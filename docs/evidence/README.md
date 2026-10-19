@@ -49,3 +49,9 @@ El núcleo de Frappe/ERPNext se comprobó sin cambios. Los pendientes obligatori
 
 17. `17-retencion-revision.png`: alcance revisado, tres campos de identificación, dos referencias privadas, motivo previo y confirmación explícita sin valores sensibles. No se pulsó el borrado final desde el navegador.
 18. `18-retencion-completada.png`: ejecución completada, dos referencias eliminadas y cero pendientes/fallidos. `privacy-worker.json` acredita aprobación del fixture desechable mediante helper, job RQ real terminado, bytes presentes antes del commit y ausentes después, outbox limpio y ledgers sin cambios.
+
+19. `19-respuesta-perdida.png`: aviso de resultado incierto; confirmación y referencia UX-NET-001 conservadas.
+20. `20-reintento-confirmado.png`: mismo resultado, factura ACC-SINV-2026-00004 después del reintento. network-sale-sale.json prueba factura/pago/stock únicos y cantidades nativas.
+21. `21-venta-devuelta.png`: venta devuelta y stock restituido, nota/pago estándar en network-sale-returned.json; turno cerrado en cero. El aviso informativo estándar de ERPNext se cerró después de verificar los documentos.
+22. `22-tiempo-real-interrumpido.png`: servidor Socket.IO aislado detenido realmente; indicador Sin tiempo real.
+23. `23-tiempo-real-recuperado.png`: servidor reiniciado y Actualizar reconecta/refresca. `transport-sessions.json` prueba además tres sesiones autenticadas, aislamiento, commit/rollback y recuperación de cambio perdido. `desk-transport-tests.log`: tres pruebas JavaScript aprobadas.

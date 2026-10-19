@@ -33,23 +33,30 @@ window.hospitality_suite = window.hospitality_suite || {};
     }
     async call(method,args={}) {return (await frappe.call({method:`hospitality_suite.api.${method}`,args})).message;}
     async load() {
+      const sequence=this.loadSequence=(this.loadSequence||0)+1;
+      let selected=this.property;
+      this.refreshPending=false;
       try {
         this.root.attr("aria-busy","true");
         if(!this.data) this.root.html('<div class="hs-loading" role="status">Cargando la operación…</div>');
-        let data=await this.call("bootstrap",{property_name:this.property || undefined});
-        if(this.property && !data.properties.some(p=>p.name===this.property)) this.property="";
-        if(!this.property && data.properties.length) {this.property=data.properties[0].name; data=await this.call("bootstrap",{property_name:this.property});}
+        let data=await this.call("bootstrap",{property_name:selected || undefined});
+        if(sequence!==this.loadSequence)return;
+        if(selected && !data.properties.some(p=>p.name===selected)) selected="";
+        if(!selected && data.properties.length) {selected=data.properties[0].name;data=await this.call("bootstrap",{property_name:selected});}
+        if(sequence!==this.loadSequence)return;
+        this.property=selected;
         this.data=data;
         this.clockOffset=moment.tz(data.server_time,data.system_timezone).valueOf()-Date.now();
         this.prop=data.properties.find(p=>p.name===this.property);
         localStorage.setItem("hs-property",this.property);
         this.render();
       } catch(error) {
+        if(sequence!==this.loadSequence)return;
         this.root.html('<div class="hs-empty" role="alert"><h2>No se pudo actualizar la operación</h2><p>Compruebe su conexión e intente nuevamente. Los movimientos requieren confirmación del servidor.</p><button class="btn btn-primary" data-act="reload">Reintentar</button></div>');
         this.bind();
-      } finally {this.root.attr("aria-busy","false");}
+      } finally {if(sequence===this.loadSequence)this.root.attr("aria-busy","false");}
     }
-    scheduleRefresh() {clearTimeout(this.refreshTimer);this.refreshTimer=setTimeout(()=>{if(!this.busy && $(this.wrapper).is(":visible"))this.load();},500);}
+    scheduleRefresh() {this.refreshPending=true;clearTimeout(this.refreshTimer);this.refreshTimer=setTimeout(()=>{if(!this.busy && $(this.wrapper).is(":visible"))this.load();},500);}
     allowed(action){return this.data.actions.includes(action);}
     button(action,label,id="",kind="secondary") {return `<button type="button" class="btn btn-${kind} hs-action" data-act="${esc(action)}" data-id="${esc(id)}">${esc(__(label))}</button>`;}
     badge(status) {return `<span class="hs-badge hs-${esc(status.toLowerCase().replaceAll(" ","-"))}">${esc(title(status))}</span>`;}
@@ -70,7 +77,7 @@ window.hospitality_suite = window.hospitality_suite || {};
       }
       this.bind();this.connection();this.updateTimers();
     }
-    connection() {const message=!navigator.onLine?"Sin conexión · operación pausada":frappe.realtime.socket?.connected?"● Tiempo real conectado":"Sin tiempo real · pulse Actualizar";this.root.find("#hs-connection").text(message);let banner=this.root.find(".hs-connection-banner");if(!banner.length)banner=$('<span class="hs-connection-banner" role="status"></span>').appendTo(this.root.find(".hs-header-actions"));banner.text(message);this.root.find(".hs-action").prop("disabled",!navigator.onLine || this.busy);}
+    connection() {const message=!navigator.onLine?"Sin conexión · operación pausada":frappe.realtime.socket?.connected?"● Tiempo real conectado":"Sin tiempo real · pulse Actualizar";this.root.find("#hs-connection").text(message);let banner=this.root.find(".hs-connection-banner");if(!banner.length)banner=$('<span class="hs-connection-banner" role="status"></span>').appendTo(this.root.find(".hs-header-actions"));banner.text(message);this.root.find(".hs-action,#hs-property").prop("disabled",!navigator.onLine || this.busy);}
     bind() {
       this.root.off("click").on("click","[data-act]",async(event)=>{
         const button=$(event.currentTarget); const action=button.data("act"), id=String(button.data("id") || "");
@@ -124,13 +131,14 @@ window.hospitality_suite = window.hospitality_suite || {};
           // Frappe's get_values may refresh a required input whose model is empty.
           // Synchronize first and validate once, without the default double read.
           const values=d.get_values();if(values)await onSubmit(values,d);
-        }finally{d._hsBusy=false;d.get_primary_btn().prop("disabled",false);}
+        }catch(error){if(!error._server_messages)frappe.msgprint({title:__("Sin confirmación del servidor"),message:__("Mantenga esta ventana y reintente con los mismos datos. La solicitud conserva su referencia para evitar duplicados."),indicator:"orange"});}
+        finally{d._hsBusy=false;d.get_primary_btn().prop("disabled",false);}
       }); for(const df of fields.filter(f=>f._hsDateTime)){const c=d.fields_dict[df.fieldname];c.$input.attr({type:"datetime-local",step:"1"});if(df.default)c.set_value(String(df.default).replace(" ","T"));} d.show();return d;
     }
     async mutate(action,data,key) {
       this.busy=true;this.connection();
       try {const result=await this.call("execute",{property_name:this.property,action,request_key:key||frappe.utils.get_random(24),data:JSON.stringify(data)});frappe.show_alert({message:__("Operación confirmada"),indicator:"green"});await this.load();return result;}
-      finally{this.busy=false;this.connection();}
+      finally{this.busy=false;this.connection();if(this.refreshPending)this.scheduleRefresh();}
     }
     action_reload(){if(navigator.onLine&&!frappe.realtime.socket?.connected)frappe.realtime.socket?.connect();return this.load();}
     async action_guest() {const key=frappe.utils.get_random(24);return this.dialog("Registrar huésped",[field("full_name","Nombre completo","Data",{reqd:1}),field("phone","Teléfono"),field("email","Correo"),field("identity_type","Tipo de identificación"),field("identity_number","Identificación según política"),field("nationality","Nacionalidad")],async(v,d)=>{await this.call("create_guest",{property_name:this.property,data:JSON.stringify(v),request_key:key});d.hide();await this.load();});}

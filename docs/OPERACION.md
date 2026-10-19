@@ -24,7 +24,7 @@ El scheduler despacha por establecimiento cada cinco minutos. Cada job bloquea e
 
 Ante un fallo, conserve Failed Job Log y el traceback, corrija la causa y vuelva a ejecutar la operación o su job por los mecanismos estándar. No marque manualmente como pagado ni cambie Allocation para eludir un bloqueo. Una ejecución posterior vuelve a examinar el estado real y no debe duplicar la liberación.
 
-Se verificaron ejecución real de expire_property, fallo con rollback y reintento posterior por el worker. La reconexión bajo corte y propagación entre dos sesiones siguen pendientes en la matriz.
+Se verificaron ejecución real de expire_property, fallo con rollback y reintento posterior por el worker. La propagación entre sesiones, aislamiento y reconexión bajo corte ya se comprobaron con tráfico real.
 
 ## Retención revisada de datos sensibles
 
@@ -82,5 +82,13 @@ Los patches de la app reconstruyen referencias de líneas y snapshots de asignac
 - Conceda roles HS más HS Access por compañía/establecimiento. Los roles ERPNext adicionales deben asignarse explícitamente; compruebe su alcance antes de usarlos.
 - Los archivos personales deben ser privados y vinculados a documentos autorizados. Configure y revise la política descrita arriba; el valor retention_days por sí solo no elimina datos.
 - Revise diferencias de caja, conciliación, documentos anulados, autorizaciones, bloqueos y jobs fallidos. No use ajustes automáticos para ocultar una diferencia.
-- Las notificaciones de la app invalidan solo el establecimiento y se envían por usuario autorizado. Los documentos estándar evitan difusión global de sus nombres; la prueba del transporte entre sesiones continúa en la matriz.
+- Las notificaciones de la app invalidan solo el establecimiento y se envían por usuario autorizado. Los documentos estándar evitan difusión global de sus nombres; el transporte entre sesiones y la exclusión de otra propiedad están probados.
 - Proteja site_config, claves de cifrado y secretos de proveedores fuera del repositorio. El portal está desactivado por defecto; los adaptadores no reciben credenciales reales durante la demostración.
+
+## Ensayos de transporte local
+
+`transport_probe.py prepare` crea dos usuarios ficticios con una sola propiedad cada uno; sus contraseñas quedan en un archivo privado del bench. `verify_transport.cjs` usa socket.io-client de Frappe: dos conexiones de hotel, una de motel, commit/rollback reales y desconexión de transporte. Los eventos solo invalidan property; al reconectar se consulta bootstrap porque Socket.IO no reproduce todos los eventos perdidos.
+
+`drop_response_proxy.py` escucha únicamente 127.0.0.1:8087 y reenvía al servidor real 8086. Solo puede descartar una respuesta exitosa de direct_sale con referencia sintética UX-NET-001. No cambia controladores, importes ni el resultado del backend. Su estado privado compara hash de clave/carga y el resultado del reintento. `verify_network_sale.py` consulta factura, pago y stock nativos. No se arma dos veces automáticamente; no es middleware de despliegue. El proxy se detuvo al terminar el ensayo y el turno quedó cerrado en cero.
+
+`cut_test_socket.py` verifica PID/comando/directorio del servicio aislado antes de detener Socket.IO. Restablezca inmediatamente con run_dev.py. Se observaron Sin tiempo real y Tiempo real conectado tras Actualizar; web/worker/scheduler siguieron activos. Las peticiones necesitan respuesta del servidor aun cuando Socket.IO está conectado. Una respuesta perdida mantiene la ventana y su referencia: reintente los mismos datos. Una recarga completa pierde la referencia en memoria; consulte documentos/saldos antes de iniciar otra operación.

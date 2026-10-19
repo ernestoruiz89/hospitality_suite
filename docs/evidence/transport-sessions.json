@@ -1,0 +1,19 @@
+{
+  "real_authenticated_sessions": 3,
+  "distinct_users": 2,
+  "separate_property_scopes": true,
+  "no_events_before_commit": true,
+  "no_events_after_rollback": true,
+  "authorized_sessions_received_commit": 2,
+  "excluded_property_events": 0,
+  "payload_keys": [
+    "property"
+  ],
+  "transport_closed": true,
+  "reconnected": true,
+  "missed_commit_recovered_by_bootstrap": true,
+  "event_after_reconnect": true,
+  "committed_guest": "94nf6kivgi",
+  "missed_guest": "95hoa6mtf5",
+  "browser_cut_test_executed": false
+}

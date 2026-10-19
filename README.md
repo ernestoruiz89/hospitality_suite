@@ -79,6 +79,8 @@ bench --site hospitality.localhost execute hospitality_suite.tests.concurrency.v
 bench --site hospitality.localhost execute hospitality_suite.tests.concurrency.verify_category
 ```
 
+Las tres pruebas de orden de respuestas/recuperación de Pages se ejecutan con `node tools/test_desk_transport.cjs`. Los ensayos reales de sesiones, corte y respuesta perdida se describen en docs/OPERACION.md.
+
 Los helpers de concurrencia están limitados al sitio sintético y conservan anulaciones auditadas. No son pruebas que deban ejecutarse contra clientes reales.
 
 `tools/qa_exports.py` genera las impresiones y exportaciones reales del recorrido ficticio. `qa_pdf.py` y `qa_workbook.mjs` las inspeccionan sin modificar su contenido; requieren las dependencias de QA. La evidencia está en `docs/evidence/` y los archivos de revisión locales en `output/`.

@@ -27,7 +27,7 @@ Actualizada el 2026-10-19. **El objetivo sigue activo.** V = prueba ejecutada de
 | F14b | Ropa de cama | linen.py, procurement.move_stock | Envío, recepción, pérdida y reposición entre almacenes con Stock Entry probados; ampliar recorrido móvil | I |
 | F15a | Servicios y existencias únicas | inventory.py | Entrega repetida de minibar: una salida y reversión estándar | V |
 | F15d | Servicios incluidos | pricing.py, inventory.py, Pages | Snapshot, cupo reservado, entrega sin otro cargo, stock único, devolución, extensión/cambio probados; configuración en Page pendiente | I |
-| F15b | Venta directa y devolución | direct_sales.py | Factura/pago/salida únicos, reintento, devolución y rollback por falta de stock; venta de agua C$30 desde Page; devolución en Page pendiente | I |
+| F15b | Venta directa y devolución | direct_sales.py | Factura/pago/salida únicos, reintento, devolución y rollback por falta de stock; venta de agua C$30, respuesta perdida/reintento único, devolución estándar y turno cero desde Pages | V |
 | F15c | Compras, traslados, mínimos y mermas | procurement.py, inventario nativo y Pages | Compra parcial, factura sin segundo stock, pagos, mínimos nativos, clasificación, reposición/consumo/merma, conteo obsoleto y reporte de SLE probados; compra/factura/pago desde Page; ampliar traslados/conteo en navegador | I |
 | F16 | Cierre diario y reapertura | closing.py | Cierre repetido, diferencias, snapshot y reapertura autorizada solo del último día probados | V |
 | F17a | KPI con noches y horas separadas | reports.summary | Cortesía, denominador cero, impuesto incluido, horas reales y bloqueo de mantenimiento probados | V |
@@ -36,8 +36,8 @@ Actualizada el 2026-10-19. **El objetivo sigue activo.** V = prueba ejecutada de
 | F19 | Contratos de integración | integrations.py | HMAC/caducidad, redacción y simulación que nunca marca pagado probados | V |
 | F20a | Permisos API, documentos, archivos y roles | security.py, hooks.py | Segunda compañía, roles combinados, saldos y stock; lectura/listado de archivos incluso del propietario, Asset y rechazo financiero de limpieza probados; retención con rollback, archivos compartidos, límites y worker real probada; falta auditoría final | I |
 | F20c | Retención revisada de datos sensibles | privacy.py, HS Retention Run/File, Page Gerencia | Ocho pruebas: actividad/adjuntos recientes, permisos, versiones, rollback, referencias compartidas, tres intentos y recuperación; RQ real completado y revisión/resultado de Page | V |
-| F20b | Notificaciones estándar por usuario | ScopedERPNotifications | Sin list_update global; Socket.IO autenticado conectado en Page tras corregir DEV_SERVER; faltan dos sesiones y reconexión bajo corte | I |
-| F21 | Idempotencia y recuperación | service.py, jobs.py, JS | Reintento, rollback, versión obsoleta y fallo/recuperación en worker RQ real probados; falta transporte/red | I |
+| F20b | Notificaciones estándar por usuario | ScopedERPNotifications | Tres sesiones reales: dos autorizadas reciben y otra propiedad no; sin eventos antes del commit/tras rollback; corte de Socket.IO y recuperación visibles en Page | V |
+| F21 | Idempotencia y recuperación | service.py, jobs.py, JS | Worker RQ real y proxy local: respuesta de venta confirmada descartada, misma clave/datos/resultado al reintentar; factura/pago/stock únicos y devolución estándar | V |
 | F22 | Once Pages, teclado y móvil | public/js, bundles, sidebar v16 | Circuitos motel y hotel completos, panel lateral 1024×768/390×844, limpieza móvil y contador sin recarga; faltan grupos/asistente/portal | I |
 | F23 | Impresiones | templates/print, generador | Nueve formatos y exportador: diez PDF generados, texto/render revisados, campos técnicos ocultos | V |
 | F24 | Demo explícita de 2 × 10 habitaciones y roles | demo.seed | Carga y repetición ejecutadas; credenciales en archivo privado del sitio sintético | V |
@@ -55,14 +55,14 @@ Actualizada el 2026-10-19. **El objetivo sigue activo.** V = prueba ejecutada de
 | 5 Último cupo y asignación física | concurrency.verify_category y category_last_unit_roomless_then_assign | Circuito de Page |
 | 6 Extensión conflictiva y cambio | extension_rejects_next_booking y cambios con segmentos/cotización | Circuito de Page |
 | 7 Expiración, penalización y devolución parcial | lifecycle, finance, portal | Scheduler y Page |
-| 8 Doble cobro y cierre repetido | finance y lifecycle | Reintento visible |
+| 8 Doble cobro y cierre repetido | finance y lifecycle | Reintento visible tras respuesta perdida: una factura/pago/salida |
 | 9 Anticipo y garantía sin doble ingreso | finance, incluido turno histórico y garantía no efectiva | Circuito de Page |
 | 10 Monedas, vuelto y arqueo | finance y cash_change_and_fractional_count | Arqueo y vuelto acreditados en Page |
 | 11 Compañía/establecimiento/API/archivo | security_recovery y referencias cruzadas | Segunda compañía y roles estándar combinados probados; ampliar Page |
 | 12 Salida, limpieza e inspección | role_flow con cuatro roles operativos | Escritorio acreditado por cuatro roles; limpieza/inspección móvil ejecutadas |
-| 13 Minibar y reversión | operations, direct_sales | Circuito de Page |
-| 14 Operaciones externas ERPNext | finance y sync_document | Factura/pago externos y sus cancelaciones probados; transporte entre sesiones pendiente |
-| 15 Fallos y recuperación | rollback de factura/stock e idempotencia | Worker RQ con fallo y reintento probado; corte de red pendiente |
+| 13 Minibar y reversión | operations, direct_sales | Venta directa/reintento/devolución/stock restituido ejecutados en Page |
+| 14 Operaciones externas ERPNext | finance y sync_document | Factura/pago externos y sus cancelaciones probados; transporte entre sesiones probado |
+| 15 Fallos y recuperación | rollback de factura/stock e idempotencia | Worker RQ, corte Socket.IO y respuesta perdida después de confirmar/reintento probados |
 | 16 Instalar y migrar sin pérdida | Instalación inicial y dos patches ejecutados | Segundo sitio limpio y restauración en tercero, igualdad de 52 tablas/295 filas tras migrar |
 
 ## Evidencia acumulada
