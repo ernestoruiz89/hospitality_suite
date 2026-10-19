@@ -48,6 +48,21 @@ def finance_stock():
     return dict(property=prop.name,card_method="Tarjeta demo",supplier=vendor,item="HS-DEMO-LINEN",purpose="Synthetic UX only")
 
 
+def group_payer():
+    """Explicit fictional company for the grouped-invoice Pages walkthrough."""
+    if frappe.local.site!="hospitality.localhost" or not frappe.conf.get("allow_tests") or frappe.session.user!="Administrator":
+        frappe.throw("El pagador ficticio requiere hospitality.localhost, allow_tests y Administrator")
+    from hospitality_suite import api
+    prop=frappe.get_doc("HS Property",{"property_name":"Hotel Jardín Demo"})
+    label="Empresa ficticia de grupo UX-GRP-001"
+    customer=frappe.db.get_value("Customer",{"customer_name":label})
+    if not customer:
+        customer=frappe.get_doc(dict(doctype="Customer",customer_name=label,customer_type="Company",customer_group="Individual",territory="Nicaragua")).insert().name
+    if not frappe.db.exists("HS Billing Party",{"property":prop.name,"customer":customer}):
+        api.save_setup(prop.name,"billing_party",dict(customer=customer,kind="Company",credit_authorized=0,reason="Pagador sintético para recorrido grupal UX-GRP-001"),"ux-grp-001-company-payer")
+    return dict(customer=customer,property=prop.name,synthetic=True)
+
+
 def seed():
     if frappe.local.site != "hospitality.localhost" and not frappe.conf.get("hospitality_allow_demo"):
         frappe.throw("La demostración requiere hospitality_allow_demo en un sitio de pruebas")

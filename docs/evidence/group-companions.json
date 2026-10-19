@@ -1,0 +1,34 @@
+{
+  "synthetic": true,
+  "booking": "ki589mj6qt",
+  "status": "Checked In",
+  "starts_at": "2026-10-19 09:00:00",
+  "ends_at": "2026-10-21 09:00:00",
+  "amount": 6000.0,
+  "people": [
+    2,
+    1
+  ],
+  "requested_rooms": [
+    "",
+    null
+  ],
+  "active_reservation_allocations": 0,
+  "stays": [
+    "mo2596eae9",
+    "n8dprf6gc2"
+  ],
+  "rooms": [
+    "H102",
+    "H103"
+  ],
+  "registered_guests": {
+    "H102": [
+      "ald8460rvo",
+      "ald1j1r1kh"
+    ],
+    "H103": [
+      "aldode7uer"
+    ]
+  }
+}

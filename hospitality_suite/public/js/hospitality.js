@@ -88,6 +88,7 @@ window.hospitality_suite = window.hospitality_suite || {};
       this.root.find("#hs-property").on("change",e=>{this.property=e.target.value;this.data=null;this.load();});
       this.root.find("#hs-search").on("input",e=>{this.query=e.target.value.toLowerCase();this.filterRooms();});
       this.root.find("#hs-clean-filter").on("change",e=>{localStorage.setItem(`hs-clean-${this.property}`,e.target.value);this.filterRooms();});
+      this.root.find("#hs-booking-history").on("change",e=>{this.bookingHistory=e.target.checked;this.render();});
     }
     render_home(el) {
       const occupied=this.data.occupied.length, available=this.data.rooms.filter(r=>r.active && r.cleaning_status==="Clean" && !this.data.occupied.some(s=>s.room===r.name)).length;
@@ -106,8 +107,8 @@ window.hospitality_suite = window.hospitality_suite || {};
     updateTimers() {const now=Date.now()+(this.clockOffset||0);this.root.find("[data-countdown]").each((_,node)=>{const min=Math.round((moment.tz(node.dataset.countdown,this.data.system_timezone).valueOf()-now)/60000);node.textContent=min>=0?`Tiempo restante: ${Math.floor(min/60)} h ${min%60} min`:`Tiempo excedido: ${Math.abs(min)} min`;});}
     table(headers,rows){return rows.length?`<div class="hs-table-wrap"><table class="hs-table"><thead><tr>${headers.map(h=>`<th scope="col">${esc(h)}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map((v,i)=>`<td data-label="${esc(headers[i])}">${v}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`:this.empty();}
     render_reservations(el) {
-      const bookings=this.data.bookings||[];
-      el.html(`<div class="hs-toolbar"><div><h2>Próximas llegadas</h2><p>Reservas individuales y grupales; las retenciones liberan cupo al vencer.</p></div>${this.button("reserve","Reservar","","primary")}${this.button("availability","Buscar disponibilidad")}</div>${this.table(["Reserva","Llegada / salida","Canal","Estado","Importe","Acciones"],bookings.map(b=>[esc(b.name),`${esc(this.date(b.starts_at))}<br>${esc(this.date(b.ends_at))}`,esc(b.channel),this.badge(b.status),this.amount(b.amount,b.currency),this.button("booking","Ver reserva",b.name)]))}`);
+      const bookings=(this.data.bookings||[]).filter(b=>this.bookingHistory||!["Cancelled","No Show","Completed"].includes(b.status));
+      el.html(`<div class="hs-toolbar"><div><h2>Reservas vigentes</h2><p>Reservas individuales y grupales; las retenciones liberan cupo al vencer.</p><label><input id="hs-booking-history" type="checkbox" ${this.bookingHistory?"checked":""}> Mostrar historial</label></div>${this.button("reserve","Reservar","","primary")}${this.button("availability","Buscar disponibilidad")}</div>${this.table(["Reserva","Llegada / salida","Canal","Estado","Importe","Acciones"],bookings.map(b=>[esc(b.name),`${esc(this.date(b.starts_at))}<br>${esc(this.date(b.ends_at))}`,esc(b.channel),this.badge(b.status),this.amount(b.amount,b.currency),this.button("booking","Ver reserva",b.name)]))}`);
     }
     render_stays(el) {el.html(`<div class="hs-toolbar"><h2>Huéspedes alojados y cuentas</h2>${this.button("walk_in","Registrar entrada inmediata","","primary")}</div>${this.table(["Habitación","Huésped","Salida prevista","Estado","Acciones"],(this.data.stays||[]).map(s=>[esc(this.roomName(s.room)),esc(this.guestName(s.guest)),esc(this.date(s.ends_at)),this.badge(s.status),this.button("detail","Ver cuenta",s.name)]))}`);}
     render_cashier(el) {el.html(`<div class="hs-toolbar"><div><h2>Turnos y cobros</h2><p>Anticipos, ingresos y garantías conservan su origen contable.</p></div>${this.button("open_shift","Abrir turno","","primary")}${this.button("payment","Cobrar")}</div>${this.table(["Responsable","Apertura","Moneda","Efectivo esperado","Estado","Acciones"],(this.data.shifts||[]).map(s=>[esc(s.cashier),esc(this.date(s.opened_at)),esc(s.currency),Object.entries(s.expected_by_currency).map(([c,v])=>this.amount(v,c)).join("<br>"),this.badge(s.status),s.status!=="Closed"?this.button("close_shift","Arqueo y cierre",s.name):this.button("print_shift","Imprimir",s.name)]))}<h2 class="hs-section-title">Movimientos recientes</h2>${this.table(["Origen","Concepto","Importe","Estado","Comprobante"],(this.data.payments||[]).map(p=>[esc(p.stay?"Habitación "+this.roomName((this.data.stays||[]).find(t=>t.name===p.stay)?.room):p.booking?"Reserva "+p.booking:"Venta / caja"),esc(title(p.kind)),this.amount(p.amount,p.currency),this.badge(p.status),esc(p.payment_entry||p.journal_entry||"—")]))}`);}
@@ -119,15 +120,38 @@ window.hospitality_suite = window.hospitality_suite || {};
     render_setup(el) {el.html(`<section class="hs-welcome"><div><h2>Configure la operación paso a paso</h2><p>Las cuentas e impuestos se seleccionan explícitamente de ERPNext.</p></div></section><div class="hs-shortcuts">${[["property","1. Políticas y contabilidad"],["category","2. Categorías"],["room","3. Habitaciones"],["rate","4. Tarifas"],["payment_method","5. Medios de pago"]].map(([id,label])=>`<button class="hs-report-link" data-act="setup" data-id="${id}">${label} →</button>`).join("")}</div><section class="hs-section"><h2>Configuración actual</h2><p>${this.data.rooms.length} habitaciones · ${this.data.categories.length} categorías · ${(this.data.rates||[]).length} tarifas</p></section>`);}
     async dialog(titleText,fields,onSubmit,label="Guardar",size="large") {
       const d=new frappe.ui.Dialog({title:__(titleText),fields,size,primary_action_label:__(label),primary_action:()=>{}});
+      const numeric=["Int","Float","Currency","Percent","Check"],edits=new Map(),rowEdits=new Map();
+      // Grid editors are reused/refreshed when focus moves or another row is
+      // added. Keep the user's numeric input before those native refreshes.
+      d.$wrapper.on("input.hsNumeric change.hsNumeric","input",event=>{
+        for(const field of Object.values(d.fields_dict)){
+          if(numeric.includes(field.df.fieldtype)&&field.$input?.[0]===event.target)edits.set(field.df.fieldname,field.get_input_value());
+          for(const row of field.grid?.grid_rows||[])for(const control of Object.values(row.on_grid_fields_dict||{})){
+            if(!numeric.includes(control.df.fieldtype)||control.$input?.[0]!==event.target)continue;
+            const key=`${field.df.fieldname}|${row.doc.name}`;
+            if(!rowEdits.has(key))rowEdits.set(key,new Map());
+            const raw=control.get_input_value();
+            rowEdits.get(key).set(control.df.fieldname,raw);
+            row.doc[control.df.fieldname]=control.get_parsed_value(raw);
+          }
+        }
+      });
       d.get_primary_btn().off("click").on("click",async()=>{
         if(d._hsBusy)return;d._hsBusy=true;d.get_primary_btn().prop("disabled",true);
         try{
-          const numeric=["Int","Float","Currency","Percent","Check"];
-          const flush=async control=>{if(control.$input&&!control.df.read_only&&numeric.includes(control.df.fieldtype))await control.parse_validate_and_set_in_model(control.get_input_value());};
+          const pending=[];
+          const capture=(control,saved,doc)=>{
+            if(!control.$input||control.df.read_only||!numeric.includes(control.df.fieldtype))return;
+            if(saved?.has(control.df.fieldname)||control.$input.is(":visible"))pending.push({control,doc,raw:saved?.has(control.df.fieldname)?saved.get(control.df.fieldname):control.get_input_value()});
+          };
           for(const field of Object.values(d.fields_dict)){
-            await flush(field);
-            for(const row of field.grid?.grid_rows||[])for(const control of Object.values(row.on_grid_fields_dict||{}))await flush(control);
+            capture(field,edits);
+            for(const row of field.grid?.grid_rows||[])for(const control of Object.values(row.on_grid_fields_dict||{}))capture(control,rowEdits.get(`${field.df.fieldname}|${row.doc.name}`),row.doc);
           }
+          // Snapshot everything before awaiting: a control refresh must not
+          // overwrite a later control's freshly typed value or an inactive row.
+          for(const value of pending)if(value.doc)value.doc[value.control.df.fieldname]=value.control.get_parsed_value(value.raw);
+          for(const {control,raw} of pending)await control.parse_validate_and_set_in_model(raw);
           // Frappe's get_values may refresh a required input whose model is empty.
           // Synchronize first and validate once, without the default double read.
           const values=d.get_values();if(values)await onSubmit(values,d);

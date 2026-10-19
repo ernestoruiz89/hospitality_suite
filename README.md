@@ -79,7 +79,7 @@ bench --site hospitality.localhost execute hospitality_suite.tests.concurrency.v
 bench --site hospitality.localhost execute hospitality_suite.tests.concurrency.verify_category
 ```
 
-Las tres pruebas de orden de respuestas/recuperación de Pages se ejecutan con `node tools/test_desk_transport.cjs`. Los ensayos reales de sesiones, corte y respuesta perdida se describen en docs/OPERACION.md.
+Las cinco pruebas de orden de respuestas, recuperación, edición numérica y acciones de grupos en Pages se ejecutan con `node tools/test_desk_transport.cjs`. Los ensayos reales de sesiones, corte y respuesta perdida se describen en docs/OPERACION.md.
 
 Los helpers de concurrencia están limitados al sitio sintético y conservan anulaciones auditadas. No son pruebas que deban ejecutarse contra clientes reales.
 

@@ -1,0 +1,17 @@
+{
+  "synthetic": true,
+  "booking": "ki589mj6qt",
+  "status": "Confirmed",
+  "starts_at": "2026-10-19 09:00:00",
+  "ends_at": "2026-10-20 09:00:00",
+  "amount": 3000.0,
+  "people": [
+    2,
+    1
+  ],
+  "requested_rooms": [
+    "",
+    null
+  ],
+  "active_reservation_allocations": 2
+}

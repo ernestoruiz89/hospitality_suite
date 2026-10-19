@@ -7,14 +7,14 @@ const path=require('node:path');
 function fixture(){
   const timers=new Map();let timer=0;
   const hospitality_suite={};
-  const context={window:{hospitality_suite},hospitality_suite,frappe:{utils:{escape_html:String,get_random:()=>"fallback"},show_alert(){}},
+  const context={window:{hospitality_suite},hospitality_suite,__:value=>value,frappe:{utils:{escape_html:String,get_random:()=>"fallback"},show_alert(){}},
     moment:{tz:()=>({valueOf:()=>0})},localStorage:{setItem(){}},$:()=>({is:()=>true}),
     setTimeout:fn=>{timers.set(++timer,fn);return timer;},clearTimeout:id=>timers.delete(id)};
   vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../hospitality_suite/public/js/hospitality.js'),'utf8'),context);
   const desk=Object.create(hospitality_suite.Desk.prototype);
   desk.property='hotel';desk.root={attr(k,v){desk.aria=v;return this;},html(v){desk.html=v;return this;}};
   desk.data={tag:'initial'};desk.render=()=>{desk.rendered=desk.data.tag;};desk.bind=()=>{};desk.connection=()=>{};
-  return {desk,timers};
+  return {desk,timers,context};
 }
 function deferred(){let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return{promise,resolve,reject};}
 const snapshot=(tag,property='hotel')=>({tag,server_time:'2026-10-19 10:00:00',system_timezone:'America/Managua',properties:[{name:property}]});
@@ -39,4 +39,38 @@ test('an invalidation during a failed mutation is refreshed once the request end
   pending.reject(Error('response lost'));await assert.rejects(mutation,/response lost/);
   assert.equal(desk.busy,false);
   let refreshed=0;desk.load=()=>{refreshed++;};[...timers.values()].at(-1)();assert.equal(refreshed,1);
+});
+test('dialog keeps numeric edits across row refreshes and leaves untouched hidden rows alone',async()=>{
+  const {desk,context}=fixture(),row1={name:'first',people:1},row2={name:'second',people:7};
+  let typed='1',submit,capture;
+  const input={};
+  const edited={df:{fieldname:'people',fieldtype:'Int'},$input:{0:input,is:()=>true},get_input_value:()=>typed,get_parsed_value:Number,
+    async parse_validate_and_set_in_model(raw){row1.people=Number(raw);}};
+  const hidden={df:{fieldname:'people',fieldtype:'Int'},$input:{0:{},is:()=>false},get_input_value:()=>1,get_parsed_value:Number,
+    async parse_validate_and_set_in_model(raw){row2.people=Number(raw);}};
+  const primary={off(){return this;},on(event,callback){submit=callback;return this;},prop(){return this;}};
+  context.__=value=>value;
+  context.frappe.ui={Dialog:class{
+    constructor(){this.fields_dict={rows:{df:{fieldname:'rows',fieldtype:'Table'},grid:{grid_rows:[{doc:row1,on_grid_fields_dict:{people:edited}},{doc:row2,on_grid_fields_dict:{people:hidden}}]}}};this.$wrapper={on(events,selector,callback){capture=callback;}};}
+    get_primary_btn(){return primary;}show(){}get_values(){return{rows:[row1,row2]};}
+  }};
+  let accepted;
+  await desk.dialog('Counts',[{fieldname:'rows',fieldtype:'Table'}],async values=>{accepted=values;});
+  typed='2';capture({target:input});assert.equal(row1.people,2,'row change must keep what was typed');
+  typed='1';row1.people=1; // a later native editor refresh must not replace the edit
+  await submit();assert.equal(accepted.rows[0].people,2);assert.equal(accepted.rows[1].people,7);
+});
+test('a partly arrived group exposes its remaining numbered request and valid actions',async()=>{
+  const {desk,context}=fixture();
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../hospitality_suite/public/js/hospitality_extras.js'),'utf8'),context);
+  const info={booking:{name:'group',status:'Checked In',guest:'principal',rooms:[{name:'request',idx:1,people:2}]},allocations:[{name:'allocation',booking_room:'request',category:'standard'}]};
+  desk.allowed=()=>true;desk.call=async()=>info;desk.data={categories:[{name:'standard',category_name:'Estándar'}],guests:[],rooms:[]};
+  let fields;desk.dialog=async(title,value)=>{fields=value;};
+  await desk.action_booking('group');
+  assert.deepEqual(Array.from(fields.find(f=>f.fieldname==='status').options,o=>o.value),['Check In']);
+  const allocation=fields.find(f=>f.fieldname==='allocation');assert.equal(allocation.default,'allocation');
+  assert.match(allocation.options[1].label,/Solicitud 1.*2 persona/);
+  assert.equal(fields.find(f=>f.fieldname==='guest').default,'principal');
+  info.allocations=[];let message;context.__=value=>value;context.frappe.msgprint=value=>{message=value;};fields=undefined;
+  await desk.action_booking('group');assert.equal(fields,undefined);assert(message);
 });

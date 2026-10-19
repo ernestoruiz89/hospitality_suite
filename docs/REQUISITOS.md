@@ -14,8 +14,8 @@ Actualizada el 2026-10-19. **El objetivo sigue activo.** V = prueba ejecutada de
 | F06b | Camas extra, temporadas y paquetes | pricing.py, schema.py, Pages | Cama extra y tarifa histórica probadas; falta recorrido de configuración | I |
 | F07 | Reservas, modificación, cancelación y retenciones | operations.py, portal.py, jobs.py | lifecycle/portal y expiración por worker real; fallo y recuperación conservan cupo hasta confirmar | I |
 | F08a | Entrada, extensión, cambio y salida | operations.py, timing.py | operations, lifecycle, timing_metrics; entrada M101 confirmada también en Page | V |
-| F08b | Acompañantes, Contact y Address estándar | operations.companions, api.create_guest | Capacidad, acompañantes y Contact/Address estándar probados; diálogo pendiente | I |
-| F09 | Folios separados y factura grupal única | accounting.py | Reparto de pagadores, factura consolidada con anticipo, saldo compartido y ambas salidas | V |
+| F08b | Acompañantes, Contact y Address estándar | operations.companions, api.create_guest | Capacidad y Contact/Address estándar probados; acompañante H3 guardado/reabierto en Page con dos plazas aceptadas | V |
+| F09 | Folios separados y factura grupal única | accounting.py | Reparto y anticipo probados; Page grupal: empresa C$6000/2 líneas y huésped C$30, dos pagos, saldos cero, turno C$6030 y ambas salidas | V |
 | F10 | Facturación y conciliación estándar | accounting.py | Anticipo antes/después de factura, turno histórico cerrado, sin duplicar efectivo | V |
 | F11 | Garantía separada, devolución y aplicación | accounting.py | Pasivo, aplicación antes/después de factura y retorno USD con variación de cambio aprobados | V |
 | F12a | Caja, parciales, monedas y diferencias | accounting.py, cashier.py | NIO/USD, doble envío, diferencia, devolución, retiro probado | V |
@@ -38,7 +38,7 @@ Actualizada el 2026-10-19. **El objetivo sigue activo.** V = prueba ejecutada de
 | F20c | Retención revisada de datos sensibles | privacy.py, HS Retention Run/File, Page Gerencia | Ocho pruebas: actividad/adjuntos recientes, permisos, versiones, rollback, referencias compartidas, tres intentos y recuperación; RQ real completado y revisión/resultado de Page | V |
 | F20b | Notificaciones estándar por usuario | ScopedERPNotifications | Tres sesiones reales: dos autorizadas reciben y otra propiedad no; sin eventos antes del commit/tras rollback; corte de Socket.IO y recuperación visibles en Page | V |
 | F21 | Idempotencia y recuperación | service.py, jobs.py, JS | Worker RQ real y proxy local: respuesta de venta confirmada descartada, misma clave/datos/resultado al reintentar; factura/pago/stock únicos y devolución estándar | V |
-| F22 | Once Pages, teclado y móvil | public/js, bundles, sidebar v16 | Circuitos motel y hotel completos, panel lateral 1024×768/390×844, limpieza móvil y contador sin recarga; faltan grupos/asistente/portal | I |
+| F22 | Once Pages, teclado y móvil | public/js, bundles, sidebar v16 | Circuitos motel y hotel completos, panel lateral 1024×768/390×844, limpieza móvil y contador sin recarga; grupo/roomless/modificación/acompañante/facturas separadas probados; faltan asistente/portal | I |
 | F23 | Impresiones | templates/print, generador | Nueve formatos y exportador: diez PDF generados, texto/render revisados, campos técnicos ocultos | V |
 | F24 | Demo explícita de 2 × 10 habitaciones y roles | demo.seed | Carga y repetición ejecutadas; credenciales en archivo privado del sitio sintético | V |
 | F25 | Manuales, contabilidad y operación | docs/ | Manuales actualizados y restauración probada; falta ensayo de reversión de cambios | I |
@@ -50,9 +50,9 @@ Actualizada el 2026-10-19. **El objetivo sigue activo.** V = prueba ejecutada de
 |---|---|---|
 | 1 Hotel, anticipo, consumo y salida | test_operations.test_01_hotel_advance_consumption_checkout_cleaning | Hotel de dos noches, agua, anticipo, factura/pago, salida y limpieza/inspección móvil ejecutados |
 | 2 Motel, gracia y medianoche | pricing, timing_metrics, lifecycle | Reserva/entrada, consumo, extensión, cobro y salida M101 acreditados |
-| 3 Grupo y separación de factura | group_split_folios y group_single_invoice_single_balance_and_checkout | Circuito de Page |
+| 3 Grupo y separación de factura | group_split_folios y group_single_invoice_single_balance_and_checkout | Circuito Page completo: empresa C$6000, huésped C$30, saldos cero y ambas salidas |
 | 4 Habitación simultánea | concurrency.verify, REPEATABLE-READ | No aplica a un navegador único |
-| 5 Último cupo y asignación física | concurrency.verify_category y category_last_unit_roomless_then_assign | Circuito de Page |
+| 5 Último cupo y asignación física | concurrency.verify_category y category_last_unit_roomless_then_assign | Dos solicitudes sin habitación convertidas a H102/H103 desde Page; último cupo con dos conexiones reales |
 | 6 Extensión conflictiva y cambio | extension_rejects_next_booking y cambios con segmentos/cotización | Circuito de Page |
 | 7 Expiración, penalización y devolución parcial | lifecycle, finance, portal | Scheduler y Page |
 | 8 Doble cobro y cierre repetido | finance y lifecycle | Reintento visible tras respuesta perdida: una factura/pago/salida |

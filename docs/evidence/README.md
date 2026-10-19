@@ -54,4 +54,14 @@ El núcleo de Frappe/ERPNext se comprobó sin cambios. Los pendientes obligatori
 20. `20-reintento-confirmado.png`: mismo resultado, factura ACC-SINV-2026-00004 después del reintento. network-sale-sale.json prueba factura/pago/stock únicos y cantidades nativas.
 21. `21-venta-devuelta.png`: venta devuelta y stock restituido, nota/pago estándar en network-sale-returned.json; turno cerrado en cero. El aviso informativo estándar de ERPNext se cerró después de verificar los documentos.
 22. `22-tiempo-real-interrumpido.png`: servidor Socket.IO aislado detenido realmente; indicador Sin tiempo real.
-23. `23-tiempo-real-recuperado.png`: servidor reiniciado y Actualizar reconecta/refresca. `transport-sessions.json` prueba además tres sesiones autenticadas, aislamiento, commit/rollback y recuperación de cambio perdido. `desk-transport-tests.log`: tres pruebas JavaScript aprobadas.
+23. `23-tiempo-real-recuperado.png`: servidor reiniciado y Actualizar reconecta/refresca. `transport-sessions.json` prueba además tres sesiones autenticadas, aislamiento, commit/rollback y recuperación de cambio perdido. `desk-transport-tests.log`: cinco pruebas JavaScript aprobadas (tres de transporte y dos de tablas/grupos).
+
+24. `24-grupo-modificacion.png`: dos solicitudes por asignar, ocupantes 2/1 y nueva cotización C$6000.
+25. `25-grupo-asignacion.png`: segunda solicitud identificada, H2/H103 y única acción de entrada pendiente.
+26. `26-grupo-acompanante.png`: acompañante H3 persistido y reabierto, dentro de dos plazas aceptadas.
+27. `27-grupo-cuenta-compartida.png`: alojamiento consolidado C$6000 en empresa, cuenta personal separada.
+28. `28-grupo-caja-cerrada.png`: turno del grupo cerrado C$6030.
+29. `29-grupo-saldos-cero.png`: cuentas empresarial y personal saldadas y facturas de origen.
+30. `30-grupo-salidas-escritorio.png`: ambas salidas registradas a 1280×900; se restauró el viewport habitual.
+
+`group-reserved/modified/stays/companions/billed/checked-out.json` son puntos de control de solo lectura del mismo recorrido. Acreditan asignaciones sin habitación, conservación 2/1, dos entradas, acompañante, una factura Company de dos alojamientos C$6000, factura personal C$30, pagos estándar y stock único. El último incluye cierre contado/esperado C$6030, diferencia cero, reserva Completed, ambas salidas y dos tareas de limpieza pendientes. No declara que esas tareas nuevas ya estén inspeccionadas.
