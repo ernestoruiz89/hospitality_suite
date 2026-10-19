@@ -139,3 +139,13 @@ Respaldo nativo fresco con cuatro componentes, protegidos modo 600. El helper es
 La copia se sirvió temporalmente en 8088 y se detuvo al terminar. Se comprobó lectura/API; Socket.IO del bench está configurado para el servicio principal 8086, no se reconfiguró para esta copia. El destino conserva scheduler pausado. El worker principal terminó limpiamente su trabajo de índice al reiniciarse; después se arrancó un worker nuevo. Capturas 45/46 y recovery-*.json.
 
 El objetivo sigue activo: la revisión siguiente detectó límites de 500/1000 filas e insuficientes dimensiones/fechas en reportes, además del historial de acompañantes. Se registraron como F17c y PENDIENTES.md; las pruebas existentes no acreditan todavía esa parte del alcance.
+
+## Ampliación: consultas completas e historial de acompañantes
+
+paging.permitted_all consulta bloques estables de 500 mediante get_list y sus permisos; la proyección operativa ya no descarta la cola del historial. report_page y guest_history presentan páginas de 50, total y controles, con límite explícito máximo de 200 por página. Las exportaciones usan el conjunto completo. El historial incorpora HS Stay Guest y exige lectura del huésped/alcance del establecimiento; no devuelve otros nombres ni identificaciones.
+
+Cuatro pruebas nuevas: 1105 eventos en todos los segmentos y XLSX, 610 asignaciones de calendario, principal/acompañante con denegación de otro establecimiento y bloqueo completado que conserva hora de auditoría pese a una edición posterior. El calendario mantiene los mantenimientos terminados y su fin procede del evento inmutable Maintenance Completed; la retención de evidencia no amplía el bloqueo histórico. KPI usa esa misma referencia.
+
+Batería conjunta: 111 aprobadas (98 integración + 13 puras); siete de Desk y dos de portal siguen aprobadas. Un primer fallo al crear el usuario de prueba procedió de Redis 13001 detenido; se arrancaron los servicios aislados y se repitió la prueba completa sin fallos. Compilación realizada. Page Auditoría: 51–100 de 142 registros, con retorno/foco al encabezado; H3 muestra H105 como principal y H102 como acompañante. Capturas 47/48. history-ui.json acredita 142 filas de XLSX y todos los identificadores en PDF de 10 páginas.
+
+La revisión visual de primera/última página de ese PDF detectó partición de fila y falta de encabezado repetido. El runtime global instalado es wkhtmltopdf 0.12.6 sin Qt parcheado; queda resolverlo dentro del bench de pruebas y repetir la inspección. Las dimensiones de reportes y fechas de llegada/salida siguen pendientes. El objetivo no se cierra con estas pruebas parciales.

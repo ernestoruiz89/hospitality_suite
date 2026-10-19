@@ -1,0 +1,20 @@
+{
+  "synthetic": true,
+  "audit_total": 142,
+  "first_page": 50,
+  "second_page": 50,
+  "duplicate_rows": 0,
+  "xlsx_rows": 142,
+  "pdf_rows_verified": 142,
+  "pdf_pages": 10,
+  "guest_history": [
+    {
+      "stay": "9mfspa61cd",
+      "relationship": "Principal"
+    },
+    {
+      "stay": "mo2596eae9",
+      "relationship": "Acompañante"
+    }
+  ]
+}

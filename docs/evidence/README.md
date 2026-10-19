@@ -92,3 +92,8 @@ La batería final registra 107 aprobadas, 94 integración y 13 puras. Incluye co
 46. `46-restauracion-gerencia-corte.png`: período 19/10 06:00→20/10 06:00 y KPI conservados.
 
 recovery-final-baseline/restored/migrated/reversed/redeployed/ui/source.json conservan el mismo hash agregado, 70 tablas, 866 filas y un archivo privado. recovery-code-previous/current.json registra las revisiones y migraciones de la copia. recovery-backup-manifest.json guarda tamaños/hash de cuatro componentes, sin archivos ni secretos. El servidor temporal 8088 se detuvo; solo se acreditan lectura/API en esa copia, mientras Socket.IO se probó en el servicio principal. El objetivo conserva pendientes de dimensiones e historial documentados.
+
+47. `47-auditoria-segunda-pagina.png`: 51–100 de 142 registros, foco/posición regresan al encabezado al avanzar.
+48. `48-historial-acompanante.png`: H3 como principal de H105 y acompañante de H102, con dos visitas recuperadas desde el servidor.
+
+history-ui.json conserva páginas sin duplicados, 142 filas en XLSX y los 142 identificadores extraídos del PDF. El PDF tiene diez páginas: se revisaron primera y última, y se detectó corte de fila/ausencia de encabezado repetido que continúa pendiente en PENDIENTES.md. No se declara esa revisión visual aprobada. La batería actual suma 111 aprobadas; las cuatro nuevas prueban 1105 eventos, 610 asignaciones, acompañantes/alcance y mantenimiento histórico.

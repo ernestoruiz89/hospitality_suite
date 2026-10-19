@@ -68,6 +68,13 @@ def update_cleaning(prop, data):
     return dict(task=task.name, status=target)
 
 
+def maintenance_finished_at(order):
+    """Completion is immutable audit time, not a later attachment/retention edit."""
+    from hospitality_suite.service import current_all
+    events=current_all("HS Audit Event",filters={"source_doctype":"HS Maintenance Order","source_name":order.name,"action":"Maintenance Completed"},fields=["occurred_at"],order_by="occurred_at asc")
+    return frappe.utils.get_datetime(events[0].occurred_at if events else order.modified)
+
+
 def maintenance(prop, data):
     if data.get("order"):
         doc = document("HS Maintenance Order", data["order"], "maintain")

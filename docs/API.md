@@ -17,6 +17,8 @@ Base RPC: `/api/method/hospitality_suite.api.`.
 | `room_balances` | establecimiento | Saldos únicamente para roles financieros/recepción autorizados |
 | `inventory_status` | establecimiento, almacén opcional | Existencias de almacenes autorizados |
 | `report`, `export_report` | establecimiento, nombre, filtros; exportación `file_format` | Datos o descarga XLSX/PDF según rol |
+| `report_page` | los mismos filtros, `offset`, `page_length` (1–200) | `rows`, `columns`, `total`, `has_more`; sin truncar la exportación |
+| `guest_history` | `name`, `offset`, `page_length` | Visitas como principal o acompañante, limitadas al documento/establecimiento autorizado |
 | `configuration`, `setup_options` | establecimiento | Configuración y opciones; requiere permiso de configuración |
 
 En la tabla, establecimiento es el argumento `property_name`; inicio/fin son `starts_at`/`ends_at`, categoría es `category` y personas es `people`. Filtros se envía como objeto JSON en `filters`, con `from_date`, `to_date` y dimensiones admitidas por el reporte. Nombres e identificadores se obtienen de las consultas, no se construyen a partir del número visible de habitación.

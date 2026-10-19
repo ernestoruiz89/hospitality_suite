@@ -35,7 +35,7 @@ def rows(prop, report, filters=None):
         frappe.throw("Reporte desconocido")
     if report=="Conciliación":
         from hospitality_suite.reconciliation import rows as reconcile
-        return reconcile(prop,filters)
+        return reconcile(prop,filters,limit=None)
     if report=="Movimientos de inventario":
         return inventory_movements(prop,filters or {})
     dt, fields = REPORTS[report]
@@ -53,7 +53,8 @@ def rows(prop, report, filters=None):
     date_field="posting_date" if dt=="Sales Invoice" else "business_date" if frappe.get_meta(dt).has_field("business_date") else "creation"
     if filters.get("from_date") and filters.get("to_date"):
         selected[date_field]=["between",[filters["from_date"],filters["to_date"]+" 23:59:59" if date_field=="creation" else filters["to_date"]]]
-    result=frappe.get_list(dt, filters=selected, fields=fields, order_by="creation desc", limit_page_length=1000)
+    from hospitality_suite.paging import permitted_all
+    result=permitted_all(dt,filters=selected,fields=fields)
     if report=="Cuentas pendientes":
         from hospitality_suite.accounting import folio_balance
         for row in result:
@@ -82,7 +83,7 @@ def inventory_movements(prop,filters):
             selected["item_code"]=filters["item"]
         if filters.get("from_date") and filters.get("to_date"):
             selected["posting_date"]=["between",[filters["from_date"],filters["to_date"]]]
-        entries=frappe.get_all("Stock Ledger Entry",filters=selected,fields=["name","posting_date","posting_time","item_code","warehouse","actual_qty","qty_after_transaction","stock_value_difference","voucher_no","voucher_detail_no"],order_by="posting_date desc,posting_time desc,creation desc",limit_page_length=1000)
+        entries=frappe.get_all("Stock Ledger Entry",filters=selected,fields=["name","posting_date","posting_time","item_code","warehouse","actual_qty","qty_after_transaction","stock_value_difference","voucher_no","voucher_detail_no"],order_by="posting_date desc,posting_time desc,creation desc")
         meta=frappe.get_meta(child)
         details={r.name:r for r in current_all(child,filters={"name":["in",[e.voucher_detail_no for e in entries]]},fields=["name"]+[k for k in ("cost_center","expense_account") if meta.has_field(k)])} if entries else {}
         for row in entries:
@@ -95,7 +96,7 @@ def inventory_movements(prop,filters):
                                purpose=usage,classification=policies.get((row.item_code,row.warehouse),"Merchandise"),quantity=row.actual_qty,
                                balance_quantity=row.qty_after_transaction,cost=row.stock_value_difference,currency=base_currency,
                                cost_center=detail.get("cost_center"),expense_account=detail.get("expense_account"),source_doctype=dt,source_name=row.voucher_no,actor=origin.owner))
-    return sorted(result,key=lambda r:(str(r["posting_date"]),str(r["posting_time"]),r["name"]),reverse=True)[:1000]
+    return sorted(result,key=lambda r:(str(r["posting_date"]),str(r["posting_time"]),r["name"]),reverse=True)
 
 
 def union_seconds(spans):
@@ -141,7 +142,8 @@ def summary(prop, starts_at=None, ends_at=None):
             if row.status=="Released":
                 order=locked_doc("HS Maintenance Order",row.maintenance) if row.maintenance else None
                 if order and order.status=="Completed":
-                    b=min(b,get_datetime(order.modified))
+                    from hospitality_suite.housekeeping import maintenance_finished_at
+                    b=min(b,maintenance_finished_at(order))
         a,b=max(start,a),min(end,b)
         if a<b:
             (blocked if row.kind=="Maintenance" else occupied).setdefault(row.room,[]).append((a,b))

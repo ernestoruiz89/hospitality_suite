@@ -12,6 +12,7 @@ LABELS={"name":"Referencia","room_number":"Habitación","category":"Categoría",
 LABELS.update(source_payment="Movimiento original",expense_category="Categoría de gasto",supplier="Proveedor",purchase_invoice="Factura de compra",fee_amount="Comisión",withholding_amount="Retención",net_amount="Neto bancario",reference="Referencia bancaria",settlement_direction="Flujo bancario")
 LABELS.update(warehouse="Almacén",purpose="Uso operativo",classification="Clasificación",balance_quantity="Existencia tras movimiento",posting_time="Hora contable",cost_center="Centro de costo",expense_account="Cuenta de gasto")
 LABELS.update(equipment="Equipo",blocks_room="Bloquea habitación")
+LABELS.update(relationship="Participación en la estancia")
 NUMBERS={"amount","quantity","grand_total","outstanding_amount","base_amount","expected_amount","counted_amount","difference","cost","expected","actual","pending","outstanding","fee_amount","withholding_amount","net_amount"}
 NUMBERS.add("balance_quantity")
 

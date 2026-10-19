@@ -32,7 +32,7 @@ Actualizada el 2026-10-19. **El objetivo sigue activo.** V = prueba ejecutada de
 | F16 | Cierre diario y reapertura | closing.py | Cierre repetido, diferencias, snapshot y reapertura autorizada solo del último día probados | V |
 | F17a | KPI con noches y horas separadas | reports.summary | Cortesía, denominador cero, impuesto incluido, horas reales y bloqueo de mantenimiento probados | V |
 | F17b | Reportes, conciliación y exportaciones | reports.py, reconciliation.py, api.export_report | Conciliación hasta origen y PDF/XLSX numérico inspeccionados; auditor no exporta. Auditoría detectó filtros de dimensión incompletos y tope de 1000 filas; ampliar consulta/exportación | I |
-| F17c | Historial completo y dimensiones de reporte | api.project/calendar, reports.rows, Pages | El historial y calendario pueden truncarse en 500 filas; faltan canal/categoría/usuario/turno cuando aplican y búsqueda completa de acompañantes. Corrección en curso | P |
+| F17c | Historial completo y dimensiones de reporte | api.project/calendar, reports.rows, Pages | El historial/calendario/exportación ya consultan todo, cuatro pruebas nuevas y Page 2/historial de acompañante acreditados. Faltan filtros por canal/categoría/usuario/turno y fechas de llegada/salida | P |
 | F18 | Portal opcional seguro | www/, portal.py | Visitante Guest cotiza/solicita; confirmación firmada con vencimiento; conversión manual desde Reservas a cupo único sin pago; render nativo probado y hotel desactivado al terminar | V |
 | F19 | Contratos de integración | integrations.py | HMAC/caducidad, redacción y simulación que nunca marca pagado probados | V |
 | F20a | Permisos API, documentos, archivos y roles | security.py, hooks.py | Segunda compañía, roles combinados, saldos y stock; lectura/listado de archivos incluso del propietario, Asset y rechazo financiero de limpieza probados; retención con rollback, archivos compartidos, límites y worker real probada; falta auditoría final | I |
@@ -68,7 +68,7 @@ Actualizada el 2026-10-19. **El objetivo sigue activo.** V = prueba ejecutada de
 
 ## Evidencia acumulada
 
-Batería conjunta anterior a las últimas ampliaciones: **50 aprobadas** (39 de integración y 11 puras). Ampliación de horarios, acompañantes y KPI: **4 aprobadas** por separado. La cortesía detectó una incompatibilidad con tarifas negativas; se corrigió con descuento en la línea estándar y referencias a sus cargos de origen. Última batería conjunta en hospitality-clean.localhost: **107 aprobadas** (94 integración + 13 puras). También pasaron impuesto incluido, camas extra, Contact/Address, retiro de caja, variación de cambio y exportación numérica.
+Batería conjunta anterior a las últimas ampliaciones: **50 aprobadas** (39 de integración y 11 puras). Ampliación de horarios, acompañantes y KPI: **4 aprobadas** por separado. La cortesía detectó una incompatibilidad con tarifas negativas; se corrigió con descuento en la línea estándar y referencias a sus cargos de origen. Última batería conjunta en hospitality-clean.localhost: **111 aprobadas** (98 integración + 13 puras). También pasaron impuesto incluido, camas extra, Contact/Address, retiro de caja, variación de cambio y exportación numérica.
 
 La matriz no sustituye los registros finales ni las capturas. Integraciones reales de canales, mensajería, pasarelas y cerraduras esperan proveedor/credenciales; HRMS es opcional. No se migró producción ni ningún sitio ajeno.
 

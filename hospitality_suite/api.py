@@ -113,7 +113,8 @@ def may(action):
 
 
 def project(dt, prop, fields=None, filters=None):
-    return frappe.get_list(dt, filters={"property": prop.name, **(filters or {})}, fields=fields or ["*"], limit_page_length=500, order_by="creation desc")
+    from hospitality_suite.paging import permitted_all
+    return permitted_all(dt, filters={"property": prop.name, **(filters or {})}, fields=fields or ["*"])
 
 
 @frappe.whitelist()
@@ -236,6 +237,26 @@ def report(property_name, report_name, filters=None):
 
 
 @frappe.whitelist()
+def report_page(property_name,report_name,filters=None,offset=0,page_length=50):
+    from hospitality_suite.paging import page
+    return page(report(property_name,report_name,filters),offset,page_length)
+
+
+@frappe.whitelist()
+def guest_history(name,offset=0,page_length=50):
+    from hospitality_suite.paging import permitted_all,page
+    guest=document("HS Guest",name)
+    companions=frappe.get_all("HS Stay Guest",filters={"guest":guest.name},fields=["parent","relationship"])
+    relation={row.parent:row.relationship for row in companions}
+    records=permitted_all("HS Stay",filters={"property":guest.property},
+                          or_filters={"guest":guest.name,"name":["in",list(relation) or [""]]},
+                          fields=["name","guest","room","starts_at","ends_at","actual_check_in","actual_check_out","status"])
+    for row in records:
+        row["relationship"]="Principal" if row.pop("guest")==guest.name else relation[row.name]
+    return page(records,offset,page_length)
+
+
+@frappe.whitelist()
 def export_report(property_name, report_name, filters=None, file_format="xlsx"):
     from hospitality_suite.reports import rows
     prop=require(property_name,"report")
@@ -251,7 +272,7 @@ def export_report(property_name, report_name, filters=None, file_format="xlsx"):
     elif file_format=="pdf":
         from frappe.utils.pdf import get_pdf
         from html import escape
-        heading=f"<style>body{{font-family:Arial,sans-serif;color:#173c32;font-size:10px}}h1{{font-size:24px}}table{{width:100%;border-collapse:collapse}}th{{background:#eaf0e9;text-align:left}}th,td{{padding:7px;border-bottom:1px solid #dce5dc}}thead{{display:table-header-group}}tr{{page-break-inside:avoid}}</style><h1>{escape(report_name)}</h1><p>{escape(prop.property_name)} · Hasta 1 000 registros autorizados</p>"
+        heading=f"<style>body{{font-family:Arial,sans-serif;color:#173c32;font-size:10px}}h1{{font-size:24px}}table{{width:100%;border-collapse:collapse}}th{{background:#eaf0e9;text-align:left}}th,td{{padding:7px;border-bottom:1px solid #dce5dc}}thead{{display:table-header-group}}tr{{page-break-inside:avoid}}</style><h1>{escape(report_name)}</h1><p>{escape(prop.property_name)} · {len(records)} registros autorizados</p>"
         table="<table><thead><tr>"+"".join(f"<th>{escape(label(k))}</th>" for k in headers)+"</tr></thead><tbody>"
         table+="".join("<tr>"+"".join(f"<td>{escape(str(display(k,row.get(k)) if row.get(k) is not None else ''))}</td>" for k in headers)+"</tr>" for row in records)+"</tbody></table>"
         content=get_pdf(heading+table,{"orientation":"Landscape"})
@@ -373,12 +394,19 @@ def calendar(property_name,starts_at,ends_at):
     start,end=to_site(starts_at,prop),to_site(ends_at,prop)
     if end<=start or (end-start).days>31:
         frappe.throw("Consulte un intervalo de hasta 31 días")
-    rows=project("HS Allocation",prop,fields=["name","room","category","starts_at","ends_at","kind","status","booking","stay"],
+    rows=project("HS Allocation",prop,fields=["name","room","category","starts_at","ends_at","kind","status","booking","stay","maintenance"],
                  filters={"starts_at":["<",end],"ends_at":[">",start]})
     result=[]
     for row in rows:
-        if row.status=="Released" and row.kind!="Stay":
+        if row.status=="Released" and row.kind not in ("Stay","Maintenance"):
             continue
+        if row.status=="Released" and row.kind=="Maintenance":
+            order=frappe.get_doc("HS Maintenance Order",row.maintenance) if row.maintenance else None
+            if not order or order.status!="Completed":
+                continue
+            row.ends_at=min(frappe.utils.get_datetime(row.ends_at),housekeeping.maintenance_finished_at(order))
+            if row.ends_at<=frappe.utils.get_datetime(row.starts_at):
+                continue
         if row.kind=="Stay" and row.stay:
             stay=frappe.get_doc("HS Stay",row.stay)
             row.starts_at=max(frappe.utils.get_datetime(row.starts_at),frappe.utils.get_datetime(stay.actual_check_in))

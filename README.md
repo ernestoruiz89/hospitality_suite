@@ -72,7 +72,7 @@ bench --site hotel.localhost set-config allow_tests true
 bench --site hotel.localhost run-tests --app hospitality_suite
 ```
 
-`before_tests` carga la demostración explícita para las pruebas; cada caso revierte sus movimientos. No ejecutar esta batería en producción. Última batería conjunta: **107 aprobadas** en el sitio adicional limpio, 94 de integración y 13 puras. Los dos casos de concurrencia usan conexiones y commits reales y se ejecutan aparte:
+`before_tests` carga la demostración explícita para las pruebas; cada caso revierte sus movimientos. No ejecutar esta batería en producción. Última batería conjunta: **111 aprobadas** en el sitio adicional limpio, 98 de integración y 13 puras. Los dos casos de concurrencia usan conexiones y commits reales y se ejecutan aparte:
 
 ```sh
 bench --site hospitality.localhost execute hospitality_suite.tests.concurrency.verify
