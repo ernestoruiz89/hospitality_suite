@@ -1,0 +1,12 @@
+{
+  "stage": "redeployed",
+  "site": "hospitality-restore.localhost",
+  "passed": true,
+  "tables": 70,
+  "rows": 866,
+  "hs_doctypes": 34,
+  "private_files": 1,
+  "aggregate_sha256": "160d4ba3965d26eaac1a9510012e87740e3bb96d9546f68aa081bc4f08e22583",
+  "data_sha256": "4a9133f30f07b213fde9e83af8be957d968dcdc446f85c92bc7f657bbfacc93d",
+  "private_bytes_sha256": "9c761ad96043341c975428d41a0b6130ff61946b49981f8d719335f9b362d37a"
+}

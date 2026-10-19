@@ -87,3 +87,8 @@ portal-ui-tests.log contiene dos pruebas aprobadas; desk-transport-tests.log con
 inventory-ui.json acredita traslado MAT-STE-2026-00010, conteo MAT-RECO-2026-00001 con dos GL Entry y tres movimientos de ropa: 00011/00012/00013. Agua 91 en origen/1 en lavandería; sábana 1 en origen/0 en lavandería, envío 2/recepción 1/pérdida 1. No se escribió directamente en los libros.
 
 La batería final registra 107 aprobadas, 94 integración y 13 puras. Incluye corte operativo configurable que recorta horas de motel, snapshot del cierre, límites inválidos rechazados, DST de 23/25 horas y webhook sintético firmado/repetido una vez, con campos redactados y ningún efecto financiero. Desk tiene siete pruebas aprobadas; portal conserva dos. concurrency-final.json acredita una confirmación y un rechazo en ambas carreras reales.
+
+45. `45-restauracion-recepcion.png`: recepción de la copia con estado de habitaciones conservado; se abrió H105 y se comprobaron C$1600 + C$1500 y saldo C$3100.
+46. `46-restauracion-gerencia-corte.png`: período 19/10 06:00→20/10 06:00 y KPI conservados.
+
+recovery-final-baseline/restored/migrated/reversed/redeployed/ui/source.json conservan el mismo hash agregado, 70 tablas, 866 filas y un archivo privado. recovery-code-previous/current.json registra las revisiones y migraciones de la copia. recovery-backup-manifest.json guarda tamaños/hash de cuatro componentes, sin archivos ni secretos. El servidor temporal 8088 se detuvo; solo se acreditan lectura/API en esa copia, mientras Socket.IO se probó en el servicio principal. El objetivo conserva pendientes de dimensiones e historial documentados.
