@@ -1,0 +1,136 @@
+"""Declarative schema; generated JSON is committed and installed by Frappe sync."""
+
+ROLES = ["HS Administrator", "HS Manager", "HS Supervisor", "HS Receptionist", "HS Cashier",
+         "HS Housekeeping", "HS Maintenance", "HS Accountant", "HS Auditor"]
+OPERATORS = ROLES[:5] + ["HS Accountant", "HS Auditor"]
+MANAGERS = ROLES[:3]
+FINANCE = ROLES[:3] + ["HS Cashier", "HS Accountant", "HS Auditor"]
+
+
+def f(name, kind="Data", options=None, required=False, **kwargs):
+    labels = {"property": "Establecimiento", "company": "Compañía", "status": "Estado",
+              "room": "Habitación", "category": "Categoría", "customer": "Cliente pagador",
+              "starts_at": "Desde", "ends_at": "Hasta", "currency": "Moneda"}
+    out = dict(fieldname=name, label=labels.get(name, name.replace("_", " ").capitalize()), fieldtype=kind)
+    if options is not None:
+        out["options"] = options
+    if required:
+        out["reqd"] = 1
+    out.update(kwargs)
+    return out
+
+
+def link(name, dt, required=True, **kw):
+    return f(name, "Link", dt, required, **kw)
+
+
+def select(name, options, default=None, **kw):
+    return f(name, "Select", "\n".join(options), True, default=default or options[0], **kw)
+
+
+SCOPE = [link("company", "Company"), link("property", "HS Property")]
+SPAN = [f("starts_at", "Datetime", required=True), f("ends_at", "Datetime", required=True)]
+MONEY = [link("currency", "Currency"), f("amount", "Currency", "currency", True)]
+
+SCHEMA = {
+    "HS Access": dict(roles=["System Manager"], writable=True, fields=[link("user", "User"), *SCOPE]),
+    "HS Property": dict(roles=ROLES, writable=True, fields=[
+        f("property_name", required=True), link("company", "Company"),
+        select("mode", ["Hotel", "Motel", "Mixed"]), f("time_zone", default="America/Managua", reqd=1),
+        f("business_date", "Date", required=True), f("close_time", "Time", default="06:00:00"),
+        link("currency", "Currency"), f("check_in_time", "Time", default="14:00:00"),
+        f("check_out_time", "Time", default="12:00:00"), f("cleaning_minutes", "Int", default=30),
+        f("inspection_required", "Check", default=1), f("discreet_mode", "Check"),
+        f("portal_enabled", "Check"), f("financial_enabled", "Check"), f("allow_credit", "Check"),
+        f("guest_id_required", "Check"), f("hold_minutes", "Int", default=15),
+        link("cost_center", "Cost Center", False), link("warehouse", "Warehouse", False),
+        link("receivable_account", "Account", False), link("guarantee_account", "Account", False),
+        link("lodging_item", "Item", False), link("tax_template", "Sales Taxes and Charges Template", False),
+        f("tax_policy_confirmed", "Check"), f("brand_name"), f("retention_days", "Int", default=365),
+    ]),
+    "HS Category": dict(roles=ROLES, writable=True, fields=[*SCOPE, f("category_name", required=True), f("capacity", "Int", default=2), f("amenities", "Small Text")]),
+    "HS Room": dict(roles=ROLES, writable=True, fields=[*SCOPE, f("room_number", required=True), link("category", "HS Category"),
+        f("floor"), f("zone"), f("beds", "Int", default=1), f("parking"), f("active", "Check", default=1),
+        select("cleaning_status", ["Clean", "Dirty", "Cleaning", "Inspection"])]),
+    "HS Rate": dict(roles=OPERATORS, writable=True, fields=[*SCOPE, f("title", required=True), link("category", "HS Category"),
+        select("mode", ["Hotel", "Motel"]), *MONEY, f("block_hours", "Float", default=3),
+        f("extra_hour_rate", "Currency", "currency"), f("grace_minutes", "Int", default=0),
+        f("rounding_minutes", "Int", default=60), f("additional_person_rate", "Currency", "currency"),
+        f("included_people", "Int", default=2), f("extra_bed_rate", "Currency", "currency"),
+        f("priority", "Int", default=10), f("valid_from", "Date"), f("valid_to", "Date"),
+        f("weekdays", description="0=lunes ... 6=domingo; vacío=todos"), link("customer", "Customer", False),
+        f("night_start", "Time"), f("night_end", "Time"), f("active", "Check", default=1)]),
+    "HS Guest": dict(roles=OPERATORS, writable=True, fields=[*SCOPE, f("full_name", required=True), f("email", "Data", options="Email"),
+        f("phone", "Data"), f("identity_type"), f("identity_number"), f("nationality"),
+        f("identity_file", "Attach"), link("customer", "Customer", False)]),
+    "HS Booking Room": dict(child=True, fields=[link("category", "HS Category"), link("room", "HS Room", False), f("people", "Int", default=1), link("rate", "HS Rate")]),
+    "HS Booking": dict(roles=OPERATORS, fields=[*SCOPE, link("customer", "Customer"), link("guest", "HS Guest", False), *SPAN,
+        select("status", ["Draft", "Hold", "Confirmed", "Checked In", "Completed", "Cancelled", "No Show"]),
+        f("hold_until", "Datetime"), f("channel", default="Recepción"), f("instructions", "Small Text"),
+        f("rooms", "Table", "HS Booking Room", True), f("reason", "Small Text"), *MONEY,
+        f("quote_snapshot", "Code", "JSON"), f("portal_token_hash", hidden=1), f("portal_expires_at", "Datetime", hidden=1)]),
+    "HS Allocation": dict(roles=OPERATORS + ["HS Maintenance"], fields=[*SCOPE, link("category", "HS Category"), link("room", "HS Room", False),
+        *SPAN, f("buffer_minutes", "Int"), select("kind", ["Reservation", "Stay", "Maintenance"]),
+        select("status", ["Active", "Released"]), link("booking", "HS Booking", False), link("stay", "HS Stay", False),
+        link("maintenance", "HS Maintenance Order", False)]),
+    "HS Stay Guest": dict(child=True, fields=[link("guest", "HS Guest"), select("relationship", ["Principal", "Acompañante"])]),
+    "HS Stay": dict(roles=OPERATORS, fields=[*SCOPE, link("booking", "HS Booking", False), link("guest", "HS Guest"),
+        link("customer", "Customer"), link("room", "HS Room"), *SPAN, f("actual_check_in", "Datetime"), f("actual_check_out", "Datetime"),
+        select("status", ["Active", "Checked Out"]), link("rate", "HS Rate"), *MONEY,
+        f("quote_snapshot", "Code", "JSON"), f("guests", "Table", "HS Stay Guest"), f("reason", "Small Text")]),
+    "HS Folio": dict(roles=OPERATORS, fields=[*SCOPE, link("stay", "HS Stay"), link("customer", "Customer"),
+        link("currency", "Currency"), select("status", ["Open", "Closed"]), f("label", default="Cuenta principal")]),
+    "HS Charge": dict(roles=OPERATORS, fields=[*SCOPE, link("stay", "HS Stay"), link("folio", "HS Folio"), link("item", "Item"),
+        f("description", "Small Text"), f("quantity", "Float", default=1), f("rate", "Currency", "currency"), *MONEY,
+        f("business_date", "Date", required=True), select("kind", ["Lodging", "Service", "Adjustment"]),
+        select("status", ["Pending", "Invoiced", "Reversed"]), link("sales_invoice", "Sales Invoice", False),
+        f("invoice_item"), f("reason", "Small Text"), f("quote_snapshot", "Code", "JSON")]),
+    "HS Payment Method": dict(roles=FINANCE, writable=True, fields=[*SCOPE, link("mode_of_payment", "Mode of Payment"),
+        link("account", "Account"), link("currency", "Currency"), f("reference_required", "Check"), f("is_cash", "Check")]),
+    "HS Shift": dict(roles=FINANCE, fields=[*SCOPE, link("cashier", "User"), f("opened_at", "Datetime"), f("closed_at", "Datetime"),
+        select("status", ["Open", "Review", "Closed"]), link("currency", "Currency"), f("opening_amount", "Currency", "currency"),
+        f("expected_amount", "Currency", "currency"), f("counted_amount", "Currency", "currency"), f("difference", "Currency", "currency"),
+        f("denominations", "Code", "JSON"), f("reason", "Small Text"), link("approved_by", "User", False)]),
+    "HS Payment": dict(roles=FINANCE, fields=[*SCOPE, link("stay", "HS Stay", False), link("booking", "HS Booking", False),
+        link("folio", "HS Folio", False), link("customer", "Customer"), link("shift", "HS Shift"), link("method", "HS Payment Method"),
+        *MONEY, f("exchange_rate", "Float", default=1), f("base_amount", "Currency"),
+        select("kind", ["Payment", "Advance", "Guarantee", "Refund", "Guarantee Refund", "Withdrawal"]),
+        select("status", ["Posted", "Cancelled"]), link("payment_entry", "Payment Entry", False), link("journal_entry", "Journal Entry", False),
+        f("reference"), link("source_payment", "HS Payment", False), f("reason", "Small Text")]),
+    "HS Cleaning Task": dict(roles=ROLES, fields=[*SCOPE, link("room", "HS Room"), link("stay", "HS Stay", False),
+        select("kind", ["Departure", "Stay", "Deep"]), select("priority", ["Normal", "High", "Urgent"]), link("assigned_to", "User", False),
+        select("status", ["Pending", "In Progress", "Inspection", "Completed"]), f("started_at", "Datetime"), f("completed_at", "Datetime"),
+        f("checklist", "Code", "JSON"), f("notes", "Small Text"), link("inspected_by", "User", False)]),
+    "HS Maintenance Order": dict(roles=ROLES, fields=[*SCOPE, link("room", "HS Room"), f("title", required=True), *SPAN,
+        select("kind", ["Corrective", "Preventive"]), select("status", ["Open", "In Progress", "Completed"]),
+        link("assigned_to", "User", False), f("notes", "Small Text"), f("evidence", "Attach"), f("cost", "Currency"),
+        link("stock_entry", "Stock Entry", False), link("reopened_by", "User", False)]),
+    "HS Service Request": dict(roles=OPERATORS, fields=[*SCOPE, link("stay", "HS Stay", False), link("folio", "HS Folio", False),
+        link("customer", "Customer", False), link("item", "Item"), f("quantity", "Float", default=1), *MONEY,
+        select("status", ["Requested", "In Progress", "Delivered", "Cancelled", "Returned"]),
+        link("charge", "HS Charge", False), link("stock_entry", "Stock Entry", False), link("return_stock_entry", "Stock Entry", False), f("notes", "Small Text")]),
+    "HS Incident": dict(roles=ROLES, fields=[*SCOPE, link("room", "HS Room"), select("kind", ["Damage", "Lost Property", "Linen"]),
+        f("description", "Small Text", required=True), f("evidence", "Attach"), link("item", "Item", False), f("quantity", "Float"),
+        select("status", ["Open", "Resolved"]), link("stock_entry", "Stock Entry", False)]),
+    "HS Daily Close": dict(roles=FINANCE, fields=[*SCOPE, f("business_date", "Date", required=True),
+        select("status", ["Review", "Closed", "Reopened"]), f("summary", "Code", "JSON"), f("blockers", "Code", "JSON"),
+        f("closed_at", "Datetime"), f("reason", "Small Text")]),
+    "HS Audit Event": dict(roles=["HS Administrator", "HS Manager", "HS Auditor"], fields=[*SCOPE, f("action", required=True),
+        f("source_doctype", required=True), f("source_name", required=True), link("actor", "User"), f("occurred_at", "Datetime"),
+        f("business_date", "Date"), f("reason", "Small Text"), f("details", "Code", "JSON")]),
+    "HS Request": dict(roles=["System Manager"], fields=[*SCOPE, f("request_key", required=True, unique=1), f("payload_hash", required=True),
+        f("operation", required=True), f("result", "Code", "JSON")]),
+    "HS Integration Event": dict(roles=MANAGERS, fields=[*SCOPE, f("provider", required=True), f("event_id", required=True, unique=1),
+        select("status", ["Received", "Processed", "Failed"]), f("attempts", "Int"), f("last_error", "Small Text"), f("payload", "Code", "JSON")]),
+}
+
+SCOPED = [name for name, spec in SCHEMA.items() if not spec.get("child") and name != "HS Access"]
+WRITABLE = [name for name, spec in SCHEMA.items() if spec.get("writable")]
+PAGES = {
+    "hospitality-home": ("Inicio", ROLES), "hospitality-reception": ("Recepción", OPERATORS),
+    "hospitality-reservations": ("Reservas", OPERATORS), "hospitality-stays": ("Estancias", OPERATORS),
+    "hospitality-cashier": ("Caja", FINANCE), "hospitality-housekeeping": ("Limpieza", ROLES),
+    "hospitality-maintenance": ("Mantenimiento", ROLES), "hospitality-services": ("Consumos e inventario", OPERATORS),
+    "hospitality-guests": ("Clientes y huéspedes", OPERATORS), "hospitality-management": ("Gerencia", FINANCE),
+    "hospitality-setup": ("Configuración", MANAGERS),
+}

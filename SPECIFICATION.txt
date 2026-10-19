@@ -1,0 +1,308 @@
+PROMPT MAESTRO PARA CODEX
+APP DE ADMINISTRACIÓN DE HOTELES Y MOTELES SOBRE FRAPPE / ERPNEXT
+
+Actúa como arquitecto de software y desarrollador senior de Frappe/ERPNext, con experiencia en sistemas de gestión hotelera (PMS), operación de moteles por horas, contabilidad, inventarios y diseño de interfaces sencillas.
+
+Tu tarea es DISEÑAR, PROGRAMAR, INTEGRAR Y PROBAR una aplicación completa e instalable para administrar hoteles, moteles y establecimientos mixtos. Trabaja directamente sobre el repositorio y entorno disponibles. Entrega código funcional, no solamente recomendaciones, pantallas de demostración o una descripción del sistema.
+
+La aplicación debe permitir que recepción, caja, limpieza, mantenimiento y gerencia trabajen mediante PÁGINAS PERSONALIZADAS, claras y rápidas. Los DocTypes serán la estructura interna; el usuario operativo no debe necesitar recorrer formularios técnicos de ERPNext para completar sus tareas habituales.
+
+1. OBJETIVO Y FORMA DE TRABAJO
+
+- Nombre técnico propuesto: hospitality_suite. Nombre comercial configurable, sin referencias obligatorias a una empresa específica.
+- Producto reutilizable para varios clientes, con configuración por compañía y establecimiento.
+- Modalidades: hotel por noche, motel por horas y operación mixta.
+- Interfaz en español, preparada para traducciones.
+- Valores iniciales sugeridos y editables: país Nicaragua, zona horaria America/Managua y moneda base NIO. Permitir USD, otras monedas y tipos de cambio mediante ERPNext.
+- No fijes tasas tributarias, requisitos de identificación ni reglas fiscales en el código. Deben ser configurables y validados para cada implementación.
+- Inspecciona primero el repositorio, sus instrucciones, las versiones instaladas de Frappe/ERPNext, aplicaciones, base de datos y herramientas de pruebas.
+- Usa la versión instalada como objetivo. Si no existe entorno, selecciona una versión estable mediante documentación oficial y declara esa decisión. No prometas compatibilidad simultánea con versiones que no has probado.
+- No modifiques el núcleo de Frappe o ERPNext. Usa una app propia, hooks, APIs documentadas, fixtures y migraciones versionadas.
+- Consulta el código y documentación correspondientes a la versión objetivo antes de asumir que un DocType, método o módulo existe. No dependas de componentes de Hospitality antiguos sin verificar su vigencia y compatibilidad.
+- Toma decisiones razonables cuando falte información no bloqueante y documenta los supuestos. Pregunta únicamente por datos que impidan avanzar de forma segura.
+- Implementa por etapas, pero continúa hasta cubrir el alcance obligatorio. No te detengas después del esquema de DocTypes o de la primera pantalla.
+- Trabaja en desarrollo o pruebas; no migres producción ni uses datos reales para demostraciones sin autorización.
+
+2. ARQUITECTURA Y MODELO DE DATOS
+
+- Backend nativo Frappe, reglas de negocio en Python y persistencia mediante DocTypes.
+- Frontend mediante Pages de Desk. Puedes usar Vue y componentes compatibles si simplifican la interfaz y su mantenimiento. Justifica la elección y resuelve el empaquetado dentro de la app.
+- Reutiliza Customer, Contact, Address, Item, Item Group, UOM, Price List, Company, Cost Center, Warehouse, Sales Invoice, Payment Entry y los documentos estándar de compras, inventarios y contabilidad que correspondan.
+- No construyas un segundo libro mayor ni un inventario independiente de ERPNext.
+- Separa huésped, acompañante, cliente que paga y empresa/agencia responsable de facturación.
+- Modela establecimientos, habitaciones, categorías, tarifas, reservas, asignaciones por intervalo, estancias, folios o cuentas de estancia, cargos, garantías, turnos de caja, tareas de limpieza, órdenes de mantenimiento y cierres diarios.
+- Usa un prefijo consistente en los DocTypes propios para evitar colisiones. Justifica cuándo una entidad requiere DocType independiente o tabla hija.
+- Define campos, enlaces, obligatoriedad, validaciones, índices, permisos, estados y transiciones. Evita estados redundantes que puedan contradecirse.
+- Cada operación debe identificar compañía, establecimiento, usuario, fecha/hora y referencias de origen.
+- Una reserva puede contener varias habitaciones; una estancia puede tener varios segmentos de habitación por cambios durante la visita.
+- Distingue fecha/hora real, fecha operativa y fecha de contabilización. Usa las convenciones de Frappe para fechas y conversiones horarias; no guardes mezclas ambiguas de UTC y hora local.
+
+3. CONFIGURACIÓN INICIAL
+
+Construye un asistente para configurar:
+- Compañía, establecimientos, modalidad, zona horaria, fecha operativa y horario de cierre.
+- Pisos, zonas, habitaciones, categoría, capacidad, camas, comodidades y estacionamiento asociado cuando corresponda.
+- Monedas, impuestos, cuentas contables, centros de costo, almacenes y medios de pago.
+- Horarios de entrada/salida, tolerancias, cargos por entrada anticipada/salida tardía y tiempo de limpieza.
+- Políticas de anticipos, garantías, cancelación, no presentación, crédito, descuentos y autorizaciones.
+- Artículos de alojamiento, horas adicionales, alimentación, minibar, lavandería y otros servicios.
+- Series documentales, formatos de impresión, usuarios y roles.
+Valida la configuración antes de habilitar operaciones financieras. No crees cuentas o impuestos arbitrarios silenciosamente.
+
+4. PÁGINAS E INTERFAZ OBLIGATORIAS
+
+Crea navegación propia, consistente y adaptada al rol, con al menos estas páginas:
+A. Inicio: indicadores, alertas, pendientes y accesos rápidos.
+B. Recepción: tablero de habitaciones y panel lateral de la estancia.
+C. Reservas: calendario por habitación y búsqueda de disponibilidad.
+D. Estancias: huéspedes alojados, llegadas, salidas y cuentas abiertas.
+E. Caja: cobros, devoluciones, turno, arqueo y cierre.
+F. Limpieza: tareas, prioridades, responsables e inspección.
+G. Mantenimiento: incidencias, bloqueos y órdenes de trabajo.
+H. Consumos e inventario: cargos a habitación, entregas y reposición.
+I. Clientes y huéspedes: consulta e historial según permisos.
+J. Gerencia: reportes, indicadores y autorizaciones.
+K. Configuración: asistente y políticas operativas.
+
+Requisitos de experiencia:
+- Diseño profesional, adaptable a escritorio, tableta y teléfono; limpieza debe funcionar cómodamente desde móvil.
+- Etiquetas comprensibles: Reservar, Registrar entrada, Agregar consumo, Extender estancia, Cambiar habitación, Cobrar, Registrar salida y Marcar limpia.
+- Acciones frecuentes dentro de la página mediante paneles, asistentes breves o diálogos, sin obligar a abrir formularios estándar.
+- Búsqueda rápida, filtros por establecimiento/piso/categoría/estado y filtros persistentes cuando resulte útil.
+- Estado vacío, carga, error, éxito, validación junto al campo y prevención de doble envío.
+- Accesibilidad por teclado y etiquetas; el color nunca será la única forma de transmitir un estado.
+- Actualización entre sesiones usando los mecanismos de tiempo real de Frappe; reconexión y recuperación de datos cuando falle la conexión.
+- No confirmar una reserva, un cobro o una salida mientras no exista respuesta válida del servidor. No implementar cobros desconectados.
+- Prueba los flujos completos desde estas páginas, no solamente desde formularios de administrador.
+
+5. TABLERO DE HABITACIONES Y DISPONIBILIDAD
+
+- Tarjetas con número, categoría, disponibilidad, limpieza, bloqueo, entrada/salida prevista, tiempo restante o excedido y saldo, según permisos.
+- Usa dimensiones separadas para ocupación, limpieza y mantenimiento. Una habitación puede estar ocupada y requerir limpieza; una reserva futura no equivale a ocupación actual.
+- Estados visibles sugeridos: disponible, reservada para el intervalo consultado, ocupada, salida próxima, tiempo excedido, sucia, en limpieza, pendiente de inspección y fuera de servicio.
+- Historial completo de cambios y bloqueos por rango de fechas/horas.
+- Impide asignar habitaciones sucias, bloqueadas o fuera de servicio, salvo excepciones expresamente configuradas y autorizadas que no permitan doble ocupación.
+- La salida deja la habitación pendiente de limpieza; su disponibilidad operativa se recupera conforme al flujo configurado.
+- Incluye colchones de limpieza en el cálculo de disponibilidad cuando así esté configurado.
+
+6. RESERVAS
+
+- Consulta de disponibilidad por fechas y horas, categoría, capacidad y cantidad de habitaciones.
+- Reservas por habitación concreta o por categoría, con control del cupo cuando todavía no exista asignación física.
+- Estados: borrador, retención temporal, confirmada, entrada registrada, completada, cancelada y no presentada; ajusta la separación reserva/estancia si el modelo lo requiere.
+- Canales: recepción, teléfono, web, empresa, agencia y otros configurables.
+- Reservas individuales y grupales, varias habitaciones, huéspedes y pagadores.
+- Cotización, anticipos, garantía, instrucciones, solicitudes especiales y confirmación imprimible.
+- Modificación, reasignación, cancelación y no presentación con motivos y reglas de cobro.
+- Las retenciones temporales expiran y liberan cupo de manera fiable.
+- Prohibir sobreventa por defecto. No habilitar sobreventa como atajo para resolver conflictos de disponibilidad.
+- El inventario de categorías y las asignaciones físicas deben compartir la misma lógica de disponibilidad y no contabilizar dos veces una reserva.
+
+7. TARIFAS PARA HOTEL Y MOTEL
+
+- Hotel: precio por noche, tipo de habitación, ocupación, temporada, día de semana, empresa/agencia y plan de alojamiento.
+- Motel: bloques configurables, por ejemplo 2, 3, 6, 12 o 24 horas; tarifas por fracción o por hora adicional y paquetes nocturnos con ventanas definidas.
+- Operación mixta con reglas explícitas para cambiar de modalidad.
+- Persona adicional, cama extra, servicios incluidos, descuentos, cortesías, tarifas negociadas e impuestos incluidos o añadidos.
+- Prioridades inequívocas si coinciden varias reglas. No acumules recargos o descuentos accidentalmente.
+- Define tolerancias, redondeo, límites exactos de cada bloque, extensiones, entrada anticipada y salida tardía.
+- Calcula importes con precisión decimal y redondeo monetario consistente con ERPNext.
+- Conserva la tarifa y sus reglas aplicadas como una versión histórica. Cambiar el tarifario no debe alterar cargos ya aceptados.
+- Muestra una explicación del cálculo antes de confirmar y al revisar la cuenta.
+- El servidor es la autoridad del tiempo y del importe. El contador de la pantalla es informativo y debe sobrevivir a recargas.
+- Cubrir cruces de medianoche, meses y años; verificar cambios de hora en zonas que los utilicen.
+
+8. ENTRADA, ESTANCIA Y SALIDA
+
+- Entrada desde reserva o ingreso inmediato sin reserva.
+- Registro de huésped, acompañantes y datos exigidos por la política configurada; no recoger información innecesaria.
+- Asignación de habitación, tarifa, fechas/horas, anticipo, garantía y responsable de pago.
+- Cuenta de estancia con alojamiento, servicios, consumos, descuentos, impuestos, pagos y saldo.
+- Cambios de habitación con historial y efectos tarifarios claros.
+- Extensiones sujetas a disponibilidad y nueva cotización antes de confirmar.
+- Varias cuentas por estancia; repartir cargos entre huésped, acompañantes, empresa o agencia sin duplicarlos.
+- Salida con revisión de consumos, inspección si corresponde, aplicación de anticipos, liquidación y comprobantes.
+- Salida a crédito solamente para clientes y usuarios autorizados, conservando la cuenta por cobrar.
+- Las garantías reembolsables se gestionan separadamente de los anticipos de alojamiento; registra su devolución o aplicación autorizada.
+- Después de una salida, genera la tarea de limpieza correspondiente.
+- Las correcciones posteriores requieren permisos, motivo, trazabilidad y documentos de reversión cuando exista efecto financiero.
+
+9. CAJA, COBROS Y CONTABILIDAD
+
+- Turnos de caja con apertura, fondo inicial, responsable, movimientos, retiros, entrega, arqueo por denominaciones y cierre.
+- Medios de pago: efectivo, tarjeta, transferencia y otros configurables. Permitir pagos parciales, combinados y monedas admitidas.
+- Referencia obligatoria para medios bancarios según configuración; tipo de cambio almacenado en la transacción y control del vuelto.
+- Separar ingresos cobrados, ingresos facturados, cuentas por cobrar, anticipos y garantías. Cobrar un anticipo no debe generar automáticamente ingreso por alojamiento.
+- Integrar facturación mediante Sales Invoice y cobros mediante Payment Entry o el mecanismo estándar apropiado para la versión objetivo.
+- Aplicar anticipos y conciliaciones mediante los mecanismos reales de ERPNext, respetando cliente, compañía, moneda y cuentas.
+- Permitir facturación individual, por habitación, por grupo o a empresa, conservando la trazabilidad de cada cargo.
+- Crear notas de crédito y devoluciones con documentos estándar; no modificar importes contabilizados directamente.
+- Configurar centros de costo y cuentas de ingresos/gastos por establecimiento y servicio.
+- Manejar comisiones de tarjeta, retenciones y liquidaciones a través de configuración y documentos estándar cuando apliquen, sin confundir cobro bruto y depósito neto.
+- Definir y documentar cuándo un cargo operativo se convierte en factura o reconocimiento contable. Si implementas devengo diario, usa documentos estándar y evita volver a reconocer ese ingreso al facturar.
+- La facturación o pagos realizados desde ERPNext también deben reflejarse en la estancia; no dependas únicamente de las acciones de tus páginas.
+- Conciliación por estancia y turno contra facturas, pagos, anticipos, garantías y devoluciones.
+- Mostrar efectivo esperado y contado, diferencias y aprobación del supervisor. No ocultar faltantes mediante ajustes automáticos.
+- Mantener saldos por moneda y tratamiento de conversiones explícito. Un pago debe pertenecer a un único turno y tener referencia inequívoca a su origen.
+- Bloquear movimientos ordinarios en turnos cerrados; correcciones mediante proceso autorizado y trazable.
+- No escribir directamente en GL Entry, Payment Ledger Entry ni Stock Ledger Entry. Usa los controladores y documentos estándar.
+
+10. LIMPIEZA, LAVANDERÍA Y MANTENIMIENTO
+
+- Limpieza de salida, estancia y profunda; prioridad, responsable, inicio/fin, checklist y observaciones.
+- Inspección opcional por supervisión antes de liberar la habitación.
+- Registro de daños, objetos olvidados y reposición de artículos, con acceso restringido a los datos necesarios.
+- Control básico de ropa de cama: entregada a lavandería, recibida, pérdida y reposición; integrar existencias si estos artículos se controlan como inventario.
+- Incidencias correctivas y mantenimiento preventivo por habitación o equipo.
+- Bloqueo parcial por intervalo o completo, responsable, repuestos, costos, evidencias y reapertura autorizada.
+- Resolver conflictos entre mantenimiento planificado, reservas existentes y estancias; no cancelar una reserva silenciosamente.
+
+11. CONSUMOS, INVENTARIO, COMPRAS Y SERVICIOS
+
+- Minibar, bebidas, alimentos, room service, lavandería, estacionamiento y otros servicios.
+- Venta directa o cargo a habitación con confirmación de estancia activa y autorización del usuario.
+- Solicitudes de servicio con estados: solicitado, en preparación/en proceso, entregado y cancelado.
+- Almacenes por establecimiento y ubicaciones cuando corresponda, mínimos y alertas de reposición.
+- Integrar recepción de compras, traslados, salidas y ajustes con documentos estándar de ERPNext.
+- Separar mercancía vendida, consumibles de limpieza, mermas y activos.
+- Definir si el inventario se descuenta al entregar o al facturar; impedir el doble descuento.
+- Permitir anulación/devolución mediante el flujo correspondiente y conciliar con la cuenta de estancia.
+- Para restaurante o POS, reutilizar funciones disponibles de ERPNext y completar la integración de cargos a habitación. No desarrollar otro ERP de restaurante innecesariamente.
+- Compras, proveedores, gastos, activos y nómina pueden reutilizar sus módulos estándar. HRMS será opcional y su ausencia no debe impedir el funcionamiento del PMS.
+
+12. CIERRE DIARIO Y AUDITORÍA NOCTURNA
+
+- Fecha operativa independiente de la fecha del reloj, con corte configurable.
+- Detectar llegadas y salidas pendientes, estancias vencidas, cargos sin procesar, caja abierta y diferencias de conciliación.
+- Generar cargos periódicos conforme a las reglas elegidas, sin duplicarlos al repetir el proceso.
+- Revisar cancelaciones, no presentaciones, descuentos, cortesías, devoluciones y cambios manuales.
+- Resumen de ocupación, producción, facturación, cobros y saldos pendientes, diferenciando cada concepto.
+- Cierre autorizado, reporte reproducible e historial de ejecución. La reapertura debe tener permisos y motivo.
+- Poder recuperar una ejecución interrumpida de manera segura y conocer qué operaciones se completaron.
+
+13. REPORTES E INDICADORES
+
+Incluye filtros por compañía, establecimiento, período, categoría, habitación, canal, usuario y turno cuando correspondan; exportación a XLSX/PDF y permisos de acceso.
+
+Reportes mínimos:
+- Disponibilidad, ocupación actual y reservas futuras.
+- Llegadas, salidas, huéspedes alojados, cancelaciones y no presentaciones.
+- Producción por habitación, categoría, servicio, canal y establecimiento.
+- Facturas, cobros por medio de pago, cuentas pendientes, anticipos y garantías.
+- Turnos, arqueos, faltantes/sobrantes, descuentos, devoluciones y cortesías.
+- Limpieza: pendientes, duración y productividad; mantenimiento y habitaciones fuera de servicio.
+- Consumo de inventario, mermas, reposición y costos por centro de costo cuando existan datos.
+- Conciliación entre folios y ERPNext, con diferencias identificables hasta el documento de origen.
+
+Indicadores:
+- Hotel: ocupación por habitación-noche, ADR y RevPAR.
+- Motel: horas ocupadas/horas comercializables, rotaciones por habitación, duración media, ticket medio e ingreso por hora disponible.
+- Define fórmula, período, moneda, fuente, tratamiento de cortesías, bloqueos, impuestos y exclusiones para cada indicador.
+- No mezcles noches con horas ni anticipos con ingresos. No sumes reservas a estancias como si fueran dos ocupaciones.
+- Usa ingreso de alojamiento, sin impuestos ni servicios ajenos, para ADR/RevPAR según la definición documentada; maneja denominadores cero.
+- La utilización horaria no debe superar 100 % por solapamientos o doble conteo. Las rotaciones son un indicador distinto que puede superar una por día.
+
+14. PORTAL DE RESERVAS E INTEGRACIONES
+
+- Incluir portal web opcional, desactivado inicialmente, para consultar categorías/disponibilidad, solicitar o crear reservas bajo políticas configuradas y consultar confirmaciones de forma segura.
+- Debe usar el mismo motor de disponibilidad, tarifas y retenciones de la recepción.
+- Proteger consultas de reservas mediante autenticación o enlaces firmados con caducidad; no exponer información de otros huéspedes.
+- Sin pasarela configurada, admitir solicitud y confirmación manual; nunca mostrar un pago como aprobado sin confirmación real.
+- Preparar APIs documentadas y adaptadores para pasarelas, correo, WhatsApp, canales de reserva y cerraduras.
+- Booking.com, Airbnb, channel managers, mensajería y hardware requieren proveedor, documentación, acceso y credenciales. Trátalos como integraciones externas opcionales, separadas del núcleo obligatorio.
+- Cuando falte acceso externo, entrega contratos/adaptadores y pruebas simuladas claramente identificadas. No presentes una integración simulada como operativa.
+- Validar firmas y evitar duplicados en webhooks; no almacenar datos completos de tarjetas ni secretos en el repositorio.
+
+15. ROLES, SEGURIDAD Y PRIVACIDAD
+
+Roles mínimos: administrador, gerente, supervisor, recepcionista, cajero, limpieza, mantenimiento, contabilidad y auditor de lectura.
+
+- Matriz de permisos por acción, documento, compañía y establecimiento, aplicada en el servidor además de la interfaz.
+- No asumir que un filtro visual o habilitar multicompañía aísla los datos. Verificar listados, enlaces, reportes, exportaciones, archivos, APIs y eventos de tiempo real.
+- No usar ignore_permissions como solución general ni exponer operaciones privadas a Guest.
+- Limpieza y mantenimiento no deben ver documentos de identidad ni información financiera innecesaria.
+- Acceso restringido y archivos privados para identificaciones y evidencias sensibles; políticas configurables de retención de datos.
+- Bitácora con usuario, momento, acción, documento, motivo y valores relevantes para tarifas, descuentos, extensiones, anulaciones, devoluciones y cierres.
+- No permitir borrar movimientos financieros confirmados para ocultar errores. Usar cancelación/reversión conforme al estándar.
+- Modo discreto en el tablero de moteles que oculte nombres y datos personales sin eliminar trazabilidad interna.
+- Proteger endpoints contra acceso a documentos ajenos, entradas inválidas, inyección y exposición de secretos. Aplicar limitación de solicitudes donde corresponda.
+
+16. CONCURRENCIA E INTEGRIDAD: OBLIGATORIO
+
+- Proteger en el servidor las reservas, entradas, cambios de habitación y extensiones con transacciones y un mecanismo de bloqueo o exclusión adecuado a la base de datos utilizada.
+- No basta consultar disponibilidad y luego insertar: dos usuarios simultáneos no deben conseguir la misma habitación o el mismo último cupo.
+- Define intervalos como [inicio, fin), con el margen de limpieza aparte cuando corresponda, y prueba sus límites exactos.
+- No confiar únicamente en un bloqueo de reservas existentes: también debes proteger la ausencia de registros para evitar carreras al reservar una habitación vacía.
+- Distingue restricciones que pueden resolverse con índices únicos de aquellas que requieren bloquear el recurso o cupo e inspeccionar solapamientos dentro de la transacción.
+- Claves de idempotencia para cobros, facturación, cargos periódicos, cierres y webhooks. Reintentar una petición no debe duplicar sus efectos.
+- Definir atomicidad para salida, facturación y cobro. Si parte del proceso depende de un servicio externo, implementar estados recuperables y reconciliación, sin simular una transacción distribuida.
+- Respetar el modelo transaccional de Frappe; no introducir commits intermedios que dejen operaciones parcialmente confirmadas.
+- Evitar sobrescrituras silenciosas entre usuarios mediante control de versión o modificación del documento.
+- Background jobs con reintentos limitados, registro de fallos y acciones de recuperación claras.
+
+17. PRUEBAS Y CRITERIOS DE ACEPTACIÓN
+
+Implementa pruebas significativas de negocio, integración contable, permisos y flujos de interfaz. Incluye como mínimo:
+1) Reserva hotelera de varias noches con anticipo, consumos, saldo y salida.
+2) Ingreso motel por bloque horario, tolerancia, extensión y cruce de medianoche.
+3) Reserva grupal y separación de facturación entre huésped y empresa.
+4) Dos solicitudes simultáneas para la misma habitación: solamente una debe confirmarse.
+5) Último cupo de categoría y conversión de reserva sin habitación a asignación física.
+6) Extensión rechazada por reserva posterior; cambio de habitación con trazabilidad.
+7) Expiración de retención, cancelación, no presentación y devolución parcial.
+8) Doble clic/reintento de cobro y cierre nocturno repetido sin duplicados.
+9) Anticipo aplicado a factura sin doble ingreso y garantía devuelta o aplicada correctamente.
+10) Pagos mixtos y multimoneda, redondeo y arqueo con diferencia.
+11) Restricción de acceso entre establecimientos y compañías, incluyendo API y archivos.
+12) Salida, limpieza, inspección y vuelta a disponibilidad.
+13) Consumo de minibar con una sola salida de inventario y reversión correcta.
+14) Factura/pago creado o cancelado desde ERPNext reflejado en la estancia.
+15) Corte de conexión, error de facturación o fallo de trabajo programado sin cobros fantasma ni estados irrecuperables.
+16) Instalación en sitio limpio y migración de una versión previa de la app sin perder datos.
+
+Usa datos ficticios reproducibles: dos establecimientos, uno hotel y otro motel, con al menos diez habitaciones cada uno, tarifas distintas, reservas, consumos y usuarios por rol. La carga de demostración será explícita y separada de la instalación normal.
+
+Aceptación funcional: un recepcionista debe poder reservar, registrar entrada, agregar un consumo, extender, cobrar y registrar salida desde las Pages. Limpieza debe liberar la habitación desde su página. Contabilidad debe rastrear los documentos resultantes y gerencia consultar reportes conciliables.
+
+Si no puedes ejecutar pruebas por falta de entorno, identifica cuáles no se ejecutaron y por qué. No declares el sistema listo para producción ni todas las pruebas aprobadas sin evidencia.
+
+18. ENTREGABLES
+
+- Repositorio de la app con código completo, estructura nativa, dependencias declaradas y archivos de construcción.
+- DocTypes, controladores, Pages, APIs, permisos, fixtures, hooks, tareas programadas, migraciones y formatos de impresión.
+- Impresiones: confirmación de reserva, registro de huésped, cuenta de estancia, factura según configuración, recibo, arqueo/cierre y órdenes operativas.
+- Diagrama del modelo de datos, estados y principales flujos.
+- Matriz requisito → implementación → prueba → estado, con pendientes explícitos.
+- README en español con versiones soportadas, instalación Bench, configuración, compilación de assets, migración y ejecución de pruebas.
+- Manual breve por rol con los procesos diarios y recuperación ante errores.
+- Documentación de configuración contable, tratamiento de anticipos/garantías y conciliación.
+- Guía de operación: workers, scheduler, monitoreo, respaldos, restauración, actualización y procedimiento de reversión de un despliegue.
+- Generador de datos de demostración y pruebas automatizadas reproducibles.
+- Evidencias de las pruebas realmente ejecutadas y capturas de las páginas cuando el entorno lo permita.
+- Lista diferenciada de funciones completadas, limitaciones verificadas e integraciones externas pendientes de credenciales.
+
+19. ORDEN DE IMPLEMENTACIÓN
+
+Fase 1: inspección del entorno, decisiones de arquitectura, matriz de alcance, modelo, estados y permisos.
+Fase 2: app instalable, configuración, habitaciones, tarifas y disponibilidad protegida contra concurrencia.
+Fase 3: Pages de recepción/reservas, entradas, estancias, extensiones y salidas.
+Fase 4: folios, consumos, facturación, anticipos, garantías, caja y conciliación.
+Fase 5: limpieza, mantenimiento, inventario, servicios y cierre diario.
+Fase 6: reportes, portal opcional e infraestructura para integraciones externas.
+Fase 7: pruebas completas, correcciones, instalación limpia, documentación y entrega.
+
+En cada fase implementa y verifica el flujo correspondiente. Mantén un registro de avance para continuar sin perder decisiones. No reduzcas el alcance obligatorio a un MVP sin indicarlo y acordarlo. No presentes pantallas con botones sin acción como funcionalidades terminadas.
+
+Si el entorno impide terminar una parte, deja el código y las instrucciones verificables de lo que sí puedes completar, explica el bloqueo concreto y continúa con los componentes independientes. No ocultes pendientes.
+
+COMIENZA AHORA
+
+Inspecciona el entorno y el repositorio. Expón brevemente las decisiones necesarias y el orden de trabajo. Después crea o modifica los archivos e inicia la implementación. El objetivo final es una aplicación integral para la operación diaria de hoteles y moteles, sencilla para sus usuarios e integrada de forma verificable con ERPNext.
+
+REFERENCIAS TÉCNICAS DE PARTIDA
+Verifica siempre su correspondencia con la versión objetivo:
+- Page API: https://docs.frappe.io/framework/user/en/api/page
+- Vue dentro de una Desk Page: https://docs.frappe.io/framework/using-vue-inside-a-desk-page
+- Portal Pages: https://docs.frappe.io/framework/user/en/portal-pages
+- Database API y transacciones: https://docs.frappe.io/framework/user/en/api/database
+- Anticipos: https://docs.frappe.io/erpnext/advance-payment-entry

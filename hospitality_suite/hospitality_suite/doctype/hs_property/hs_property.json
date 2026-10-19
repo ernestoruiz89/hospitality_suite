@@ -1,0 +1,287 @@
+{
+ "doctype": "DocType",
+ "name": "HS Property",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "hash",
+ "naming_rule": "Random",
+ "fields": [
+  {
+   "fieldname": "property_name",
+   "label": "Property name",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "company",
+   "label": "Compañía",
+   "fieldtype": "Link",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "mode",
+   "label": "Mode",
+   "fieldtype": "Select",
+   "options": "Hotel\nMotel\nMixed",
+   "reqd": 1,
+   "default": "Hotel"
+  },
+  {
+   "fieldname": "time_zone",
+   "label": "Time zone",
+   "fieldtype": "Data",
+   "default": "America/Managua",
+   "reqd": 1
+  },
+  {
+   "fieldname": "business_date",
+   "label": "Business date",
+   "fieldtype": "Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "close_time",
+   "label": "Close time",
+   "fieldtype": "Time",
+   "default": "06:00:00"
+  },
+  {
+   "fieldname": "currency",
+   "label": "Moneda",
+   "fieldtype": "Link",
+   "options": "Currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "check_in_time",
+   "label": "Check in time",
+   "fieldtype": "Time",
+   "default": "14:00:00"
+  },
+  {
+   "fieldname": "check_out_time",
+   "label": "Check out time",
+   "fieldtype": "Time",
+   "default": "12:00:00"
+  },
+  {
+   "fieldname": "cleaning_minutes",
+   "label": "Cleaning minutes",
+   "fieldtype": "Int",
+   "default": 30
+  },
+  {
+   "fieldname": "inspection_required",
+   "label": "Inspection required",
+   "fieldtype": "Check",
+   "default": 1
+  },
+  {
+   "fieldname": "discreet_mode",
+   "label": "Discreet mode",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "portal_enabled",
+   "label": "Portal enabled",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "financial_enabled",
+   "label": "Financial enabled",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "allow_credit",
+   "label": "Allow credit",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "guest_id_required",
+   "label": "Guest id required",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "hold_minutes",
+   "label": "Hold minutes",
+   "fieldtype": "Int",
+   "default": 15
+  },
+  {
+   "fieldname": "cost_center",
+   "label": "Cost center",
+   "fieldtype": "Link",
+   "options": "Cost Center"
+  },
+  {
+   "fieldname": "warehouse",
+   "label": "Warehouse",
+   "fieldtype": "Link",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "receivable_account",
+   "label": "Receivable account",
+   "fieldtype": "Link",
+   "options": "Account"
+  },
+  {
+   "fieldname": "guarantee_account",
+   "label": "Guarantee account",
+   "fieldtype": "Link",
+   "options": "Account"
+  },
+  {
+   "fieldname": "lodging_item",
+   "label": "Lodging item",
+   "fieldtype": "Link",
+   "options": "Item"
+  },
+  {
+   "fieldname": "tax_template",
+   "label": "Tax template",
+   "fieldtype": "Link",
+   "options": "Sales Taxes and Charges Template"
+  },
+  {
+   "fieldname": "tax_policy_confirmed",
+   "label": "Tax policy confirmed",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "brand_name",
+   "label": "Brand name",
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "retention_days",
+   "label": "Retention days",
+   "fieldtype": "Int",
+   "default": 365
+  }
+ ],
+ "field_order": [
+  "property_name",
+  "company",
+  "mode",
+  "time_zone",
+  "business_date",
+  "close_time",
+  "currency",
+  "check_in_time",
+  "check_out_time",
+  "cleaning_minutes",
+  "inspection_required",
+  "discreet_mode",
+  "portal_enabled",
+  "financial_enabled",
+  "allow_credit",
+  "guest_id_required",
+  "hold_minutes",
+  "cost_center",
+  "warehouse",
+  "receivable_account",
+  "guarantee_account",
+  "lodging_item",
+  "tax_template",
+  "tax_policy_confirmed",
+  "brand_name",
+  "retention_days"
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Administrator",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Supervisor",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Receptionist",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Cashier",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Housekeeping",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Maintenance",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Accountant",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Auditor",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0
+}

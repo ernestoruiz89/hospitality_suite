@@ -1,0 +1,215 @@
+{
+ "doctype": "DocType",
+ "name": "HS Stay",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "hash",
+ "naming_rule": "Random",
+ "fields": [
+  {
+   "fieldname": "company",
+   "label": "Compañía",
+   "fieldtype": "Link",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "property",
+   "label": "Establecimiento",
+   "fieldtype": "Link",
+   "options": "HS Property",
+   "reqd": 1
+  },
+  {
+   "fieldname": "booking",
+   "label": "Booking",
+   "fieldtype": "Link",
+   "options": "HS Booking"
+  },
+  {
+   "fieldname": "guest",
+   "label": "Guest",
+   "fieldtype": "Link",
+   "options": "HS Guest",
+   "reqd": 1
+  },
+  {
+   "fieldname": "customer",
+   "label": "Cliente pagador",
+   "fieldtype": "Link",
+   "options": "Customer",
+   "reqd": 1
+  },
+  {
+   "fieldname": "room",
+   "label": "Habitación",
+   "fieldtype": "Link",
+   "options": "HS Room",
+   "reqd": 1
+  },
+  {
+   "fieldname": "starts_at",
+   "label": "Desde",
+   "fieldtype": "Datetime",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ends_at",
+   "label": "Hasta",
+   "fieldtype": "Datetime",
+   "reqd": 1
+  },
+  {
+   "fieldname": "actual_check_in",
+   "label": "Actual check in",
+   "fieldtype": "Datetime"
+  },
+  {
+   "fieldname": "actual_check_out",
+   "label": "Actual check out",
+   "fieldtype": "Datetime"
+  },
+  {
+   "fieldname": "status",
+   "label": "Estado",
+   "fieldtype": "Select",
+   "options": "Active\nChecked Out",
+   "reqd": 1,
+   "default": "Active"
+  },
+  {
+   "fieldname": "rate",
+   "label": "Rate",
+   "fieldtype": "Link",
+   "options": "HS Rate",
+   "reqd": 1
+  },
+  {
+   "fieldname": "currency",
+   "label": "Moneda",
+   "fieldtype": "Link",
+   "options": "Currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amount",
+   "label": "Amount",
+   "fieldtype": "Currency",
+   "options": "currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "quote_snapshot",
+   "label": "Quote snapshot",
+   "fieldtype": "Code",
+   "options": "JSON"
+  },
+  {
+   "fieldname": "guests",
+   "label": "Guests",
+   "fieldtype": "Table",
+   "options": "HS Stay Guest"
+  },
+  {
+   "fieldname": "reason",
+   "label": "Reason",
+   "fieldtype": "Small Text"
+  }
+ ],
+ "field_order": [
+  "company",
+  "property",
+  "booking",
+  "guest",
+  "customer",
+  "room",
+  "starts_at",
+  "ends_at",
+  "actual_check_in",
+  "actual_check_out",
+  "status",
+  "rate",
+  "currency",
+  "amount",
+  "quote_snapshot",
+  "guests",
+  "reason"
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Administrator",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Supervisor",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Receptionist",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Cashier",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Accountant",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Auditor",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0
+}

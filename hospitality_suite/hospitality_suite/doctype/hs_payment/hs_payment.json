@@ -1,0 +1,221 @@
+{
+ "doctype": "DocType",
+ "name": "HS Payment",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "hash",
+ "naming_rule": "Random",
+ "fields": [
+  {
+   "fieldname": "company",
+   "label": "Compañía",
+   "fieldtype": "Link",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "property",
+   "label": "Establecimiento",
+   "fieldtype": "Link",
+   "options": "HS Property",
+   "reqd": 1
+  },
+  {
+   "fieldname": "stay",
+   "label": "Stay",
+   "fieldtype": "Link",
+   "options": "HS Stay"
+  },
+  {
+   "fieldname": "booking",
+   "label": "Booking",
+   "fieldtype": "Link",
+   "options": "HS Booking"
+  },
+  {
+   "fieldname": "folio",
+   "label": "Folio",
+   "fieldtype": "Link",
+   "options": "HS Folio"
+  },
+  {
+   "fieldname": "customer",
+   "label": "Cliente pagador",
+   "fieldtype": "Link",
+   "options": "Customer",
+   "reqd": 1
+  },
+  {
+   "fieldname": "shift",
+   "label": "Shift",
+   "fieldtype": "Link",
+   "options": "HS Shift",
+   "reqd": 1
+  },
+  {
+   "fieldname": "method",
+   "label": "Method",
+   "fieldtype": "Link",
+   "options": "HS Payment Method",
+   "reqd": 1
+  },
+  {
+   "fieldname": "currency",
+   "label": "Moneda",
+   "fieldtype": "Link",
+   "options": "Currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amount",
+   "label": "Amount",
+   "fieldtype": "Currency",
+   "options": "currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "exchange_rate",
+   "label": "Exchange rate",
+   "fieldtype": "Float",
+   "default": 1
+  },
+  {
+   "fieldname": "base_amount",
+   "label": "Base amount",
+   "fieldtype": "Currency"
+  },
+  {
+   "fieldname": "kind",
+   "label": "Kind",
+   "fieldtype": "Select",
+   "options": "Payment\nAdvance\nGuarantee\nRefund\nGuarantee Refund\nWithdrawal",
+   "reqd": 1,
+   "default": "Payment"
+  },
+  {
+   "fieldname": "status",
+   "label": "Estado",
+   "fieldtype": "Select",
+   "options": "Posted\nCancelled",
+   "reqd": 1,
+   "default": "Posted"
+  },
+  {
+   "fieldname": "payment_entry",
+   "label": "Payment entry",
+   "fieldtype": "Link",
+   "options": "Payment Entry"
+  },
+  {
+   "fieldname": "journal_entry",
+   "label": "Journal entry",
+   "fieldtype": "Link",
+   "options": "Journal Entry"
+  },
+  {
+   "fieldname": "reference",
+   "label": "Reference",
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "source_payment",
+   "label": "Source payment",
+   "fieldtype": "Link",
+   "options": "HS Payment"
+  },
+  {
+   "fieldname": "reason",
+   "label": "Reason",
+   "fieldtype": "Small Text"
+  }
+ ],
+ "field_order": [
+  "company",
+  "property",
+  "stay",
+  "booking",
+  "folio",
+  "customer",
+  "shift",
+  "method",
+  "currency",
+  "amount",
+  "exchange_rate",
+  "base_amount",
+  "kind",
+  "status",
+  "payment_entry",
+  "journal_entry",
+  "reference",
+  "source_payment",
+  "reason"
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Administrator",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Supervisor",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Cashier",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Accountant",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Auditor",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0
+}

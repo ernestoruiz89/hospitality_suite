@@ -1,0 +1,34 @@
+{
+ "doctype": "Page",
+ "name": "hospitality-guests",
+ "page_name": "hospitality-guests",
+ "title": "Clientes y huéspedes",
+ "module": "Hospitality Suite",
+ "standard": "Yes",
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "HS Administrator"
+  },
+  {
+   "role": "HS Manager"
+  },
+  {
+   "role": "HS Supervisor"
+  },
+  {
+   "role": "HS Receptionist"
+  },
+  {
+   "role": "HS Cashier"
+  },
+  {
+   "role": "HS Accountant"
+  },
+  {
+   "role": "HS Auditor"
+  }
+ ]
+}

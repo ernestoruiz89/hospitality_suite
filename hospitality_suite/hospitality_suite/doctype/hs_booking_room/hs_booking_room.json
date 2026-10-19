@@ -1,0 +1,49 @@
+{
+ "doctype": "DocType",
+ "name": "HS Booking Room",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "hash",
+ "naming_rule": "Random",
+ "fields": [
+  {
+   "fieldname": "category",
+   "label": "Categoría",
+   "fieldtype": "Link",
+   "options": "HS Category",
+   "reqd": 1
+  },
+  {
+   "fieldname": "room",
+   "label": "Habitación",
+   "fieldtype": "Link",
+   "options": "HS Room"
+  },
+  {
+   "fieldname": "people",
+   "label": "People",
+   "fieldtype": "Int",
+   "default": 1
+  },
+  {
+   "fieldname": "rate",
+   "label": "Rate",
+   "fieldtype": "Link",
+   "options": "HS Rate",
+   "reqd": 1
+  }
+ ],
+ "field_order": [
+  "category",
+  "room",
+  "people",
+  "rate"
+ ],
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0,
+ "istable": 1
+}

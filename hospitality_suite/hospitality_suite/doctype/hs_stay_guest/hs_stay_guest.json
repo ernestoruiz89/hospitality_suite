@@ -1,0 +1,36 @@
+{
+ "doctype": "DocType",
+ "name": "HS Stay Guest",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "hash",
+ "naming_rule": "Random",
+ "fields": [
+  {
+   "fieldname": "guest",
+   "label": "Guest",
+   "fieldtype": "Link",
+   "options": "HS Guest",
+   "reqd": 1
+  },
+  {
+   "fieldname": "relationship",
+   "label": "Relationship",
+   "fieldtype": "Select",
+   "options": "Principal\nAcompañante",
+   "reqd": 1,
+   "default": "Principal"
+  }
+ ],
+ "field_order": [
+  "guest",
+  "relationship"
+ ],
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0,
+ "istable": 1
+}

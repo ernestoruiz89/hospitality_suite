@@ -1,0 +1,19 @@
+[build-system]
+requires = ["flit_core>=3.9,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "hospitality_suite"
+authors = [{name = "Hospitality Suite Contributors"}]
+description = "Operación de hoteles y moteles sobre Frappe y ERPNext"
+readme = "README.md"
+requires-python = ">=3.14"
+dynamic = ["version"]
+dependencies = []
+
+[tool.bench.frappe-dependencies]
+frappe = ">=16.52.0,<17.0.0"
+erpnext = ">=16.51.1,<17.0.0"
+
+[tool.ruff]
+line-length = 110

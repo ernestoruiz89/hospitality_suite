@@ -1,0 +1,213 @@
+{
+ "doctype": "DocType",
+ "name": "HS Booking",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "hash",
+ "naming_rule": "Random",
+ "fields": [
+  {
+   "fieldname": "company",
+   "label": "Compañía",
+   "fieldtype": "Link",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "property",
+   "label": "Establecimiento",
+   "fieldtype": "Link",
+   "options": "HS Property",
+   "reqd": 1
+  },
+  {
+   "fieldname": "customer",
+   "label": "Cliente pagador",
+   "fieldtype": "Link",
+   "options": "Customer",
+   "reqd": 1
+  },
+  {
+   "fieldname": "guest",
+   "label": "Guest",
+   "fieldtype": "Link",
+   "options": "HS Guest"
+  },
+  {
+   "fieldname": "starts_at",
+   "label": "Desde",
+   "fieldtype": "Datetime",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ends_at",
+   "label": "Hasta",
+   "fieldtype": "Datetime",
+   "reqd": 1
+  },
+  {
+   "fieldname": "status",
+   "label": "Estado",
+   "fieldtype": "Select",
+   "options": "Draft\nHold\nConfirmed\nChecked In\nCompleted\nCancelled\nNo Show",
+   "reqd": 1,
+   "default": "Draft"
+  },
+  {
+   "fieldname": "hold_until",
+   "label": "Hold until",
+   "fieldtype": "Datetime"
+  },
+  {
+   "fieldname": "channel",
+   "label": "Channel",
+   "fieldtype": "Data",
+   "default": "Recepción"
+  },
+  {
+   "fieldname": "instructions",
+   "label": "Instructions",
+   "fieldtype": "Small Text"
+  },
+  {
+   "fieldname": "rooms",
+   "label": "Rooms",
+   "fieldtype": "Table",
+   "options": "HS Booking Room",
+   "reqd": 1
+  },
+  {
+   "fieldname": "reason",
+   "label": "Reason",
+   "fieldtype": "Small Text"
+  },
+  {
+   "fieldname": "currency",
+   "label": "Moneda",
+   "fieldtype": "Link",
+   "options": "Currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amount",
+   "label": "Amount",
+   "fieldtype": "Currency",
+   "options": "currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "quote_snapshot",
+   "label": "Quote snapshot",
+   "fieldtype": "Code",
+   "options": "JSON"
+  },
+  {
+   "fieldname": "portal_token_hash",
+   "label": "Portal token hash",
+   "fieldtype": "Data",
+   "hidden": 1
+  },
+  {
+   "fieldname": "portal_expires_at",
+   "label": "Portal expires at",
+   "fieldtype": "Datetime",
+   "hidden": 1
+  }
+ ],
+ "field_order": [
+  "company",
+  "property",
+  "customer",
+  "guest",
+  "starts_at",
+  "ends_at",
+  "status",
+  "hold_until",
+  "channel",
+  "instructions",
+  "rooms",
+  "reason",
+  "currency",
+  "amount",
+  "quote_snapshot",
+  "portal_token_hash",
+  "portal_expires_at"
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Administrator",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Supervisor",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Receptionist",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Cashier",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Accountant",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Auditor",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0
+}

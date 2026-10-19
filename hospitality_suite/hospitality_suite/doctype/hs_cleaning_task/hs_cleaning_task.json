@@ -1,0 +1,204 @@
+{
+ "doctype": "DocType",
+ "name": "HS Cleaning Task",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "hash",
+ "naming_rule": "Random",
+ "fields": [
+  {
+   "fieldname": "company",
+   "label": "Compañía",
+   "fieldtype": "Link",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "property",
+   "label": "Establecimiento",
+   "fieldtype": "Link",
+   "options": "HS Property",
+   "reqd": 1
+  },
+  {
+   "fieldname": "room",
+   "label": "Habitación",
+   "fieldtype": "Link",
+   "options": "HS Room",
+   "reqd": 1
+  },
+  {
+   "fieldname": "stay",
+   "label": "Stay",
+   "fieldtype": "Link",
+   "options": "HS Stay"
+  },
+  {
+   "fieldname": "kind",
+   "label": "Kind",
+   "fieldtype": "Select",
+   "options": "Departure\nStay\nDeep",
+   "reqd": 1,
+   "default": "Departure"
+  },
+  {
+   "fieldname": "priority",
+   "label": "Priority",
+   "fieldtype": "Select",
+   "options": "Normal\nHigh\nUrgent",
+   "reqd": 1,
+   "default": "Normal"
+  },
+  {
+   "fieldname": "assigned_to",
+   "label": "Assigned to",
+   "fieldtype": "Link",
+   "options": "User"
+  },
+  {
+   "fieldname": "status",
+   "label": "Estado",
+   "fieldtype": "Select",
+   "options": "Pending\nIn Progress\nInspection\nCompleted",
+   "reqd": 1,
+   "default": "Pending"
+  },
+  {
+   "fieldname": "started_at",
+   "label": "Started at",
+   "fieldtype": "Datetime"
+  },
+  {
+   "fieldname": "completed_at",
+   "label": "Completed at",
+   "fieldtype": "Datetime"
+  },
+  {
+   "fieldname": "checklist",
+   "label": "Checklist",
+   "fieldtype": "Code",
+   "options": "JSON"
+  },
+  {
+   "fieldname": "notes",
+   "label": "Notes",
+   "fieldtype": "Small Text"
+  },
+  {
+   "fieldname": "inspected_by",
+   "label": "Inspected by",
+   "fieldtype": "Link",
+   "options": "User"
+  }
+ ],
+ "field_order": [
+  "company",
+  "property",
+  "room",
+  "stay",
+  "kind",
+  "priority",
+  "assigned_to",
+  "status",
+  "started_at",
+  "completed_at",
+  "checklist",
+  "notes",
+  "inspected_by"
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Administrator",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Supervisor",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Receptionist",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Cashier",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Housekeeping",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Maintenance",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Accountant",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Auditor",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0
+}

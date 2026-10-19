@@ -1,0 +1,246 @@
+{
+ "doctype": "DocType",
+ "name": "HS Rate",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "hash",
+ "naming_rule": "Random",
+ "fields": [
+  {
+   "fieldname": "company",
+   "label": "Compañía",
+   "fieldtype": "Link",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "property",
+   "label": "Establecimiento",
+   "fieldtype": "Link",
+   "options": "HS Property",
+   "reqd": 1
+  },
+  {
+   "fieldname": "title",
+   "label": "Title",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "category",
+   "label": "Categoría",
+   "fieldtype": "Link",
+   "options": "HS Category",
+   "reqd": 1
+  },
+  {
+   "fieldname": "mode",
+   "label": "Mode",
+   "fieldtype": "Select",
+   "options": "Hotel\nMotel",
+   "reqd": 1,
+   "default": "Hotel"
+  },
+  {
+   "fieldname": "currency",
+   "label": "Moneda",
+   "fieldtype": "Link",
+   "options": "Currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amount",
+   "label": "Amount",
+   "fieldtype": "Currency",
+   "options": "currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "block_hours",
+   "label": "Block hours",
+   "fieldtype": "Float",
+   "default": 3
+  },
+  {
+   "fieldname": "extra_hour_rate",
+   "label": "Extra hour rate",
+   "fieldtype": "Currency",
+   "options": "currency"
+  },
+  {
+   "fieldname": "grace_minutes",
+   "label": "Grace minutes",
+   "fieldtype": "Int",
+   "default": 0
+  },
+  {
+   "fieldname": "rounding_minutes",
+   "label": "Rounding minutes",
+   "fieldtype": "Int",
+   "default": 60
+  },
+  {
+   "fieldname": "additional_person_rate",
+   "label": "Additional person rate",
+   "fieldtype": "Currency",
+   "options": "currency"
+  },
+  {
+   "fieldname": "included_people",
+   "label": "Included people",
+   "fieldtype": "Int",
+   "default": 2
+  },
+  {
+   "fieldname": "extra_bed_rate",
+   "label": "Extra bed rate",
+   "fieldtype": "Currency",
+   "options": "currency"
+  },
+  {
+   "fieldname": "priority",
+   "label": "Priority",
+   "fieldtype": "Int",
+   "default": 10
+  },
+  {
+   "fieldname": "valid_from",
+   "label": "Valid from",
+   "fieldtype": "Date"
+  },
+  {
+   "fieldname": "valid_to",
+   "label": "Valid to",
+   "fieldtype": "Date"
+  },
+  {
+   "fieldname": "weekdays",
+   "label": "Weekdays",
+   "fieldtype": "Data",
+   "description": "0=lunes ... 6=domingo; vacío=todos"
+  },
+  {
+   "fieldname": "customer",
+   "label": "Cliente pagador",
+   "fieldtype": "Link",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "night_start",
+   "label": "Night start",
+   "fieldtype": "Time"
+  },
+  {
+   "fieldname": "night_end",
+   "label": "Night end",
+   "fieldtype": "Time"
+  },
+  {
+   "fieldname": "active",
+   "label": "Active",
+   "fieldtype": "Check",
+   "default": 1
+  }
+ ],
+ "field_order": [
+  "company",
+  "property",
+  "title",
+  "category",
+  "mode",
+  "currency",
+  "amount",
+  "block_hours",
+  "extra_hour_rate",
+  "grace_minutes",
+  "rounding_minutes",
+  "additional_person_rate",
+  "included_people",
+  "extra_bed_rate",
+  "priority",
+  "valid_from",
+  "valid_to",
+  "weekdays",
+  "customer",
+  "night_start",
+  "night_end",
+  "active"
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Administrator",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Supervisor",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Receptionist",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Cashier",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Accountant",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Auditor",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0
+}

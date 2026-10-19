@@ -1,0 +1,40 @@
+{
+ "doctype": "Page",
+ "name": "hospitality-maintenance",
+ "page_name": "hospitality-maintenance",
+ "title": "Mantenimiento",
+ "module": "Hospitality Suite",
+ "standard": "Yes",
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "HS Administrator"
+  },
+  {
+   "role": "HS Manager"
+  },
+  {
+   "role": "HS Supervisor"
+  },
+  {
+   "role": "HS Receptionist"
+  },
+  {
+   "role": "HS Cashier"
+  },
+  {
+   "role": "HS Housekeeping"
+  },
+  {
+   "role": "HS Maintenance"
+  },
+  {
+   "role": "HS Accountant"
+  },
+  {
+   "role": "HS Auditor"
+  }
+ ]
+}
