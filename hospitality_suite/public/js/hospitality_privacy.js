@@ -15,6 +15,6 @@
     },"Revisar alcance");};
   Desk.prototype.action_retry_retention=async function(id){const run=this.data.retention_runs.find(r=>r.name===id),key=frappe.utils.get_random(24);return this.dialog("Reintentar archivos pendientes",[f("reason","Corrección realizada / motivo","Small Text",{reqd:1})],async(v,d)=>{await this.mutate("retry_retention",{run:id,modified:run.modified,reason:v.reason},key);d.hide();},"Encolar reintento");};
   const setup=Desk.prototype.render_setup;
-  Desk.prototype.render_setup=function(el){setup.call(this,el);el.find(".hs-shortcuts").append(this.button("retention_policy","14. Retención de datos"));};
+  Desk.prototype.render_setup=function(el){setup.call(this,el);el.find(".hs-shortcuts").append(this.button("retention_policy","14. Retención de datos")+this.button("portal_settings","15. Portal de reservas"));};
   Desk.prototype.action_retention_policy=async function(){const config=await this.call("configuration",{property_name:this.property}),key=frappe.utils.get_random(24);return this.dialog("Política de retención revisada",[f("retention_days","Días de conservación (0 desactiva; hasta 36500)","Int",{default:config.retention_days})],async(v,d)=>{await this.call("save_setup",{property_name:this.property,section:"property",data:JSON.stringify(v),request_key:key,expected_modified:config.modified});d.hide();await this.load();});};
 })();

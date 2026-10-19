@@ -46,6 +46,21 @@ class TestPortal(IntegrationTestCase):
         self.assertEqual(request["hold_until"],repeat["hold_until"])
         token=request["confirmation_url"].split("token=")[1]
         result=portal.confirmation(token)
+        # Exercise Frappe's hyphen-to-underscore website controller discovery,
+        # including the real template, rather than only the service method.
+        from frappe.website.page_renderers.template_page import TemplatePage
+        previous_form=frappe.local.form_dict
+        try:
+            frappe.local.form_dict=frappe._dict(token=token)
+            page=TemplatePage("hospitality-confirmation")
+            html=page.get_html()
+            self.assertIn("Solicitud recibida; pendiente de confirmación manual",html)
+            self.assertIn("Esta página no acredita un pago",html)
+            self.assertIn("Cupo conservado hasta",html)
+            self.assertIn(result["hold_until"].strftime("%d/%m/%Y %H:%M"),html)
+            self.assertNotIn(data["email"],html)
+        finally:
+            frappe.local.form_dict=previous_form
         self.assertNotIn("full_name",result)
         self.assertNotIn("email",result)
         self.assertEqual(result["amount"],6000)

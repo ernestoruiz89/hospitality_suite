@@ -1,0 +1,22 @@
+TAP version 13
+# Subtest: editing dates while a quote is in flight invalidates its response
+ok 1 - editing dates while a quote is in flight invalidates its response
+  ---
+  duration_ms: 1.7585
+  type: 'test'
+  ...
+# Subtest: an uncertain request unlocks controls and retries the same quote and key
+ok 2 - an uncertain request unlocks controls and retries the same quote and key
+  ---
+  duration_ms: 1.5327
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 7.8937

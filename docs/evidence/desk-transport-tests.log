@@ -2,39 +2,45 @@ TAP version 13
 # Subtest: an older success cannot overwrite a newer property response
 ok 1 - an older success cannot overwrite a newer property response
   ---
-  duration_ms: 2.8087
+  duration_ms: 2.9127
   type: 'test'
   ...
 # Subtest: an old failure cannot clear busy or replace a newer result with an error
 ok 2 - an old failure cannot clear busy or replace a newer result with an error
   ---
-  duration_ms: 0.8681
+  duration_ms: 0.7907
   type: 'test'
   ...
 # Subtest: an invalidation during a failed mutation is refreshed once the request ends
 ok 3 - an invalidation during a failed mutation is refreshed once the request ends
   ---
-  duration_ms: 1.1989
+  duration_ms: 1.1334
   type: 'test'
   ...
 # Subtest: dialog keeps numeric edits across row refreshes and leaves untouched hidden rows alone
 ok 4 - dialog keeps numeric edits across row refreshes and leaves untouched hidden rows alone
   ---
-  duration_ms: 1.6814
+  duration_ms: 1.9868
   type: 'test'
   ...
 # Subtest: a partly arrived group exposes its remaining numbered request and valid actions
 ok 5 - a partly arrived group exposes its remaining numbered request and valid actions
   ---
-  duration_ms: 2.3242
+  duration_ms: 2.3595
   type: 'test'
   ...
-1..5
-# tests 5
+# Subtest: a native business rejection keeps its server message; a lost response gets recovery guidance
+ok 6 - a native business rejection keeps its server message; a lost response gets recovery guidance
+  ---
+  duration_ms: 0.966
+  type: 'test'
+  ...
+1..6
+# tests 6
 # suites 0
-# pass 5
+# pass 6
 # fail 0
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 14.8375
+# duration_ms 16.3879

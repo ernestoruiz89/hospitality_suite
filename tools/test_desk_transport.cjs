@@ -74,3 +74,12 @@ test('a partly arrived group exposes its remaining numbered request and valid ac
   info.allocations=[];let message;context.__=value=>value;context.frappe.msgprint=value=>{message=value;};fields=undefined;
   await desk.action_booking('group');assert.equal(fields,undefined);assert(message);
 });
+test('a native business rejection keeps its server message; a lost response gets recovery guidance',async()=>{
+  const {desk,context}=fixture();let submit;const messages=[];
+  context.frappe.msgprint=message=>messages.push(message);
+  const primary={off(){return this;},on(event,callback){submit=callback;return this;},prop(){return this;}};
+  context.frappe.ui={Dialog:class{constructor(){this.fields_dict={};this.$wrapper={on(){}};}get_primary_btn(){return primary;}show(){}get_values(){return{};}}};
+  let error={status:417,responseJSON:{_server_messages:'["Cupo agotado"]'}};
+  await desk.dialog('Request',[],async()=>{throw error;});await submit();assert.equal(messages.length,0);
+  error={status:0};await submit();assert.equal(messages.length,1);assert.equal(messages[0].title,'Sin confirmación del servidor');
+});

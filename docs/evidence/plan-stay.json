@@ -1,0 +1,25 @@
+{
+  "synthetic": true,
+  "rate": "8b4tjsft1p",
+  "amount": 1600.0,
+  "priority": 30,
+  "valid_from": "2026-10-19",
+  "valid_to": "2026-10-19",
+  "included": [
+    {
+      "item": "HS-DEMO-WATER",
+      "quantity": 1.0,
+      "basis": "Stay"
+    }
+  ],
+  "booking": "9mfda664id",
+  "stay": "9mfspa61cd",
+  "room": "H104",
+  "accepted_amount": 1600.0,
+  "entitlements": [
+    {
+      "item": "HS-DEMO-WATER",
+      "quantity": "1.0"
+    }
+  ]
+}

@@ -122,7 +122,8 @@ def confirmation(token):
     doc=frappe.get_doc(data["doctype"],data["name"])
     prop=enabled(doc.property)
     return dict(property_name=prop.property_name,status=doc.status,starts_at=local(doc.starts_at,prop),ends_at=local(doc.ends_at,prop),
-                hold_until=doc.get("hold_until"),currency=doc.currency,amount=doc.amount,time_zone=prop.time_zone)
+                hold_until=local(doc.hold_until,prop) if doc.get("hold_until") else None,
+                currency=doc.currency,amount=doc.amount,time_zone=prop.time_zone)
 
 
 def link(prop,data):

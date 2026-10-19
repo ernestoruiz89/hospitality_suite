@@ -65,3 +65,16 @@ El núcleo de Frappe/ERPNext se comprobó sin cambios. Los pendientes obligatori
 30. `30-grupo-salidas-escritorio.png`: ambas salidas registradas a 1280×900; se restauró el viewport habitual.
 
 `group-reserved/modified/stays/companions/billed/checked-out.json` son puntos de control de solo lectura del mismo recorrido. Acreditan asignaciones sin habitación, conservación 2/1, dos entradas, acompañante, una factura Company de dos alojamientos C$6000, factura personal C$30, pagos estándar y stock único. El último incluye cierre contado/esperado C$6030, diferencia cero, reserva Completed, ambas salidas y dos tareas de limpieza pendientes. No declara que esas tareas nuevas ya estén inspeccionadas.
+
+31. `31-configuracion-documentos.png`: series y formatos guardados/reabiertos.
+32. `32-plan-incluido-configuracion.png`: tarifa por fecha/prioridad con agua incluida.
+33. `33-plan-cotizacion.png`: C$1600 y una unidad por estancia.
+34. `34-plan-cupo-rechazado.png`: segunda unidad rechazada, sin reintento de red sugerido.
+35. `35-extension-conflictiva-rechazada.png`: conflicto con reserva posterior.
+36. `36-plan-cambio-extension.png`: H105, salida 21/10 09:30 y C$3100. plan-*.json acredita segmentos contiguos, dos cargos y stock/beneficio únicos; fixture sigue abierto sin cobrar.
+37. `37-portal-solicitud-visitante.png`: confirmación firmada con vencimiento; la solicitud se creó como Guest antes del nuevo inicio de sesión de gerencia.
+38. `38-portal-convertido.png`: conversión manual. portal-converted.json acredita owner Guest, reserva Web, una asignación activa y ningún pago.
+39. `39-configuracion-acceso-denegado.png`: recepción no puede abrir la Page de configuración.
+40. `40-configuracion-roles.png`: formulario administrativo con nueve roles en español; no se concedieron nuevos accesos desde el navegador.
+
+portal-ui-tests.log contiene dos pruebas aprobadas; desk-transport-tests.log contiene seis. La prueba nativa del portal ahora renderiza la ruta real de confirmación y valida vencimiento y ausencia del correo del visitante.

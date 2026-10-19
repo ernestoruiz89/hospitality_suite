@@ -79,7 +79,7 @@ bench --site hospitality.localhost execute hospitality_suite.tests.concurrency.v
 bench --site hospitality.localhost execute hospitality_suite.tests.concurrency.verify_category
 ```
 
-Las cinco pruebas de orden de respuestas, recuperación, edición numérica y acciones de grupos en Pages se ejecutan con `node tools/test_desk_transport.cjs`. Los ensayos reales de sesiones, corte y respuesta perdida se describen en docs/OPERACION.md.
+Las seis pruebas de orden de respuestas, recuperación, edición numérica, acciones de grupos y errores de negocio en Pages se ejecutan con `node tools/test_desk_transport.cjs`. Las dos pruebas del portal se ejecutan con `node tools/test_portal_ui.cjs` y cubren cotizaciones obsoletas y reintentos con la misma referencia. Los ensayos reales de sesiones, corte y respuesta perdida se describen en docs/OPERACION.md.
 
 Los helpers de concurrencia están limitados al sitio sintético y conservan anulaciones auditadas. No son pruebas que deban ejecutarse contra clientes reales.
 
@@ -91,4 +91,4 @@ El núcleo incluye disponibilidad serializada, snapshots tarifarios, grupos, fol
 
 La retención de identificaciones y evidencias requiere revisión de gerencia y una política por establecimiento; los archivos se eliminan mediante outbox después del commit. Su alcance y recuperación están en docs/OPERACION.md.
 
-La matriz distingue lo implementado de lo probado y lo pendiente: mantenimiento detallado, servicios incluidos, ampliación de seguridad, red/tiempo real, móvil, recorridos adicionales y recuperación de despliegue requieren cierre. Pasarelas, canales, mensajería y cerraduras solo tienen contratos; no hay proveedor real configurado ni pagos simulados como liquidados.
+La matriz distingue lo implementado de lo probado y lo pendiente. Mantenimiento, planes incluidos, portal Guest, grupos y fallos de transporte ya tienen recorridos de navegador; faltan ampliación de inventario móvil y auditoría/recuperación final de despliegue. Pasarelas, canales, mensajería y cerraduras solo tienen contratos; no hay proveedor real configurado ni pagos simulados como liquidados.

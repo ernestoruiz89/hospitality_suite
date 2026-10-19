@@ -73,9 +73,9 @@ def seed():
     from erpnext.setup.setup_wizard.operations.install_fixtures import install as install_erp_defaults
     if not frappe.db.exists("Warehouse Type", "Transit"):
         install_erp_defaults("Nicaragua")
-    frappe.db.set_single_value("System Settings", "time_zone", "America/Managua")
-    frappe.db.set_single_value("System Settings", "language", "es")
-    frappe.db.set_single_value("System Settings", "country", "Nicaragua")
+    settings=frappe.get_doc("System Settings")
+    settings.update(dict(time_zone="America/Managua",language="es",country="Nicaragua"))
+    settings.save()
     company_name = "Alojamiento Demostración"
     if not frappe.db.exists("Company", company_name):
         company = frappe.get_doc(dict(doctype="Company", company_name=company_name, abbr="HSD", country="Nicaragua",

@@ -1,0 +1,17 @@
+{
+  "synthetic": true,
+  "request": "guqk0ou0hv",
+  "request_owner": "Guest",
+  "status": "Converted",
+  "booking": "i99qbv6dtl",
+  "booking_status": "Confirmed",
+  "channel": "Web",
+  "amount": 1500.0,
+  "starts_at": "2026-10-23 14:00:00",
+  "ends_at": "2026-10-24 12:00:00",
+  "rooms": 1,
+  "request_active_allocations": 0,
+  "booking_active_allocations": 1,
+  "payments": 0,
+  "stays": 0
+}
