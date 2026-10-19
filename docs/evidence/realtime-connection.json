@@ -1,0 +1,11 @@
+{
+  "site": "hospitality.localhost",
+  "browser_url": "http://localhost:8086/desk/hospitality-suite/hospitality-maintenance",
+  "authenticated_user": "supervisor@hospitality.example.invalid",
+  "dev_server": 1,
+  "socketio_port": 9001,
+  "ui_status": "● Tiempo real conectado",
+  "console_errors_after_reload": [],
+  "two_session_cut_test_executed": false,
+  "evidence": "15-equipo-evidencia-resolucion.png"
+}

@@ -89,16 +89,32 @@ def maintenance(prop, data):
         doc.status, doc.notes = target, data.get("notes",doc.notes)
         doc.save()
     else:
-        room = document("HS Room", data["room"], "maintain")
+        from hospitality_suite.service import current_all
+        equipment=document("HS Equipment",data["equipment"],"maintain") if data.get("equipment") else None
+        if equipment and (not equipment.active or equipment.property!=prop.name):
+            frappe.throw("Seleccione un equipo activo del establecimiento")
+        if equipment and equipment.room and data.get("room") and equipment.room!=data["room"]:
+            frappe.throw("La habitación no corresponde a la ubicación del equipo")
+        room_name=data.get("room") or (equipment.room if equipment else None)
+        room=document("HS Room",room_name,"maintain") if room_name else None
+        if not room and not equipment:
+            frappe.throw("Seleccione habitación o equipo")
+        blocks=bool(data.get("blocks_room",bool(room)))
+        if blocks and not room:
+            frappe.throw("Para bloquear disponibilidad seleccione una habitación")
         if not data.get("title") or data.get("kind","Corrective") not in ("Corrective","Preventive"):
             frappe.throw("Indique título y tipo de mantenimiento")
         validate_technician(prop,data.get("assigned_to"))
         start, end = to_site(data["starts_at"], prop), to_site(data["ends_at"], prop)
-        availability.check(prop, room.category, start, end, room.name)
-        doc = insert("HS Maintenance Order", prop, room=room.name, title=data["title"], starts_at=start, ends_at=end,
+        if equipment and current_all("HS Maintenance Order",filters={"equipment":equipment.name,"status":["!=","Completed"],"starts_at":["<",end],"ends_at":[">",start]},pluck="name"):
+            frappe.throw("El equipo ya tiene una orden que coincide con ese intervalo")
+        if blocks:
+            availability.check(prop, room.category, start, end, room.name)
+        doc = insert("HS Maintenance Order", prop, room=room.name if room else None,equipment=equipment.name if equipment else None,blocks_room=blocks, title=data["title"], starts_at=start, ends_at=end,
                      kind=data.get("kind") or "Corrective", status="Open", notes=data.get("notes"), assigned_to=data.get("assigned_to"))
-        insert("HS Allocation", prop, category=room.category, room=room.name, starts_at=start, ends_at=end,
-               buffer_minutes=0, kind="Maintenance", status="Active", maintenance=doc.name)
+        if blocks:
+            insert("HS Allocation", prop, category=room.category, room=room.name, starts_at=start, ends_at=end,
+                   buffer_minutes=0, kind="Maintenance", status="Active", maintenance=doc.name)
     audit(prop, "Maintenance " + doc.status, doc, doc.notes)
     return dict(order=doc.name, status=doc.status)
 

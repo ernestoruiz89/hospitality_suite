@@ -10,7 +10,7 @@ def hs_json(value):
 
 VALUE_LABELS={"Confirmed":"Confirmada","Checked In":"Entrada registrada","Completed":"Completada","Cancelled":"Cancelada","No Show":"No presentada",
             "Hold":"Retención temporal","Active":"Alojado","Checked Out":"Salida registrada","Pending":"Pendiente","In Progress":"En proceso",
-            "Inspection":"Pendiente de inspección","Open":"Abierto","Closed":"Cerrado","Review":"Por revisar","Posted":"Contabilizado",
+            "Inspection":"Pendiente de inspección","Open":"Abierto","Closed":"Cerrado","Review":"Por revisar","Posted":"Contabilizado","Resolved":"Resuelto",
             "Payment":"Cobro","Advance":"Anticipo","Guarantee":"Garantía","Guarantee Refund":"Devolución de garantía",
             "Guarantee Applied":"Aplicación de garantía","Refund":"Devolución","Withdrawal":"Retiro / entrega","Invoiced":"Facturado",
             "Expense":"Egreso","Supplier Payment":"Pago a proveedor","Settlement":"Liquidación de tarjeta",

@@ -110,7 +110,7 @@ class ScopedDocument(Document):
                 if decimal(row.quantity)<=0 or (self.mode!="Hotel" and row.basis=="Night") or (row.item,row.basis) in keys:
                     frappe.throw("Revise las cantidades de servicios incluidos; por noche solo aplica a hotel y no admite duplicados")
                 item=frappe.get_doc("Item",row.item)
-                if item.disabled or not item.is_sales_item:
+                if item.disabled or not item.is_sales_item or item.is_fixed_asset:
                     frappe.throw("El servicio incluido debe ser un artículo de venta habilitado")
                 keys.add((row.item,row.basis))
         if self.doctype=="HS Category" and (self.capacity<1 or (self.max_extra_beds or 0)<0):
@@ -136,6 +136,9 @@ class ScopedDocument(Document):
             self.currency=frappe.db.get_value("Company",self.company,"default_currency")
             if account.company!=self.company or account.is_group or account.root_type!="Expense" or account.account_currency!=self.currency or self.max_amount<0:
                 frappe.throw("Configure una cuenta de gasto de la compañía en moneda base y un límite no negativo")
+        if self.doctype=="HS Equipment":
+            from hospitality_suite.equipment import validate_equipment
+            validate_equipment(self)
         if self.doctype=="HS Payment" and self.is_new() and self.kind in ("Payment","Advance","Guarantee","Refund","Guarantee Refund"):
             from hospitality_suite.treasury import method_snapshot
             self.fee_snapshot=frappe.as_json(method_snapshot(frappe.get_doc("HS Payment Method",self.method),refund=self.kind in ("Refund","Guarantee Refund")))

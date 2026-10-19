@@ -4,6 +4,8 @@
 
 En el sitio de pruebas de esta tarea, `tools/run_dev.py` arranca web 8086, Socket.IO 9001, worker para short/default/long y scheduler, con Redis propios 13001/11001. Comprueba procesos/puertos para no duplicarlos y no interrumpe un puerto ya activo. Los registros están en `/home/frappe/benches/hospitality-bench/.hospitality-run`.
 
+El arranque directo de web incluye `DEV_SERVER=true`, como normalmente hace `bench start`. Sin esa variable, Desk intenta Socket.IO sobre el puerto web esperando un proxy productivo y sus consultas fallan. Se comprobó `window.dev_server=1`, puerto 9001 y conexión autenticada en Page. Después de cambiar Python use `--restart-web`: el proceso de pruebas utiliza `--noreload`. No se alteran archivos del núcleo para resolverlo.
+
 Es un servidor de desarrollo local. Para un despliegue definitivo use la administración de procesos, proxy, HTTPS y configuración de Bench correspondiente al sistema de destino; no copie este arranque como servicio público de producción.
 
 Compruebe:
@@ -22,7 +24,7 @@ El scheduler despacha por establecimiento cada cinco minutos. Cada job bloquea e
 
 Ante un fallo, conserve Failed Job Log y el traceback, corrija la causa y vuelva a ejecutar la operación o su job por los mecanismos estándar. No marque manualmente como pagado ni cambie Allocation para eludir un bloqueo. Una ejecución posterior vuelve a examinar el estado real y no debe duplicar la liberación.
 
-Se verificó ejecución real de expire_property por el worker. El ensayo explícito de fallo/reintento y la reconexión entre sesiones siguen pendientes en la matriz.
+Se verificaron ejecución real de expire_property, fallo con rollback y reintento posterior por el worker. La reconexión bajo corte y propagación entre dos sesiones siguen pendientes en la matriz.
 
 ## Respaldo
 

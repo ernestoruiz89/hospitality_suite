@@ -20,6 +20,7 @@ def after_migrate():
     create_custom_fields({"Sales Invoice Item": [dict(fieldname="hs_charge", label="Cargo de estancia", fieldtype="Link", options="HS Charge", no_copy=1,print_hide=1)]})
     create_custom_fields({"Sales Invoice Item":[dict(fieldname="hs_charge_sources",label="Cargos que componen la línea",fieldtype="Code",options="JSON",read_only=1,no_copy=1,print_hide=1)]})
     create_custom_fields({"Warehouse":[dict(fieldname="hs_property",label="Establecimiento de alojamiento",fieldtype="Link",options="HS Property")]})
+    create_custom_fields({"Asset":[dict(fieldname="hs_property",label="Establecimiento de alojamiento",fieldtype="Link",options="HS Property",allow_on_submit=1,print_hide=1)]})
     create_custom_fields({"Stock Entry":[dict(fieldname="hs_stock_purpose",label="Uso operativo",fieldtype="Select",options="\nSale\nCleaning\nWaste\nLinen Replacement\nMaintenance\nTransfer\nAdjustment\nLaundry",print_hide=1)]})
     from frappe.permissions import add_permission
     for dt in ("Account","Item","Company","Cost Center","Warehouse","Mode of Payment","Price List","Sales Taxes and Charges Template","Customer","Supplier","Currency"):
@@ -43,6 +44,7 @@ def after_migrate():
     frappe.db.add_unique("HS Billing Party",["property","customer"],"hs_billing_party_unique")
     frappe.db.add_unique("HS Supplier",["property","supplier"],"hs_supplier_unique")
     frappe.db.add_unique("HS Stock Policy",["property","item","warehouse"],"hs_stock_policy_unique")
+    frappe.db.add_unique("HS Equipment",["property","equipment_code"],"hs_equipment_unique")
 
 
 def validate_financial_configuration(prop):

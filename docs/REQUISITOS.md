@@ -23,7 +23,7 @@ Actualizada el 2026-10-19. **El objetivo sigue activo.** V = prueba ejecutada de
 | F12c | Egresos y pagos a proveedores | treasury.py, procurement.py, Page Caja | Categoría/límite, efectivo disponible, Payment Entry/Journal Entry, sincronización nativa y cancelación probados; egreso C$20 y proveedor C$100 desde Page | V |
 | F12d | Comisiones, retenciones y liquidación | treasury.py, reconciliation.py, Page Caja | Snapshot, parciales/redondeo, devolución y cambio USD; bruto C$30, gasto C$2.90, activo C$0.30 y banco C$26.80 desde Page | V |
 | F13 | Limpieza, asignación e inspección | housekeeping.py, Page | Checklist incompleto rechazado; circuito de cuatro roles en escritorio y limpieza/inspección en móvil ejecutados | I |
-| F14a | Mantenimiento y objetos | housekeeping.py, linen.py, Pages | Repuestos/costo/stock, devolución, responsable, evidencia privada y resolución probados; falta equipo y carga de archivo en navegador | I |
+| F14a | Mantenimiento y objetos | housekeeping.py, equipment.py, linen.py, Pages | Equipo sin habitación, vínculo Asset y aislamiento, intervalos y conflictos probados; configuración/equipo/evidencia privada/completar y resolver objeto ejecutados desde Pages | V |
 | F14b | Ropa de cama | linen.py, procurement.move_stock | Envío, recepción, pérdida y reposición entre almacenes con Stock Entry probados; ampliar recorrido móvil | I |
 | F15a | Servicios y existencias únicas | inventory.py | Entrega repetida de minibar: una salida y reversión estándar | V |
 | F15d | Servicios incluidos | pricing.py, inventory.py, Pages | Snapshot, cupo reservado, entrega sin otro cargo, stock único, devolución, extensión/cambio probados; configuración en Page pendiente | I |
@@ -34,8 +34,8 @@ Actualizada el 2026-10-19. **El objetivo sigue activo.** V = prueba ejecutada de
 | F17b | Reportes, conciliación y exportaciones | reports.py, reconciliation.py, api.export_report | Conciliación hasta origen; PDF y XLSX numérico inspeccionados; auditor no exporta | V |
 | F18 | Portal opcional seguro | www/, portal.py | Desactivación, firma, caducidad, retención y conversión probadas; Page pública pendiente | I |
 | F19 | Contratos de integración | integrations.py | HMAC/caducidad, redacción y simulación que nunca marca pagado probados | V |
-| F20a | Permisos API, documentos, archivos y roles | security.py, hooks.py | Segunda compañía real, roles HS + Stock/Accounts/Sales User, Bin/almacenes, RPC de saldos y archivos probados; ampliar auditoría de APIs | I |
-| F20b | Notificaciones estándar por usuario | ScopedERPNotifications | Implementado sin list_update global; Socket.IO pendiente de prueba | I |
+| F20a | Permisos API, documentos, archivos y roles | security.py, hooks.py | Segunda compañía, roles combinados, saldos y stock; lectura/listado de archivos incluso del propietario, Asset y rechazo financiero de limpieza probados; falta retención y auditoría final | I |
+| F20b | Notificaciones estándar por usuario | ScopedERPNotifications | Sin list_update global; Socket.IO autenticado conectado en Page tras corregir DEV_SERVER; faltan dos sesiones y reconexión bajo corte | I |
 | F21 | Idempotencia y recuperación | service.py, jobs.py, JS | Reintento, rollback, versión obsoleta y fallo/recuperación en worker RQ real probados; falta transporte/red | I |
 | F22 | Once Pages, teclado y móvil | public/js, bundles, sidebar v16 | Circuitos motel y hotel completos, panel lateral 1024×768/390×844, limpieza móvil y contador sin recarga; faltan grupos/asistente/portal | I |
 | F23 | Impresiones | templates/print, generador | Nueve formatos y exportador: diez PDF generados, texto/render revisados, campos técnicos ocultos | V |
@@ -66,7 +66,7 @@ Actualizada el 2026-10-19. **El objetivo sigue activo.** V = prueba ejecutada de
 
 ## Evidencia acumulada
 
-Batería conjunta anterior a las últimas ampliaciones: **50 aprobadas** (39 de integración y 11 puras). Ampliación de horarios, acompañantes y KPI: **4 aprobadas** por separado. La cortesía detectó una incompatibilidad con tarifas negativas; se corrigió con descuento en la línea estándar y referencias a sus cargos de origen. Última batería conjunta en hospitality-clean.localhost: **91 aprobadas** (80 integración + 11 puras). También pasaron impuesto incluido, camas extra, Contact/Address, retiro de caja, variación de cambio y exportación numérica.
+Batería conjunta anterior a las últimas ampliaciones: **50 aprobadas** (39 de integración y 11 puras). Ampliación de horarios, acompañantes y KPI: **4 aprobadas** por separado. La cortesía detectó una incompatibilidad con tarifas negativas; se corrigió con descuento en la línea estándar y referencias a sus cargos de origen. Última batería conjunta en hospitality-clean.localhost: **95 aprobadas** (84 integración + 11 puras). También pasaron impuesto incluido, camas extra, Contact/Address, retiro de caja, variación de cambio y exportación numérica.
 
 La matriz no sustituye los registros finales ni las capturas. Integraciones reales de canales, mensajería, pasarelas y cerraduras esperan proveedor/credenciales; HRMS es opcional. No se migró producción ni ningún sitio ajeno.
 

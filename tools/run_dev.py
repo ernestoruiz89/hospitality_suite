@@ -67,7 +67,12 @@ def main():
                 print(name+": proceso activo")
                 continue
         with (state/(name+".log")).open("ab") as log:
-            process=subprocess.Popen(command,cwd=BENCH,stdin=subprocess.DEVNULL,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
+            # bench start normally sets DEV_SERVER. Direct serve must also tell
+            # Desk to use socketio_port instead of expecting a production proxy.
+            env=dict(os.environ)
+            if name=="web":
+                env["DEV_SERVER"]="true"
+            process=subprocess.Popen(command,cwd=BENCH,env=env,stdin=subprocess.DEVNULL,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
         pidfile.write_text(str(process.pid))
         print(name+": iniciado")
     subprocess.run([bench,"--site",SITE,"enable-scheduler"],cwd=BENCH,check=True)

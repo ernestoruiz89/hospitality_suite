@@ -81,6 +81,17 @@ class TestMaintenanceLinen(IntegrationTestCase):
         self.call("maintenance",dict(order=order.name,modified=str(order.modified),evidence=file.file_url))
         order.reload()
         self.assertEqual(order.evidence,file.file_url)
+        from hospitality_suite.security import file_permission
+        for user in ("maintenance@hospitality.example.invalid","supervisor@hospitality.example.invalid"):
+            frappe.set_user(user)
+            self.assertTrue(frappe.has_permission("File","read",doc=file))
+            self.assertIn(file.name,frappe.get_list("File",filters={"attached_to_doctype":order.doctype,"attached_to_name":order.name},pluck="name"))
+        frappe.set_user("housekeeping@hospitality.example.invalid")
+        self.assertFalse(file_permission(file))
+        self.assertFalse(frappe.has_permission("File","read",doc=file))
+        self.assertEqual(frappe.get_list("File",filters={"attached_to_doctype":order.doctype,"attached_to_name":order.name},pluck="name"),[])
+        self.assertNotIn("evidence",next(r for r in api.bootstrap(self.prop.name)["maintenance"] if r.name==order.name))
+        frappe.set_user("Administrator")
         incident=self.call("incident",dict(room=self.room,kind="Lost Property",description="Objeto sintético en custodia"))["incident"]
         record=frappe.get_doc("HS Incident",incident)
         with self.assertRaises(frappe.ValidationError):

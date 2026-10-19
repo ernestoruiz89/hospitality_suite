@@ -69,6 +69,13 @@ for _dt in SCOPED:
 
 
 def validate_file(doc, method=None):
+    if doc.attached_to_doctype=="Asset":
+        target=frappe.get_doc("Asset",doc.attached_to_name)
+        if target.hs_property:
+            from hospitality_suite.equipment import asset_permission
+            if not asset_permission(target) or not doc.is_private:
+                frappe.throw("El archivo del activo debe ser privado y accesible por el rol y establecimiento",frappe.PermissionError)
+            target.check_permission("write")
     if doc.attached_to_doctype in ("Customer","Supplier","Contact","Address") and set(frappe.get_roles()).intersection(ROLES):
         target=frappe.get_doc(doc.attached_to_doctype,doc.attached_to_name)
         if not party_permission(target):
@@ -99,6 +106,66 @@ def private_evidence(url,target):
     return url
 
 
+def file_permission(doc,user=None,permission_type=None,**kwargs):
+    """A file's owner must not bypass the current parent scope or role."""
+    if is_system(user):
+        return True
+    permission_type=permission_type or kwargs.get("ptype")
+    dt,name=doc.get("attached_to_doctype"),doc.get("attached_to_name")
+    if not dt or not name:
+        return True
+    roles=set(frappe.get_roles(user))
+    if dt=="HS Property" or (dt.startswith("HS ") and frappe.get_meta(dt).has_field("property")):
+        prop=name if dt=="HS Property" else frappe.db.get_value(dt,name,"property")
+        if prop not in allowed_properties(user):
+            return False
+        if roles.intersection(ROLES):
+            actions={"HS Guest":["guest","finance","report"],"HS Maintenance Order":["maintain","inspect","report"],"HS Incident":["incident","inspect","report"]}.get(dt)
+            if actions and not any(roles.intersection(ACTIONS[action]) for action in actions):
+                return False
+    if dt in STANDARD_SCOPED and not standard_permission(frappe.get_doc(dt,name),user,permission_type):
+        return False
+    if dt in ("Customer","Supplier","Contact","Address") and not party_permission(frappe.get_doc(dt,name),user):
+        return False
+    if dt=="Asset":
+        from hospitality_suite.equipment import asset_permission
+        if not asset_permission(frappe.get_doc("Asset",name),user,permission_type):
+            return False
+    return True  # Frappe's native File hook still decides owner/parent permission.
+
+
+def file_query(user=None):
+    if is_system(user):
+        return ""
+    from hospitality_suite.schema import SCHEMA
+    roles=set(frappe.get_roles(user))
+    props=",".join(frappe.db.escape(p) for p in allowed_properties(user)) or "NULL"
+    targets=",".join(frappe.db.escape(dt) for dt in SCOPED)
+    branches=[]
+    for dt in SCOPED:
+        if not roles.intersection(SCHEMA[dt].get("roles",[])):
+            continue
+        actions={"HS Guest":["guest","finance","report"],"HS Maintenance Order":["maintain","inspect","report"],"HS Incident":["incident","inspect","report"]}.get(dt)
+        if actions and not any(roles.intersection(ACTIONS[a]) for a in actions):
+            continue
+        field="name" if dt=="HS Property" else "property"
+        branches.append(f"(`tabFile`.attached_to_doctype={frappe.db.escape(dt)} AND EXISTS(SELECT name FROM `tab{dt}` WHERE name=`tabFile`.attached_to_name AND `{field}` IN ({props})))")
+    conditions=[f"(COALESCE(`tabFile`.attached_to_doctype,'') NOT IN ({targets}) OR ({' OR '.join(branches) or '1=0'}))"]
+    for dt in STANDARD_SCOPED:
+        rule=standard_query(dt,user)
+        if rule:
+            conditions.append(f"(COALESCE(`tabFile`.attached_to_doctype,'')!={frappe.db.escape(dt)} OR EXISTS(SELECT name FROM `tab{dt}` WHERE name=`tabFile`.attached_to_name AND ({rule})))")
+    for dt in ("Customer","Supplier","Contact","Address","Asset"):
+        if dt=="Asset":
+            from hospitality_suite.equipment import asset_query
+            rule=asset_query(user)
+        else:
+            rule=party_query(dt,user)
+        if rule:
+            conditions.append(f"(COALESCE(`tabFile`.attached_to_doctype,'')!={frappe.db.escape(dt)} OR EXISTS(SELECT name FROM `tab{dt}` WHERE name=`tabFile`.attached_to_name AND ({rule})))")
+    return " AND ".join(conditions)
+
+
 def realtime(property_name):
     users = frappe.get_all("HS Access", filters={"property": property_name}, pluck="user")
     users.append("Administrator")
@@ -110,6 +177,8 @@ def realtime(property_name):
 def standard_permission(doc, user=None, permission_type=None, **kwargs):
     permission_type=permission_type or kwargs.get("ptype")
     roles=set(frappe.get_roles(user))
+    if not is_system(user) and roles.intersection(ROLES) and not roles.intersection(set(ROLES)-{"HS Housekeeping","HS Maintenance"}) and doc.doctype!="Stock Entry":
+        return False
     if "HS Auditor" in roles and not roles.intersection(set(ROLES)-{"HS Auditor"}) and not is_system(user) and permission_type not in (None,"read","select","print","export","report"):
         return False
     prop = doc.get("hs_property")
@@ -127,6 +196,9 @@ def standard_permission(doc, user=None, permission_type=None, **kwargs):
 def standard_query(dt, user=None):
     if is_system(user):
         return ""
+    roles=set(frappe.get_roles(user))
+    if roles.intersection(ROLES) and not roles.intersection(set(ROLES)-{"HS Housekeeping","HS Maintenance"}) and dt!="Stock Entry":
+        return "1=0"
     props = allowed_properties(user)
     permitted = ",".join(frappe.db.escape(v) for v in props) or "NULL"
     # Hospitality operators only see standard documents belonging to their scope.
@@ -277,6 +349,8 @@ def reference_reconciliation(doc,original):
 def query_gl_entry(user=None):
     if is_system(user) or not set(frappe.get_roles(user)).intersection(ROLES):
         return ""
+    if not set(frappe.get_roles(user)).intersection(ACTIONS["finance"]+ACTIONS["report"]+ACTIONS["stay"]):
+        return "1=0"
     props=allowed_properties(user)
     names=",".join(frappe.db.escape(p) for p in props) or "NULL"
     parts=[f"(`tabGL Entry`.voucher_type={frappe.db.escape(dt)} AND EXISTS (SELECT name FROM `tab{dt}` h WHERE h.name=`tabGL Entry`.voucher_no AND h.hs_property IN ({names})))" for dt in STANDARD_SCOPED if frappe.db.exists("DocType",dt)]
@@ -286,6 +360,8 @@ def query_gl_entry(user=None):
 def gl_permission(doc,user=None,**kwargs):
     if is_system(user) or not set(frappe.get_roles(user)).intersection(ROLES):
         return True
+    if not set(frappe.get_roles(user)).intersection(ACTIONS["finance"]+ACTIONS["report"]+ACTIONS["stay"]):
+        return False
     if doc.voucher_type not in STANDARD_SCOPED:
         return False
     prop=frappe.db.get_value(doc.voucher_type,doc.voucher_no,"hs_property")

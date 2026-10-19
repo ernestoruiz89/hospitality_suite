@@ -22,7 +22,7 @@ REPORTS = {
     "Egresos":("HS Payment",["name","shift","method","kind","expense_category","supplier","purchase_invoice","amount","currency","status","journal_entry","payment_entry","reason"]),
     "Turnos": ("HS Shift", ["name", "cashier", "opened_at", "closed_at", "status", "currency", "expected_amount", "counted_amount", "difference"]),
     "Limpieza": ("HS Cleaning Task", ["name", "room", "status", "kind", "assigned_to", "started_at", "completed_at"]),
-    "Mantenimiento": ("HS Maintenance Order", ["name", "room", "title", "status", "starts_at", "ends_at", "cost", "stock_entry"]),
+    "Mantenimiento": ("HS Maintenance Order", ["name", "room","equipment","blocks_room", "title", "status", "starts_at", "ends_at", "cost", "stock_entry"]),
     "Inventario": ("HS Service Request", ["name", "item", "quantity", "status", "stock_entry", "return_stock_entry", "charge", "amount", "currency"]),
     "Movimientos de inventario":(None,[]),
     "Auditoría": ("HS Audit Event", ["name", "action", "actor", "occurred_at", "source_doctype", "source_name", "reason"]),

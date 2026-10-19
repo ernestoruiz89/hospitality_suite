@@ -30,6 +30,12 @@ for dt in ("Customer","Supplier","Contact","Address"):
     permission_query_conditions[dt]="hospitality_suite.security.query_party_"+dt.lower()
     has_permission[dt]="hospitality_suite.security.party_permission"
 extend_doctype_class["Warehouse"]=["hospitality_suite.controllers.ScopedERPNotifications"]
+extend_doctype_class["Asset"]=["hospitality_suite.controllers.ScopedERPNotifications"]
+permission_query_conditions["Asset"]="hospitality_suite.equipment.asset_query"
+has_permission["Asset"]="hospitality_suite.equipment.asset_permission"
+has_permission["File"]="hospitality_suite.security.file_permission"
+permission_query_conditions["File"]="hospitality_suite.security.file_query"
+doc_events["Asset"]={"validate":"hospitality_suite.equipment.validate_asset","before_update_after_submit":"hospitality_suite.equipment.validate_asset"}
 permission_query_conditions["GL Entry"]="hospitality_suite.security.query_gl_entry"
 has_permission["GL Entry"]="hospitality_suite.security.gl_permission"
 for dt in ("Account","Company","Cost Center","Warehouse","Sales Taxes and Charges Template"):

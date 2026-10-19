@@ -4,7 +4,7 @@ Sitios ficticios locales: hospitality.localhost, hospitality-clean.localhost y h
 
 ## Automatizadas
 
-- `tests-clean.log`: última batería conjunta, **91 aprobadas**: 80 integración y 11 puras.
+- `tests-clean.log`: última batería conjunta, **95 aprobadas**: 84 integración y 11 puras.
 - `tests-clean.xml`: JUnit normalizado para CI, sin fallos ni errores. `tests-clean.raw.txt` conserva la salida original; Frappe 16 concatena un documento XML por cohorte. `tools/normalize_junit.py` los combina sin alterar casos/resultados.
 - `concurrency.log` y `category-race.log`: dos conexiones reales por caso, exactamente una confirmación y un rechazo, bajo REPEATABLE-READ; anulaciones de limpieza auditadas.
 - Los escenarios, fuentes y limitaciones están descritos en `../REQUISITOS.md` y `../AVANCE.md`.
@@ -30,6 +30,8 @@ Las capturas 01 a 06 prueban escritorio. La ampliación 07 a 12 prueba mantenimi
 12. `12-hotel-housekeeping-mobile.png`: limpieza/inspección terminadas, cero pendientes.
 13. `13-caja-egresos-liquidacion.png`: egreso C$20, proveedor C$100, cobro de tarjeta C$30 y liquidación separada C$2.90 comisión/C$0.30 retención/C$26.80 banco; esperado C$380.
 14. `14-caja-compra-cerrada.png`: turno cerrado con C$380 contados y sin diferencia. `finance-stock.json` verifica los documentos nativos, dos sábanas recibidas, factura sin segundo stock y saldada, compensación cero y conciliación sin diferencias.
+15. `15-equipo-evidencia-resolucion.png`: equipo sin habitación, orden completada por supervisión, evidencia privada y objeto resuelto con constancia; conexión real visible.
+16. `16-equipo-mobile.png`: vista de mantenimiento a 390×844 con fichas y estado de tiempo real. `equipment.json` acredita cero asignaciones de habitación, archivo/hash, roles permitidos/denegado y resolución. Su PDF se generó y revisó visualmente en una página (472 caracteres).
 
 `countdown.json` acredita descenso con la misma referencia del servidor. `worker-recovery.json` conserva fallo/rollback y recuperación. `restore-baseline-summary.json`, `restore-verify.json` y `restore-after-migrate.json` conservan cantidades/hash; no contienen credenciales ni volcado. Referencia y respaldos completos permanecen privados en WSL.
 

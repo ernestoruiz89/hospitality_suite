@@ -137,7 +137,6 @@ class TestSecurityRecovery(IntegrationTestCase):
         self.assertFalse(frappe.has_permission("Contact",doc=contact,ptype="read"))
         self.assertEqual(frappe.get_list("Contact",pluck="name"),[])
         self.assertFalse(file.has_permission("read"))
-        frappe.set_user("receptionist@hospitality.example.invalid")
         # Demo reception has both properties; a user with just one must not see the other customer.
         only="one-property-"+uuid.uuid4().hex[:7]+"@example.invalid"
         frappe.set_user("Administrator")
@@ -149,3 +148,24 @@ class TestSecurityRecovery(IntegrationTestCase):
         self.assertFalse(frappe.has_permission("Customer",doc=frappe.get_doc("Customer",other_guest.customer),ptype="read"))
         self.assertFalse(frappe.has_permission("Contact",doc=contact,ptype="read"))
         self.assertFalse(file.has_permission("read"))
+
+    def test_cleaning_with_accounts_role_cannot_read_native_financial_documents_or_owned_files(self):
+        stay=self.stay()
+        shift=self.invoke("open_shift",dict(opening_amount=0))["shift"]
+        method=frappe.db.get_value("HS Payment Method",{"property":self.prop.name})
+        paid=self.invoke("payment",dict(stay=stay["stay"],folio=stay["folio"],shift=shift,method=method,amount=1500,kind="Payment"))
+        native=frappe.get_doc("Payment Entry",paid["payment_entry"])
+        user="clean-finance-"+uuid.uuid4().hex[:7]+"@example.invalid"
+        frappe.get_doc(dict(doctype="User",email=user,first_name="Limpieza financiera de prueba",send_welcome_email=0,user_type="System User",roles=[dict(role="HS Housekeeping"),dict(role="Accounts User")])).insert()
+        with operation():
+            frappe.get_doc(dict(doctype="HS Access",property=self.prop.name,company=self.prop.company,user=user)).insert()
+        file=frappe.get_doc(dict(doctype="File",owner=user,file_name="comprobante-sintetico-"+uuid.uuid4().hex+".txt",content="Comprobante sintetico",is_private=1,
+                                attached_to_doctype=native.doctype,attached_to_name=native.name)).insert()
+        frappe.set_user(user)
+        self.assertFalse(frappe.has_permission("Payment Entry",doc=native,ptype="read"))
+        self.assertEqual(frappe.get_list("Payment Entry",pluck="name"),[])
+        self.assertFalse(file.has_permission("read"))
+        self.assertEqual(frappe.get_list("File",filters={"name":file.name},pluck="name"),[])
+        entries=frappe.get_all("GL Entry",filters={"voucher_type":native.doctype,"voucher_no":native.name},pluck="name")
+        self.assertTrue(entries)
+        self.assertFalse(frappe.has_permission("GL Entry",doc=frappe.get_doc("GL Entry",entries[0]),ptype="read"))

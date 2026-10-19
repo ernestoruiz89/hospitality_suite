@@ -4,6 +4,8 @@ Objetivo instalado: Frappe 16.52.0 (`4515014`) y ERPNext 16.51.1 (`5af6561`). Fr
 
 Prefijo propio `HS`. Los recursos consultados, sujetos a permisos, bloqueos o ciclos de vida independientes son DocTypes. Habitaciones solicitadas de una reserva y acompañantes son tablas hijas. Los cargos son documentos independientes para permitir separación de folios y trazabilidad hasta una línea de factura.
 
+HS Equipment registra identificación/ubicación/instrucciones operativas y un vínculo opcional con Asset estándar. No duplica valoración ni depreciación. Un activo corresponde a un solo equipo y debe estar asignado a su compañía/establecimiento. Una orden puede pertenecer a una habitación o equipo; solo crea HS Allocation si bloquea una habitación. Las órdenes de un mismo equipo no se solapan. La vista de mantenimiento recibe datos mínimos del equipo; los valores contables de Asset requieren roles y alcance propios.
+
 La compañía procede siempre del establecimiento. Un bloqueo `SELECT ... FOR UPDATE` sobre el establecimiento serializa cambios de cupo, incluso cuando todavía no existen asignaciones. Se prefieren bloqueos gruesos seguros antes de optimizaciones prematuras. Orden de bloqueos: establecimiento, operación, documentos secundarios. Intervalos `[inicio, fin)` y colchón de limpieza separado. Una asignación cuenta una sola vez, tanto con habitación como sin ella. La reserva se convierte en estancia sustituyendo la asignación dentro de la misma transacción.
 
 Fechas guardadas en la zona del sistema Frappe; conversión explícita desde/hacia la zona del establecimiento. Los cálculos de duración usan instantes con zona y los límites de días usan la zona local del establecimiento. Fecha operativa independiente; fecha contable explícita según documentos ERPNext.
@@ -27,6 +29,10 @@ erDiagram
   HS_Payment }o--o| Payment_Entry : contabiliza
   HS_Room ||--o{ HS_Cleaning_Task : requiere
   HS_Room ||--o{ HS_Maintenance_Order : bloquea
+  HS_Property ||--o{ HS_Equipment : registra
+  HS_Room |o--o{ HS_Equipment : ubica
+  Asset |o--o| HS_Equipment : referencia
+  HS_Equipment |o--o{ HS_Maintenance_Order : requiere
 ```
 
 ```mermaid

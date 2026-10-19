@@ -5,7 +5,7 @@ window.hospitality_suite = window.hospitality_suite || {};
   const labels = {Clean:"Limpia", Dirty:"Sucia", Cleaning:"En limpieza", Inspection:"Pendiente de inspección",
     Active:"Alojado", "Checked Out":"Salida registrada", Confirmed:"Confirmada", Hold:"Retención temporal",
     Invoiced:"Facturado", Reversed:"Revertido", Draft:"Borrador", "Checked In":"Entrada registrada", Completed:"Completada", Cancelled:"Cancelada", "No Show":"No presentada",
-    Pending:"Pendiente", "In Progress":"En proceso", Open:"Abierto", Closed:"Cerrado", Review:"Por revisar",
+    Pending:"Pendiente", "In Progress":"En proceso", Open:"Abierto", Closed:"Cerrado", Review:"Por revisar",Resolved:"Resuelto",
     Requested:"Solicitado", Delivered:"Entregado", Returned:"Devuelto", Posted:"Contabilizado", Payment:"Cobro", Advance:"Anticipo", Guarantee:"Garantía",
     "Guarantee Refund":"Devolución de garantía", Refund:"Devolución", Normal:"Normal", High:"Alta", Urgent:"Urgente"};
   const title = (s) => labels[s] || s;
@@ -22,8 +22,11 @@ window.hospitality_suite = window.hospitality_suite || {};
       this.busy = false;
       this.load();
       frappe.realtime.on("hospitality_changed", (event) => {if (event.property === this.property) this.scheduleRefresh();});
-      if (frappe.realtime.socket) frappe.realtime.socket.on("connect",()=>this.scheduleRefresh());
-      window.addEventListener("online",()=>this.load());
+      if (frappe.realtime.socket){
+        frappe.realtime.socket.on("connect",()=>{this.connection();this.scheduleRefresh();});
+        for(const event of ["disconnect","connect_error"])frappe.realtime.socket.on(event,()=>this.connection());
+      }
+      window.addEventListener("online",()=>this.action_reload());
       window.addEventListener("offline",()=>this.connection());
       $(wrapper).on("show",()=>this.scheduleRefresh());
       this.timer=setInterval(()=>{if($(wrapper).is(":visible")) this.updateTimers();},30000);
@@ -67,7 +70,7 @@ window.hospitality_suite = window.hospitality_suite || {};
       }
       this.bind();this.connection();this.updateTimers();
     }
-    connection() {const message=navigator.onLine?"● Conectado":"Sin conexión · operación pausada";this.root.find("#hs-connection").text(message);let banner=this.root.find(".hs-connection-banner");if(!banner.length)banner=$('<span class="hs-connection-banner" role="status"></span>').appendTo(this.root.find(".hs-header-actions"));banner.text(message);this.root.find(".hs-action").prop("disabled",!navigator.onLine || this.busy);}
+    connection() {const message=!navigator.onLine?"Sin conexión · operación pausada":frappe.realtime.socket?.connected?"● Tiempo real conectado":"Sin tiempo real · pulse Actualizar";this.root.find("#hs-connection").text(message);let banner=this.root.find(".hs-connection-banner");if(!banner.length)banner=$('<span class="hs-connection-banner" role="status"></span>').appendTo(this.root.find(".hs-header-actions"));banner.text(message);this.root.find(".hs-action").prop("disabled",!navigator.onLine || this.busy);}
     bind() {
       this.root.off("click").on("click","[data-act]",async(event)=>{
         const button=$(event.currentTarget); const action=button.data("act"), id=String(button.data("id") || "");
@@ -129,7 +132,7 @@ window.hospitality_suite = window.hospitality_suite || {};
       try {const result=await this.call("execute",{property_name:this.property,action,request_key:key||frappe.utils.get_random(24),data:JSON.stringify(data)});frappe.show_alert({message:__("Operación confirmada"),indicator:"green"});await this.load();return result;}
       finally{this.busy=false;this.connection();}
     }
-    action_reload(){return this.load();}
+    action_reload(){if(navigator.onLine&&!frappe.realtime.socket?.connected)frappe.realtime.socket?.connect();return this.load();}
     async action_guest() {const key=frappe.utils.get_random(24);return this.dialog("Registrar huésped",[field("full_name","Nombre completo","Data",{reqd:1}),field("phone","Teléfono"),field("email","Correo"),field("identity_type","Tipo de identificación"),field("identity_number","Identificación según política"),field("nationality","Nacionalidad")],async(v,d)=>{await this.call("create_guest",{property_name:this.property,data:JSON.stringify(v),request_key:key});d.hide();await this.load();});}
     async action_guest_history(id){const rows=(this.data.stays||[]).filter(s=>s.guest===id);frappe.msgprint({title:__("Historial de estancias"),message:this.table(["Habitación","Entrada","Salida","Estado"],rows.map(s=>[esc(this.roomName(s.room)),esc(this.date(s.starts_at)),esc(this.date(s.ends_at)),this.badge(s.status)])),wide:true});}
     async reservation(roomId,walk=false) {

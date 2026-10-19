@@ -167,12 +167,16 @@ def bootstrap(property_name=None):
     if any(may(a) for a in ("inventory","clean","maintain","report","service")):
         result["warehouses"]=[dict(name=n,warehouse_name=frappe.db.get_value("Warehouse",n,"warehouse_name")) for n in procurement.warehouses(prop)]
     result["cleaning"] = project("HS Cleaning Task", prop, ["name", "room", "kind", "status", "priority", "assigned_to", "modified", "checklist", "notes"])
-    result["maintenance"] = project("HS Maintenance Order", prop, ["name", "room", "title", "starts_at", "ends_at", "status", "modified", "notes","assigned_to","evidence"])
+    result["equipment"]=project("HS Equipment",prop,["name","equipment_code","label","room","active","instructions"])
+    result["maintenance"] = project("HS Maintenance Order", prop, ["name", "room","equipment","blocks_room", "title", "starts_at", "ends_at", "status", "modified", "notes","assigned_to"])
+    if may("setup"):
+        result["assets"] = frappe.get_all("Asset",filters={"hs_property":prop.name,"company":prop.company,"docstatus":["!=",2]},fields=["name","asset_name"],limit=500)
     result["incidents"]=project("HS Incident",prop,["name","room","kind","description","status","evidence","resolution","modified"])
     if may("maintain") or may("report"):
         for order in result["maintenance"]:
             doc=frappe.get_doc("HS Maintenance Order",order.name)
             order["cost"]=doc.cost
+            order["evidence"]=doc.evidence
             order["parts"]=[r.as_dict() for r in doc.parts]
     if may("report"):
         from hospitality_suite.reports import summary, REPORTS
@@ -254,6 +258,7 @@ def save_setup(property_name, section, data, request_key, expected_modified=None
     allowed["payment_method"]+=list(treasury.METHOD_FIELDS)
     allowed["expense_category"]=["label","account","max_amount","active"]
     allowed["supplier"]=["supplier","active"]
+    allowed["equipment"]=["equipment_code","label","room","asset","active","instructions"]
     if "included_services" in values:
         services=values["included_services"]
         if not isinstance(services,list) or len(services)>100:
@@ -269,7 +274,7 @@ def save_setup(property_name, section, data, request_key, expected_modified=None
             prop.save()
             doc = prop
         else:
-            dt = {"room": "HS Room", "category": "HS Category", "rate": "HS Rate", "payment_method": "HS Payment Method","billing_party":"HS Billing Party","expense_category":"HS Expense Category","supplier":"HS Supplier"}[section]
+            dt = {"room": "HS Room", "category": "HS Category", "rate": "HS Rate", "payment_method": "HS Payment Method","billing_party":"HS Billing Party","expense_category":"HS Expense Category","supplier":"HS Supplier","equipment":"HS Equipment"}[section]
             doc = insert(dt, prop, **values)
         audit(prop, "Setup " + section, doc)
         return dict(name=doc.name)

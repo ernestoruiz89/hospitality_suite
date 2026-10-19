@@ -26,8 +26,19 @@
    "fieldname": "room",
    "label": "Habitación",
    "fieldtype": "Link",
-   "options": "HS Room",
-   "reqd": 1
+   "options": "HS Room"
+  },
+  {
+   "fieldname": "equipment",
+   "label": "Equipment",
+   "fieldtype": "Link",
+   "options": "HS Equipment"
+  },
+  {
+   "fieldname": "blocks_room",
+   "label": "Blocks room",
+   "fieldtype": "Check",
+   "default": 1
   },
   {
    "fieldname": "title",
@@ -77,7 +88,8 @@
   {
    "fieldname": "evidence",
    "label": "Evidence",
-   "fieldtype": "Attach"
+   "fieldtype": "Attach",
+   "permlevel": 1
   },
   {
    "fieldname": "cost",
@@ -111,6 +123,8 @@
   "company",
   "property",
   "room",
+  "equipment",
+  "blocks_room",
   "title",
   "starts_at",
   "ends_at",

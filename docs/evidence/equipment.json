@@ -1,0 +1,18 @@
+{
+  "equipment": "hfj7aq41pd",
+  "order": "hr3a78j3od",
+  "status": "Completed",
+  "room": null,
+  "blocks_room": 0,
+  "allocations": 0,
+  "private_file": "4166ba4f19",
+  "evidence_sha256": "45a8e86d6a5974533d4add30da6f0b4b1dc7d0f80c6d5e2a41c2e1d97eef18d5",
+  "permissions": {
+    "supervisor@hospitality.example.invalid": true,
+    "maintenance@hospitality.example.invalid": true,
+    "housekeeping@hospitality.example.invalid": false
+  },
+  "incident": "jpjjmvvhon",
+  "incident_status": "Resolved",
+  "resolved_by": "supervisor@hospitality.example.invalid"
+}
