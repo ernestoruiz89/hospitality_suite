@@ -41,7 +41,7 @@ Abra Configuración con un administrador de sistema o rol autorizado. Seleccione
 
 El usuario necesita roles HS y un registro HS Access por establecimiento/compañía. El asistente concede únicamente roles HS; la administración de cuentas de acceso y los roles ERPNext adicionales siguen los mecanismos estándar de Frappe. Un recepcionista que también cobra puede combinar HS Receptionist y HS Cashier.
 
-Consulte el [manual por rol](docs/MANUAL.md), [tratamiento contable](docs/CONTABILIDAD.md) y [operación técnica](docs/OPERACION.md).
+Consulte el [manual por rol](docs/MANUAL.md), [tratamiento contable](docs/CONTABILIDAD.md) y [operación técnica](docs/OPERACION.md) y [contratos API](docs/API.md).
 
 ## Demostración explícita
 
@@ -72,14 +72,14 @@ bench --site hotel.localhost set-config allow_tests true
 bench --site hotel.localhost run-tests --app hospitality_suite
 ```
 
-`before_tests` carga la demostración explícita para las pruebas; cada caso revierte sus movimientos. No ejecutar esta batería en producción. Última batería conjunta: **103 aprobadas** en el sitio adicional limpio, 92 de integración y 11 puras. Los dos casos de concurrencia usan conexiones y commits reales y se ejecutan aparte:
+`before_tests` carga la demostración explícita para las pruebas; cada caso revierte sus movimientos. No ejecutar esta batería en producción. Última batería conjunta: **107 aprobadas** en el sitio adicional limpio, 94 de integración y 13 puras. Los dos casos de concurrencia usan conexiones y commits reales y se ejecutan aparte:
 
 ```sh
 bench --site hospitality.localhost execute hospitality_suite.tests.concurrency.verify
 bench --site hospitality.localhost execute hospitality_suite.tests.concurrency.verify_category
 ```
 
-Las seis pruebas de orden de respuestas, recuperación, edición numérica, acciones de grupos y errores de negocio en Pages se ejecutan con `node tools/test_desk_transport.cjs`. Las dos pruebas del portal se ejecutan con `node tools/test_portal_ui.cjs` y cubren cotizaciones obsoletas y reintentos con la misma referencia. Los ensayos reales de sesiones, corte y respuesta perdida se describen en docs/OPERACION.md.
+Las siete pruebas de orden de respuestas, recuperación, edición numérica, acciones de grupos, horas locales y errores de negocio en Pages se ejecutan con `node tools/test_desk_transport.cjs`. Las dos pruebas del portal se ejecutan con `node tools/test_portal_ui.cjs` y cubren cotizaciones obsoletas y reintentos con la misma referencia. Los ensayos reales de sesiones, corte y respuesta perdida se describen en docs/OPERACION.md.
 
 Los helpers de concurrencia están limitados al sitio sintético y conservan anulaciones auditadas. No son pruebas que deban ejecutarse contra clientes reales.
 

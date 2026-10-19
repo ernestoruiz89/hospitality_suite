@@ -126,3 +126,41 @@ class TestTimingMetrics(IntegrationTestCase):
         self.assertEqual(result["occupied_hours"],2)
         self.assertEqual(result["available_hours"],238)
         self.assertLessEqual(result["utilization"],100)
+
+    def test_business_cutoff_clips_motel_hours_and_is_saved_in_close(self):
+        from hospitality_suite.time import business_window
+        self.prop=frappe.get_doc("HS Property",{"property_name":"Motel Luna Demo"})
+        self.room=frappe.get_all("HS Room",filters={"property":self.prop.name,"room_number":"M110"},fields=["*"])[0]
+        self.guest=frappe.get_all("HS Guest",filters={"property":self.prop.name},fields=["*"])[0]
+        entered=self.enter()
+        with operation():
+            self.prop.close_time="06:45:00"
+            self.prop.save()
+            cutoff=business_window(self.prop)["starts_at"]
+            stay=frappe.get_doc("HS Stay",entered["stay"])
+            stay.actual_check_in=cutoff-timedelta(minutes=30)
+            stay.actual_check_out=cutoff+timedelta(minutes=30)
+            stay.status="Checked Out"
+            stay.save()
+            segment=frappe.get_doc("HS Allocation",{"stay":stay.name})
+            segment.starts_at=stay.actual_check_in
+            segment.ends_at=stay.actual_check_out
+            segment.save(ignore_permissions=True)
+        result=reports.summary(self.prop)
+        self.assertEqual(result["occupied_hours"],0.5)
+        self.assertEqual(result["rotations"],0)
+        self.assertEqual(result["close_time"],"06:45:00")
+        self.assertIn("T06:45:00",result["local_starts_at"])
+        day=str(self.prop.business_date)
+        calendar=reports.summary(self.prop,day+" 00:00:00",str(now_datetime().date()+timedelta(days=1))+" 00:00:00")
+        self.assertEqual(calendar["occupied_hours"],1)
+        self.assertEqual(calendar["rotations"],1)
+        close=self.call("daily_close",dict(confirm=False))
+        snapshot=frappe.parse_json(frappe.db.get_value("HS Daily Close",close["close"],"summary"))
+        self.assertEqual(snapshot["occupied_hours"],0.5)
+        self.assertEqual(snapshot["local_ends_at"],result["local_ends_at"])
+        self.assertEqual(close["period"]["close_time"],"06:45:00")
+        for invalid in ("25:00:00","06:00:00+02:00"):
+            with self.assertRaises(frappe.ValidationError):
+                api.save_setup(self.prop.name,"property",dict(close_time=invalid),uuid.uuid4().hex,str(self.prop.modified))
+        self.assertEqual(str(frappe.db.get_value("HS Property",self.prop.name,"close_time")),"6:45:00")

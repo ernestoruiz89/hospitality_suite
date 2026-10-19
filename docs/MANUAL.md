@@ -59,6 +59,12 @@ Los medios utilizados conservan cuenta, moneda y clasificación para que los arq
 
 Revise el cierre diario antes de confirmar: llegadas pendientes, estancias vencidas, cargos, turnos y diferencias contables. Confirmar avanza la fecha operativa una sola vez por solicitud. Reabrir el último día requiere motivo y autorización. El formato de cierre imprime el snapshot conservado.
 
+Configuración → Horarios y penalizaciones define la hora de corte. La fecha operativa D comprende desde ese corte de D hasta el corte de D+1 en la zona del establecimiento, con inicio incluido y fin excluido. Gerencia y el cierre muestran el período real; un día con cambio horario puede durar 23 o 25 horas. El reloj no avanza automáticamente la fecha operativa: el responsable confirma su cierre después de revisar los pendientes. Los informes con fechas explícitas conservan el período elegido.
+
+Configuración → Series y formatos permite seleccionar los existentes en ERPNext. Usuarios y roles aparece solo a administración del sistema; el alta concede roles HS y acceso al establecimiento, sin conceder roles generales de ERPNext. Las aprobaciones financieras y de retención requieren gerente o administrador HS; el supervisor operativo inspecciona limpieza y mantenimiento.
+
+Configuración → Portal de reservas habilita el establecimiento en `/hospitality`. El visitante consulta precio y solicita confirmación; el cupo se conserva hasta la hora mostrada. En Reservas → Solicitudes del portal, recepción revisa huésped/pagador y confirma la cotización para convertirla en reserva. El enlace firmado permite consultar su estado sin publicar datos personales. Sin pasarela real no hay pago aprobado ni envío automático por un proveedor de mensajería.
+
 En Configuración → Retención de datos, administración define días de conservación; 0 desactiva la revisión. Gerencia → Revisar datos vencidos muestra documentos elegibles y pide motivo. Revise los campos y adjuntos del resumen antes de confirmar la eliminación irreversible. Solo administrador HS y gerente pueden aprobarla. Huéspedes con actividad vigente o reciente, evidencias de tareas abiertas y adjuntos recientes se conservan. Se retiran identificaciones y evidencias cerradas; nombres, contactos, contabilidad, comentarios libres y respaldos conservan su política propia. El historial distingue pendiente, completada y fallida; corregida la causa de una falla, un gerente puede encolar otro intento con motivo.
 
 ## Si ocurre un error

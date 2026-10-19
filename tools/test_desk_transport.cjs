@@ -83,3 +83,16 @@ test('a native business rejection keeps its server message; a lost response gets
   await desk.dialog('Request',[],async()=>{throw error;});await submit();assert.equal(messages.length,0);
   error={status:0};await submit();assert.equal(messages.length,1);assert.equal(messages[0].title,'Sin confirmación del servidor');
 });
+
+test('property wall-clock controls preserve native single-digit hours',async()=>{
+  const {desk,context}=fixture();let received,attributes,value;
+  desk.prop={time_zone:'America/Managua'};
+  const primary={off(){return this;},on(){return this;},prop(){return this;}};
+  context.frappe.ui={Dialog:class{
+    constructor(options){received=options.fields[0];this.fields_dict={cutoff:{$input:{attr(v){attributes=v;}},set_value(v){value=v;}}};this.$wrapper={on(){}};}
+    get_primary_btn(){return primary;}show(){}get_values(){return{};}
+  }};
+  await desk.dialog('Cutoff',[{fieldname:'cutoff',fieldtype:'Time',default:'6:45:00'}],async()=>{});
+  assert.equal(received.fieldtype,'Data');assert.match(received.description,/America\/Managua/);
+  assert.equal(attributes.type,'time');assert.equal(value,'06:45:00');
+});

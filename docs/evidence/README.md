@@ -78,3 +78,12 @@ El núcleo de Frappe/ERPNext se comprobó sin cambios. Los pendientes obligatori
 40. `40-configuracion-roles.png`: formulario administrativo con nueve roles en español; no se concedieron nuevos accesos desde el navegador.
 
 portal-ui-tests.log contiene dos pruebas aprobadas; desk-transport-tests.log contiene seis. La prueba nativa del portal ahora renderiza la ruta real de confirmación y valida vencimiento y ausencia del correo del visitante.
+
+41. `41-inventario-revision-conteo.png`: conteo 1 frente a existencia 2 y valoración C$10 revisados antes de confirmar.
+42. `42-inventario-conteo-confirmado.png`: ubicación de lavandería con una unidad de agua después del ajuste.
+43. `43-lavanderia-mobile.png`: formulario completo a 390×844, con etiquetas y Guardar accesible.
+44. `44-lavanderia-resultados-mobile.png`: resultado de pérdida/recepción sin información de huéspedes o importes. Los movimientos se enviaron con rol limpieza en la vista habitual y se revisaron junto con el formulario a 390×844.
+
+inventory-ui.json acredita traslado MAT-STE-2026-00010, conteo MAT-RECO-2026-00001 con dos GL Entry y tres movimientos de ropa: 00011/00012/00013. Agua 91 en origen/1 en lavandería; sábana 1 en origen/0 en lavandería, envío 2/recepción 1/pérdida 1. No se escribió directamente en los libros.
+
+La batería final registra 107 aprobadas, 94 integración y 13 puras. Incluye corte operativo configurable que recorta horas de motel, snapshot del cierre, límites inválidos rechazados, DST de 23/25 horas y webhook sintético firmado/repetido una vez, con campos redactados y ningún efecto financiero. Desk tiene siete pruebas aprobadas; portal conserva dos. concurrency-final.json acredita una confirmación y un rechazo en ambas carreras reales.

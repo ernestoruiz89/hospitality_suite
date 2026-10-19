@@ -1,25 +1,25 @@
-Starting test run with parameters: site=hospitality-clean.localhost, app=hospitality_suite, verbose=False, tests=(), force=False, profile=False, junit_xml_output=/tmp/hospitality-tests-20261019-setup.xml, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+Starting test run with parameters: site=hospitality-clean.localhost, app=hospitality_suite, verbose=False, tests=(), force=False, profile=False, junit_xml_output=/tmp/hospitality-complete-20261019.xml, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
 View detailed logs (using --verbose): /home/frappe/benches/hospitality-bench/logs/frappe.testing.log
 
-Running 92 integration tests for hospitality_suite
+Running 94 integration tests for hospitality_suite
 
 Running tests...
 ----------------------------------------------------------------------
-............................................................................................
+..............................................................................................
 ----------------------------------------------------------------------
-Ran 92 tests in 33.525s
+Ran 94 tests in 31.631s
 
 OK
 
 Generating XML reports...
 
-Running 11 unspecified-category tests for hospitality_suite
+Running 13 unspecified-category tests for hospitality_suite
 
 Running tests...
 ----------------------------------------------------------------------
-...........
+.............
 ----------------------------------------------------------------------
-Ran 11 tests in 0.263s
+Ran 13 tests in 0.167s
 
 OK
 

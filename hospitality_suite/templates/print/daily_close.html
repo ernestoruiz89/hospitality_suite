@@ -4,6 +4,7 @@
   <p>{{ doc.name | e }} · Fecha operativa {{ doc.business_date }} · {{ hs_label(doc.status) | e }}</p>
   <p>Cierre: {{ hs_date(doc.closed_at,doc.property) }} · Moneda {{ frappe.db.get_value("HS Property",doc.property,"currency") | e }}</p>
   {% set snapshot=hs_json(doc.summary or '{}') %}
+  {% if snapshot.get('local_starts_at') %}<p>Período: {{ snapshot.local_starts_at | e }} → {{ snapshot.local_ends_at | e }} · {{ snapshot.time_zone | e }}</p>{% endif %}
   <table><thead><tr><th>Indicador conservado al ejecutar</th><th>Valor</th></tr></thead><tbody>
   {% for key,label in [('production','Producción operativa'),('hotel_lodging_net','Alojamiento hotel neto facturado'),('motel_lodging_net','Alojamiento motel neto facturado'),('room_nights','Habitaciones-noche comercializadas'),('occupied_hours','Horas de motel ocupadas'),('ADR','ADR hotel'),('RevPAR','RevPAR hotel')] %}
   <tr><th>{{ label }}</th><td>{{ snapshot.get(key,'—') | e }}</td></tr>{% endfor %}</tbody></table>

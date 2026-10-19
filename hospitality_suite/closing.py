@@ -47,7 +47,7 @@ def daily_close(prop, data):
         prop.business_date = add_days(prop.business_date, 1)
         prop.save()
     audit(prop, "Daily close " + doc.status, doc)
-    return dict(close=doc.name, status=doc.status, blockers=problems)
+    return dict(close=doc.name, status=doc.status, blockers=problems,period=frappe.parse_json(doc.summary))
 
 
 def reopen(prop, data):

@@ -1,0 +1,25 @@
+{
+  "native_bench_backup": true,
+  "components": [
+    {
+      "file": "20261019_095513-hospitality_localhost-database.sql.gz",
+      "bytes": 1133764,
+      "sha256": "209d1084e64fbe75107d891cb5c6bff37ec2f9353e53b4fba5bd6067681e38f5"
+    },
+    {
+      "file": "20261019_095513-hospitality_localhost-files.tar",
+      "bytes": 10240,
+      "sha256": "e27ebfc97c648d28db7a1a874b8a3a008bf1cf8cb3ab3e24006df35619ecf295"
+    },
+    {
+      "file": "20261019_095513-hospitality_localhost-private-files.tar",
+      "bytes": 10240,
+      "sha256": "c3ed7713c4e1c83859b0c939287c1a7fcfa92760c34eacb3280b3205e7225144"
+    },
+    {
+      "file": "20261019_095513-hospitality_localhost-site_config_backup.json",
+      "bytes": 372,
+      "sha256": "99c5c767a1d478deb51197ebe115213e46fda77c2bbc3aa3674354dba354e12e"
+    }
+  ]
+}

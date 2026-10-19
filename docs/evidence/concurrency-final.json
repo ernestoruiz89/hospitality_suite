@@ -1,0 +1,15 @@
+{
+  "isolation": "REPEATABLE-READ",
+  "room": {
+    "passed": true,
+    "confirmed": 1,
+    "rejected": 1,
+    "booking": "ocmkubphpq"
+  },
+  "category": {
+    "passed": true,
+    "confirmed": 1,
+    "rejected": 1,
+    "booking": "oklcpsvq6d"
+  }
+}

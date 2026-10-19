@@ -111,9 +111,10 @@ def union_seconds(spans):
 
 
 def summary(prop, starts_at=None, ends_at=None):
-    from hospitality_suite.time import to_site, local
-    start=to_site(starts_at or str(prop.business_date)+" 00:00:00",prop)
-    end=to_site(ends_at,prop) if ends_at else to_site(str(get_datetime(str(prop.business_date)).date()+timedelta(days=1))+" 00:00:00",prop)
+    from hospitality_suite.time import to_site, local, business_window
+    window=business_window(prop) if not starts_at or not ends_at else {}
+    start=to_site(starts_at,prop) if starts_at else window["starts_at"]
+    end=to_site(ends_at,prop) if ends_at else window["ends_at"]
     if end<=start or (end-start).days>366:
         frappe.throw("Consulte un período positivo de hasta un año")
     room_names=current_all("HS Room",filters={"property":prop.name,"active":1},pluck="name")
@@ -224,5 +225,7 @@ def summary(prop, starts_at=None, ends_at=None):
                 occupancy_percent=round(len(sold_nights)/available_nights*100,2) if available_nights else 0,
                 ADR=safe(lodging_net,len(sold_nights)),RevPAR=safe(lodging_net,available_nights),
                 revenue_per_available_hour=safe(motel_net,decimal(available)/3600),average_ticket=safe(motel_net,len(served)),
-                starts_at=str(start),ends_at=str(end),mode=prop.mode,
+                starts_at=str(start),ends_at=str(end),mode=prop.mode,time_zone=prop.time_zone,
+                local_starts_at=local(start,prop).isoformat(),local_ends_at=local(end,prop).isoformat(),
+                close_time=window["close_time"] if not starts_at and not ends_at else None,
                 definitions="Hotel: noches comercializadas de estancias con entrada registrada, únicas por habitación y fecha; ADR=alojamiento neto facturado/noches, RevPAR=neto/noches disponibles. Motel: horas reales unidas por habitación, rotaciones=entradas; ingreso neto/hora disponible. Ingreso de líneas de facturas presentadas, distribuido al período de servicio; excluye impuestos, otros servicios, anticipos y garantías. Cortesías ocupan con ingreso cero; bloqueos restan capacidad; denominador cero=0. Producción operativa se muestra separadamente.")

@@ -1,0 +1,34 @@
+{
+  "synthetic": true,
+  "transfer": "MAT-STE-2026-00010",
+  "stock_reconciliation": "MAT-RECO-2026-00001",
+  "count_gl_entries": 2,
+  "water": {
+    "Stores - HSD": 91.0,
+    "Lavander\u00eda UX-INV-001 - HSD": 1.0
+  },
+  "linen": {
+    "Stores - HSD": 1.0,
+    "Lavander\u00eda UX-INV-001 - HSD": 0.0
+  },
+  "linen_movements": [
+    {
+      "name": "mjqrgb8rr6",
+      "stock_entry": "MAT-STE-2026-00011",
+      "quantity": 2.0,
+      "actor": "housekeeping@hospitality.example.invalid"
+    },
+    {
+      "name": "mn0n381ub1",
+      "stock_entry": "MAT-STE-2026-00012",
+      "quantity": 1.0,
+      "actor": "housekeeping@hospitality.example.invalid"
+    },
+    {
+      "name": "n8qabj0e84",
+      "stock_entry": "MAT-STE-2026-00013",
+      "quantity": 1.0,
+      "actor": "housekeeping@hospitality.example.invalid"
+    }
+  ]
+}

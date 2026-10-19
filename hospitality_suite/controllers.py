@@ -69,6 +69,8 @@ class ScopedDocument(Document):
             if get_datetime(self.starts_at) >= get_datetime(self.ends_at):
                 frappe.throw(_("La fecha final debe ser posterior a la inicial"))
         if self.doctype == "HS Property":
+            from hospitality_suite.time import cutoff_time
+            cutoff_time(self.close_time)
             if not 0<=(self.retention_days or 0)<=36500:
                 frappe.throw("La retención admite de 0 a 36500 días; cero desactiva el proceso")
             from hospitality_suite.setup import validate_document_settings

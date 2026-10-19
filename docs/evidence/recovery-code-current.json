@@ -1,0 +1,8 @@
+{
+  "stage": "current",
+  "site": "hospitality-restore.localhost",
+  "code_revision": "be9a592fb58e04c82bf9da0e347f33659cb4e973",
+  "isolated_archive": false,
+  "migration_passed": true,
+  "source_checkout_unchanged": true
+}

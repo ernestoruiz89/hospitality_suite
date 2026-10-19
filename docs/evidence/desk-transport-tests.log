@@ -1,46 +1,15 @@
-TAP version 13
-# Subtest: an older success cannot overwrite a newer property response
-ok 1 - an older success cannot overwrite a newer property response
-  ---
-  duration_ms: 2.9127
-  type: 'test'
-  ...
-# Subtest: an old failure cannot clear busy or replace a newer result with an error
-ok 2 - an old failure cannot clear busy or replace a newer result with an error
-  ---
-  duration_ms: 0.7907
-  type: 'test'
-  ...
-# Subtest: an invalidation during a failed mutation is refreshed once the request ends
-ok 3 - an invalidation during a failed mutation is refreshed once the request ends
-  ---
-  duration_ms: 1.1334
-  type: 'test'
-  ...
-# Subtest: dialog keeps numeric edits across row refreshes and leaves untouched hidden rows alone
-ok 4 - dialog keeps numeric edits across row refreshes and leaves untouched hidden rows alone
-  ---
-  duration_ms: 1.9868
-  type: 'test'
-  ...
-# Subtest: a partly arrived group exposes its remaining numbered request and valid actions
-ok 5 - a partly arrived group exposes its remaining numbered request and valid actions
-  ---
-  duration_ms: 2.3595
-  type: 'test'
-  ...
-# Subtest: a native business rejection keeps its server message; a lost response gets recovery guidance
-ok 6 - a native business rejection keeps its server message; a lost response gets recovery guidance
-  ---
-  duration_ms: 0.966
-  type: 'test'
-  ...
-1..6
-# tests 6
-# suites 0
-# pass 6
-# fail 0
-# cancelled 0
-# skipped 0
-# todo 0
-# duration_ms 16.3879
+✔ an older success cannot overwrite a newer property response (2.7651ms)
+✔ an old failure cannot clear busy or replace a newer result with an error (0.8317ms)
+✔ an invalidation during a failed mutation is refreshed once the request ends (1.0588ms)
+✔ dialog keeps numeric edits across row refreshes and leaves untouched hidden rows alone (1.5303ms)
+✔ a partly arrived group exposes its remaining numbered request and valid actions (1.8818ms)
+✔ a native business rejection keeps its server message; a lost response gets recovery guidance (0.7706ms)
+✔ property wall-clock controls preserve native single-digit hours (0.7495ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 13.3167
