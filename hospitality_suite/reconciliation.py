@@ -47,8 +47,11 @@ def rows(prop,filters=None,limit=1000):
         result.append(dict(type=kind,source=name,erp_document=origin or "—",expected=str(money(expected)),actual=str(money(actual)),
                            difference=str(difference),currency=currency,status="Difference" if difference else "OK",detail=detail))
     def selected(row,date_field="creation"):
-        date=str(row.get(date_field) or "")[:10]
-        return (not filters.get("from_date") or date>=filters["from_date"]) and (not filters.get("to_date") or date<=filters["to_date"]) and (not filters.get("shift") or row.get("shift")==filters["shift"])
+        from hospitality_suite.time import local
+        value=row.get(date_field)
+        date=str(local(value,prop).date()) if value and date_field=="creation" else str(value or "")[:10]
+        shift=row.get("shift") or row.get("hs_shift") or (row.name if row.get("doctype")=="HS Shift" or row.get("cashier") else None)
+        return (not filters.get("from_date") or date>=filters["from_date"]) and (not filters.get("to_date") or date<=filters["to_date"]) and (not filters.get("shift") or shift==filters["shift"])
     charges=current_all("HS Charge",filters={"property":prop.name,"status":"Invoiced"},fields=["*"])
     seen=set()
     for charge in charges:
@@ -117,6 +120,7 @@ def rows(prop,filters=None,limit=1000):
         current=expected(shift)
         for currency in set(frozen)|set(current):
             record("Closed shift",shift.name,None,frozen.get(currency,0),current.get(currency,0),currency,"Efectivo actual contra arqueo original")
+    result=[row for row in result if not filters.get("status") or row["status"]==filters["status"]]
     return result if limit is None else result[:limit]
 
 

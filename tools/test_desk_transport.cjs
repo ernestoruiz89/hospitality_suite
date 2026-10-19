@@ -18,6 +18,49 @@ function fixture(){
 }
 function deferred(){let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return{promise,resolve,reject};}
 const snapshot=(tag,property='hotel')=>({tag,server_time:'2026-10-19 10:00:00',system_timezone:'America/Managua',properties:[{name:property}]});
+
+test('booking descriptions use people and dates while respecting discreet mode and preserving keys',()=>{
+  const {desk}=fixture();
+  desk.date=()=>"23/10/2026 14:00";
+  desk.data={properties:[{name:'hotel',discreet_mode:0}],bookings:[{name:'opaque-booking-key',guest:'guest-key',starts_at:'2026-10-23 14:00:00'}],guests:[{name:'guest-key',full_name:'Visitante de prueba'}],items:[{name:'STOCK-CODE',item_name:'Agua embotellada'}]};
+  desk.prop=desk.data.properties[0];
+  assert.equal(desk.bookingLabel('opaque-booking-key'),'Visitante de prueba · 23/10/2026 14:00');
+  assert.equal(desk.itemName('STOCK-CODE'),'Agua embotellada');
+  desk.data.properties[0].discreet_mode=1;
+  assert.equal(desk.bookingLabel('opaque-booking-key'),'Huésped registrado · 23/10/2026 14:00');
+  assert.equal(desk.data.bookings[0].name,'opaque-booking-key');
+  assert.equal(desk.data.items[0].name,'STOCK-CODE');
+});
+
+test('report scope changes ignore old options and keep a failed scope unqueryable',async()=>{
+  const {desk,context}=fixture();
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../hospitality_suite/public/js/hospitality_reporting.js'),'utf8'),context);
+  const metadata=user=>({base:'Auditoría',filters:['user'],companies:['Company'],properties:[{name:'hotel',property_name:'Hotel',company:'Company'},{name:'motel',property_name:'Motel',company:'Company'}],
+    date_fields:[{value:'occurred_at',label:'Momento'}],date_field:'occurred_at',note:'Source dates',users:[{name:user,full_name:user}]});
+  desk.data={property_now:'2026-10-19T10:00:00-06:00'};
+  let controls,values,submit,disabled=false,queries=0,notices=0;
+  context.frappe.msgprint=()=>{notices++;};
+  desk.dialog=async(title,fields,callback)=>{
+    submit=callback;controls=Object.fromEntries(fields.map(df=>[df.fieldname,{df}]));values=Object.fromEntries(fields.map(df=>[df.fieldname,df.default||'']));
+    return {fields_dict:controls,get_value:key=>values[key],async set_value(key,value){const old=values[key];values[key]=value;if(old!==value)await controls[key].df.onchange?.();},
+      set_df_property(key,property,value){controls[key].df[property]=value;},get_primary_btn:()=>({prop(key,value){disabled=value;}})};
+  };
+  desk.call=async()=>metadata('initial');
+  const dialog=await desk.action_report('Auditoría');
+  desk.show_paged=async()=>{queries++;};
+  const older=deferred(),newer=deferred();let count=0;
+  desk.call=()=>++count===1?older.promise:newer.promise;
+  values.property_name='motel';const first=controls.property_name.df.onchange();
+  values.property_name='hotel';const second=controls.property_name.df.onchange();
+  newer.resolve(metadata('authorized current owner'));await second;
+  older.resolve(metadata('obsolete owner'));await first;
+  assert.equal(controls.user.df.options[1].value,'authorized current owner');assert.equal(disabled,false);
+  desk.call=async()=>{throw Error('scope disconnected');};
+  values.property_name='motel';await assert.rejects(controls.property_name.df.onchange(),/scope disconnected/);
+  assert.equal(disabled,true);await submit(values,{hide(){}});assert.equal(queries,0);assert.equal(notices,1);
+  desk.call=async()=>metadata('recovered owner');values.property_name='hotel';await controls.property_name.df.onchange();
+  await submit(values,{hide(){}});assert.equal(queries,1);
+});
 test('an older success cannot overwrite a newer property response',async()=>{
   const {desk}=fixture(),old=deferred(),fresh=deferred();let count=0;
   desk.call=()=>++count===1?old.promise:fresh.promise;

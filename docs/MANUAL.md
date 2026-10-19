@@ -75,3 +75,13 @@ En Configuración → Retención de datos, administración define días de conse
 - El indicador Tiempo real conectado refleja Socket.IO. Si muestra Sin tiempo real, pulse Actualizar para reconectar y consultar el estado del servidor. Los movimientos siguen requiriendo respuesta válida; una conexión de notificaciones no sustituye esa confirmación.
 - Si falla facturación o stock, el comando revierte su operación local completa. El error no equivale a una reserva, cobro o salida confirmada.
 - Para corregir documentos presentados, use nota de crédito, devolución o cancelación autorizada con motivo. Conserve documentos y auditoría.
+
+## Reportes con información legible
+
+En Gerencia, elija el reporte y confirme compañía, establecimiento y período. «Consultar por» distingue llegada, salida y registro. Los filtros de categoría, habitación, canal, usuario, responsable, turno, medio de pago o inventario aparecen cuando corresponden al reporte. Las fechas usan el calendario del navegador y la zona local del establecimiento.
+
+La presentación inicial es «Vista operativa»: servicios por su nombre, habitaciones por su número, cuentas por su etiqueta y personas por su nombre autorizado. Producción muestra alojamiento, consumos y devoluciones con cantidades, importes y estado; «Agrupar producción» permite comparar habitación, categoría, servicio, canal o establecimiento. Los importes de monedas distintas permanecen separados.
+
+Para revisar documentos de origen, seleccione «Documentos y referencias técnicas» en Presentación. Las claves internas siguen disponibles para contabilidad, sin ocupar la vista cotidiana. PDF y Excel respetan esa selección e incluyen el conjunto completo, aunque la pantalla muestre una página. Los valores numéricos se conservan en Excel.
+
+El listado de reservas muestra huésped y fecha. En modo discreto sustituye el nombre por «Huésped registrado». Las acciones siguen apuntando al mismo documento; estas etiquetas no renumeran ni alteran reservas, facturas, cuentas o movimientos.

@@ -18,10 +18,21 @@ Base RPC: `/api/method/hospitality_suite.api.`.
 | `inventory_status` | establecimiento, almacén opcional | Existencias de almacenes autorizados |
 | `report`, `export_report` | establecimiento, nombre, filtros; exportación `file_format` | Datos o descarga XLSX/PDF según rol |
 | `report_page` | los mismos filtros, `offset`, `page_length` (1–200) | `rows`, `columns`, `total`, `has_more`; sin truncar la exportación |
+| `report_options` | `property_name`, `report_name`, `company` opcional | Dimensiones aplicables, tipos de fecha y opciones dentro de los establecimientos autorizados |
 | `guest_history` | `name`, `offset`, `page_length` | Visitas como principal o acompañante, limitadas al documento/establecimiento autorizado |
 | `configuration`, `setup_options` | establecimiento | Configuración y opciones; requiere permiso de configuración |
 
 En la tabla, establecimiento es el argumento `property_name`; inicio/fin son `starts_at`/`ends_at`, categoría es `category` y personas es `people`. Filtros se envía como objeto JSON en `filters`, con `from_date`, `to_date` y dimensiones admitidas por el reporte. Nombres e identificadores se obtienen de las consultas, no se construyen a partir del número visible de habitación.
+
+### Reportes y presentación
+
+`report_options` es la autoridad sobre filtros y `date_field`. Llegadas permite llegada/salida prevista o registro; estancias añade entrada/salida reales. Los períodos de fecha cubren días locales completos, con extremo final exclusivo en el día siguiente. Se admite un solo extremo y se rechazan fechas inválidas, períodos invertidos y dimensiones que no correspondan. Disponibilidad utiliza `starts_at`/`ends_at` y el mismo cálculo de cupo que reserva; las candidatas físicas son alternativas, mientras las reservas sin asignar consumen cupo de categoría.
+
+Para agregar una compañía envíe `property_name=""` y `filters.company` con su nombre. Solo se combinan establecimientos autorizados de esa compañía; la selección de una propiedad incompatible se rechaza. Las filas conservan establecimiento, zona y moneda. Producción admite `group_by` con `room`, `category`, `item`, `channel` o `property`, con totales separados por moneda. Los documentos compartidos se seleccionan completos; un filtro no prorratea su saldo.
+
+`report` conserva las claves originales. `report_page` y `export_report` usan por defecto una vista operativa con nombres y columnas relevantes. Las etiquetas están en `_display`; no reemplazan el valor original de `name`, `stay`, `folio`, `item` u otros enlaces. `filters.detail_level="technical"` incluye las referencias de documentos para trazabilidad. La Page debe renderizar únicamente `columns` y escapar las etiquetas. El historial de huésped sigue el mismo criterio y conserva sus claves en la respuesta.
+
+Las exportaciones incluyen todos los resultados. XLSX mantiene números y precisión monetaria nativa; `base_currency` identifica el importe en moneda base. El PDF operativo de producción omite identificadores aleatorios. Los informes anchos se distribuyen en secciones con claves de relación repetidas; fechas y filtros figuran en el encabezado. El generador exige el runtime con Qt parcheado descrito en OPERACION.md.
 
 ## Cotizar y confirmar
 

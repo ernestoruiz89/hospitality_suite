@@ -22,8 +22,8 @@ class TestTimingMetrics(IntegrationTestCase):
     def call(self,action,data):
         return api.execute(self.prop.name,action,uuid.uuid4().hex,data)
 
-    def enter(self,people=1):
-        start=now_datetime().replace(microsecond=0)
+    def enter(self,people=1,starts_at=None):
+        start=starts_at or now_datetime().replace(microsecond=0)
         data=dict(starts_at=str(start),ends_at=str(start+(timedelta(hours=3) if self.prop.mode=="Motel" else timedelta(days=1))),guest=self.guest.name,customer=self.guest.customer,
                   rooms=[dict(category=self.room.category,room=self.room.name,people=people)])
         data["acceptance"]=api.preview(self.prop.name,data)["acceptance"]
@@ -56,7 +56,9 @@ class TestTimingMetrics(IntegrationTestCase):
             self.prop.schedule_rounding_minutes=30
             self.prop.checkout_inspection_required=1
             self.prop.save()
-        entered=self.enter()
+        # Keep planned departure before checkout. Running this test after noon
+        # must not prepay the very late fee that the assertion is measuring.
+        entered=self.enter(starts_at=now_datetime().replace(hour=10,minute=0,second=0,microsecond=0))
         stay=frappe.get_doc("HS Stay",entered["stay"])
         # The night ends at the configured checkout boundary, even with an earlier planned departure.
         boundary=stay.starts_at.replace(hour=12,minute=0,second=0,microsecond=0)+timedelta(days=1)

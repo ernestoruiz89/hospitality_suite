@@ -238,7 +238,23 @@ class TestFinance(IntegrationTestCase):
             self.assertEqual(frappe.db.get_value("Payment Entry",result["payment_entry"],"received_amount"),100.123)
             from hospitality_suite.cashier import expected
             self.assertEqual(expected(frappe.get_doc("HS Shift",self.shift))["NIO"],"100.123")
+            import io
+            from openpyxl import load_workbook
+            records=api.report(self.prop.name,"Cobros")
+            self.assertEqual(next(r.base_currency for r in records if r.name==result["payment"]),"NIO")
+            def check_export(number_format):
+                api.export_report(self.prop.name,"Cobros",file_format="xlsx")
+                book=load_workbook(io.BytesIO(frappe.local.response.filecontent),read_only=True)
+                sheet=book.active
+                headers=[cell.value for cell in next(sheet.rows)]
+                column=headers.index("Importe")+1
+                cell=sheet.cell(2,column)
+                self.assertEqual(cell.value,100.123)
+                self.assertEqual(cell.number_format,number_format)
+                book.close()
+            check_export("#,##0.000")
             frappe.db.set_default("currency_precision","0")
+            check_export("#,##0")
             self.assertEqual(str(money("10.5")),"11")
             start=now_datetime().replace(microsecond=0)
             values=dict(starts_at=str(start),ends_at=str(start+timedelta(days=1)),customer=self.guest.customer,guest=self.guest.name,

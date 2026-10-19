@@ -30,12 +30,13 @@ try:
     assert not {r.name for r in first['rows']}&{r.name for r in second['rows']}
     records=api.report(prop,'Auditoría')
     assert len(records)==first['total']
-    api.export_report(prop,'Auditoría',file_format='xlsx')
+    trace_filters=dict(detail_level='technical')
+    api.export_report(prop,'Auditoría',filters=trace_filters,file_format='xlsx')
     workbook=load_workbook(io.BytesIO(frappe.local.response.filecontent),read_only=True)
     xlsx_count=sum(1 for _ in workbook.active.rows)-1
     workbook.close()
     assert xlsx_count==len(records)
-    api.export_report(prop,'Auditoría',file_format='pdf')
+    api.export_report(prop,'Auditoría',filters=trace_filters,file_format='pdf')
     data=frappe.local.response.filecontent
     pdf=PdfReader(io.BytesIO(data))
     text=''.join(''.join(page.extract_text().split()) for page in pdf.pages)
@@ -46,7 +47,7 @@ try:
     with requests.Session() as session:
         response=session.post('http://127.0.0.1:8086/api/method/login',data=dict(usr='manager@hospitality.example.invalid',pwd=credentials['manager@hospitality.example.invalid']),timeout=20)
         response.raise_for_status()
-        response=session.get('http://127.0.0.1:8086/api/method/hospitality_suite.api.export_report',params=dict(property_name=prop,report_name='Auditoría',file_format='pdf'),timeout=60)
+        response=session.get('http://127.0.0.1:8086/api/method/hospitality_suite.api.export_report',params=dict(property_name=prop,report_name='Auditoría',filters=json.dumps(trace_filters),file_format='pdf'),timeout=60)
         response.raise_for_status()
         assert response.content.startswith(b'%PDF-')
         http_pdf=PdfReader(io.BytesIO(response.content))

@@ -13,28 +13,45 @@ LABELS.update(source_payment="Movimiento original",expense_category="Categoría 
 LABELS.update(warehouse="Almacén",purpose="Uso operativo",classification="Clasificación",balance_quantity="Existencia tras movimiento",posting_time="Hora contable",cost_center="Centro de costo",expense_account="Cuenta de gasto")
 LABELS.update(equipment="Equipo",blocks_room="Bloquea habitación")
 LABELS.update(relationship="Participación en la estancia")
+LABELS.update(company="Compañía",property="Establecimiento",time_zone="Zona horaria",adjustment_type="Tipo de ajuste",duration_minutes="Duración (min)",
+              total_rooms="Habitaciones habilitadas",available_capacity="Cupo simultáneo disponible",candidate_rooms="Habitaciones candidatas",clean_candidates="Candidatas limpias ahora",selected_room_available="Habitación seleccionada disponible")
+LABELS.update(revenue_net="Ingreso neto facturado",source_type="Origen de producción")
+LABELS.update(pending_amount="Importe sin facturar",records="Registros de origen")
+LABELS.update(guest="Huésped")
+LABELS.update(invoice_number="Número de factura",account_label="Cuenta",recorded_at="Fecha y hora")
+LABELS.update(base_currency="Moneda base")
 NUMBERS={"amount","quantity","grand_total","outstanding_amount","base_amount","expected_amount","counted_amount","difference","cost","expected","actual","pending","outstanding","fee_amount","withholding_amount","net_amount"}
 NUMBERS.add("balance_quantity")
+NUMBERS.update({"duration_minutes","total_rooms","available_capacity","clean_candidates"})
+NUMBERS.add("revenue_net")
+NUMBERS.update({"pending_amount","records"})
+MONEY_FIELDS=NUMBERS-{"quantity","duration_minutes","total_rooms","available_capacity","clean_candidates","balance_quantity","records"}
 
 
 def label(key):
     return LABELS.get(key,key)
 
 
-def display(key,value):
-    if key in ("status","kind","type","cleaning_status","settlement_direction","purpose","classification"):
+def display(key,value,record=None):
+    if record and key in record.get("_display",{}):
+        return record["_display"][key]
+    if key=="selected_room_available" and value is not None:
+        return "Sí" if value else "No"
+    if key=="cleaning_status":
+        return {"Clean":"Limpia","Dirty":"Pendiente de limpieza","Cleaning":"En limpieza","Inspection":"Pendiente de inspección"}.get(value,value)
+    if key in ("status","kind","type","cleaning_status","settlement_direction","purpose","classification","adjustment_type"):
         from hospitality_suite.printing import hs_label
         return hs_label(value)
     return value
 
 
 def xlsx_data(records,headers):
-    from hospitality_suite.pricing import decimal
+    from hospitality_suite.pricing import decimal,currency_precision
     rows=[[label(k) for k in headers]]
     for record in records:
         row=[]
         for key in headers:
-            value=display(key,record.get(key))
+            value=display(key,record.get(key),record)
             if key in NUMBERS and value is not None:
                 value=float(decimal(value))
             elif isinstance(value,str) and value.lstrip().startswith(("=","+","-","@")):
@@ -45,4 +62,46 @@ def xlsx_data(records,headers):
     styles={"styles":[{"bold":True,"bg_color":"#173C32","font_color":"#FFFFFF","font_name":"Arial","font_size":10},
                       {"num_format":"#,##0.00","font_name":"Arial","font_size":10},{"font_name":"Arial","font_size":10}],
             "row_styles":{0:[0]},"cell_styles":{(i,j):[1 if key in NUMBERS else 2] for i in range(1,len(rows)) for j,key in enumerate(headers)}}
+    formats={}
+    precisions={}
+    for i,record in enumerate(records,1):
+        for j,key in enumerate(headers):
+            if key in MONEY_FIELDS:
+                currency=record.get("base_currency") if key=="base_amount" else record.get("currency")
+                if currency not in precisions:
+                    precisions[currency]=currency_precision(currency)
+                precision=precisions[currency]
+                if precision not in formats:
+                    formats[precision]=len(styles["styles"])
+                    styles["styles"].append({"num_format":"#,##0"+("."+"0"*precision if precision else ""),"font_name":"Arial","font_size":10})
+                styles["cell_styles"][(i,j)]=[formats[precision]]
     return rows,widths,styles
+
+
+def pdf_html(title,scope,records,headers,note):
+    """Wide reports use readable column groups with repeated source keys."""
+    from html import escape
+    from hospitality_suite.pricing import money
+    anchors=(["name"]+(["room"] if "room" in headers else [])) if "name" in headers else (["property",headers[0]] if "property" in headers and headers[0]!="property" else [headers[0]])
+    remaining=[k for k in headers if k not in anchors]
+    width=max(1,8-len(anchors))
+    bands=[headers] if len(headers)<=8 else [anchors+remaining[i:i+width] for i in range(0,len(remaining),width)]
+    html="<style>body{font-family:Arial,sans-serif;color:#173c32;font-size:11px}h1{font-size:24px}h2{font-size:14px}table{width:100%;table-layout:fixed;border-collapse:collapse}th{background:#eaf0e9;text-align:left}th,td{padding:5px;border-bottom:1px solid #dce5dc;word-wrap:break-word;overflow-wrap:break-word}thead{display:table-header-group}tr{page-break-inside:avoid}.numeric{text-align:right;white-space:nowrap}.new-band{page-break-before:always}</style>"
+    money_fields=MONEY_FIELDS
+    for index,band in enumerate(bands):
+        html+=f'<section class="{"new-band" if index else ""}"><h1>{escape(title)}</h1><p>{escape(scope)} · {len(records)} registros autorizados</p><p>{escape(note)}</p>'
+        if len(bands)>1:
+            html+=f'<h2>Detalle {index+1} de {len(bands)}</h2><p>Las referencias se repiten para relacionar las columnas de cada detalle.</p>'
+        html+='<table><thead><tr>'+''.join(f'<th>{escape(label(k))}</th>' for k in band)+'</tr></thead><tbody>'
+        for row in records:
+            html+='<tr>'
+            for key in band:
+                value=display(key,row.get(key),row)
+                if value is None:
+                    value=''
+                if key in money_fields and value!='':
+                    value=str(money(value,currency=row.get('base_currency') if key=='base_amount' else row.get('currency')))
+                html+=f'<td class="{"numeric" if key in NUMBERS else ""}">{escape(str(value))}</td>'
+            html+='</tr>'
+        html+='</tbody></table></section>'
+    return html

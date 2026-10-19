@@ -120,7 +120,7 @@ def project(dt, prop, fields=None, filters=None):
 @frappe.whitelist()
 def bootstrap(property_name=None):
     names = allowed_properties()
-    props = frappe.get_all("HS Property", filters={"name": ["in", names]}, fields=["name", "property_name", "brand_name", "mode", "time_zone", "currency", "business_date", "discreet_mode", "inspection_required"])
+    props = frappe.get_all("HS Property", filters={"name": ["in", names]}, fields=["name", "company", "property_name", "brand_name", "mode", "time_zone", "currency", "business_date", "discreet_mode", "inspection_required"])
     roles = frappe.get_roles()
     pages = [dict(route=route, title=title) for route, (title, accepted) in PAGES.items() if is_system() or set(roles).intersection(accepted)]
     result = dict(properties=props, pages=pages, actions=[a for a in ACTIONS if may(a)], server_time=str(now_datetime()))
@@ -232,14 +232,85 @@ def availability_search(property_name, starts_at, ends_at, category, people=1):
 @frappe.whitelist()
 def report(property_name, report_name, filters=None):
     from hospitality_suite.reports import rows
-    prop = require(property_name, "report")
-    return rows(prop, report_name, payload(filters or {}))
+    from hospitality_suite.report_queries import scopes
+    filters=payload(filters or {})
+    selected=scopes(property_name,filters.get("company"))
+    records=[]
+    for prop in selected:
+        batch=rows(prop,report_name,filters)
+        if not property_name:
+            for row in batch:
+                row.update(company=prop.company,property=prop.name,time_zone=prop.time_zone)
+                row.setdefault("_display",{})["property"]=prop.property_name
+        records.extend(batch)
+    return records
+
+
+@frappe.whitelist()
+def report_options(property_name,report_name,company=None):
+    """Return only applicable filters and options from authorized properties."""
+    from hospitality_suite.report_queries import scopes,metadata
+    selected=scopes(property_name,company)
+    meta=metadata(report_name)
+    from hospitality_suite.reports import REPORTS
+    base_dt=REPORTS[meta["base"]][0]
+    meta["statuses"]=(frappe.get_meta(base_dt).get_field("status").options or "").splitlines() if base_dt and frappe.get_meta(base_dt).has_field("status") else ["OK","Difference"] if meta["base"]=="Conciliación" else []
+    meta["kinds"]=(frappe.get_meta(base_dt).get_field("kind").options or "").splitlines() if base_dt and frappe.get_meta(base_dt).has_field("kind") else []
+    props=frappe.get_all("HS Property",filters={"name":["in",allowed_properties()]},fields=["name","property_name","company"])
+    result=dict(meta,properties=props,companies=sorted({p.company for p in props}),rooms=[],categories=[],shifts=[],methods=[],warehouses=[],users=[],channels=[])
+    users=set()
+    for prop in selected:
+        for key,dt,fields in (("rooms","HS Room",["name","room_number","category"]),("categories","HS Category",["name","category_name"]),
+                              ("shifts","HS Shift",["name","cashier","opened_at","status"]),("methods","HS Payment Method",["name","mode_of_payment","currency"])):
+            if ("method" if key=="methods" else "shift" if key=="shifts" else "category" if key=="categories" else "room") not in meta["filters"]:
+                continue
+            for row in project(dt,prop,fields):
+                row["property_label"]=prop.property_name
+                if key=="shifts":
+                    row["label"]=f"{row.cashier} · {local_report_time(row.opened_at,prop)} · {row.name}"
+                result[key].append(row)
+        if "warehouse" in meta["filters"]:
+            from hospitality_suite.procurement import warehouses
+            result["warehouses"] += [dict(name=n,warehouse_name=n,property_label=prop.property_name) for n in warehouses(prop)]
+        if "user" in meta["filters"]:
+            dt=REPORTS[meta["base"]][0]
+            if dt:
+                users.update((r.actor if dt=="HS Audit Event" else r.owner) for r in permitted_report_owners(dt,prop))
+                if meta["base"]=="Producción":
+                    users.update(r.owner for r in permitted_report_owners("HS Service Request",prop))
+            else:
+                for native in ("Stock Entry","Stock Reconciliation","Purchase Receipt","Sales Invoice"):
+                    users.update(r.owner for r in permitted_report_owners(native,prop))
+        result["channels"] += [r.channel for r in project("HS Booking",prop,["channel"]) if r.channel]
+        if "assigned_to" in meta["filters"]:
+            users.update(r.assigned_to for r in project(base_dt,prop,["assigned_to"]) if r.assigned_to)
+    users.discard(None)
+    result["users"]=frappe.get_all("User",filters={"name":["in",list(users)]},fields=["name","full_name"])
+    result["channels"]=sorted(set(result["channels"]+["Venta directa"]))
+    return result
+
+
+def local_report_time(value,prop):
+    from hospitality_suite.time import local
+    return local(value,prop).strftime("%d/%m/%Y %H:%M") if value else "—"
+
+
+def permitted_report_owners(dt,prop):
+    from hospitality_suite.paging import permitted_all
+    field="hs_property" if not dt.startswith("HS ") else "property"
+    return permitted_all(dt,filters={field:prop.name},fields=["owner"]+(["actor"] if dt=="HS Audit Event" else []))
 
 
 @frappe.whitelist()
 def report_page(property_name,report_name,filters=None,offset=0,page_length=50):
     from hospitality_suite.paging import page
-    return page(report(property_name,report_name,filters),offset,page_length)
+    from hospitality_suite.report_presentation import prepare
+    from hospitality_suite.report_queries import scopes
+    selected=payload(filters or {})
+    records,columns=prepare(report_name,report(property_name,report_name,selected),scopes(property_name,selected.get("company")),selected.get("detail_level") or "operational")
+    result=page(records,offset,page_length)
+    result["columns"]=columns
+    return result
 
 
 @frappe.whitelist()
@@ -253,18 +324,23 @@ def guest_history(name,offset=0,page_length=50):
                           fields=["name","guest","room","starts_at","ends_at","actual_check_in","actual_check_out","status"])
     for row in records:
         row["relationship"]="Principal" if row.pop("guest")==guest.name else relation[row.name]
-    return page(records,offset,page_length)
+    from hospitality_suite.report_presentation import prepare
+    records,columns=prepare("Historial de estancias",records,[require(guest.property)])
+    result=page(records,offset,page_length)
+    result["columns"]=columns
+    return result
 
 
 @frappe.whitelist()
 def export_report(property_name, report_name, filters=None, file_format="xlsx"):
-    from hospitality_suite.reports import rows
-    prop=require(property_name,"report")
+    from hospitality_suite.report_queries import scopes,metadata,describe_filters
+    selected=scopes(property_name,payload(filters or {}).get("company"))
     if not is_system() and not set(frappe.get_roles()).intersection(["HS Administrator","HS Manager","HS Accountant"]):
         frappe.throw("La exportación requiere gerencia o contabilidad",frappe.PermissionError)
-    records=rows(prop,report_name,payload(filters or {}))
-    headers=list(records[0]) if records else ["Sin datos"]
-    from hospitality_suite.report_formatting import xlsx_data,label,display
+    from hospitality_suite.report_presentation import prepare
+    records,headers=prepare(report_name,report(property_name,report_name,filters),selected,payload(filters or {}).get("detail_level") or "operational")
+    headers=headers or ["Sin datos"]
+    from hospitality_suite.report_formatting import xlsx_data,pdf_html
     if file_format=="xlsx":
         from frappe.utils.xlsxutils import make_xlsx
         data,widths,styles=xlsx_data(records,headers)
@@ -273,11 +349,9 @@ def export_report(property_name, report_name, filters=None, file_format="xlsx"):
         from frappe.utils.pdf import get_pdf,is_wkhtmltopdf_valid
         if not is_wkhtmltopdf_valid():
             frappe.throw("El generador PDF del servidor requiere wkhtmltopdf con Qt parcheado. Solicite a administración revisar la instalación.")
-        from html import escape
-        heading=f"<style>body{{font-family:Arial,sans-serif;color:#173c32;font-size:10px}}h1{{font-size:24px}}table{{width:100%;table-layout:fixed;border-collapse:collapse}}th{{background:#eaf0e9;text-align:left}}th,td{{padding:7px;border-bottom:1px solid #dce5dc;word-wrap:break-word;overflow-wrap:break-word}}thead{{display:table-header-group}}tr{{page-break-inside:avoid}}</style><h1>{escape(report_name)}</h1><p>{escape(prop.property_name)} · {len(records)} registros autorizados</p>"
-        table="<table><thead><tr>"+"".join(f"<th>{escape(label(k))}</th>" for k in headers)+"</tr></thead><tbody>"
-        table+="".join("<tr>"+"".join(f"<td>{escape(str(display(k,row.get(k)) if row.get(k) is not None else ''))}</td>" for k in headers)+"</tr>" for row in records)+"</tbody></table>"
-        content=get_pdf(heading+table,{"orientation":"Landscape","footer-right":"[page] / [topage]","footer-font-size":"8","footer-spacing":"5"})
+        scope_label=selected[0].property_name+" · "+selected[0].time_zone if property_name else selected[0].company+" · establecimientos autorizados"
+        note=metadata(report_name)['note']+" "+describe_filters(selected,report_name,payload(filters or {}))
+        content=get_pdf(pdf_html(report_name,scope_label,records,headers,note),{"orientation":"Landscape","footer-right":"[page] / [topage]","footer-font-size":"8","footer-spacing":"5"})
     else:
         frappe.throw("Formato no permitido")
     frappe.local.response.update(filename="hospitality-report."+file_format,filecontent=content,type="binary")

@@ -24,5 +24,5 @@ def page(records,offset=0,page_length=50):
     except (ValueError,TypeError,OverflowError):
         frappe.throw("Seleccione una página válida de hasta 200 registros")
     total=len(records)
-    return dict(rows=records[start:start+length],columns=list(records[0]) if records else [],
+    return dict(rows=records[start:start+length],columns=[k for k in records[0] if not k.startswith("_")] if records else [],
                 offset=start,page_length=length,total=total,has_more=start+length<total)

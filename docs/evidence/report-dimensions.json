@@ -1,0 +1,94 @@
+{
+  "synthetic": true,
+  "mutations": false,
+  "history": {
+    "stay": "9mfspa61cd",
+    "original_room": "H104",
+    "original_production": 1600,
+    "current_room": "H105",
+    "extension_production": 1500
+  },
+  "returned_sale": {
+    "reference": "aman49j68q",
+    "rows": 2,
+    "total": 0
+  },
+  "availability": [
+    {
+      "category": "aks0goq58n",
+      "room": "aktqvhl56g",
+      "selected_room_available": false,
+      "cleaning_status": "Dirty",
+      "total_rooms": 10,
+      "available_capacity": 8,
+      "candidate_rooms": "H101, H102, H103, H106, H107, H108, H109, H110",
+      "clean_candidates": 6,
+      "starts_at": "2026-10-20 10:00:00",
+      "ends_at": "2026-10-21 10:00:00",
+      "_display": {
+        "category": "Estándar",
+        "room": "H104",
+        "cleaning_status": "Pendiente de limpieza",
+        "starts_at": "2026-10-20T10:00:00-06:00",
+        "ends_at": "2026-10-21T10:00:00-06:00"
+      }
+    }
+  ],
+  "authorized_company_properties": 2,
+  "arrivals": [
+    "i99qbv6dtl"
+  ],
+  "pending_accounts": 1,
+  "exports": [
+    {
+      "file": "production-readable",
+      "rows": 10,
+      "xlsx_rows": 10,
+      "pdf_pages": 1,
+      "column_sections": 1,
+      "technical_references": false,
+      "reference_check": "operational descriptions; internal keys hidden",
+      "http_status": 200
+    },
+    {
+      "file": "production-technical",
+      "rows": 10,
+      "xlsx_rows": 10,
+      "pdf_pages": 4,
+      "column_sections": 3,
+      "technical_references": true,
+      "reference_check": "all source keys in every section",
+      "http_status": 200
+    },
+    {
+      "file": "production-room",
+      "rows": 6,
+      "xlsx_rows": 6,
+      "pdf_pages": 1,
+      "column_sections": 1,
+      "technical_references": false,
+      "reference_check": "operational descriptions; internal keys hidden",
+      "http_status": 200
+    },
+    {
+      "file": "availability-company",
+      "rows": 2,
+      "xlsx_rows": 2,
+      "pdf_pages": 2,
+      "column_sections": 2,
+      "technical_references": false,
+      "reference_check": "operational descriptions; internal keys hidden",
+      "http_status": 200
+    },
+    {
+      "file": "arrivals",
+      "rows": 1,
+      "xlsx_rows": 1,
+      "pdf_pages": 2,
+      "column_sections": 2,
+      "technical_references": false,
+      "reference_check": "operational descriptions; internal keys hidden",
+      "http_status": 200
+    }
+  ]
+}

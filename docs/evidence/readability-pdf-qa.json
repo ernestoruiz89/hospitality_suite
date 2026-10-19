@@ -1,0 +1,32 @@
+{
+  "synthetic": true,
+  "reviewed_at": "2026-10-19T19:19:02.296812+00:00",
+  "review": "All rendered pages inspected: contained columns, repeated headers, complete rows, legible operational descriptions; technical keys remain explicit.",
+  "exports": [
+    {
+      "file": "output/report-dimensions/production-readable.pdf",
+      "sha256": "d246a840973e14bb11f95cbc7359d3f34a2a2bdf2880194caa506ae2e18fe38f",
+      "pages": 1
+    },
+    {
+      "file": "output/report-dimensions/production-technical.pdf",
+      "sha256": "21daae34bbd7b56f6fba47bcdd46eb798a92edb431c4af6f6229e1911eb7cecf",
+      "pages": 4
+    },
+    {
+      "file": "output/report-dimensions/production-room.pdf",
+      "sha256": "1c1eaed6f2b9d6835b541434deb2131c909828abfdb2ca33c662d8c47b7a27c5",
+      "pages": 1
+    },
+    {
+      "file": "output/report-dimensions/availability-company.pdf",
+      "sha256": "92495336e083eadb38299bf58e5aa820ad8dea1b358828cc1a6a037d356fd108",
+      "pages": 2
+    },
+    {
+      "file": "output/report-dimensions/arrivals.pdf",
+      "sha256": "9ea593c288e5c7b6d28c24910b7dda3e862851ba0084e38c9fd581d71ade70f5",
+      "pages": 2
+    }
+  ]
+}

@@ -102,3 +102,14 @@ history-ui.json conserva páginas sin duplicados, 142 filas en XLSX y los 142 id
 50. `50-pdf-ultima-pagina.png`: encabezado repetido, última fila completa y pie 18/18.
 
 La revisión anterior de diez páginas fue sustituida por un PDF de 18 páginas, todas renderizadas y revisadas. history-pdf-qa.json fija su hash y revisión; history-ui.json verifica 142 registros y encabezados de todas las páginas por función/HTTP 200. pdf-runtime.json fija versión/paquete/binario aislado. patched-native-exports-manifest.json conserva la nueva generación de diez comprobantes, todos revisados. Batería actual: 112 aprobadas; queda dimensión/fechas de informes, sin declarar completo el objetivo.
+
+51. `51-produccion-por-habitacion.png`: producción agrupada por habitación y moneda, sin duplicar venta/devuelta.
+52. `52-filtros-disponibilidad-movil.png`: filtros de intervalo y habitación en móvil.
+53. `53-disponibilidad-movil.png`: H104 no disponible en el intervalo reservado, cupo simultáneo 8 y limpieza actual por separado, a 390×844.
+54. `54-produccion-legible.png`: Page con nombres de servicios, habitación, cantidad, moneda, estado e ingreso neto; diez registros en la vista operativa.
+55. `55-produccion-pdf-legible.png`: PDF operativo con los diez registros en una página, sin hashes ni códigos de catálogo HS-DEMO.
+56. `56-reservas-nombres-fechas.png`: listado de reservas con huésped y fecha; los comandos conservan las claves originales.
+
+`report-dimensions.json` acredita filtros locales, atribución de alojamiento H104 C$1600/extensión H105 C$1500, venta/devuelta una vez, disponibilidad compartida con el motor de reservas, llegadas por canal Web y cuentas con saldo positivo. Cinco exportaciones PDF/XLSX verificadas por HTTP 200. La versión técnica conserva todas las referencias en cada sección; la operativa las oculta. Las diez páginas de esos cinco PDF se renderizaron y revisaron; `readability-pdf-qa.json` fija los hashes y páginas. Los archivos se conservan en `output/report-dimensions/` y las capturas 54/55 permiten revisar el resultado sin abrir el sitio.
+
+`readability-native-tests.log/xml`: 122 aprobadas, 109 integración + 13 puras, cero fallos/errores. `readability-js-tests.log`: nueve pruebas Desk y dos portal. `readability-race-room/category.json`: una confirmación y un rechazo en cada carrera real bajo REPEATABLE READ, después de compartir el motor con disponibilidad. Las reservas de carrera se cancelaron con auditoría. El checkpoint de recuperación anterior sigue siendo evidencia histórica; deberá repetirse con la revisión final. Continúan la auditoría de todos los puntos de la especificación y los orígenes contables de los reportes mínimos.

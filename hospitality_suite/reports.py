@@ -28,38 +28,15 @@ REPORTS = {
     "Auditoría": ("HS Audit Event", ["name", "action", "actor", "occurred_at", "source_doctype", "source_name", "reason"]),
 }
 
+from hospitality_suite.report_queries import ALIASES
+for _name, _base in ALIASES.items():
+    REPORTS[_name] = REPORTS[_base]
+
 
 def rows(prop, report, filters=None):
     require(prop.name, "report")
-    if report not in REPORTS:
-        frappe.throw("Reporte desconocido")
-    if report=="Conciliación":
-        from hospitality_suite.reconciliation import rows as reconcile
-        return reconcile(prop,filters,limit=None)
-    if report=="Movimientos de inventario":
-        return inventory_movements(prop,filters or {})
-    dt, fields = REPORTS[report]
-    selected = {"hs_property" if dt == "Sales Invoice" else "property": prop.name}
-    allowed = {"room", "status", "category", "channel", "cashier", "shift", "kind", "assigned_to"}
-    for key, value in (filters or {}).items():
-        if key in allowed and frappe.get_meta(dt).has_field(key) and isinstance(value, str) and value:
-            selected[key] = value
-    filters=filters or {}
-    kinds={"Liquidaciones":["Settlement"],"Egresos":["Expense","Supplier Payment","Withdrawal"],"Cobros":["Payment","Advance","Guarantee","Refund","Guarantee Refund","Guarantee Applied"]}.get(report)
-    if kinds:
-        if selected.get("kind") and selected["kind"] not in kinds:
-            frappe.throw("El concepto no corresponde a este reporte")
-        selected["kind"]=selected.get("kind") or ["in",kinds]
-    date_field="posting_date" if dt=="Sales Invoice" else "business_date" if frappe.get_meta(dt).has_field("business_date") else "creation"
-    if filters.get("from_date") and filters.get("to_date"):
-        selected[date_field]=["between",[filters["from_date"],filters["to_date"]+" 23:59:59" if date_field=="creation" else filters["to_date"]]]
-    from hospitality_suite.paging import permitted_all
-    result=permitted_all(dt,filters=selected,fields=fields)
-    if report=="Cuentas pendientes":
-        from hospitality_suite.accounting import folio_balance
-        for row in result:
-            row.update(folio_balance(row.name))
-    return result
+    from hospitality_suite.report_queries import projected_rows
+    return projected_rows(prop,report,filters or {})
 
 
 def inventory_movements(prop,filters):
@@ -81,8 +58,13 @@ def inventory_movements(prop,filters):
         selected=dict(company=prop.company,voucher_type=dt,voucher_no=["in",list(origins)],warehouse=["in",permitted],is_cancelled=0)
         if filters.get("item"):
             selected["item_code"]=filters["item"]
-        if filters.get("from_date") and filters.get("to_date"):
-            selected["posting_date"]=["between",[filters["from_date"],filters["to_date"]]]
+        date_filters=[]
+        if filters.get("from_date"):
+            date_filters.append(["posting_date",">=",filters["from_date"]])
+        if filters.get("to_date"):
+            date_filters.append(["posting_date","<=",filters["to_date"]])
+        if date_filters:
+            selected=[[key,"=",value] if not isinstance(value,list) else [key,*value] for key,value in selected.items()]+date_filters
         entries=frappe.get_all("Stock Ledger Entry",filters=selected,fields=["name","posting_date","posting_time","item_code","warehouse","actual_qty","qty_after_transaction","stock_value_difference","voucher_no","voucher_detail_no"],order_by="posting_date desc,posting_time desc,creation desc")
         meta=frappe.get_meta(child)
         details={r.name:r for r in current_all(child,filters={"name":["in",[e.voucher_detail_no for e in entries]]},fields=["name"]+[k for k in ("cost_center","expense_account") if meta.has_field(k)])} if entries else {}
@@ -93,7 +75,7 @@ def inventory_movements(prop,filters):
                 continue
             detail=details.get(row.voucher_detail_no,{})
             result.append(dict(name=row.name,posting_date=row.posting_date,posting_time=row.posting_time,item=row.item_code,warehouse=row.warehouse,
-                               purpose=usage,classification=policies.get((row.item_code,row.warehouse),"Merchandise"),quantity=row.actual_qty,
+                               purpose=usage,classification=policies.get((row.item_code,row.warehouse),"Unclassified"),quantity=row.actual_qty,
                                balance_quantity=row.qty_after_transaction,cost=row.stock_value_difference,currency=base_currency,
                                cost_center=detail.get("cost_center"),expense_account=detail.get("expense_account"),source_doctype=dt,source_name=row.voucher_no,actor=origin.owner))
     return sorted(result,key=lambda r:(str(r["posting_date"]),str(r["posting_time"]),r["name"]),reverse=True)
@@ -217,6 +199,8 @@ def summary(prop, starts_at=None, ends_at=None):
     served=[r for r in stays.values() if json.loads(r.quote_snapshot)["rules"]["mode"]=="Motel" and get_datetime(r.actual_check_in)<end and get_datetime(r.actual_check_out or now_datetime())>start]
     durations=[max(0,(get_datetime(r.actual_check_out or now_datetime())-get_datetime(r.actual_check_in)).total_seconds()/3600) for r in served]
     production=sum(decimal(r.amount) for r in charges if local_start.date()<=r.business_date<local_end.date())
+    from hospitality_suite.report_queries import direct_sales
+    production+=sum(decimal(r.amount) for r in direct_sales(prop) if local_start.date()<=r.business_date<local_end.date())
     safe=lambda a,b:str(money(decimal(a)/decimal(b))) if b else "0.00"
     return dict(currency=prop.currency,production=str(money(production)),lodging_production=str(money(lodging_net+motel_net)),
                 hotel_lodging_net=str(money(lodging_net)),motel_lodging_net=str(money(motel_net)),

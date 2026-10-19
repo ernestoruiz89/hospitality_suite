@@ -21,6 +21,8 @@ VALUE_LABELS={"Confirmed":"Confirmada","Checked In":"Entrada registrada","Comple
             "Corrective":"Correctivo","Preventive":"Preventivo","Departure":"Salida","Stay":"Estancia","Deep":"Profunda",
             "Normal":"Normal","High":"Alta","Urgent":"Urgente","Charge":"Cargo","Closed shift":"Turno cerrado",
             "Principal":"Principal","Acompañante":"Acompañante"}
+VALUE_LABELS.update(Unclassified="Sin clasificar",Discount="Descuento",Courtesy="Cortesía",Surcharge="Recargo",Reversed="Revertido",Delivered="Entregado",Returned="Devuelto",Requested="Solicitado")
+VALUE_LABELS.update(Service="Servicio",Lodging="Alojamiento",Difference="Diferencia")
 
 
 def hs_label(value):

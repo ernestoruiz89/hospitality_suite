@@ -25,7 +25,12 @@ def active_allocations(prop, start, end, exclude=None):
     return result
 
 
-def check(prop, category, start, end, room=None, exclude=None, for_entry=False, proposed=None):
+def capacity(prop, category, start, end, exclude=None, proposed=None):
+    """The same interval sweep serves reports, quotes and locked mutations.
+
+    Physical candidates are alternatives: roomless demand reduces category
+    capacity even when it has not selected any particular candidate yet.
+    """
     start, end = get_datetime(start), get_datetime(end)
     if start >= end:
         frappe.throw("El intervalo debe tener duración positiva")
@@ -33,7 +38,25 @@ def check(prop, category, start, end, room=None, exclude=None, for_entry=False, 
     if cat.property != prop.name:
         frappe.throw("Categoría de otro establecimiento", frappe.PermissionError)
     rooms = current_all("HS Room", filters={"property": prop.name, "category": category, "active": 1}, fields=["name", "cleaning_status"])
-    by_name = {r.name: r for r in rooms}
+    end_buffer = end + timedelta(minutes=prop.cleaning_minutes or 0)
+    rows = active_allocations(prop, start, end_buffer, exclude) + list(proposed or [])
+    rows = [r for r in rows if r.category == category and overlapping(start, end_buffer, r.starts_at, get_datetime(r.ends_at)+timedelta(minutes=r.buffer_minutes or 0))]
+    events = []
+    for row in rows:
+        a, b = max(start, get_datetime(row.starts_at)), min(end_buffer, get_datetime(row.ends_at) + timedelta(minutes=row.buffer_minutes or 0))
+        if a < b:
+            events.extend([(a, 1), (b, -1)])
+    count = peak = 0
+    for _, delta in sorted(events):
+        count += delta
+        peak = max(peak, count)
+    candidates = [r.name for r in rooms if not any(a.room == r.name for a in rows)]
+    return dict(rooms=rooms, candidates=candidates, available=max(0, len(rooms)-peak))
+
+
+def check(prop, category, start, end, room=None, exclude=None, for_entry=False, proposed=None):
+    inventory = capacity(prop, category, start, end, exclude, proposed)
+    by_name = {r.name: r for r in inventory["rooms"]}
     if room:
         if room not in by_name:
             frappe.throw("La habitación no pertenece a la categoría o está deshabilitada")
@@ -41,24 +64,13 @@ def check(prop, category, start, end, room=None, exclude=None, for_entry=False, 
             frappe.throw("La habitación debe estar limpia e inspeccionada")
         if for_entry and current_all("HS Stay",filters={"property":prop.name,"room":room,"status":"Active"}):
             frappe.throw("La habitación conserva una estancia activa; registre la salida antes de asignarla")
-    end_buffer = end + timedelta(minutes=prop.cleaning_minutes or 0)
-    rows = active_allocations(prop, start, end_buffer, exclude) + list(proposed or [])
-    rows = [r for r in rows if r.category == category]
-    if room and any(r.room == room and overlapping(start, end_buffer, r.starts_at, get_datetime(r.ends_at) + timedelta(minutes=r.buffer_minutes or 0)) for r in rows):
+    if room and room not in inventory["candidates"]:
         frappe.throw("La habitación tiene una reserva, estancia o bloqueo en ese intervalo")
     # Sweep all demand, including roomless reservations and maintenance; half-open
     # endpoints sort releases (-1) before arrivals (+1). No double counting.
-    events = [(start, 1), (end_buffer, -1)]
-    for row in rows:
-        a, b = max(start, get_datetime(row.starts_at)), min(end_buffer, get_datetime(row.ends_at) + timedelta(minutes=row.buffer_minutes or 0))
-        if a < b:
-            events.extend([(a, 1), (b, -1)])
-    count = 0
-    for _, delta in sorted(events):
-        count += delta
-        if count > len(rooms):
-            frappe.throw("No queda cupo de esta categoría en el intervalo solicitado")
-    return [r.name for r in rooms if not any(a.room == r.name for a in rows)]
+    if not inventory["available"]:
+        frappe.throw("No queda cupo de esta categoría en el intervalo solicitado")
+    return inventory["candidates"]
 
 
 def expire_locked(prop):
