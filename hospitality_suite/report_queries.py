@@ -15,6 +15,7 @@ ALIASES = {
     "Llegadas": "Reservas", "Salidas": "Estancias", "Huéspedes alojados": "Estancias",
     "Cancelaciones y no presentaciones": "Reservas", "Descuentos y cortesías": "Producción",
     "Anticipos y garantías": "Cobros",
+    "Productividad de limpieza": "Limpieza", "Arqueos por moneda": "Turnos",
 }
 DATES = {
     "Reservas": [("starts_at", "Llegada prevista"), ("ends_at", "Salida prevista"), ("creation", "Registro")],
@@ -58,9 +59,14 @@ def metadata(report):
         keys += ["status"]
     keys += ["detail_level"]
     dates = DATES.get(base, [("creation", "Registro")])
+    if report == "Cancelaciones y no presentaciones":
+        dates = [("status_changed_at", "Cancelación / no presentación"), *DATES["Reservas"]]
     default = "ends_at" if report == "Salidas" else dates[0][0]
     return dict(base=base, filters=keys, date_fields=[dict(value=k, label=v) for k, v in dates], date_field=default,
-                note=("Cupo simultáneo por categoría; las habitaciones candidatas son alternativas y no se suman al cupo. Limpieza actual se muestra por separado." if base == "Disponibilidad" else
+                note=("Tareas por responsable. Duración de inicio a finalización, incluidas esperas de inspección. Tareas/hora usa solo finalizadas con duración positiva; no mide jornada laboral." if report == "Productividad de limpieza" else
+                      "Arqueo separado por moneda original. Cerrado/revisión conserva conteo y esperado del cierre; abierto muestra esperado actual y conteo pendiente." if report == "Arqueos por moneda" else
+                      "La fecha de cancelación/no presentación procede de auditoría. Penalización aceptada sin impuestos; consulte su factura y estado contable." if report == "Cancelaciones y no presentaciones" else
+                      "Cupo simultáneo por categoría; las habitaciones candidatas son alternativas y no se suman al cupo. Limpieza actual se muestra por separado." if base == "Disponibilidad" else
                       "Ingreso neto facturado: importe sin impuestos. Las devoluciones se restan y los cargos pendientes se muestran sin ingreso facturado." if base == "Producción" else
                       "Los filtros seleccionan documentos completos; no prorratean facturas ni cuentas grupales."))
 
@@ -265,7 +271,7 @@ class Context:
         if not cats:
             cats.update(self.rooms[r].category for r in rooms if r in self.rooms)
         cats.discard(None)
-        if base in ("Producción", "Inventario") and not stay and (record.get("direct_sale") or record.sales_invoice):
+        if base in ("Producción", "Inventario") and not stay and not booking and (record.get("direct_sale") or record.sales_invoice):
             channels.add("Venta directa")
         return rooms, cats, channels
 
@@ -303,18 +309,22 @@ def projected_rows(prop, report, filters):
         return [r for r in inventory_movements(prop, filters) if not filters.get("user") or r["actor"] == filters["user"]]
     dt, fields = REPORTS[base]
     requested = set(fields) | {"creation", "owner"} | {r["value"] for r in meta["date_fields"]}
-    requested |= {"stay", "booking", "folio", "hs_booking", "hs_shift", "applies_to_charge", "cashier", "assigned_to", "kind", "status", "adjustment_type", "method", "quantity", "invoice_item", "guest"}
+    requested |= {"stay", "booking", "folio", "hs_booking", "hs_shift", "applies_to_charge", "cashier", "assigned_to", "kind", "status", "adjustment_type", "method", "quantity", "invoice_item", "guest", "fee_invoice", "fee_amount", "reason", "denominations"}
     requested = [k for k in sorted(requested) if k in {"name", "creation", "owner", "modified", "modified_by", "docstatus"} or frappe.get_meta(dt).has_field(k)]
     sources = permitted_all(dt, filters={"hs_property" if dt == "Sales Invoice" else "property": prop.name}, fields=requested)
     if base == "Producción" and report != "Descuentos y cortesías":
-        sources += direct_sales(prop)
+        sources += direct_sales(prop) + native_invoice_lines(prop)
         sources.sort(key=lambda r:(get_datetime(r.creation),r.name),reverse=True)
     context = Context(prop)
     context.production_sources = sources
+    decisions = booking_decisions(prop) if report == "Cancelaciones y no presentaciones" else {}
     result = []
     kinds = {"Liquidaciones": ["Settlement"], "Egresos": ["Expense", "Supplier Payment", "Withdrawal"], "Cobros": ["Payment", "Advance", "Guarantee", "Refund", "Guarantee Refund", "Guarantee Applied"]}.get(base)
     for source in sources:
         source = frappe._dict(source)
+        if report == "Cancelaciones y no presentaciones":
+            decision = decisions.get((source.name, source.status))
+            source.status_changed_at = decision.occurred_at if decision else None
         if base == "Mantenimiento" and mode == "completed_at":
             from hospitality_suite.housekeeping import maintenance_finished_at
             source.completed_at = maintenance_finished_at(frappe.get_doc(dt, source.name)) if source.status == "Completed" else None
@@ -342,6 +352,11 @@ def projected_rows(prop, report, filters):
         row = frappe._dict({key: source.get(key) for key in fields})
         if base in {"Reservas","Estancias"}:
             row.guest=source.guest
+        if report == "Cancelaciones y no presentaciones":
+            row.update(status_changed_at=source.status_changed_at, reason=source.reason,
+                       penalty_amount=source.fee_amount or 0, fee_invoice=source.fee_invoice)
+            invoice = frappe.db.get_value("Sales Invoice", {"name":source.fee_invoice,"hs_property":prop.name,"company":prop.company}, "docstatus") if source.fee_invoice else None
+            row.fee_status = {0:"Borrador",1:"Confirmada",2:"Anulada"}.get(invoice,"Sin penalización" if not source.fee_invoice else "Documento no disponible")
         if "user" in meta["filters"]:
             row.actor = actor
         if "base_amount" in row:
@@ -363,7 +378,10 @@ def projected_rows(prop, report, filters):
             row.completed_at = source.completed_at
         decorated = context.decorate(row, source, base, filters)
         if decorated is not None:
-            result.append(decorated)
+            if report == "Arqueos por moneda":
+                result.extend(shift_currency_rows(decorated,source))
+            else:
+                result.append(decorated)
     if base in {"Reservas","Estancias"}:
         for row in result:
             row.setdefault("_display",{})["guest"]=context.guests.get(row.guest,"")
@@ -378,7 +396,49 @@ def projected_rows(prop, report, filters):
                 item["_display"]={**row.get("_display",{}),"guest":context.guests.get(member.guest,"")}
                 expanded.append(item)
         result=expanded
+    if report == "Productividad de limpieza":
+        return cleaning_productivity(result)
     return group_production(result,filters["group_by"],prop) if base == "Producción" and filters.get("group_by") else result
+
+
+def shift_currency_rows(row, source):
+    if source.status == "Open":
+        from hospitality_suite.cashier import expected
+        amounts=expected(frappe.get_doc("HS Shift",source.name))
+        counts=None
+    else:
+        snapshot=frappe.parse_json(source.denominations or "{}")
+        amounts=snapshot.get("expected") or {source.currency:source.expected_amount}
+        counts=snapshot.get("counts")
+    result=[]
+    for currency in sorted(set(amounts)|set(counts or {})):
+        item=frappe._dict(row.copy())
+        counted=sum(decimal(r["value"])*int(r["count"]) for r in counts.get(currency,[])) if counts is not None else (decimal(source.counted_amount) if source.status!="Open" and currency==source.currency else None)
+        amount=decimal(amounts.get(currency,0))
+        item.update(currency=currency,expected_amount=amount,counted_amount=counted,difference=counted-amount if counted is not None else None)
+        result.append(item)
+    return result
+
+
+def cleaning_productivity(records):
+    groups={}
+    for row in records:
+        key=row.assigned_to or ""
+        if key not in groups:
+            groups[key]=frappe._dict(assigned_to=key,tasks=0,pending_tasks=0,completed_tasks=0,timed_tasks=0,duration_minutes=0,
+                                    _display={"assigned_to":"Sin asignar"} if not key else {})
+        group=groups[key]
+        group.tasks+=1
+        group.completed_tasks+=int(row.status=="Completed")
+        group.pending_tasks+=int(row.status!="Completed")
+        if row.status=="Completed" and row.duration_minutes is not None and row.duration_minutes>0:
+            group.timed_tasks+=1
+            group.duration_minutes+=row.duration_minutes
+    for group in groups.values():
+        group.average_minutes=round(group.duration_minutes/group.timed_tasks,2) if group.timed_tasks else 0
+        group.tasks_per_recorded_hour=round(group.timed_tasks*60/group.duration_minutes,2) if group.duration_minutes else 0
+        group.duration_minutes=round(group.duration_minutes,2)
+    return [groups[key] for key in sorted(groups)]
 
 
 def group_production(records, dimension, prop):
@@ -424,6 +484,50 @@ def direct_sales(prop):
                                       item=service.item, quantity=-service.quantity if returning else service.quantity,
                                       amount=native.total, revenue_net=native.net_total, source_type="Devolución de venta directa" if returning else "Venta directa", currency=native.currency, status="Invoiced", kind="Service", sales_invoice=invoice,
                                       business_date=event.business_date if event else local(stamp, prop).date(), creation=stamp, owner=event.actor if event else service.owner))
+    return result
+
+
+def booking_decisions(prop):
+    events = permitted_all("HS Audit Event", filters={"property":prop.name,"source_doctype":"HS Booking","action":["in",["Cancelled","No Show","Hold expired"]]},
+                           fields=["source_name","action","occurred_at"], order_by="occurred_at asc,name asc")
+    return {(r.source_name,"Cancelled" if r.action=="Hold expired" else r.action):r for r in events}
+
+
+def native_invoice_lines(prop):
+    """Include submitted native lines absent from charges and counter sales.
+
+    Cancellation/no-show fees have a booking but no stay/folio. Native counter
+    invoices may have neither. Read their actual amounts, including returns;
+    never create another accounting document or count a represented line twice.
+    """
+    invoices = {r.name:r for r in permitted_all("Sales Invoice", filters={"hs_property":prop.name,"company":prop.company,"docstatus":1},
+                fields=["name","creation","owner","posting_date","currency","hs_booking","hs_stay","hs_folio","is_return","return_against"])}
+    if not invoices:
+        return []
+    services = permitted_all("HS Service Request", filters={"property":prop.name,"stay":["is","not set"]}, fields=["sales_invoice","credit_note"])
+    represented_invoices = {n for r in services for n in (r.sales_invoice,r.credit_note) if n}
+    represented_lines = {(r.sales_invoice,r.invoice_item) for r in permitted_all("HS Charge",filters={"property":prop.name},fields=["sales_invoice","invoice_item"])}
+    events = permitted_all("HS Audit Event", filters={"property":prop.name,"source_doctype":"Sales Invoice","action":"on_submit"},
+                           fields=["source_name","business_date","occurred_at","actor"],order_by="occurred_at asc,name asc")
+    submissions = {r.source_name:r for r in events}
+    penalties = {r.fee_invoice:r for r in permitted_all("HS Booking",filters={"property":prop.name,"fee_invoice":["is","set"]},fields=["name","fee_invoice","status"])}
+    items = frappe.get_all("Sales Invoice Item", filters={"parent":["in",list(invoices)],"parenttype":"Sales Invoice"},
+                           fields=["name","parent","item_code","qty","amount","net_amount","hs_charge"])
+    result=[]
+    for item in items:
+        inv=invoices[item.parent]
+        if inv.name in represented_invoices or item.hs_charge or (inv.name,item.name) in represented_lines:
+            continue
+        original=invoices.get(inv.return_against) if inv.is_return else None
+        penalty=penalties.get(inv.return_against if inv.is_return else inv.name)
+        event=submissions.get(inv.name)
+        kind=("Penalización por no presentación" if penalty.status=="No Show" else "Penalización por cancelación") if penalty else "Factura de venta ERPNext"
+        result.append(frappe._dict(name=inv.name+":"+item.name, hs_booking=inv.hs_booking or (original.hs_booking if original else None),
+                                  stay=inv.hs_stay,folio=inv.hs_folio,item=item.item_code,quantity=item.qty,amount=item.amount,revenue_net=item.net_amount,
+                                  currency=inv.currency,status="Invoiced",kind="Service",sales_invoice=inv.name,invoice_item=item.name,
+                                  source_type=("Devolución · " if inv.is_return else "")+kind,
+                                  business_date=event.business_date if event else inv.posting_date,
+                                  creation=event.occurred_at if event else inv.creation, owner=event.actor if event else inv.owner))
     return result
 
 

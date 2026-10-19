@@ -1,0 +1,43 @@
+{
+  "synthetic": true,
+  "reviewed_at": "2026-10-19T19:39:13.403330+00:00",
+  "review": "All eight rendered pages inspected. Contained columns, repeated table headings, complete rows and human context repeated across column sections.",
+  "exports": [
+    {
+      "file": "cleaning-productivity.pdf",
+      "report": "Productividad de limpieza",
+      "rows": 2,
+      "xlsx_rows": 2,
+      "pdf_pages": 1,
+      "sha256": "8106ed7fd04d9facd8646948ade5ab3d930ccc0fcea424153d4729b84b008857",
+      "http_status": 200
+    },
+    {
+      "file": "cash-counts.pdf",
+      "report": "Arqueos por moneda",
+      "rows": 4,
+      "xlsx_rows": 4,
+      "pdf_pages": 1,
+      "sha256": "0a10d11b231f043bbafff0f8b611d8db489026d9b575a417dc01ee1c04a1de91",
+      "http_status": 200
+    },
+    {
+      "file": "cancellations.pdf",
+      "report": "Cancelaciones y no presentaciones",
+      "rows": 17,
+      "xlsx_rows": 17,
+      "pdf_pages": 5,
+      "sha256": "d54edadeb2c105a53963e5faa81b616cc550df3cf074ebaacd63c38060870ff5",
+      "http_status": 200
+    },
+    {
+      "file": "production.pdf",
+      "report": "Producción",
+      "rows": 10,
+      "xlsx_rows": 10,
+      "pdf_pages": 1,
+      "sha256": "d246a840973e14bb11f95cbc7359d3f34a2a2bdf2880194caa506ae2e18fe38f",
+      "http_status": 200
+    }
+  ]
+}

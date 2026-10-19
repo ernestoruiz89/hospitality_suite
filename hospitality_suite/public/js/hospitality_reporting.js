@@ -11,7 +11,7 @@
     const value=(key,v,row)=>{
       if(Object.hasOwn(row._display||{},key))return e(row._display[key]);
       if(key==="selected_room_available"&&v!==null&&v!==undefined)return v?"Sí":"No";
-      if(["amount","grand_total","outstanding_amount","base_amount","expected_amount","counted_amount","difference","cost","expected","actual","pending","outstanding","fee_amount","withholding_amount","net_amount","revenue_net","pending_amount"].includes(key)&&v!==null&&v!==undefined&&v!=="")return e(this.amount(v,key==="base_amount"?row.base_currency:row.currency));
+      if(["amount","grand_total","outstanding_amount","base_amount","expected_amount","counted_amount","difference","cost","expected","actual","pending","outstanding","fee_amount","withholding_amount","net_amount","revenue_net","pending_amount","penalty_amount"].includes(key)&&v!==null&&v!==undefined&&v!=="")return e(this.amount(v,key==="base_amount"?row.base_currency:row.currency));
       if(key==="room"&&v)return e(this.roomName(v));
       if(["starts_at","ends_at","actual_check_in","actual_check_out"].includes(key))return e(this.date(v));
       return e(["status","kind","type","cleaning_status","settlement_direction","purpose","classification","relationship","adjustment_type"].includes(key)?this.data.report_values?.[v]||v:v);

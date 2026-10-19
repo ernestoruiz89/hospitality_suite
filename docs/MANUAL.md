@@ -85,3 +85,7 @@ La presentación inicial es «Vista operativa»: servicios por su nombre, habita
 Para revisar documentos de origen, seleccione «Documentos y referencias técnicas» en Presentación. Las claves internas siguen disponibles para contabilidad, sin ocupar la vista cotidiana. PDF y Excel respetan esa selección e incluyen el conjunto completo, aunque la pantalla muestre una página. Los valores numéricos se conservan en Excel.
 
 El listado de reservas muestra huésped y fecha. En modo discreto sustituye el nombre por «Huésped registrado». Las acciones siguen apuntando al mismo documento; estas etiquetas no renumeran ni alteran reservas, facturas, cuentas o movimientos.
+
+«Cancelaciones y no presentaciones» consulta inicialmente la fecha de la decisión o vencimiento, tomada de auditoría. Puede cambiarla a llegada prevista, salida o registro. Muestra motivo, penalización aceptada y factura/estado contable; una penalización anulada no sigue sumando producción. «Arqueos por moneda» separa esperado, contado y diferencia de cada moneda, conservando el snapshot de cierre. En un turno abierto, contado y diferencia permanecen pendientes.
+
+«Productividad de limpieza» resume por responsable tareas pendientes/finalizadas y duración registrada. Tareas por hora usa únicamente finalizadas con duración positiva de inicio a finalización; incluye esperas de inspección y no es una medición de jornada laboral. Gerencia de motel distingue entradas totales de rotaciones por habitación con tiempo comercializable.

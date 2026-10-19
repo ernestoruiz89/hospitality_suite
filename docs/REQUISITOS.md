@@ -2,6 +2,8 @@
 
 Actualizada el 2026-10-19. **El objetivo sigue activo.** V = prueba ejecutada de la parte indicada; I = implementado, verificación pendiente; P = trabajo pendiente. Las pruebas de backend no acreditan por sí solas un recorrido completo de interfaz.
 
+La [auditoría punto por punto](AUDITORIA_ESPECIFICACION.md) conserva el texto original y su huella: 201 elementos enumerados, diez cláusulas adicionales y siete fases, 218 entradas. Quince entradas de reportes/indicadores tienen contraste individual; la revisión del resto sigue explícita. Esta matriz resume las fases y no sustituye esa auditoría.
+
 | ID | Requisito | Implementación | Evidencia y trabajo pendiente | Estado |
 |---|---|---|---|---|
 | F01 | Inspección y versión objetivo | ARQUITECTURA.md | Frappe 16.52.0, ERPNext 16.51.1, WSL/MariaDB inspeccionados | V |
@@ -31,7 +33,7 @@ Actualizada el 2026-10-19. **El objetivo sigue activo.** V = prueba ejecutada de
 | F15c | Compras, traslados, mínimos y mermas | procurement.py, inventario nativo y Pages | Compra parcial, factura sin segundo stock, pagos, mínimos nativos, clasificación, reposición/consumo/merma, conteo obsoleto y reporte de SLE probados; compra/factura/pago, nuevo almacén, traslado y conteo físico con revisión/diferencia y dos GL Entry ejecutados desde Page | V |
 | F16 | Cierre diario y reapertura | closing.py | Cierre repetido, diferencias, snapshot y reapertura autorizada solo del último día probados | V |
 | F17a | KPI con noches y horas separadas | reports.summary | Cortesía, denominador cero, impuesto incluido, horas reales y bloqueo de mantenimiento probados | V |
-| F17b | Reportes, conciliación y exportaciones | reports.py, report_queries.py, reconciliation.py, api.export_report | Exportación completa PDF/XLSX, dimensiones autorizadas, venta/devolución sin duplicar y atribución histórica probadas. Continúa revisión semántica de todos los reportes mínimos, incluidas penalizaciones | I |
+| F17b | Reportes mínimos, conciliación y exportaciones | reports.py, report_queries.py, reconciliation.py, api.export_report | Sección 13 contrastada: dimensiones, atribución histórica, penalizaciones nativas/retornos, productividad de limpieza y arqueos por moneda. 48 consultas en dos propiedades y cuatro PDF/XLSX por HTTP; ocho páginas revisadas. Capturas 57–59 y tres pruebas nuevas con controles financieros/stock | V |
 | F17c | Historial completo y dimensiones de reporte | api.project/calendar/report_options, report_queries.py, Pages | Historial sin tope; paginación e historial de acompañante acreditados. Fechas locales de llegada/salida/registro, compañía/establecimiento, canal/categoría/habitación/usuario/turno y opciones particulares probadas; disponibilidad reutiliza el motor de cupos | V |
 | F17d | Presentación legible y referencias opcionales | report_presentation.py, report_formatting.py, Pages | Producción con nombres, fechas, cantidades e importes; reservas por huésped/fecha y modo discreto. PDF operativo de diez registros en una página; vista técnica mantiene claves originales. Excel conserva valores y precisión 0/3. Capturas 54–56 y diez pruebas nuevas | V |
 | F18 | Portal opcional seguro | www/, portal.py | Visitante Guest cotiza/solicita; confirmación firmada con vencimiento; conversión manual desde Reservas a cupo único sin pago; render nativo probado y hotel desactivado al terminar | V |
@@ -69,7 +71,7 @@ Actualizada el 2026-10-19. **El objetivo sigue activo.** V = prueba ejecutada de
 
 ## Evidencia acumulada
 
-Batería conjunta anterior a las últimas ampliaciones: **50 aprobadas** (39 de integración y 11 puras). Ampliación de horarios, acompañantes y KPI: **4 aprobadas** por separado. La cortesía detectó una incompatibilidad con tarifas negativas; se corrigió con descuento en la línea estándar y referencias a sus cargos de origen. Última batería conjunta en hospitality-clean.localhost: **122 aprobadas** (109 integración + 13 puras), además de **9 de Desk y 2 del portal**. Ambas carreras reales se repitieron tras reutilizar el motor de cupos en reportes, con una confirmación y un rechazo por carrera. También pasaron impuesto incluido, camas extra, Contact/Address, retiro de caja, variación de cambio y exportación numérica.
+Batería conjunta anterior a las últimas ampliaciones: **50 aprobadas** (39 de integración y 11 puras). Ampliación de horarios, acompañantes y KPI: **4 aprobadas** por separado. La cortesía detectó una incompatibilidad con tarifas negativas; se corrigió con descuento en la línea estándar y referencias a sus cargos de origen. Última batería conjunta en hospitality-clean.localhost: **125 aprobadas** (112 integración + 13 puras), además de **9 de Desk y 2 del portal**. Ambas carreras reales se repitieron tras reutilizar el motor de cupos en reportes, con una confirmación y un rechazo por carrera. También pasaron impuesto incluido, camas extra, Contact/Address, retiro de caja, variación de cambio, penalizaciones, devolución POS nativa y exportación numérica.
 
 La matriz no sustituye los registros finales ni las capturas. Integraciones reales de canales, mensajería, pasarelas y cerraduras esperan proveedor/credenciales; HRMS es opcional. No se migró producción ni ningún sitio ajeno.
 

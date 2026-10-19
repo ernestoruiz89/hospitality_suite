@@ -8,6 +8,7 @@ from hospitality_suite.time import local
 
 
 PROFILES={
+    "Cancelaciones y no presentaciones":["status_changed_at","starts_at","guest","room","status","reason","penalty_amount","fee_status","fee_invoice","currency"],
     "Producción":["business_date","room","item","quantity","amount","currency","status","revenue_net"],
     "Reservas":["starts_at","ends_at","guest","customer","room","category","status","channel","amount","currency"],
     "Estancias":["room","guest","relationship","actual_check_in","ends_at","actual_check_out","status","customer"],
@@ -19,13 +20,14 @@ PROFILES={
     "Egresos":["recorded_at","kind","expense_category","supplier","amount","currency","status","reason"],
     "Turnos":["cashier","opened_at","closed_at","status","currency","expected_amount","counted_amount","difference"],
     "Limpieza":["room","kind","assigned_to","started_at","completed_at","duration_minutes","status"],
+    "Productividad de limpieza":["assigned_to","tasks","pending_tasks","completed_tasks","timed_tasks","duration_minutes","average_minutes","tasks_per_recorded_hour"],
     "Mantenimiento":["room","equipment","title","status","starts_at","ends_at","cost","blocks_room"],
     "Inventario":["room","item","quantity","amount","currency","status"],
     "Movimientos de inventario":["posting_date","item","warehouse","purpose","classification","quantity","cost","currency","cost_center"],
     "Auditoría":["occurred_at","action","actor","source_doctype","source_name","reason"],
     "Conciliación":["type","source","erp_document","expected","actual","difference","currency","status","detail"],
 }
-DATES={"starts_at","ends_at","actual_check_in","actual_check_out","opened_at","closed_at","started_at","completed_at","occurred_at","recorded_at"}
+DATES={"starts_at","ends_at","actual_check_in","actual_check_out","opened_at","closed_at","started_at","completed_at","occurred_at","recorded_at","status_changed_at"}
 TITLES={"HS Booking":"Reserva","HS Stay":"Estancia","HS Folio":"Cuenta","HS Charge":"Cargo","HS Payment":"Movimiento de caja",
         "HS Service Request":"Consumo","HS Shift":"Turno","HS Cleaning Task":"Limpieza","HS Maintenance Order":"Mantenimiento",
         "HS Daily Close":"Cierre diario","HS Guest":"Huésped","HS Rate":"Tarifa","HS Room":"Habitación","HS Category":"Categoría",
@@ -225,6 +227,10 @@ def prepare(report,records,props,level="operational"):
                 elif row.get("adjustment_type"):
                     from hospitality_suite.printing import hs_label
                     hints["item"]=hs_label(row.adjustment_type)+" · "+hints.get("item","")
+                elif "Penalización" in row.source_type:
+                    hints["item"]=row.source_type+" · "+hints.get("item","")
+                elif row.source_type.startswith("Devolución · "):
+                    hints["item"]="Devolución · "+hints.get("item","")
                 if not row.get("room"):
                     hints["room"]="Venta directa" if "venta directa" in row.source_type.lower() else "Sin habitación"
             if base=="Cuentas pendientes":
@@ -246,7 +252,7 @@ def prepare(report,records,props,level="operational"):
         columns=original_columns
     else:
         available=set().union(*(r.keys() for r in result))
-        columns=[k for k in PROFILES.get(base,original_columns) if k in available]
+        columns=[k for k in PROFILES.get(report,PROFILES.get(base,original_columns)) if k in available]
     for field in ("property","time_zone"):
         if field in original_columns and field not in columns:
             columns.append(field)

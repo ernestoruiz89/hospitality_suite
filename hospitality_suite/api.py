@@ -278,6 +278,8 @@ def report_options(property_name,report_name,company=None):
                 users.update((r.actor if dt=="HS Audit Event" else r.owner) for r in permitted_report_owners(dt,prop))
                 if meta["base"]=="Producción":
                     users.update(r.owner for r in permitted_report_owners("HS Service Request",prop))
+                    from hospitality_suite.paging import permitted_all
+                    users.update(r.actor for r in permitted_all("HS Audit Event",filters={"property":prop.name,"source_doctype":"Sales Invoice","action":"on_submit"},fields=["actor"]))
             else:
                 for native in ("Stock Entry","Stock Reconciliation","Purchase Receipt","Sales Invoice"):
                     users.update(r.owner for r in permitted_report_owners(native,prop))

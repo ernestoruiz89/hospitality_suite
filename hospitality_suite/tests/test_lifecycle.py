@@ -101,6 +101,11 @@ class TestLifecycle(IntegrationTestCase):
         self.assertEqual(expire_property(self.prop.name),0)
         self.assertEqual(frappe.db.get_value("HS Booking",booking.name,"status"),"Cancelled")
         self.assertEqual(frappe.db.count("HS Allocation",{"booking":booking.name,"status":"Active"}),0)
+        from hospitality_suite.time import local
+        day=str(local(now_datetime(),self.prop).date())
+        expired=next(r for r in api.report(self.prop.name,"Cancelaciones y no presentaciones",dict(from_date=day,to_date=day)) if r.name==booking.name)
+        self.assertIsNotNone(expired.status_changed_at)
+        self.assertEqual(expired.reason,"Retención temporal vencida")
 
     def test_room_change_retains_segments_and_price(self):
         stay=self.command("walk_in",self.values())

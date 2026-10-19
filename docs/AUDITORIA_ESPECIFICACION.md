@@ -1,0 +1,327 @@
+# Auditoría punto por punto de la especificación
+
+Fuente: `Prompt_Codex_Hoteles_Moteles_Frappe_ERPNext.txt`. SHA-256: `876632e08057a1ea0386bd9e01fde6f477c62380a9414bed23e2a852765fb651`.
+
+Inventario: 201 elementos enumerados (incluidas las once Pages), 10 cláusulas expresas adicionales y 7 fases. Total: **218 entradas**.
+
+R = contraste individual pendiente; I = implementación localizada con verificación pendiente; P = diferencia material pendiente; V = evidencia individual revisada. La matriz resumida REQUISITOS.md conserva la evidencia anterior. R no afirma que la función falte; V exige probar todo el texto de la entrada. Ningún recuento ni generador acredita por sí mismo el alcance.
+
+Estado: V: 15, I: 2, P: 0, R: 201. Objetivo activo.
+
+## 0. Objetivo general
+
+| ID / línea original | Requisito | Estado | Implementación | Evidencia | Pendiente |
+|---|---|---|---|---|---|
+| S00-01 / L6 | Tu tarea es DISEÑAR, PROGRAMAR, INTEGRAR Y PROBAR una aplicación completa e instalable para administrar hoteles, moteles y establecimientos mixtos. Trabaja directamente sobre el repositorio y entorno disponibles. Entrega código funcional, no solamente recomendaciones, pantallas de demostración o una descripción del sistema. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S00-02 / L8 | La aplicación debe permitir que recepción, caja, limpieza, mantenimiento y gerencia trabajen mediante PÁGINAS PERSONALIZADAS, claras y rápidas. Los DocTypes serán la estructura interna; el usuario operativo no debe necesitar recorrer formularios técnicos de ERPNext para completar sus tareas habituales. | R | — | — | Contraste individual con código y evidencia pendiente. |
+
+## 1. OBJETIVO Y FORMA DE TRABAJO
+
+| ID / línea original | Requisito | Estado | Implementación | Evidencia | Pendiente |
+|---|---|---|---|---|---|
+| S01-01 / L12 | - Nombre técnico propuesto: hospitality_suite. Nombre comercial configurable, sin referencias obligatorias a una empresa específica. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S01-02 / L13 | - Producto reutilizable para varios clientes, con configuración por compañía y establecimiento. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S01-03 / L14 | - Modalidades: hotel por noche, motel por horas y operación mixta. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S01-04 / L15 | - Interfaz en español, preparada para traducciones. | I | [hospitality_suite/public/js/hospitality.js](../hospitality_suite/public/js/hospitality.js)<br>[hospitality_suite/public/js/hospitality_workflows.js](../hospitality_suite/public/js/hospitality_workflows.js) | [docs/evidence/54-produccion-legible.png](evidence/54-produccion-legible.png) | La interfaz española funciona y los diálogos usan traducción nativa; contrastar todos los literales de Pages y mensajes antes de acreditar preparación completa para traducciones. |
+| S01-05 / L16 | - Valores iniciales sugeridos y editables: país Nicaragua, zona horaria America/Managua y moneda base NIO. Permitir USD, otras monedas y tipos de cambio mediante ERPNext. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S01-06 / L17 | - No fijes tasas tributarias, requisitos de identificación ni reglas fiscales en el código. Deben ser configurables y validados para cada implementación. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S01-07 / L18 | - Inspecciona primero el repositorio, sus instrucciones, las versiones instaladas de Frappe/ERPNext, aplicaciones, base de datos y herramientas de pruebas. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S01-08 / L19 | - Usa la versión instalada como objetivo. Si no existe entorno, selecciona una versión estable mediante documentación oficial y declara esa decisión. No prometas compatibilidad simultánea con versiones que no has probado. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S01-09 / L20 | - No modifiques el núcleo de Frappe o ERPNext. Usa una app propia, hooks, APIs documentadas, fixtures y migraciones versionadas. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S01-10 / L21 | - Consulta el código y documentación correspondientes a la versión objetivo antes de asumir que un DocType, método o módulo existe. No dependas de componentes de Hospitality antiguos sin verificar su vigencia y compatibilidad. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S01-11 / L22 | - Toma decisiones razonables cuando falte información no bloqueante y documenta los supuestos. Pregunta únicamente por datos que impidan avanzar de forma segura. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S01-12 / L23 | - Implementa por etapas, pero continúa hasta cubrir el alcance obligatorio. No te detengas después del esquema de DocTypes o de la primera pantalla. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S01-13 / L24 | - Trabaja en desarrollo o pruebas; no migres producción ni uses datos reales para demostraciones sin autorización. | R | — | — | Contraste individual con código y evidencia pendiente. |
+
+## 2. ARQUITECTURA Y MODELO DE DATOS
+
+| ID / línea original | Requisito | Estado | Implementación | Evidencia | Pendiente |
+|---|---|---|---|---|---|
+| S02-01 / L28 | - Backend nativo Frappe, reglas de negocio en Python y persistencia mediante DocTypes. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S02-02 / L29 | - Frontend mediante Pages de Desk. Puedes usar Vue y componentes compatibles si simplifican la interfaz y su mantenimiento. Justifica la elección y resuelve el empaquetado dentro de la app. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S02-03 / L30 | - Reutiliza Customer, Contact, Address, Item, Item Group, UOM, Price List, Company, Cost Center, Warehouse, Sales Invoice, Payment Entry y los documentos estándar de compras, inventarios y contabilidad que correspondan. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S02-04 / L31 | - No construyas un segundo libro mayor ni un inventario independiente de ERPNext. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S02-05 / L32 | - Separa huésped, acompañante, cliente que paga y empresa/agencia responsable de facturación. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S02-06 / L33 | - Modela establecimientos, habitaciones, categorías, tarifas, reservas, asignaciones por intervalo, estancias, folios o cuentas de estancia, cargos, garantías, turnos de caja, tareas de limpieza, órdenes de mantenimiento y cierres diarios. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S02-07 / L34 | - Usa un prefijo consistente en los DocTypes propios para evitar colisiones. Justifica cuándo una entidad requiere DocType independiente o tabla hija. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S02-08 / L35 | - Define campos, enlaces, obligatoriedad, validaciones, índices, permisos, estados y transiciones. Evita estados redundantes que puedan contradecirse. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S02-09 / L36 | - Cada operación debe identificar compañía, establecimiento, usuario, fecha/hora y referencias de origen. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S02-10 / L37 | - Una reserva puede contener varias habitaciones; una estancia puede tener varios segmentos de habitación por cambios durante la visita. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S02-11 / L38 | - Distingue fecha/hora real, fecha operativa y fecha de contabilización. Usa las convenciones de Frappe para fechas y conversiones horarias; no guardes mezclas ambiguas de UTC y hora local. | R | — | — | Contraste individual con código y evidencia pendiente. |
+
+## 3. CONFIGURACIÓN INICIAL
+
+| ID / línea original | Requisito | Estado | Implementación | Evidencia | Pendiente |
+|---|---|---|---|---|---|
+| S03-01 / L43 | - Compañía, establecimientos, modalidad, zona horaria, fecha operativa y horario de cierre. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S03-02 / L44 | - Pisos, zonas, habitaciones, categoría, capacidad, camas, comodidades y estacionamiento asociado cuando corresponda. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S03-03 / L45 | - Monedas, impuestos, cuentas contables, centros de costo, almacenes y medios de pago. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S03-04 / L46 | - Horarios de entrada/salida, tolerancias, cargos por entrada anticipada/salida tardía y tiempo de limpieza. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S03-05 / L47 | - Políticas de anticipos, garantías, cancelación, no presentación, crédito, descuentos y autorizaciones. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S03-06 / L48 | - Artículos de alojamiento, horas adicionales, alimentación, minibar, lavandería y otros servicios. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S03-07 / L49 | - Series documentales, formatos de impresión, usuarios y roles. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S03-08 / L50 | Valida la configuración antes de habilitar operaciones financieras. No crees cuentas o impuestos arbitrarios silenciosamente. | R | — | — | Contraste individual con código y evidencia pendiente. |
+
+## 4. PÁGINAS E INTERFAZ OBLIGATORIAS
+
+| ID / línea original | Requisito | Estado | Implementación | Evidencia | Pendiente |
+|---|---|---|---|---|---|
+| S04-01 / L55 | A. Inicio: indicadores, alertas, pendientes y accesos rápidos. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S04-02 / L56 | B. Recepción: tablero de habitaciones y panel lateral de la estancia. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S04-03 / L57 | C. Reservas: calendario por habitación y búsqueda de disponibilidad. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S04-04 / L58 | D. Estancias: huéspedes alojados, llegadas, salidas y cuentas abiertas. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S04-05 / L59 | E. Caja: cobros, devoluciones, turno, arqueo y cierre. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S04-06 / L60 | F. Limpieza: tareas, prioridades, responsables e inspección. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S04-07 / L61 | G. Mantenimiento: incidencias, bloqueos y órdenes de trabajo. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S04-08 / L62 | H. Consumos e inventario: cargos a habitación, entregas y reposición. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S04-09 / L63 | I. Clientes y huéspedes: consulta e historial según permisos. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S04-10 / L64 | J. Gerencia: reportes, indicadores y autorizaciones. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S04-11 / L65 | K. Configuración: asistente y políticas operativas. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S04-12 / L68 | - Diseño profesional, adaptable a escritorio, tableta y teléfono; limpieza debe funcionar cómodamente desde móvil. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S04-13 / L69 | - Etiquetas comprensibles: Reservar, Registrar entrada, Agregar consumo, Extender estancia, Cambiar habitación, Cobrar, Registrar salida y Marcar limpia. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S04-14 / L70 | - Acciones frecuentes dentro de la página mediante paneles, asistentes breves o diálogos, sin obligar a abrir formularios estándar. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S04-15 / L71 | - Búsqueda rápida, filtros por establecimiento/piso/categoría/estado y filtros persistentes cuando resulte útil. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S04-16 / L72 | - Estado vacío, carga, error, éxito, validación junto al campo y prevención de doble envío. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S04-17 / L73 | - Accesibilidad por teclado y etiquetas; el color nunca será la única forma de transmitir un estado. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S04-18 / L74 | - Actualización entre sesiones usando los mecanismos de tiempo real de Frappe; reconexión y recuperación de datos cuando falle la conexión. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S04-19 / L75 | - No confirmar una reserva, un cobro o una salida mientras no exista respuesta válida del servidor. No implementar cobros desconectados. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S04-20 / L76 | - Prueba los flujos completos desde estas páginas, no solamente desde formularios de administrador. | R | — | — | Contraste individual con código y evidencia pendiente. |
+
+## 5. TABLERO DE HABITACIONES Y DISPONIBILIDAD
+
+| ID / línea original | Requisito | Estado | Implementación | Evidencia | Pendiente |
+|---|---|---|---|---|---|
+| S05-01 / L80 | - Tarjetas con número, categoría, disponibilidad, limpieza, bloqueo, entrada/salida prevista, tiempo restante o excedido y saldo, según permisos. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S05-02 / L81 | - Usa dimensiones separadas para ocupación, limpieza y mantenimiento. Una habitación puede estar ocupada y requerir limpieza; una reserva futura no equivale a ocupación actual. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S05-03 / L82 | - Estados visibles sugeridos: disponible, reservada para el intervalo consultado, ocupada, salida próxima, tiempo excedido, sucia, en limpieza, pendiente de inspección y fuera de servicio. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S05-04 / L83 | - Historial completo de cambios y bloqueos por rango de fechas/horas. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S05-05 / L84 | - Impide asignar habitaciones sucias, bloqueadas o fuera de servicio, salvo excepciones expresamente configuradas y autorizadas que no permitan doble ocupación. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S05-06 / L85 | - La salida deja la habitación pendiente de limpieza; su disponibilidad operativa se recupera conforme al flujo configurado. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S05-07 / L86 | - Incluye colchones de limpieza en el cálculo de disponibilidad cuando así esté configurado. | R | — | — | Contraste individual con código y evidencia pendiente. |
+
+## 6. RESERVAS
+
+| ID / línea original | Requisito | Estado | Implementación | Evidencia | Pendiente |
+|---|---|---|---|---|---|
+| S06-01 / L90 | - Consulta de disponibilidad por fechas y horas, categoría, capacidad y cantidad de habitaciones. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S06-02 / L91 | - Reservas por habitación concreta o por categoría, con control del cupo cuando todavía no exista asignación física. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S06-03 / L92 | - Estados: borrador, retención temporal, confirmada, entrada registrada, completada, cancelada y no presentada; ajusta la separación reserva/estancia si el modelo lo requiere. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S06-04 / L93 | - Canales: recepción, teléfono, web, empresa, agencia y otros configurables. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S06-05 / L94 | - Reservas individuales y grupales, varias habitaciones, huéspedes y pagadores. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S06-06 / L95 | - Cotización, anticipos, garantía, instrucciones, solicitudes especiales y confirmación imprimible. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S06-07 / L96 | - Modificación, reasignación, cancelación y no presentación con motivos y reglas de cobro. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S06-08 / L97 | - Las retenciones temporales expiran y liberan cupo de manera fiable. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S06-09 / L98 | - Prohibir sobreventa por defecto. No habilitar sobreventa como atajo para resolver conflictos de disponibilidad. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S06-10 / L99 | - El inventario de categorías y las asignaciones físicas deben compartir la misma lógica de disponibilidad y no contabilizar dos veces una reserva. | R | — | — | Contraste individual con código y evidencia pendiente. |
+
+## 7. TARIFAS PARA HOTEL Y MOTEL
+
+| ID / línea original | Requisito | Estado | Implementación | Evidencia | Pendiente |
+|---|---|---|---|---|---|
+| S07-01 / L103 | - Hotel: precio por noche, tipo de habitación, ocupación, temporada, día de semana, empresa/agencia y plan de alojamiento. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S07-02 / L104 | - Motel: bloques configurables, por ejemplo 2, 3, 6, 12 o 24 horas; tarifas por fracción o por hora adicional y paquetes nocturnos con ventanas definidas. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S07-03 / L105 | - Operación mixta con reglas explícitas para cambiar de modalidad. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S07-04 / L106 | - Persona adicional, cama extra, servicios incluidos, descuentos, cortesías, tarifas negociadas e impuestos incluidos o añadidos. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S07-05 / L107 | - Prioridades inequívocas si coinciden varias reglas. No acumules recargos o descuentos accidentalmente. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S07-06 / L108 | - Define tolerancias, redondeo, límites exactos de cada bloque, extensiones, entrada anticipada y salida tardía. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S07-07 / L109 | - Calcula importes con precisión decimal y redondeo monetario consistente con ERPNext. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S07-08 / L110 | - Conserva la tarifa y sus reglas aplicadas como una versión histórica. Cambiar el tarifario no debe alterar cargos ya aceptados. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S07-09 / L111 | - Muestra una explicación del cálculo antes de confirmar y al revisar la cuenta. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S07-10 / L112 | - El servidor es la autoridad del tiempo y del importe. El contador de la pantalla es informativo y debe sobrevivir a recargas. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S07-11 / L113 | - Cubrir cruces de medianoche, meses y años; verificar cambios de hora en zonas que los utilicen. | R | — | — | Contraste individual con código y evidencia pendiente. |
+
+## 8. ENTRADA, ESTANCIA Y SALIDA
+
+| ID / línea original | Requisito | Estado | Implementación | Evidencia | Pendiente |
+|---|---|---|---|---|---|
+| S08-01 / L117 | - Entrada desde reserva o ingreso inmediato sin reserva. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S08-02 / L118 | - Registro de huésped, acompañantes y datos exigidos por la política configurada; no recoger información innecesaria. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S08-03 / L119 | - Asignación de habitación, tarifa, fechas/horas, anticipo, garantía y responsable de pago. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S08-04 / L120 | - Cuenta de estancia con alojamiento, servicios, consumos, descuentos, impuestos, pagos y saldo. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S08-05 / L121 | - Cambios de habitación con historial y efectos tarifarios claros. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S08-06 / L122 | - Extensiones sujetas a disponibilidad y nueva cotización antes de confirmar. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S08-07 / L123 | - Varias cuentas por estancia; repartir cargos entre huésped, acompañantes, empresa o agencia sin duplicarlos. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S08-08 / L124 | - Salida con revisión de consumos, inspección si corresponde, aplicación de anticipos, liquidación y comprobantes. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S08-09 / L125 | - Salida a crédito solamente para clientes y usuarios autorizados, conservando la cuenta por cobrar. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S08-10 / L126 | - Las garantías reembolsables se gestionan separadamente de los anticipos de alojamiento; registra su devolución o aplicación autorizada. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S08-11 / L127 | - Después de una salida, genera la tarea de limpieza correspondiente. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S08-12 / L128 | - Las correcciones posteriores requieren permisos, motivo, trazabilidad y documentos de reversión cuando exista efecto financiero. | R | — | — | Contraste individual con código y evidencia pendiente. |
+
+## 9. CAJA, COBROS Y CONTABILIDAD
+
+| ID / línea original | Requisito | Estado | Implementación | Evidencia | Pendiente |
+|---|---|---|---|---|---|
+| S09-01 / L132 | - Turnos de caja con apertura, fondo inicial, responsable, movimientos, retiros, entrega, arqueo por denominaciones y cierre. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S09-02 / L133 | - Medios de pago: efectivo, tarjeta, transferencia y otros configurables. Permitir pagos parciales, combinados y monedas admitidas. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S09-03 / L134 | - Referencia obligatoria para medios bancarios según configuración; tipo de cambio almacenado en la transacción y control del vuelto. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S09-04 / L135 | - Separar ingresos cobrados, ingresos facturados, cuentas por cobrar, anticipos y garantías. Cobrar un anticipo no debe generar automáticamente ingreso por alojamiento. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S09-05 / L136 | - Integrar facturación mediante Sales Invoice y cobros mediante Payment Entry o el mecanismo estándar apropiado para la versión objetivo. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S09-06 / L137 | - Aplicar anticipos y conciliaciones mediante los mecanismos reales de ERPNext, respetando cliente, compañía, moneda y cuentas. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S09-07 / L138 | - Permitir facturación individual, por habitación, por grupo o a empresa, conservando la trazabilidad de cada cargo. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S09-08 / L139 | - Crear notas de crédito y devoluciones con documentos estándar; no modificar importes contabilizados directamente. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S09-09 / L140 | - Configurar centros de costo y cuentas de ingresos/gastos por establecimiento y servicio. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S09-10 / L141 | - Manejar comisiones de tarjeta, retenciones y liquidaciones a través de configuración y documentos estándar cuando apliquen, sin confundir cobro bruto y depósito neto. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S09-11 / L142 | - Definir y documentar cuándo un cargo operativo se convierte en factura o reconocimiento contable. Si implementas devengo diario, usa documentos estándar y evita volver a reconocer ese ingreso al facturar. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S09-12 / L143 | - La facturación o pagos realizados desde ERPNext también deben reflejarse en la estancia; no dependas únicamente de las acciones de tus páginas. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S09-13 / L144 | - Conciliación por estancia y turno contra facturas, pagos, anticipos, garantías y devoluciones. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S09-14 / L145 | - Mostrar efectivo esperado y contado, diferencias y aprobación del supervisor. No ocultar faltantes mediante ajustes automáticos. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S09-15 / L146 | - Mantener saldos por moneda y tratamiento de conversiones explícito. Un pago debe pertenecer a un único turno y tener referencia inequívoca a su origen. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S09-16 / L147 | - Bloquear movimientos ordinarios en turnos cerrados; correcciones mediante proceso autorizado y trazable. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S09-17 / L148 | - No escribir directamente en GL Entry, Payment Ledger Entry ni Stock Ledger Entry. Usa los controladores y documentos estándar. | R | — | — | Contraste individual con código y evidencia pendiente. |
+
+## 10. LIMPIEZA, LAVANDERÍA Y MANTENIMIENTO
+
+| ID / línea original | Requisito | Estado | Implementación | Evidencia | Pendiente |
+|---|---|---|---|---|---|
+| S10-01 / L152 | - Limpieza de salida, estancia y profunda; prioridad, responsable, inicio/fin, checklist y observaciones. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S10-02 / L153 | - Inspección opcional por supervisión antes de liberar la habitación. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S10-03 / L154 | - Registro de daños, objetos olvidados y reposición de artículos, con acceso restringido a los datos necesarios. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S10-04 / L155 | - Control básico de ropa de cama: entregada a lavandería, recibida, pérdida y reposición; integrar existencias si estos artículos se controlan como inventario. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S10-05 / L156 | - Incidencias correctivas y mantenimiento preventivo por habitación o equipo. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S10-06 / L157 | - Bloqueo parcial por intervalo o completo, responsable, repuestos, costos, evidencias y reapertura autorizada. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S10-07 / L158 | - Resolver conflictos entre mantenimiento planificado, reservas existentes y estancias; no cancelar una reserva silenciosamente. | R | — | — | Contraste individual con código y evidencia pendiente. |
+
+## 11. CONSUMOS, INVENTARIO, COMPRAS Y SERVICIOS
+
+| ID / línea original | Requisito | Estado | Implementación | Evidencia | Pendiente |
+|---|---|---|---|---|---|
+| S11-01 / L162 | - Minibar, bebidas, alimentos, room service, lavandería, estacionamiento y otros servicios. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S11-02 / L163 | - Venta directa o cargo a habitación con confirmación de estancia activa y autorización del usuario. | I | [hospitality_suite/api.py](../hospitality_suite/api.py) — bootstrap<br>[hospitality_suite/public/js/hospitality_workflows.js](../hospitality_suite/public/js/hospitality_workflows.js) | [docs/evidence/54-produccion-legible.png](evidence/54-produccion-legible.png) | Los circuitos de venta/cargo están acreditados en la matriz resumida. Revisar el selector de artículos ante un catálogo mayor que las 500 filas cargadas por bootstrap; no declarar completo ese acceso sin verificarlo. |
+| S11-03 / L164 | - Solicitudes de servicio con estados: solicitado, en preparación/en proceso, entregado y cancelado. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S11-04 / L165 | - Almacenes por establecimiento y ubicaciones cuando corresponda, mínimos y alertas de reposición. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S11-05 / L166 | - Integrar recepción de compras, traslados, salidas y ajustes con documentos estándar de ERPNext. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S11-06 / L167 | - Separar mercancía vendida, consumibles de limpieza, mermas y activos. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S11-07 / L168 | - Definir si el inventario se descuenta al entregar o al facturar; impedir el doble descuento. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S11-08 / L169 | - Permitir anulación/devolución mediante el flujo correspondiente y conciliar con la cuenta de estancia. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S11-09 / L170 | - Para restaurante o POS, reutilizar funciones disponibles de ERPNext y completar la integración de cargos a habitación. No desarrollar otro ERP de restaurante innecesariamente. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S11-10 / L171 | - Compras, proveedores, gastos, activos y nómina pueden reutilizar sus módulos estándar. HRMS será opcional y su ausencia no debe impedir el funcionamiento del PMS. | R | — | — | Contraste individual con código y evidencia pendiente. |
+
+## 12. CIERRE DIARIO Y AUDITORÍA NOCTURNA
+
+| ID / línea original | Requisito | Estado | Implementación | Evidencia | Pendiente |
+|---|---|---|---|---|---|
+| S12-01 / L175 | - Fecha operativa independiente de la fecha del reloj, con corte configurable. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S12-02 / L176 | - Detectar llegadas y salidas pendientes, estancias vencidas, cargos sin procesar, caja abierta y diferencias de conciliación. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S12-03 / L177 | - Generar cargos periódicos conforme a las reglas elegidas, sin duplicarlos al repetir el proceso. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S12-04 / L178 | - Revisar cancelaciones, no presentaciones, descuentos, cortesías, devoluciones y cambios manuales. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S12-05 / L179 | - Resumen de ocupación, producción, facturación, cobros y saldos pendientes, diferenciando cada concepto. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S12-06 / L180 | - Cierre autorizado, reporte reproducible e historial de ejecución. La reapertura debe tener permisos y motivo. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S12-07 / L181 | - Poder recuperar una ejecución interrumpida de manera segura y conocer qué operaciones se completaron. | R | — | — | Contraste individual con código y evidencia pendiente. |
+
+## 13. REPORTES E INDICADORES
+
+| ID / línea original | Requisito | Estado | Implementación | Evidencia | Pendiente |
+|---|---|---|---|---|---|
+| S13-01 / L185 | Incluye filtros por compañía, establecimiento, período, categoría, habitación, canal, usuario y turno cuando correspondan; exportación a XLSX/PDF y permisos de acceso. | V | [hospitality_suite/report_queries.py](../hospitality_suite/report_queries.py) — metadata / validate / scopes<br>[hospitality_suite/api.py](../hospitality_suite/api.py) — report_options / export_report | [docs/evidence/minimum-reports-native-tests.xml](evidence/minimum-reports-native-tests.xml)<br>[docs/evidence/report-dimensions.json](evidence/report-dimensions.json)<br>[docs/evidence/minimum-reports-http.json](evidence/minimum-reports-http.json)<br>[docs/evidence/readability-js-tests.log](evidence/readability-js-tests.log) | — |
+| S13-02 / L188 | - Disponibilidad, ocupación actual y reservas futuras. | V | [hospitality_suite/availability.py](../hospitality_suite/availability.py) — capacity<br>[hospitality_suite/report_queries.py](../hospitality_suite/report_queries.py) — availability_rows / projected_rows | [docs/evidence/minimum-reports-native-tests.xml](evidence/minimum-reports-native-tests.xml)<br>[hospitality_suite/tests/test_report_dimensions.py](../hospitality_suite/tests/test_report_dimensions.py) — test_availability_shares_capacity_with_roomless_reservations / test_hosted_guests_include_principal_and_companions_with_names<br>[docs/evidence/report-dimensions.json](evidence/report-dimensions.json)<br>[docs/evidence/53-disponibilidad-movil.png](evidence/53-disponibilidad-movil.png) | — |
+| S13-03 / L189 | - Llegadas, salidas, huéspedes alojados, cancelaciones y no presentaciones. | V | [hospitality_suite/report_queries.py](../hospitality_suite/report_queries.py) — booking_decisions / projected_rows<br>[hospitality_suite/report_presentation.py](../hospitality_suite/report_presentation.py) — PROFILES | [docs/evidence/minimum-reports-native-tests.xml](evidence/minimum-reports-native-tests.xml)<br>[hospitality_suite/tests/test_report_dimensions.py](../hospitality_suite/tests/test_report_dimensions.py) — test_arrival_departure_and_registration_are_distinct / test_booking_penalties_use_decision_date_and_native_financial_sources<br>[hospitality_suite/tests/test_lifecycle.py](../hospitality_suite/tests/test_lifecycle.py) — test_hold_expiry_is_idempotent<br>[docs/evidence/59-cancelaciones-fecha-real.png](evidence/59-cancelaciones-fecha-real.png) | — |
+| S13-04 / L190 | - Producción por habitación, categoría, servicio, canal y establecimiento. | V | [hospitality_suite/report_queries.py](../hospitality_suite/report_queries.py) — group_production / native_invoice_lines / direct_sales | [docs/evidence/minimum-reports-native-tests.xml](evidence/minimum-reports-native-tests.xml)<br>[hospitality_suite/tests/test_report_dimensions.py](../hospitality_suite/tests/test_report_dimensions.py) — test_production_room_and_adjustment_keep_original_attribution_after_move / test_invoice_credit_and_discount_reconcile_production_and_typed_export<br>[docs/evidence/report-dimensions.json](evidence/report-dimensions.json)<br>[docs/evidence/51-produccion-por-habitacion.png](evidence/51-produccion-por-habitacion.png) | — |
+| S13-05 / L191 | - Facturas, cobros por medio de pago, cuentas pendientes, anticipos y garantías. | V | [hospitality_suite/reports.py](../hospitality_suite/reports.py) — REPORTS<br>[hospitality_suite/report_queries.py](../hospitality_suite/report_queries.py) — projected_rows | [docs/evidence/minimum-reports-native-tests.xml](evidence/minimum-reports-native-tests.xml)<br>[hospitality_suite/tests/test_report_dimensions.py](../hospitality_suite/tests/test_report_dimensions.py) — test_only_positive_pending_folios_and_applicable_report_options<br>[hospitality_suite/tests/test_finance.py](../hospitality_suite/tests/test_finance.py) — test_guarantee_is_liability_then_refund / test_partial_advance_refund_then_invoice<br>[docs/evidence/minimum-reports-http.json](evidence/minimum-reports-http.json) | — |
+| S13-06 / L192 | - Turnos, arqueos, faltantes/sobrantes, descuentos, devoluciones y cortesías. | V | [hospitality_suite/report_queries.py](../hospitality_suite/report_queries.py) — shift_currency_rows / projected_rows<br>[hospitality_suite/cashier.py](../hospitality_suite/cashier.py) — close_shift | [docs/evidence/minimum-reports-native-tests.xml](evidence/minimum-reports-native-tests.xml)<br>[hospitality_suite/tests/test_report_dimensions.py](../hospitality_suite/tests/test_report_dimensions.py) — test_cleaning_productivity_and_shift_counts_preserve_their_units / test_invoice_credit_and_discount_reconcile_production_and_typed_export<br>[hospitality_suite/tests/test_finance.py](../hospitality_suite/tests/test_finance.py) — test_close_difference_needs_supervisor_and_blocks_new_payment<br>[docs/evidence/58-arqueos-por-moneda.png](evidence/58-arqueos-por-moneda.png) | — |
+| S13-07 / L193 | - Limpieza: pendientes, duración y productividad; mantenimiento y habitaciones fuera de servicio. | V | [hospitality_suite/report_queries.py](../hospitality_suite/report_queries.py) — cleaning_productivity / projected_rows<br>[hospitality_suite/housekeeping.py](../hospitality_suite/housekeeping.py)<br>[hospitality_suite/equipment.py](../hospitality_suite/equipment.py) | [docs/evidence/minimum-reports-native-tests.xml](evidence/minimum-reports-native-tests.xml)<br>[hospitality_suite/tests/test_report_dimensions.py](../hospitality_suite/tests/test_report_dimensions.py) — test_cleaning_productivity_and_shift_counts_preserve_their_units<br>[hospitality_suite/tests/test_reporting_history.py](../hospitality_suite/tests/test_reporting_history.py) — test_completed_maintenance_remains_in_history_after_later_document_edit<br>[docs/evidence/57-productividad-limpieza.png](evidence/57-productividad-limpieza.png) | — |
+| S13-08 / L194 | - Consumo de inventario, mermas, reposición y costos por centro de costo cuando existan datos. | V | [hospitality_suite/reports.py](../hospitality_suite/reports.py) — inventory_movements<br>[hospitality_suite/procurement.py](../hospitality_suite/procurement.py) | [docs/evidence/minimum-reports-native-tests.xml](evidence/minimum-reports-native-tests.xml)<br>[hospitality_suite/tests/test_procurement.py](../hospitality_suite/tests/test_procurement.py) — test_stock_transfer_cleaning_loss_replacement_and_count_adjustment / test_native_reorder_minimums_and_classification_are_property_scoped<br>[docs/evidence/inventory-ui.json](evidence/inventory-ui.json) | — |
+| S13-09 / L195 | - Conciliación entre folios y ERPNext, con diferencias identificables hasta el documento de origen. | V | [hospitality_suite/reconciliation.py](../hospitality_suite/reconciliation.py)<br>[hospitality_suite/accounting.py](../hospitality_suite/accounting.py) — sync_document | [docs/evidence/minimum-reports-native-tests.xml](evidence/minimum-reports-native-tests.xml)<br>[hospitality_suite/tests/test_setup_reporting.py](../hospitality_suite/tests/test_setup_reporting.py) — test_tax_inclusive_net_kpi_and_document_reconciliation<br>[hospitality_suite/tests/test_finance.py](../hospitality_suite/tests/test_finance.py) — test_external_invoice_requires_all_adjustments_and_syncs_every_source / test_untracked_native_cash_is_visible_and_blocks_shift_close<br>[docs/evidence/minimum-reports-http.json](evidence/minimum-reports-http.json) | — |
+| S13-10 / L198 | - Hotel: ocupación por habitación-noche, ADR y RevPAR. | V | [hospitality_suite/reports.py](../hospitality_suite/reports.py) — summary<br>[docs/CONTABILIDAD.md](CONTABILIDAD.md) — Conciliación e indicadores | [docs/evidence/minimum-reports-native-tests.xml](evidence/minimum-reports-native-tests.xml)<br>[hospitality_suite/tests/test_setup_reporting.py](../hospitality_suite/tests/test_setup_reporting.py) — test_tax_inclusive_net_kpi_and_document_reconciliation<br>[hospitality_suite/tests/test_timing_metrics.py](../hospitality_suite/tests/test_timing_metrics.py) — test_courtesy_occupies_without_revenue_and_zero_denominator | — |
+| S13-11 / L199 | - Motel: horas ocupadas/horas comercializables, rotaciones por habitación, duración media, ticket medio e ingreso por hora disponible. | V | [hospitality_suite/reports.py](../hospitality_suite/reports.py) — summary<br>[docs/CONTABILIDAD.md](CONTABILIDAD.md) — Conciliación e indicadores | [docs/evidence/minimum-reports-native-tests.xml](evidence/minimum-reports-native-tests.xml)<br>[hospitality_suite/tests/test_timing_metrics.py](../hospitality_suite/tests/test_timing_metrics.py) — test_motel_actual_arrival_hours_and_maintenance_capacity / test_business_cutoff_clips_motel_hours_and_is_saved_in_close | — |
+| S13-12 / L200 | - Define fórmula, período, moneda, fuente, tratamiento de cortesías, bloqueos, impuestos y exclusiones para cada indicador. | V | [hospitality_suite/reports.py](../hospitality_suite/reports.py) — summary / definitions<br>[docs/CONTABILIDAD.md](CONTABILIDAD.md) — Conciliación e indicadores | [docs/evidence/minimum-reports-native-tests.xml](evidence/minimum-reports-native-tests.xml)<br>[hospitality_suite/tests/test_timing_metrics.py](../hospitality_suite/tests/test_timing_metrics.py)<br>[hospitality_suite/tests/test_setup_reporting.py](../hospitality_suite/tests/test_setup_reporting.py) — test_tax_inclusive_net_kpi_and_document_reconciliation | — |
+| S13-13 / L201 | - No mezcles noches con horas ni anticipos con ingresos. No sumes reservas a estancias como si fueran dos ocupaciones. | V | [hospitality_suite/reports.py](../hospitality_suite/reports.py) — summary<br>[hospitality_suite/accounting.py](../hospitality_suite/accounting.py) — reconcile_folio_advances | [docs/evidence/minimum-reports-native-tests.xml](evidence/minimum-reports-native-tests.xml)<br>[hospitality_suite/tests/test_timing_metrics.py](../hospitality_suite/tests/test_timing_metrics.py)<br>[hospitality_suite/tests/test_finance.py](../hospitality_suite/tests/test_finance.py) — test_advance_after_invoice_from_closed_shift_reconciles_without_cash_change<br>[hospitality_suite/tests/test_report_dimensions.py](../hospitality_suite/tests/test_report_dimensions.py) — test_native_counter_invoice_and_credit_are_in_production_without_stay | — |
+| S13-14 / L202 | - Usa ingreso de alojamiento, sin impuestos ni servicios ajenos, para ADR/RevPAR según la definición documentada; maneja denominadores cero. | V | [hospitality_suite/reports.py](../hospitality_suite/reports.py) — summary<br>[docs/CONTABILIDAD.md](CONTABILIDAD.md) — Conciliación e indicadores | [docs/evidence/minimum-reports-native-tests.xml](evidence/minimum-reports-native-tests.xml)<br>[hospitality_suite/tests/test_setup_reporting.py](../hospitality_suite/tests/test_setup_reporting.py) — test_tax_inclusive_net_kpi_and_document_reconciliation<br>[hospitality_suite/tests/test_timing_metrics.py](../hospitality_suite/tests/test_timing_metrics.py) — test_courtesy_occupies_without_revenue_and_zero_denominator | — |
+| S13-15 / L203 | - La utilización horaria no debe superar 100 % por solapamientos o doble conteo. Las rotaciones son un indicador distinto que puede superar una por día. | V | [hospitality_suite/reports.py](../hospitality_suite/reports.py) — union_seconds / summary<br>[hospitality_suite/availability.py](../hospitality_suite/availability.py) — check | [docs/evidence/minimum-reports-native-tests.xml](evidence/minimum-reports-native-tests.xml)<br>[hospitality_suite/tests/test_timing_metrics.py](../hospitality_suite/tests/test_timing_metrics.py) — test_motel_actual_arrival_hours_and_maintenance_capacity / test_business_cutoff_clips_motel_hours_and_is_saved_in_close<br>[docs/evidence/readability-race-room.json](evidence/readability-race-room.json) | — |
+
+## 14. PORTAL DE RESERVAS E INTEGRACIONES
+
+| ID / línea original | Requisito | Estado | Implementación | Evidencia | Pendiente |
+|---|---|---|---|---|---|
+| S14-01 / L207 | - Incluir portal web opcional, desactivado inicialmente, para consultar categorías/disponibilidad, solicitar o crear reservas bajo políticas configuradas y consultar confirmaciones de forma segura. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S14-02 / L208 | - Debe usar el mismo motor de disponibilidad, tarifas y retenciones de la recepción. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S14-03 / L209 | - Proteger consultas de reservas mediante autenticación o enlaces firmados con caducidad; no exponer información de otros huéspedes. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S14-04 / L210 | - Sin pasarela configurada, admitir solicitud y confirmación manual; nunca mostrar un pago como aprobado sin confirmación real. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S14-05 / L211 | - Preparar APIs documentadas y adaptadores para pasarelas, correo, WhatsApp, canales de reserva y cerraduras. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S14-06 / L212 | - Booking.com, Airbnb, channel managers, mensajería y hardware requieren proveedor, documentación, acceso y credenciales. Trátalos como integraciones externas opcionales, separadas del núcleo obligatorio. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S14-07 / L213 | - Cuando falte acceso externo, entrega contratos/adaptadores y pruebas simuladas claramente identificadas. No presentes una integración simulada como operativa. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S14-08 / L214 | - Validar firmas y evitar duplicados en webhooks; no almacenar datos completos de tarjetas ni secretos en el repositorio. | R | — | — | Contraste individual con código y evidencia pendiente. |
+
+## 15. ROLES, SEGURIDAD Y PRIVACIDAD
+
+| ID / línea original | Requisito | Estado | Implementación | Evidencia | Pendiente |
+|---|---|---|---|---|---|
+| S15-01 / L218 | Roles mínimos: administrador, gerente, supervisor, recepcionista, cajero, limpieza, mantenimiento, contabilidad y auditor de lectura. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S15-02 / L220 | - Matriz de permisos por acción, documento, compañía y establecimiento, aplicada en el servidor además de la interfaz. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S15-03 / L221 | - No asumir que un filtro visual o habilitar multicompañía aísla los datos. Verificar listados, enlaces, reportes, exportaciones, archivos, APIs y eventos de tiempo real. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S15-04 / L222 | - No usar ignore_permissions como solución general ni exponer operaciones privadas a Guest. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S15-05 / L223 | - Limpieza y mantenimiento no deben ver documentos de identidad ni información financiera innecesaria. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S15-06 / L224 | - Acceso restringido y archivos privados para identificaciones y evidencias sensibles; políticas configurables de retención de datos. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S15-07 / L225 | - Bitácora con usuario, momento, acción, documento, motivo y valores relevantes para tarifas, descuentos, extensiones, anulaciones, devoluciones y cierres. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S15-08 / L226 | - No permitir borrar movimientos financieros confirmados para ocultar errores. Usar cancelación/reversión conforme al estándar. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S15-09 / L227 | - Modo discreto en el tablero de moteles que oculte nombres y datos personales sin eliminar trazabilidad interna. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S15-10 / L228 | - Proteger endpoints contra acceso a documentos ajenos, entradas inválidas, inyección y exposición de secretos. Aplicar limitación de solicitudes donde corresponda. | R | — | — | Contraste individual con código y evidencia pendiente. |
+
+## 16. CONCURRENCIA E INTEGRIDAD: OBLIGATORIO
+
+| ID / línea original | Requisito | Estado | Implementación | Evidencia | Pendiente |
+|---|---|---|---|---|---|
+| S16-01 / L232 | - Proteger en el servidor las reservas, entradas, cambios de habitación y extensiones con transacciones y un mecanismo de bloqueo o exclusión adecuado a la base de datos utilizada. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S16-02 / L233 | - No basta consultar disponibilidad y luego insertar: dos usuarios simultáneos no deben conseguir la misma habitación o el mismo último cupo. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S16-03 / L234 | - Define intervalos como [inicio, fin), con el margen de limpieza aparte cuando corresponda, y prueba sus límites exactos. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S16-04 / L235 | - No confiar únicamente en un bloqueo de reservas existentes: también debes proteger la ausencia de registros para evitar carreras al reservar una habitación vacía. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S16-05 / L236 | - Distingue restricciones que pueden resolverse con índices únicos de aquellas que requieren bloquear el recurso o cupo e inspeccionar solapamientos dentro de la transacción. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S16-06 / L237 | - Claves de idempotencia para cobros, facturación, cargos periódicos, cierres y webhooks. Reintentar una petición no debe duplicar sus efectos. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S16-07 / L238 | - Definir atomicidad para salida, facturación y cobro. Si parte del proceso depende de un servicio externo, implementar estados recuperables y reconciliación, sin simular una transacción distribuida. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S16-08 / L239 | - Respetar el modelo transaccional de Frappe; no introducir commits intermedios que dejen operaciones parcialmente confirmadas. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S16-09 / L240 | - Evitar sobrescrituras silenciosas entre usuarios mediante control de versión o modificación del documento. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S16-10 / L241 | - Background jobs con reintentos limitados, registro de fallos y acciones de recuperación claras. | R | — | — | Contraste individual con código y evidencia pendiente. |
+
+## 17. PRUEBAS Y CRITERIOS DE ACEPTACIÓN
+
+| ID / línea original | Requisito | Estado | Implementación | Evidencia | Pendiente |
+|---|---|---|---|---|---|
+| S17-01 / L246 | 1) Reserva hotelera de varias noches con anticipo, consumos, saldo y salida. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S17-02 / L247 | 2) Ingreso motel por bloque horario, tolerancia, extensión y cruce de medianoche. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S17-03 / L248 | 3) Reserva grupal y separación de facturación entre huésped y empresa. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S17-04 / L249 | 4) Dos solicitudes simultáneas para la misma habitación: solamente una debe confirmarse. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S17-05 / L250 | 5) Último cupo de categoría y conversión de reserva sin habitación a asignación física. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S17-06 / L251 | 6) Extensión rechazada por reserva posterior; cambio de habitación con trazabilidad. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S17-07 / L252 | 7) Expiración de retención, cancelación, no presentación y devolución parcial. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S17-08 / L253 | 8) Doble clic/reintento de cobro y cierre nocturno repetido sin duplicados. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S17-09 / L254 | 9) Anticipo aplicado a factura sin doble ingreso y garantía devuelta o aplicada correctamente. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S17-10 / L255 | 10) Pagos mixtos y multimoneda, redondeo y arqueo con diferencia. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S17-11 / L256 | 11) Restricción de acceso entre establecimientos y compañías, incluyendo API y archivos. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S17-12 / L257 | 12) Salida, limpieza, inspección y vuelta a disponibilidad. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S17-13 / L258 | 13) Consumo de minibar con una sola salida de inventario y reversión correcta. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S17-14 / L259 | 14) Factura/pago creado o cancelado desde ERPNext reflejado en la estancia. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S17-15 / L260 | 15) Corte de conexión, error de facturación o fallo de trabajo programado sin cobros fantasma ni estados irrecuperables. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S17-16 / L261 | 16) Instalación en sitio limpio y migración de una versión previa de la app sin perder datos. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S17-17 / L263 | Usa datos ficticios reproducibles: dos establecimientos, uno hotel y otro motel, con al menos diez habitaciones cada uno, tarifas distintas, reservas, consumos y usuarios por rol. La carga de demostración será explícita y separada de la instalación normal. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S17-18 / L265 | Aceptación funcional: un recepcionista debe poder reservar, registrar entrada, agregar un consumo, extender, cobrar y registrar salida desde las Pages. Limpieza debe liberar la habitación desde su página. Contabilidad debe rastrear los documentos resultantes y gerencia consultar reportes conciliables. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S17-19 / L267 | Si no puedes ejecutar pruebas por falta de entorno, identifica cuáles no se ejecutaron y por qué. No declares el sistema listo para producción ni todas las pruebas aprobadas sin evidencia. | R | — | — | Contraste individual con código y evidencia pendiente. |
+
+## 18. ENTREGABLES
+
+| ID / línea original | Requisito | Estado | Implementación | Evidencia | Pendiente |
+|---|---|---|---|---|---|
+| S18-01 / L271 | - Repositorio de la app con código completo, estructura nativa, dependencias declaradas y archivos de construcción. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S18-02 / L272 | - DocTypes, controladores, Pages, APIs, permisos, fixtures, hooks, tareas programadas, migraciones y formatos de impresión. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S18-03 / L273 | - Impresiones: confirmación de reserva, registro de huésped, cuenta de estancia, factura según configuración, recibo, arqueo/cierre y órdenes operativas. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S18-04 / L274 | - Diagrama del modelo de datos, estados y principales flujos. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S18-05 / L275 | - Matriz requisito → implementación → prueba → estado, con pendientes explícitos. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S18-06 / L276 | - README en español con versiones soportadas, instalación Bench, configuración, compilación de assets, migración y ejecución de pruebas. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S18-07 / L277 | - Manual breve por rol con los procesos diarios y recuperación ante errores. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S18-08 / L278 | - Documentación de configuración contable, tratamiento de anticipos/garantías y conciliación. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S18-09 / L279 | - Guía de operación: workers, scheduler, monitoreo, respaldos, restauración, actualización y procedimiento de reversión de un despliegue. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S18-10 / L280 | - Generador de datos de demostración y pruebas automatizadas reproducibles. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S18-11 / L281 | - Evidencias de las pruebas realmente ejecutadas y capturas de las páginas cuando el entorno lo permita. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S18-12 / L282 | - Lista diferenciada de funciones completadas, limitaciones verificadas e integraciones externas pendientes de credenciales. | R | — | — | Contraste individual con código y evidencia pendiente. |
+
+## 19. ORDEN DE IMPLEMENTACIÓN
+
+| ID / línea original | Requisito | Estado | Implementación | Evidencia | Pendiente |
+|---|---|---|---|---|---|
+| S19-01 / L286 | Fase 1: inspección del entorno, decisiones de arquitectura, matriz de alcance, modelo, estados y permisos. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S19-02 / L287 | Fase 2: app instalable, configuración, habitaciones, tarifas y disponibilidad protegida contra concurrencia. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S19-03 / L288 | Fase 3: Pages de recepción/reservas, entradas, estancias, extensiones y salidas. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S19-04 / L289 | Fase 4: folios, consumos, facturación, anticipos, garantías, caja y conciliación. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S19-05 / L290 | Fase 5: limpieza, mantenimiento, inventario, servicios y cierre diario. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S19-06 / L291 | Fase 6: reportes, portal opcional e infraestructura para integraciones externas. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S19-07 / L292 | Fase 7: pruebas completas, correcciones, instalación limpia, documentación y entrega. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S19-08 / L294 | En cada fase implementa y verifica el flujo correspondiente. Mantén un registro de avance para continuar sin perder decisiones. No reduzcas el alcance obligatorio a un MVP sin indicarlo y acordarlo. No presentes pantallas con botones sin acción como funcionalidades terminadas. | R | — | — | Contraste individual con código y evidencia pendiente. |
+| S19-09 / L296 | Si el entorno impide terminar una parte, deja el código y las instrucciones verificables de lo que sí puedes completar, explica el bloqueo concreto y continúa con los componentes independientes. No ocultes pendientes. | R | — | — | Contraste individual con código y evidencia pendiente. |

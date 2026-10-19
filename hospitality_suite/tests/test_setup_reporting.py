@@ -96,6 +96,8 @@ class TestSetupReporting(IntegrationTestCase):
         summary=reports.summary(self.prop,day+" 00:00:00",str(now_datetime().date()+timedelta(days=1))+" 00:00:00")
         self.assertEqual(summary["hotel_lodging_net"],"1304.35")
         self.assertEqual(summary["ADR"],"1304.35")
+        self.assertEqual(summary["RevPAR"],"130.44")
+        self.assertEqual(summary["occupancy_percent"],10)
         self.assertFalse(reconciliation.differences(self.prop))
         # A damaged operational link must be surfaced, rather than hidden in a total.
         with operation():

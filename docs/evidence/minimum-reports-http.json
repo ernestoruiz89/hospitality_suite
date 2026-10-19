@@ -1,0 +1,96 @@
+{
+  "synthetic": true,
+  "mutations": false,
+  "reports_by_property": {
+    "Hotel Jardín Demo": {
+      "Conciliación": 23,
+      "Disponibilidad": 1,
+      "Facturas": 6,
+      "Cuentas pendientes": 1,
+      "Reservas": 22,
+      "Estancias": 4,
+      "Producción": 10,
+      "Cobros": 7,
+      "Liquidaciones": 1,
+      "Egresos": 2,
+      "Turnos": 4,
+      "Limpieza": 4,
+      "Mantenimiento": 1,
+      "Inventario": 5,
+      "Movimientos de inventario": 13,
+      "Auditoría": 148,
+      "Llegadas": 5,
+      "Salidas": 4,
+      "Huéspedes alojados": 1,
+      "Cancelaciones y no presentaciones": 17,
+      "Descuentos y cortesías": 0,
+      "Anticipos y garantías": 1,
+      "Productividad de limpieza": 2,
+      "Arqueos por moneda": 4
+    },
+    "Motel Luna Demo": {
+      "Conciliación": 5,
+      "Disponibilidad": 1,
+      "Facturas": 1,
+      "Cuentas pendientes": 0,
+      "Reservas": 1,
+      "Estancias": 1,
+      "Producción": 3,
+      "Cobros": 1,
+      "Liquidaciones": 0,
+      "Egresos": 0,
+      "Turnos": 1,
+      "Limpieza": 1,
+      "Mantenimiento": 1,
+      "Inventario": 1,
+      "Movimientos de inventario": 2,
+      "Auditoría": 28,
+      "Llegadas": 1,
+      "Salidas": 1,
+      "Huéspedes alojados": 0,
+      "Cancelaciones y no presentaciones": 0,
+      "Descuentos y cortesías": 0,
+      "Anticipos y garantías": 0,
+      "Productividad de limpieza": 1,
+      "Arqueos por moneda": 1
+    }
+  },
+  "exports": [
+    {
+      "file": "cleaning-productivity.pdf",
+      "report": "Productividad de limpieza",
+      "rows": 2,
+      "xlsx_rows": 2,
+      "pdf_pages": 1,
+      "sha256": "8106ed7fd04d9facd8646948ade5ab3d930ccc0fcea424153d4729b84b008857",
+      "http_status": 200
+    },
+    {
+      "file": "cash-counts.pdf",
+      "report": "Arqueos por moneda",
+      "rows": 4,
+      "xlsx_rows": 4,
+      "pdf_pages": 1,
+      "sha256": "0a10d11b231f043bbafff0f8b611d8db489026d9b575a417dc01ee1c04a1de91",
+      "http_status": 200
+    },
+    {
+      "file": "cancellations.pdf",
+      "report": "Cancelaciones y no presentaciones",
+      "rows": 17,
+      "xlsx_rows": 17,
+      "pdf_pages": 5,
+      "sha256": "d54edadeb2c105a53963e5faa81b616cc550df3cf074ebaacd63c38060870ff5",
+      "http_status": 200
+    },
+    {
+      "file": "production.pdf",
+      "report": "Producción",
+      "rows": 10,
+      "xlsx_rows": 10,
+      "pdf_pages": 1,
+      "sha256": "d246a840973e14bb11f95cbc7359d3f34a2a2bdf2880194caa506ae2e18fe38f",
+      "http_status": 200
+    }
+  ]
+}

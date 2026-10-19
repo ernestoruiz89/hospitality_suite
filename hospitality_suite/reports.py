@@ -131,6 +131,7 @@ def summary(prop, starts_at=None, ends_at=None):
             (blocked if row.kind=="Maintenance" else occupied).setdefault(row.room,[]).append((a,b))
     seconds=sum(union_seconds(v) for v in occupied.values())
     available=max(0,len(room_names)*(end-start).total_seconds()-sum(union_seconds(v) for v in blocked.values()))
+    commercial_rooms=sum(union_seconds(blocked.get(room,[]))<(end-start).total_seconds() for room in room_names)
     charges=current_all("HS Charge",filters={"property":prop.name,"status":["!=","Reversed"]},fields=["*"])
     lodging_net=decimal(0)
     motel_net=decimal(0)
@@ -198,15 +199,20 @@ def summary(prop, starts_at=None, ends_at=None):
     motel_stays=[r for r in stays.values() if json.loads(r.quote_snapshot)["rules"]["mode"]=="Motel" and start<=get_datetime(r.actual_check_in)<end]
     served=[r for r in stays.values() if json.loads(r.quote_snapshot)["rules"]["mode"]=="Motel" and get_datetime(r.actual_check_in)<end and get_datetime(r.actual_check_out or now_datetime())>start]
     durations=[max(0,(get_datetime(r.actual_check_out or now_datetime())-get_datetime(r.actual_check_in)).total_seconds()/3600) for r in served]
-    production=sum(decimal(r.amount) for r in charges if local_start.date()<=r.business_date<local_end.date())
-    from hospitality_suite.report_queries import direct_sales
-    production+=sum(decimal(r.amount) for r in direct_sales(prop) if local_start.date()<=r.business_date<local_end.date())
+    from hospitality_suite.report_queries import direct_sales,native_invoice_lines
+    production_by_currency={}
+    for row in charges+direct_sales(prop)+native_invoice_lines(prop):
+        if local_start.date()<=row.business_date<local_end.date():
+            production_by_currency[row.currency]=production_by_currency.get(row.currency,decimal(0))+decimal(row.amount)
+    production=production_by_currency.get(prop.currency,decimal(0))
     safe=lambda a,b:str(money(decimal(a)/decimal(b))) if b else "0.00"
-    return dict(currency=prop.currency,production=str(money(production)),lodging_production=str(money(lodging_net+motel_net)),
+    return dict(currency=prop.currency,production=str(money(production,currency=prop.currency)),
+                production_by_currency={c:str(money(value,currency=c)) for c,value in sorted(production_by_currency.items())},lodging_production=str(money(lodging_net+motel_net)),
                 hotel_lodging_net=str(money(lodging_net)),motel_lodging_net=str(money(motel_net)),
                 occupied_hours=round(seconds/3600,2),available_hours=round(available/3600,2),
                 utilization=round(seconds/available*100,2) if available else 0,
-                rotations=len(motel_stays),average_stay_hours=round(sum(durations)/len(durations),2) if durations else 0,
+                rotations=len(motel_stays),commercial_rooms=commercial_rooms,rotations_per_room=round(len(motel_stays)/commercial_rooms,2) if commercial_rooms else 0,
+                average_stay_hours=round(sum(durations)/len(durations),2) if durations else 0,
                 room_nights=len(sold_nights),available_room_nights=available_nights,
                 occupancy_percent=round(len(sold_nights)/available_nights*100,2) if available_nights else 0,
                 ADR=safe(lodging_net,len(sold_nights)),RevPAR=safe(lodging_net,available_nights),
@@ -214,4 +220,4 @@ def summary(prop, starts_at=None, ends_at=None):
                 starts_at=str(start),ends_at=str(end),mode=prop.mode,time_zone=prop.time_zone,
                 local_starts_at=local(start,prop).isoformat(),local_ends_at=local(end,prop).isoformat(),
                 close_time=window["close_time"] if not starts_at and not ends_at else None,
-                definitions="Hotel: noches comercializadas de estancias con entrada registrada, únicas por habitación y fecha; ADR=alojamiento neto facturado/noches, RevPAR=neto/noches disponibles. Motel: horas reales unidas por habitación, rotaciones=entradas; ingreso neto/hora disponible. Ingreso de líneas de facturas presentadas, distribuido al período de servicio; excluye impuestos, otros servicios, anticipos y garantías. Cortesías ocupan con ingreso cero; bloqueos restan capacidad; denominador cero=0. Producción operativa se muestra separadamente.")
+                definitions="Hotel: noches comercializadas de estancias con entrada registrada, únicas por habitación y fecha; ADR=alojamiento neto facturado/noches, RevPAR=neto/noches disponibles. Motel: horas reales unidas por habitación; rotaciones/habitación=entradas/habitaciones con alguna hora comercializable; ingreso neto/hora disponible. Ingreso de líneas de facturas presentadas, distribuido al período de servicio; excluye impuestos, otros servicios, anticipos y garantías. Cortesías ocupan con ingreso cero; bloqueos restan capacidad; denominador cero=0. Producción operativa se muestra separada por moneda.")

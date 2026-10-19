@@ -182,7 +182,9 @@ def credit_note(prop, data):
         if len(kept) != len(selected):
             frappe.throw("Línea de factura desconocida")
         credit.set("items", kept)
-    credit.update(dict(hs_stay=inv.hs_stay,hs_booking=inv.hs_booking, hs_folio=inv.hs_folio, update_stock=0, remarks=data["reason"]))
+    # Native POS invoices own their stock ledger; operational deliveries use
+    # Stock Entry and keep update_stock=0 on both invoice and credit note.
+    credit.update(dict(hs_stay=inv.hs_stay,hs_booking=inv.hs_booking, hs_folio=inv.hs_folio, update_stock=inv.update_stock, remarks=data["reason"]))
     for row in credit.items:
         row.hs_charge = None
         row.hs_charge_sources=None

@@ -1,0 +1,19 @@
+✔ booking descriptions use people and dates while respecting discreet mode and preserving keys (2.9745ms)
+✔ report scope changes ignore old options and keep a failed scope unqueryable (2.4827ms)
+✔ an older success cannot overwrite a newer property response (1.5089ms)
+✔ an old failure cannot clear busy or replace a newer result with an error (0.8299ms)
+✔ an invalidation during a failed mutation is refreshed once the request ends (0.8732ms)
+✔ dialog keeps numeric edits across row refreshes and leaves untouched hidden rows alone (1.2699ms)
+✔ a partly arrived group exposes its remaining numbered request and valid actions (2.3488ms)
+✔ a native business rejection keeps its server message; a lost response gets recovery guidance (0.9871ms)
+✔ property wall-clock controls preserve native single-digit hours (1.03ms)
+✔ editing dates while a quote is in flight invalidates its response (1.8574ms)
+✔ an uncertain request unlocks controls and retries the same quote and key (1.076ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 76.4775

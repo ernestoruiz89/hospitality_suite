@@ -20,12 +20,17 @@ LABELS.update(pending_amount="Importe sin facturar",records="Registros de origen
 LABELS.update(guest="Huésped")
 LABELS.update(invoice_number="Número de factura",account_label="Cuenta",recorded_at="Fecha y hora")
 LABELS.update(base_currency="Moneda base")
+LABELS.update(status_changed_at="Cancelación / no presentación",penalty_amount="Penalización aceptada",fee_status="Estado de penalización",fee_invoice="Factura de penalización")
+LABELS.update(tasks="Tareas",pending_tasks="Pendientes",completed_tasks="Finalizadas",timed_tasks="Finalizadas con duración",average_minutes="Duración media (min)",tasks_per_recorded_hour="Tareas/hora registrada")
 NUMBERS={"amount","quantity","grand_total","outstanding_amount","base_amount","expected_amount","counted_amount","difference","cost","expected","actual","pending","outstanding","fee_amount","withholding_amount","net_amount"}
 NUMBERS.add("balance_quantity")
 NUMBERS.update({"duration_minutes","total_rooms","available_capacity","clean_candidates"})
 NUMBERS.add("revenue_net")
 NUMBERS.update({"pending_amount","records"})
-MONEY_FIELDS=NUMBERS-{"quantity","duration_minutes","total_rooms","available_capacity","clean_candidates","balance_quantity","records"}
+NUMBERS.add("penalty_amount")
+TASK_METRICS={"tasks","pending_tasks","completed_tasks","timed_tasks","average_minutes","tasks_per_recorded_hour"}
+NUMBERS.update(TASK_METRICS)
+MONEY_FIELDS=NUMBERS-{"quantity","duration_minutes","total_rooms","available_capacity","clean_candidates","balance_quantity","records"}-TASK_METRICS
 
 
 def label(key):
@@ -82,7 +87,11 @@ def pdf_html(title,scope,records,headers,note):
     """Wide reports use readable column groups with repeated source keys."""
     from html import escape
     from hospitality_suite.pricing import money
-    anchors=(["name"]+(["room"] if "room" in headers else [])) if "name" in headers else (["property",headers[0]] if "property" in headers and headers[0]!="property" else [headers[0]])
+    if "name" in headers:
+        anchors=["name"]+(["room"] if "room" in headers else [])
+    else:
+        context=(["guest","starts_at","room"] if "guest" in headers else ["cashier","opened_at","currency"] if "cashier" in headers else ["assigned_to"] if "assigned_to" in headers else [headers[0]])
+        anchors=list(dict.fromkeys(k for k in (["property"] if "property" in headers else [])+context if k in headers))
     remaining=[k for k in headers if k not in anchors]
     width=max(1,8-len(anchors))
     bands=[headers] if len(headers)<=8 else [anchors+remaining[i:i+width] for i in range(0,len(remaining),width)]

@@ -94,6 +94,7 @@ class TestTimingMetrics(IntegrationTestCase):
         self.assertEqual(zero["ADR"],"0.00")
         self.assertEqual(zero["RevPAR"],"0.00")
         self.assertEqual(zero["utilization"],0)
+        self.assertEqual(zero["rotations_per_room"],0)
 
     def test_companions_scoped_capacity_and_incomplete_cleaning(self):
         entered=self.enter(people=2)
@@ -127,7 +128,19 @@ class TestTimingMetrics(IntegrationTestCase):
             result=reports.summary(self.prop,str(now-timedelta(hours=3)),str(now+timedelta(hours=21)))
         self.assertEqual(result["occupied_hours"],2)
         self.assertEqual(result["available_hours"],238)
+        self.assertEqual(result["commercial_rooms"],10)
+        self.assertEqual(result["rotations"],1)
+        self.assertEqual(result["rotations_per_room"],.1)
         self.assertLessEqual(result["utilization"],100)
+        invoice=self.call("invoice",dict(folio=entered["folio"]))["invoice"]
+        net=frappe.db.get_value("Sales Invoice",invoice,"net_total")
+        from hospitality_suite.pricing import decimal,money
+        with patch("hospitality_suite.reports.now_datetime",return_value=now):
+            billed=reports.summary(self.prop,str(now-timedelta(hours=3)),str(now+timedelta(hours=21)))
+        self.assertEqual(decimal(billed["motel_lodging_net"]),decimal(net))
+        self.assertEqual(decimal(billed["average_ticket"]),decimal(net))
+        self.assertEqual(decimal(billed["revenue_per_available_hour"]),money(decimal(net)/238))
+        self.assertEqual(billed["average_stay_hours"],2)
 
     def test_business_cutoff_clips_motel_hours_and_is_saved_in_close(self):
         from hospitality_suite.time import business_window

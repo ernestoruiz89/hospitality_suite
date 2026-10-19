@@ -34,6 +34,10 @@ Para agregar una compañía envíe `property_name=""` y `filters.company` con su
 
 Las exportaciones incluyen todos los resultados. XLSX mantiene números y precisión monetaria nativa; `base_currency` identifica el importe en moneda base. El PDF operativo de producción omite identificadores aleatorios. Los informes anchos se distribuyen en secciones con claves de relación repetidas; fechas y filtros figuran en el encabezado. El generador exige el runtime con Qt parcheado descrito en OPERACION.md.
 
+Cancelaciones/no presentaciones usa `date_field="status_changed_at"` de forma predeterminada; procede de eventos Cancelled/No Show/Hold expired y no de `modified`. También admite llegada/salida prevista y creación. Incluye `penalty_amount` aceptado sin impuestos, `fee_invoice`, `fee_status` y motivo. Una factura anulada no aporta producción. Producción incluye líneas nativas sin cargo/venta directa representados, penalizaciones y sus notas de crédito; no altera la contabilidad ni suma dos veces sus orígenes.
+
+`Productividad de limpieza` conserva filtros de Limpieza y agrupa por `assigned_to`: tareas, pendientes, finalizadas, finalizadas con duración positiva, minutos totales/media y tareas por hora registrada. `Arqueos por moneda` conserva filtros de Turnos y devuelve una fila por turno/moneda con el snapshot de cierre; en turno abierto, `counted_amount` y `difference` son null. `summary` mantiene `rotations` como entradas y añade `commercial_rooms`, `rotations_per_room` y `production_by_currency`; `production` corresponde solo a la moneda del establecimiento.
+
 ## Cotizar y confirmar
 
 `preview(property_name, data, action)` consulta la cotización. `data` admite objeto o JSON. Fechas de entrada se interpretan en la zona del establecimiento; para una hora ambigua de DST debe proporcionarse un desplazamiento explícito. No use importes ni reloj del navegador como autoridad.

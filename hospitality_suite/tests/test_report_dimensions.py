@@ -53,7 +53,7 @@ class TestReportDimensions(IntegrationTestCase):
         self.assertFalse(api.report(self.prop.name,"Reservas",dict(selected,channel="Otro canal")))
         cancelled=frappe.get_doc("HS Booking",booking)
         self.call("booking_status",dict(booking=booking,status="Cancelled",reason="Cancelación sintética",modified=str(cancelled.modified)))
-        self.assertEqual([r.name for r in api.report(self.prop.name,"Cancelaciones y no presentaciones",selected)],[booking])
+        self.assertEqual([r.name for r in api.report(self.prop.name,"Cancelaciones y no presentaciones",dict(selected,date_field="starts_at"))],[booking])
         self.assertFalse(api.report(self.prop.name,"Llegadas",selected))
 
     def test_local_day_boundaries_one_sided_period_and_display(self):
@@ -148,6 +148,138 @@ class TestReportDimensions(IntegrationTestCase):
         payments=api.report(self.prop.name,"Cobros",dict(shift=shift,method=method,user="Administrator"))
         self.assertEqual({r.kind for r in payments},{"Payment","Refund"})
         self.assertFalse(api.report(self.prop.name,"Cobros",dict(shift="other-shift")))
+
+    def test_booking_penalties_use_decision_date_and_native_financial_sources(self):
+        from hospitality_suite.time import local
+        from hospitality_suite import reports
+        for status,days,amount in (("Cancelled",15,100),("No Show",-2,80)):
+            with self.subTest(status=status):
+                with operation():
+                    self.prop.cancellation_fee_mode=self.prop.no_show_fee_mode="Fixed"
+                    self.prop.cancellation_fee_value=100
+                    self.prop.no_show_fee_value=80
+                    self.prop.penalty_item=self.prop.lodging_item
+                    self.prop.save()
+                start=now_datetime().replace(microsecond=0)+timedelta(days=days)
+                channel="Penalización "+status
+                values=dict(starts_at=str(start),ends_at=str(start+timedelta(days=1)),customer=self.guest.customer,guest=self.guest.name,
+                            channel=channel,rooms=[dict(category=self.room.category,room=self.room.name,people=1)])
+                values["acceptance"]=api.preview(self.prop.name,values)["acceptance"]
+                booking=self.call("reserve",values)["booking"]
+                doc=frappe.get_doc("HS Booking",booking)
+                decision=dict(booking=booking,modified=str(doc.modified),status=status,reason="Decisión sintética")
+                decision["fee_acceptance"]=api.preview(self.prop.name,decision,"booking_status")["acceptance"]
+                self.call("booking_status",decision)
+                doc.reload()
+                invoice=frappe.get_doc("Sales Invoice",doc.fee_invoice)
+                self.assertFalse(frappe.db.exists("HS Charge",{"sales_invoice":invoice.name}))
+                today=str(local(now_datetime(),self.prop).date())
+                selected=dict(from_date=today,to_date=today,status=status,channel=channel)
+                result=api.report(self.prop.name,"Cancelaciones y no presentaciones",selected)
+                self.assertEqual([r.name for r in result],[booking])
+                self.assertEqual(result[0].penalty_amount,amount)
+                self.assertEqual(result[0].fee_invoice,invoice.name)
+                self.assertEqual(result[0].fee_status,"Confirmada")
+                self.assertFalse(api.report(self.prop.name,"Cancelaciones y no presentaciones",dict(selected,from_date=str(start.date()),to_date=str(start.date()))))
+                self.assertEqual([r.name for r in api.report(self.prop.name,"Cancelaciones y no presentaciones",dict(selected,date_field="starts_at",from_date=str(start.date()),to_date=str(start.date())))],[booking])
+                frappe.db.set_value("HS Booking",booking,"modified",now_datetime()+timedelta(days=10),update_modified=False)
+                self.assertEqual(api.report(self.prop.name,"Cancelaciones y no presentaciones",selected)[0].status_changed_at,result[0].status_changed_at)
+                filters=dict(channel=channel,room=self.room.name,item=self.prop.penalty_item)
+                production=api.report(self.prop.name,"Producción",filters)
+                self.assertEqual(len(production),1)
+                self.assertEqual((decimal(production[0].amount),decimal(production[0].revenue_net)),(decimal(invoice.total),decimal(invoice.net_total)))
+                self.assertNotIn("Venta directa",production[0].channel)
+                self.assertTrue(production[0].source_type.startswith("Penalización"))
+                self.assertEqual(production[0].business_date,self.prop.business_date)
+                view=api.report_page(self.prop.name,"Producción",filters)
+                self.assertIn("Penalización",view["rows"][0]._display["item"])
+                before=decimal(reports.summary(self.prop)["production"])
+                credit=self.call("credit_note",dict(invoice=invoice.name,reason="Devolución de penalización",items=[dict(invoice_item=invoice.items[0].name,quantity=1)]))
+                rows=api.report(self.prop.name,"Producción",filters)
+                self.assertEqual(len(rows),2)
+                self.assertEqual(sum(decimal(r.amount) for r in rows),0)
+                self.assertEqual(sum(decimal(r.revenue_net) for r in rows),0)
+                self.assertEqual(decimal(reports.summary(self.prop)["production"]),before-decimal(amount))
+                self.assertEqual(next(r for r in rows if r.sales_invoice==credit["credit_note"]).source_type,"Devolución · "+production[0].source_type)
+                for name in (credit["credit_note"],invoice.name):
+                    native=frappe.get_doc("Sales Invoice",name)
+                    native.hs_correction_reason="Anulación sintética autorizada"
+                    native.save()
+                    native.cancel()
+                self.assertFalse(api.report(self.prop.name,"Producción",filters))
+                self.assertEqual(api.report(self.prop.name,"Cancelaciones y no presentaciones",selected)[0].fee_status,"Anulada")
+
+    def test_native_counter_invoice_and_credit_are_in_production_without_stay(self):
+        invoice=frappe.get_doc(dict(doctype="Sales Invoice",company=self.prop.company,hs_property=self.prop.name,
+                                    customer=self.guest.customer,currency=self.prop.currency,debit_to=self.prop.receivable_account,
+                                    cost_center=self.prop.cost_center,update_stock=1))
+        invoice.append("items",dict(item_code="HS-DEMO-WATER",qty=2,rate=30,cost_center=self.prop.cost_center,warehouse=self.prop.warehouse))
+        invoice.set_missing_values()
+        invoice.insert()
+        invoice.submit()
+        self.assertFalse(frappe.db.exists("HS Service Request",{"sales_invoice":invoice.name}))
+        self.assertFalse(frappe.db.exists("HS Charge",{"sales_invoice":invoice.name}))
+        rows=api.report(self.prop.name,"Producción",dict(channel="Venta directa",item="HS-DEMO-WATER"))
+        original=[r for r in rows if r.sales_invoice==invoice.name]
+        self.assertEqual(len(original),1)
+        self.assertEqual((decimal(original[0].amount),decimal(original[0].revenue_net)),(decimal(60),decimal(60)))
+        credit=self.call("credit_note",dict(invoice=invoice.name,reason="Devolución nativa parcial",items=[dict(invoice_item=invoice.items[0].name,quantity=1)]))
+        rows=api.report(self.prop.name,"Producción",dict(channel="Venta directa",item="HS-DEMO-WATER"))
+        chosen=[r for r in rows if r.sales_invoice in (invoice.name,credit["credit_note"])]
+        self.assertEqual(len(chosen),2)
+        self.assertEqual(sum(decimal(r.amount) for r in chosen),decimal(30))
+        self.assertEqual(sum(decimal(r.revenue_net) for r in chosen),decimal(30))
+        returned=frappe.get_doc("Sales Invoice",credit["credit_note"])
+        self.assertTrue(returned.update_stock)
+        stock=frappe.get_all("Stock Ledger Entry",filters={"voucher_type":"Sales Invoice","voucher_no":["in",[invoice.name,returned.name]],"is_cancelled":0},fields=["voucher_no","actual_qty"])
+        self.assertEqual(sum(decimal(r.actual_qty) for r in stock if r.voucher_no==invoice.name),-2)
+        self.assertEqual(sum(decimal(r.actual_qty) for r in stock if r.voucher_no==returned.name),1)
+        from hospitality_suite import reports
+        before=decimal(reports.summary(self.prop)["production"])
+        foreign=frappe.get_doc(dict(doctype="Sales Invoice",company=self.prop.company,hs_property=self.prop.name,
+                                    customer=self.guest.customer,currency="USD",conversion_rate=37,debit_to=self.prop.receivable_account,
+                                    cost_center=self.prop.cost_center,update_stock=0))
+        foreign.append("items",dict(item_code=self.prop.lodging_item,qty=1,rate=5,cost_center=self.prop.cost_center))
+        foreign.set_missing_values()
+        foreign.insert()
+        foreign.submit()
+        totals=reports.summary(self.prop)
+        self.assertEqual(decimal(totals["production"]),before,"Do not add USD directly to NIO")
+        self.assertEqual(decimal(totals["production_by_currency"]["USD"]),5)
+        self.assertEqual(decimal(totals["production_by_currency"][self.prop.currency]),before)
+
+    def test_cleaning_productivity_and_shift_counts_preserve_their_units(self):
+        from hospitality_suite.service import insert
+        start=now_datetime()-timedelta(hours=3)
+        with operation():
+            for minutes in (30,60):
+                insert("HS Cleaning Task",self.prop,room=self.room.name,kind="Deep",priority="Normal",status="Completed",assigned_to="Administrator",
+                       started_at=start,completed_at=start+timedelta(minutes=minutes))
+            insert("HS Cleaning Task",self.prop,room=self.room.name,kind="Stay",priority="Normal",status="Pending",assigned_to="Administrator")
+            insert("HS Cleaning Task",self.prop,room=self.room.name,kind="Deep",priority="Normal",status="Completed")
+        records=api.report(self.prop.name,"Productividad de limpieza",dict(room=self.room.name,assigned_to="Administrator"))
+        self.assertEqual(len(records),1)
+        result=records[0]
+        self.assertEqual((result.tasks,result.pending_tasks,result.completed_tasks,result.timed_tasks),(3,1,2,2))
+        self.assertEqual((result.duration_minutes,result.average_minutes,result.tasks_per_recorded_hour),(90,45,1.33))
+        missing=next(r for r in api.report(self.prop.name,"Productividad de limpieza",dict(room=self.room.name)) if not r.assigned_to)
+        self.assertEqual((missing.completed_tasks,missing.timed_tasks,missing.tasks_per_recorded_hour),(1,0,0))
+        page=api.report_page(self.prop.name,"Productividad de limpieza",dict(room=self.room.name,assigned_to="Administrator"))
+        self.assertEqual(page["rows"][0]._display["assigned_to"],frappe.db.get_value("User","Administrator","full_name"))
+        shift=self.call("open_shift",dict(opening_amount=100))["shift"]
+        before=api.report(self.prop.name,"Arqueos por moneda",dict(shift=shift))
+        self.assertIsNone(before[0].counted_amount)
+        self.assertIsNone(before[0].difference)
+        doc=frappe.get_doc("HS Shift",shift)
+        self.call("close_shift",dict(shift=shift,modified=str(doc.modified),denominations={"NIO":[dict(value=100,count=1)],"USD":[dict(value=1,count=5)]},
+                                     reason="Sobrante USD sintético",approve=True))
+        rows=api.report(self.prop.name,"Arqueos por moneda",dict(shift=shift,status="Closed"))
+        currencies={r.currency:r for r in rows}
+        self.assertEqual(set(currencies),{"NIO","USD"})
+        self.assertEqual((currencies["NIO"].expected_amount,currencies["NIO"].counted_amount,currencies["NIO"].difference),(100,100,0))
+        self.assertEqual((currencies["USD"].expected_amount,currencies["USD"].counted_amount,currencies["USD"].difference),(0,5,5))
+        self.assertEqual(frappe.db.get_value("HS Shift",shift,"approved_by"),"Administrator")
+        self.assertFalse(frappe.db.exists("Journal Entry",{"hs_shift":shift}),"A count discrepancy must not create a balancing entry")
 
     def test_readable_presentation_hides_internal_keys_and_keeps_explicit_trace_view(self):
         entered=self.enter()
