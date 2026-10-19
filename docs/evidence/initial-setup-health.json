@@ -1,0 +1,7 @@
+{
+  "preview_logged_out": true,
+  "main_8086": true,
+  "preview_8089": false,
+  "main_http_status": 200,
+  "listener_source": "ss inside WSL; Windows localhost forwarding can outlive the server briefly"
+}

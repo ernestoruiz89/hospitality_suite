@@ -1,0 +1,1402 @@
+{
+  "site": "hospitality.localhost",
+  "mutations": false,
+  "core": {
+    "frappe": {
+      "version": "16.52.0",
+      "commit": "4515014c87ece6cb20ee91d2cfb121c5cbd1ff4a",
+      "clean": true
+    },
+    "erpnext": {
+      "version": "16.51.1",
+      "commit": "5af6561f5aa48104559692fb4fd82f2580e8d338",
+      "clean": true
+    }
+  },
+  "python": "3.14.6",
+  "database": "10.11.14-MariaDB-0ubuntu0.24.04.1",
+  "installed_apps": [
+    "frappe",
+    "erpnext",
+    "hospitality_suite"
+  ],
+  "roles": [
+    "HS Administrator",
+    "HS Manager",
+    "HS Supervisor",
+    "HS Receptionist",
+    "HS Cashier",
+    "HS Housekeeping",
+    "HS Maintenance",
+    "HS Accountant",
+    "HS Auditor"
+  ],
+  "actions": {
+    "setup": [
+      "HS Administrator",
+      "HS Manager",
+      "HS Supervisor"
+    ],
+    "reserve": [
+      "HS Administrator",
+      "HS Manager",
+      "HS Supervisor",
+      "HS Receptionist"
+    ],
+    "stay": [
+      "HS Administrator",
+      "HS Manager",
+      "HS Supervisor",
+      "HS Receptionist"
+    ],
+    "finance": [
+      "HS Administrator",
+      "HS Manager",
+      "HS Supervisor",
+      "HS Cashier",
+      "HS Accountant"
+    ],
+    "clean": [
+      "HS Administrator",
+      "HS Manager",
+      "HS Supervisor",
+      "HS Housekeeping"
+    ],
+    "inspect": [
+      "HS Administrator",
+      "HS Manager",
+      "HS Supervisor"
+    ],
+    "maintain": [
+      "HS Administrator",
+      "HS Manager",
+      "HS Supervisor",
+      "HS Maintenance"
+    ],
+    "service": [
+      "HS Administrator",
+      "HS Manager",
+      "HS Supervisor",
+      "HS Receptionist",
+      "HS Cashier"
+    ],
+    "report": [
+      "HS Administrator",
+      "HS Manager",
+      "HS Supervisor",
+      "HS Accountant",
+      "HS Auditor"
+    ],
+    "approve": [
+      "HS Administrator",
+      "HS Manager"
+    ],
+    "guest": [
+      "HS Administrator",
+      "HS Manager",
+      "HS Supervisor",
+      "HS Receptionist"
+    ],
+    "incident": [
+      "HS Administrator",
+      "HS Manager",
+      "HS Supervisor",
+      "HS Housekeeping",
+      "HS Maintenance"
+    ],
+    "inventory": [
+      "HS Administrator",
+      "HS Manager",
+      "HS Supervisor",
+      "HS Accountant"
+    ]
+  },
+  "model": [
+    {
+      "doctype": "HS Access",
+      "child": false,
+      "fields": 3,
+      "indexes": {
+        "PRIMARY": {
+          "unique": true,
+          "columns": [
+            "name"
+          ]
+        },
+        "creation": {
+          "unique": false,
+          "columns": [
+            "creation"
+          ]
+        },
+        "hs_access_unique": {
+          "unique": true,
+          "columns": [
+            "user",
+            "property"
+          ]
+        },
+        "modified": {
+          "unique": false,
+          "columns": [
+            "modified"
+          ]
+        }
+      }
+    },
+    {
+      "doctype": "HS Property",
+      "child": false,
+      "fields": 46,
+      "indexes": {
+        "PRIMARY": {
+          "unique": true,
+          "columns": [
+            "name"
+          ]
+        },
+        "creation": {
+          "unique": false,
+          "columns": [
+            "creation"
+          ]
+        },
+        "modified": {
+          "unique": false,
+          "columns": [
+            "modified"
+          ]
+        }
+      }
+    },
+    {
+      "doctype": "HS Category",
+      "child": false,
+      "fields": 6,
+      "indexes": {
+        "PRIMARY": {
+          "unique": true,
+          "columns": [
+            "name"
+          ]
+        },
+        "creation": {
+          "unique": false,
+          "columns": [
+            "creation"
+          ]
+        },
+        "hs_scope_hs_category": {
+          "unique": false,
+          "columns": [
+            "property",
+            "modified"
+          ]
+        },
+        "modified": {
+          "unique": false,
+          "columns": [
+            "modified"
+          ]
+        }
+      }
+    },
+    {
+      "doctype": "HS Room",
+      "child": false,
+      "fields": 10,
+      "indexes": {
+        "PRIMARY": {
+          "unique": true,
+          "columns": [
+            "name"
+          ]
+        },
+        "creation": {
+          "unique": false,
+          "columns": [
+            "creation"
+          ]
+        },
+        "hs_room_unique": {
+          "unique": true,
+          "columns": [
+            "property",
+            "room_number"
+          ]
+        },
+        "hs_scope_hs_room": {
+          "unique": false,
+          "columns": [
+            "property",
+            "modified"
+          ]
+        },
+        "modified": {
+          "unique": false,
+          "columns": [
+            "modified"
+          ]
+        }
+      }
+    },
+    {
+      "doctype": "HS Rate",
+      "child": false,
+      "fields": 23,
+      "indexes": {
+        "PRIMARY": {
+          "unique": true,
+          "columns": [
+            "name"
+          ]
+        },
+        "creation": {
+          "unique": false,
+          "columns": [
+            "creation"
+          ]
+        },
+        "hs_scope_hs_rate": {
+          "unique": false,
+          "columns": [
+            "property",
+            "modified"
+          ]
+        },
+        "modified": {
+          "unique": false,
+          "columns": [
+            "modified"
+          ]
+        }
+      }
+    },
+    {
+      "doctype": "HS Rate Service",
+      "child": true,
+      "fields": 3,
+      "indexes": {
+        "PRIMARY": {
+          "unique": true,
+          "columns": [
+            "name"
+          ]
+        },
+        "parent": {
+          "unique": false,
+          "columns": [
+            "parent"
+          ]
+        }
+      }
+    },
+    {
+      "doctype": "HS Guest",
+      "child": false,
+      "fields": 12,
+      "indexes": {
+        "PRIMARY": {
+          "unique": true,
+          "columns": [
+            "name"
+          ]
+        },
+        "creation": {
+          "unique": false,
+          "columns": [
+            "creation"
+          ]
+        },
+        "hs_scope_hs_guest": {
+          "unique": false,
+          "columns": [
+            "property",
+            "modified"
+          ]
+        },
+        "modified": {
+          "unique": false,
+          "columns": [
+            "modified"
+          ]
+        }
+      }
+    },
+    {
+      "doctype": "HS Booking Room",
+      "child": true,
+      "fields": 5,
+      "indexes": {
+        "PRIMARY": {
+          "unique": true,
+          "columns": [
+            "name"
+          ]
+        },
+        "modified": {
+          "unique": false,
+          "columns": [
+            "modified"
+          ]
+        },
+        "parent": {
+          "unique": false,
+          "columns": [
+            "parent"
+          ]
+        }
+      }
+    },
+    {
+      "doctype": "HS Booking",
+      "child": false,
+      "fields": 19,
+      "indexes": {
+        "PRIMARY": {
+          "unique": true,
+          "columns": [
+            "name"
+          ]
+        },
+        "creation": {
+          "unique": false,
+          "columns": [
+            "creation"
+          ]
+        },
+        "hs_scope_hs_booking": {
+          "unique": false,
+          "columns": [
+            "property",
+            "modified"
+          ]
+        },
+        "modified": {
+          "unique": false,
+          "columns": [
+            "modified"
+          ]
+        }
+      }
+    },
+    {
+      "doctype": "HS Allocation",
+      "child": false,
+      "fields": 18,
+      "indexes": {
+        "PRIMARY": {
+          "unique": true,
+          "columns": [
+            "name"
+          ]
+        },
+        "creation": {
+          "unique": false,
+          "columns": [
+            "creation"
+          ]
+        },
+        "hs_allocation_interval": {
+          "unique": false,
+          "columns": [
+            "property",
+            "status",
+            "starts_at",
+            "ends_at"
+          ]
+        },
+        "hs_scope_hs_allocation": {
+          "unique": false,
+          "columns": [
+            "property",
+            "modified"
+          ]
+        },
+        "modified": {
+          "unique": false,
+          "columns": [
+            "modified"
+          ]
+        }
+      }
+    },
+    {
+      "doctype": "HS Stay Guest",
+      "child": true,
+      "fields": 2,
+      "indexes": {
+        "PRIMARY": {
+          "unique": true,
+          "columns": [
+            "name"
+          ]
+        },
+        "parent": {
+          "unique": false,
+          "columns": [
+            "parent"
+          ]
+        }
+      }
+    },
+    {
+      "doctype": "HS Stay",
+      "child": false,
+      "fields": 24,
+      "indexes": {
+        "PRIMARY": {
+          "unique": true,
+          "columns": [
+            "name"
+          ]
+        },
+        "creation": {
+          "unique": false,
+          "columns": [
+            "creation"
+          ]
+        },
+        "hs_scope_hs_stay": {
+          "unique": false,
+          "columns": [
+            "property",
+            "modified"
+          ]
+        },
+        "modified": {
+          "unique": false,
+          "columns": [
+            "modified"
+          ]
+        }
+      }
+    },
+    {
+      "doctype": "HS Folio",
+      "child": false,
+      "fields": 8,
+      "indexes": {
+        "PRIMARY": {
+          "unique": true,
+          "columns": [
+            "name"
+          ]
+        },
+        "creation": {
+          "unique": false,
+          "columns": [
+            "creation"
+          ]
+        },
+        "hs_scope_hs_folio": {
+          "unique": false,
+          "columns": [
+            "property",
+            "modified"
+          ]
+        },
+        "modified": {
+          "unique": false,
+          "columns": [
+            "modified"
+          ]
+        }
+      }
+    },
+    {
+      "doctype": "HS Charge",
+      "child": false,
+      "fields": 19,
+      "indexes": {
+        "PRIMARY": {
+          "unique": true,
+          "columns": [
+            "name"
+          ]
+        },
+        "creation": {
+          "unique": false,
+          "columns": [
+            "creation"
+          ]
+        },
+        "hs_scope_hs_charge": {
+          "unique": false,
+          "columns": [
+            "property",
+            "modified"
+          ]
+        },
+        "modified": {
+          "unique": false,
+          "columns": [
+            "modified"
+          ]
+        }
+      }
+    },
+    {
+      "doctype": "HS Payment Method",
+      "child": false,
+      "fields": 15,
+      "indexes": {
+        "PRIMARY": {
+          "unique": true,
+          "columns": [
+            "name"
+          ]
+        },
+        "creation": {
+          "unique": false,
+          "columns": [
+            "creation"
+          ]
+        },
+        "hs_scope_hs_payment_method": {
+          "unique": false,
+          "columns": [
+            "property",
+            "modified"
+          ]
+        },
+        "modified": {
+          "unique": false,
+          "columns": [
+            "modified"
+          ]
+        }
+      }
+    },
+    {
+      "doctype": "HS Expense Category",
+      "child": false,
+      "fields": 7,
+      "indexes": {
+        "PRIMARY": {
+          "unique": true,
+          "columns": [
+            "name"
+          ]
+        },
+        "creation": {
+          "unique": false,
+          "columns": [
+            "creation"
+          ]
+        },
+        "hs_scope_hs_expense_category": {
+          "unique": false,
+          "columns": [
+            "property",
+            "modified"
+          ]
+        },
+        "modified": {
+          "unique": false,
+          "columns": [
+            "modified"
+          ]
+        }
+      }
+    },
+    {
+      "doctype": "HS Supplier",
+      "child": false,
+      "fields": 4,
+      "indexes": {
+        "PRIMARY": {
+          "unique": true,
+          "columns": [
+            "name"
+          ]
+        },
+        "creation": {
+          "unique": false,
+          "columns": [
+            "creation"
+          ]
+        },
+        "hs_scope_hs_supplier": {
+          "unique": false,
+          "columns": [
+            "property",
+            "modified"
+          ]
+        },
+        "hs_supplier_unique": {
+          "unique": true,
+          "columns": [
+            "property",
+            "supplier"
+          ]
+        },
+        "modified": {
+          "unique": false,
+          "columns": [
+            "modified"
+          ]
+        }
+      }
+    },
+    {
+      "doctype": "HS Stock Policy",
+      "child": false,
+      "fields": 5,
+      "indexes": {
+        "PRIMARY": {
+          "unique": true,
+          "columns": [
+            "name"
+          ]
+        },
+        "creation": {
+          "unique": false,
+          "columns": [
+            "creation"
+          ]
+        },
+        "hs_scope_hs_stock_policy": {
+          "unique": false,
+          "columns": [
+            "property",
+            "modified"
+          ]
+        },
+        "hs_stock_policy_unique": {
+          "unique": true,
+          "columns": [
+            "property",
+            "item",
+            "warehouse"
+          ]
+        },
+        "modified": {
+          "unique": false,
+          "columns": [
+            "modified"
+          ]
+        }
+      }
+    },
+    {
+      "doctype": "HS Shift",
+      "child": false,
+      "fields": 14,
+      "indexes": {
+        "PRIMARY": {
+          "unique": true,
+          "columns": [
+            "name"
+          ]
+        },
+        "creation": {
+          "unique": false,
+          "columns": [
+            "creation"
+          ]
+        },
+        "hs_scope_hs_shift": {
+          "unique": false,
+          "columns": [
+            "property",
+            "modified"
+          ]
+        },
+        "modified": {
+          "unique": false,
+          "columns": [
+            "modified"
+          ]
+        }
+      }
+    },
+    {
+      "doctype": "HS Payment",
+      "child": false,
+      "fields": 32,
+      "indexes": {
+        "PRIMARY": {
+          "unique": true,
+          "columns": [
+            "name"
+          ]
+        },
+        "creation": {
+          "unique": false,
+          "columns": [
+            "creation"
+          ]
+        },
+        "hs_scope_hs_payment": {
+          "unique": false,
+          "columns": [
+            "property",
+            "modified"
+          ]
+        },
+        "modified": {
+          "unique": false,
+          "columns": [
+            "modified"
+          ]
+        }
+      }
+    },
+    {
+      "doctype": "HS Cleaning Task",
+      "child": false,
+      "fields": 13,
+      "indexes": {
+        "PRIMARY": {
+          "unique": true,
+          "columns": [
+            "name"
+          ]
+        },
+        "creation": {
+          "unique": false,
+          "columns": [
+            "creation"
+          ]
+        },
+        "hs_scope_hs_cleaning_task": {
+          "unique": false,
+          "columns": [
+            "property",
+            "modified"
+          ]
+        },
+        "modified": {
+          "unique": false,
+          "columns": [
+            "modified"
+          ]
+        }
+      }
+    },
+    {
+      "doctype": "HS Equipment",
+      "child": false,
+      "fields": 8,
+      "indexes": {
+        "PRIMARY": {
+          "unique": true,
+          "columns": [
+            "name"
+          ]
+        },
+        "creation": {
+          "unique": false,
+          "columns": [
+            "creation"
+          ]
+        },
+        "hs_equipment_unique": {
+          "unique": true,
+          "columns": [
+            "property",
+            "equipment_code"
+          ]
+        },
+        "hs_scope_hs_equipment": {
+          "unique": false,
+          "columns": [
+            "property",
+            "modified"
+          ]
+        },
+        "modified": {
+          "unique": false,
+          "columns": [
+            "modified"
+          ]
+        }
+      }
+    },
+    {
+      "doctype": "HS Maintenance Order",
+      "child": false,
+      "fields": 17,
+      "indexes": {
+        "PRIMARY": {
+          "unique": true,
+          "columns": [
+            "name"
+          ]
+        },
+        "creation": {
+          "unique": false,
+          "columns": [
+            "creation"
+          ]
+        },
+        "hs_scope_hs_maintenance_order": {
+          "unique": false,
+          "columns": [
+            "property",
+            "modified"
+          ]
+        },
+        "modified": {
+          "unique": false,
+          "columns": [
+            "modified"
+          ]
+        }
+      }
+    },
+    {
+      "doctype": "HS Maintenance Part",
+      "child": true,
+      "fields": 5,
+      "indexes": {
+        "PRIMARY": {
+          "unique": true,
+          "columns": [
+            "name"
+          ]
+        },
+        "parent": {
+          "unique": false,
+          "columns": [
+            "parent"
+          ]
+        }
+      }
+    },
+    {
+      "doctype": "HS Service Request",
+      "child": false,
+      "fields": 17,
+      "indexes": {
+        "PRIMARY": {
+          "unique": true,
+          "columns": [
+            "name"
+          ]
+        },
+        "creation": {
+          "unique": false,
+          "columns": [
+            "creation"
+          ]
+        },
+        "hs_scope_hs_service_request": {
+          "unique": false,
+          "columns": [
+            "property",
+            "modified"
+          ]
+        },
+        "modified": {
+          "unique": false,
+          "columns": [
+            "modified"
+          ]
+        }
+      }
+    },
+    {
+      "doctype": "HS Incident",
+      "child": false,
+      "fields": 13,
+      "indexes": {
+        "PRIMARY": {
+          "unique": true,
+          "columns": [
+            "name"
+          ]
+        },
+        "creation": {
+          "unique": false,
+          "columns": [
+            "creation"
+          ]
+        },
+        "hs_scope_hs_incident": {
+          "unique": false,
+          "columns": [
+            "property",
+            "modified"
+          ]
+        },
+        "modified": {
+          "unique": false,
+          "columns": [
+            "modified"
+          ]
+        }
+      }
+    },
+    {
+      "doctype": "HS Daily Close",
+      "child": false,
+      "fields": 8,
+      "indexes": {
+        "PRIMARY": {
+          "unique": true,
+          "columns": [
+            "name"
+          ]
+        },
+        "creation": {
+          "unique": false,
+          "columns": [
+            "creation"
+          ]
+        },
+        "hs_close_unique": {
+          "unique": true,
+          "columns": [
+            "property",
+            "business_date"
+          ]
+        },
+        "hs_scope_hs_daily_close": {
+          "unique": false,
+          "columns": [
+            "property",
+            "modified"
+          ]
+        },
+        "modified": {
+          "unique": false,
+          "columns": [
+            "modified"
+          ]
+        }
+      }
+    },
+    {
+      "doctype": "HS Audit Event",
+      "child": false,
+      "fields": 10,
+      "indexes": {
+        "PRIMARY": {
+          "unique": true,
+          "columns": [
+            "name"
+          ]
+        },
+        "creation": {
+          "unique": false,
+          "columns": [
+            "creation"
+          ]
+        },
+        "hs_scope_hs_audit_event": {
+          "unique": false,
+          "columns": [
+            "property",
+            "modified"
+          ]
+        },
+        "modified": {
+          "unique": false,
+          "columns": [
+            "modified"
+          ]
+        }
+      }
+    },
+    {
+      "doctype": "HS Request",
+      "child": false,
+      "fields": 6,
+      "indexes": {
+        "PRIMARY": {
+          "unique": true,
+          "columns": [
+            "name"
+          ]
+        },
+        "creation": {
+          "unique": false,
+          "columns": [
+            "creation"
+          ]
+        },
+        "hs_scope_hs_request": {
+          "unique": false,
+          "columns": [
+            "property",
+            "modified"
+          ]
+        },
+        "modified": {
+          "unique": false,
+          "columns": [
+            "modified"
+          ]
+        },
+        "request_key": {
+          "unique": true,
+          "columns": [
+            "request_key"
+          ]
+        }
+      }
+    },
+    {
+      "doctype": "HS Integration Event",
+      "child": false,
+      "fields": 8,
+      "indexes": {
+        "PRIMARY": {
+          "unique": true,
+          "columns": [
+            "name"
+          ]
+        },
+        "creation": {
+          "unique": false,
+          "columns": [
+            "creation"
+          ]
+        },
+        "event_id": {
+          "unique": true,
+          "columns": [
+            "event_id"
+          ]
+        },
+        "hs_scope_hs_integration_event": {
+          "unique": false,
+          "columns": [
+            "property",
+            "modified"
+          ]
+        },
+        "modified": {
+          "unique": false,
+          "columns": [
+            "modified"
+          ]
+        }
+      }
+    },
+    {
+      "doctype": "HS Portal Request",
+      "child": false,
+      "fields": 19,
+      "indexes": {
+        "PRIMARY": {
+          "unique": true,
+          "columns": [
+            "name"
+          ]
+        },
+        "creation": {
+          "unique": false,
+          "columns": [
+            "creation"
+          ]
+        },
+        "hs_scope_hs_portal_request": {
+          "unique": false,
+          "columns": [
+            "property",
+            "modified"
+          ]
+        },
+        "modified": {
+          "unique": false,
+          "columns": [
+            "modified"
+          ]
+        },
+        "request_key": {
+          "unique": true,
+          "columns": [
+            "request_key"
+          ]
+        }
+      }
+    },
+    {
+      "doctype": "HS Billing Party",
+      "child": false,
+      "fields": 8,
+      "indexes": {
+        "PRIMARY": {
+          "unique": true,
+          "columns": [
+            "name"
+          ]
+        },
+        "creation": {
+          "unique": false,
+          "columns": [
+            "creation"
+          ]
+        },
+        "hs_billing_party_unique": {
+          "unique": true,
+          "columns": [
+            "property",
+            "customer"
+          ]
+        },
+        "hs_scope_hs_billing_party": {
+          "unique": false,
+          "columns": [
+            "property",
+            "modified"
+          ]
+        },
+        "modified": {
+          "unique": false,
+          "columns": [
+            "modified"
+          ]
+        }
+      }
+    },
+    {
+      "doctype": "HS Retention Run",
+      "child": false,
+      "fields": 13,
+      "indexes": {
+        "PRIMARY": {
+          "unique": true,
+          "columns": [
+            "name"
+          ]
+        },
+        "creation": {
+          "unique": false,
+          "columns": [
+            "creation"
+          ]
+        },
+        "hs_scope_hs_retention_run": {
+          "unique": false,
+          "columns": [
+            "property",
+            "modified"
+          ]
+        },
+        "modified": {
+          "unique": false,
+          "columns": [
+            "modified"
+          ]
+        }
+      }
+    },
+    {
+      "doctype": "HS Retention File",
+      "child": true,
+      "fields": 6,
+      "indexes": {
+        "PRIMARY": {
+          "unique": true,
+          "columns": [
+            "name"
+          ]
+        },
+        "parent": {
+          "unique": false,
+          "columns": [
+            "parent"
+          ]
+        }
+      }
+    }
+  ],
+  "pages": [
+    {
+      "route": "hospitality-home",
+      "title": "Inicio",
+      "roles": [
+        "HS Accountant",
+        "HS Administrator",
+        "HS Auditor",
+        "HS Cashier",
+        "HS Housekeeping",
+        "HS Maintenance",
+        "HS Manager",
+        "HS Receptionist",
+        "HS Supervisor",
+        "System Manager"
+      ]
+    },
+    {
+      "route": "hospitality-reception",
+      "title": "Recepción",
+      "roles": [
+        "HS Accountant",
+        "HS Administrator",
+        "HS Auditor",
+        "HS Cashier",
+        "HS Manager",
+        "HS Receptionist",
+        "HS Supervisor",
+        "System Manager"
+      ]
+    },
+    {
+      "route": "hospitality-reservations",
+      "title": "Reservas",
+      "roles": [
+        "HS Accountant",
+        "HS Administrator",
+        "HS Auditor",
+        "HS Cashier",
+        "HS Manager",
+        "HS Receptionist",
+        "HS Supervisor",
+        "System Manager"
+      ]
+    },
+    {
+      "route": "hospitality-stays",
+      "title": "Estancias",
+      "roles": [
+        "HS Accountant",
+        "HS Administrator",
+        "HS Auditor",
+        "HS Cashier",
+        "HS Manager",
+        "HS Receptionist",
+        "HS Supervisor",
+        "System Manager"
+      ]
+    },
+    {
+      "route": "hospitality-cashier",
+      "title": "Caja",
+      "roles": [
+        "HS Accountant",
+        "HS Administrator",
+        "HS Auditor",
+        "HS Cashier",
+        "HS Manager",
+        "HS Supervisor",
+        "System Manager"
+      ]
+    },
+    {
+      "route": "hospitality-housekeeping",
+      "title": "Limpieza",
+      "roles": [
+        "HS Accountant",
+        "HS Administrator",
+        "HS Auditor",
+        "HS Cashier",
+        "HS Housekeeping",
+        "HS Maintenance",
+        "HS Manager",
+        "HS Receptionist",
+        "HS Supervisor",
+        "System Manager"
+      ]
+    },
+    {
+      "route": "hospitality-maintenance",
+      "title": "Mantenimiento",
+      "roles": [
+        "HS Accountant",
+        "HS Administrator",
+        "HS Auditor",
+        "HS Cashier",
+        "HS Housekeeping",
+        "HS Maintenance",
+        "HS Manager",
+        "HS Receptionist",
+        "HS Supervisor",
+        "System Manager"
+      ]
+    },
+    {
+      "route": "hospitality-services",
+      "title": "Consumos e inventario",
+      "roles": [
+        "HS Accountant",
+        "HS Administrator",
+        "HS Auditor",
+        "HS Cashier",
+        "HS Manager",
+        "HS Receptionist",
+        "HS Supervisor",
+        "System Manager"
+      ]
+    },
+    {
+      "route": "hospitality-guests",
+      "title": "Clientes y huéspedes",
+      "roles": [
+        "HS Accountant",
+        "HS Administrator",
+        "HS Auditor",
+        "HS Cashier",
+        "HS Manager",
+        "HS Receptionist",
+        "HS Supervisor",
+        "System Manager"
+      ]
+    },
+    {
+      "route": "hospitality-management",
+      "title": "Gerencia",
+      "roles": [
+        "HS Accountant",
+        "HS Administrator",
+        "HS Auditor",
+        "HS Manager",
+        "HS Supervisor",
+        "System Manager"
+      ]
+    },
+    {
+      "route": "hospitality-setup",
+      "title": "Configuración",
+      "roles": [
+        "HS Administrator",
+        "HS Manager",
+        "HS Supervisor",
+        "System Manager"
+      ]
+    }
+  ],
+  "native_doctypes": [
+    "Address",
+    "Company",
+    "Contact",
+    "Cost Center",
+    "Customer",
+    "Delivery Note",
+    "GL Entry",
+    "Item",
+    "Item Group",
+    "Journal Entry",
+    "Material Request",
+    "Mode of Payment",
+    "Payment Entry",
+    "Payment Ledger Entry",
+    "Price List",
+    "Purchase Invoice",
+    "Purchase Order",
+    "Purchase Receipt",
+    "Sales Invoice",
+    "Sales Order",
+    "Stock Entry",
+    "Stock Ledger Entry",
+    "Stock Reconciliation",
+    "UOM",
+    "Warehouse"
+  ],
+  "assets": [
+    {
+      "name": "hospitality.bundle.js",
+      "bytes": 128309,
+      "sha256": "1a38b2e4693b341ee43162ec21d00f878dc715d7098bf22600e4fa52bea73e92"
+    },
+    {
+      "name": "hospitality.bundle.css",
+      "bytes": 9982,
+      "sha256": "b168c9ec07247f7a21fbf0f458d679b61a3c77b4267eddf1beefe37536de1b2c"
+    }
+  ]
+}

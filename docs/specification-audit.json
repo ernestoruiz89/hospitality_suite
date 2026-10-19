@@ -33,10 +33,16 @@
       "line": 12,
       "kind": "enumerated",
       "requirement": "- Nombre técnico propuesto: hospitality_suite. Nombre comercial configurable, sin referencias obligatorias a una empresa específica.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/schema.py",
+        "hospitality_suite/public/js/hospitality.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_ARQUITECTURA.md",
+        "docs/evidence/architecture-current.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S01-02",
@@ -45,10 +51,16 @@
       "line": 13,
       "kind": "enumerated",
       "requirement": "- Producto reutilizable para varios clientes, con configuración por compañía y establecimiento.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/security.py",
+        "hospitality_suite/service.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_ARQUITECTURA.md",
+        "docs/evidence/initial-setup-native-tests.xml::TestSecurityRecovery"
+      ],
+      "remaining": ""
     },
     {
       "id": "S01-03",
@@ -57,10 +69,16 @@
       "line": 14,
       "kind": "enumerated",
       "requirement": "- Modalidades: hotel por noche, motel por horas y operación mixta.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/pricing.py",
+        "hospitality_suite/operations.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_ARQUITECTURA.md",
+        "docs/evidence/initial-setup-native-tests.xml::test_mixed_property_quotes_both_modes_and_shares_room_capacity"
+      ],
+      "remaining": ""
     },
     {
       "id": "S01-04",
@@ -93,10 +111,17 @@
       "line": 16,
       "kind": "enumerated",
       "requirement": "- Valores iniciales sugeridos y editables: país Nicaragua, zona horaria America/Managua y moneda base NIO. Permitir USD, otras monedas y tipos de cambio mediante ERPNext.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/schema.py",
+        "hospitality_suite/public/js/hospitality_workflows.js",
+        "hospitality_suite/setup.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_ARQUITECTURA.md",
+        "docs/evidence/initial-setup-native-tests.xml::TestFinance / TestInitialSetup"
+      ],
+      "remaining": ""
     },
     {
       "id": "S01-06",
@@ -105,10 +130,17 @@
       "line": 17,
       "kind": "enumerated",
       "requirement": "- No fijes tasas tributarias, requisitos de identificación ni reglas fiscales en el código. Deben ser configurables y validados para cada implementación.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/install.py",
+        "hospitality_suite/controllers.py",
+        "hospitality_suite/demo.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_ARQUITECTURA.md",
+        "docs/evidence/initial-setup-native-tests.xml::test_tax_inclusive_net_kpi_and_document_reconciliation"
+      ],
+      "remaining": ""
     },
     {
       "id": "S01-07",
@@ -117,10 +149,16 @@
       "line": 18,
       "kind": "enumerated",
       "requirement": "- Inspecciona primero el repositorio, sus instrucciones, las versiones instaladas de Frappe/ERPNext, aplicaciones, base de datos y herramientas de pruebas.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "docs/AVANCE.md",
+        "tools/bootstrap_wsl.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_ARQUITECTURA.md",
+        "docs/evidence/architecture-current.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S01-08",
@@ -129,10 +167,17 @@
       "line": 19,
       "kind": "enumerated",
       "requirement": "- Usa la versión instalada como objetivo. Si no existe entorno, selecciona una versión estable mediante documentación oficial y declara esa decisión. No prometas compatibilidad simultánea con versiones que no has probado.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "pyproject.toml",
+        "README.md"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_ARQUITECTURA.md",
+        "docs/evidence/architecture-current.json",
+        "docs/evidence/initial-setup-native-tests.xml"
+      ],
+      "remaining": ""
     },
     {
       "id": "S01-09",
@@ -141,10 +186,17 @@
       "line": 20,
       "kind": "enumerated",
       "requirement": "- No modifiques el núcleo de Frappe o ERPNext. Usa una app propia, hooks, APIs documentadas, fixtures y migraciones versionadas.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/hooks.py",
+        "hospitality_suite/patches.txt",
+        "hospitality_suite/install.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_ARQUITECTURA.md",
+        "docs/evidence/architecture-current.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S01-10",
@@ -153,10 +205,18 @@
       "line": 21,
       "kind": "enumerated",
       "requirement": "- Consulta el código y documentación correspondientes a la versión objetivo antes de asumir que un DocType, método o módulo existe. No dependas de componentes de Hospitality antiguos sin verificar su vigencia y compatibilidad.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/procurement.py",
+        "docs/ARQUITECTURA.md"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_ARQUITECTURA.md",
+        "docs/evidence/architecture-current.json",
+        "docs/evidence/initial-setup-native-tests.xml"
+      ],
+      "remaining": ""
     },
     {
       "id": "S01-11",
@@ -165,10 +225,17 @@
       "line": 22,
       "kind": "enumerated",
       "requirement": "- Toma decisiones razonables cuando falte información no bloqueante y documenta los supuestos. Pregunta únicamente por datos que impidan avanzar de forma segura.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "docs/ARQUITECTURA.md",
+        "docs/CONTABILIDAD.md",
+        "docs/PENDIENTES.md"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_ARQUITECTURA.md",
+        "docs/AVANCE.md"
+      ],
+      "remaining": ""
     },
     {
       "id": "S01-12",
@@ -189,10 +256,18 @@
       "line": 24,
       "kind": "enumerated",
       "requirement": "- Trabaja en desarrollo o pruebas; no migres producción ni uses datos reales para demostraciones sin autorización.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/demo.py",
+        "tools/bootstrap_wsl.py",
+        "tools/catalog_preview.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_ARQUITECTURA.md",
+        "docs/evidence/architecture-current.json",
+        "docs/evidence/initial-setup-ui.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S02-01",
@@ -201,10 +276,18 @@
       "line": 28,
       "kind": "enumerated",
       "requirement": "- Backend nativo Frappe, reglas de negocio en Python y persistencia mediante DocTypes.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/schema.py",
+        "hospitality_suite/controllers.py",
+        "hospitality_suite/service.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_ARQUITECTURA.md",
+        "docs/evidence/architecture-current.json",
+        "docs/evidence/initial-setup-native-tests.xml"
+      ],
+      "remaining": ""
     },
     {
       "id": "S02-02",
@@ -213,10 +296,18 @@
       "line": 29,
       "kind": "enumerated",
       "requirement": "- Frontend mediante Pages de Desk. Puedes usar Vue y componentes compatibles si simplifican la interfaz y su mantenimiento. Justifica la elección y resuelve el empaquetado dentro de la app.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/public/hospitality.bundle.js",
+        "hospitality_suite/public/hospitality.bundle.css",
+        "docs/ARQUITECTURA.md"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_ARQUITECTURA.md",
+        "docs/evidence/architecture-current.json",
+        "docs/evidence/README.md"
+      ],
+      "remaining": ""
     },
     {
       "id": "S02-03",
@@ -225,10 +316,19 @@
       "line": 30,
       "kind": "enumerated",
       "requirement": "- Reutiliza Customer, Contact, Address, Item, Item Group, UOM, Price List, Company, Cost Center, Warehouse, Sales Invoice, Payment Entry y los documentos estándar de compras, inventarios y contabilidad que correspondan.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/api.py",
+        "hospitality_suite/catalog.py",
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/procurement.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_ARQUITECTURA.md",
+        "docs/evidence/architecture-current.json",
+        "docs/evidence/initial-setup-native-tests.xml"
+      ],
+      "remaining": ""
     },
     {
       "id": "S02-04",
@@ -237,10 +337,18 @@
       "line": 31,
       "kind": "enumerated",
       "requirement": "- No construyas un segundo libro mayor ni un inventario independiente de ERPNext.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/inventory.py",
+        "hospitality_suite/treasury.py",
+        "docs/CONTABILIDAD.md"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_ARQUITECTURA.md",
+        "docs/evidence/initial-setup-native-tests.xml::TestFinance / TestTreasury / TestProcurement / TestDirectSales"
+      ],
+      "remaining": ""
     },
     {
       "id": "S02-05",
@@ -249,10 +357,17 @@
       "line": 32,
       "kind": "enumerated",
       "requirement": "- Separa huésped, acompañante, cliente que paga y empresa/agencia responsable de facturación.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/schema.py",
+        "hospitality_suite/operations.py",
+        "hospitality_suite/accounting.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_ARQUITECTURA.md",
+        "docs/evidence/initial-setup-native-tests.xml::TestLifecycle / TestSetupReporting / TestReportDimensions"
+      ],
+      "remaining": ""
     },
     {
       "id": "S02-06",
@@ -261,10 +376,16 @@
       "line": 33,
       "kind": "enumerated",
       "requirement": "- Modela establecimientos, habitaciones, categorías, tarifas, reservas, asignaciones por intervalo, estancias, folios o cuentas de estancia, cargos, garantías, turnos de caja, tareas de limpieza, órdenes de mantenimiento y cierres diarios.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/schema.py",
+        "docs/ARQUITECTURA.md"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_ARQUITECTURA.md",
+        "docs/evidence/architecture-current.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S02-07",
@@ -273,10 +394,16 @@
       "line": 34,
       "kind": "enumerated",
       "requirement": "- Usa un prefijo consistente en los DocTypes propios para evitar colisiones. Justifica cuándo una entidad requiere DocType independiente o tabla hija.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/schema.py",
+        "docs/ARQUITECTURA.md"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_ARQUITECTURA.md",
+        "docs/evidence/architecture-current.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S02-08",
@@ -285,10 +412,21 @@
       "line": 35,
       "kind": "enumerated",
       "requirement": "- Define campos, enlaces, obligatoriedad, validaciones, índices, permisos, estados y transiciones. Evita estados redundantes que puedan contradecirse.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/schema.py",
+        "hospitality_suite/controllers.py",
+        "hospitality_suite/operations.py",
+        "hospitality_suite/housekeeping.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_ARQUITECTURA.md",
+        "docs/evidence/architecture-current.json",
+        "docs/evidence/initial-setup-native-tests.xml",
+        "docs/evidence/readability-race-room.json",
+        "docs/evidence/readability-race-category.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S02-09",
@@ -297,10 +435,18 @@
       "line": 36,
       "kind": "enumerated",
       "requirement": "- Cada operación debe identificar compañía, establecimiento, usuario, fecha/hora y referencias de origen.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/service.py",
+        "hospitality_suite/setup.py",
+        "hospitality_suite/install.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_ARQUITECTURA.md",
+        "docs/evidence/initial-setup-native-tests.xml",
+        "docs/evidence/initial-setup-ui.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S02-10",
@@ -309,10 +455,17 @@
       "line": 37,
       "kind": "enumerated",
       "requirement": "- Una reserva puede contener varias habitaciones; una estancia puede tener varios segmentos de habitación por cambios durante la visita.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/schema.py",
+        "hospitality_suite/operations.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_ARQUITECTURA.md",
+        "docs/evidence/initial-setup-native-tests.xml::TestLifecycle",
+        "docs/evidence/36-plan-cambio-extension.png"
+      ],
+      "remaining": ""
     },
     {
       "id": "S02-11",
@@ -321,10 +474,17 @@
       "line": 38,
       "kind": "enumerated",
       "requirement": "- Distingue fecha/hora real, fecha operativa y fecha de contabilización. Usa las convenciones de Frappe para fechas y conversiones horarias; no guardes mezclas ambiguas de UTC y hora local.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/time.py",
+        "hospitality_suite/report_queries.py",
+        "hospitality_suite/setup.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_ARQUITECTURA.md",
+        "docs/evidence/initial-setup-native-tests.xml::TestBusinessWindow / TestTimingMetrics / TestReportDimensions / TestInitialSetup"
+      ],
+      "remaining": ""
     },
     {
       "id": "S03-01",
@@ -333,10 +493,20 @@
       "line": 43,
       "kind": "enumerated",
       "requirement": "- Compañía, establecimientos, modalidad, zona horaria, fecha operativa y horario de cierre.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/setup.py",
+        "hospitality_suite/controllers.py",
+        "hospitality_suite/public/js/hospitality.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_ARQUITECTURA.md",
+        "docs/evidence/initial-setup-native-tests.xml",
+        "docs/evidence/62-alta-fecha-corte.png",
+        "docs/evidence/63-alta-conservada.png",
+        "docs/evidence/initial-setup-ui.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S03-02",
@@ -345,10 +515,18 @@
       "line": 44,
       "kind": "enumerated",
       "requirement": "- Pisos, zonas, habitaciones, categoría, capacidad, camas, comodidades y estacionamiento asociado cuando corresponda.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/schema.py",
+        "hospitality_suite/public/js/hospitality.js",
+        "hospitality_suite/api.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_ARQUITECTURA.md",
+        "docs/evidence/architecture-current.json",
+        "docs/evidence/initial-setup-native-tests.xml::TestSetupReporting / TestLifecycle"
+      ],
+      "remaining": ""
     },
     {
       "id": "S03-03",
@@ -357,10 +535,17 @@
       "line": 45,
       "kind": "enumerated",
       "requirement": "- Monedas, impuestos, cuentas contables, centros de costo, almacenes y medios de pago.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/install.py",
+        "hospitality_suite/public/js/hospitality.js",
+        "hospitality_suite/controllers.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_ARQUITECTURA.md",
+        "docs/evidence/initial-setup-native-tests.xml::TestFinance / TestTreasury / TestInitialSetup"
+      ],
+      "remaining": ""
     },
     {
       "id": "S03-04",
@@ -369,10 +554,17 @@
       "line": 46,
       "kind": "enumerated",
       "requirement": "- Horarios de entrada/salida, tolerancias, cargos por entrada anticipada/salida tardía y tiempo de limpieza.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/timing.py",
+        "hospitality_suite/availability.py",
+        "hospitality_suite/public/js/hospitality_workflows.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_ARQUITECTURA.md",
+        "docs/evidence/initial-setup-native-tests.xml::TestTimingMetrics / TestBusinessWindow"
+      ],
+      "remaining": ""
     },
     {
       "id": "S03-05",
@@ -381,10 +573,16 @@
       "line": 47,
       "kind": "enumerated",
       "requirement": "- Políticas de anticipos, garantías, cancelación, no presentación, crédito, descuentos y autorizaciones.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "P",
+      "implementation": [
+        "hospitality_suite/schema.py",
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/security.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_ARQUITECTURA.md"
+      ],
+      "remaining": "Anticipos y garantías funcionan manualmente con cuentas/roles, pero falta configuración explícita de sus políticas de uso por establecimiento. Conservar créditos, cancelación/no presentación, descuentos y autorizaciones ya implementados y completar el contraste de todas las políticas."
     },
     {
       "id": "S03-06",
@@ -393,10 +591,17 @@
       "line": 48,
       "kind": "enumerated",
       "requirement": "- Artículos de alojamiento, horas adicionales, alimentación, minibar, lavandería y otros servicios.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "I",
+      "implementation": [
+        "hospitality_suite/catalog.py",
+        "hospitality_suite/pricing.py",
+        "hospitality_suite/public/js/hospitality_catalog.js"
+      ],
+      "evidence": [
+        "docs/evidence/catalog-native-tests.xml",
+        "docs/AUDITORIA_ARQUITECTURA.md"
+      ],
+      "remaining": "Catálogo completo y artículos de alojamiento/horario/consumo operan. Contrastar la configuración/asignación de todos los servicios pedidos, en particular el artículo para horas adicionales, antes de acreditar toda la entrada."
     },
     {
       "id": "S03-07",
@@ -405,10 +610,18 @@
       "line": 49,
       "kind": "enumerated",
       "requirement": "- Series documentales, formatos de impresión, usuarios y roles.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/setup.py",
+        "hospitality_suite/public/js/hospitality_workflows.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_ARQUITECTURA.md",
+        "docs/evidence/initial-setup-native-tests.xml::test_user_wizard_restricted_and_series_validated",
+        "docs/evidence/31-configuracion-documentos.png",
+        "docs/evidence/40-configuracion-roles.png"
+      ],
+      "remaining": ""
     },
     {
       "id": "S03-08",
@@ -417,10 +630,18 @@
       "line": 50,
       "kind": "clause",
       "requirement": "Valida la configuración antes de habilitar operaciones financieras. No crees cuentas o impuestos arbitrarios silenciosamente.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/install.py",
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/setup.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_ARQUITECTURA.md",
+        "docs/evidence/initial-setup-native-tests.xml::test_initial_date_cutoff_retry_and_no_implicit_financial_masters",
+        "docs/evidence/initial-setup-ui.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S04-01",
@@ -1616,10 +1837,16 @@
       "line": 179,
       "kind": "enumerated",
       "requirement": "- Resumen de ocupación, producción, facturación, cobros y saldos pendientes, diferenciando cada concepto.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "P",
+      "implementation": [
+        "hospitality_suite/closing.py",
+        "hospitality_suite/reports.py",
+        "hospitality_suite/templates/print/daily_close.html"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_ARQUITECTURA.md"
+      ],
+      "remaining": "El snapshot del cierre conserva ocupación y producción, pero debe incorporar facturación, cobros y saldos pendientes diferenciados, con moneda, período, fuentes y lectura reproducible. Los reportes individuales no sustituyen este resumen."
     },
     {
       "id": "S12-06",

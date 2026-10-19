@@ -93,3 +93,9 @@ El listado de reservas muestra huésped y fecha. En modo discreto sustituye el n
 «Productividad de limpieza» resume por responsable tareas pendientes/finalizadas y duración registrada. Tareas por hora usa únicamente finalizadas con duración positiva de inicio a finalización; incluye esperas de inspección y no es una medición de jornada laboral. Gerencia de motel distingue entradas totales de rotaciones por habitación con tiempo comercializable.
 
 Las etiquetas y mensajes preparados usan las traducciones nativas de Frappe. Los nombres de huéspedes, artículos, establecimientos y cuentas permanecen como fueron registrados. Los selectores muestran los nombres como texto y conservan la referencia original al confirmar. Esta revisión amplía la preparación de idiomas; no incorpora un paquete completo de otro idioma.
+
+## Alta de otro establecimiento
+
+Administración del sistema dispone de «Crear establecimiento» en Configuración, también cuando ya existen otros. Seleccione una compañía existente de ERPNext, modalidad, moneda y zona horaria; indique la hora local del corte. La fecha operativa inicial es opcional: vacía, corresponde al día local y retrocede un día si aún no se alcanzó el corte. Puede indicar una fecha inicial válida con el calendario. Una vez creado, el panel selecciona el nuevo establecimiento.
+
+El alta no crea cuentas ni impuestos y conserva finanzas deshabilitadas. Complete políticas/contabilidad, categorías, habitaciones, tarifas y medios antes de habilitarlas. La fecha posterior avanza mediante cierre diario; una corrección usa la reapertura autorizada. Un reintento con los mismos datos conserva la referencia del formulario y recupera el establecimiento ya creado.

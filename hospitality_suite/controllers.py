@@ -93,6 +93,8 @@ class ScopedDocument(Document):
                     if not frappe.db.exists("Currency",currency) or not isinstance(denominations,list) or not 1<=len(denominations)<=50 or any(decimal(v)<=0 for v in denominations):
                         frappe.throw(frappe._("Moneda o denominación inválida"))
             old=self.get_doc_before_save()
+            if old and frappe.utils.getdate(old.business_date)!=frappe.utils.getdate(self.business_date) and not internal:
+                frappe.throw(frappe._("Cambie la fecha operativa mediante el cierre o la reapertura autorizada"))
             if old and (old.company!=self.company or old.currency!=self.currency):
                 if frappe.db.exists("HS Room",{"property":self.name}) or frappe.db.exists("HS Booking",{"property":self.name}):
                     frappe.throw(frappe._("No cambie compañía o moneda de un establecimiento con datos; requiere una migración contable explícita"))

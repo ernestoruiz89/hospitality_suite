@@ -132,10 +132,20 @@ test('property wall-clock controls preserve native single-digit hours',async()=>
   desk.prop={time_zone:'America/Managua'};
   const primary={off(){return this;},on(){return this;},prop(){return this;}};
   context.frappe.ui={Dialog:class{
-    constructor(options){received=options.fields[0];this.fields_dict={cutoff:{$input:{attr(v){attributes=v;}},set_value(v){value=v;}}};this.$wrapper={on(){}};}
+    constructor(options){received=options.fields[0];this.fields_dict={[received.fieldname]:{$input:{attr(v){attributes=v;}},set_value(v){value=v;}}};this.$wrapper={on(){}};}
     get_primary_btn(){return primary;}show(){}get_values(){return{};}
   }};
   await desk.dialog('Cutoff',[{fieldname:'cutoff',fieldtype:'Time',default:'6:45:00'}],async()=>{});
   assert.equal(received.fieldtype,'Data');assert.match(received.description,/America\/Managua/);
   assert.equal(attributes.type,'time');assert.equal(value,'06:45:00');
+  desk.prop=undefined;
+  await desk.dialog('Initial setup',[{fieldname:'cutoff',fieldtype:'Time',default:'06:00:00',description:'Zona elegida en este formulario'}],async()=>{});
+  assert.equal(received.description,'Zona elegida en este formulario');
+  assert.equal(value,'06:00:00');
+  const original=desk.dialog;let setupFields;
+  desk.dialog=(title,fields)=>{setupFields=fields;};
+  desk.action_new_property();desk.dialog=original;
+  const date=setupFields.find(df=>df.fieldname==='business_date');
+  await desk.dialog('Initial date',[{...date,default:'2026-10-18'}],async()=>{});
+  assert.equal(attributes.type,'date');assert.equal(value,'2026-10-18');
 });

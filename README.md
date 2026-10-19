@@ -74,7 +74,7 @@ bench --site hotel.localhost set-config allow_tests true
 bench --site hotel.localhost run-tests --app hospitality_suite
 ```
 
-`before_tests` carga la demostración explícita para las pruebas; cada caso revierte sus movimientos. No ejecutar esta batería en producción. Última batería conjunta: **129 aprobadas** en hospitality-clean.localhost, 116 de integración y 13 puras, además de trece de Desk (dos del catálogo y dos de presentación/traducción) y dos del portal. La demostración principal conserva operaciones UX y no representa el estado inicial esperado por la batería completa. Los dos casos de concurrencia usan conexiones y commits reales y se ejecutan aparte:
+`before_tests` carga la demostración explícita para las pruebas; cada caso revierte sus movimientos. No ejecutar esta batería en producción. Última batería conjunta: **133 aprobadas** en hospitality-clean.localhost, 120 de integración y 13 puras, además de trece de Desk (dos del catálogo y dos de presentación/traducción) y dos del portal. La demostración principal conserva operaciones UX y no representa el estado inicial esperado por la batería completa. Los dos casos de concurrencia usan conexiones y commits reales y se ejecutan aparte:
 
 ```sh
 bench --site hospitality.localhost execute hospitality_suite.tests.concurrency.verify

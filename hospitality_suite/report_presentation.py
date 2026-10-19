@@ -37,6 +37,7 @@ TITLES={"HS Booking":"Reserva","HS Stay":"Estancia","HS Folio":"Cuenta","HS Char
         "Purchase Receipt":"Recepción de compra","Purchase Invoice":"Factura de proveedor","Stock Reconciliation":"Conteo de inventario"}
 TITLES.update({"User":"Usuario","File":"Archivo privado","HS Payment Method":"Medio de pago","HS Stock Policy":"Política de inventario","HS Expense Category":"Categoría de gasto","HS Supplier":"Proveedor autorizado"})
 ACTIONS={
+    "Create property":"Establecimiento creado",
     "Reserve":"Reserva creada","Modify reservation":"Reserva modificada","Check in":"Entrada registrada","Check out":"Salida registrada",
     "Extend":"Estancia extendida","Change room":"Cambio de habitación","Create folio":"Cuenta creada","Move charge":"Cargo trasladado de cuenta",
     "Invoice":"Factura emitida","Credit note":"Nota de crédito emitida","Reconcile advances":"Anticipos conciliados","Apply guarantee":"Garantía aplicada",

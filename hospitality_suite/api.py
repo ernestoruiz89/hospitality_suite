@@ -124,6 +124,7 @@ def bootstrap(property_name=None):
     roles = frappe.get_roles()
     pages = [dict(route=route, title=title) for route, (title, accepted) in PAGES.items() if is_system() or set(roles).intersection(accepted)]
     result = dict(properties=props, pages=pages, actions=[a for a in ACTIONS if may(a)], server_time=str(now_datetime()))
+    result["can_create_property"]=is_system()
     result["system_timezone"] = frappe.utils.get_system_timezone()
     if not property_name:
         return result
@@ -442,17 +443,7 @@ def create_guest(property_name, data, request_key):
 
 @frappe.whitelist(methods=["POST"])
 def create_property(data, request_key):
-    if not is_system():
-        frappe.throw(frappe._("Se requiere administración del sistema"), frappe.PermissionError)
-    values = payload(data)
-    if not request_key or any(k not in ("property_name", "company", "mode", "currency", "time_zone") for k in values):
-        frappe.throw(frappe._("Configuración no válida"))
-    from hospitality_suite.service import operation
-    from frappe.utils import nowdate
-    with operation():
-        doc = frappe.get_doc(dict(doctype="HS Property", **values, business_date=nowdate()))
-        doc.insert()
-    return dict(property=doc.name)
+    return setup.create_property(payload(data),request_key)
 
 
 @frappe.whitelist()
