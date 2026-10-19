@@ -573,16 +573,21 @@
       "line": 47,
       "kind": "enumerated",
       "requirement": "- Políticas de anticipos, garantías, cancelación, no presentación, crédito, descuentos y autorizaciones.",
-      "status": "P",
+      "status": "V",
       "implementation": [
-        "hospitality_suite/schema.py",
-        "hospitality_suite/accounting.py",
-        "hospitality_suite/security.py"
+        "hospitality_suite/payment_policies.py",
+        "hospitality_suite/controllers.py",
+        "hospitality_suite/operations.py",
+        "hospitality_suite/public/js/hospitality_policies.js"
       ],
       "evidence": [
-        "docs/AUDITORIA_ARQUITECTURA.md"
+        "docs/AUDITORIA_CIERRE_POLITICAS.md",
+        "docs/evidence/financial-native-tests.xml::TestPaymentPolicies / TestLifecycle / TestReportDimensions / TestTimingMetrics",
+        "docs/evidence/financial-js-tests.log",
+        "docs/evidence/67-payment-policies-reloaded.png",
+        "docs/evidence/payment-policy-ui.json"
       ],
-      "remaining": "Anticipos y garantías funcionan manualmente con cuentas/roles, pero falta configuración explícita de sus políticas de uso por establecimiento. Conservar créditos, cancelación/no presentación, descuentos y autorizaciones ya implementados y completar el contraste de todas las políticas."
+      "remaining": ""
     },
     {
       "id": "S03-06",
@@ -1837,16 +1842,23 @@
       "line": 179,
       "kind": "enumerated",
       "requirement": "- Resumen de ocupación, producción, facturación, cobros y saldos pendientes, diferenciando cada concepto.",
-      "status": "P",
+      "status": "V",
       "implementation": [
         "hospitality_suite/closing.py",
-        "hospitality_suite/reports.py",
+        "hospitality_suite/close_financials.py",
+        "hospitality_suite/public/js/hospitality_close.js",
         "hospitality_suite/templates/print/daily_close.html"
       ],
       "evidence": [
-        "docs/AUDITORIA_ARQUITECTURA.md"
+        "docs/AUDITORIA_CIERRE_POLITICAS.md",
+        "docs/evidence/financial-native-tests.xml::TestCloseFinancials",
+        "docs/evidence/financial-js-tests.log",
+        "docs/evidence/64-close-financial-review.png",
+        "docs/evidence/65-close-financial-balances.png",
+        "docs/evidence/66-close-saved-summary.png",
+        "docs/evidence/financial-close-ui-export.json"
       ],
-      "remaining": "El snapshot del cierre conserva ocupación y producción, pero debe incorporar facturación, cobros y saldos pendientes diferenciados, con moneda, período, fuentes y lectura reproducible. Los reportes individuales no sustituyen este resumen."
+      "remaining": ""
     },
     {
       "id": "S12-06",

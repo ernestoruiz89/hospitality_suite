@@ -4,4 +4,6 @@ import "./js/hospitality_workflows.js";
 import "./js/hospitality_finance_stock.js";
 import "./js/hospitality_privacy.js";
 import "./js/hospitality_reporting.js";
+import "./js/hospitality_policies.js";
+import "./js/hospitality_close.js";
 import "./js/hospitality_catalog.js";

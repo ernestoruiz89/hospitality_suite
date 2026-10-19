@@ -51,7 +51,10 @@ class ScopedDocument(Document):
             if not is_system():
                 frappe.throw(_("Solamente administración del sistema puede conceder acceso"), frappe.PermissionError)
         if self.get("property"):
-            prop = frappe.get_doc("HS Property", self.property)
+            prop = frappe.get_doc("HS Property", self.property,for_update=internal)
+            if self.doctype=="HS Payment" and self.is_new():
+                self.business_date=prop.business_date
+                self.business_date_source="Recorded"
             if self.company != prop.company:
                 frappe.throw(_("La compañía no coincide con el establecimiento"))
             if not internal:
@@ -93,6 +96,9 @@ class ScopedDocument(Document):
                     if not frappe.db.exists("Currency",currency) or not isinstance(denominations,list) or not 1<=len(denominations)<=50 or any(decimal(v)<=0 for v in denominations):
                         frappe.throw(frappe._("Moneda o denominación inválida"))
             old=self.get_doc_before_save()
+            if old and any(old.get(field)!=self.get(field) for field in ("advance_policy","guarantee_policy")):
+                from hospitality_suite.security import require
+                require(self.name,"approve")
             if old and frappe.utils.getdate(old.business_date)!=frappe.utils.getdate(self.business_date) and not internal:
                 frappe.throw(frappe._("Cambie la fecha operativa mediante el cierre o la reapertura autorizada"))
             if old and (old.company!=self.company or old.currency!=self.currency):

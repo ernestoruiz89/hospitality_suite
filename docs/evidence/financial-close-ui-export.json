@@ -1,0 +1,58 @@
+{
+  "site": "hospitality.localhost",
+  "synthetic": true,
+  "export_mutations": false,
+  "source": "duc1v44ja6",
+  "status": "Review",
+  "business_date": "2026-10-19",
+  "snapshot_sha256": "bca4e3497a95f604012f73e10ff2eff13c4a3ed287537eff0dd74f0a7db7f749",
+  "posting_date": "2026-10-19",
+  "movement_date": "2026-10-19",
+  "currencies": [
+    {
+      "advances": "500.00",
+      "credit_notes_total": "30.00",
+      "currency": "NIO",
+      "customer_credits": "0.00",
+      "guarantee_refunds": "0.00",
+      "guarantees": "0.00",
+      "guarantees_applied": "0.00",
+      "guarantees_held": "0.00",
+      "invoices_net": "9120.00",
+      "invoices_tax": "0.00",
+      "invoices_total": "9120.00",
+      "net_customer_receipts": "9120.00",
+      "payable_billed": "9120.00",
+      "payments": "8650.00",
+      "pending_charges": "3100.00",
+      "pos_collections": "0.00",
+      "pos_refunds": "0.00",
+      "precision": 2,
+      "production": "12220.00",
+      "receivables": "0.00",
+      "refunds": "30.00",
+      "rounding_adjustment": "0.00",
+      "unallocated_advances": "0.00"
+    }
+  ],
+  "source_counts": {
+    "guarantees": 0,
+    "invoices": 6,
+    "movements": 7,
+    "native_pos": 0,
+    "pending_charges": 2,
+    "receivables": 0,
+    "unallocated_advances": 0,
+    "unattributed_movements": 0
+  },
+  "blockers": [
+    {
+      "type": "Cargos sin facturar",
+      "count": 2
+    }
+  ],
+  "close_confirmed": false,
+  "pages": 2,
+  "pdf_sha256": "c3d4f3c28bf2e5645b709c699139398206e4227def76dae1ad14069fea25baa7",
+  "pdf": "output/financial-close/daily-close.pdf"
+}

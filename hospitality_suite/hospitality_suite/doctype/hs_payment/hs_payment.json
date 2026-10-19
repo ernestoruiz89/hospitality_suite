@@ -35,6 +35,20 @@
    "options": "HS Booking"
   },
   {
+   "fieldname": "business_date",
+   "label": "Fecha operativa",
+   "fieldtype": "Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "business_date_source",
+   "label": "Business date source",
+   "fieldtype": "Data",
+   "read_only": 1,
+   "hidden": 1,
+   "print_hide": 1
+  },
+  {
    "fieldname": "folio",
    "label": "Folio",
    "fieldtype": "Link",
@@ -222,6 +236,8 @@
   "property",
   "stay",
   "booking",
+  "business_date",
+  "business_date_source",
   "folio",
   "customer",
   "shift",

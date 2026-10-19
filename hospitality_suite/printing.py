@@ -8,6 +8,11 @@ def hs_json(value):
     return frappe.parse_json(value)
 
 
+def hs_close_groups():
+    from hospitality_suite.close_financials import display_groups
+    return display_groups()
+
+
 VALUE_LABELS={"Confirmed":"Confirmada","Checked In":"Entrada registrada","Completed":"Completada","Cancelled":"Cancelada","No Show":"No presentada",
             "Hold":"Retención temporal","Active":"Alojado","Checked Out":"Salida registrada","Pending":"Pendiente","In Progress":"En proceso",
             "Inspection":"Pendiente de inspección","Open":"Abierto","Closed":"Cerrado","Review":"Por revisar","Posted":"Contabilizado","Resolved":"Resuelto",

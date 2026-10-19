@@ -32,7 +32,16 @@ def daily_close(prop, data):
     if doc and doc.status == "Closed":
         return dict(close=doc.name, status=doc.status)
     problems = blockers(prop)
-    values = dict(business_date=prop.business_date, status="Review", summary=canonical(summary(prop)), blockers=canonical(problems))
+    captured=summary(prop)
+    from hospitality_suite.close_financials import snapshot
+    captured["financial"]=snapshot(prop,captured)
+    import hashlib
+    stable={k:v for k,v in captured["financial"].items() if k!="captured_at"}
+    fixed={k:v for k,v in captured.items() if k not in {"financial","occupied_hours","utilization","average_stay_hours"}}
+    acceptance=hashlib.sha256(canonical(dict(operational=fixed,financial=stable,blockers=problems)).encode()).hexdigest()
+    if data.get("confirm") and data.get("review_acceptance") and data["review_acceptance"]!=acceptance:
+        frappe.throw(frappe._("El resumen del cierre cambió. Actualice la revisión antes de confirmar"))
+    values = dict(business_date=prop.business_date, status="Review", summary=canonical(captured), blockers=canonical(problems))
     if doc:
         doc.update(values)
         doc.save()
@@ -47,7 +56,7 @@ def daily_close(prop, data):
         prop.business_date = add_days(prop.business_date, 1)
         prop.save()
     audit(prop, "Daily close " + doc.status, doc)
-    return dict(close=doc.name, status=doc.status, blockers=problems,period=frappe.parse_json(doc.summary))
+    return dict(close=doc.name, status=doc.status, blockers=problems,period=frappe.parse_json(doc.summary),review_acceptance=acceptance)
 
 
 def reopen(prop, data):

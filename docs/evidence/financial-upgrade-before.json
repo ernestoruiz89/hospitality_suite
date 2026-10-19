@@ -1,0 +1,19 @@
+{
+  "stage": "before",
+  "site": "hospitality.localhost",
+  "passed": true,
+  "tables": 70,
+  "rows": 908,
+  "private_files": 1,
+  "excluded_new_columns": {
+    "HS Property": [
+      "advance_policy",
+      "guarantee_policy"
+    ],
+    "HS Payment": [
+      "business_date",
+      "business_date_source"
+    ]
+  },
+  "aggregate_sha256": "54fff8cd0d167154975507c7de5bc1231feedfb1ba8163335c6f4a9e66c1e016"
+}

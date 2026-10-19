@@ -1,0 +1,25 @@
+{
+  "site": "hospitality-clean.localhost",
+  "synthetic": true,
+  "readback_only": true,
+  "property": "e6ttlq8sal",
+  "property_name": "Establecimiento UX de prueba",
+  "advance_policy": "Approval",
+  "guarantee_policy": "Disabled",
+  "financial_enabled": false,
+  "operation_records": {
+    "HS Booking": 0,
+    "HS Stay": 0,
+    "HS Charge": 0,
+    "HS Payment": 0,
+    "HS Shift": 0
+  },
+  "native_documents": {
+    "Sales Invoice": 0,
+    "Payment Entry": 0,
+    "Journal Entry": 0,
+    "Stock Entry": 0
+  },
+  "ui_reloaded": true,
+  "preview_socketio_configured": false
+}

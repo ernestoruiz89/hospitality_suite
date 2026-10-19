@@ -99,3 +99,13 @@ Las etiquetas y mensajes preparados usan las traducciones nativas de Frappe. Los
 Administración del sistema dispone de «Crear establecimiento» en Configuración, también cuando ya existen otros. Seleccione una compañía existente de ERPNext, modalidad, moneda y zona horaria; indique la hora local del corte. La fecha operativa inicial es opcional: vacía, corresponde al día local y retrocede un día si aún no se alcanzó el corte. Puede indicar una fecha inicial válida con el calendario. Una vez creado, el panel selecciona el nuevo establecimiento.
 
 El alta no crea cuentas ni impuestos y conserva finanzas deshabilitadas. Complete políticas/contabilidad, categorías, habitaciones, tarifas y medios antes de habilitarlas. La fecha posterior avanza mediante cierre diario; una corrección usa la reapertura autorizada. Un reintento con los mismos datos conserva la referencia del formulario y recupera el establecimiento ya creado.
+
+## Políticas de anticipos y garantías
+
+En Configuración → Anticipos y garantías, elija una política para cada tipo: manual según rol de caja, con autorización de gerencia o sin nuevos movimientos. Guardar el cambio requiere permiso de aprobación. La caja muestra las opciones que correspondan y avisa cuando requiere gerencia; el servidor comprueba nuevamente el permiso al registrar. Los fondos recibidos anteriormente conservan su devolución o aplicación autorizada.
+
+## Revisar y consultar el cierre
+
+Gerencia → Revisar cierre del día presenta ocupación, producción, facturación, dinero recibido y saldos separados por moneda. La fecha contable selecciona las facturas; la fecha operativa selecciona los movimientos. Los saldos corresponden al instante de la revisión e incluyen todas las fechas. Anticipos y garantías se distinguen del ingreso por alojamiento; un crédito a favor no elimina una factura sin conciliación.
+
+Resuelva los pendientes antes de confirmar. Si cambia la información financiera mientras revisa, actualice la revisión. Historial de cierres → Ver resumen consulta lo conservado en esa ejecución, sin recalcularlo con pagos posteriores. Imprimir cierre utiliza ese mismo resumen. Los cierres antiguos que no conservan el desglose lo indican expresamente.

@@ -16,6 +16,8 @@ La factura de folio toma cargos pendientes, conserva su origen y los marca factu
 
 ## Anticipos
 
+Cada establecimiento configura anticipos y garantías como manuales, con autorización de gerencia o deshabilitados para nuevos ingresos. La cotización y la contabilización aplican la política; la autorización conserva actor y regla en auditoría. También se valida la presentación nativa de Payment Entry sin referencias y Journal Entry que ingresa al pasivo de garantías. Separe el cobro de una factura del anticipo sin aplicar en documentos distintos. Deshabilitar ingresos conserva la devolución/aplicación autorizada de fondos existentes.
+
 Un anticipo es un Payment Entry del cliente y queda sin asignar hasta su aplicación. No genera automáticamente ingreso por alojamiento. Al facturar, ERPNext aplica los anticipos de esa reserva/estancia y pagador, respetando compañía, moneda y cuenta.
 
 También se concilian anticipos recibidos después de existir una factura. La app utiliza Payment Reconciliation de ERPNext. Actualizar referencias de un anticipo histórico puede ser válido con el turno original cerrado; no cambia el importe, moneda, cuenta o caja originales. No puede usarse esa excepción para cambiar dinero de un turno cerrado.
@@ -29,6 +31,8 @@ La recepción de garantía genera Journal Entry: débito al medio de pago y cré
 Una aplicación no vuelve a aumentar el efectivo esperado. Se conserva el documento y la valuación de la obligación original; las diferencias de cambio se equilibran mediante la cuenta estándar de ganancia/pérdida de cambio configurada. Se probó una garantía de USD10 devuelta con un cambio distinto: la obligación original queda en cero y la diferencia de C$3.76 se registra en la cuenta de cambio. Otras combinaciones de moneda/precisión necesitan la ampliación indicada en la matriz.
 
 ## Monedas, caja y correcciones
+
+El cierre conserva producción, facturación, cobros y saldos diferenciados por moneda. Facturación usa fecha contable; cobros usan fecha operativa registrada/auditada. Los cobros POS nativos se leen de sus cuentas de pago estándar, netos de vuelto. Los saldos de facturas y anticipos nativos usan moneda de la cuenta del cliente; créditos a favor y facturas pendientes se muestran separados hasta conciliarlos. Los movimientos históricos sin fecha acreditada se advierten sin inventarla. Ver resumen e imprimir utilizan el JSON conservado; no vuelven a sumar saldos actuales. Véase AUDITORIA_CIERRE_POLITICAS.md.
 
 Cada movimiento conserva moneda del medio, importe, tipo de cambio y equivalente base. La conversión a la moneda de la cuenta del cliente se almacena en Payment Entry. ERPNext obtiene los cambios desde Currency Exchange/configuración estándar; el navegador no impone una tasa.
 

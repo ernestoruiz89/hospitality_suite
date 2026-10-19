@@ -256,6 +256,8 @@ def validate_standard(doc, method=None):
         frappe.throw(frappe._("No puede quitar ni cambiar el origen de un documento vinculado a alojamiento"))
     if not getattr(frappe.local, "hs_operation", False):
         require(prop_name,"approve" if doc.doctype=="Stock Reconciliation" else "inventory" if doc.doctype in ("Stock Entry","Purchase Order","Purchase Receipt","Purchase Invoice") else "finance")
+    from hospitality_suite.payment_policies import validate_native
+    validate_native(doc,prop,original)
     if doc.get("hs_folio"):
         folio = document("HS Folio", doc.hs_folio)
         if not doc.get("hs_booking") and folio.booking:

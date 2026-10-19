@@ -108,6 +108,12 @@ def seed():
                                         parent_account=parent, root_type="Liability", account_type="", account_currency="NIO")).insert().name
     cash = company.default_cash_account or frappe.db.get_value("Account", {"company": company.name, "account_type": "Cash", "is_group": 0})
     warehouse = frappe.db.get_value("Warehouse", {"company": company.name, "warehouse_name": "Stores", "is_group": 0})
+    if not warehouse:
+        # ERPNext translates its initial warehouse names when Company is created.
+        # This explicit demo owns a stable fixture; normal installation creates none.
+        parent=frappe.db.get_value("Warehouse",{"company":company.name,"is_group":1,"parent_warehouse":["is","not set"]})
+        warehouse=frappe.get_doc(dict(doctype="Warehouse",warehouse_name="Stores",company=company.name,
+                                      parent_warehouse=parent,is_group=0)).insert().name
     if not frappe.db.exists("Mode of Payment", "Efectivo demo"):
         frappe.get_doc(dict(doctype="Mode of Payment", mode_of_payment="Efectivo demo", type="Cash",
                             accounts=[dict(company=company.name, default_account=cash)])).insert()

@@ -21,6 +21,8 @@ class TestDirectSales(IntegrationTestCase):
         return api.execute(self.prop.name,action,key or uuid.uuid4().hex,data)
 
     def test_sale_retry_one_stock_issue_and_full_standard_refund(self):
+        frappe.set_user("cashier@hospitality.example.invalid")
+        self.shift=self.call("open_shift",dict(opening_amount=0))["shift"]
         values=dict(customer=self.guest.customer,item=self.item,quantity=2,method=self.method,shift=self.shift)
         quote=api.preview(self.prop.name,values,"direct_sale")
         values.update(acceptance=quote["acceptance"],tendered=100)
@@ -31,7 +33,9 @@ class TestDirectSales(IntegrationTestCase):
         invoice=frappe.get_doc("Sales Invoice",one["invoice"])
         self.assertEqual(invoice.update_stock,0)
         self.assertEqual(invoice.outstanding_amount,0)
+        self.assertTrue(all(row.warehouse==self.prop.warehouse for row in invoice.items))
         self.assertEqual(frappe.db.get_value("Stock Entry",service.stock_entry,"docstatus"),1)
+        frappe.set_user("Administrator")
         result=self.call("return_direct_sale",dict(service=service.name,shift=self.shift,reason="Devolución de venta de prueba"))
         self.assertEqual(frappe.db.get_value("Stock Entry",service.stock_entry,"docstatus"),2)
         self.assertEqual(frappe.db.get_value("Sales Invoice",result["credit_note"],"outstanding_amount"),0)

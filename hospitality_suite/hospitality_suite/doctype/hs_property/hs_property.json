@@ -101,6 +101,22 @@
    "fieldtype": "Check"
   },
   {
+   "fieldname": "advance_policy",
+   "label": "Política de anticipos",
+   "fieldtype": "Select",
+   "options": "Manual\nApproval\nDisabled",
+   "reqd": 1,
+   "default": "Manual"
+  },
+  {
+   "fieldname": "guarantee_policy",
+   "label": "Política de garantías",
+   "fieldtype": "Select",
+   "options": "Manual\nApproval\nDisabled",
+   "reqd": 1,
+   "default": "Manual"
+  },
+  {
    "fieldname": "guest_id_required",
    "label": "Guest id required",
    "fieldtype": "Check"
@@ -314,6 +330,8 @@
   "portal_enabled",
   "financial_enabled",
   "allow_credit",
+  "advance_policy",
+  "guarantee_policy",
   "guest_id_required",
   "hold_minutes",
   "cost_center",

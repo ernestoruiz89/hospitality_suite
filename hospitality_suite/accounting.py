@@ -23,6 +23,12 @@ def post_standard(doc, prop):
     No caller supplies arbitrary account lines or a doctype to this helper.
     """
     doc.hs_property = prop.name
+    if doc.doctype=="Sales Invoice":
+        # Native defaults may belong to another warehouse in the same company.
+        # Operational deliveries already own stock; their invoice stays scoped.
+        for row in doc.items:
+            if not row.warehouse:
+                row.warehouse=prop.warehouse
     if doc.doctype=="Sales Invoice" and prop.get("invoice_series"):
         doc.naming_series=prop.invoice_series
     elif doc.doctype=="Payment Entry" and prop.get("payment_series"):
@@ -78,7 +84,7 @@ def invoice_folio(prop, data):
         rate=total/decimal(charge.quantity)
         row = inv.append("items", dict(item_code=charge.item, qty=charge.quantity, rate=float(rate),price_list_rate=charge.rate,
                                        discount_amount=float(decimal(charge.rate)-rate),
-                                       description=charge.description, cost_center=prop.cost_center, hs_charge=charge.name,
+                                       description=charge.description, cost_center=prop.cost_center, warehouse=prop.warehouse, hs_charge=charge.name,
                                        hs_charge_sources=frappe.as_json([r.name for r in related])))
         mapping.extend((r.name,row) for r in related)
     if len(mapping)!=len(charges):
@@ -278,7 +284,7 @@ def invoice_cancellation(prop,booking,fee,reason):
     invoice.update(dict(company=prop.company,customer=booking.customer,currency=booking.currency,posting_date=nowdate(),due_date=nowdate(),
                         debit_to=prop.receivable_account,cost_center=prop.cost_center,hs_booking=booking.name,update_stock=0,remarks=reason,
                         taxes_and_charges=prop.tax_template))
-    invoice.append("items",dict(item_code=prop.penalty_item,qty=1,rate=float(decimal(fee["amount"])),cost_center=prop.cost_center,
+    invoice.append("items",dict(item_code=prop.penalty_item,qty=1,rate=float(decimal(fee["amount"])),cost_center=prop.cost_center,warehouse=prop.warehouse,
                                 description="Cancelación / no presentación: "+booking.name))
     invoice.set_missing_values()
     if prop.tax_template:
@@ -355,6 +361,8 @@ def payment(prop, data):
     kind = data.get("kind", "Payment")
     if kind not in ("Payment", "Advance", "Guarantee", "Refund", "Guarantee Refund"):
         frappe.throw(frappe._("Tipo de movimiento inválido"))
+    from hospitality_suite.payment_policies import authorize
+    policy=authorize(prop,kind)
     source = None
     if kind in ("Refund", "Guarantee Refund"):
         require(prop.name, "approve")
@@ -485,14 +493,17 @@ def payment(prop, data):
                     currency=method.currency, exchange_rate=fx, base_amount=money(amount * fx), kind=kind, status="Posted",
                     payment_entry=pe.name if pe else None, journal_entry=journal.name if journal else None,
                     source_payment=source.name if source else None, reference=data.get("reference"), reason=data.get("reason"),tendered=tendered,change_amount=change)
-    audit(prop, kind, record, data.get("reason"))
+    audit(prop, kind, record, data.get("reason"),dict(payment_policy=policy) if policy else None)
     return dict(payment=record.name, payment_entry=record.payment_entry, journal_entry=record.journal_entry, amount=str(amount), currency=method.currency,
                 tendered=str(tendered),change=str(change),exchange_rate=str(fx),base_amount=str(record.base_amount))
 
 
 def payment_quote(prop,data):
+    ready(prop)
     import hashlib
     from hospitality_suite.service import canonical
+    from hospitality_suite.payment_policies import authorize
+    policy=authorize(prop,data.get("kind","Payment"))
     method=document("HS Payment Method",data["method"],"finance")
     amount=money(data["amount"],currency=method.currency)
     tendered=money(data.get("tendered") or amount,currency=method.currency)
@@ -504,6 +515,7 @@ def payment_quote(prop,data):
     values=dict(amount=str(amount),currency=method.currency,exchange_rate=str(fx),base_amount=str(money(amount*fx,currency=company_currency)),
                 base_currency=company_currency,property_amount=str(money(amount*fx/property_fx,currency=prop.currency)),property_currency=prop.currency,
                 tendered=str(tendered),change=str(money(tendered-amount,currency=method.currency)),method=method.name)
+    values["payment_policy"]=policy
     values["acceptance"]=hashlib.sha256(canonical(values).encode()).hexdigest()
     return values
 
@@ -596,6 +608,6 @@ def sync_document(doc, method=None):
                    exchange_rate=doc.target_exchange_rate if doc.payment_type == "Receive" else doc.source_exchange_rate,
                    kind="Supplier Payment" if doc.party_type=="Supplier" else ("Payment" if doc.references else "Advance") if doc.payment_type == "Receive" else "Refund",
                    status="Posted", payment_entry=doc.name, reference=doc.reference_no, reason=doc.remarks)
-        audit(prop, method or "ERP update", stay or doc, doc.get("hs_correction_reason"),details={"doctype": doc.doctype, "name": doc.name, "docstatus": doc.docstatus})
+        audit(prop, method or "ERP update", stay or doc, doc.get("hs_correction_reason"),details={"doctype": doc.doctype, "name": doc.name, "docstatus": doc.docstatus,"payment_policy":doc.flags.get("hs_payment_policy") or {}})
     from hospitality_suite.security import realtime
     realtime(prop.name)

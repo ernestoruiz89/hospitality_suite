@@ -142,3 +142,16 @@ La revisión anterior de diez páginas fue sustituida por un PDF de 18 páginas,
 `initial-setup-ui.json`: lectura del fixture administrativo creado desde Page en hospitality-clean.localhost, petición/auditoría únicas y cero documentos operativos o financieros, con finanzas deshabilitadas. Queda como fixture explícito en el sitio limpio y se creó después de la batería. La copia temporal no acredita Socket.IO. `architecture-current.json`: inspección instalada de solo lectura y núcleos limpios; sus bundles corresponden a la compilación de esta fase. AUDITORIA_ARQUITECTURA.md detalla la evidencia de cada obligación revisada y las diferencias aún pendientes.
 
 `initial-setup-health.json` confirma sesión temporal cerrada, servidor 8089 detenido mediante el helper y 8086 activo con HTTP 200. La escucha se comprobó dentro de WSL: el reenvío TCP de Windows puede sobrevivir brevemente al proceso, por lo que un connect TCP desde Windows no se usó como prueba suficiente del cierre.
+
+64. `64-close-financial-review.png`: revisión financiera del cierre en Gerencia, fechas y conceptos separados.
+65. `65-close-financial-balances.png`: saldos y dos cargos pendientes; Confirmar cierre deshabilitado.
+66. `66-close-saved-summary.png`: Ver resumen consulta la captura conservada, sin confirmar ni recalcularla.
+67. `67-payment-policies-reloaded.png`: Approval/Disabled guardados y recargados en el establecimiento administrativo vacío del sitio limpio.
+
+`financial-native-tests.log/xml`: 145 aprobadas (132 integración + trece puras) en hospitality-acceptance.localhost; doce nuevas sobre políticas, crédito/descuento, fechas, impuestos/devoluciones/POS/monedas y cierre estable. La venta directa se ejecuta además como cajero con turno propio. `financial-js-tests.log`: diecinueve aprobadas, diecisiete Desk y dos portal. `financial-build.log`, `financial-main-migrate.log` y `financial-acceptance-install.log` conservan instalación/compilación. El núcleo continúa limpio.
+
+`financial-upgrade-before/after.json`: mismas 70 tablas/908 filas y archivo privado durante la migración, excluyendo solo las cuatro columnas nuevas. `financial-final-state.json`: sitio de aceptación sin operaciones remanentes, respaldo inicial, scheduler pausado, guardia de fixtures rechaza la demostración, 36 tablas nativas de esa demostración sin cambios, HTTP 200 y puertos comprobados desde WSL. No sustituye la recuperación de la revisión final.
+
+`financial-close-ui-export.json`: revisión real guardada, fuentes/importes/pendientes y exportación sin mutaciones; PDF nativo en output/financial-close/daily-close.pdf, dos páginas renderizadas/revisadas. `payment-policy-ui.json` confirma política del fixture vacío, finanzas deshabilitadas y cero operaciones/documentos propios. La sesión administrativa temporal se cerró; 8089 se detuvo y no acredita otro Socket.IO.
+
+La interrupción de WSL y las ejecuciones fallidas se describen en AVANCE.md y AUDITORIA_CIERRE_POLITICAS.md. El antiguo sitio limpio conserva respaldo de diagnóstico y scheduler pausado; la aceptación final usa un sitio nuevo independiente. Los resultados anteriores no se presentan como la aceptación de esta revisión. La matriz conserva 218 entradas: 46 V, dos I y 170 R; objetivo activo.

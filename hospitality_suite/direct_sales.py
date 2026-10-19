@@ -29,7 +29,7 @@ def draft(prop,data):
     inv.update(dict(company=prop.company,customer=customer,currency=prop.currency,posting_date=nowdate(),due_date=nowdate(),
                     debit_to=prop.receivable_account,cost_center=prop.cost_center,hs_property=prop.name,update_stock=0,
                     taxes_and_charges=prop.tax_template))
-    inv.append("items",dict(item_code=item.name,qty=float(quantity),rate=prices[0].price_list_rate,cost_center=prop.cost_center))
+    inv.append("items",dict(item_code=item.name,qty=float(quantity),rate=prices[0].price_list_rate,cost_center=prop.cost_center,warehouse=prop.warehouse))
     inv.set_missing_values()
     if prop.tax_template:
         from erpnext.controllers.accounts_controller import get_taxes_and_charges

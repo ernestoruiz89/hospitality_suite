@@ -147,7 +147,7 @@
     {
       "doctype": "HS Property",
       "child": false,
-      "fields": 46,
+      "fields": 48,
       "indexes": {
         "PRIMARY": {
           "unique": true,
@@ -714,7 +714,7 @@
     {
       "doctype": "HS Payment",
       "child": false,
-      "fields": 32,
+      "fields": 34,
       "indexes": {
         "PRIMARY": {
           "unique": true,
@@ -1390,13 +1390,13 @@
   "assets": [
     {
       "name": "hospitality.bundle.js",
-      "bytes": 128309,
-      "sha256": "1a38b2e4693b341ee43162ec21d00f878dc715d7098bf22600e4fa52bea73e92"
+      "bytes": 133691,
+      "sha256": "1ab83c8041899eecd7969534d9bed03669769bc243d19722b16b5ac10da83a09"
     },
     {
       "name": "hospitality.bundle.css",
       "bytes": 9982,
-      "sha256": "b168c9ec07247f7a21fbf0f458d679b61a3c77b4267eddf1beefe37536de1b2c"
+      "sha256": "2976a957fbce09627418604c694ee524a3fad3615f3f5ab91cf193fee5bf71ed"
     }
   ]
 }

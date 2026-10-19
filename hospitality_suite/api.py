@@ -152,6 +152,8 @@ def bootstrap(property_name=None):
         customers = set(r.customer for r in result["guests"] + result["folios"] + result["bookings"] + result["billing_parties"] if r.get("customer"))
         result["customers"] = [dict(name=n, customer_name=frappe.db.get_value("Customer", n, "customer_name")) for n in sorted(customers)]
     if may("finance") or may("report"):
+        from hospitality_suite.payment_policies import policies
+        result["payment_policies"]=policies(prop)
         result["denominations"]=frappe.parse_json(prop.get("cash_denominations") or "{}")
         result["shifts"] = project("HS Shift", prop)
         for shift in result["shifts"]:
@@ -183,6 +185,8 @@ def bootstrap(property_name=None):
             order["parts"]=[r.as_dict() for r in doc.parts]
     if may("report"):
         from hospitality_suite.reports import summary, REPORTS
+        from hospitality_suite.close_financials import display_groups
+        result["close_financial_groups"]=display_groups()
         from hospitality_suite.report_formatting import LABELS
         from hospitality_suite.printing import VALUE_LABELS
         result["summary"] = summary(prop)
@@ -379,6 +383,7 @@ def save_setup(property_name, section, data, request_key, expected_modified=None
         "billing_party": ["customer","kind","credit_authorized","credit_limit","valid_until","reason"],
     }
     allowed["property"] += ["invoice_series","payment_series","invoice_print_format","receipt_print_format"]
+    allowed["property"] += ["advance_policy","guarantee_policy"]
     allowed["rate"].append("included_services")
     allowed["payment_method"]+=list(treasury.METHOD_FIELDS)
     allowed["expense_category"]=["label","account","max_amount","active"]
