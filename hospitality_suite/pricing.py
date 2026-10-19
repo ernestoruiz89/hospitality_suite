@@ -1,6 +1,7 @@
 """Pure decimal pricing kernel; persisted snapshots preserve accepted calculations."""
 from datetime import timedelta, UTC
 from decimal import Decimal, ROUND_HALF_UP, ROUND_CEILING
+from hospitality_suite.i18n import text as _
 
 
 def decimal(value):
@@ -25,16 +26,16 @@ def money(value, precision=None, currency=None):
 
 def calculate(rate, start, end, people=1, extra_beds=0, precision=2):
     if end.astimezone(UTC) <= start.astimezone(UTC):
-        raise ValueError("El fin debe ser posterior al inicio")
+        raise ValueError(_("El fin debe ser posterior al inicio"))
     if people < 1 or extra_beds < 0:
-        raise ValueError("Ocupación inválida")
+        raise ValueError(_("Ocupación inválida"))
     details = []
     extra_people = max(0, int(people) - int(rate.get("included_people") or 2))
     extras = decimal(rate.get("additional_person_rate")) * extra_people + decimal(rate.get("extra_bed_rate")) * extra_beds
     if rate["mode"] == "Hotel":
         units = max(1, (end.date() - start.date()).days)
         subtotal = (decimal(rate["amount"]) + extras) * units
-        details.append(f"{units} noche(s) × {decimal(rate['amount']) + extras}")
+        details.append(_("{0} noche(s) × {1}",[units,decimal(rate['amount']) + extras]))
     else:
         elapsed = decimal((end.astimezone(UTC) - start.astimezone(UTC)).total_seconds()) / 60
         block = decimal(rate.get("block_hours") or 3) * 60
@@ -44,7 +45,7 @@ def calculate(rate, start, end, people=1, extra_beds=0, precision=2):
         extra_amount = extra_units * rounding / 60 * decimal(rate.get("extra_hour_rate"))
         units = 1
         subtotal = decimal(rate["amount"]) + extras + extra_amount
-        details.append(f"Bloque {block / 60} h: {rate['amount']}; {extra_units} fracción(es) de {rounding} min: {extra_amount}; personas/camas: {extras}")
+        details.append(_("Bloque {0} h: {1}; {2} fracción(es) de {3} min: {4}; personas/camas: {5}",[block/60,rate['amount'],extra_units,rounding,extra_amount,extras]))
     return dict(currency=rate["currency"], amount=str(money(subtotal, precision)), units=units,
                 explanation=details, rules=dict(rate), start=start.isoformat(), end=end.isoformat(), precision=precision)
 
@@ -61,7 +62,7 @@ def quote(prop, category, starts_at, ends_at, people=1, rate_name=None, customer
         rates = [r for r in rates if r.name == rate_name]
     selected_mode=mode or (prop.mode if prop.mode!="Mixed" else "Hotel")
     if prop.mode!="Mixed" and selected_mode!=prop.mode:
-        frappe.throw("El establecimiento no permite esa modalidad")
+        frappe.throw(frappe._("El establecimiento no permite esa modalidad"))
     rates=[r for r in rates if r.mode==selected_mode and (not r.customer or r.customer==customer)]
 
     def choose(day):
@@ -77,9 +78,9 @@ def quote(prop, category, starts_at, ends_at, people=1, rate_name=None, customer
             matches=[r for r in matches if in_window(r)]
         matches.sort(key=lambda r:(-r.priority,-bool(r.customer),r.name))
         if not matches:
-            frappe.throw("No existe una tarifa aplicable a la fecha y al pagador")
+            frappe.throw(frappe._("No existe una tarifa aplicable a la fecha y al pagador"))
         if len(matches)>1 and (matches[0].priority,bool(matches[0].customer))==(matches[1].priority,bool(matches[1].customer)):
-            frappe.throw("Hay tarifas con la misma prioridad; defina una prioridad inequívoca")
+            frappe.throw(frappe._("Hay tarifas con la misma prioridad; defina una prioridad inequívoca"))
         return matches[0]
     precision = currency_precision(choose(start.date()).currency)
     if selected_mode=="Motel":
@@ -93,15 +94,16 @@ def quote(prop, category, starts_at, ends_at, people=1, rate_name=None, customer
             nightly.append(dict(date=str(day),amount=str(money(price,int(precision))),rules=dict(rate)))
         currencies={r["rules"]["currency"] for r in nightly}
         if len(currencies)!=1:
-            frappe.throw("Las tarifas por noche deben usar una sola moneda")
+            frappe.throw(frappe._("Las tarifas por noche deben usar una sola moneda"))
         result=dict(currency=nightly[0]["rules"]["currency"],amount=str(money(sum(decimal(r["amount"]) for r in nightly),int(precision))),
                     units=len(nightly),explanation=[f"{r['date']}: {r['amount']} ({r['rules']['title']})" for r in nightly],
                     nightly=nightly,rules=nightly[0]["rules"],start=start.isoformat(),end=end.isoformat(),precision=int(precision))
     result["people"]=int(people)
     result["extra_beds"]=int(extra_beds)
     result["included_services"]=included_services(result)
+    result["base_explanation"]=list(result["explanation"])
     for row in result["included_services"]:
-        result["explanation"].append(f"Incluido: {row['item']} × {row['quantity']}")
+        result["explanation"].append(_("Incluido: {0} × {1}",[frappe.db.get_value("Item",row['item'],"item_name") or row['item'],row['quantity']]))
     return result
 
 

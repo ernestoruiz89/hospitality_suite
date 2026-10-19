@@ -26,7 +26,7 @@ VALUE_LABELS.update(Service="Servicio",Lodging="Alojamiento",Difference="Diferen
 
 
 def hs_label(value):
-    return VALUE_LABELS.get(value,value or "—")
+    return frappe._(VALUE_LABELS.get(value,value or "—"))
 
 
 def hs_money(value,currency):

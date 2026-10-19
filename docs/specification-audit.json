@@ -72,12 +72,19 @@
       "status": "I",
       "implementation": [
         "hospitality_suite/public/js/hospitality.js",
-        "hospitality_suite/public/js/hospitality_workflows.js"
+        "hospitality_suite/public/js/hospitality_reporting.js",
+        "hospitality_suite/i18n.py",
+        "hospitality_suite/translation_messages.py",
+        "hospitality_suite/templates/print/cleaning.html"
       ],
       "evidence": [
-        "docs/evidence/54-produccion-legible.png"
+        "docs/evidence/localization-extraction.json",
+        "docs/evidence/localization-wire-invariants.json",
+        "docs/evidence/localization-native-tests.xml",
+        "docs/evidence/localization-js-tests.log",
+        "hospitality_suite/tests/test_localization.py"
       ],
-      "remaining": "La interfaz española funciona y los diálogos usan traducción nativa; contrastar todos los literales de Pages y mensajes antes de acreditar preparación completa para traducciones."
+      "remaining": "Preparación ampliada y extracción nativa de mensajes acreditadas; permanece I hasta revisar cada literal dinámico de Pages y mensajes secundarios. No se entrega un paquete completo de otro idioma."
     },
     {
       "id": "S01-05",

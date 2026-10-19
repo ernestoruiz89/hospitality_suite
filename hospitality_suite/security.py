@@ -74,14 +74,14 @@ def validate_file(doc, method=None):
         if target.hs_property:
             from hospitality_suite.equipment import asset_permission
             if not asset_permission(target) or not doc.is_private:
-                frappe.throw("El archivo del activo debe ser privado y accesible por el rol y establecimiento",frappe.PermissionError)
+                frappe.throw(frappe._("El archivo del activo debe ser privado y accesible por el rol y establecimiento"),frappe.PermissionError)
             target.check_permission("write")
     if doc.attached_to_doctype in ("Customer","Supplier","Contact","Address") and set(frappe.get_roles()).intersection(ROLES):
         target=frappe.get_doc(doc.attached_to_doctype,doc.attached_to_name)
         if not party_permission(target):
-            frappe.throw("El archivo no pertenece a una persona o proveedor autorizado",frappe.PermissionError)
+            frappe.throw(frappe._("El archivo no pertenece a una persona o proveedor autorizado"),frappe.PermissionError)
         if not doc.is_private:
-            frappe.throw("Los archivos de personas y proveedores de alojamiento deben ser privados")
+            frappe.throw(frappe._("Los archivos de personas y proveedores de alojamiento deben ser privados"))
         target.check_permission("write")
     if doc.attached_to_doctype and (doc.attached_to_doctype.startswith("HS ") or doc.attached_to_doctype in STANDARD_SCOPED):
         target=frappe.get_doc(doc.attached_to_doctype,doc.attached_to_name)
@@ -101,7 +101,7 @@ def private_evidence(url,target):
         return None
     files=frappe.get_all("File",filters={"file_url":url,"is_private":1,"attached_to_doctype":target.doctype,"attached_to_name":target.name},pluck="name")
     if not files or not url.startswith("/private/files/"):
-        frappe.throw("Adjunte una evidencia privada a este documento")
+        frappe.throw(frappe._("Adjunte una evidencia privada a este documento"))
     frappe.get_doc("File",files[0]).check_permission("read")
     return url
 
@@ -214,46 +214,46 @@ for _standard in STANDARD_SCOPED:
 def validate_standard(doc, method=None):
     original=doc.get_doc_before_save()
     if original and original.get("hs_property") and not doc.get("hs_property") and not doc.get("hs_stay"):
-        frappe.throw("No puede quitar el origen de un documento vinculado a alojamiento")
+        frappe.throw(frappe._("No puede quitar el origen de un documento vinculado a alojamiento"))
     if not doc.get("hs_property") and not doc.get("hs_stay") and not doc.get("hs_booking") and not is_system() and set(frappe.get_roles()).intersection(ROLES):
         properties=frappe.get_all("HS Property",filters={"name":["in",allowed_properties()],"company":doc.company},pluck="name")
         if len(properties)==1:
             doc.hs_property=properties[0]
         else:
-            frappe.throw("Seleccione un establecimiento autorizado para este documento")
+            frappe.throw(frappe._("Seleccione un establecimiento autorizado para este documento"))
     if not doc.get("hs_stay") and not doc.get("hs_property") and not doc.get("hs_booking"):
         return
     prop_name = doc.get("hs_property")
     if doc.get("hs_stay"):
         stay = frappe.get_doc("HS Stay", doc.hs_stay)
         if prop_name and prop_name != stay.property:
-            frappe.throw("La estancia y el establecimiento no coinciden")
+            frappe.throw(frappe._("La estancia y el establecimiento no coinciden"))
         prop_name = stay.property
     if doc.get("hs_booking"):
         booking=document("HS Booking",doc.hs_booking)
         if prop_name and prop_name!=booking.property:
-            frappe.throw("La reserva y el establecimiento no coinciden")
+            frappe.throw(frappe._("La reserva y el establecimiento no coinciden"))
         prop_name=booking.property
         party=doc.get("customer") or doc.get("party")
         payers=[booking.customer]+frappe.get_all("HS Folio",filters={"booking":booking.name},pluck="customer")
         if party and party not in payers:
-            frappe.throw("El pagador no coincide con la reserva o sus cuentas")
+            frappe.throw(frappe._("El pagador no coincide con la reserva o sus cuentas"))
     prop = require(prop_name)
     if doc.company != prop.company:
-        frappe.throw("El documento contable pertenece a otra compañía")
+        frappe.throw(frappe._("El documento contable pertenece a otra compañía"))
     if doc.doctype in ("Purchase Order","Purchase Receipt","Purchase Invoice") and doc.get("supplier"):
         if not frappe.db.exists("HS Supplier",{"property":prop.name,"supplier":doc.supplier,"active":1}):
-            frappe.throw("El proveedor no está habilitado en este establecimiento")
+            frappe.throw(frappe._("El proveedor no está habilitado en este establecimiento"))
     if not is_system():
         owned=set(frappe.get_all("Warehouse",filters={"hs_property":prop.name},pluck="name"))|{prop.warehouse,prop.laundry_warehouse}
         for row in [doc]+list(doc.get("items") or []):
             for field in ("warehouse","s_warehouse","t_warehouse","set_warehouse","set_from_warehouse"):
                 if row.get(field) and row.get(field) not in owned:
-                    frappe.throw("El almacén no está asignado a este establecimiento",frappe.PermissionError)
+                    frappe.throw(frappe._("El almacén no está asignado a este establecimiento"),frappe.PermissionError)
     doc.hs_property = prop.name
     old=doc.get_doc_before_save()
     if old and old.get("hs_property") and (old.hs_property!=doc.hs_property or old.get("hs_stay")!=doc.get("hs_stay")):
-        frappe.throw("No puede quitar ni cambiar el origen de un documento vinculado a alojamiento")
+        frappe.throw(frappe._("No puede quitar ni cambiar el origen de un documento vinculado a alojamiento"))
     if not getattr(frappe.local, "hs_operation", False):
         require(prop_name,"approve" if doc.doctype=="Stock Reconciliation" else "inventory" if doc.doctype in ("Stock Entry","Purchase Order","Purchase Receipt","Purchase Invoice") else "finance")
     if doc.get("hs_folio"):
@@ -262,53 +262,53 @@ def validate_standard(doc, method=None):
             doc.hs_booking=folio.booking
         belongs=folio.stay==doc.get("hs_stay") if folio.stay else (folio.booking==doc.get("hs_booking") or (doc.get("hs_stay") and folio.booking==frappe.db.get_value("HS Stay",doc.hs_stay,"booking")))
         if folio.property != prop.name or not belongs:
-            frappe.throw("Cuenta y estancia incompatibles")
+            frappe.throw(frappe._("Cuenta y estancia incompatibles"))
         party = doc.get("customer") or doc.get("party")
         if party and party != folio.customer:
-            frappe.throw("El cliente del documento no es el pagador de la cuenta")
+            frappe.throw(frappe._("El cliente del documento no es el pagador de la cuenta"))
     if doc.get("hs_shift"):
         shift = document("HS Shift", doc.hs_shift)
         reconciles=reference_reconciliation(doc,original)
         if shift.property != prop.name or (shift.status != "Open" and not reconciles):
-            frappe.throw("No puede registrar movimientos en un turno cerrado")
+            frappe.throw(frappe._("No puede registrar movimientos en un turno cerrado"))
     if doc.doctype == "Sales Invoice":
         if doc.discount_amount or doc.additional_discount_percentage:
-            frappe.throw("Registre los descuentos y cortesías mediante un ajuste autorizado de la cuenta")
+            frappe.throw(frappe._("Registre los descuentos y cortesías mediante un ajuste autorizado de la cuenta"))
         used_sources=set()
         for row in doc.items:
             if row.get("hs_charge"):
                 charge = document("HS Charge", row.hs_charge)
                 folio=document("HS Folio",charge.folio)
                 if charge.property!=prop.name or (doc.get("hs_stay") and charge.stay!=doc.hs_stay) or charge.folio!=doc.get("hs_folio") or folio.customer!=doc.customer:
-                    frappe.throw("La línea de factura no corresponde a esta cuenta")
+                    frappe.throw(frappe._("La línea de factura no corresponde a esta cuenta"))
                 if doc.update_stock:
-                    frappe.throw("El inventario de cargos de estancia se descuenta al entregar; no active actualizar stock")
+                    frappe.throw(frappe._("El inventario de cargos de estancia se descuenta al entregar; no active actualizar stock"))
                 from hospitality_suite.pricing import decimal,money
                 sources=frappe.parse_json(row.get("hs_charge_sources") or "[]") or [charge.name]
                 if not isinstance(sources,list) or charge.name not in sources or len(sources)!=len(set(sources)):
-                    frappe.throw("Referencias de cargos inválidas")
+                    frappe.throw(frappe._("Referencias de cargos inválidas"))
                 linked=[document("HS Charge",name) for name in sources]
                 if charge.applies_to_charge or any(c.folio!=charge.folio or c.currency!=doc.currency or c.item!=charge.item or (c.name!=charge.name and c.applies_to_charge!=charge.name) for c in linked):
-                    frappe.throw("Los ajustes no pertenecen al cargo de esta línea")
+                    frappe.throw(frappe._("Los ajustes no pertenecen al cargo de esta línea"))
                 if any(c.status not in ("Pending","Invoiced") for c in linked):
-                    frappe.throw("No puede facturar un cargo revertido")
+                    frappe.throw(frappe._("No puede facturar un cargo revertido"))
                 if any(c.status=="Invoiced" and c.sales_invoice!=doc.name for c in linked):
-                    frappe.throw("Un cargo de esta línea ya está facturado en otro documento")
+                    frappe.throw(frappe._("Un cargo de esta línea ya está facturado en otro documento"))
                 from hospitality_suite.service import current_all
                 adjustments=set(current_all("HS Charge",filters={"applies_to_charge":charge.name,"status":["!=","Reversed"]},pluck="name"))
                 if set(sources)!={charge.name}|adjustments or used_sources.intersection(sources):
-                    frappe.throw("Incluya el cargo y todos sus ajustes una sola vez en la misma línea")
+                    frappe.throw(frappe._("Incluya el cargo y todos sus ajustes una sola vez en la misma línea"))
                 used_sources.update(sources)
                 total=sum(decimal(c.amount) for c in linked)
                 if total!=money(total,currency=doc.currency):
-                    frappe.throw("La precisión monetaria cambió respecto al cargo aceptado; revise la configuración antes de facturar")
+                    frappe.throw(frappe._("La precisión monetaria cambió respecto al cargo aceptado; revise la configuración antes de facturar"))
                 expected_rate=total/decimal(charge.quantity)
                 if decimal(row.qty)!=decimal(charge.quantity) or money(row.rate,currency=doc.currency)!=money(expected_rate,currency=doc.currency):
-                    frappe.throw("La cantidad y tarifa deben coincidir con el cargo; use un ajuste autorizado")
+                    frappe.throw(frappe._("La cantidad y tarifa deben coincidir con el cargo; use un ajuste autorizado"))
             elif doc.get("hs_stay") and not doc.is_return:
                 pending=frappe.get_all("HS Charge",filters={"stay":doc.hs_stay,"item":row.item_code,"status":"Pending"},pluck="name")
                 if pending:
-                    frappe.throw("Existen cargos pendientes de este artículo. Seleccione su cargo de origen para evitar facturarlo dos veces")
+                    frappe.throw(frappe._("Existen cargos pendientes de este artículo. Seleccione su cargo de origen para evitar facturarlo dos veces"))
 
 
 def guard_cancel(doc,method=None):
@@ -316,12 +316,12 @@ def guard_cancel(doc,method=None):
     if prop_name:
         require(prop_name,"approve")
         if not doc.get("hs_correction_reason"):
-            frappe.throw("Indique el motivo de corrección antes de cancelar un documento de alojamiento")
+            frappe.throw(frappe._("Indique el motivo de corrección antes de cancelar un documento de alojamiento"))
         field={"Payment Entry":"payment_entry","Journal Entry":"journal_entry"}.get(doc.doctype)
         if field:
             originals=frappe.get_all("HS Payment",filters={field:doc.name,"status":"Posted"},pluck="name")
             if originals and frappe.db.exists("HS Payment",{"source_payment":["in",originals],"status":"Posted"}):
-                frappe.throw("Revierta primero las aplicaciones, devoluciones o liquidaciones dependientes de este movimiento")
+                frappe.throw(frappe._("Revierta primero las aplicaciones, devoluciones o liquidaciones dependientes de este movimiento"))
 
 
 def reference_reconciliation(doc,original):
@@ -373,7 +373,7 @@ def guard_report(report_name,filters):
         return
     filters=frappe.parse_json(filters) if isinstance(filters,str) else filters or {}
     if report_name!="General Ledger" or not filters.get("voucher_no"):
-        frappe.throw("Use los reportes de Gerencia o abra el mayor de un documento autorizado",frappe.PermissionError)
+        frappe.throw(frappe._("Use los reportes de Gerencia o abra el mayor de un documento autorizado"),frappe.PermissionError)
     matches=[]
     for dt in STANDARD_SCOPED:
         if not frappe.db.exists("DocType",dt):
@@ -382,7 +382,7 @@ def guard_report(report_name,filters):
         if row and row.hs_property in allowed_properties() and row.company==filters.get("company"):
             matches.append(row)
     if len(matches)!=1:
-        frappe.throw("El documento del mayor no pertenece a un establecimiento autorizado",frappe.PermissionError)
+        frappe.throw(frappe._("El documento del mayor no pertenece a un establecimiento autorizado"),frappe.PermissionError)
 
 
 @frappe.whitelist()
@@ -491,7 +491,7 @@ for _party in ("Customer","Supplier","Contact","Address"):
 @frappe.whitelist()
 def scoped_account_balance(*args,**kwargs):
     if not is_system() and set(frappe.get_roles()).intersection(ROLES):
-        frappe.throw("Use los saldos y reportes del establecimiento; el saldo agregado de una cuenta puede incluir otros establecimientos",frappe.PermissionError)
+        frappe.throw(frappe._("Use los saldos y reportes del establecimiento; el saldo agregado de una cuenta puede incluir otros establecimientos"),frappe.PermissionError)
     from erpnext.accounts.utils import get_balance_on
     return get_balance_on(*args,**kwargs)
 
@@ -500,6 +500,6 @@ def scoped_account_balance(*args,**kwargs):
 def scoped_stock_balance(item_code,warehouse=None,**kwargs):
     if not is_system() and set(frappe.get_roles()).intersection(ROLES):
         if not warehouse or warehouse not in inventory_warehouses():
-            frappe.throw("Seleccione un almacén de su establecimiento",frappe.PermissionError)
+            frappe.throw(frappe._("Seleccione un almacén de su establecimiento"),frappe.PermissionError)
     from erpnext.stock.utils import get_stock_balance
     return get_stock_balance(item_code,warehouse,**kwargs)

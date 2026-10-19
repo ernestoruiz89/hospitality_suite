@@ -10,15 +10,15 @@ def validate_equipment(doc):
     if doc.asset:
         asset=locked_doc("Asset",doc.asset)
         if asset.company!=doc.company or asset.hs_property!=doc.property or asset.docstatus==2 or asset.status in ("Scrapped","Sold"):
-            frappe.throw("Seleccione un activo vigente asignado al mismo establecimiento y compañía")
+            frappe.throw(frappe._("Seleccione un activo vigente asignado al mismo establecimiento y compañía"))
         duplicates=current_all("HS Equipment",filters={"asset":asset.name,"name":["!=",doc.name]},pluck="name")
         if duplicates:
-            frappe.throw("El activo ya tiene un equipo operativo; conserve su historial")
+            frappe.throw(frappe._("El activo ya tiene un equipo operativo; conserve su historial"))
     old=doc.get_doc_before_save()
     if old and old.asset!=doc.asset and current_all("HS Maintenance Order",filters={"equipment":doc.name},pluck="name"):
-        frappe.throw("Conserve el activo del equipo que ya tiene mantenimiento registrado")
+        frappe.throw(frappe._("Conserve el activo del equipo que ya tiene mantenimiento registrado"))
     if old and (old.room!=doc.room or old.active!=doc.active) and current_all("HS Maintenance Order",filters={"equipment":doc.name,"status":["!=","Completed"]},pluck="name"):
-        frappe.throw("Complete las órdenes pendientes antes de mover o deshabilitar el equipo")
+        frappe.throw(frappe._("Complete las órdenes pendientes antes de mover o deshabilitar el equipo"))
 
 
 def asset_permission(doc,user=None,permission_type=None,**kwargs):
@@ -49,11 +49,11 @@ def validate_asset(doc,method=None):
         frappe.db.sql("SELECT name FROM `tabHS Property` WHERE name=%s FOR UPDATE",(name,))
     linked=frappe.qb.get_query("HS Equipment",filters={"asset":doc.name},fields=["name"],ignore_permissions=True,for_update=True).run()
     if old and old.hs_property!=doc.hs_property and linked:
-        frappe.throw("El activo está vinculado a un equipo; conserve su establecimiento")
+        frappe.throw(frappe._("El activo está vinculado a un equipo; conserve su establecimiento"))
     if not doc.hs_property:
         if not is_system() and set(frappe.get_roles()).intersection(ROLES):
-            frappe.throw("Asigne el activo a un establecimiento autorizado",frappe.PermissionError)
+            frappe.throw(frappe._("Asigne el activo a un establecimiento autorizado"),frappe.PermissionError)
         return
     prop=require(doc.hs_property,"inventory")
     if doc.company!=prop.company:
-        frappe.throw("La compañía del activo no coincide con el establecimiento")
+        frappe.throw(frappe._("La compañía del activo no coincide con el establecimiento"))

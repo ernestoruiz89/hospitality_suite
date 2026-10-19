@@ -20,7 +20,7 @@ FIELDS={"HS Guest":("identity_type","identity_number","identity_file"),"HS Maint
 def policy(prop):
     days=prop.retention_days or 0
     if not days:
-        frappe.throw("La política de retención está desactivada; configure los días antes de revisar")
+        frappe.throw(frappe._("La política de retención está desactivada; configure los días antes de revisar"))
     return days,to_site(str(now_local(prop).date()-timedelta(days=days))+" 00:00:00",prop)
 
 
@@ -52,11 +52,11 @@ def files_for(doc):
 def validate_local_file(doc):
     root=Path(frappe.get_site_path("private","files")).resolve()
     if not doc.is_private or not doc.file_url.startswith("/private/files/") or not doc.content_hash or Path(doc.get_full_path()).resolve().parent!=root:
-        frappe.throw("Revise el adjunto: la retención solo procesa archivos privados locales de este sitio")
+        frappe.throw(frappe._("Revise el adjunto: la retención solo procesa archivos privados locales de este sitio"))
     if doc.thumbnail_url:
         thumb=Path(doc.thumbnail_url)
         if str(thumb.parent) not in ("/files","/private/files") or not thumb.stem.startswith(Path(doc.file_url).stem+"_"):
-            frappe.throw("Revise la miniatura del archivo antes de eliminarla por retención")
+            frappe.throw(frappe._("Revise la miniatura del archivo antes de eliminarla por retención"))
 
 
 def file_snapshot(file):
@@ -69,19 +69,19 @@ def plan(prop,targets):
     require(prop.name,"approve")
     days,cutoff=policy(prop)
     if not isinstance(targets,list) or not 1<=len(targets)<=50:
-        frappe.throw("Seleccione de uno a cincuenta documentos para revisar")
+        frappe.throw(frappe._("Seleccione de uno a cincuenta documentos para revisar"))
     identities=[(r.get("doctype"),r.get("name")) for r in targets]
     if len(set(identities))!=len(identities) or any(dt not in FIELDS for dt,name in identities):
-        frappe.throw("Revise los tipos de documento y evite repetirlos")
+        frappe.throw(frappe._("Revise los tipos de documento y evite repetirlos"))
     selected=[]
     for target in targets:
         doc=document(target["doctype"],target["name"],"approve")
         if doc.property!=prop.name:
-            frappe.throw("El documento no pertenece al establecimiento de esta revisión",frappe.PermissionError)
+            frappe.throw(frappe._("El documento no pertenece al establecimiento de esta revisión"),frappe.PermissionError)
         assert_version(doc,target.get("modified"))
         files=files_for(doc)
         if not eligible(prop,doc,cutoff,files):
-            frappe.throw("El documento cambió, tiene actividad vigente o todavía no cumple la política de retención")
+            frappe.throw(frappe._("El documento cambió, tiene actividad vigente o todavía no cumple la política de retención"))
         selected.append(dict(doctype=doc.doctype,name=doc.name,modified=str(doc.modified),fields=[f for f in FIELDS[doc.doctype] if doc.get(f)],files=[file_snapshot(f) for f in files]))
     return dict(retention_days=days,cutoff=str(cutoff),targets=sorted(selected,key=lambda r:(r["doctype"],r["name"])))
 
@@ -145,7 +145,7 @@ def queue(run):
 def retire(prop,data):
     value=plan(prop,data.get("targets"))
     if not data.get("reason") or data.get("acceptance")!=acceptance(value) or data.get("confirm") is not True:
-        frappe.throw("Revise los documentos, confirme la eliminación de datos sensibles e indique el motivo")
+        frappe.throw(frappe._("Revise los documentos, confirme la eliminación de datos sensibles e indique el motivo"))
     summary=[dict(doctype=r["doctype"],name=r["name"],fields=r["fields"],file_count=len(r["files"])) for r in value["targets"]]
     run=insert("HS Retention Run",prop,status="Pending",approved_by=frappe.session.user,approved_at=frappe.utils.now_datetime(),
                retention_days=value["retention_days"],cutoff=value["cutoff"],reason=data["reason"],plan=canonical(summary),attempts=0)
@@ -179,7 +179,7 @@ def retire(prop,data):
 def purge_run(run_name):
     """Private worker entry; absent/rolled-back runs cannot affect the filesystem."""
     if not is_system():
-        frappe.throw("La eliminación física se ejecuta en el worker del sistema",frappe.PermissionError)
+        frappe.throw(frappe._("La eliminación física se ejecuta en el worker del sistema"),frappe.PermissionError)
     prop_name=frappe.db.get_value("HS Retention Run",run_name,"property")
     if not prop_name:
         return dict(status="Missing")
@@ -224,7 +224,7 @@ def retry(prop,data):
     run=document("HS Retention Run",data["run"],"approve")
     assert_version(run,data.get("modified"))
     if run.property!=prop.name or run.status!="Failed" or not data.get("reason"):
-        frappe.throw("Seleccione una ejecución fallida e indique la corrección realizada")
+        frappe.throw(frappe._("Seleccione una ejecución fallida e indique la corrección realizada"))
     run.attempts,run.status,run.last_error=0,"Pending",None
     run.save()
     audit(prop,"Retry file disposal",run,data["reason"])

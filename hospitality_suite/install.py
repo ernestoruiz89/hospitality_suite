@@ -51,16 +51,16 @@ def validate_financial_configuration(prop):
     required = ["cost_center", "warehouse", "receivable_account", "guarantee_account", "lodging_item"]
     missing = [f for f in required if not prop.get(f)]
     if missing or not prop.tax_policy_confirmed:
-        frappe.throw("Complete la configuración contable y confirme la política tributaria antes de operar: " + ", ".join(missing))
+        frappe.throw(frappe._("Complete la configuración contable y confirme la política tributaria antes de operar: ") + ", ".join(missing))
     for field in ["cost_center", "warehouse", "receivable_account", "guarantee_account", "tax_template"]:
         value = prop.get(field)
         if value:
             doc = frappe.get_doc(prop.meta.get_field(field).options, value)
             if doc.company != prop.company or doc.get("is_group"):
-                frappe.throw("Configuración contable de otra compañía o cuenta agrupadora: " + field)
+                frappe.throw(frappe._("Configuración contable de otra compañía o cuenta agrupadora: ") + field)
     rec = frappe.get_doc("Account", prop.receivable_account)
     guarantee = frappe.get_doc("Account", prop.guarantee_account)
     if rec.account_type != "Receivable" or guarantee.root_type != "Liability":
-        frappe.throw("Configure una cuenta por cobrar y un pasivo para garantías")
+        frappe.throw(frappe._("Configure una cuenta por cobrar y un pasivo para garantías"))
     if rec.account_currency != prop.currency or guarantee.account_currency != prop.currency:
-        frappe.throw("Las cuentas de cliente y garantías deben usar la moneda del establecimiento")
+        frappe.throw(frappe._("Las cuentas de cliente y garantías deben usar la moneda del establecimiento"))

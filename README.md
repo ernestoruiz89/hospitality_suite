@@ -74,14 +74,14 @@ bench --site hotel.localhost set-config allow_tests true
 bench --site hotel.localhost run-tests --app hospitality_suite
 ```
 
-`before_tests` carga la demostración explícita para las pruebas; cada caso revierte sus movimientos. No ejecutar esta batería en producción. Última batería conjunta: **127 aprobadas** en el sitio adicional limpio, 114 de integración y 13 puras, además de once de Desk (dos del catálogo) y dos del portal. Los dos casos de concurrencia usan conexiones y commits reales y se ejecutan aparte:
+`before_tests` carga la demostración explícita para las pruebas; cada caso revierte sus movimientos. No ejecutar esta batería en producción. Última batería conjunta: **129 aprobadas** en hospitality-clean.localhost, 116 de integración y 13 puras, además de trece de Desk (dos del catálogo y dos de presentación/traducción) y dos del portal. La demostración principal conserva operaciones UX y no representa el estado inicial esperado por la batería completa. Los dos casos de concurrencia usan conexiones y commits reales y se ejecutan aparte:
 
 ```sh
 bench --site hospitality.localhost execute hospitality_suite.tests.concurrency.verify
 bench --site hospitality.localhost execute hospitality_suite.tests.concurrency.verify_category
 ```
 
-Las nueve pruebas de orden de respuestas, recuperación, edición numérica, acciones de grupos, horas locales, reportes y etiquetas de Pages se ejecutan con `node tools/test_desk_transport.cjs`. Las dos del catálogo se ejecutan con `node tools/test_catalog_ui.cjs` y cubren respuestas atrasadas, fallo de búsqueda, selección conservada y valores originales. Las dos del portal se ejecutan con `node tools/test_portal_ui.cjs` y cubren cotizaciones obsoletas y reintentos con la misma referencia. Puede ejecutar las trece juntas con `node --test tools/test_desk_transport.cjs tools/test_catalog_ui.cjs tools/test_portal_ui.cjs`. Los ensayos reales de sesiones, corte y respuesta perdida se describen en docs/OPERACION.md.
+Las nueve pruebas de orden de respuestas, recuperación, edición numérica, acciones de grupos, horas locales, reportes y etiquetas de Pages se ejecutan con `node tools/test_desk_transport.cjs`. Las dos del catálogo se ejecutan con `node tools/test_catalog_ui.cjs` y cubren respuestas atrasadas, fallo de búsqueda, selección conservada y valores originales. Las dos del portal se ejecutan con `node tools/test_portal_ui.cjs` y cubren cotizaciones obsoletas y reintentos con la misma referencia. Las dos de presentación/traducción verifican valores estables y nombres insertados como texto. Puede ejecutar las quince juntas con `node --test tools/test_desk_transport.cjs tools/test_catalog_ui.cjs tools/test_localization_ui.cjs tools/test_portal_ui.cjs`. Los ensayos reales de sesiones, corte y respuesta perdida se describen en docs/OPERACION.md.
 
 Los helpers de concurrencia están limitados al sitio sintético y conservan anulaciones auditadas. No son pruebas que deban ejecutarse contra clientes reales.
 

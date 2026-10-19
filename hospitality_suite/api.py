@@ -47,10 +47,10 @@ COMMANDS = {
 def payload(value):
     if isinstance(value, str):
         if len(value) > 100000:
-            frappe.throw("Solicitud demasiado grande")
+            frappe.throw(frappe._("Solicitud demasiado grande"))
         value = json.loads(value)
     if not isinstance(value, dict):
-        frappe.throw("Se requiere un objeto JSON")
+        frappe.throw(frappe._("Se requiere un objeto JSON"))
     return value
 
 
@@ -58,7 +58,7 @@ def payload(value):
 def execute(property_name, action, request_key, data=None):
     data = payload(data or {})
     if action not in COMMANDS:
-        frappe.throw("Acción desconocida")
+        frappe.throw(frappe._("Acción desconocida"))
     permission, handler = COMMANDS[action]
     body = {**data, "operation": action}
     return command(property_name, permission, request_key, body, lambda prop: handler(prop, data))
@@ -105,7 +105,7 @@ def preview(property_name, data, action="reserve"):
         request_doc,values=portal.conversion_values(prop,data)
         excluded=frappe.get_all("HS Allocation",filters={"portal_request":request_doc.name,"status":"Active"},pluck="name")
         return operations.quote_request(prop,values,exclude=excluded)
-    frappe.throw("Cotización desconocida")
+    frappe.throw(frappe._("Cotización desconocida"))
 
 
 def may(action):
@@ -186,8 +186,8 @@ def bootstrap(property_name=None):
         from hospitality_suite.printing import VALUE_LABELS
         result["summary"] = summary(prop)
         result["reports"] = list(REPORTS)
-        result["report_labels"]=LABELS
-        result["report_values"]=VALUE_LABELS
+        result["report_labels"]={key:frappe._(value) for key,value in LABELS.items()}
+        result["report_values"]={key:frappe._(value) for key,value in VALUE_LABELS.items()}
         result["closes"] = project("HS Daily Close", prop)
     if may("approve"):
         result["retention_runs"]=project("HS Retention Run",prop,["name","status","approved_by","approved_at","attempts","last_error","modified"])
@@ -232,7 +232,7 @@ def availability_search(property_name, starts_at, ends_at, category, people=1):
     from hospitality_suite.availability import check
     prop = require(property_name, "reserve")
     if int(people) < 1 or int(people) > frappe.db.get_value("HS Category", category, "capacity"):
-        frappe.throw("Cantidad de personas inválida")
+        frappe.throw(frappe._("Cantidad de personas inválida"))
     return check(prop, category, to_site(starts_at, prop), to_site(ends_at, prop))
 
 
@@ -345,7 +345,7 @@ def export_report(property_name, report_name, filters=None, file_format="xlsx"):
     from hospitality_suite.report_queries import scopes,metadata,describe_filters
     selected=scopes(property_name,payload(filters or {}).get("company"))
     if not is_system() and not set(frappe.get_roles()).intersection(["HS Administrator","HS Manager","HS Accountant"]):
-        frappe.throw("La exportación requiere gerencia o contabilidad",frappe.PermissionError)
+        frappe.throw(frappe._("La exportación requiere gerencia o contabilidad"),frappe.PermissionError)
     from hospitality_suite.report_presentation import prepare
     records,headers=prepare(report_name,report(property_name,report_name,filters),selected,payload(filters or {}).get("detail_level") or "operational")
     headers=headers or ["Sin datos"]
@@ -357,12 +357,12 @@ def export_report(property_name, report_name, filters=None, file_format="xlsx"):
     elif file_format=="pdf":
         from frappe.utils.pdf import get_pdf,is_wkhtmltopdf_valid
         if not is_wkhtmltopdf_valid():
-            frappe.throw("El generador PDF del servidor requiere wkhtmltopdf con Qt parcheado. Solicite a administración revisar la instalación.")
+            frappe.throw(frappe._("El generador PDF del servidor requiere wkhtmltopdf con Qt parcheado. Solicite a administración revisar la instalación."))
         scope_label=selected[0].property_name+" · "+selected[0].time_zone if property_name else selected[0].company+" · establecimientos autorizados"
         note=metadata(report_name)['note']+" "+describe_filters(selected,report_name,payload(filters or {}))
         content=get_pdf(pdf_html(report_name,scope_label,records,headers,note),{"orientation":"Landscape","footer-right":"[page] / [topage]","footer-font-size":"8","footer-spacing":"5"})
     else:
-        frappe.throw("Formato no permitido")
+        frappe.throw(frappe._("Formato no permitido"))
     frappe.local.response.update(filename="hospitality-report."+file_format,filecontent=content,type="binary")
 
 
@@ -386,10 +386,10 @@ def save_setup(property_name, section, data, request_key, expected_modified=None
     if "included_services" in values:
         services=values["included_services"]
         if not isinstance(services,list) or len(services)>100:
-            frappe.throw("Revise la lista de servicios incluidos")
+            frappe.throw(frappe._("Revise la lista de servicios incluidos"))
         values["included_services"]=[{key:row.get(key) for key in ("item","quantity","basis")} for row in services]
     if section not in allowed or any(k not in allowed[section] for k in values):
-        frappe.throw("Campo de configuración no admitido")
+        frappe.throw(frappe._("Campo de configuración no admitido"))
     def save(prop):
         if section == "property":
             from hospitality_suite.service import assert_version
@@ -410,7 +410,7 @@ def create_guest(property_name, data, request_key):
     values = payload(data)
     def save(prop):
         if not values.get("full_name"):
-            frappe.throw("Escriba el nombre del huésped")
+            frappe.throw(frappe._("Escriba el nombre del huésped"))
         customer = values.get("customer")
         if not customer:
             group = frappe.db.get_single_value("Selling Settings", "customer_group") or frappe.db.get_value("Customer Group", {"is_group": 0}, "name")
@@ -428,7 +428,7 @@ def create_guest(property_name, data, request_key):
             doc.contact=contact.insert(ignore_permissions=True).name
         if values.get("address_line1"):
             if not values.get("city") or not values.get("country"):
-                frappe.throw("Indique ciudad y país de la dirección")
+                frappe.throw(frappe._("Indique ciudad y país de la dirección"))
             address=frappe.get_doc(dict(doctype="Address",address_title=values["full_name"],address_type="Personal",
                                        address_line1=values["address_line1"],city=values["city"],country=values["country"],
                                        links=[dict(link_doctype="Customer",link_name=customer)]))
@@ -443,10 +443,10 @@ def create_guest(property_name, data, request_key):
 @frappe.whitelist(methods=["POST"])
 def create_property(data, request_key):
     if not is_system():
-        frappe.throw("Se requiere administración del sistema", frappe.PermissionError)
+        frappe.throw(frappe._("Se requiere administración del sistema"), frappe.PermissionError)
     values = payload(data)
     if not request_key or any(k not in ("property_name", "company", "mode", "currency", "time_zone") for k in values):
-        frappe.throw("Configuración no válida")
+        frappe.throw(frappe._("Configuración no válida"))
     from hospitality_suite.service import operation
     from frappe.utils import nowdate
     with operation():
@@ -478,7 +478,7 @@ def calendar(property_name,starts_at,ends_at):
     prop=require(property_name)
     start,end=to_site(starts_at,prop),to_site(ends_at,prop)
     if end<=start or (end-start).days>31:
-        frappe.throw("Consulte un intervalo de hasta 31 días")
+        frappe.throw(frappe._("Consulte un intervalo de hasta 31 días"))
     rows=project("HS Allocation",prop,fields=["name","room","category","starts_at","ends_at","kind","status","booking","stay","maintenance"],
                  filters={"starts_at":["<",end],"ends_at":[">",start]})
     result=[]
@@ -509,7 +509,7 @@ def calendar(property_name,starts_at,ends_at):
 def room_balances(property_name):
     prop=require(property_name)
     if not may("stay") and not may("finance"):
-        frappe.throw("No tiene acceso a saldos",frappe.PermissionError)
+        frappe.throw(frappe._("No tiene acceso a saldos"),frappe.PermissionError)
     result={}
     for stay in project("HS Stay",prop,fields=["name"],filters={"status":"Active"}):
         total=0
@@ -526,7 +526,7 @@ def room_balances(property_name):
 def inventory_status(property_name,warehouse_name=None):
     prop=require(property_name)
     if not any(may(a) for a in ("service","report","inventory","clean","maintain")):
-        frappe.throw("No tiene permiso para consultar existencias",frappe.PermissionError)
+        frappe.throw(frappe._("No tiene permiso para consultar existencias"),frappe.PermissionError)
     if not prop.warehouse:
         return dict(warehouse=None,items=[])
     target=procurement.warehouse(prop,warehouse_name)

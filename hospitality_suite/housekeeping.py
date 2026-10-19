@@ -12,10 +12,10 @@ def schedule_cleaning(prop,data):
     room=document("HS Room",data["room"],"inspect")
     kind=data.get("kind") or "Stay"
     if kind not in ("Stay","Deep","Departure") or data.get("priority","Normal") not in ("Normal","High","Urgent"):
-        frappe.throw("Tipo o prioridad de limpieza inválido")
+        frappe.throw(frappe._("Tipo o prioridad de limpieza inválido"))
     from hospitality_suite.service import current_all
     if current_all("HS Cleaning Task",filters={"room":room.name,"status":["!=","Completed"]}):
-        frappe.throw("La habitación ya tiene una tarea de limpieza pendiente")
+        frappe.throw(frappe._("La habitación ya tiene una tarea de limpieza pendiente"))
     assigned=data.get("assigned_to")
     validate_cleaner(prop,assigned)
     task=insert("HS Cleaning Task",prop,room=room.name,kind=kind,priority=data.get("priority") or "Normal",
@@ -30,7 +30,7 @@ def validate_cleaner(prop,user):
         return
     from hospitality_suite.security import allowed_properties
     if not frappe.db.get_value("User",user,"enabled") or prop.name not in allowed_properties(user) or not set(frappe.get_roles(user)).intersection({"HS Housekeeping","HS Supervisor","HS Manager","HS Administrator","System Manager"}):
-        frappe.throw("El responsable debe tener acceso y rol de limpieza en este establecimiento")
+        frappe.throw(frappe._("El responsable debe tener acceso y rol de limpieza en este establecimiento"))
 
 
 def update_cleaning(prop, data):
@@ -39,7 +39,7 @@ def update_cleaning(prop, data):
     target = data["status"]
     transitions = {"Pending": ["In Progress"], "In Progress": ["Inspection", "Completed"], "Inspection": ["Completed", "In Progress"], "Completed": []}
     if target not in transitions[task.status]:
-        frappe.throw("Transición de limpieza inválida")
+        frappe.throw(frappe._("Transición de limpieza inválida"))
     room = frappe.get_doc("HS Room", task.room)
     if task.assigned_to and task.assigned_to!=frappe.session.user:
         require(prop.name,"inspect")
@@ -52,11 +52,11 @@ def update_cleaning(prop, data):
         checklist = data.get("checklist") or {}
         required=set(frappe.parse_json(task.checklist or "{}")) or {"baño","cama","minibar","superficies"}
         if set(checklist)!=required or not all(v is True or v==1 for v in checklist.values()):
-            frappe.throw("Complete la lista de revisión antes de marcar limpia")
+            frappe.throw(frappe._("Complete la lista de revisión antes de marcar limpia"))
         task.checklist = canonical(checklist)
         if target == "Completed" and prop.inspection_required:
             if task.status != "Inspection":
-                frappe.throw("La habitación requiere inspección previa")
+                frappe.throw(frappe._("La habitación requiere inspección previa"))
             require(prop.name, "inspect")
             task.inspected_by = frappe.session.user
         task.completed_at = now_datetime()
@@ -81,7 +81,7 @@ def maintenance(prop, data):
         assert_version(doc, data.get("modified"))
         target = data.get("status") or doc.status
         if doc.status == "Completed" or target not in (doc.status,"In Progress", "Completed"):
-            frappe.throw("Transición de mantenimiento inválida")
+            frappe.throw(frappe._("Transición de mantenimiento inválida"))
         maintenance_owner(prop,doc)
         if "assigned_to" in data and data["assigned_to"]!=doc.assigned_to:
             require(prop.name,"inspect")
@@ -99,22 +99,22 @@ def maintenance(prop, data):
         from hospitality_suite.service import current_all
         equipment=document("HS Equipment",data["equipment"],"maintain") if data.get("equipment") else None
         if equipment and (not equipment.active or equipment.property!=prop.name):
-            frappe.throw("Seleccione un equipo activo del establecimiento")
+            frappe.throw(frappe._("Seleccione un equipo activo del establecimiento"))
         if equipment and equipment.room and data.get("room") and equipment.room!=data["room"]:
-            frappe.throw("La habitación no corresponde a la ubicación del equipo")
+            frappe.throw(frappe._("La habitación no corresponde a la ubicación del equipo"))
         room_name=data.get("room") or (equipment.room if equipment else None)
         room=document("HS Room",room_name,"maintain") if room_name else None
         if not room and not equipment:
-            frappe.throw("Seleccione habitación o equipo")
+            frappe.throw(frappe._("Seleccione habitación o equipo"))
         blocks=bool(data.get("blocks_room",bool(room)))
         if blocks and not room:
-            frappe.throw("Para bloquear disponibilidad seleccione una habitación")
+            frappe.throw(frappe._("Para bloquear disponibilidad seleccione una habitación"))
         if not data.get("title") or data.get("kind","Corrective") not in ("Corrective","Preventive"):
-            frappe.throw("Indique título y tipo de mantenimiento")
+            frappe.throw(frappe._("Indique título y tipo de mantenimiento"))
         validate_technician(prop,data.get("assigned_to"))
         start, end = to_site(data["starts_at"], prop), to_site(data["ends_at"], prop)
         if equipment and current_all("HS Maintenance Order",filters={"equipment":equipment.name,"status":["!=","Completed"],"starts_at":["<",end],"ends_at":[">",start]},pluck="name"):
-            frappe.throw("El equipo ya tiene una orden que coincide con ese intervalo")
+            frappe.throw(frappe._("El equipo ya tiene una orden que coincide con ese intervalo"))
         if blocks:
             availability.check(prop, room.category, start, end, room.name)
         doc = insert("HS Maintenance Order", prop, room=room.name if room else None,equipment=equipment.name if equipment else None,blocks_room=blocks, title=data["title"], starts_at=start, ends_at=end,
@@ -128,7 +128,7 @@ def maintenance(prop, data):
 
 def validate_technician(prop,user):
     if user and (not frappe.db.get_value("User",user,"enabled") or prop.name not in allowed_properties(user) or not set(frappe.get_roles(user)).intersection({"HS Maintenance","HS Supervisor","HS Manager","HS Administrator","System Manager"})):
-        frappe.throw("El responsable debe tener acceso y rol de mantenimiento en este establecimiento")
+        frappe.throw(frappe._("El responsable debe tener acceso y rol de mantenimiento en este establecimiento"))
 
 
 def maintenance_owner(prop,doc):
@@ -145,14 +145,14 @@ def maintenance_parts(prop,data):
     assert_version(doc,data.get("modified"))
     maintenance_owner(prop,doc)
     if doc.status=="Completed":
-        frappe.throw("La orden ya está cerrada")
+        frappe.throw(frappe._("La orden ya está cerrada"))
     if data.get("return_entry"):
         require(prop.name,"approve")
         if not data.get("reason"):
-            frappe.throw("Indique el motivo de devolución de repuestos")
+            frappe.throw(frappe._("Indique el motivo de devolución de repuestos"))
         parts=[r for r in doc.parts if r.stock_entry==data["return_entry"] and r.status=="Issued"]
         if not parts:
-            frappe.throw("La salida no pertenece a los repuestos pendientes de esta orden")
+            frappe.throw(frappe._("La salida no pertenece a los repuestos pendientes de esta orden"))
         entry=locked_doc("Stock Entry",data["return_entry"])
         entry.flags.ignore_permissions=True
         entry.hs_correction_reason=data["reason"]
@@ -162,14 +162,14 @@ def maintenance_parts(prop,data):
     else:
         parts=data.get("parts")
         if not isinstance(parts,list) or not 1<=len(parts)<=100:
-            frappe.throw("Seleccione los repuestos y sus cantidades")
+            frappe.throw(frappe._("Seleccione los repuestos y sus cantidades"))
         entry=frappe.new_doc("Stock Entry")
         entry.update(dict(company=prop.company,stock_entry_type="Material Issue",remarks="Mantenimiento "+doc.name,hs_stock_purpose="Maintenance"))
         for part in parts:
             item=locked_doc("Item",part["item"])
             qty=decimal(part.get("quantity"))
             if item.disabled or not item.is_stock_item or qty<=0:
-                frappe.throw("El repuesto debe ser un artículo de inventario habilitado y la cantidad positiva")
+                frappe.throw(frappe._("El repuesto debe ser un artículo de inventario habilitado y la cantidad positiva"))
             entry.append("items",dict(item_code=item.name,qty=float(qty),s_warehouse=prop.warehouse,cost_center=prop.cost_center))
         post_standard(entry,prop)
         for row in entry.items:

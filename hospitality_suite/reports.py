@@ -99,7 +99,7 @@ def summary(prop, starts_at=None, ends_at=None):
     start=to_site(starts_at,prop) if starts_at else window["starts_at"]
     end=to_site(ends_at,prop) if ends_at else window["ends_at"]
     if end<=start or (end-start).days>366:
-        frappe.throw("Consulte un período positivo de hasta un año")
+        frappe.throw(frappe._("Consulte un período positivo de hasta un año"))
     room_names=current_all("HS Room",filters={"property":prop.name,"active":1},pluck="name")
     stays={r.name:r for r in current_all("HS Stay",filters={"property":prop.name},fields=["*"])}
     allocations=current_all("HS Allocation",filters={"property":prop.name},fields=["*"])
@@ -220,4 +220,4 @@ def summary(prop, starts_at=None, ends_at=None):
                 starts_at=str(start),ends_at=str(end),mode=prop.mode,time_zone=prop.time_zone,
                 local_starts_at=local(start,prop).isoformat(),local_ends_at=local(end,prop).isoformat(),
                 close_time=window["close_time"] if not starts_at and not ends_at else None,
-                definitions="Hotel: noches comercializadas de estancias con entrada registrada, únicas por habitación y fecha; ADR=alojamiento neto facturado/noches, RevPAR=neto/noches disponibles. Motel: horas reales unidas por habitación; rotaciones/habitación=entradas/habitaciones con alguna hora comercializable; ingreso neto/hora disponible. Ingreso de líneas de facturas presentadas, distribuido al período de servicio; excluye impuestos, otros servicios, anticipos y garantías. Cortesías ocupan con ingreso cero; bloqueos restan capacidad; denominador cero=0. Producción operativa se muestra separada por moneda.")
+                definitions=frappe._("Hotel: noches comercializadas de estancias con entrada registrada, únicas por habitación y fecha; ADR=alojamiento neto facturado/noches, RevPAR=neto/noches disponibles. Motel: horas reales unidas por habitación; rotaciones/habitación=entradas/habitaciones con alguna hora comercializable; ingreso neto/hora disponible. Ingreso de líneas de facturas presentadas, distribuido al período de servicio; excluye impuestos, otros servicios, anticipos y garantías. Cortesías ocupan con ingreso cero; bloqueos restan capacidad; denominador cero=0. Producción operativa se muestra separada por moneda."))

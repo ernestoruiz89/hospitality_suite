@@ -1,0 +1,91 @@
+{
+  "site": "hospitality.localhost",
+  "synthetic": true,
+  "mutations": false,
+  "source_formats_synced": 9,
+  "files": [
+    {
+      "file": "reservation.pdf",
+      "pages": 1,
+      "format": "HS Confirmación de reserva",
+      "sha256": "eebedd67053db8a5bd14d8089a51992c2846ea21bf574d1ea2138a44d43d1b1c"
+    },
+    {
+      "file": "registration.pdf",
+      "pages": 1,
+      "format": "HS Registro de huésped",
+      "sha256": "daeef2a9b65e23550768c3746781df2e7552d238d3c541517c205e5ac6a7683d"
+    },
+    {
+      "file": "folio.pdf",
+      "pages": 1,
+      "format": "HS Cuenta de estancia",
+      "sha256": "afd610eeb4d8f09b0ab6ba2f105bd98d3f8357a10598a57bf11f40d640210bf9"
+    },
+    {
+      "file": "receipt.pdf",
+      "pages": 1,
+      "format": "HS Recibo",
+      "sha256": "aac4c3aa9c510d985766813dc51a69a95db8c8f9ffef4aa8386fca51bfee7a5f"
+    },
+    {
+      "file": "shift.pdf",
+      "pages": 1,
+      "format": "HS Arqueo",
+      "sha256": "d9e36a0222b3de419664ad23b74e2abedf4cbf2bab35fb8ecb7a79d6f1d15016"
+    },
+    {
+      "file": "cleaning.pdf",
+      "pages": 1,
+      "format": "HS Orden de limpieza",
+      "sha256": "343f938b996ce0518827c50d4249670c084622ec5a08904a663843e7c67a82cc"
+    },
+    {
+      "file": "maintenance.pdf",
+      "pages": 1,
+      "format": "HS Orden de mantenimiento",
+      "sha256": "8c91222fa263111312cb6bad1944a2cf59b5e598b3bbd59dadcd3229c99fa649"
+    },
+    {
+      "file": "daily_close.pdf",
+      "pages": 1,
+      "format": "HS Cierre diario",
+      "sha256": "a7ffbf7d1a2b418d5df08d5ab63a77992a3a29be799b40ba28ccdce9907c083e"
+    },
+    {
+      "file": "invoice.pdf",
+      "pages": 1,
+      "format": "HS Factura",
+      "sha256": "eeb634ff1e7db3c8a30ee47010a3d9858d13eca3e8860d66c60afdc7df029490"
+    },
+    {
+      "file": "production.xlsx",
+      "rows": 10,
+      "sha256": "f27455d52ad1046a825d62b0b84a8e64e839fd7a99cd4f15afbeea51a5fa7e4a"
+    },
+    {
+      "file": "production.pdf",
+      "rows": 10,
+      "pages": 1,
+      "sha256": "d246a840973e14bb11f95cbc7359d3f34a2a2bdf2880194caa506ae2e18fe38f"
+    }
+  ],
+  "visual_verification": {
+    "identical_to_previously_reviewed": [
+      "reservation.pdf",
+      "registration.pdf",
+      "folio.pdf",
+      "receipt.pdf",
+      "shift.pdf",
+      "cleaning.pdf",
+      "daily_close.pdf",
+      "invoice.pdf"
+    ],
+    "new_renderings_reviewed": [
+      "maintenance.pdf",
+      "production.pdf"
+    ],
+    "production_records": 10,
+    "production_pages": 1
+  }
+}

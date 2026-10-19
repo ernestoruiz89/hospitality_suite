@@ -8,22 +8,22 @@ from hospitality_suite.service import insert,audit
 
 def assign_user(prop,data):
     if not is_system():
-        frappe.throw("Solo administración del sistema puede conceder accesos",frappe.PermissionError)
+        frappe.throw(frappe._("Solo administración del sistema puede conceder accesos"),frappe.PermissionError)
     roles=data.get("roles") or []
     if not isinstance(roles,list) or not roles or any(r not in ROLES for r in roles):
-        frappe.throw("Seleccione roles operativos de Hospitality Suite")
+        frappe.throw(frappe._("Seleccione roles operativos de Hospitality Suite"))
     email=data.get("email") or ""
     frappe.utils.validate_email_address(email,throw=True)
     if email in ("Administrator","Guest"):
-        frappe.throw("Seleccione un usuario operativo")
+        frappe.throw(frappe._("Seleccione un usuario operativo"))
     if frappe.db.exists("User",email):
         user=frappe.get_doc("User",email)
         if not user.enabled or user.user_type!="System User":
-            frappe.throw("El usuario debe estar habilitado para Desk")
+            frappe.throw(frappe._("El usuario debe estar habilitado para Desk"))
         user.add_roles(*roles)
     else:
         if not data.get("first_name"):
-            frappe.throw("Indique el nombre del usuario")
+            frappe.throw(frappe._("Indique el nombre del usuario"))
         user=frappe.get_doc(dict(doctype="User",email=email,first_name=data["first_name"],send_welcome_email=0,
                                 user_type="System User",language="es",time_zone=prop.time_zone,
                                 roles=[dict(role=r) for r in roles])).insert()
@@ -46,8 +46,8 @@ def validate_document_settings(prop):
         value=prop.get(field)
         options=(frappe.get_meta(dt).get_field("naming_series").options or "").splitlines()
         if value and value not in options:
-            frappe.throw("Seleccione una serie existente de "+dt+"; registre nuevas series mediante Naming Series de Frappe")
+            frappe.throw(frappe._("Seleccione una serie existente de ")+dt+frappe._("; registre nuevas series mediante Naming Series de Frappe"))
     for field,dt in (("invoice_print_format","Sales Invoice"),("receipt_print_format","HS Payment")):
         value=prop.get(field)
         if value and value!="Standard" and not frappe.db.exists("Print Format",{"name":value,"doc_type":dt,"disabled":0}):
-            frappe.throw("Seleccione un formato habilitado para "+dt)
+            frappe.throw(frappe._("Seleccione un formato habilitado para ")+dt)

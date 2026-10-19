@@ -1,0 +1,23 @@
+✔ catalogue keeps human names and immutable item keys, including duplicate descriptions (3.0761ms)
+✔ outdated catalogue responses cannot overwrite results or authorize a failed search (2.5839ms)
+✔ booking descriptions use people and dates while respecting discreet mode and preserving keys (5.2858ms)
+✔ report scope changes ignore old options and keep a failed scope unqueryable (3.6747ms)
+✔ an older success cannot overwrite a newer property response (2.8597ms)
+✔ an old failure cannot clear busy or replace a newer result with an error (1.3545ms)
+✔ an invalidation during a failed mutation is refreshed once the request ends (2.0233ms)
+✔ dialog keeps numeric edits across row refreshes and leaves untouched hidden rows alone (2.3983ms)
+✔ a partly arrived group exposes its remaining numbered request and valid actions (4.1411ms)
+✔ a native business rejection keeps its server message; a lost response gets recovery guidance (1.6095ms)
+✔ property wall-clock controls preserve native single-digit hours (1.5616ms)
+✔ native operational selects translate labels and preserve values, defaults and disabled state (4.6679ms)
+✔ master-data names are literal text even when matching a translation key or containing markup (3.1215ms)
+✔ editing dates while a quote is in flight invalidates its response (2.8437ms)
+✔ an uncertain request unlocks controls and retries the same quote and key (2.5831ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 126.5565

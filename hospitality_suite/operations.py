@@ -23,20 +23,20 @@ def quote_request(prop, data, exclude=None):
         people = int(row.get("people") or 1)
         beds=int(row.get("extra_beds") or 0)
         if beds<0 or beds>(frappe.db.get_value("HS Category",row["category"],"max_extra_beds") or 0):
-            frappe.throw("Las camas extra superan la configuración de la categoría")
+            frappe.throw(frappe._("Las camas extra superan la configuración de la categoría"))
         if people > frappe.db.get_value("HS Category", row["category"], "capacity"):
-            frappe.throw("La cantidad de personas supera la capacidad de la categoría")
+            frappe.throw(frappe._("La cantidad de personas supera la capacidad de la categoría"))
         availability.check(prop, row["category"], start, end, row.get("room"), proposed=proposed,exclude=exclude)
         result = quote(prop, row["category"], start, end, people, row.get("rate"), data.get("customer"),data.get("mode"),extra_beds=beds)
         if result["currency"] != prop.currency:
-            frappe.throw("La tarifa debe estar expresada en la moneda del establecimiento")
+            frappe.throw(frappe._("La tarifa debe estar expresada en la moneda del establecimiento"))
         result.update(category=row["category"], room=row.get("room"), people=people)
         if result["rules"]["mode"]=="Hotel":
             from hospitality_suite.timing import arrival
             estimate=arrival(prop,frappe._dict(name="quotation",modified="",starts_at=start,ends_at=end),result,at=start)
             result["timing_estimate"]=estimate
             if decimal(estimate["early"]) or decimal(estimate["late"]):
-                result["explanation"].append(f"Cargos estimados por horario: entrada anticipada {estimate['early']}; salida tardía {estimate['late']}")
+                result["explanation"].append(frappe._("Cargos estimados por horario: entrada anticipada {0}; salida tardía {1}").format(estimate['early'],estimate['late']))
         results.append(result)
         proposed.append(frappe._dict(category=row["category"], room=row.get("room"), starts_at=start, ends_at=end, buffer_minutes=prop.cleaning_minutes))
     response = dict(lines=results, amount=str(money(sum(decimal(r["amount"]) for r in results))), currency=prop.currency)
@@ -50,7 +50,7 @@ def reserve(prop, data):
     availability.expire_locked(prop)
     calculation = quote_request(prop, data)
     if data.get("acceptance") != calculation["acceptance"]:
-        frappe.throw("Revise y acepte la cotización vigente antes de reservar")
+        frappe.throw(frappe._("Revise y acepte la cotización vigente antes de reservar"))
     for row, result in zip(data["rooms"], calculation["lines"]):
         row["rate"] = result["rules"]["name"]
     status = "Hold" if data.get("hold") else "Confirmed"
@@ -72,22 +72,22 @@ def update_booking(prop, data):
     doc = document("HS Booking", data["booking"], "reserve")
     assert_version(doc, data.get("modified"))
     if doc.status not in ("Hold", "Confirmed", "Draft"):
-        frappe.throw("La reserva no admite esta transición")
+        frappe.throw(frappe._("La reserva no admite esta transición"))
     target = data["status"]
     if target not in ("Confirmed", "Cancelled", "No Show"):
-        frappe.throw("Transición de reserva inválida")
+        frappe.throw(frappe._("Transición de reserva inválida"))
     if target in ("Cancelled", "No Show") and not data.get("reason"):
-        frappe.throw("Indique el motivo")
+        frappe.throw(frappe._("Indique el motivo"))
     if target == "No Show" and get_datetime(doc.starts_at) > now_datetime():
-        frappe.throw("La llegada todavía no está vencida")
+        frappe.throw(frappe._("La llegada todavía no está vencida"))
     if doc.status == "Hold" and get_datetime(doc.hold_until) <= now_datetime():
-        frappe.throw("La retención ya venció; cree una nueva reserva")
+        frappe.throw(frappe._("La retención ya venció; cree una nueva reserva"))
     if target in ("Cancelled","No Show"):
         from hospitality_suite.accounting import cancellation_fee,invoice_cancellation
         fee=cancellation_fee(prop,doc,target)
         if decimal(fee["amount"]):
             if data.get("fee_acceptance")!=fee["acceptance"]:
-                frappe.throw("Revise y acepte el cargo de cancelación o no presentación")
+                frappe.throw(frappe._("Revise y acepte el cargo de cancelación o no presentación"))
             invoice=invoice_cancellation(prop,doc,fee,data["reason"])
             doc.fee_invoice,doc.fee_amount=invoice.name,fee["amount"]
     doc.status, doc.reason = target, data.get("reason")
@@ -101,7 +101,7 @@ def update_booking(prop, data):
 def modification_values(prop,data):
     doc=document("HS Booking",data["booking"],"reserve")
     if doc.status not in ("Draft","Hold","Confirmed") or current_all("HS Stay",filters={"booking":doc.name}):
-        frappe.throw("Solo puede modificar una reserva antes de registrar la primera entrada")
+        frappe.throw(frappe._("Solo puede modificar una reserva antes de registrar la primera entrada"))
     from hospitality_suite.time import local
     values=dict(starts_at=data.get("starts_at") or local(doc.starts_at,prop).isoformat(),
                 ends_at=data.get("ends_at") or local(doc.ends_at,prop).isoformat(),customer=data.get("customer") or doc.customer,
@@ -109,7 +109,7 @@ def modification_values(prop,data):
                 rooms=data.get("rooms") or [dict(category=r.category,room=r.room,people=r.people,extra_beds=r.extra_beds) for r in doc.rooms],
                 channel=data.get("channel") or doc.channel,instructions=data.get("instructions",doc.instructions))
     if values["customer"]!=doc.customer and current_all("HS Payment",filters={"booking":doc.name,"status":"Posted"}):
-        frappe.throw("Revierta o concilie los movimientos existentes antes de cambiar el pagador")
+        frappe.throw(frappe._("Revierta o concilie los movimientos existentes antes de cambiar el pagador"))
     excluded=current_all("HS Allocation",filters={"booking":doc.name,"status":"Active"},pluck="name")
     return doc,values,excluded
 
@@ -118,10 +118,10 @@ def modify_reservation(prop,data):
     doc,values,excluded=modification_values(prop,data)
     assert_version(doc,data.get("modified"))
     if not data.get("reason"):
-        frappe.throw("Indique el motivo de modificación")
+        frappe.throw(frappe._("Indique el motivo de modificación"))
     calculation=quote_request(prop,values,exclude=excluded)
     if calculation["acceptance"]!=data.get("acceptance"):
-        frappe.throw("Revise y acepte la nueva cotización")
+        frappe.throw(frappe._("Revise y acepte la nueva cotización"))
     before=dict(starts_at=str(doc.starts_at),ends_at=str(doc.ends_at),amount=doc.amount,quote=doc.quote_snapshot)
     availability.release(booking=doc.name)
     doc.update(dict(starts_at=to_site(values["starts_at"],prop),ends_at=to_site(values["ends_at"],prop),customer=values["customer"],guest=values["guest"],
@@ -145,7 +145,7 @@ def charge(prop, stay, folio, item, amount, kind, description, snapshot=None, qu
                 applies_to=candidate.name
                 break
         if not applies_to:
-            frappe.throw("El crédito supera los cargos pendientes; emita una nota de crédito sobre la factura de origen")
+            frappe.throw(frappe._("El crédito supera los cargos pendientes; emita una nota de crédito sobre la factura de origen"))
     return insert("HS Charge", prop, stay=stay.name, folio=folio.name, item=item, quantity=quantity,
                   rate=decimal(amount) / decimal(quantity), amount=amount, currency=folio.currency,
                   business_date=prop.business_date, status="Pending", kind=kind, description=description,
@@ -157,39 +157,39 @@ def check_in(prop, data,accept_timing=False):
     booking = document("HS Booking", data["booking"], "stay")
     assert_version(booking, data.get("modified"))
     if booking.status not in ("Confirmed", "Checked In"):
-        frappe.throw("Confirme la reserva antes de registrar entrada")
+        frappe.throw(frappe._("Confirme la reserva antes de registrar entrada"))
     guest = document("HS Guest", data.get("guest") or booking.guest, "stay")
     if prop.guest_id_required and not guest.identity_number:
-        frappe.throw("La política requiere identificación del huésped principal")
+        frappe.throw(frappe._("La política requiere identificación del huésped principal"))
     allocations = current_all("HS Allocation", filters={"booking": booking.name, "kind": "Reservation", "status": "Active"}, fields=["*"])
     selected = data.get("allocation")
     alloc = next((r for r in allocations if not selected or r.name == selected), None)
     if not alloc:
-        frappe.throw("No queda una habitación pendiente de entrada en esta reserva")
+        frappe.throw(frappe._("No queda una habitación pendiente de entrada en esta reserva"))
     room_name = data.get("room") or alloc.room
     if not room_name:
-        frappe.throw("Seleccione la habitación para esta entrada")
+        frappe.throw(frappe._("Seleccione la habitación para esta entrada"))
     start = min(get_datetime(booking.starts_at), now_datetime())
     if get_datetime(booking.ends_at) <= now_datetime():
-        frappe.throw("El intervalo reservado ha terminado; modifique la reserva")
+        frappe.throw(frappe._("El intervalo reservado ha terminado; modifique la reserva"))
     availability.check(prop, alloc.category, start, booking.ends_at, room_name, exclude=[alloc.name], for_entry=True)
     accepted = json.loads(booking.quote_snapshot)
     requested = next((r for r in booking.rooms if r.name == alloc.booking_room), None)
     if not requested:
-        frappe.throw("La asignación no conserva la línea de reserva de origen")
+        frappe.throw(frappe._("La asignación no conserva la línea de reserva de origen"))
     line = accepted["lines"][requested.idx-1]
     from hospitality_suite.timing import arrival
     fees=arrival(prop,booking,line)
     timing_total=decimal(fees["early"])+decimal(fees["late"])
     if timing_total:
         if not prop.timing_item:
-            frappe.throw("Configure el artículo para cargos por horario")
+            frappe.throw(frappe._("Configure el artículo para cargos por horario"))
         if accept_timing:
             estimate=line.get("timing_estimate") or {}
             if timing_total>decimal(estimate.get("early"))+decimal(estimate.get("late")):
-                frappe.throw("Los cargos por horario cambiaron; vuelva a cotizar la entrada")
+                frappe.throw(frappe._("Los cargos por horario cambiaron; vuelva a cotizar la entrada"))
         elif data.get("timing_acceptance")!=fees["acceptance"]:
-            frappe.throw("Revise y acepte los cargos por entrada anticipada y salida tardía programada")
+            frappe.throw(frappe._("Revise y acepte los cargos por entrada anticipada y salida tardía programada"))
     stay = insert("HS Stay", prop, booking=booking.name, guest=guest.name, customer=booking.customer, room=room_name,
                   starts_at=start, ends_at=booking.ends_at, actual_check_in=now_datetime(), status="Active",
                   rate=line["rules"]["name"], currency=prop.currency, amount=line["amount"], quote_snapshot=canonical(line),
@@ -204,7 +204,7 @@ def check_in(prop, data,accept_timing=False):
     booking.status = "Checked In"
     booking.save()
     if not prop.lodging_item:
-        frappe.throw("Configure el artículo de alojamiento")
+        frappe.throw(frappe._("Configure el artículo de alojamiento"))
     charge(prop, stay, folio, prop.lodging_item, line["amount"], "Lodging", "Alojamiento", line)
     if decimal(fees["early"]):
         charge(prop,stay,folio,prop.timing_item,fees["early"],"Service","Entrada anticipada",fees)
@@ -225,7 +225,7 @@ def arrival_quote(prop,data):
     allocations=current_all("HS Allocation",filters={"booking":booking.name,"status":"Active","kind":"Reservation"},fields=["*"])
     allocation=next((a for a in allocations if not data.get("allocation") or a.name==data["allocation"]),None)
     if not allocation:
-        frappe.throw("Seleccione una habitación pendiente de entrada")
+        frappe.throw(frappe._("Seleccione una habitación pendiente de entrada"))
     row=next(r for r in booking.rooms if r.name==allocation.booking_room)
     return arrival(prop,booking,json.loads(booking.quote_snapshot)["lines"][row.idx-1])
 
@@ -233,10 +233,10 @@ def arrival_quote(prop,data):
 def extension_quote(prop, data):
     stay = document("HS Stay", data["stay"], "stay")
     if stay.status != "Active":
-        frappe.throw("La estancia ya terminó")
+        frappe.throw(frappe._("La estancia ya terminó"))
     end = to_site(data["ends_at"], prop)
     if end <= get_datetime(stay.ends_at):
-        frappe.throw("La nueva salida debe ser posterior a la actual")
+        frappe.throw(frappe._("La nueva salida debe ser posterior a la actual"))
     allocations = current_all("HS Allocation", filters={"stay": stay.name, "status": "Active"}, fields=["*"])
     current = max(allocations, key=lambda a: a.starts_at)
     availability.check(prop, current.category, current.starts_at, end, stay.room, exclude=[a.name for a in allocations])
@@ -247,7 +247,7 @@ def extension_quote(prop, data):
         calculation=quote(prop,current.category,stay.ends_at,end,original.get("people",1),customer=stay.customer,mode="Hotel",extra_beds=original.get("extra_beds",0))
         from hospitality_suite.pricing import included_services
         calculation["included_services"]=included_services(calculation,night_only=True)
-        calculation["explanation"]=[s for s in calculation["explanation"] if not s.startswith("Incluido:")]+[f"Incluido en extensión: {r['item']} × {r['quantity']}" for r in calculation["included_services"]]
+        calculation["explanation"]=calculation["base_explanation"]+[frappe._("Incluido en extensión: {0} × {1}").format(frappe.db.get_value("Item",r['item'],"item_name") or r['item'],r['quantity']) for r in calculation["included_services"]]
         calculation["difference"]=calculation["amount"]
         calculation["amount"]=str(money(decimal(stay.amount)+decimal(calculation["difference"])))
     else:
@@ -267,7 +267,7 @@ def extend(prop, data):
     assert_version(stay, data.get("modified"))
     result = extension_quote(prop, data)
     if result["acceptance"] != data.get("acceptance"):
-        frappe.throw("Revise y acepte la nueva cotización")
+        frappe.throw(frappe._("Revise y acepte la nueva cotización"))
     if result["rules"]["mode"]=="Hotel":
         from hospitality_suite.pricing import included_services
         benefits={r["item"]:decimal(r["quantity"]) for r in json.loads(stay.service_entitlements or "[]")}
@@ -291,7 +291,7 @@ def extend(prop, data):
     stay.save()
     folio = locked_doc("HS Folio", data["folio"])
     if (folio.stay!=stay.name if folio.stay else folio.booking!=stay.booking) or folio.status != "Open":
-        frappe.throw("Cuenta inválida")
+        frappe.throw(frappe._("Cuenta inválida"))
     if decimal(result["difference"]):
         charge(prop, stay, folio, prop.lodging_item, result["difference"], "Lodging", "Extensión de estancia", result)
     audit(prop, "Extend", stay, data.get("reason"), result)
@@ -310,17 +310,17 @@ def companions(prop,data):
     stay=document("HS Stay",data["stay"],"guest")
     assert_version(stay,data.get("modified"))
     if stay.status!="Active":
-        frappe.throw("Registre acompañantes durante una estancia activa")
+        frappe.throw(frappe._("Registre acompañantes durante una estancia activa"))
     guests=data.get("guests") or []
     if not isinstance(guests,list) or len(guests)!=len(set(guests)) or stay.guest in guests:
-        frappe.throw("La lista de acompañantes contiene duplicados")
+        frappe.throw(frappe._("La lista de acompañantes contiene duplicados"))
     snapshot=frappe.parse_json(stay.quote_snapshot)
     if len(guests)+1>int(snapshot.get("people") or 1):
-        frappe.throw("La lista supera la ocupación aceptada; revise primero la tarifa y capacidad de la reserva")
+        frappe.throw(frappe._("La lista supera la ocupación aceptada; revise primero la tarifa y capacidad de la reserva"))
     for name in guests:
         guest=document("HS Guest",name,"guest")
         if prop.guest_id_required and not guest.identity_number:
-            frappe.throw("Complete la identificación requerida del acompañante")
+            frappe.throw(frappe._("Complete la identificación requerida del acompañante"))
     previous=[r.guest for r in stay.guests]
     stay.set("guests",[dict(guest=stay.guest,relationship="Principal")]+[dict(guest=g,relationship="Acompañante") for g in guests])
     stay.save()
@@ -332,11 +332,11 @@ def change_room(prop, data):
     stay = document("HS Stay", data["stay"], "stay")
     assert_version(stay, data.get("modified"))
     if stay.status != "Active" or not data.get("reason"):
-        frappe.throw("Seleccione una estancia activa e indique el motivo")
+        frappe.throw(frappe._("Seleccione una estancia activa e indique el motivo"))
     room = document("HS Room", data["room"], "stay")
     calculation=room_change_quote(prop,data)
     if data.get("acceptance")!=calculation["acceptance"]:
-        frappe.throw("Revise y acepte el efecto tarifario del cambio de habitación")
+        frappe.throw(frappe._("Revise y acepte el efecto tarifario del cambio de habitación"))
     if decimal(calculation["difference"])<0:
         require(prop.name,"approve")
     now = now_datetime()
@@ -358,7 +358,7 @@ def change_room(prop, data):
     if decimal(calculation["difference"]):
         folio=document("HS Folio",data["folio"],"stay")
         if (folio.stay!=stay.name if folio.stay else folio.booking!=stay.booking) or folio.status!="Open":
-            frappe.throw("Seleccione una cuenta abierta de la estancia")
+            frappe.throw(frappe._("Seleccione una cuenta abierta de la estancia"))
         charge(prop,stay,folio,prop.lodging_item,calculation["difference"],"Lodging","Cambio de habitación y tarifa",calculation["quote"],reason=data["reason"])
     audit(prop, "Change room", stay, data["reason"], {"from": before, "to": room.name})
     return dict(stay=stay.name, room=room.name)
@@ -370,7 +370,7 @@ def room_change_quote(prop,data):
     stay=document("HS Stay",data["stay"],"stay")
     room=document("HS Room",data["room"],"stay")
     if stay.status!="Active" or room.name==stay.room or get_datetime(stay.ends_at)<=now_datetime():
-        frappe.throw("Seleccione otra habitación para una estancia activa dentro de su intervalo")
+        frappe.throw(frappe._("Seleccione otra habitación para una estancia activa dentro de su intervalo"))
     actual_now=now_datetime()
     now=actual_now.replace(second=0,microsecond=0)
     availability.check(prop,room.category,actual_now,stay.ends_at,room.name,for_entry=True)
@@ -381,22 +381,22 @@ def room_change_quote(prop,data):
     if room.category==current.category and mode==original["rules"]["mode"]:
         q=dict(original)
         difference=decimal(0)
-        explanation="Misma categoría y modalidad: se conserva el importe aceptado."
+        explanation=frappe._("Misma categoría y modalidad: se conserva el importe aceptado.")
     else:
         if original.get("people",1)>frappe.db.get_value("HS Category",room.category,"capacity") or original.get("extra_beds",0)>(frappe.db.get_value("HS Category",room.category,"max_extra_beds") or 0):
-            frappe.throw("La habitación de destino no admite esta ocupación o camas extra")
+            frappe.throw(frappe._("La habitación de destino no admite esta ocupación o camas extra"))
         q=quote(prop,room.category,now,stay.ends_at,original.get("people",1),customer=stay.customer,mode=mode,extra_beds=original.get("extra_beds",0))
         if original["rules"]["mode"]=="Hotel":
             days=original.get("nightly") or []
             unused=sum(decimal(r["amount"]) for r in days if get_datetime(r["date"]).date()>=local(now,prop).date()) if days else decimal(current.accepted_amount)
-            explanation="Se acredita la noche actual y las futuras no trasladadas a otro segmento; se cotiza la categoría y modalidad de destino."
+            explanation=frappe._("Se acredita la noche actual y las futuras no trasladadas a otro segmento; se cotiza la categoría y modalidad de destino.")
         else:
             duration=(get_datetime(current.ends_at)-get_datetime(current.starts_at)).total_seconds()
             fraction=max(0,min(1,(get_datetime(current.ends_at)-now).total_seconds()/duration)) if duration else 0
             unused=money(decimal(current.accepted_amount)*decimal(fraction))
-            explanation="Se acredita proporcionalmente el tiempo restante del segmento anterior y se cotiza el bloque de destino."
+            explanation=frappe._("Se acredita proporcionalmente el tiempo restante del segmento anterior y se cotiza el bloque de destino.")
         difference=money(decimal(q["amount"])-unused)
-    result=dict(quote=q,difference=str(difference),explanation=explanation+" Los servicios incluidos ya aceptados se conservan, sin duplicarlos por el cambio. El prorrateo se calcula por minuto iniciado; revise nuevamente si cambia el minuto de la cotización.",valid_until=str(now+timedelta(minutes=1)))
+    result=dict(quote=q,difference=str(difference),explanation=explanation+" "+frappe._("Los servicios incluidos ya aceptados se conservan, sin duplicarlos por el cambio. El prorrateo se calcula por minuto iniciado; revise nuevamente si cambia el minuto de la cotización."),valid_until=str(now+timedelta(minutes=1)))
     result["acceptance"]=hashlib.sha256(canonical(dict(stay=stay.name,modified=str(stay.modified),room=room.name,
                                                           amount=result["difference"],rate=q["rules"]["name"],mode=mode)).encode()).hexdigest()
     return result
@@ -405,7 +405,7 @@ def room_change_quote(prop,data):
 def create_folio(prop, data):
     stay = document("HS Stay", data["stay"], "stay")
     if stay.status != "Active":
-        frappe.throw("La estancia debe estar activa")
+        frappe.throw(frappe._("La estancia debe estar activa"))
     doc = insert("HS Folio", prop, stay=None if data.get("group") else stay.name,booking=stay.booking, customer=data["customer"], currency=prop.currency, label=data.get("label"), status="Open")
     audit(prop, "Create folio", doc)
     return dict(folio=doc.name)
@@ -417,9 +417,9 @@ def move_charge(prop, data):
     stay=locked_doc("HS Stay",doc.stay)
     matches=target.stay==doc.stay if target.stay else bool(target.booking and target.booking==stay.booking)
     if doc.status != "Pending" or target.status != "Open" or not matches or not data.get("reason"):
-        frappe.throw("Solo puede trasladar cargos pendientes de la misma estancia o grupo con un motivo")
+        frappe.throw(frappe._("Solo puede trasladar cargos pendientes de la misma estancia o grupo con un motivo"))
     if doc.applies_to_charge:
-        frappe.throw("Traslade el cargo principal; sus descuentos y cortesías se trasladan con él")
+        frappe.throw(frappe._("Traslade el cargo principal; sus descuentos y cortesías se trasladan con él"))
     for related in current_all("HS Charge",filters={"applies_to_charge":doc.name,"status":"Pending"},pluck="name"):
         adjustment=locked_doc("HS Charge",related)
         adjustment.folio=target.name
@@ -438,15 +438,15 @@ def adjustment(prop,data):
     source=document("HS Charge",data["charge"],"approve")
     folio=document("HS Folio",source.folio,"approve")
     if source.status!="Pending" or folio.status!="Open" or not data.get("reason"):
-        frappe.throw("Ajuste cargos pendientes con un motivo; para cargos facturados use una nota de crédito")
+        frappe.throw(frappe._("Ajuste cargos pendientes con un motivo; para cargos facturados use una nota de crédito"))
     kind=data["adjustment_type"]
     if kind not in ("Discount","Courtesy","Surcharge"):
-        frappe.throw("Tipo de ajuste inválido")
+        frappe.throw(frappe._("Tipo de ajuste inválido"))
     previous=current_all("HS Charge",filters={"applies_to_charge":source.name,"status":["!=","Reversed"]},fields=["amount"])
     available=decimal(source.amount)+sum(decimal(r.amount) for r in previous)
     amount=available if kind=="Courtesy" else money(data.get("amount"))
     if amount<=0 or (kind!="Surcharge" and amount>available):
-        frappe.throw("El descuento o cortesía supera el cargo disponible")
+        frappe.throw(frappe._("El descuento o cortesía supera el cargo disponible"))
     signed=amount if kind=="Surcharge" else -amount
     stay=locked_doc("HS Stay",source.stay)
     record=charge(prop,stay,folio,source.item,signed,source.kind,
@@ -463,13 +463,13 @@ def check_out(prop, data):
     stay = document("HS Stay", data["stay"], "stay")
     assert_version(stay, data.get("modified"))
     if stay.status != "Active":
-        frappe.throw("La estancia ya tiene salida registrada")
+        frappe.throw(frappe._("La estancia ya tiene salida registrada"))
     if prop.checkout_inspection_required and not stay.departure_inspected_by:
-        frappe.throw("La política requiere una inspección antes de la salida")
+        frappe.throw(frappe._("La política requiere una inspección antes de la salida"))
     from hospitality_suite.timing import departure
     valid=stay.departure_expires_at and get_datetime(stay.departure_expires_at)>=now_datetime()
     if not valid and decimal(departure(prop,{"stay":stay.name})["amount"])>0:
-        frappe.throw("Prepare y liquide los cargos por tiempo antes de registrar salida")
+        frappe.throw(frappe._("Prepare y liquide los cargos por tiempo antes de registrar salida"))
     folios = [r.name for r in folios_for_stay(stay)]
     for name in folios:
         invoice_folio(prop, {"folio": name})
@@ -477,21 +477,21 @@ def check_out(prop, data):
         if decimal(balance["outstanding"]) > 0:
             require(prop.name, "approve")
             if not prop.allow_credit or not data.get("credit_reason"):
-                frappe.throw("Liquiden el saldo antes de registrar salida o autoricen crédito con motivo")
+                frappe.throw(frappe._("Liquiden el saldo antes de registrar salida o autoricen crédito con motivo"))
             from frappe.utils import nowdate
             folio=locked_doc("HS Folio",name)
             grants=current_all("HS Billing Party",filters={"property":prop.name,"customer":folio.customer,"credit_authorized":1},fields=["credit_limit","valid_until"])
             if not grants or (grants[0].valid_until and str(grants[0].valid_until)<nowdate()):
-                frappe.throw("El cliente no tiene autorización de crédito vigente")
+                frappe.throw(frappe._("El cliente no tiene autorización de crédito vigente"))
             invoices=current_all("Sales Invoice",filters={"company":prop.company,"customer":folio.customer,"docstatus":1,"outstanding_amount":[">",0]},fields=["outstanding_amount"])
             if sum(decimal(r.outstanding_amount) for r in invoices)>decimal(grants[0].credit_limit):
-                frappe.throw("El saldo del cliente supera su límite de crédito autorizado")
+                frappe.throw(frappe._("El saldo del cliente supera su límite de crédito autorizado"))
     guarantee = sum(decimal(p.amount) * (-1 if p.kind in ("Guarantee Refund", "Guarantee Applied") else 1)
                     for p in current_all("HS Payment", filters={"stay": stay.name, "status": "Posted", "kind": ["in", ["Guarantee", "Guarantee Refund", "Guarantee Applied"]]}, fields=["amount", "kind"]))
     if guarantee:
-        frappe.throw("Devuelva o aplique la garantía antes de registrar salida")
+        frappe.throw(frappe._("Devuelva o aplique la garantía antes de registrar salida"))
     if frappe.db.exists("HS Service Request", {"stay": stay.name, "status": ["in", ["Requested", "In Progress"]]}):
-        frappe.throw("Revise los servicios pendientes antes de registrar salida")
+        frappe.throw(frappe._("Revise los servicios pendientes antes de registrar salida"))
     stay.status, stay.actual_check_out, stay.reason = "Checked Out", now_datetime(), data.get("credit_reason")
     stay.save()
     availability.release(stay=stay.name)

@@ -22,31 +22,31 @@ def validate_method(method):
     fee,withheld,fixed=decimal(method.fee_percent),decimal(method.withholding_percent),decimal(method.fee_fixed)
     refund_fee,refund_fixed=decimal(method.refund_fee_percent),decimal(method.refund_fee_fixed)
     if min(fee,withheld,fixed,refund_fee,refund_fixed)<0 or fee+withheld>100 or refund_fee>100 or (method.is_cash and (fee or withheld or fixed or refund_fee or refund_fixed)):
-        frappe.throw("Revise comisión/retención: importes no negativos, porcentajes totales hasta 100 y medio no efectivo")
+        frappe.throw(frappe._("Revise comisión/retención: importes no negativos, porcentajes totales hasta 100 y medio no efectivo"))
     company_currency=frappe.db.get_value("Company",method.company,"default_currency")
     for field,root in (("fee_account","Expense"),("withholding_account","Asset"),("settlement_account","Asset")):
         value=method.get(field)
         required=(field=="fee_account" and (fee or fixed or refund_fee or refund_fixed)) or (field=="withholding_account" and withheld) or (field=="settlement_account" and (fee or fixed or withheld or refund_fee or refund_fixed))
         if required and not value:
-            frappe.throw("Complete las cuentas de comisión, retención y liquidación que correspondan")
+            frappe.throw(frappe._("Complete las cuentas de comisión, retención y liquidación que correspondan"))
         if value:
             account=locked_doc("Account",value)
             currency=method.currency if field=="settlement_account" else company_currency
             if account.company!=method.company or account.is_group or account.root_type!=root or account.account_currency!=currency or value==method.account:
-                frappe.throw("La cuenta de liquidación/comisión/retención no coincide con compañía, moneda o naturaleza")
+                frappe.throw(frappe._("La cuenta de liquidación/comisión/retención no coincide con compañía, moneda o naturaleza"))
             if (field=="settlement_account" and account.account_type!="Bank") or (field=="withholding_account" and account.account_type in ("Bank","Cash","Receivable","Payable")):
-                frappe.throw("La liquidación requiere cuenta bancaria y la retención un activo tributario separado de caja/clientes/proveedores")
+                frappe.throw(frappe._("La liquidación requiere cuenta bancaria y la retención un activo tributario separado de caja/clientes/proveedores"))
 
 
 def open_context(prop,data):
     shift=document("HS Shift",data["shift"],"finance")
     method=document("HS Payment Method",data["method"],"finance")
     if shift.status!="Open":
-        frappe.throw("Seleccione un turno abierto")
+        frappe.throw(frappe._("Seleccione un turno abierto"))
     if shift.cashier!=frappe.session.user:
         require(prop.name,"approve")
     if method.reference_required and not data.get("reference"):
-        frappe.throw("Indique la referencia bancaria")
+        frappe.throw(frappe._("Indique la referencia bancaria"))
     return shift,method
 
 
@@ -57,14 +57,14 @@ def expense(prop,data):
     category=document("HS Expense Category",data["category"],"finance")
     amount=money(data.get("amount"),currency=method.currency)
     if not category.active or not method.is_cash or amount<=0 or not data.get("reason"):
-        frappe.throw("Seleccione categoría activa, medio en efectivo, importe positivo y motivo del egreso")
+        frappe.throw(frappe._("Seleccione categoría activa, medio en efectivo, importe positivo y motivo del egreso"))
     fx=exchange(method.currency,category.currency)
     base=money(amount*fx,currency=category.currency)
     if (category.max_amount and base>decimal(category.max_amount)) or amount>decimal(expected(shift).get(method.currency,0)):
-        frappe.throw("El egreso supera el límite de la categoría o el efectivo esperado del turno")
+        frappe.throw(frappe._("El egreso supera el límite de la categoría o el efectivo esperado del turno"))
     account=locked_doc("Account",category.account)
     if account.company!=prop.company or account.is_group or account.root_type!="Expense" or account.account_currency!=category.currency:
-        frappe.throw("Revise la cuenta de gasto configurada")
+        frappe.throw(frappe._("Revise la cuenta de gasto configurada"))
     journal=frappe.new_doc("Journal Entry")
     journal.update(dict(company=prop.company,posting_date=frappe.utils.nowdate(),voucher_type="Cash Entry",multi_currency=1,hs_shift=shift.name,user_remark=data["reason"]))
     journal.append("accounts",dict(account=category.account,debit_in_account_currency=float(base),exchange_rate=1,cost_center=prop.cost_center))
@@ -82,13 +82,13 @@ def settlement_quote(prop,data):
     snapshot=frappe.parse_json(source.fee_snapshot or "{}")
     direction="Pay" if source.kind in ("Refund","Guarantee Refund") else "Receive"
     if source.status!="Posted" or source.kind not in ("Payment","Advance","Guarantee","Refund","Guarantee Refund") or method.is_cash or not snapshot.get("settlement_account"):
-        frappe.throw("Seleccione un cobro no efectivo con cuentas de liquidación aceptadas al cobrar")
+        frappe.throw(frappe._("Seleccione un cobro no efectivo con cuentas de liquidación aceptadas al cobrar"))
     previous=current_all("HS Payment",filters={"source_payment":source.name,"kind":"Settlement","status":"Posted"},fields=["amount","fee_amount","withholding_amount","clearing_base_amount"])
     settled=sum(decimal(p.amount) for p in previous)
     amount=money(data.get("amount"),currency=source.currency)
     remaining=decimal(source.amount)-settled
     if amount<=0 or amount>remaining:
-        frappe.throw("La liquidación supera el importe bruto pendiente")
+        frappe.throw(frappe._("La liquidación supera el importe bruto pendiente"))
     total_fee=money(decimal(source.amount)*decimal(snapshot.get("fee_percent"))/100+decimal(snapshot.get("fee_fixed")),currency=source.currency)
     total_withheld=money(decimal(source.amount)*decimal(snapshot.get("withholding_percent"))/100,currency=source.currency)
     final=amount==remaining
@@ -96,17 +96,17 @@ def settlement_quote(prop,data):
     withheld=total_withheld-sum(decimal(p.withholding_amount) for p in previous) if final else money(total_withheld*amount/decimal(source.amount),currency=source.currency)
     net=money(amount+fee if direction=="Pay" else amount-fee-withheld,currency=source.currency)
     if min(fee,withheld,net)<0:
-        frappe.throw("La comisión o retención supera el bruto; revise la política aceptada")
+        frappe.throw(frappe._("La comisión o retención supera el bruto; revise la política aceptada"))
     base_currency=frappe.db.get_value("Company",prop.company,"default_currency")
     fx=exchange(source.currency,base_currency)
     native=locked_doc("Payment Entry" if source.payment_entry else "Journal Entry",source.payment_entry or source.journal_entry)
     if native.docstatus!=1 or native.hs_property!=prop.name:
-        frappe.throw("El cobro original no tiene documento contable vigente")
+        frappe.throw(frappe._("El cobro original no tiene documento contable vigente"))
     original_base=sum((decimal(r.credit)-decimal(r.debit)) if direction=="Pay" else (decimal(r.debit)-decimal(r.credit)) for r in current_all("GL Entry",filters={"voucher_type":native.doctype,"voucher_no":native.name,"account":method.account,"is_cancelled":0},fields=["debit","credit"]))
     cleared=sum(decimal(r.clearing_base_amount) for r in previous)
     historical_base=original_base-cleared if final else money(original_base*amount/decimal(source.amount),currency=base_currency)
     if historical_base<=0:
-        frappe.throw("La fracción no admite valoración histórica positiva; agrupe una cantidad mayor")
+        frappe.throw(frappe._("La fracción no admite valoración histórica positiva; agrupe una cantidad mayor"))
     q=dict(source_payment=source.name,method=method.name,amount=str(amount),fee=str(fee),withholding=str(withheld),net=str(net),
            currency=source.currency,direction=direction,exchange_rate=str(fx),clearing_base=str(historical_base),clearing_rate=str(historical_base/amount),policy=snapshot,previous=str(settled),base_currency=base_currency)
     q["acceptance"]=hashlib.sha256(canonical(q).encode()).hexdigest()
@@ -117,7 +117,7 @@ def settle(prop,data):
     ready(prop)
     q=settlement_quote(prop,data)
     if data.get("acceptance")!=q["acceptance"] or not data.get("reference"):
-        frappe.throw("Revise y acepte la liquidación e indique su referencia bancaria")
+        frappe.throw(frappe._("Revise y acepte la liquidación e indique su referencia bancaria"))
     shift,method=open_context(prop,{**data,"method":q["method"]})
     policy=q["policy"]
     company_currency=q["base_currency"]
@@ -135,7 +135,7 @@ def settle(prop,data):
     for name,amount,credit,currency,rate,root in lines:
         account=locked_doc("Account",name)
         if account.company!=prop.company or account.is_group or account.root_type!=root or account.account_currency!=currency:
-            frappe.throw("Una cuenta de la política aceptada ya no es válida")
+            frappe.throw(frappe._("Una cuenta de la política aceptada ya no es válida"))
         journal.append("accounts",dict(account=name,credit_in_account_currency=float(amount) if credit else 0,
                                         debit_in_account_currency=0 if credit else float(amount),exchange_rate=float(rate),cost_center=prop.cost_center))
     from hospitality_suite.accounting import balance_exchange

@@ -41,7 +41,7 @@ def daily_close(prop, data):
     if data.get("confirm"):
         require(prop.name, "approve")
         if problems:
-            frappe.throw("Resuelva los pendientes antes de confirmar el cierre")
+            frappe.throw(frappe._("Resuelva los pendientes antes de confirmar el cierre"))
         doc.status, doc.closed_at = "Closed", now_datetime()
         doc.save()
         prop.business_date = add_days(prop.business_date, 1)
@@ -54,9 +54,9 @@ def reopen(prop, data):
     require(prop.name, "approve")
     doc = document("HS Daily Close", data["close"], "approve")
     if doc.status != "Closed" or not data.get("reason"):
-        frappe.throw("Seleccione un cierre confirmado e indique el motivo")
+        frappe.throw(frappe._("Seleccione un cierre confirmado e indique el motivo"))
     if str(add_days(doc.business_date, 1)) != str(prop.business_date):
-        frappe.throw("Solo puede reabrir el último día cerrado")
+        frappe.throw(frappe._("Solo puede reabrir el último día cerrado"))
     doc.status, doc.reason = "Reopened", data["reason"]
     doc.save()
     prop.business_date = doc.business_date

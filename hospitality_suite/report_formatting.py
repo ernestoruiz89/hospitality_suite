@@ -34,16 +34,18 @@ MONEY_FIELDS=NUMBERS-{"quantity","duration_minutes","total_rooms","available_cap
 
 
 def label(key):
-    return LABELS.get(key,key)
+    import frappe
+    return frappe._(LABELS.get(key,key))
 
 
 def display(key,value,record=None):
+    import frappe
     if record and key in record.get("_display",{}):
         return record["_display"][key]
     if key=="selected_room_available" and value is not None:
-        return "Sí" if value else "No"
+        return frappe._("Sí") if value else frappe._("No")
     if key=="cleaning_status":
-        return {"Clean":"Limpia","Dirty":"Pendiente de limpieza","Cleaning":"En limpieza","Inspection":"Pendiente de inspección"}.get(value,value)
+        return frappe._({"Clean":"Limpia","Dirty":"Pendiente de limpieza","Cleaning":"En limpieza","Inspection":"Pendiente de inspección"}.get(value,value))
     if key in ("status","kind","type","cleaning_status","settlement_direction","purpose","classification","adjustment_type"):
         from hospitality_suite.printing import hs_label
         return hs_label(value)
@@ -52,15 +54,17 @@ def display(key,value,record=None):
 
 def xlsx_data(records,headers):
     from hospitality_suite.pricing import decimal,currency_precision
-    rows=[[label(k) for k in headers]]
+    def safe_text(value):
+        return "'"+value if isinstance(value,str) and value.lstrip().startswith(("=","+","-","@")) else value
+    rows=[[safe_text(label(k)) for k in headers]]
     for record in records:
         row=[]
         for key in headers:
             value=display(key,record.get(key),record)
             if key in NUMBERS and value is not None:
                 value=float(decimal(value))
-            elif isinstance(value,str) and value.lstrip().startswith(("=","+","-","@")):
-                value="'"+value
+            else:
+                value=safe_text(value)
             row.append(value)
         rows.append(row)
     widths=[max(16,min(65,max(len(str(row[col] or "")) for row in rows)+3)) for col in range(len(headers))]
@@ -86,6 +90,7 @@ def xlsx_data(records,headers):
 def pdf_html(title,scope,records,headers,note):
     """Wide reports use readable column groups with repeated source keys."""
     from html import escape
+    import frappe
     from hospitality_suite.pricing import money
     if "name" in headers:
         anchors=["name"]+(["room"] if "room" in headers else [])
@@ -98,9 +103,9 @@ def pdf_html(title,scope,records,headers,note):
     html="<style>body{font-family:Arial,sans-serif;color:#173c32;font-size:11px}h1{font-size:24px}h2{font-size:14px}table{width:100%;table-layout:fixed;border-collapse:collapse}th{background:#eaf0e9;text-align:left}th,td{padding:5px;border-bottom:1px solid #dce5dc;word-wrap:break-word;overflow-wrap:break-word}thead{display:table-header-group}tr{page-break-inside:avoid}.numeric{text-align:right;white-space:nowrap}.new-band{page-break-before:always}</style>"
     money_fields=MONEY_FIELDS
     for index,band in enumerate(bands):
-        html+=f'<section class="{"new-band" if index else ""}"><h1>{escape(title)}</h1><p>{escape(scope)} · {len(records)} registros autorizados</p><p>{escape(note)}</p>'
+        html+=f'<section class="{"new-band" if index else ""}"><h1>{escape(frappe._(title))}</h1><p>{escape(scope)} · {escape(frappe._("{0} registros autorizados").format(len(records)))}</p><p>{escape(note)}</p>'
         if len(bands)>1:
-            html+=f'<h2>Detalle {index+1} de {len(bands)}</h2><p>Las referencias se repiten para relacionar las columnas de cada detalle.</p>'
+            html+=f'<h2>{escape(frappe._("Detalle {0} de {1}").format(index+1,len(bands)))}</h2><p>{escape(frappe._("Las referencias se repiten para relacionar las columnas de cada detalle."))}</p>'
         html+='<table><thead><tr>'+''.join(f'<th>{escape(label(k))}</th>' for k in band)+'</tr></thead><tbody>'
         for row in records:
             html+='<tr>'

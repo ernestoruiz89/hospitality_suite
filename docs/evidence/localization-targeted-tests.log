@@ -1,0 +1,14 @@
+Starting test run with parameters: site=hospitality-clean.localhost, module=hospitality_suite.tests.test_localization, verbose=False, tests=(), force=False, profile=False, junit_xml_output=/tmp/hospitality-localization-final-target.xml, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/frappe/benches/hospitality-bench/logs/frappe.testing.log
+
+Running 2 integration tests for hospitality_suite
+
+Running tests...
+----------------------------------------------------------------------
+..
+----------------------------------------------------------------------
+Ran 2 tests in 2.098s
+
+OK
+
+Generating XML reports...

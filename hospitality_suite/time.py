@@ -14,9 +14,9 @@ def aware(value, zone):
     first = value.replace(tzinfo=ZoneInfo(zone), fold=0)
     second = value.replace(tzinfo=ZoneInfo(zone), fold=1)
     if first.utcoffset() != second.utcoffset():
-        frappe.throw("Hora ambigua o inexistente por cambio horario; indique un desplazamiento UTC explícito")
+        frappe.throw(frappe._("Hora ambigua o inexistente por cambio horario; indique un desplazamiento UTC explícito"))
     if first.astimezone(UTC).astimezone(ZoneInfo(zone)).replace(tzinfo=None) != value:
-        frappe.throw("Hora local inexistente")
+        frappe.throw(frappe._("Hora local inexistente"))
     return first
 
 
@@ -49,7 +49,7 @@ def cutoff_time(value):
             raise ValueError()
         return result
     except (ValueError,TypeError,OverflowError):
-        frappe.throw("Indique una hora de corte válida entre 00:00:00 y 23:59:59")
+        frappe.throw(frappe._("Indique una hora de corte válida entre 00:00:00 y 23:59:59"))
 
 
 def business_window(prop):

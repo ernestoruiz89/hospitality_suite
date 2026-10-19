@@ -13,7 +13,7 @@ from hospitality_suite.service import operation
 def finance_stock():
     """Explicit synthetic configuration for the extended Pages UX walkthrough."""
     if frappe.local.site!="hospitality.localhost" or not frappe.conf.get("allow_tests") or frappe.session.user!="Administrator":
-        frappe.throw("Configuración demostrativa solo en hospitality.localhost con Administrator y allow_tests")
+        frappe.throw(frappe._("Configuración demostrativa solo en hospitality.localhost con Administrator y allow_tests"))
     prop=frappe.get_doc("HS Property",{"property_name":"Hotel Jardín Demo"})
     def account(label,root,kind=None):
         name=frappe.db.get_value("Account",{"company":prop.company,"account_name":label})
@@ -51,7 +51,7 @@ def finance_stock():
 def group_payer():
     """Explicit fictional company for the grouped-invoice Pages walkthrough."""
     if frappe.local.site!="hospitality.localhost" or not frappe.conf.get("allow_tests") or frappe.session.user!="Administrator":
-        frappe.throw("El pagador ficticio requiere hospitality.localhost, allow_tests y Administrator")
+        frappe.throw(frappe._("El pagador ficticio requiere hospitality.localhost, allow_tests y Administrator"))
     from hospitality_suite import api
     prop=frappe.get_doc("HS Property",{"property_name":"Hotel Jardín Demo"})
     label="Empresa ficticia de grupo UX-GRP-001"
@@ -65,9 +65,9 @@ def group_payer():
 
 def seed():
     if frappe.local.site != "hospitality.localhost" and not frappe.conf.get("hospitality_allow_demo"):
-        frappe.throw("La demostración requiere hospitality_allow_demo en un sitio de pruebas")
+        frappe.throw(frappe._("La demostración requiere hospitality_allow_demo en un sitio de pruebas"))
     if frappe.session.user != "Administrator":
-        frappe.throw("Ejecute la demostración como Administrator", frappe.PermissionError)
+        frappe.throw(frappe._("Ejecute la demostración como Administrator"), frappe.PermissionError)
     credential_path=Path(frappe.get_site_path("private","hospitality-demo-users.json"))
     credentials=json.loads(credential_path.read_text()) if credential_path.exists() else {}
     from erpnext.setup.setup_wizard.operations.install_fixtures import install as install_erp_defaults

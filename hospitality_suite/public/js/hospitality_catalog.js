@@ -4,10 +4,10 @@
   const allowed=(row,purpose)=>!row.disabled&&(purpose==="sale"?row.is_sales_item&&!row.is_fixed_asset:purpose==="stock"?row.is_stock_item&&!row.is_fixed_asset:purpose==="purchase"?row.is_purchase_item&&!row.is_fixed_asset:true);
   const choices=(rows,required)=>{
     const names=new Map();for(const r of rows)names.set(r.item_name,(names.get(r.item_name)||0)+1);
-    return [{value:"",label:__(required?"Seleccione…":"Todos")},...rows.map(r=>({value:r.name,label:r.item_name+(names.get(r.item_name)>1?" · "+r.name:"")}))];
+    return [{value:"",label:__(required?__("Seleccione…"):__("Todos"))},...rows.map(r=>({value:r.name,label:r.item_name+(names.get(r.item_name)>1?" · "+r.name:"")}))];
   };
   Desk.prototype.item_field=function(label="Artículo",purpose="any",extra={}){
-    return {fieldname:"item",label:__(label),fieldtype:"Select",reqd:1,_hsItemPurpose:purpose,...extra};
+    return {fieldname:"item",label:__(label),fieldtype:"Select",reqd:1,_hsDataOptions:true,_hsItemPurpose:purpose,...extra};
   };
   const dialog=Desk.prototype.dialog;
   Desk.prototype.dialog=async function(title,fields,submit,...args){
@@ -36,7 +36,7 @@
           if(retained)rows=[previous,...rows];
           d.set_df_property(item.fieldname,"options",choices(rows,item.reqd));
           if(selected)await d.set_value(item.fieldname,selected);
-          d.set_df_property(item.fieldname,"description",__(result.has_more?"Hay más de 50 coincidencias. Escriba más para afinar la búsqueda.":result.items.length?"Elija un artículo de los resultados.":"No hay artículos que coincidan con la búsqueda.")+(retained?" "+__("Se conserva el artículo seleccionado."):""));
+          d.set_df_property(item.fieldname,"description",__(result.has_more?__("Hay más de 50 coincidencias. Escriba más para afinar la búsqueda."):result.items.length?__("Elija un artículo de los resultados."):__("No hay artículos que coincidan con la búsqueda."))+(retained?" "+__("Se conserva el artículo seleccionado."):""));
           valid=true;d._hsCatalogBlocked=false;
         }catch(error){if(version===revision)d.set_df_property(item.fieldname,"description",__("No se pudo consultar el catálogo. Vuelva a buscar."));}
         finally{if(version===revision){pending=false;d.get_primary_btn().prop("disabled",!valid||Boolean(d._hsBusy));}}

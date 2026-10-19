@@ -22,7 +22,7 @@ def arrival(prop,booking,line,at=None):
     now=local(at or now_datetime(),prop)
     planned=local(booking.starts_at,prop)
     if now.date()<planned.date():
-        frappe.throw("Para ingresar antes de la fecha reservada, modifique el intervalo y acepte su nueva cotización")
+        frappe.throw(frappe._("Para ingresar antes de la fecha reservada, modifique el intervalo y acepte su nueva cotización"))
     if line["rules"]["mode"]!="Hotel":
         return dict(early="0.00",late="0.00",acceptance="")
     boundary=aware(datetime.combine(planned.date(),get_time(prop.check_in_time)),prop.time_zone)
@@ -31,7 +31,7 @@ def arrival(prop,booking,line,at=None):
     checkout=aware(datetime.combine(checkout_day,get_time(prop.check_out_time)),prop.time_zone)
     late_minutes=max(0,(local(booking.ends_at,prop).astimezone(UTC)-checkout.astimezone(UTC)).total_seconds()/60)
     result=dict(early=str(fee(early_minutes,prop.early_hour_rate,prop)),late=str(fee(late_minutes,prop.late_hour_rate,prop)),
-                explanation="Entrada anticipada y salida tardía programada según horario, tolerancia y fracción del establecimiento.")
+                explanation=frappe._("Entrada anticipada y salida tardía programada según horario, tolerancia y fracción del establecimiento."))
     result["acceptance"]=hashlib.sha256(canonical(dict(booking=booking.name,modified=str(booking.modified),**result)).encode()).hexdigest()
     return result
 
@@ -39,7 +39,7 @@ def arrival(prop,booking,line,at=None):
 def departure(prop,data):
     stay=document("HS Stay",data["stay"],"stay")
     if stay.status!="Active":
-        frappe.throw("La estancia ya terminó")
+        frappe.throw(frappe._("La estancia ya terminó"))
     segments=current_all("HS Allocation",filters={"stay":stay.name,"status":"Active"},fields=["*"],order_by="starts_at desc")
     current=segments[0]
     snapshot=json.loads(current.quote_snapshot or stay.quote_snapshot)
@@ -54,7 +54,7 @@ def departure(prop,data):
         boundary=aware(datetime.combine(day,get_time(prop.check_out_time)),prop.time_zone)
         minutes=max(0,(local(end,prop).astimezone(UTC)-boundary.astimezone(UTC)).total_seconds()/60)
         difference=max(decimal(0),fee(minutes,prop.late_hour_rate,prop)-decimal(stay.late_fee))
-        quote=dict(explanation=["Salida tardía: tolerancia y fracción configuradas"],start=snapshot["start"],end=local(end,prop).isoformat(),rules=snapshot["rules"])
+        quote=dict(explanation=[frappe._("Salida tardía: tolerancia y fracción configuradas")],start=snapshot["start"],end=local(end,prop).isoformat(),rules=snapshot["rules"])
         kind="Service"
     result=dict(stay=stay.name,amount=str(money(difference)),currency=prop.currency,kind=kind,quote=quote,
                 explanation=quote["explanation"],inspection_required=bool(prop.checkout_inspection_required),
@@ -68,16 +68,16 @@ def prepare_departure(prop,data):
     from hospitality_suite.operations import charge
     quote=departure(prop,data)
     if data.get("acceptance")!=quote["acceptance"]:
-        frappe.throw("Revise nuevamente la liquidación de salida")
+        frappe.throw(frappe._("Revise nuevamente la liquidación de salida"))
     stay=document("HS Stay",data["stay"],"stay")
     folio=document("HS Folio",data["folio"],"stay")
     if (folio.stay!=stay.name if folio.stay else folio.booking!=stay.booking) or folio.status!="Open":
-        frappe.throw("Seleccione una cuenta abierta de esta estancia")
+        frappe.throw(frappe._("Seleccione una cuenta abierta de esta estancia"))
     amount=decimal(quote["amount"])
     if amount:
         item=prop.lodging_item if quote["kind"]=="Lodging" else prop.timing_item
         if not item:
-            frappe.throw("Configure el artículo para cargos por horario")
+            frappe.throw(frappe._("Configure el artículo para cargos por horario"))
         charge(prop,stay,folio,item,amount,quote["kind"],"Liquidación de tiempo de estancia",quote["quote"])
         if quote["kind"]=="Lodging":
             segments=current_all("HS Allocation",filters={"stay":stay.name,"status":"Active"},fields=["name"],order_by="starts_at desc")
@@ -97,7 +97,7 @@ def prepare_departure(prop,data):
 def inspect_departure(prop,data):
     stay=document("HS Stay",data["stay"],"inspect")
     if stay.status!="Active" or not data.get("notes"):
-        frappe.throw("Seleccione una estancia activa e indique la revisión realizada")
+        frappe.throw(frappe._("Seleccione una estancia activa e indique la revisión realizada"))
     stay.departure_inspected_by=frappe.session.user
     stay.departure_inspected_at=now_datetime()
     stay.departure_notes=data["notes"]

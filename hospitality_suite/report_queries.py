@@ -36,7 +36,7 @@ SHIFTED = {"Cobros", "Liquidaciones", "Egresos", "Facturas", "Turnos", "Concilia
 def metadata(report):
     from hospitality_suite.reports import REPORTS
     if report not in REPORTS:
-        frappe.throw("Reporte desconocido")
+        frappe.throw(frappe._("Reporte desconocido"))
     base = ALIASES.get(report, report)
     keys = ["user"] if base not in ("Disponibilidad", "Conciliación") else []
     if base in DIMENSIONAL or base == "Disponibilidad":
@@ -62,26 +62,28 @@ def metadata(report):
     if report == "Cancelaciones y no presentaciones":
         dates = [("status_changed_at", "Cancelación / no presentación"), *DATES["Reservas"]]
     default = "ends_at" if report == "Salidas" else dates[0][0]
-    return dict(base=base, filters=keys, date_fields=[dict(value=k, label=v) for k, v in dates], date_field=default,
+    result=dict(base=base, filters=keys, date_fields=[dict(value=k, label=frappe._(v)) for k, v in dates], date_field=default,
                 note=("Tareas por responsable. Duración de inicio a finalización, incluidas esperas de inspección. Tareas/hora usa solo finalizadas con duración positiva; no mide jornada laboral." if report == "Productividad de limpieza" else
                       "Arqueo separado por moneda original. Cerrado/revisión conserva conteo y esperado del cierre; abierto muestra esperado actual y conteo pendiente." if report == "Arqueos por moneda" else
                       "La fecha de cancelación/no presentación procede de auditoría. Penalización aceptada sin impuestos; consulte su factura y estado contable." if report == "Cancelaciones y no presentaciones" else
                       "Cupo simultáneo por categoría; las habitaciones candidatas son alternativas y no se suman al cupo. Limpieza actual se muestra por separado." if base == "Disponibilidad" else
                       "Ingreso neto facturado: importe sin impuestos. Las devoluciones se restan y los cargos pendientes se muestran sin ingreso facturado." if base == "Producción" else
                       "Los filtros seleccionan documentos completos; no prorratean facturas ni cuentas grupales."))
+    result["note"]=frappe._(result["note"])
+    return result
 
 
 def scopes(property_name=None, company=None):
     if property_name:
         prop = require(property_name, "report")
         if company and prop.company != company:
-            frappe.throw("La compañía no corresponde al establecimiento", frappe.PermissionError)
+            frappe.throw(frappe._("La compañía no corresponde al establecimiento"), frappe.PermissionError)
         return [prop]
     if not company:
-        frappe.throw("Seleccione una compañía o un establecimiento")
+        frappe.throw(frappe._("Seleccione una compañía o un establecimiento"))
     names = frappe.get_all("HS Property", filters={"name": ["in", allowed_properties()], "company": company}, pluck="name")
     if not names:
-        frappe.throw("No tiene establecimientos autorizados de esa compañía", frappe.PermissionError)
+        frappe.throw(frappe._("No tiene establecimientos autorizados de esa compañía"), frappe.PermissionError)
     return [require(name, "report") for name in names]
 
 
@@ -93,23 +95,23 @@ def validate(filters, meta):
         if value in (None, ""):
             continue
         if key not in allowed or not isinstance(value, str):
-            frappe.throw("Filtro no aplicable a este reporte: " + key)
+            frappe.throw(frappe._("Filtro no aplicable a este reporte: ") + key)
     mode = filters.get("date_field") or meta["date_field"]
     if mode not in {r["value"] for r in meta["date_fields"]}:
-        frappe.throw("La fecha seleccionada no corresponde a este reporte")
+        frappe.throw(frappe._("La fecha seleccionada no corresponde a este reporte"))
     bounds = []
     for key in ("from_date", "to_date"):
         try:
             value = filters.get(key)
             bounds.append(date.fromisoformat(value) if value else None)
         except (TypeError, ValueError):
-            frappe.throw("Indique fechas válidas en formato AAAA-MM-DD")
+            frappe.throw(frappe._("Indique fechas válidas en formato AAAA-MM-DD"))
     if all(bounds) and bounds[0] > bounds[1]:
-        frappe.throw("La fecha final debe ser igual o posterior a la inicial")
+        frappe.throw(frappe._("La fecha final debe ser igual o posterior a la inicial"))
     if filters.get("group_by") and filters["group_by"] not in {"room", "category", "item", "channel", "property"}:
-        frappe.throw("Agrupación de producción no admitida")
+        frappe.throw(frappe._("Agrupación de producción no admitida"))
     if filters.get("detail_level") and filters["detail_level"] not in {"operational","technical"}:
-        frappe.throw("Presentación de reporte no admitida")
+        frappe.throw(frappe._("Presentación de reporte no admitida"))
     return mode, bounds
 
 
@@ -132,7 +134,7 @@ def describe_filters(props, report, filters):
     from hospitality_suite.report_formatting import label,display
     meta=metadata(report)
     date_label=next(r["label"] for r in meta["date_fields"] if r["value"]==(filters.get("date_field") or meta["date_field"]))
-    parts=["Fecha: "+date_label] if meta["base"]!="Disponibilidad" else []
+    parts=[frappe._("Fecha: {0}").format(date_label)] if meta["base"]!="Disponibilidad" else []
     captions=dict(from_date="Desde",to_date="Hasta",starts_at="Inicio local",ends_at="Fin local",user="Registrado por",group_by="Agrupación",detail_level="Presentación")
     for key,value in filters.items():
         if not value or key in {"company","date_field"}:
@@ -143,9 +145,9 @@ def describe_filters(props, report, filters):
         if key=="group_by":
             value=label(value)
         if key=="detail_level":
-            value="Referencias técnicas" if value=="technical" else "Vista operativa"
-        parts.append(captions.get(key,label(key))+": "+str(display(key,value)))
-    return " · ".join(parts) or "Sin filtros adicionales"
+            value=frappe._("Referencias técnicas") if value=="technical" else frappe._("Vista operativa")
+        parts.append((frappe._(captions[key]) if key in captions else label(key))+": "+str(display(key,value)))
+    return " · ".join(parts) or frappe._("Sin filtros adicionales")
 
 
 class Context:
@@ -537,7 +539,7 @@ def availability_rows(prop, filters):
     start = to_site(filters.get("starts_at") or (filters.get("from_date") or str(prop.business_date))+" 00:00:00", prop)
     end = to_site(filters.get("ends_at") or str(getdate(filters.get("to_date") or filters.get("from_date") or prop.business_date)+timedelta(days=1))+" 00:00:00", prop)
     if end <= start:
-        frappe.throw("Seleccione un intervalo de disponibilidad positivo")
+        frappe.throw(frappe._("Seleccione un intervalo de disponibilidad positivo"))
     ctx = Context(prop)
     categories = ctx.categories
     result = []

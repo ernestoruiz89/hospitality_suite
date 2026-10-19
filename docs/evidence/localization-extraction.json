@@ -1,0 +1,24 @@
+{
+  "native_extractor": "frappe.translate.get_server_messages",
+  "source_occurrences": 3493,
+  "unique_messages": 1710,
+  "representative_messages": [
+    "Importe",
+    "Cliente pagador",
+    "CONFIRMACIÓN DE RESERVA",
+    "Incluido: {0} × {1}",
+    "Incluido en extensión: {0} × {1}",
+    "Sin conexión · operación pausada",
+    "No existe una tarifa aplicable a la fecha y al pagador",
+    "Tiempo restante: {0} h {1} min",
+    "Presentación",
+    "Entrada prevista",
+    "Buscar artículo por nombre o código",
+    "Vista operativa",
+    "Referencias técnicas"
+  ],
+  "templates_parsed": 11,
+  "messages_sha256": "b8ebc73eab8938996b9a70827c062d96ddbfaedfeb8df9aedf438ada06ad1590",
+  "full_language_pack": false,
+  "translation_fixtures": "Native Translation records in rolled-back integration transactions"
+}

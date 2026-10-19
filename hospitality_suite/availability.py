@@ -33,10 +33,10 @@ def capacity(prop, category, start, end, exclude=None, proposed=None):
     """
     start, end = get_datetime(start), get_datetime(end)
     if start >= end:
-        frappe.throw("El intervalo debe tener duración positiva")
+        frappe.throw(frappe._("El intervalo debe tener duración positiva"))
     cat = locked_doc("HS Category", category)
     if cat.property != prop.name:
-        frappe.throw("Categoría de otro establecimiento", frappe.PermissionError)
+        frappe.throw(frappe._("Categoría de otro establecimiento"), frappe.PermissionError)
     rooms = current_all("HS Room", filters={"property": prop.name, "category": category, "active": 1}, fields=["name", "cleaning_status"])
     end_buffer = end + timedelta(minutes=prop.cleaning_minutes or 0)
     rows = active_allocations(prop, start, end_buffer, exclude) + list(proposed or [])
@@ -59,17 +59,17 @@ def check(prop, category, start, end, room=None, exclude=None, for_entry=False, 
     by_name = {r.name: r for r in inventory["rooms"]}
     if room:
         if room not in by_name:
-            frappe.throw("La habitación no pertenece a la categoría o está deshabilitada")
+            frappe.throw(frappe._("La habitación no pertenece a la categoría o está deshabilitada"))
         if for_entry and by_name[room].cleaning_status != "Clean":
-            frappe.throw("La habitación debe estar limpia e inspeccionada")
+            frappe.throw(frappe._("La habitación debe estar limpia e inspeccionada"))
         if for_entry and current_all("HS Stay",filters={"property":prop.name,"room":room,"status":"Active"}):
-            frappe.throw("La habitación conserva una estancia activa; registre la salida antes de asignarla")
+            frappe.throw(frappe._("La habitación conserva una estancia activa; registre la salida antes de asignarla"))
     if room and room not in inventory["candidates"]:
-        frappe.throw("La habitación tiene una reserva, estancia o bloqueo en ese intervalo")
+        frappe.throw(frappe._("La habitación tiene una reserva, estancia o bloqueo en ese intervalo"))
     # Sweep all demand, including roomless reservations and maintenance; half-open
     # endpoints sort releases (-1) before arrivals (+1). No double counting.
     if not inventory["available"]:
-        frappe.throw("No queda cupo de esta categoría en el intervalo solicitado")
+        frappe.throw(frappe._("No queda cupo de esta categoría en el intervalo solicitado"))
     return inventory["candidates"]
 
 

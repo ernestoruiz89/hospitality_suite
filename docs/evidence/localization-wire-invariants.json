@@ -1,0 +1,53 @@
+{
+  "baseline": "32d4020270ce60e9d72d8610fd54247ba983167c",
+  "files": [
+    {
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "existing_wire_literals": 316,
+      "unchanged": true,
+      "sha256": "d125add492bdd9d516aa7b688ac7815f8830d1ee047d5ca00bd249290425808e"
+    },
+    {
+      "file": "hospitality_suite/public/js/hospitality_catalog.js",
+      "existing_wire_literals": 6,
+      "unchanged": true,
+      "sha256": "043339e834d28fb7560d2ecebfa360d38aed1b6bc62ad93313d696a83768dc85"
+    },
+    {
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "existing_wire_literals": 241,
+      "unchanged": true,
+      "sha256": "c4964807ab0b55ad0433b24807885a277cc8f45cf495de43ac78e82782d922ba"
+    },
+    {
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "existing_wire_literals": 167,
+      "unchanged": true,
+      "sha256": "f2e288fcd7d948074cad39c1f1bf3879733c06f72fcd1ae35a366c3522d2f53c"
+    },
+    {
+      "file": "hospitality_suite/public/js/hospitality_privacy.js",
+      "existing_wire_literals": 29,
+      "unchanged": true,
+      "sha256": "760e95c9a0248f70469e33d57955d93aaff77014875ff321308244fe1ba935b2"
+    },
+    {
+      "file": "hospitality_suite/public/js/hospitality_reporting.js",
+      "existing_wire_literals": 62,
+      "unchanged": true,
+      "sha256": "b289d2142a71da10b13e566f78406b7d0f479fc3b52a6ef544141357baacb35c"
+    },
+    {
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "existing_wire_literals": 212,
+      "unchanged": true,
+      "sha256": "ce1053b1603ca95d48e5142240e626c3cf8e4c404004e64c044c304523a0fc58"
+    },
+    {
+      "file": "hospitality_suite/www/hospitality.js",
+      "existing_wire_literals": 3,
+      "unchanged": true,
+      "sha256": "7492b0efd714fc48756ab18043b4e1738cd656ce986f5d40b4d616119b7152ab"
+    }
+  ]
+}

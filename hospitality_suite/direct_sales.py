@@ -14,16 +14,16 @@ def draft(prop,data):
     accounting.ready(prop)
     customer=data.get("customer")
     if not customer or not (current_all("HS Guest",filters={"property":prop.name,"customer":customer}) or current_all("HS Billing Party",filters={"property":prop.name,"customer":customer})):
-        frappe.throw("Seleccione un pagador registrado en este establecimiento")
+        frappe.throw(frappe._("Seleccione un pagador registrado en este establecimiento"))
     item=locked_doc("Item",data["item"])
     quantity=decimal(data.get("quantity") or 0)
     if item.disabled or not item.is_sales_item or item.is_fixed_asset or quantity<=0:
-        frappe.throw("Artículo o cantidad inválida")
+        frappe.throw(frappe._("Artículo o cantidad inválida"))
     price_list=prop.price_list or frappe.db.get_single_value("Selling Settings","selling_price_list")
     prices=current_all("Item Price",filters={"item_code":item.name,"price_list":price_list,"currency":prop.currency,"selling":1},fields=["price_list_rate","valid_from","valid_upto"])
     prices=[p for p in prices if (not p.valid_from or str(p.valid_from)<=nowdate()) and (not p.valid_upto or str(p.valid_upto)>=nowdate())]
     if len(prices)!=1:
-        frappe.throw("Configure un precio de venta vigente e inequívoco para este artículo")
+        frappe.throw(frappe._("Configure un precio de venta vigente e inequívoco para este artículo"))
     inv=frappe.new_doc("Sales Invoice")
     inv.flags.ignore_permissions=True
     inv.update(dict(company=prop.company,customer=customer,currency=prop.currency,posting_date=nowdate(),due_date=nowdate(),
@@ -54,18 +54,18 @@ def quote(prop,data):
 def sell(prop,data):
     inv,method,q=draft(prop,data)
     if data.get("acceptance")!=q["acceptance"]:
-        frappe.throw("Revise la cotización de venta antes de confirmar")
+        frappe.throw(frappe._("Revise la cotización de venta antes de confirmar"))
     shift=document("HS Shift",data["shift"],"finance")
     if shift.status!="Open":
-        frappe.throw("Abra un turno antes de vender")
+        frappe.throw(frappe._("Abra un turno antes de vender"))
     if shift.cashier!=frappe.session.user:
         require(prop.name,"approve")
     if method.reference_required and not data.get("reference"):
-        frappe.throw("Indique la referencia bancaria")
+        frappe.throw(frappe._("Indique la referencia bancaria"))
     amount=money(q["payment_amount"])
     tendered=money(data.get("tendered") or amount)
     if tendered<amount or (tendered!=amount and not method.is_cash):
-        frappe.throw("Revise el recibido y el vuelto en la moneda del medio")
+        frappe.throw(frappe._("Revise el recibido y el vuelto en la moneda del medio"))
     from hospitality_suite.inventory import stock_movement
     stock=stock_movement(prop,q["item"],float(decimal(q["quantity"])))
     inv.hs_shift=shift.name
@@ -92,12 +92,12 @@ def return_sale(prop,data):
     require(prop.name,"approve")
     service=document("HS Service Request",data["service"],"approve")
     if service.stay or service.status!="Delivered" or not service.sales_invoice or not data.get("reason"):
-        frappe.throw("Seleccione una venta directa entregada e indique el motivo")
+        frappe.throw(frappe._("Seleccione una venta directa entregada e indique el motivo"))
     source=locked_doc("HS Payment",frappe.db.get_value("HS Payment",{"service":service.name,"kind":"Payment","status":"Posted"},"name"))
     shift=document("HS Shift",data["shift"],"approve")
     method=document("HS Payment Method",source.method,"approve")
     if shift.status!="Open":
-        frappe.throw("Seleccione un turno abierto para devolver")
+        frappe.throw(frappe._("Seleccione un turno abierto para devolver"))
     credit=accounting.credit_note(prop,dict(invoice=service.sales_invoice,reason=data["reason"]))
     inv=locked_doc("Sales Invoice",credit["credit_note"])
     company_currency=frappe.db.get_value("Company",prop.company,"default_currency")

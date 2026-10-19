@@ -68,19 +68,19 @@ def sanitized(value):
 def webhook(provider):
     config=(frappe.conf.get("hospitality_integrations") or {}).get(provider) or {}
     if not config.get("enabled") or not config.get("secret") or not config.get("property"):
-        frappe.throw("Integración no configurada",frappe.PermissionError)
+        frappe.throw(frappe._("Integración no configurada"),frappe.PermissionError)
     raw=frappe.request.get_data()
     if len(raw)>65536:
-        frappe.throw("Evento demasiado grande")
+        frappe.throw(frappe._("Evento demasiado grande"))
     try:
         valid=validate_signature(config["secret"],raw,frappe.request.headers.get("X-Hospitality-Timestamp"),frappe.request.headers.get("X-Hospitality-Signature") or "")
     except (ValueError,TypeError):
         valid=False
     if not valid:
-        frappe.throw("Firma inválida o evento vencido",frappe.PermissionError)
+        frappe.throw(frappe._("Firma inválida o evento vencido"),frappe.PermissionError)
     values=json.loads(raw)
     if not values.get("id") or len(str(values["id"]))>200:
-        frappe.throw("El proveedor debe enviar un identificador estable")
+        frappe.throw(frappe._("El proveedor debe enviar un identificador estable"))
     prop=frappe.get_doc("HS Property",config["property"])
     frappe.db.sql("SELECT name FROM `tabHS Property` WHERE name=%s FOR UPDATE",(prop.name,))
     identity=hashlib.sha256((provider+"|"+str(values["id"])).encode()).hexdigest()

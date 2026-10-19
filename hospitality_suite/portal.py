@@ -19,7 +19,7 @@ from hospitality_suite.time import to_site, local
 def enabled(name):
     prop=frappe.get_doc("HS Property",name)
     if not prop.portal_enabled:
-        frappe.throw("El portal no está habilitado",frappe.PermissionError)
+        frappe.throw(frappe._("El portal no está habilitado"),frappe.PermissionError)
     return prop
 
 
@@ -42,7 +42,7 @@ def verify(token):
             raise ValueError()
         return data
     except (ValueError,KeyError,TypeError):
-        frappe.throw("Enlace inválido o vencido",frappe.PermissionError)
+        frappe.throw(frappe._("Enlace inválido o vencido"),frappe.PermissionError)
 
 
 @frappe.whitelist(allow_guest=True)
@@ -61,7 +61,7 @@ def request_values(data):
     count=int(data.get("quantity") or 1)
     people=int(data.get("people") or 1)
     if not 1<=count<=10 or not 1<=people<=20:
-        frappe.throw("Cantidad de habitaciones o personas inválida")
+        frappe.throw(frappe._("Cantidad de habitaciones o personas inválida"))
     values={k:data.get(k) for k in ("full_name","email","phone","starts_at","ends_at","category","mode","quantity","people","acceptance")}
     return {**values,"rooms":[dict(category=data["category"],people=people) for _ in range(count)]}
 
@@ -78,13 +78,13 @@ def quote(property_name,data):
 def request(property_name,data,request_key):
     prop=enabled(property_name)
     if not request_key or len(request_key)>100:
-        frappe.throw("Clave de solicitud inválida")
+        frappe.throw(frappe._("Clave de solicitud inválida"))
     values=request_values(data)
     if not values.get("full_name") or not values.get("email"):
-        frappe.throw("Indique nombre y correo para la confirmación")
+        frappe.throw(frappe._("Indique nombre y correo para la confirmación"))
     validate_email_address(values["email"],throw=True)
     if len(values["full_name"])>120 or len(values["email"])>140:
-        frappe.throw("Nombre o correo demasiado largo")
+        frappe.throw(frappe._("Nombre o correo demasiado largo"))
     digest=hashlib.sha256((property_name+"|"+request_key).encode()).hexdigest()
     payload_hash=hashlib.sha256(canonical(values).encode()).hexdigest()
     frappe.db.sql("SELECT name FROM `tabHS Property` WHERE name=%s FOR UPDATE",(prop.name,))
@@ -93,12 +93,12 @@ def request(property_name,data,request_key):
         if old:
             doc=frappe.get_doc("HS Portal Request",old[0].name,for_update=True)
             if doc.payload_hash!=payload_hash:
-                frappe.throw("La clave ya fue usada para otra solicitud")
+                frappe.throw(frappe._("La clave ya fue usada para otra solicitud"))
         else:
             availability.expire_locked(prop)
             calculation=operations.quote_request(prop,values)
             if calculation["acceptance"]!=values.get("acceptance"):
-                frappe.throw("Vuelva a consultar el precio y disponibilidad")
+                frappe.throw(frappe._("Vuelva a consultar el precio y disponibilidad"))
             doc=frappe.get_doc(dict(doctype="HS Portal Request",property=prop.name,company=prop.company,
                                    full_name=values["full_name"],email=values["email"],phone=values.get("phone"),
                                    starts_at=to_site(values["starts_at"],prop),ends_at=to_site(values["ends_at"],prop),
@@ -118,7 +118,7 @@ def request(property_name,data,request_key):
 def confirmation(token):
     data=verify(token)
     if data["doctype"] not in ("HS Portal Request","HS Booking"):
-        frappe.throw("Confirmación inválida",frappe.PermissionError)
+        frappe.throw(frappe._("Confirmación inválida"),frappe.PermissionError)
     doc=frappe.get_doc(data["doctype"],data["name"])
     prop=enabled(doc.property)
     return dict(property_name=prop.property_name,status=doc.status,starts_at=local(doc.starts_at,prop),ends_at=local(doc.ends_at,prop),
@@ -137,7 +137,7 @@ def link(prop,data):
 def conversion_values(prop,data):
     request_doc=document("HS Portal Request",data["portal_request"],"reserve")
     if request_doc.status!="Hold" or request_doc.hold_until<=now_datetime():
-        frappe.throw("La solicitud ya no conserva una retención vigente")
+        frappe.throw(frappe._("La solicitud ya no conserva una retención vigente"))
     values=dict(starts_at=local(request_doc.starts_at,prop).isoformat(),ends_at=local(request_doc.ends_at,prop).isoformat(),mode=request_doc.mode,
                 customer=data["customer"],guest=data["guest"],rooms=[dict(category=request_doc.category,people=request_doc.people) for _ in range(request_doc.rooms)],
                 channel="Web",acceptance=data.get("acceptance"))

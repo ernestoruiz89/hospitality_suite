@@ -57,11 +57,11 @@ ACTIONS={
 
 def action_label(value):
     if value in ACTIONS:
-        return ACTIONS[value]
+        return frappe._(ACTIONS[value])
     from hospitality_suite.printing import hs_label
     for prefix,title in (("Setup ","Configuración"),("Cleaning ","Limpieza"),("Maintenance ","Mantenimiento"),("Service ","Servicio"),("Adjustment ","Ajuste"),("Payment ","Caja"),("Booking ","Reserva")):
         if value and value.startswith(prefix):
-            return title+": "+hs_label(value[len(prefix):])
+            return frappe._(title)+": "+hs_label(value[len(prefix):])
     return frappe._(value) if value else ""
 
 
@@ -103,18 +103,18 @@ class Descriptions:
             return ""
         if key not in self._cache:
             # Values come exclusively from already authorized report records.
-            self._cache[key]=frappe.db.get_value(dt,name,field) or "Sin descripción"
+            self._cache[key]=frappe.db.get_value(dt,name,field) or frappe._("Sin descripción")
         return self._cache[key]
 
     def room(self,name):
-        return ", ".join(self.rooms[n].room_number if n in self.rooms else "Sin habitación" for n in str(name or "").split(", ") if n)
+        return ", ".join(self.rooms[n].room_number if n in self.rooms else frappe._("Sin habitación") for n in str(name or "").split(", ") if n)
 
     def stay(self,name):
         row=self.stays.get(name)
         if not row:
-            return "Estancia" if name else ""
+            return frappe._("Estancia") if name else ""
         guest=self.guests.get(row.guest)
-        parts=["Habitación "+self.room(row.room)]
+        parts=[frappe._("Habitación {0}").format(self.room(row.room))]
         if guest:
             parts.append(guest.full_name)
         if row.actual_check_in:
@@ -124,14 +124,14 @@ class Descriptions:
     def booking(self,name):
         row=self.bookings.get(name)
         if not row:
-            return "Reserva" if name else ""
+            return frappe._("Reserva") if name else ""
         guest=self.guests.get(row.guest)
         who=guest.full_name if guest else self.master("Customer",row.customer,"customer_name")
-        return " · ".join(["Reserva de "+who,local(row.starts_at,self.props[row.property]).strftime("%d/%m/%Y %H:%M")])
+        return " · ".join([frappe._("Reserva de {0}").format(who),local(row.starts_at,self.props[row.property]).strftime("%d/%m/%Y %H:%M")])
 
     def folio(self,name):
         row=self.folios.get(name)
-        return row.label if row else "Cuenta" if name else ""
+        return row.label if row else frappe._("Cuenta") if name else ""
 
     def origin(self,dt,name):
         if dt=="HS Stay":
@@ -143,7 +143,7 @@ class Descriptions:
         if dt=="HS Room":
             return self.room(name)
         if dt=="HS Guest":
-            return self.guests[name].full_name if name in self.guests else "Huésped"
+            return self.guests[name].full_name if name in self.guests else frappe._("Huésped")
         if dt=="User":
             return self.master("User",name,"full_name")
         if dt in {"HS Charge","HS Service Request"}:
@@ -160,22 +160,22 @@ class Descriptions:
         if dt=="HS Shift":
             row=self.scoped(dt,["cashier","opened_at","property"]).get(name)
             if row:
-                return "Caja de "+self.master("User",row.cashier,"full_name")+" · "+local(row.opened_at,self.props[row.property]).strftime("%d/%m/%Y %H:%M")
+                return frappe._("Caja de {0}").format(self.master("User",row.cashier,"full_name"))+" · "+local(row.opened_at,self.props[row.property]).strftime("%d/%m/%Y %H:%M")
         config={"HS Rate":["title"],"HS Category":["category_name"],"HS Equipment":["label"],
                 "HS Maintenance Order":["title"],"HS Daily Close":["business_date"],"HS Expense Category":["label"]}
         if dt in config:
             row=self.scoped(dt,config[dt]).get(name)
-            return str(row[config[dt][0]]) if row else TITLES.get(dt,"Documento")
+            return str(row[config[dt][0]]) if row else frappe._(TITLES.get(dt,"Documento"))
         if dt in TITLES and not dt.startswith("HS "):
             return name  # Standard ERPNext voucher numbers are business references.
-        return TITLES.get(dt,"Documento de la operación")
+        return frappe._(TITLES.get(dt,"Documento de la operación"))
 
 
 def prepare(report,records,props,level="operational"):
     from hospitality_suite.report_queries import ALIASES
     base=ALIASES.get(report,report)
     if level not in {"operational","technical"}:
-        frappe.throw("Presentación de reporte no admitida")
+        frappe.throw(frappe._("Presentación de reporte no admitida"))
     if not records:
         return [],[]
     data=Descriptions(props)
@@ -187,16 +187,16 @@ def prepare(report,records,props,level="operational"):
         prop=data.props.get(row.get("property")) or props[0]
         if level=="operational":
             if row.get("docstatus") is not None:
-                hints["docstatus"]={0:"Borrador",1:"Confirmada",2:"Anulada"}.get(row.docstatus,str(row.docstatus))
+                hints["docstatus"]=frappe._({0:"Borrador",1:"Confirmada",2:"Anulada"}.get(row.docstatus,str(row.docstatus)))
             for key in ("is_return","blocks_room","active"):
                 if row.get(key) is not None:
-                    hints[key]="Sí" if row[key] else "No"
+                    hints[key]=frappe._("Sí") if row[key] else frappe._("No")
             if row.get("room"):
                 hints["room"]=hints.get("room") or data.room(row.room)
             elif base in {"Reservas","Estancias","Inventario"}:
-                hints["room"]="Por asignar" if base=="Reservas" else "Sin habitación"
+                hints["room"]=frappe._("Por asignar") if base=="Reservas" else frappe._("Sin habitación")
             if base=="Reservas" and not row.get("guest"):
-                hints["guest"]="Por registrar"
+                hints["guest"]=frappe._("Por registrar")
             for key,dt,field in (("item","Item","item_name"),("customer","Customer","customer_name"),("supplier","Supplier","supplier_name"),
                                  ("actor","User","full_name"),("cashier","User","full_name"),("assigned_to","User","full_name"),
                                  ("warehouse","Warehouse","warehouse_name"),("cost_center","Cost Center","cost_center_name")):
@@ -209,11 +209,11 @@ def prepare(report,records,props,level="operational"):
                 hints["equipment"]=data.origin("HS Equipment",row.equipment)
             if row.get("method"):
                 method=data.scoped("HS Payment Method",["mode_of_payment","currency"]).get(row.method)
-                hints["method"]=f"{frappe._(method.mode_of_payment)} · {method.currency}" if method else "Medio de pago"
+                hints["method"]=f"{method.mode_of_payment} · {method.currency}" if method else frappe._("Medio de pago")
             if row.get("expense_category"):
                 hints["expense_category"]=data.origin("HS Expense Category",row.expense_category)
             if row.get("source_doctype"):
-                hints["source_doctype"]=TITLES.get(row.source_doctype,row.source_doctype)
+                hints["source_doctype"]=frappe._(TITLES.get(row.source_doctype,row.source_doctype))
                 hints["source_name"]=data.origin(row.source_doctype,row.get("source_name"))
             if base=="Auditoría":
                 hints["action"]=action_label(row.get("action"))
@@ -223,16 +223,17 @@ def prepare(report,records,props,level="operational"):
                     hints["source"]="; ".join(data.origin(source_type,n) for n in row.get("source","").split(", "))
             if base=="Producción" and row.get("source_type"):
                 if row.source_type in {"Nota de crédito","Devolución de venta directa"}:
-                    hints["item"]="Devolución · "+hints.get("item","")
+                    hints["item"]=frappe._("Devolución")+" · "+hints.get("item","")
                 elif row.get("adjustment_type"):
                     from hospitality_suite.printing import hs_label
                     hints["item"]=hs_label(row.adjustment_type)+" · "+hints.get("item","")
                 elif "Penalización" in row.source_type:
-                    hints["item"]=row.source_type+" · "+hints.get("item","")
+                    prefix=(frappe._("Devolución")+" · "+frappe._(row.source_type.removeprefix("Devolución · "))) if row.source_type.startswith("Devolución · ") else frappe._(row.source_type)
+                    hints["item"]=prefix+" · "+hints.get("item","")
                 elif row.source_type.startswith("Devolución · "):
-                    hints["item"]="Devolución · "+hints.get("item","")
+                    hints["item"]=frappe._("Devolución")+" · "+hints.get("item","")
                 if not row.get("room"):
-                    hints["room"]="Venta directa" if "venta directa" in row.source_type.lower() else "Sin habitación"
+                    hints["room"]=frappe._("Venta directa") if "venta directa" in row.source_type.lower() else frappe._("Sin habitación")
             if base=="Cuentas pendientes":
                 row.account_label=data.folio(row.name)
             if base=="Facturas":

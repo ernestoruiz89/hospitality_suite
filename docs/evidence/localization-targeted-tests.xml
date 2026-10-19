@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuites tests="2" failures="0" errors="0">
+  <testsuite name="hospitality_suite.tests.test_localization.TestLocalization-20261019144208" tests="2" file="hospitality_suite/tests/test_localization.py" time="2.092" timestamp="2026-10-19T14:42:11" failures="0" errors="0" skipped="0">
+    <testcase classname="hospitality_suite.tests.test_localization.TestLocalization" name="test_extension_entitlements_are_independent_of_translated_explanation" time="1.435" timestamp="2026-10-19T14:42:11" file="/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/tests/test_localization.py" line="90" />
+    <testcase classname="hospitality_suite.tests.test_localization.TestLocalization" name="test_native_dictionary_translates_reports_and_print_but_preserves_names_and_types" time="0.657" timestamp="2026-10-19T14:42:11" file="/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/tests/test_localization.py" line="47" />
+  </testsuite>
+</testsuites>
