@@ -6,6 +6,15 @@ from frappe.utils import get_datetime
 from hospitality_suite.schema import WRITABLE
 
 
+class DeferredRetentionFile:
+    def _delete_file_on_disk(self):
+        # Native File removes the metadata in the request transaction. Bytes are
+        # removed only by the persisted retention job, after that transaction.
+        if getattr(frappe.local,"hs_retention_run",None):
+            return
+        return super()._delete_file_on_disk()
+
+
 class ScopedERPNotifications:
     def notify_update(self):
         prop=self.get("hs_property")
@@ -60,6 +69,8 @@ class ScopedDocument(Document):
             if get_datetime(self.starts_at) >= get_datetime(self.ends_at):
                 frappe.throw(_("La fecha final debe ser posterior a la inicial"))
         if self.doctype == "HS Property":
+            if not 0<=(self.retention_days or 0)<=36500:
+                frappe.throw("La retención admite de 0 a 36500 días; cero desactiva el proceso")
             from hospitality_suite.setup import validate_document_settings
             validate_document_settings(self)
             from zoneinfo import ZoneInfo

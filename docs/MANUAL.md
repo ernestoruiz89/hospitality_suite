@@ -59,6 +59,8 @@ Los medios utilizados conservan cuenta, moneda y clasificación para que los arq
 
 Revise el cierre diario antes de confirmar: llegadas pendientes, estancias vencidas, cargos, turnos y diferencias contables. Confirmar avanza la fecha operativa una sola vez por solicitud. Reabrir el último día requiere motivo y autorización. El formato de cierre imprime el snapshot conservado.
 
+En Configuración → Retención de datos, administración define días de conservación; 0 desactiva la revisión. Gerencia → Revisar datos vencidos muestra documentos elegibles y pide motivo. Revise los campos y adjuntos del resumen antes de confirmar la eliminación irreversible. Solo administrador HS y gerente pueden aprobarla. Huéspedes con actividad vigente o reciente, evidencias de tareas abiertas y adjuntos recientes se conservan. Se retiran identificaciones y evidencias cerradas; nombres, contactos, contabilidad, comentarios libres y respaldos conservan su política propia. El historial distingue pendiente, completada y fallida; corregida la causa de una falla, un gerente puede encolar otro intento con motivo.
+
 ## Si ocurre un error
 
 - Sin conexión, no se cobran movimientos desconectados. Espere respuesta del servidor; vuelva a consultar la cuenta antes de repetir.

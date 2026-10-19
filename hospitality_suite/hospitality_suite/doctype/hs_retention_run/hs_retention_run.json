@@ -1,0 +1,137 @@
+{
+ "doctype": "DocType",
+ "name": "HS Retention Run",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "hash",
+ "naming_rule": "Random",
+ "fields": [
+  {
+   "fieldname": "company",
+   "label": "Compañía",
+   "fieldtype": "Link",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "property",
+   "label": "Establecimiento",
+   "fieldtype": "Link",
+   "options": "HS Property",
+   "reqd": 1
+  },
+  {
+   "fieldname": "status",
+   "label": "Estado",
+   "fieldtype": "Select",
+   "options": "Pending\nCompleted\nFailed",
+   "reqd": 1,
+   "default": "Pending"
+  },
+  {
+   "fieldname": "approved_by",
+   "label": "Approved by",
+   "fieldtype": "Link",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "approved_at",
+   "label": "Approved at",
+   "fieldtype": "Datetime"
+  },
+  {
+   "fieldname": "cutoff",
+   "label": "Cutoff",
+   "fieldtype": "Datetime"
+  },
+  {
+   "fieldname": "retention_days",
+   "label": "Retention days",
+   "fieldtype": "Int"
+  },
+  {
+   "fieldname": "reason",
+   "label": "Reason",
+   "fieldtype": "Small Text",
+   "reqd": 1
+  },
+  {
+   "fieldname": "plan",
+   "label": "Plan",
+   "fieldtype": "Code",
+   "options": "JSON"
+  },
+  {
+   "fieldname": "files",
+   "label": "Files",
+   "fieldtype": "Table",
+   "options": "HS Retention File"
+  },
+  {
+   "fieldname": "attempts",
+   "label": "Attempts",
+   "fieldtype": "Int",
+   "default": 0
+  },
+  {
+   "fieldname": "last_error",
+   "label": "Last error",
+   "fieldtype": "Small Text"
+  },
+  {
+   "fieldname": "completed_at",
+   "label": "Completed at",
+   "fieldtype": "Datetime"
+  }
+ ],
+ "field_order": [
+  "company",
+  "property",
+  "status",
+  "approved_by",
+  "approved_at",
+  "cutoff",
+  "retention_days",
+  "reason",
+  "plan",
+  "files",
+  "attempts",
+  "last_error",
+  "completed_at"
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Administrator",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0
+}

@@ -12,6 +12,8 @@ Fechas guardadas en la zona del sistema Frappe; conversión explícita desde/hac
 
 Las peticiones de escritura exigen idempotencia, se vinculan al usuario, acción y carga canónica y se registran en la misma transacción. No hay commits intermedios en servicios. Los cambios operativos solamente se permiten mediante el servicio; los formularios/API genéricos no pueden saltar disponibilidad, permisos o caja. Cualquier fallo hace rollback en el límite HTTP de Frappe.
 
+La retención revisada usa HS Retention Run y su tabla hija HS Retention File. La aprobación y el retiro de campos, versiones y metadatos File pertenecen a una transacción; un mixin nativo aplaza únicamente la eliminación física durante esa operación. El outbox persistido se procesa después del commit mediante RQ como servicio del sistema. La aprobación conserva su usuario original. Un rollback no elimina bytes; un reintento puede completar una eliminación física interrumpida. Las referencias de contenido compartido se conservan y las rutas del outbox se limpian al terminar.
+
 Ingresos y existencias: exclusivamente Sales Invoice, Payment Entry, Journal Entry y Stock Entry estándar. Un cargo pendiente es operativo; reconoce ingreso al presentar factura. El inventario de consumos se entrega mediante Stock Entry, nunca también mediante `update_stock` de la factura. Las garantías utilizan una cuenta de pasivo configurada y un documento estándar separado.
 
 ```mermaid
@@ -33,6 +35,8 @@ erDiagram
   HS_Room |o--o{ HS_Equipment : ubica
   Asset |o--o| HS_Equipment : referencia
   HS_Equipment |o--o{ HS_Maintenance_Order : requiere
+  HS_Property ||--o{ HS_Retention_Run : autoriza
+  HS_Retention_Run ||--o{ HS_Retention_File : dispone
 ```
 
 ```mermaid

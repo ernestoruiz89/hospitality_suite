@@ -4,7 +4,7 @@ Sitios ficticios locales: hospitality.localhost, hospitality-clean.localhost y h
 
 ## Automatizadas
 
-- `tests-clean.log`: última batería conjunta, **95 aprobadas**: 84 integración y 11 puras.
+- `tests-clean.log`: última batería conjunta, **103 aprobadas**: 92 integración y 11 puras.
 - `tests-clean.xml`: JUnit normalizado para CI, sin fallos ni errores. `tests-clean.raw.txt` conserva la salida original; Frappe 16 concatena un documento XML por cohorte. `tools/normalize_junit.py` los combina sin alterar casos/resultados.
 - `concurrency.log` y `category-race.log`: dos conexiones reales por caso, exactamente una confirmación y un rechazo, bajo REPEATABLE-READ; anulaciones de limpieza auditadas.
 - Los escenarios, fuentes y limitaciones están descritos en `../REQUISITOS.md` y `../AVANCE.md`.
@@ -46,3 +46,6 @@ La cuenta muestra cargos, facturas/impuestos, cobros/garantías y saldo; el arqu
 `finance-stock-pdf-qa.json` acredita seis PDF adicionales legibles: liquidación, egreso, arqueo y reportes de liquidaciones/egresos/movimientos nativos. Se revisaron sus renderizados; `qa_finance_workbook.mjs` verificó C$30/C$2.90/C$0.30/C$26.80 como celdas numéricas y renderizó su vista sin modificar el XLSX. Los movimientos antiguos sin clasificación explícita se muestran como tales; no se infiere que fueron traslados.
 
 El núcleo de Frappe/ERPNext se comprobó sin cambios. Los pendientes obligatorios continúan en `../PENDIENTES.md`; esta evidencia no declara aptitud para producción.
+
+17. `17-retencion-revision.png`: alcance revisado, tres campos de identificación, dos referencias privadas, motivo previo y confirmación explícita sin valores sensibles. No se pulsó el borrado final desde el navegador.
+18. `18-retencion-completada.png`: ejecución completada, dos referencias eliminadas y cero pendientes/fallidos. `privacy-worker.json` acredita aprobación del fixture desechable mediante helper, job RQ real terminado, bytes presentes antes del commit y ausentes después, outbox limpio y ledgers sin cambios.

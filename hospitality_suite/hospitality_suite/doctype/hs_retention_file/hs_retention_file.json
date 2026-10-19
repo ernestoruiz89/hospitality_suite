@@ -1,0 +1,65 @@
+{
+ "doctype": "DocType",
+ "name": "HS Retention File",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "hash",
+ "naming_rule": "Random",
+ "fields": [
+  {
+   "fieldname": "source_file",
+   "label": "Source file",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "file_url",
+   "label": "File url",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "print_hide": 1
+  },
+  {
+   "fieldname": "thumbnail_url",
+   "label": "Thumbnail url",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "print_hide": 1
+  },
+  {
+   "fieldname": "content_hash",
+   "label": "Content hash",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "print_hide": 1
+  },
+  {
+   "fieldname": "status",
+   "label": "Estado",
+   "fieldtype": "Select",
+   "options": "Pending\nDeleted\nShared\nFailed",
+   "reqd": 1,
+   "default": "Pending"
+  },
+  {
+   "fieldname": "last_error",
+   "label": "Last error",
+   "fieldtype": "Small Text"
+  }
+ ],
+ "field_order": [
+  "source_file",
+  "file_url",
+  "thumbnail_url",
+  "content_hash",
+  "status",
+  "last_error"
+ ],
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0,
+ "istable": 1
+}

@@ -164,6 +164,11 @@ SCHEMA = {
         f("quote_snapshot","Code","JSON"),f("request_key",unique=1,hidden=1),f("payload_hash",hidden=1),link("booking","HS Booking",False)]),
     "HS Billing Party": dict(roles=OPERATORS,writable=True,fields=[*SCOPE,link("customer","Customer"),select("kind",["Company","Agency","Individual"]),
         f("credit_authorized","Check"),f("credit_limit","Currency"),f("valid_until","Date"),f("reason","Small Text",required=True)]),
+    "HS Retention Run":dict(roles=ROLES[:2],fields=[*SCOPE,select("status",["Pending","Completed","Failed"]),link("approved_by","User"),
+        f("approved_at","Datetime"),f("cutoff","Datetime"),f("retention_days","Int"),f("reason","Small Text",required=True),f("plan","Code","JSON"),
+        f("files","Table","HS Retention File"),f("attempts","Int",default=0),f("last_error","Small Text"),f("completed_at","Datetime")]),
+    "HS Retention File":dict(child=True,fields=[f("source_file",required=True),f("file_url",hidden=1,print_hide=1),f("thumbnail_url",hidden=1,print_hide=1),
+        f("content_hash",hidden=1,print_hide=1),select("status",["Pending","Deleted","Shared","Failed"]),f("last_error","Small Text")]),
 }
 
 SCOPED = [name for name, spec in SCHEMA.items() if not spec.get("child") and name != "HS Access"]

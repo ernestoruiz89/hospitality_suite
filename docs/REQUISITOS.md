@@ -34,7 +34,8 @@ Actualizada el 2026-10-19. **El objetivo sigue activo.** V = prueba ejecutada de
 | F17b | Reportes, conciliación y exportaciones | reports.py, reconciliation.py, api.export_report | Conciliación hasta origen; PDF y XLSX numérico inspeccionados; auditor no exporta | V |
 | F18 | Portal opcional seguro | www/, portal.py | Desactivación, firma, caducidad, retención y conversión probadas; Page pública pendiente | I |
 | F19 | Contratos de integración | integrations.py | HMAC/caducidad, redacción y simulación que nunca marca pagado probados | V |
-| F20a | Permisos API, documentos, archivos y roles | security.py, hooks.py | Segunda compañía, roles combinados, saldos y stock; lectura/listado de archivos incluso del propietario, Asset y rechazo financiero de limpieza probados; falta retención y auditoría final | I |
+| F20a | Permisos API, documentos, archivos y roles | security.py, hooks.py | Segunda compañía, roles combinados, saldos y stock; lectura/listado de archivos incluso del propietario, Asset y rechazo financiero de limpieza probados; retención con rollback, archivos compartidos, límites y worker real probada; falta auditoría final | I |
+| F20c | Retención revisada de datos sensibles | privacy.py, HS Retention Run/File, Page Gerencia | Ocho pruebas: actividad/adjuntos recientes, permisos, versiones, rollback, referencias compartidas, tres intentos y recuperación; RQ real completado y revisión/resultado de Page | V |
 | F20b | Notificaciones estándar por usuario | ScopedERPNotifications | Sin list_update global; Socket.IO autenticado conectado en Page tras corregir DEV_SERVER; faltan dos sesiones y reconexión bajo corte | I |
 | F21 | Idempotencia y recuperación | service.py, jobs.py, JS | Reintento, rollback, versión obsoleta y fallo/recuperación en worker RQ real probados; falta transporte/red | I |
 | F22 | Once Pages, teclado y móvil | public/js, bundles, sidebar v16 | Circuitos motel y hotel completos, panel lateral 1024×768/390×844, limpieza móvil y contador sin recarga; faltan grupos/asistente/portal | I |
@@ -66,7 +67,7 @@ Actualizada el 2026-10-19. **El objetivo sigue activo.** V = prueba ejecutada de
 
 ## Evidencia acumulada
 
-Batería conjunta anterior a las últimas ampliaciones: **50 aprobadas** (39 de integración y 11 puras). Ampliación de horarios, acompañantes y KPI: **4 aprobadas** por separado. La cortesía detectó una incompatibilidad con tarifas negativas; se corrigió con descuento en la línea estándar y referencias a sus cargos de origen. Última batería conjunta en hospitality-clean.localhost: **95 aprobadas** (84 integración + 11 puras). También pasaron impuesto incluido, camas extra, Contact/Address, retiro de caja, variación de cambio y exportación numérica.
+Batería conjunta anterior a las últimas ampliaciones: **50 aprobadas** (39 de integración y 11 puras). Ampliación de horarios, acompañantes y KPI: **4 aprobadas** por separado. La cortesía detectó una incompatibilidad con tarifas negativas; se corrigió con descuento en la línea estándar y referencias a sus cargos de origen. Última batería conjunta en hospitality-clean.localhost: **103 aprobadas** (92 integración + 11 puras). También pasaron impuesto incluido, camas extra, Contact/Address, retiro de caja, variación de cambio y exportación numérica.
 
 La matriz no sustituye los registros finales ni las capturas. Integraciones reales de canales, mensajería, pasarelas y cerraduras esperan proveedor/credenciales; HRMS es opcional. No se migró producción ni ningún sitio ajeno.
 

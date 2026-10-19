@@ -5,7 +5,7 @@ window.hospitality_suite = window.hospitality_suite || {};
   const labels = {Clean:"Limpia", Dirty:"Sucia", Cleaning:"En limpieza", Inspection:"Pendiente de inspección",
     Active:"Alojado", "Checked Out":"Salida registrada", Confirmed:"Confirmada", Hold:"Retención temporal",
     Invoiced:"Facturado", Reversed:"Revertido", Draft:"Borrador", "Checked In":"Entrada registrada", Completed:"Completada", Cancelled:"Cancelada", "No Show":"No presentada",
-    Pending:"Pendiente", "In Progress":"En proceso", Open:"Abierto", Closed:"Cerrado", Review:"Por revisar",Resolved:"Resuelto",
+    Pending:"Pendiente", "In Progress":"En proceso", Open:"Abierto", Closed:"Cerrado", Review:"Por revisar",Resolved:"Resuelto",Failed:"Fallida",
     Requested:"Solicitado", Delivered:"Entregado", Returned:"Devuelto", Posted:"Contabilizado", Payment:"Cobro", Advance:"Anticipo", Guarantee:"Garantía",
     "Guarantee Refund":"Devolución de garantía", Refund:"Devolución", Normal:"Normal", High:"Alta", Urgent:"Urgente"};
   const title = (s) => labels[s] || s;

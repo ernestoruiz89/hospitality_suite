@@ -31,6 +31,7 @@ for dt in ("Customer","Supplier","Contact","Address"):
     has_permission[dt]="hospitality_suite.security.party_permission"
 extend_doctype_class["Warehouse"]=["hospitality_suite.controllers.ScopedERPNotifications"]
 extend_doctype_class["Asset"]=["hospitality_suite.controllers.ScopedERPNotifications"]
+extend_doctype_class["File"]=["hospitality_suite.controllers.DeferredRetentionFile"]
 permission_query_conditions["Asset"]="hospitality_suite.equipment.asset_query"
 has_permission["Asset"]="hospitality_suite.equipment.asset_permission"
 has_permission["File"]="hospitality_suite.security.file_permission"

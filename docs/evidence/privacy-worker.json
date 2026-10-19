@@ -1,0 +1,17 @@
+{
+  "synthetic_fixture": true,
+  "guest": "4fsi2lgflc",
+  "run": "62e15kfojm",
+  "approved_by": "manager@hospitality.example.invalid",
+  "status": "Completed",
+  "attempts": 1,
+  "real_rq_status": "JobStatus.FINISHED",
+  "worker_user": "Administrator",
+  "bytes_existed_before_commit": true,
+  "bytes_exist_after_job": false,
+  "metadata_removed": 2,
+  "outbox_paths_cleared": true,
+  "ledgers_unchanged": true,
+  "browser_review_before_approval": true,
+  "browser_final_delete_clicked": false
+}

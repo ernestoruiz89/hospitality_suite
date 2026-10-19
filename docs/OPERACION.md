@@ -26,6 +26,16 @@ Ante un fallo, conserve Failed Job Log y el traceback, corrija la causa y vuelva
 
 Se verificaron ejecución real de expire_property, fallo con rollback y reintento posterior por el worker. La reconexión bajo corte y propagación entre dos sesiones siguen pendientes en la matriz.
 
+## Retención revisada de datos sensibles
+
+Configurar retention_days no elimina datos automáticamente. El gerente o administrador HS revisa candidatos y alcance en Gerencia, indica motivo y confirma. El límite se calcula a medianoche local del establecimiento. Se conservan huéspedes con reservas no terminadas o actividad reciente, incluidos acompañantes; mantenimiento debe estar completado y las novedades resueltas. Un adjunto nuevo o modificado recientemente impide retirar el documento.
+
+La política actual retira identity_type, identity_number e identity_file de HS Guest y evidence de mantenimiento/novedades cerrados, junto con sus adjuntos privados locales, cambios de esos campos en Version y comentarios automáticos de adjuntos. Conserva nombres, contactos, importes, documentos contables, descripciones y comentarios libres, bitácora y respaldos. No es anonimización integral. Los respaldos deben caducar mediante la política separada de almacenamiento; restaurarlos puede recuperar información retirada y exige volver a revisar retención.
+
+HS Retention Run conserva aprobación y conteos. El retiro de campos/metadatos y el outbox se confirman juntos; un rollback mantiene el archivo físico. El job privado se encola después del commit como Administrator, conservando la identidad del aprobador en la ejecución. Nunca lo exponga como RPC. Comprueba referencias compartidas antes de eliminar y limpia rutas/hash al terminar. Los archivos compartidos se conservan para el otro documento. Si falla, mantiene el outbox privado y hace como máximo tres intentos automáticos; Gerencia permite reintento autorizado con motivo después de corregir permisos/almacenamiento. No borre ni edite el outbox manualmente.
+
+Tras cambiar hooks o código del worker en este bench de pruebas, use `tools/run_dev.py --restart-worker`. El script valida PID, comando y directorio antes de detener el proceso aislado. La prueba real retiró dos referencias File y sus bytes en un intento, después del commit, sin cambiar GL/Payment/Stock Ledger. `tools/verify_privacy.py` solo admite el sitio sintético y un fixture explícito desechable; la prueba de navegador revisó el alcance y el resultado, mientras la aprobación del fixture se ejecutó por el helper de desarrollo.
+
 ## Respaldo
 
 Desde el bench y con los permisos del sitio:
@@ -70,7 +80,7 @@ Los patches de la app reconstruyen referencias de líneas y snapshots de asignac
 ## Seguridad y monitoreo
 
 - Conceda roles HS más HS Access por compañía/establecimiento. Los roles ERPNext adicionales deben asignarse explícitamente; compruebe su alcance antes de usarlos.
-- Los archivos personales deben ser privados y vinculados a documentos autorizados. Configure la política de datos personales de la implementación; no existe una purga automática acreditada por el solo campo retention_days.
+- Los archivos personales deben ser privados y vinculados a documentos autorizados. Configure y revise la política descrita arriba; el valor retention_days por sí solo no elimina datos.
 - Revise diferencias de caja, conciliación, documentos anulados, autorizaciones, bloqueos y jobs fallidos. No use ajustes automáticos para ocultar una diferencia.
 - Las notificaciones de la app invalidan solo el establecimiento y se envían por usuario autorizado. Los documentos estándar evitan difusión global de sus nombres; la prueba del transporte entre sesiones continúa en la matriz.
 - Proteja site_config, claves de cifrado y secretos de proveedores fuera del repositorio. El portal está desactivado por defecto; los adaptadores no reciben credenciales reales durante la demostración.

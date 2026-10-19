@@ -4,7 +4,7 @@ import json
 import frappe
 from frappe.utils import now_datetime
 
-from hospitality_suite import operations, cashier, housekeeping, inventory, accounting, closing, linen, portal,timing,direct_sales,treasury,procurement
+from hospitality_suite import operations, cashier, housekeeping, inventory, accounting, closing, linen, portal,timing,direct_sales,treasury,procurement,privacy
 from hospitality_suite.security import allowed_properties, require, document, ACTIONS, is_system
 from hospitality_suite.service import command, insert, audit, canonical
 from hospitality_suite.time import to_site, now_local
@@ -40,6 +40,7 @@ COMMANDS = {
     "move_stock":("inventory",procurement.move_stock),"adjust_stock":("approve",procurement.adjust_stock),
     "register_supplier":("inventory",procurement.register_supplier),
     "create_warehouse":("inventory",procurement.create_warehouse),"stock_policy":("setup",procurement.stock_policy),
+    "retire_sensitive":("approve",privacy.retire),"retry_retention":("approve",privacy.retry),
 }
 
 
@@ -65,7 +66,7 @@ def execute(property_name, action, request_key, data=None):
 
 @frappe.whitelist()
 def preview(property_name, data, action="reserve"):
-    permission="inventory" if action=="purchase_order" else "approve" if action=="adjust_stock" else "finance" if action in ("payment","direct_sale","settle_payment","supplier_payment") else "reserve" if action in ("reserve","booking_status","modify_reservation","convert_portal") else "stay"
+    permission="inventory" if action=="purchase_order" else "approve" if action in ("adjust_stock","retire_sensitive") else "finance" if action in ("payment","direct_sale","settle_payment","supplier_payment") else "reserve" if action in ("reserve","booking_status","modify_reservation","convert_portal") else "stay"
     prop = require(property_name, permission)
     data = payload(data)
     if action == "reserve":
@@ -98,6 +99,8 @@ def preview(property_name, data, action="reserve"):
         return procurement.adjustment_quote(prop,data)
     if action=="purchase_order":
         return procurement.purchase_order_quote(prop,data)
+    if action=="retire_sensitive":
+        return privacy.quote(prop,data)
     if action=="convert_portal":
         request_doc,values=portal.conversion_values(prop,data)
         excluded=frappe.get_all("HS Allocation",filters={"portal_request":request_doc.name,"status":"Active"},pluck="name")
@@ -187,7 +190,22 @@ def bootstrap(property_name=None):
         result["report_labels"]=LABELS
         result["report_values"]=VALUE_LABELS
         result["closes"] = project("HS Daily Close", prop)
+    if may("approve"):
+        result["retention_runs"]=project("HS Retention Run",prop,["name","status","approved_by","approved_at","attempts","last_error","modified"])
+        for run in result["retention_runs"]:
+            counts=current_all_retention_files(run.name)
+            run["file_counts"]={status:sum(r.status==status for r in counts) for status in ("Pending","Deleted","Shared","Failed")}
     return result
+
+
+def current_all_retention_files(name):
+    from hospitality_suite.service import current_all
+    return current_all("HS Retention File",filters={"parent":name,"parenttype":"HS Retention Run"},fields=["status"])
+
+
+@frappe.whitelist()
+def retention_candidates(property_name):
+    return privacy.candidates(require(property_name,"approve"))
 
 
 @frappe.whitelist()

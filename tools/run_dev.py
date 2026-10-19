@@ -22,6 +22,7 @@ def port_open(port):
 def main():
     parser=argparse.ArgumentParser()
     parser.add_argument("--restart-web",action="store_true")
+    parser.add_argument("--restart-worker",action="store_true")
     args=parser.parse_args()
     if os.name!="posix" or not (BENCH/"sites"/SITE/"site_config.json").exists():
         raise SystemExit("Ejecute como frappe dentro de WSL, después de crear el sitio aislado")
@@ -42,21 +43,22 @@ def main():
     }
     for name,(command,port) in commands.items():
         pidfile=state/(name+".pid")
-        if name=="web" and args.restart_web and pidfile.exists():
+        if ((name=="web" and args.restart_web) or (name=="worker" and args.restart_worker)) and pidfile.exists():
             pid=int(pidfile.read_text())
             process_path=Path(f"/proc/{pid}")
             if process_path.exists():
                 cmdline=(process_path/"cmdline").read_bytes().decode(errors="replace")
                 cwd=(process_path/"cwd").resolve()
-                if "serve" not in cmdline or "8086" not in cmdline or cwd not in (BENCH,BENCH/"sites"):
-                    raise SystemExit("El PID no coincide con el servidor aislado; no se interrumpe")
+                expected=("serve" in cmdline and "8086" in cmdline) if name=="web" else ("worker" in cmdline and str(BENCH) in cmdline)
+                if not expected or cwd not in (BENCH,BENCH/"sites"):
+                    raise SystemExit("El PID no coincide con el proceso aislado; no se interrumpe")
                 os.kill(pid,signal.SIGTERM)
                 for _ in range(50):
-                    if not port_open(8086):
+                    if (name=="web" and not port_open(8086)) or (name=="worker" and not process_path.exists()):
                         break
                     time.sleep(.1)
-                if port_open(8086):
-                    raise SystemExit("El servidor no se detuvo todavía; revise su registro")
+                if (name=="web" and port_open(8086)) or (name=="worker" and process_path.exists()):
+                    raise SystemExit("El proceso no se detuvo todavía; revise su registro")
         if port and port_open(port):
             print(name+": puerto activo")
             continue
