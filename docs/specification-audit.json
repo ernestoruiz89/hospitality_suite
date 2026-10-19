@@ -1442,15 +1442,21 @@
       "line": 163,
       "kind": "enumerated",
       "requirement": "- Venta directa o cargo a habitación con confirmación de estancia activa y autorización del usuario.",
-      "status": "I",
+      "status": "V",
       "implementation": [
-        "hospitality_suite/api.py::bootstrap",
-        "hospitality_suite/public/js/hospitality_workflows.js"
+        "hospitality_suite/catalog.py",
+        "hospitality_suite/public/js/hospitality_catalog.js",
+        "hospitality_suite/inventory.py::request_service",
+        "hospitality_suite/direct_sales.py"
       ],
       "evidence": [
-        "docs/evidence/54-produccion-legible.png"
+        "hospitality_suite/tests/test_catalog.py",
+        "docs/evidence/catalog-native-tests.xml",
+        "docs/evidence/catalog-js-tests.log",
+        "docs/evidence/catalog-ui-selection.json",
+        "docs/evidence/60-catalogo-completo-busqueda.png"
       ],
-      "remaining": "Los circuitos de venta/cargo están acreditados en la matriz resumida. Revisar el selector de artículos ante un catálogo mayor que las 500 filas cargadas por bootstrap; no declarar completo ese acceso sin verificarlo."
+      "remaining": ""
     },
     {
       "id": "S11-03",

@@ -134,8 +134,6 @@ def bootstrap(property_name=None):
     result["print_formats"]=dict(invoice=prop.invoice_print_format or "HS Factura",receipt=prop.receipt_print_format or "HS Recibo")
     result["rooms"] = project("HS Room", prop, ["name", "room_number", "category", "floor", "zone", "cleaning_status", "active", "parking"])
     result["categories"] = project("HS Category", prop, ["name", "category_name", "capacity"])
-    if may("clean") or may("service") or may("maintain") or may("inventory"):
-        result["items"]=frappe.get_all("Item",filters={"disabled":0},fields=["name","item_name","is_stock_item","is_fixed_asset","is_sales_item","is_purchase_item"],limit_page_length=500)
     # Minimal operational projection is intentionally separate from stay documents.
     active = frappe.get_all("HS Stay", filters={"property": prop.name, "status": "Active"}, fields=["name", "room", "ends_at"])
     result["occupied"] = active
@@ -196,7 +194,16 @@ def bootstrap(property_name=None):
         for run in result["retention_runs"]:
             counts=current_all_retention_files(run.name)
             run["file_counts"]={status:sum(r.status==status for r in counts) for status in ("Pending","Deleted","Shared","Failed")}
+    if any(may(a) for a in ("clean","service","maintain","inventory")):
+        from hospitality_suite.catalog import bootstrap_items
+        result["items"]=bootstrap_items(result)
     return result
+
+
+@frappe.whitelist()
+def catalog_search(property_name,txt="",purpose="any"):
+    from hospitality_suite.catalog import search
+    return search(property_name,txt,purpose)
 
 
 def current_all_retention_files(name):

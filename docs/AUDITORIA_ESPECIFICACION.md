@@ -6,7 +6,7 @@ Inventario: 201 elementos enumerados (incluidas las once Pages), 10 cláusulas e
 
 R = contraste individual pendiente; I = implementación localizada con verificación pendiente; P = diferencia material pendiente; V = evidencia individual revisada. La matriz resumida REQUISITOS.md conserva la evidencia anterior. R no afirma que la función falte; V exige probar todo el texto de la entrada. Ningún recuento ni generador acredita por sí mismo el alcance.
 
-Estado: V: 15, I: 2, P: 0, R: 201. Objetivo activo.
+Estado: V: 16, I: 1, P: 0, R: 201. Objetivo activo.
 
 ## 0. Objetivo general
 
@@ -186,7 +186,7 @@ Estado: V: 15, I: 2, P: 0, R: 201. Objetivo activo.
 | ID / línea original | Requisito | Estado | Implementación | Evidencia | Pendiente |
 |---|---|---|---|---|---|
 | S11-01 / L162 | - Minibar, bebidas, alimentos, room service, lavandería, estacionamiento y otros servicios. | R | — | — | Contraste individual con código y evidencia pendiente. |
-| S11-02 / L163 | - Venta directa o cargo a habitación con confirmación de estancia activa y autorización del usuario. | I | [hospitality_suite/api.py](../hospitality_suite/api.py) — bootstrap<br>[hospitality_suite/public/js/hospitality_workflows.js](../hospitality_suite/public/js/hospitality_workflows.js) | [docs/evidence/54-produccion-legible.png](evidence/54-produccion-legible.png) | Los circuitos de venta/cargo están acreditados en la matriz resumida. Revisar el selector de artículos ante un catálogo mayor que las 500 filas cargadas por bootstrap; no declarar completo ese acceso sin verificarlo. |
+| S11-02 / L163 | - Venta directa o cargo a habitación con confirmación de estancia activa y autorización del usuario. | V | [hospitality_suite/catalog.py](../hospitality_suite/catalog.py)<br>[hospitality_suite/public/js/hospitality_catalog.js](../hospitality_suite/public/js/hospitality_catalog.js)<br>[hospitality_suite/inventory.py](../hospitality_suite/inventory.py) — request_service<br>[hospitality_suite/direct_sales.py](../hospitality_suite/direct_sales.py) | [hospitality_suite/tests/test_catalog.py](../hospitality_suite/tests/test_catalog.py)<br>[docs/evidence/catalog-native-tests.xml](evidence/catalog-native-tests.xml)<br>[docs/evidence/catalog-js-tests.log](evidence/catalog-js-tests.log)<br>[docs/evidence/catalog-ui-selection.json](evidence/catalog-ui-selection.json)<br>[docs/evidence/60-catalogo-completo-busqueda.png](evidence/60-catalogo-completo-busqueda.png) | — |
 | S11-03 / L164 | - Solicitudes de servicio con estados: solicitado, en preparación/en proceso, entregado y cancelado. | R | — | — | Contraste individual con código y evidencia pendiente. |
 | S11-04 / L165 | - Almacenes por establecimiento y ubicaciones cuando corresponda, mínimos y alertas de reposición. | R | — | — | Contraste individual con código y evidencia pendiente. |
 | S11-05 / L166 | - Integrar recepción de compras, traslados, salidas y ajustes con documentos estándar de ERPNext. | R | — | — | Contraste individual con código y evidencia pendiente. |

@@ -2,7 +2,7 @@
 
 Actualizada el 2026-10-19. **El objetivo sigue activo.** V = prueba ejecutada de la parte indicada; I = implementado, verificación pendiente; P = trabajo pendiente. Las pruebas de backend no acreditan por sí solas un recorrido completo de interfaz.
 
-La [auditoría punto por punto](AUDITORIA_ESPECIFICACION.md) conserva el texto original y su huella: 201 elementos enumerados, diez cláusulas adicionales y siete fases, 218 entradas. Quince entradas de reportes/indicadores tienen contraste individual; la revisión del resto sigue explícita. Esta matriz resume las fases y no sustituye esa auditoría.
+La [auditoría punto por punto](AUDITORIA_ESPECIFICACION.md) conserva el texto original y su huella: 201 elementos enumerados, diez cláusulas adicionales y siete fases, 218 entradas. Dieciséis entradas de reportes/indicadores y selección de artículos tienen contraste individual; la revisión del resto sigue explícita. Esta matriz resume las fases y no sustituye esa auditoría.
 
 | ID | Requisito | Implementación | Evidencia y trabajo pendiente | Estado |
 |---|---|---|---|---|
@@ -28,9 +28,10 @@ La [auditoría punto por punto](AUDITORIA_ESPECIFICACION.md) conserva el texto o
 | F14a | Mantenimiento y objetos | housekeeping.py, equipment.py, linen.py, Pages | Equipo sin habitación, vínculo Asset y aislamiento, intervalos y conflictos probados; configuración/equipo/evidencia privada/completar y resolver objeto ejecutados desde Pages | V |
 | F14b | Ropa de cama | linen.py, procurement.move_stock | Envío/recepción/pérdida desde Page con rol limpieza, tres Stock Entry y cantidades conciliadas; formulario/resultados inspeccionados a 390×844, reposición probada en integración | V |
 | F15a | Servicios y existencias únicas | inventory.py | Entrega repetida de minibar: una salida y reversión estándar | V |
-| F15d | Servicios incluidos | pricing.py, inventory.py, Pages | Page: plan con agua configurado/cotizado, entrega C$0 con Stock Entry único, segunda unidad rechazada, cambio y extensión conservan un solo beneficio | V |
 | F15b | Venta directa y devolución | direct_sales.py | Factura/pago/salida únicos, reintento, devolución y rollback por falta de stock; venta de agua C$30, respuesta perdida/reintento único, devolución estándar y turno cero desde Pages | V |
 | F15c | Compras, traslados, mínimos y mermas | procurement.py, inventario nativo y Pages | Compra parcial, factura sin segundo stock, pagos, mínimos nativos, clasificación, reposición/consumo/merma, conteo obsoleto y reporte de SLE probados; compra/factura/pago, nuevo almacén, traslado y conteo físico con revisión/diferencia y dos GL Entry ejecutados desde Page | V |
+| F15d | Servicios incluidos | pricing.py, inventory.py, Pages | Page: plan con agua configurado/cotizado, entrega C$0 con Stock Entry único, segunda unidad rechazada, cambio y extensión conservan un solo beneficio | V |
+| F15e | Catálogo completo y selección por nombre | catalog.py, hospitality_catalog.js, selectores de Pages | 606 artículos, búsqueda literal/código fuera de las primeras 500, consumo a precio ERPNext y nombre histórico deshabilitado probados. Rol limpieza recibe proyección mínima; alcance/Guest rechazados. Dos pruebas JS y selección real de HS-CATALOG-QA-0605 en sitio limpio, captura 60 | V |
 | F16 | Cierre diario y reapertura | closing.py | Cierre repetido, diferencias, snapshot y reapertura autorizada solo del último día probados | V |
 | F17a | KPI con noches y horas separadas | reports.summary | Cortesía, denominador cero, impuesto incluido, horas reales y bloqueo de mantenimiento probados | V |
 | F17b | Reportes mínimos, conciliación y exportaciones | reports.py, report_queries.py, reconciliation.py, api.export_report | Sección 13 contrastada: dimensiones, atribución histórica, penalizaciones nativas/retornos, productividad de limpieza y arqueos por moneda. 48 consultas en dos propiedades y cuatro PDF/XLSX por HTTP; ocho páginas revisadas. Capturas 57–59 y tres pruebas nuevas con controles financieros/stock | V |
@@ -71,7 +72,7 @@ La [auditoría punto por punto](AUDITORIA_ESPECIFICACION.md) conserva el texto o
 
 ## Evidencia acumulada
 
-Batería conjunta anterior a las últimas ampliaciones: **50 aprobadas** (39 de integración y 11 puras). Ampliación de horarios, acompañantes y KPI: **4 aprobadas** por separado. La cortesía detectó una incompatibilidad con tarifas negativas; se corrigió con descuento en la línea estándar y referencias a sus cargos de origen. Última batería conjunta en hospitality-clean.localhost: **125 aprobadas** (112 integración + 13 puras), además de **9 de Desk y 2 del portal**. Ambas carreras reales se repitieron tras reutilizar el motor de cupos en reportes, con una confirmación y un rechazo por carrera. También pasaron impuesto incluido, camas extra, Contact/Address, retiro de caja, variación de cambio, penalizaciones, devolución POS nativa y exportación numérica.
+Batería conjunta anterior a las últimas ampliaciones: **50 aprobadas** (39 de integración y 11 puras). Ampliación de horarios, acompañantes y KPI: **4 aprobadas** por separado. La cortesía detectó una incompatibilidad con tarifas negativas; se corrigió con descuento en la línea estándar y referencias a sus cargos de origen. Última batería conjunta en hospitality-clean.localhost: **127 aprobadas** (114 integración + 13 puras), además de **11 de Desk y 2 del portal**. Ambas carreras reales se repitieron tras reutilizar el motor de cupos en reportes, con una confirmación y un rechazo por carrera. También pasaron impuesto incluido, camas extra, Contact/Address, retiro de caja, variación de cambio, penalizaciones, devolución POS nativa y exportación numérica.
 
 La matriz no sustituye los registros finales ni las capturas. Integraciones reales de canales, mensajería, pasarelas y cerraduras esperan proveedor/credenciales; HRMS es opcional. No se migró producción ni ningún sitio ajeno.
 

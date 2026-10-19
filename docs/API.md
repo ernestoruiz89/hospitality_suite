@@ -20,9 +20,16 @@ Base RPC: `/api/method/hospitality_suite.api.`.
 | `report_page` | los mismos filtros, `offset`, `page_length` (1–200) | `rows`, `columns`, `total`, `has_more`; sin truncar la exportación |
 | `report_options` | `property_name`, `report_name`, `company` opcional | Dimensiones aplicables, tipos de fecha y opciones dentro de los establecimientos autorizados |
 | `guest_history` | `name`, `offset`, `page_length` | Visitas como principal o acompañante, limitadas al documento/establecimiento autorizado |
+| `catalog_search` | `property_name`, `txt`, `purpose` (`any`, `sale`, `stock`, `purchase`) | Hasta 50 coincidencias y `has_more`; solo nombres/uso del Item compartido, sin precio/costo/saldo |
 | `configuration`, `setup_options` | establecimiento | Configuración y opciones; requiere permiso de configuración |
 
 En la tabla, establecimiento es el argumento `property_name`; inicio/fin son `starts_at`/`ends_at`, categoría es `category` y personas es `people`. Filtros se envía como objeto JSON en `filters`, con `from_date`, `to_date` y dimensiones admitidas por el reporte. Nombres e identificadores se obtienen de las consultas, no se construyen a partir del número visible de habitación.
+
+### Catálogo de artículos
+
+`bootstrap.items` incluye las primeras 50 opciones y los nombres referenciados por consumos, compras o repuestos visibles, incluso si el artículo histórico está deshabilitado. No es el catálogo completo ni limita la selección: `catalog_search` busca en el Item estándar completo, por código o nombre, con texto literal de hasta 140 caracteres. Los artículos deshabilitados quedan fuera de la búsqueda. Requiere establecimiento autorizado y rol de servicio, limpieza, mantenimiento, inventario, configuración o reporte; Guest no accede. Item es un maestro compartido de ERPNext; precios y costos se resuelven en sus operaciones autorizadas por establecimiento/lista/moneda.
+
+La Page conserva el código en el valor de la opción y muestra su nombre. Si dos resultados tienen el mismo nombre, añade el código para distinguirlos. Una búsqueda fallida o pendiente no autoriza la acción; las respuestas anteriores se descartan y la selección existente se conserva explícitamente al cambiar la búsqueda. `_hs_item_search` es un control de pantalla y se retira antes de ejecutar el comando.
 
 ### Reportes y presentación
 

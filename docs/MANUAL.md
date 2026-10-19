@@ -69,6 +69,8 @@ En Configuración → Retención de datos, administración define días de conse
 
 ## Si ocurre un error
 
+En los selectores de consumos, venta directa, ropa, repuestos, movimientos, conteos y filtros de artículos puede escribir parte del nombre o código. Se muestran hasta 50 coincidencias; afine el texto si hay más. Elija el resultado por su nombre. Cambiar la búsqueda conserva la selección anterior y lo indica; una búsqueda sin respuesta válida bloquea la confirmación hasta volver a consultar. Los precios se obtienen de ERPNext al cotizar o registrar el consumo.
+
 - Sin conexión, no se cobran movimientos desconectados. Espere respuesta del servidor; vuelva a consultar la cuenta antes de repetir.
 - Si aparece Sin confirmación del servidor, mantenga el diálogo y reintente los mismos datos. La misma solicitud conserva su clave de idempotencia al reintentar. Si se perdió toda la ventana, consulte primero el comprobante y el saldo; no introduzca otro pago sin verificar.
 - Si otro usuario modificó el documento, actualice y revise el estado nuevo. No vuelva a enviar datos antiguos para sobrescribirlo.

@@ -70,7 +70,7 @@
     };
     const company=options.properties.find(p=>p.name===this.property)?.company;
     let selectedCompany=company;
-    const filters=options.filters.map(key=>key==="item"?field(key,labels[key],"Link",{options:"Item"}):select(key,labels[key],values(key)));
+    const filters=options.filters.map(key=>key==="item"?this.item_field(labels[key],"any",{reqd:0}):select(key,labels[key],values(key)));
     const dates=options.base==="Disponibilidad"?[
       field("starts_at","Inicio (hora local de cada establecimiento)","Datetime",{default:this.data.property_now?.slice(0,19),reqd:1}),
       field("ends_at","Fin (hora local de cada establecimiento)","Datetime",{reqd:1})
