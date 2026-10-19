@@ -72,6 +72,9 @@ def main():
             # bench start normally sets DEV_SERVER. Direct serve must also tell
             # Desk to use socketio_port instead of expecting a production proxy.
             env=dict(os.environ)
+            pdf_runtime=BENCH/'.runtime/wkhtmltox/usr/local/bin'
+            if (pdf_runtime/'wkhtmltopdf').is_file():
+                env['PATH']=str(pdf_runtime)+os.pathsep+env.get('PATH','')
             if name=="web":
                 env["DEV_SERVER"]="true"
             process=subprocess.Popen(command,cwd=BENCH,env=env,stdin=subprocess.DEVNULL,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)

@@ -1,5 +1,6 @@
 """History remains complete beyond former limits and respects role/property."""
 from datetime import timedelta
+from unittest.mock import patch
 import io
 import uuid
 
@@ -107,3 +108,9 @@ class TestReportingHistory(IntegrationTestCase):
         self.assertEqual(len(result),1)
         from hospitality_suite.time import local
         self.assertEqual(result[0].ends_at,local(finished,self.prop).isoformat())
+
+    def test_pdf_rejects_incompatible_renderer_instead_of_returning_a_broken_report(self):
+        with patch('frappe.utils.pdf.is_wkhtmltopdf_valid',return_value=False),patch('frappe.utils.pdf.get_pdf') as renderer:
+            with self.assertRaises(frappe.ValidationError):
+                api.export_report(self.prop.name,'Auditoría',file_format='pdf')
+            renderer.assert_not_called()

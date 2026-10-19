@@ -1,0 +1,92 @@
+{
+  "renderer": "wkhtmltopdf 0.12.6.1 (with patched qt)",
+  "pdf_files": 10,
+  "xlsx_files": 1,
+  "visually_reviewed_pdf_pages": 10,
+  "files": [
+    {
+      "file": "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/output/patched-native/pdf/reservation.pdf",
+      "source_doctype": "HS Booking",
+      "source": "kh48obir08",
+      "format": "HS Confirmación de reserva",
+      "bytes": 9376,
+      "sha256": "eebedd67053db8a5bd14d8089a51992c2846ea21bf574d1ea2138a44d43d1b1c"
+    },
+    {
+      "file": "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/output/patched-native/pdf/registration.pdf",
+      "source_doctype": "HS Stay",
+      "source": "agp2lri219",
+      "format": "HS Registro de huésped",
+      "bytes": 8276,
+      "sha256": "daeef2a9b65e23550768c3746781df2e7552d238d3c541517c205e5ac6a7683d"
+    },
+    {
+      "file": "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/output/patched-native/pdf/folio.pdf",
+      "source_doctype": "HS Stay",
+      "source": "agp2lri219",
+      "format": "HS Cuenta de estancia",
+      "bytes": 10390,
+      "sha256": "afd610eeb4d8f09b0ab6ba2f105bd98d3f8357a10598a57bf11f40d640210bf9"
+    },
+    {
+      "file": "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/output/patched-native/pdf/receipt.pdf",
+      "source_doctype": "HS Payment",
+      "source": "i283k2gp2s",
+      "format": "HS Recibo",
+      "bytes": 9146,
+      "sha256": "aac4c3aa9c510d985766813dc51a69a95db8c8f9ffef4aa8386fca51bfee7a5f"
+    },
+    {
+      "file": "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/output/patched-native/pdf/shift.pdf",
+      "source_doctype": "HS Shift",
+      "source": "guh9ip04kn",
+      "format": "HS Arqueo",
+      "bytes": 9656,
+      "sha256": "d9e36a0222b3de419664ad23b74e2abedf4cbf2bab35fb8ecb7a79d6f1d15016"
+    },
+    {
+      "file": "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/output/patched-native/pdf/cleaning.pdf",
+      "source_doctype": "HS Cleaning Task",
+      "source": "krb3bd426o",
+      "format": "HS Orden de limpieza",
+      "bytes": 9224,
+      "sha256": "343f938b996ce0518827c50d4249670c084622ec5a08904a663843e7c67a82cc"
+    },
+    {
+      "file": "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/output/patched-native/pdf/maintenance.pdf",
+      "source_doctype": "HS Maintenance Order",
+      "source": "q1d9m8g18h",
+      "format": "HS Orden de mantenimiento",
+      "bytes": 13242,
+      "sha256": "04537535c2c2b9f795e075084e349cba09b415edd97d4e0060398ec14fc8a5fa"
+    },
+    {
+      "file": "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/output/patched-native/pdf/daily_close.pdf",
+      "source_doctype": "HS Daily Close",
+      "source": "1kr0prds5u",
+      "format": "HS Cierre diario",
+      "bytes": 8762,
+      "sha256": "a7ffbf7d1a2b418d5df08d5ab63a77992a3a29be799b40ba28ccdce9907c083e"
+    },
+    {
+      "file": "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/output/patched-native/pdf/invoice.pdf",
+      "source_doctype": "Sales Invoice",
+      "source": "ACC-SINV-2026-00001",
+      "format": "HS Factura",
+      "bytes": 12640,
+      "sha256": "eeb634ff1e7db3c8a30ee47010a3d9858d13eca3e8860d66c60afdc7df029490"
+    },
+    {
+      "file": "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/output/patched-native/reconciliation.xlsx",
+      "format": "xlsx",
+      "bytes": 5665,
+      "sha256": "fd9268604510c93bf7e949df2d4af2c21efdf412639cb6481056d737e3e1b376"
+    },
+    {
+      "file": "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/output/patched-native/pdf/reconciliation.pdf",
+      "format": "pdf",
+      "bytes": 14069,
+      "sha256": "e719711d7a460651d43f5eab1f58cf43e8c838508554c79d1c2a73d0aa646e54"
+    }
+  ]
+}

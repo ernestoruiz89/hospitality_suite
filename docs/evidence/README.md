@@ -97,3 +97,8 @@ recovery-final-baseline/restored/migrated/reversed/redeployed/ui/source.json con
 48. `48-historial-acompanante.png`: H3 como principal de H105 y acompañante de H102, con dos visitas recuperadas desde el servidor.
 
 history-ui.json conserva páginas sin duplicados, 142 filas en XLSX y los 142 identificadores extraídos del PDF. El PDF tiene diez páginas: se revisaron primera y última, y se detectó corte de fila/ausencia de encabezado repetido que continúa pendiente en PENDIENTES.md. No se declara esa revisión visual aprobada. La batería actual suma 111 aprobadas; las cuatro nuevas prueban 1105 eventos, 610 asignaciones, acompañantes/alcance y mantenimiento histórico.
+
+49. `49-pdf-encabezados-paginacion.png`: PDF corregido con Qt parcheado, tabla contenida y pie 1/18.
+50. `50-pdf-ultima-pagina.png`: encabezado repetido, última fila completa y pie 18/18.
+
+La revisión anterior de diez páginas fue sustituida por un PDF de 18 páginas, todas renderizadas y revisadas. history-pdf-qa.json fija su hash y revisión; history-ui.json verifica 142 registros y encabezados de todas las páginas por función/HTTP 200. pdf-runtime.json fija versión/paquete/binario aislado. patched-native-exports-manifest.json conserva la nueva generación de diez comprobantes, todos revisados. Batería actual: 112 aprobadas; queda dimensión/fechas de informes, sin declarar completo el objetivo.

@@ -33,6 +33,8 @@ wsl -d Ubuntu-24.04 -u frappe -- python3 /mnt/c/Users/Ernesto/Documents/ChatGPT/
 
 El script solo arranca el bench aislado, reutiliza puertos activos y deja PID/registros en `.hospitality-run`. Tras cambiar Python, ejecute el mismo comando con `--restart-web` y, si cambian hooks/jobs, `--restart-worker`; el servidor administrado usa `--noreload`. No es un despliegue de producción. Las credenciales se conservan únicamente en los archivos privados del bench/sitio descritos en `docs/AVANCE.md`; no están en Git.
 
+PDF requiere wkhtmltopdf con Qt parcheado. En este bench, `tools/bootstrap_pdf_runtime.py` se ejecuta con `env/bin/python` de Frappe y extrae el paquete oficial dentro de `.runtime`, sin reemplazar el binario del sistema. Después reinicie web/worker mediante run_dev. Versión probada: 0.12.6.1; detalles y comandos en OPERACION.md.
+
 `tools/bootstrap_wsl.py` documenta la creación inicial de la base y el sitio, rechaza bases existentes y permite otra base `hospitality_*` para un sitio `hospitality-*.localhost`. No reutilizarlo sobre sitios ajenos.
 
 ## Configuración y operación
@@ -72,7 +74,7 @@ bench --site hotel.localhost set-config allow_tests true
 bench --site hotel.localhost run-tests --app hospitality_suite
 ```
 
-`before_tests` carga la demostración explícita para las pruebas; cada caso revierte sus movimientos. No ejecutar esta batería en producción. Última batería conjunta: **111 aprobadas** en el sitio adicional limpio, 98 de integración y 13 puras. Los dos casos de concurrencia usan conexiones y commits reales y se ejecutan aparte:
+`before_tests` carga la demostración explícita para las pruebas; cada caso revierte sus movimientos. No ejecutar esta batería en producción. Última batería conjunta: **112 aprobadas** en el sitio adicional limpio, 99 de integración y 13 puras. Los dos casos de concurrencia usan conexiones y commits reales y se ejecutan aparte:
 
 ```sh
 bench --site hospitality.localhost execute hospitality_suite.tests.concurrency.verify

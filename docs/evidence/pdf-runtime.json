@@ -1,0 +1,9 @@
+{
+  "version": "wkhtmltopdf 0.12.6.1 (with patched qt)",
+  "source": "https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-3/wkhtmltox_0.12.6.1-3.jammy_amd64.deb",
+  "package_sha256": "4f723b2691ad8638a9df960e0421d346d7315083e3583a334f33362280ddba15",
+  "bytes": 17326782,
+  "isolated": true,
+  "system_binary_unchanged": true,
+  "binary_sha256": "750c92708349321a502b92e5e6c16b25499318ec24d1175cc8a81b6aefa321b2"
+}

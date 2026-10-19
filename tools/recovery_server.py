@@ -30,6 +30,10 @@ else:
         assert connection.connect_ex(('127.0.0.1',8088))!=0,'Puerto 8088 ocupado; no se reutiliza'
     with (state/'restore-web.log').open('ab') as log:
         (state/'restore-web.log').chmod(0o600)
-        process=subprocess.Popen(['/home/frappe/.local/bin/bench','--site','hospitality-restore.localhost','serve','--port','8088','--noreload'],cwd=bench,env={**os.environ,'DEV_SERVER':'true'},stdin=subprocess.DEVNULL,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
+        environment={**os.environ,'DEV_SERVER':'true'}
+        runtime=bench/'.runtime/wkhtmltox/usr/local/bin'
+        if (runtime/'wkhtmltopdf').is_file():
+            environment['PATH']=str(runtime)+os.pathsep+environment.get('PATH','')
+        process=subprocess.Popen(['/home/frappe/.local/bin/bench','--site','hospitality-restore.localhost','serve','--port','8088','--noreload'],cwd=bench,env=environment,stdin=subprocess.DEVNULL,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
     pidfile.write_text(str(process.pid))
     print('Servidor de copia de pruebas iniciado: http://hospitality-restore.localhost:8088/app/hospitality-reception')

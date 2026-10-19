@@ -1,0 +1,11 @@
+{
+  "renderer": "wkhtmltopdf 0.12.6.1 (with patched qt)",
+  "rows_verified": 142,
+  "pages_rendered": 18,
+  "pages_visually_reviewed": 18,
+  "repeated_headers": true,
+  "page_numbers": true,
+  "clipped_columns": false,
+  "split_rows_observed": false,
+  "sha256": "d578f5dd620a748f31674131ebee19ec71035d02b3944937fc4d17974a153b41"
+}

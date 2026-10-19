@@ -68,7 +68,7 @@ Actualizada el 2026-10-19. **El objetivo sigue activo.** V = prueba ejecutada de
 
 ## Evidencia acumulada
 
-Batería conjunta anterior a las últimas ampliaciones: **50 aprobadas** (39 de integración y 11 puras). Ampliación de horarios, acompañantes y KPI: **4 aprobadas** por separado. La cortesía detectó una incompatibilidad con tarifas negativas; se corrigió con descuento en la línea estándar y referencias a sus cargos de origen. Última batería conjunta en hospitality-clean.localhost: **111 aprobadas** (98 integración + 13 puras). También pasaron impuesto incluido, camas extra, Contact/Address, retiro de caja, variación de cambio y exportación numérica.
+Batería conjunta anterior a las últimas ampliaciones: **50 aprobadas** (39 de integración y 11 puras). Ampliación de horarios, acompañantes y KPI: **4 aprobadas** por separado. La cortesía detectó una incompatibilidad con tarifas negativas; se corrigió con descuento en la línea estándar y referencias a sus cargos de origen. Última batería conjunta en hospitality-clean.localhost: **112 aprobadas** (99 integración + 13 puras). También pasaron impuesto incluido, camas extra, Contact/Address, retiro de caja, variación de cambio y exportación numérica.
 
 La matriz no sustituye los registros finales ni las capturas. Integraciones reales de canales, mensajería, pasarelas y cerraduras esperan proveedor/credenciales; HRMS es opcional. No se migró producción ni ningún sitio ajeno.
 

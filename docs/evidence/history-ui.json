@@ -6,7 +6,11 @@
   "duplicate_rows": 0,
   "xlsx_rows": 142,
   "pdf_rows_verified": 142,
-  "pdf_pages": 10,
+  "pdf_pages": 18,
+  "pdf_header_pages": 18,
+  "http_pdf_status": 200,
+  "http_pdf_rows_verified": 142,
+  "http_pdf_pages": 18,
   "guest_history": [
     {
       "stay": "9mfspa61cd",

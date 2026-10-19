@@ -270,12 +270,14 @@ def export_report(property_name, report_name, filters=None, file_format="xlsx"):
         data,widths,styles=xlsx_data(records,headers)
         content=make_xlsx(data,"Reporte",column_widths=widths,styles=styles).getvalue()
     elif file_format=="pdf":
-        from frappe.utils.pdf import get_pdf
+        from frappe.utils.pdf import get_pdf,is_wkhtmltopdf_valid
+        if not is_wkhtmltopdf_valid():
+            frappe.throw("El generador PDF del servidor requiere wkhtmltopdf con Qt parcheado. Solicite a administración revisar la instalación.")
         from html import escape
-        heading=f"<style>body{{font-family:Arial,sans-serif;color:#173c32;font-size:10px}}h1{{font-size:24px}}table{{width:100%;border-collapse:collapse}}th{{background:#eaf0e9;text-align:left}}th,td{{padding:7px;border-bottom:1px solid #dce5dc}}thead{{display:table-header-group}}tr{{page-break-inside:avoid}}</style><h1>{escape(report_name)}</h1><p>{escape(prop.property_name)} · {len(records)} registros autorizados</p>"
+        heading=f"<style>body{{font-family:Arial,sans-serif;color:#173c32;font-size:10px}}h1{{font-size:24px}}table{{width:100%;table-layout:fixed;border-collapse:collapse}}th{{background:#eaf0e9;text-align:left}}th,td{{padding:7px;border-bottom:1px solid #dce5dc;word-wrap:break-word;overflow-wrap:break-word}}thead{{display:table-header-group}}tr{{page-break-inside:avoid}}</style><h1>{escape(report_name)}</h1><p>{escape(prop.property_name)} · {len(records)} registros autorizados</p>"
         table="<table><thead><tr>"+"".join(f"<th>{escape(label(k))}</th>" for k in headers)+"</tr></thead><tbody>"
         table+="".join("<tr>"+"".join(f"<td>{escape(str(display(k,row.get(k)) if row.get(k) is not None else ''))}</td>" for k in headers)+"</tr>" for row in records)+"</tbody></table>"
-        content=get_pdf(heading+table,{"orientation":"Landscape"})
+        content=get_pdf(heading+table,{"orientation":"Landscape","footer-right":"[page] / [topage]","footer-font-size":"8","footer-spacing":"5"})
     else:
         frappe.throw("Formato no permitido")
     frappe.local.response.update(filename="hospitality-report."+file_format,filecontent=content,type="binary")

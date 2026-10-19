@@ -15,6 +15,9 @@ parser.add_argument("--site",default="hospitality.localhost")
 parser.add_argument("--output",required=True)
 args=parser.parse_args()
 bench=Path("/home/frappe/benches/hospitality-bench")
+pdf_runtime=bench/".runtime/wkhtmltox/usr/local/bin"
+if (pdf_runtime/"wkhtmltopdf").is_file():
+    os.environ["PATH"]=str(pdf_runtime)+os.pathsep+os.environ.get("PATH","")
 os.chdir(bench/"sites")
 frappe.init(site=args.site,sites_path=str(bench/"sites"))
 frappe.connect()

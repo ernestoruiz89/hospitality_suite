@@ -8,6 +8,19 @@ El arranque directo de web incluye `DEV_SERVER=true`, como normalmente hace `ben
 
 Es un servidor de desarrollo local. Para un despliegue definitivo use la administración de procesos, proxy, HTTPS y configuración de Bench correspondiente al sistema de destino; no copie este arranque como servicio público de producción.
 
+## Motor PDF del bench de pruebas
+
+Los PDF requieren wkhtmltopdf con Qt parcheado. El paquete del sistema WSL era 0.12.6 sin esas funciones: una exportación extensa podía partir filas y omitir encabezados. Se extrajo el [paquete oficial 0.12.6.1-3 de Jammy amd64](https://github.com/wkhtmltopdf/packaging/releases/tag/0.12.6.1-3), comprobado en este Ubuntu 24.04, únicamente en `.runtime/wkhtmltox` del bench. No sustituye `/usr/bin/wkhtmltopdf` ni cambia otro bench. El instalador verifica SHA-256 fijado, dependencias y la salida with patched qt, y limpia solo la caché de detección de estos sitios sintéticos.
+
+```sh
+/home/frappe/benches/hospitality-bench/env/bin/python /mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/tools/bootstrap_pdf_runtime.py
+/home/frappe/benches/hospitality-bench/env/bin/python /mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/tools/run_dev.py --restart-web --restart-worker
+```
+
+run_dev y el servidor temporal de restauración anteponen ese directorio a PATH de sus procesos. Los helpers de impresión también lo seleccionan. Para otros comandos CLI de impresión, anteponga `/home/frappe/benches/hospitality-bench/.runtime/wkhtmltox/usr/local/bin` al PATH de esa sesión. Una instalación externa debe proporcionar su propio runtime compatible. La API de exportación rechaza un motor incompatible y conserva el escape de valores y las restricciones nativas de JavaScript/archivos locales.
+
+Se verificaron los 142 registros de un PDF de 18 páginas por función y HTTP, con encabezado y pie por página; se revisaron las 18 páginas y diez comprobantes regenerados. La tabla de exportación tiene columnas de ancho contenido y ajuste de palabras para evitar desbordamiento con smart shrinking desactivado. Los respaldos SQL/archivos no incluyen este binario del sistema: preserve también la configuración y las versiones/dependencias del despliegue.
+
 Compruebe:
 
 ```sh
