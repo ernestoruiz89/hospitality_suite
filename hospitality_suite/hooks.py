@@ -25,6 +25,11 @@ doc_events = {
     for dt in STANDARD_SCOPED
 }
 extend_doctype_class={dt:["hospitality_suite.controllers.ScopedERPNotifications"] for dt in STANDARD_SCOPED}
+for dt in ("Customer","Supplier","Contact","Address"):
+    extend_doctype_class[dt]=["hospitality_suite.controllers.ScopedERPNotifications"]
+    permission_query_conditions[dt]="hospitality_suite.security.query_party_"+dt.lower()
+    has_permission[dt]="hospitality_suite.security.party_permission"
+extend_doctype_class["Warehouse"]=["hospitality_suite.controllers.ScopedERPNotifications"]
 permission_query_conditions["GL Entry"]="hospitality_suite.security.query_gl_entry"
 has_permission["GL Entry"]="hospitality_suite.security.gl_permission"
 for dt in ("Account","Company","Cost Center","Warehouse","Sales Taxes and Charges Template"):

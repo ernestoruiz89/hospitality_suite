@@ -52,6 +52,53 @@
    "fieldname": "is_cash",
    "label": "Is cash",
    "fieldtype": "Check"
+  },
+  {
+   "fieldname": "fee_percent",
+   "label": "Fee percent",
+   "fieldtype": "Percent"
+  },
+  {
+   "fieldname": "fee_fixed",
+   "label": "Fee fixed",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency"
+  },
+  {
+   "fieldname": "fee_account",
+   "label": "Fee account",
+   "fieldtype": "Link",
+   "options": "Account"
+  },
+  {
+   "fieldname": "refund_fee_percent",
+   "label": "Refund fee percent",
+   "fieldtype": "Percent"
+  },
+  {
+   "fieldname": "refund_fee_fixed",
+   "label": "Refund fee fixed",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency"
+  },
+  {
+   "fieldname": "withholding_percent",
+   "label": "Withholding percent",
+   "fieldtype": "Percent"
+  },
+  {
+   "fieldname": "withholding_account",
+   "label": "Withholding account",
+   "fieldtype": "Link",
+   "options": "Account"
+  },
+  {
+   "fieldname": "settlement_account",
+   "label": "Settlement account",
+   "fieldtype": "Link",
+   "options": "Account"
   }
  ],
  "field_order": [
@@ -61,7 +108,15 @@
   "account",
   "currency",
   "reference_required",
-  "is_cash"
+  "is_cash",
+  "fee_percent",
+  "fee_fixed",
+  "fee_account",
+  "refund_fee_percent",
+  "refund_fee_fixed",
+  "withholding_percent",
+  "withholding_account",
+  "settlement_account"
  ],
  "permissions": [
   {

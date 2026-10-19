@@ -1,0 +1,23 @@
+{
+  "site": "hospitality.localhost",
+  "order": "PUR-ORD-2026-00001",
+  "receipt": "MAT-PRE-2026-00001",
+  "invoice": "ACC-PINV-2026-00001",
+  "supplier_outstanding": 0.0,
+  "linen_quantity": 2,
+  "invoice_update_stock": 0,
+  "source_payment": "ACC-PAY-2026-00005",
+  "settlement": "ACC-JV-2026-00002",
+  "gross": 30.0,
+  "fee": 2.9,
+  "withholding": 0.3,
+  "net": 26.8,
+  "clearing_balance": 0.0,
+  "shift": "3ri45vs2lc",
+  "shift_status": "Closed",
+  "expected_cash": {
+    "NIO": "380.00"
+  },
+  "difference": 0.0,
+  "reconciliation_differences": []
+}

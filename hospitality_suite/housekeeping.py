@@ -141,7 +141,7 @@ def maintenance_parts(prop,data):
         if not isinstance(parts,list) or not 1<=len(parts)<=100:
             frappe.throw("Seleccione los repuestos y sus cantidades")
         entry=frappe.new_doc("Stock Entry")
-        entry.update(dict(company=prop.company,stock_entry_type="Material Issue",remarks="Mantenimiento "+doc.name))
+        entry.update(dict(company=prop.company,stock_entry_type="Material Issue",remarks="Mantenimiento "+doc.name,hs_stock_purpose="Maintenance"))
         for part in parts:
             item=locked_doc("Item",part["item"])
             qty=decimal(part.get("quantity"))

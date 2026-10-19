@@ -32,9 +32,21 @@ Una aplicación no vuelve a aumentar el efectivo esperado. Se conserva el docume
 
 Cada movimiento conserva moneda del medio, importe, tipo de cambio y equivalente base. La conversión a la moneda de la cuenta del cliente se almacena en Payment Entry. ERPNext obtiene los cambios desde Currency Exchange/configuración estándar; el navegador no impone una tasa.
 
-El arqueo separa monedas. Fondo más cobros/anticipos/garantías en efectivo, menos devoluciones y retiros, produce el esperado. La aplicación de garantía se excluye del efectivo porque no es movimiento de caja. Los medios no efectivos no aumentan el efectivo físico.
+El arqueo separa monedas. Fondo más cobros/anticipos/garantías en efectivo, menos devoluciones, retiros, egresos y pagos a proveedores en efectivo, produce el esperado. La aplicación de garantía y la liquidación bancaria se excluyen del efectivo porque no son movimientos de caja. Los medios no efectivos no aumentan el efectivo físico.
 
-Comisiones, retenciones y liquidaciones bancarias se contabilizan por los mecanismos estándar configurados; no se reduce el cobro bruto del huésped para ocultar una comisión. No hay pasarela activa que liquide importes por su cuenta.
+Configure el medio no efectivo con cuenta de compensación, banco de liquidación en la moneda del medio, gasto de comisión y activo separado para retenciones en moneda base. El cobro conserva el bruto y un snapshot de porcentajes/comisión fija. Registrar liquidación exige revisar una cotización y una referencia del extracto: Journal Entry debita banco neto, comisión y retención y acredita compensación. No genera otra factura ni otro cobro.
+
+Las liquidaciones parciales prorratean el costo fijo/porcentajes del bruto original; la última absorbe el residuo de redondeo. Cambiar la política afecta a cobros nuevos. La compensación se cancela por su valor histórico; banco/gastos usan el cambio actual y la cuenta estándar de diferencia de cambio. Se verificó USD con saldo de compensación cero y ganancia de C$3.76. La conciliación comprueba bruto, neto, comisión, retención y valoración histórica.
+
+Las devoluciones tienen su política configurable de comisión y liquidación de salida: el banco se acredita por bruto devuelto más comisión. La retención original no se recupera automáticamente; una devolución tributaria depende de la liquidación/documentación real del proveedor. Para anular un cobro con liquidaciones vigentes, primero revierta esas liquidaciones con autorización y motivo. No hay pasarela activa que liquide importes por su cuenta.
+
+## Compras y egresos
+
+Registrar egreso usa una categoría con cuenta Expense de la compañía en moneda base y límite por operación (cero = sin límite). Solo efectivo disponible del propio turno; otro responsable exige autorización gerencial. El Journal Entry registra gasto y salida de caja, sin ajustar una factura de cliente.
+
+Orden de compra conserva precio/impuestos aceptados. Purchase Receipt incorpora la recepción completa o parcial; Purchase Invoice se crea desde lo recibido con update_stock=0. No duplica inventario. El pago se convierte a la moneda de la cuenta del proveedor, aplica la factura estándar y crea un único movimiento del turno. Pagos nativos de proveedor sobre los medios configurados también se sincronizan; una devolución de proveedor se gestiona con el flujo estándar de devolución de compra y su conciliación, no con un cobro de huésped.
+
+Los mínimos se almacenan en Item Reorder por almacén. HS Stock Policy solo clasifica uso operativo; Bin/SLE siguen siendo la verdad de cantidades/valoración. Traslados y reposición de ropa usan Material Transfer; limpieza/merma usan Material Issue con gasto/centro de costo; el conteo autorizado usa Stock Reconciliation con valoración existente y rechazo si cambió la existencia cotizada. Los activos fijos conservan el módulo Asset estándar. Movimientos de inventario proyecta SLE y origen, cantidades, variación de valor, uso y centro de costo, sin otro libro de inventario.
 
 Cancelar o devolver exige autorización y motivo. Una corrección posterior al cierre conserva el arqueo original; Conciliación compara el esperado actual con ese snapshot y muestra la diferencia para revisión. No se eliminan registros para ocultarla.
 

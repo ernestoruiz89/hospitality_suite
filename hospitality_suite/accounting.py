@@ -206,7 +206,7 @@ def apply_guarantee(prop, data):
     matches=source.stay==folio.stay if folio.stay else source.booking==folio.booking
     if source.kind != "Guarantee" or source.status != "Posted" or not matches or source.customer != folio.customer or not data.get("reason"):
         frappe.throw("Garantía, pagador o motivo incompatible")
-    used = sum(decimal(p.amount) for p in current_all("HS Payment", filters={"source_payment": source.name, "status":"Posted"}, fields=["amount"]))
+    used = sum(decimal(p.amount) for p in current_all("HS Payment", filters={"source_payment": source.name, "status":"Posted","kind":["in",["Guarantee Refund","Guarantee Applied"]]}, fields=["amount"]))
     amount = money(data["amount"],currency=source.currency)
     if amount <= 0 or amount + used > decimal(source.amount):
         frappe.throw("El importe supera la garantía disponible")
@@ -317,7 +317,8 @@ def original_guarantee(source):
 def balance_exchange(journal,prop):
     debit=sum(decimal(r.debit_in_account_currency)*decimal(r.exchange_rate or 1) for r in journal.accounts)
     credit=sum(decimal(r.credit_in_account_currency)*decimal(r.exchange_rate or 1) for r in journal.accounts)
-    difference=money(debit-credit)
+    company_currency=frappe.db.get_value("Company",prop.company,"default_currency")
+    difference=money(debit-credit,currency=company_currency)
     if not difference:
         return
     account=prop.get("exchange_gain_loss_account") or frappe.db.get_value("Company",prop.company,"exchange_gain_loss_account")
@@ -363,7 +364,7 @@ def payment(prop, data):
             frappe.throw("Origen de devolución inválido")
         if source.currency != method.currency:
             frappe.throw("Devuelva en la moneda del movimiento original")
-        refunded = sum(decimal(p.amount) for p in current_all("HS Payment", filters={"source_payment": source.name, "status": "Posted"}, fields=["amount"]))
+        refunded = sum(decimal(p.amount) for p in current_all("HS Payment", filters={"source_payment": source.name, "status": "Posted","kind":["in",["Refund","Guarantee Refund","Guarantee Applied"]]}, fields=["amount"]))
         if refunded + amount > decimal(source.amount):
             frappe.throw("La devolución supera el importe disponible")
         data = {**data, "stay": source.stay, "booking": source.booking, "customer": source.customer, "folio": source.folio}
@@ -566,18 +567,32 @@ def sync_document(doc, method=None):
                 payment_doc = locked_doc("HS Payment", name)
                 payment_doc.status = "Cancelled"
                 payment_doc.save(ignore_permissions=True)
-        if doc.doctype == "Payment Entry" and doc.party_type=="Customer" and doc.docstatus == 1 and not frappe.db.exists("HS Payment", {"payment_entry": doc.name}) and not getattr(frappe.local, "hs_posting", False):
+        if doc.doctype == "Payment Entry" and doc.party_type in ("Customer","Supplier") and doc.docstatus == 1 and not frappe.db.exists("HS Payment", {"payment_entry": doc.name}) and not getattr(frappe.local, "hs_posting", False):
             account = doc.paid_to if doc.payment_type == "Receive" else doc.paid_from
-            method_name = frappe.db.get_value("HS Payment Method", {"property": prop.name, "account": account})
+            method_filters={"property":prop.name,"account":account}
+            if doc.mode_of_payment:
+                method_filters["mode_of_payment"]=doc.mode_of_payment
+            methods=current_all("HS Payment Method",filters=method_filters,pluck="name")
+            if doc.party_type=="Supplier" and not methods and not doc.get("hs_shift"):
+                audit(prop,"Supplier payment outside front-desk accounts",doc)
+                return
+            method_name=methods[0] if len(methods)==1 else None
             if not doc.get("hs_shift") or not method_name:
-                frappe.throw("Asigne turno abierto y medio de pago configurado al cobro de estancia")
+                frappe.throw("Asigne turno abierto y un medio de pago inequívoco de este establecimiento")
             method_doc = locked_doc("HS Payment Method", method_name)
-            insert("HS Payment", prop, stay=stay.name if stay else None, booking=doc.get("hs_booking") or (stay.booking if stay else None), folio=doc.get("hs_folio"), customer=doc.party,
+            if doc.party_type=="Supplier":
+                from hospitality_suite.procurement import supplier as scoped_supplier
+                scoped_supplier(prop,doc.party)
+                if doc.payment_type!="Pay":
+                    frappe.throw("La devolución de proveedor requiere su flujo de devolución de compra")
+            insert("HS Payment", prop, stay=stay.name if stay else None, booking=doc.get("hs_booking") or (stay.booking if stay else None), folio=doc.get("hs_folio"), customer=doc.party if doc.party_type=="Customer" else None,
+                   supplier=doc.party if doc.party_type=="Supplier" else None,
+                   purchase_invoice=next((r.reference_name for r in doc.references if r.reference_doctype=="Purchase Invoice"),None) if doc.party_type=="Supplier" else None,
                    shift=doc.hs_shift, method=method_name, currency=method_doc.currency,
                    amount=doc.received_amount if doc.payment_type == "Receive" else doc.paid_amount,
                    base_amount=doc.base_received_amount if doc.payment_type == "Receive" else doc.base_paid_amount,
                    exchange_rate=doc.target_exchange_rate if doc.payment_type == "Receive" else doc.source_exchange_rate,
-                   kind=("Payment" if doc.references else "Advance") if doc.payment_type == "Receive" else "Refund",
+                   kind="Supplier Payment" if doc.party_type=="Supplier" else ("Payment" if doc.references else "Advance") if doc.payment_type == "Receive" else "Refund",
                    status="Posted", payment_entry=doc.name, reference=doc.reference_no, reason=doc.remarks)
         audit(prop, method or "ERP update", stay or doc, doc.get("hs_correction_reason"),details={"doctype": doc.doctype, "name": doc.name, "docstatus": doc.docstatus})
     from hospitality_suite.security import realtime

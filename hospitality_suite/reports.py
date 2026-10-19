@@ -18,10 +18,13 @@ REPORTS = {
     "Estancias": ("HS Stay", ["name", "room", "starts_at", "ends_at", "actual_check_in", "actual_check_out", "status", "customer"]),
     "Producción": ("HS Charge", ["name", "stay", "folio", "item", "kind", "amount", "currency", "status", "sales_invoice", "business_date"]),
     "Cobros": ("HS Payment", ["name", "stay", "booking", "shift", "method", "kind", "amount", "currency", "base_amount", "status", "payment_entry", "journal_entry"]),
+    "Liquidaciones":("HS Payment",["name","source_payment","shift","method","settlement_direction","amount","fee_amount","withholding_amount","net_amount","currency","status","journal_entry","reference"]),
+    "Egresos":("HS Payment",["name","shift","method","kind","expense_category","supplier","purchase_invoice","amount","currency","status","journal_entry","payment_entry","reason"]),
     "Turnos": ("HS Shift", ["name", "cashier", "opened_at", "closed_at", "status", "currency", "expected_amount", "counted_amount", "difference"]),
     "Limpieza": ("HS Cleaning Task", ["name", "room", "status", "kind", "assigned_to", "started_at", "completed_at"]),
     "Mantenimiento": ("HS Maintenance Order", ["name", "room", "title", "status", "starts_at", "ends_at", "cost", "stock_entry"]),
     "Inventario": ("HS Service Request", ["name", "item", "quantity", "status", "stock_entry", "return_stock_entry", "charge", "amount", "currency"]),
+    "Movimientos de inventario":(None,[]),
     "Auditoría": ("HS Audit Event", ["name", "action", "actor", "occurred_at", "source_doctype", "source_name", "reason"]),
 }
 
@@ -33,6 +36,8 @@ def rows(prop, report, filters=None):
     if report=="Conciliación":
         from hospitality_suite.reconciliation import rows as reconcile
         return reconcile(prop,filters)
+    if report=="Movimientos de inventario":
+        return inventory_movements(prop,filters or {})
     dt, fields = REPORTS[report]
     selected = {"hs_property" if dt == "Sales Invoice" else "property": prop.name}
     allowed = {"room", "status", "category", "channel", "cashier", "shift", "kind", "assigned_to"}
@@ -40,6 +45,11 @@ def rows(prop, report, filters=None):
         if key in allowed and frappe.get_meta(dt).has_field(key) and isinstance(value, str) and value:
             selected[key] = value
     filters=filters or {}
+    kinds={"Liquidaciones":["Settlement"],"Egresos":["Expense","Supplier Payment","Withdrawal"],"Cobros":["Payment","Advance","Guarantee","Refund","Guarantee Refund","Guarantee Applied"]}.get(report)
+    if kinds:
+        if selected.get("kind") and selected["kind"] not in kinds:
+            frappe.throw("El concepto no corresponde a este reporte")
+        selected["kind"]=selected.get("kind") or ["in",kinds]
     date_field="posting_date" if dt=="Sales Invoice" else "business_date" if frappe.get_meta(dt).has_field("business_date") else "creation"
     if filters.get("from_date") and filters.get("to_date"):
         selected[date_field]=["between",[filters["from_date"],filters["to_date"]+" 23:59:59" if date_field=="creation" else filters["to_date"]]]
@@ -49,6 +59,43 @@ def rows(prop, report, filters=None):
         for row in result:
             row.update(folio_balance(row.name))
     return result
+
+
+def inventory_movements(prop,filters):
+    """Project the native ledger; operational records never supply valuation."""
+    from hospitality_suite.procurement import warehouses,warehouse
+    permitted=warehouses(prop)
+    if filters.get("warehouse"):
+        permitted=[warehouse(prop,filters["warehouse"])]
+    policies={(r.item,r.warehouse):r.purpose for r in current_all("HS Stock Policy",filters={"property":prop.name},fields=["item","warehouse","purpose"])}
+    base_currency=frappe.db.get_value("Company",prop.company,"default_currency")
+    result=[]
+    for dt,child,purpose in (("Stock Entry","Stock Entry Detail","Stock"),("Purchase Receipt","Purchase Receipt Item","Purchase"),
+                              ("Stock Reconciliation","Stock Reconciliation Item","Adjustment"),("Sales Invoice","Sales Invoice Item","Sale"),
+                              ("Purchase Invoice","Purchase Invoice Item","Purchase"),("Delivery Note","Delivery Note Item","Sale")):
+        fields=["name","owner"]+(["hs_stock_purpose"] if dt=="Stock Entry" else [])
+        origins={r.name:r for r in current_all(dt,filters={"hs_property":prop.name,"company":prop.company,"docstatus":1},fields=fields)}
+        if not origins:
+            continue
+        selected=dict(company=prop.company,voucher_type=dt,voucher_no=["in",list(origins)],warehouse=["in",permitted],is_cancelled=0)
+        if filters.get("item"):
+            selected["item_code"]=filters["item"]
+        if filters.get("from_date") and filters.get("to_date"):
+            selected["posting_date"]=["between",[filters["from_date"],filters["to_date"]]]
+        entries=frappe.get_all("Stock Ledger Entry",filters=selected,fields=["name","posting_date","posting_time","item_code","warehouse","actual_qty","qty_after_transaction","stock_value_difference","voucher_no","voucher_detail_no"],order_by="posting_date desc,posting_time desc,creation desc",limit_page_length=1000)
+        meta=frappe.get_meta(child)
+        details={r.name:r for r in current_all(child,filters={"name":["in",[e.voucher_detail_no for e in entries]]},fields=["name"]+[k for k in ("cost_center","expense_account") if meta.has_field(k)])} if entries else {}
+        for row in entries:
+            origin=origins[row.voucher_no]
+            usage=origin.get("hs_stock_purpose") or purpose
+            if filters.get("purpose") and filters["purpose"]!=usage:
+                continue
+            detail=details.get(row.voucher_detail_no,{})
+            result.append(dict(name=row.name,posting_date=row.posting_date,posting_time=row.posting_time,item=row.item_code,warehouse=row.warehouse,
+                               purpose=usage,classification=policies.get((row.item_code,row.warehouse),"Merchandise"),quantity=row.actual_qty,
+                               balance_quantity=row.qty_after_transaction,cost=row.stock_value_difference,currency=base_currency,
+                               cost_center=detail.get("cost_center"),expense_account=detail.get("expense_account"),source_doctype=dt,source_name=row.voucher_no,actor=origin.owner))
+    return sorted(result,key=lambda r:(str(r["posting_date"]),str(r["posting_time"]),r["name"]),reverse=True)[:1000]
 
 
 def union_seconds(spans):

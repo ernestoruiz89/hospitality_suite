@@ -121,3 +121,31 @@ class TestSecurityRecovery(IntegrationTestCase):
         account_rpc=frappe.get_attr(frappe.override_whitelisted_method("erpnext.accounts.utils.get_balance_on"))
         with self.assertRaises(frappe.PermissionError):
             account_rpc(account=self.prop.receivable_account)
+
+    def test_native_parties_contacts_and_files_do_not_bypass_guest_privacy(self):
+        other_guest=frappe.get_doc("HS Guest",{"property":self.other.name})
+        contact=frappe.get_doc(dict(doctype="Contact",first_name="Contacto ficticio privado",links=[dict(link_doctype="Customer",link_name=other_guest.customer)])).insert()
+        file=frappe.get_doc(dict(doctype="File",file_name="evidencia-ficticia-"+uuid.uuid4().hex+".txt",content="Evidencia sintetica privada",is_private=1,
+                                 attached_to_doctype="Customer",attached_to_name=other_guest.customer)).insert()
+        user="private-"+uuid.uuid4().hex[:7]+"@example.invalid"
+        frappe.get_doc(dict(doctype="User",email=user,first_name="Limpieza con rol estándar",send_welcome_email=0,user_type="System User",
+                            roles=[dict(role="HS Housekeeping"),dict(role="Accounts User")])).insert()
+        with operation():
+            frappe.get_doc(dict(doctype="HS Access",property=self.prop.name,company=self.prop.company,user=user)).insert()
+        frappe.set_user(user)
+        self.assertFalse(frappe.has_permission("Customer",doc=frappe.get_doc("Customer",self.guest.customer),ptype="read"))
+        self.assertFalse(frappe.has_permission("Contact",doc=contact,ptype="read"))
+        self.assertEqual(frappe.get_list("Contact",pluck="name"),[])
+        self.assertFalse(file.has_permission("read"))
+        frappe.set_user("receptionist@hospitality.example.invalid")
+        # Demo reception has both properties; a user with just one must not see the other customer.
+        only="one-property-"+uuid.uuid4().hex[:7]+"@example.invalid"
+        frappe.set_user("Administrator")
+        frappe.get_doc(dict(doctype="User",email=only,first_name="Recepción aislada",send_welcome_email=0,user_type="System User",roles=[dict(role="HS Receptionist"),dict(role="Accounts User")])).insert()
+        with operation():
+            frappe.get_doc(dict(doctype="HS Access",property=self.prop.name,company=self.prop.company,user=only)).insert()
+        frappe.set_user(only)
+        self.assertTrue(frappe.has_permission("Customer",doc=frappe.get_doc("Customer",self.guest.customer),ptype="read"))
+        self.assertFalse(frappe.has_permission("Customer",doc=frappe.get_doc("Customer",other_guest.customer),ptype="read"))
+        self.assertFalse(frappe.has_permission("Contact",doc=contact,ptype="read"))
+        self.assertFalse(file.has_permission("read"))

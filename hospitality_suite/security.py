@@ -14,6 +14,7 @@ ACTIONS = {
     "report": MANAGERS + ["HS Accountant", "HS Auditor"], "approve": MANAGERS[:2],
     "guest": MANAGERS + ["HS Receptionist"],
     "incident": MANAGERS + ["HS Housekeeping","HS Maintenance"],
+    "inventory":MANAGERS+["HS Accountant"],
 }
 
 
@@ -68,6 +69,13 @@ for _dt in SCOPED:
 
 
 def validate_file(doc, method=None):
+    if doc.attached_to_doctype in ("Customer","Supplier","Contact","Address") and set(frappe.get_roles()).intersection(ROLES):
+        target=frappe.get_doc(doc.attached_to_doctype,doc.attached_to_name)
+        if not party_permission(target):
+            frappe.throw("El archivo no pertenece a una persona o proveedor autorizado",frappe.PermissionError)
+        if not doc.is_private:
+            frappe.throw("Los archivos de personas y proveedores de alojamiento deben ser privados")
+        target.check_permission("write")
     if doc.attached_to_doctype and (doc.attached_to_doctype.startswith("HS ") or doc.attached_to_doctype in STANDARD_SCOPED):
         target=frappe.get_doc(doc.attached_to_doctype,doc.attached_to_name)
         if doc.attached_to_doctype in STANDARD_SCOPED:
@@ -161,6 +169,9 @@ def validate_standard(doc, method=None):
     prop = require(prop_name)
     if doc.company != prop.company:
         frappe.throw("El documento contable pertenece a otra compañía")
+    if doc.doctype in ("Purchase Order","Purchase Receipt","Purchase Invoice") and doc.get("supplier"):
+        if not frappe.db.exists("HS Supplier",{"property":prop.name,"supplier":doc.supplier,"active":1}):
+            frappe.throw("El proveedor no está habilitado en este establecimiento")
     if not is_system():
         owned=set(frappe.get_all("Warehouse",filters={"hs_property":prop.name},pluck="name"))|{prop.warehouse,prop.laundry_warehouse}
         for row in [doc]+list(doc.get("items") or []):
@@ -172,7 +183,7 @@ def validate_standard(doc, method=None):
     if old and old.get("hs_property") and (old.hs_property!=doc.hs_property or old.get("hs_stay")!=doc.get("hs_stay")):
         frappe.throw("No puede quitar ni cambiar el origen de un documento vinculado a alojamiento")
     if not getattr(frappe.local, "hs_operation", False):
-        require(prop_name, "finance")
+        require(prop_name,"approve" if doc.doctype=="Stock Reconciliation" else "inventory" if doc.doctype in ("Stock Entry","Purchase Order","Purchase Receipt","Purchase Invoice") else "finance")
     if doc.get("hs_folio"):
         folio = document("HS Folio", doc.hs_folio)
         if not doc.get("hs_booking") and folio.booking:
@@ -234,6 +245,11 @@ def guard_cancel(doc,method=None):
         require(prop_name,"approve")
         if not doc.get("hs_correction_reason"):
             frappe.throw("Indique el motivo de corrección antes de cancelar un documento de alojamiento")
+        field={"Payment Entry":"payment_entry","Journal Entry":"journal_entry"}.get(doc.doctype)
+        if field:
+            originals=frappe.get_all("HS Payment",filters={field:doc.name,"status":"Posted"},pluck="name")
+            if originals and frappe.db.exists("HS Payment",{"source_payment":["in",originals],"status":"Posted"}):
+                frappe.throw("Revierta primero las aplicaciones, devoluciones o liquidaciones dependientes de este movimiento")
 
 
 def reference_reconciliation(doc,original):
@@ -360,6 +376,40 @@ def query_bin(user=None):
 
 def query_stock_ledger_entry(user=None):
     return stock_query("Stock Ledger Entry",user)
+
+
+def party_names(dt,user=None):
+    props=allowed_properties(user)
+    if dt=="Supplier":
+        return set(frappe.get_all("HS Supplier",filters={"property":["in",props]},pluck="supplier"))
+    if dt=="Customer":
+        return set(frappe.get_all("HS Guest",filters={"property":["in",props],"customer":["is","set"]},pluck="customer"))|set(frappe.get_all("HS Billing Party",filters={"property":["in",props]},pluck="customer"))
+    names=set()
+    for linked in ("Customer","Supplier"):
+        allowed=party_names(linked,user)
+        names.update(frappe.get_all("Dynamic Link",filters={"parenttype":dt,"link_doctype":linked,"link_name":["in",list(allowed)]},pluck="parent"))
+    return names
+
+
+def party_permission(doc,user=None,**kwargs):
+    if is_system(user) or not set(frappe.get_roles(user)).intersection(ROLES):
+        return True
+    if not set(frappe.get_roles(user)).intersection(set(ACTIONS["guest"]+ACTIONS["finance"]+ACTIONS["report"]+ACTIONS["inventory"])):
+        return False
+    return doc.name in party_names(doc.doctype,user)
+
+
+def party_query(dt,user=None):
+    if is_system(user) or not set(frappe.get_roles(user)).intersection(ROLES):
+        return ""
+    if not set(frappe.get_roles(user)).intersection(set(ACTIONS["guest"]+ACTIONS["finance"]+ACTIONS["report"]+ACTIONS["inventory"])):
+        return "1=0"
+    values=",".join(frappe.db.escape(n) for n in sorted(party_names(dt,user))) or "NULL"
+    return f"`tab{dt}`.`name` IN ({values})"
+
+
+for _party in ("Customer","Supplier","Contact","Address"):
+    globals()["query_party_"+_party.lower()]=lambda user=None,dt=_party:party_query(dt,user)
 
 
 @frappe.whitelist()

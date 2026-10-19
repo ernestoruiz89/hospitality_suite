@@ -4,7 +4,7 @@ import json
 import frappe
 from frappe.utils import now_datetime
 
-from hospitality_suite import operations, cashier, housekeeping, inventory, accounting, closing, linen, portal,timing,direct_sales
+from hospitality_suite import operations, cashier, housekeeping, inventory, accounting, closing, linen, portal,timing,direct_sales,treasury,procurement
 from hospitality_suite.security import allowed_properties, require, document, ACTIONS, is_system
 from hospitality_suite.service import command, insert, audit, canonical
 from hospitality_suite.time import to_site, now_local
@@ -34,6 +34,12 @@ COMMANDS = {
     "schedule_cleaning":("inspect",housekeeping.schedule_cleaning),
     "direct_sale":("finance",direct_sales.sell),"return_direct_sale":("approve",direct_sales.return_sale),
     "assign_user":("setup",setup.assign_user),"companions":("guest",operations.companions),
+    "cash_expense":("finance",treasury.expense),"settle_payment":("finance",treasury.settle),
+    "purchase_order":("inventory",procurement.purchase_order),"receive_purchase":("inventory",procurement.receive_purchase),
+    "purchase_invoice":("inventory",procurement.purchase_invoice),"supplier_payment":("finance",procurement.supplier_payment),
+    "move_stock":("inventory",procurement.move_stock),"adjust_stock":("approve",procurement.adjust_stock),
+    "register_supplier":("inventory",procurement.register_supplier),
+    "create_warehouse":("inventory",procurement.create_warehouse),"stock_policy":("setup",procurement.stock_policy),
 }
 
 
@@ -59,7 +65,7 @@ def execute(property_name, action, request_key, data=None):
 
 @frappe.whitelist()
 def preview(property_name, data, action="reserve"):
-    permission="finance" if action in ("payment","direct_sale") else "reserve" if action in ("reserve","booking_status","modify_reservation","convert_portal") else "stay"
+    permission="inventory" if action=="purchase_order" else "approve" if action=="adjust_stock" else "finance" if action in ("payment","direct_sale","settle_payment","supplier_payment") else "reserve" if action in ("reserve","booking_status","modify_reservation","convert_portal") else "stay"
     prop = require(property_name, permission)
     data = payload(data)
     if action == "reserve":
@@ -84,6 +90,14 @@ def preview(property_name, data, action="reserve"):
     if action=="payment":
         require(prop.name,"finance")
         return accounting.payment_quote(prop,data)
+    if action=="settle_payment":
+        return treasury.settlement_quote(prop,data)
+    if action=="supplier_payment":
+        return procurement.supplier_payment_quote(prop,data)
+    if action=="adjust_stock":
+        return procurement.adjustment_quote(prop,data)
+    if action=="purchase_order":
+        return procurement.purchase_order_quote(prop,data)
     if action=="convert_portal":
         request_doc,values=portal.conversion_values(prop,data)
         excluded=frappe.get_all("HS Allocation",filters={"portal_request":request_doc.name,"status":"Active"},pluck="name")
@@ -111,12 +125,13 @@ def bootstrap(property_name=None):
         return result
     prop = require(property_name)
     result["inventory_currency"]=frappe.db.get_value("Company",prop.company,"default_currency")
+    result["default_warehouse"]=prop.warehouse
     result["property_now"] = now_local(prop).isoformat()
     result["print_formats"]=dict(invoice=prop.invoice_print_format or "HS Factura",receipt=prop.receipt_print_format or "HS Recibo")
     result["rooms"] = project("HS Room", prop, ["name", "room_number", "category", "floor", "zone", "cleaning_status", "active", "parking"])
     result["categories"] = project("HS Category", prop, ["name", "category_name", "capacity"])
-    if may("clean") or may("service") or may("maintain"):
-        result["items"]=frappe.get_all("Item",filters={"disabled":0},fields=["name","item_name","is_stock_item"],limit_page_length=500)
+    if may("clean") or may("service") or may("maintain") or may("inventory"):
+        result["items"]=frappe.get_all("Item",filters={"disabled":0},fields=["name","item_name","is_stock_item","is_fixed_asset","is_sales_item","is_purchase_item"],limit_page_length=500)
     # Minimal operational projection is intentionally separate from stay documents.
     active = frappe.get_all("HS Stay", filters={"property": prop.name, "status": "Active"}, fields=["name", "room", "ends_at"])
     result["occupied"] = active
@@ -142,6 +157,15 @@ def bootstrap(property_name=None):
             shift["expected_by_currency"] = frozen.get("expected",shift["current_expected"]) if shift.status=="Closed" else shift["current_expected"]
         result["payment_methods"] = project("HS Payment Method", prop)
         result["payments"] = project("HS Payment", prop)
+        result["expense_categories"]=project("HS Expense Category",prop)
+        result["suppliers"]=project("HS Supplier",prop)
+        result["purchase_orders"]=frappe.get_list("Purchase Order",filters={"hs_property":prop.name,"docstatus":1,"status":["not in",["Closed","Cancelled","Completed"]]},fields=["name","supplier","currency","grand_total","schedule_date"],limit=500)
+        for order in result["purchase_orders"]:
+            order["items"]=[dict(name=r.name,item=r.item_code,quantity=r.qty,received_quantity=r.received_qty,rate=r.rate) for r in frappe.get_doc("Purchase Order",order.name).items]
+        result["purchase_receipts"]=frappe.get_list("Purchase Receipt",filters={"hs_property":prop.name,"docstatus":1,"per_billed":["<",100],"is_return":0},fields=["name","supplier","currency","grand_total"],limit=500)
+        result["purchase_invoices"]=frappe.get_list("Purchase Invoice",filters={"hs_property":prop.name,"docstatus":1,"outstanding_amount":[">",0],"is_return":0},fields=["name","supplier","currency","outstanding_amount","bill_no"],limit=500)
+    if any(may(a) for a in ("inventory","clean","maintain","report","service")):
+        result["warehouses"]=[dict(name=n,warehouse_name=frappe.db.get_value("Warehouse",n,"warehouse_name")) for n in procurement.warehouses(prop)]
     result["cleaning"] = project("HS Cleaning Task", prop, ["name", "room", "kind", "status", "priority", "assigned_to", "modified", "checklist", "notes"])
     result["maintenance"] = project("HS Maintenance Order", prop, ["name", "room", "title", "starts_at", "ends_at", "status", "modified", "notes","assigned_to","evidence"])
     result["incidents"]=project("HS Incident",prop,["name","room","kind","description","status","evidence","resolution","modified"])
@@ -152,8 +176,12 @@ def bootstrap(property_name=None):
             order["parts"]=[r.as_dict() for r in doc.parts]
     if may("report"):
         from hospitality_suite.reports import summary, REPORTS
+        from hospitality_suite.report_formatting import LABELS
+        from hospitality_suite.printing import VALUE_LABELS
         result["summary"] = summary(prop)
         result["reports"] = list(REPORTS)
+        result["report_labels"]=LABELS
+        result["report_values"]=VALUE_LABELS
         result["closes"] = project("HS Daily Close", prop)
     return result
 
@@ -223,6 +251,9 @@ def save_setup(property_name, section, data, request_key, expected_modified=None
     }
     allowed["property"] += ["invoice_series","payment_series","invoice_print_format","receipt_print_format"]
     allowed["rate"].append("included_services")
+    allowed["payment_method"]+=list(treasury.METHOD_FIELDS)
+    allowed["expense_category"]=["label","account","max_amount","active"]
+    allowed["supplier"]=["supplier","active"]
     if "included_services" in values:
         services=values["included_services"]
         if not isinstance(services,list) or len(services)>100:
@@ -238,7 +269,7 @@ def save_setup(property_name, section, data, request_key, expected_modified=None
             prop.save()
             doc = prop
         else:
-            dt = {"room": "HS Room", "category": "HS Category", "rate": "HS Rate", "payment_method": "HS Payment Method","billing_party":"HS Billing Party"}[section]
+            dt = {"room": "HS Room", "category": "HS Category", "rate": "HS Rate", "payment_method": "HS Payment Method","billing_party":"HS Billing Party","expense_category":"HS Expense Category","supplier":"HS Supplier"}[section]
             doc = insert(dt, prop, **values)
         audit(prop, "Setup " + section, doc)
         return dict(name=doc.name)
@@ -356,17 +387,28 @@ def room_balances(property_name):
 
 
 @frappe.whitelist()
-def inventory_status(property_name):
+def inventory_status(property_name,warehouse_name=None):
     prop=require(property_name)
-    if not may("service") and not may("report"):
+    if not any(may(a) for a in ("service","report","inventory","clean","maintain")):
         frappe.throw("No tiene permiso para consultar existencias",frappe.PermissionError)
     if not prop.warehouse:
         return dict(warehouse=None,items=[])
-    bins=frappe.get_all("Bin",filters={"warehouse":prop.warehouse},fields=["item_code","actual_qty","projected_qty"])
-    minimums={r.parent:r for r in frappe.get_all("Item Reorder",filters={"warehouse":prop.warehouse},fields=["parent","warehouse_reorder_level","warehouse_reorder_qty"])}
+    target=procurement.warehouse(prop,warehouse_name)
+    bins=frappe.get_all("Bin",filters={"warehouse":target},fields=["item_code","actual_qty","projected_qty"])
+    minimums={r.parent:r for r in frappe.get_all("Item Reorder",filters={"warehouse":target},fields=["parent","warehouse_reorder_level","warehouse_reorder_qty"])}
+    existing={r.item_code for r in bins}
+    bins += [frappe._dict(item_code=item,actual_qty=0,projected_qty=0) for item in minimums if item not in existing]
+    purposes={r.item:r.purpose for r in frappe.get_all("HS Stock Policy",filters={"property":prop.name,"warehouse":target},fields=["item","purpose"])}
+    existing={r.item_code for r in bins}
+    bins += [frappe._dict(item_code=item,actual_qty=0,projected_qty=0) for item in purposes if item not in existing]
     for row in bins:
         row["item_name"]=frappe.db.get_value("Item",row.item_code,"item_name")
         setting=minimums.get(row.item_code)
         row["minimum"]=setting.warehouse_reorder_level if setting else None
+        row["reorder_quantity"]=setting.warehouse_reorder_qty if setting else None
+        row["purpose"]=purposes.get(row.item_code) or ("Asset" if frappe.db.get_value("Item",row.item_code,"is_fixed_asset") else "Merchandise")
+        row["stock_managed"]=row["purpose"]!="Asset"
+        if not row["stock_managed"]:
+            row["actual_qty"],row["projected_qty"],row["minimum"]=None,None,None
         row["needs_restock"]=bool(setting and row.actual_qty<setting.warehouse_reorder_level)
-    return dict(warehouse=prop.warehouse,items=bins)
+    return dict(warehouse=target,items=bins)

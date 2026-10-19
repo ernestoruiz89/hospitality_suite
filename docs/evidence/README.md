@@ -4,7 +4,7 @@ Sitios ficticios locales: hospitality.localhost, hospitality-clean.localhost y h
 
 ## Automatizadas
 
-- `tests-clean.log`: última batería conjunta, **79 aprobadas**: 68 integración y 11 puras.
+- `tests-clean.log`: última batería conjunta, **91 aprobadas**: 80 integración y 11 puras.
 - `tests-clean.xml`: JUnit normalizado para CI, sin fallos ni errores. `tests-clean.raw.txt` conserva la salida original; Frappe 16 concatena un documento XML por cohorte. `tools/normalize_junit.py` los combina sin alterar casos/resultados.
 - `concurrency.log` y `category-race.log`: dos conexiones reales por caso, exactamente una confirmación y un rechazo, bajo REPEATABLE-READ; anulaciones de limpieza auditadas.
 - Los escenarios, fuentes y limitaciones están descritos en `../REQUISITOS.md` y `../AVANCE.md`.
@@ -28,6 +28,8 @@ Las capturas 01 a 06 prueban escritorio. La ampliación 07 a 12 prueba mantenimi
 10. `10-hotel-settled.png`: alojamiento C$3,000 + consumo C$60, factura y saldo cero.
 11. `11-hotel-cashier-closed.png`: turno C$3,060 cerrado; anticipo C$500 y pago C$2,560.
 12. `12-hotel-housekeeping-mobile.png`: limpieza/inspección terminadas, cero pendientes.
+13. `13-caja-egresos-liquidacion.png`: egreso C$20, proveedor C$100, cobro de tarjeta C$30 y liquidación separada C$2.90 comisión/C$0.30 retención/C$26.80 banco; esperado C$380.
+14. `14-caja-compra-cerrada.png`: turno cerrado con C$380 contados y sin diferencia. `finance-stock.json` verifica los documentos nativos, dos sábanas recibidas, factura sin segundo stock y saldada, compensación cero y conciliación sin diferencias.
 
 `countdown.json` acredita descenso con la misma referencia del servidor. `worker-recovery.json` conserva fallo/rollback y recuperación. `restore-baseline-summary.json`, `restore-verify.json` y `restore-after-migrate.json` conservan cantidades/hash; no contienen credenciales ni volcado. Referencia y respaldos completos permanecen privados en WSL.
 
@@ -38,5 +40,7 @@ Las capturas 01 a 06 prueban escritorio. La ampliación 07 a 12 prueba mantenimi
 La cuenta muestra cargos, facturas/impuestos, cobros/garantías y saldo; el arqueo incluye denominaciones. La factura HS Factura usa valores estándar y oculta referencias técnicas. No se acredita cumplimiento fiscal particular por el solo formato de demostración.
 
 `workbook-qa.log` contiene la importación de solo lectura y los valores de la conciliación XLSX: importes numéricos, moneda NIO y diferencias cero. También se revisó su imagen sin texto cortado. Los archivos PDF/XLSX e imágenes de revisión están en `output/`, excluido de Git; los scripts QA permiten reproducirlos después de completar un recorrido ficticio.
+
+`finance-stock-pdf-qa.json` acredita seis PDF adicionales legibles: liquidación, egreso, arqueo y reportes de liquidaciones/egresos/movimientos nativos. Se revisaron sus renderizados; `qa_finance_workbook.mjs` verificó C$30/C$2.90/C$0.30/C$26.80 como celdas numéricas y renderizó su vista sin modificar el XLSX. Los movimientos antiguos sin clasificación explícita se muestran como tales; no se infiere que fueron traslados.
 
 El núcleo de Frappe/ERPNext se comprobó sin cambios. Los pendientes obligatorios continúan en `../PENDIENTES.md`; esta evidencia no declara aptitud para producción.

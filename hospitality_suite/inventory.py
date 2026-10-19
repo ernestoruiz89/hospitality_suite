@@ -14,6 +14,7 @@ def stock_movement(prop, item, quantity, returning=False):
     entry = frappe.new_doc("Stock Entry")
     entry.stock_entry_type = "Material Receipt" if returning else "Material Issue"
     entry.company = prop.company
+    entry.hs_stock_purpose="Sale"
     entry.append("items", dict(item_code=item, qty=quantity, s_warehouse=None if returning else prop.warehouse,
                                t_warehouse=prop.warehouse if returning else None, cost_center=prop.cost_center))
     return post_standard(entry, prop)
@@ -27,7 +28,7 @@ def request_service(prop, data):
     if stay.status != "Active" or folio.status != "Open" or not matches:
         frappe.throw("El consumo requiere una estancia activa y una cuenta abierta")
     item = locked_doc("Item", data["item"])
-    if item.disabled or not item.is_sales_item:
+    if item.disabled or not item.is_sales_item or item.is_fixed_asset:
         frappe.throw("El artículo no está habilitado para venta")
     quantity = decimal(data.get("quantity") or 1)
     if quantity <= 0:

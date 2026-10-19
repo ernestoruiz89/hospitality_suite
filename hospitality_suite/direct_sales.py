@@ -17,7 +17,7 @@ def draft(prop,data):
         frappe.throw("Seleccione un pagador registrado en este establecimiento")
     item=locked_doc("Item",data["item"])
     quantity=decimal(data.get("quantity") or 0)
-    if item.disabled or not item.is_sales_item or quantity<=0:
+    if item.disabled or not item.is_sales_item or item.is_fixed_asset or quantity<=0:
         frappe.throw("Artículo o cantidad inválida")
     price_list=prop.price_list or frappe.db.get_single_value("Selling Settings","selling_price_list")
     prices=current_all("Item Price",filters={"item_code":item.name,"price_list":price_list,"currency":prop.currency,"selling":1},fields=["price_list_rate","valid_from","valid_upto"])

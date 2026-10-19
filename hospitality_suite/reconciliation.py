@@ -85,6 +85,19 @@ def rows(prop,filters=None,limit=1000):
                 account=frappe.db.get_value("HS Payment Method",payment.method,"account")
                 actual=abs(sum(decimal(r.debit_in_account_currency)-decimal(r.credit_in_account_currency) for r in native.accounts if r.account==account))
         record("Payment",payment.name,name,payment.amount,actual,payment.currency,"Verificación de importe, documento y turno")
+        if payment.kind=="Settlement":
+            policy=frappe.parse_json(payment.fee_snapshot or "{}")
+            base_currency=frappe.db.get_value("Company",prop.company,"default_currency")
+            valid=native and native.docstatus==1 and native.hs_property==prop.name and native.hs_shift==payment.shift
+            def posted(account,base=False,credit=False):
+                debit_field="debit" if base else "debit_in_account_currency"
+                credit_field="credit" if base else "credit_in_account_currency"
+                return sum((decimal(r.get(credit_field))-decimal(r.get(debit_field))) if credit else (decimal(r.get(debit_field))-decimal(r.get(credit_field))) for r in native.accounts if r.account==account) if valid else decimal(0)
+            outgoing=payment.settlement_direction=="Pay"
+            record("Settlement net",payment.name,name,payment.net_amount,posted(policy.get("settlement_account"),credit=outgoing),payment.currency,"Depósito o débito bancario neto de liquidación")
+            record("Settlement fee",payment.name,name,money(decimal(payment.fee_amount)*decimal(payment.exchange_rate),currency=base_currency),posted(policy.get("fee_account"),base=True),base_currency,"Comisión contabilizada como gasto")
+            record("Settlement withholding",payment.name,name,money(decimal(payment.withholding_amount)*decimal(payment.exchange_rate),currency=base_currency),posted(policy.get("withholding_account"),base=True),base_currency,"Retención contabilizada como activo")
+            record("Settlement clearing",payment.name,name,payment.clearing_base_amount,posted(frappe.db.get_value("HS Payment Method",payment.method,"account"),base=True,credit=not outgoing),base_currency,"Liquidación de la valoración histórica del movimiento")
     for native in unmatched_cash(prop,filters.get("shift")):
         if selected(native):
             record("Untracked payment",native["name"],native["name"],0,native["amount"],native["currency"],"Movimiento nativo sin registro operativo: "+native["account"])

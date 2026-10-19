@@ -9,7 +9,10 @@ LABELS={"name":"Referencia","room_number":"Habitación","category":"Categoría",
 "title":"Incidencia","cost":"Costo","stock_entry":"Documento de stock","return_stock_entry":"Reversión de stock","charge":"Cargo","action":"Acción","actor":"Usuario",
 "occurred_at":"Momento","source_doctype":"Tipo de origen","source_name":"Documento de origen","reason":"Motivo","type":"Tipo","source":"Origen","erp_document":"Documento ERPNext",
 "expected":"Esperado","actual":"Según ERPNext","detail":"Detalle","pending":"Sin facturar","outstanding":"Saldo pendiente"}
-NUMBERS={"amount","quantity","grand_total","outstanding_amount","base_amount","expected_amount","counted_amount","difference","cost","expected","actual","pending","outstanding"}
+LABELS.update(source_payment="Movimiento original",expense_category="Categoría de gasto",supplier="Proveedor",purchase_invoice="Factura de compra",fee_amount="Comisión",withholding_amount="Retención",net_amount="Neto bancario",reference="Referencia bancaria",settlement_direction="Flujo bancario")
+LABELS.update(warehouse="Almacén",purpose="Uso operativo",classification="Clasificación",balance_quantity="Existencia tras movimiento",posting_time="Hora contable",cost_center="Centro de costo",expense_account="Cuenta de gasto")
+NUMBERS={"amount","quantity","grand_total","outstanding_amount","base_amount","expected_amount","counted_amount","difference","cost","expected","actual","pending","outstanding","fee_amount","withholding_amount","net_amount"}
+NUMBERS.add("balance_quantity")
 
 
 def label(key):
@@ -17,7 +20,7 @@ def label(key):
 
 
 def display(key,value):
-    if key in ("status","kind","type","cleaning_status"):
+    if key in ("status","kind","type","cleaning_status","settlement_direction","purpose","classification"):
         from hospitality_suite.printing import hs_label
         return hs_label(value)
     return value

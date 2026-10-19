@@ -30,7 +30,7 @@ def expected(shift):
             continue
         if not frappe.db.get_value("HS Payment Method", row.method, "is_cash"):
             continue
-        sign = -1 if row.kind in ("Refund", "Guarantee Refund", "Withdrawal") else 1
+        sign = -1 if row.kind in ("Refund", "Guarantee Refund", "Withdrawal","Expense","Supplier Payment") else 1
         amounts[row.currency] = amounts.get(row.currency, decimal(0)) + decimal(row.amount) * sign
     return {k: str(money(v,currency=k)) for k, v in amounts.items()}
 

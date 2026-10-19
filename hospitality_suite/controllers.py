@@ -129,6 +129,16 @@ class ScopedDocument(Document):
             old=self.get_doc_before_save()
             if old and any(old.get(k)!=self.get(k) for k in ("property","company","account","currency","is_cash","mode_of_payment")) and frappe.db.exists("HS Payment",{"method":self.name}):
                 frappe.throw("Conserve el medio utilizado para la trazabilidad; cree otro para cambiar su cuenta, moneda o clasificación")
+            from hospitality_suite.treasury import validate_method
+            validate_method(self)
+        if self.doctype=="HS Expense Category":
+            account=frappe.get_doc("Account",self.account)
+            self.currency=frappe.db.get_value("Company",self.company,"default_currency")
+            if account.company!=self.company or account.is_group or account.root_type!="Expense" or account.account_currency!=self.currency or self.max_amount<0:
+                frappe.throw("Configure una cuenta de gasto de la compañía en moneda base y un límite no negativo")
+        if self.doctype=="HS Payment" and self.is_new() and self.kind in ("Payment","Advance","Guarantee","Refund","Guarantee Refund"):
+            from hospitality_suite.treasury import method_snapshot
+            self.fee_snapshot=frappe.as_json(method_snapshot(frappe.get_doc("HS Payment Method",self.method),refund=self.kind in ("Refund","Guarantee Refund")))
         if self.doctype=="HS Billing Party" and self.credit_limit<0:
             frappe.throw("El límite de crédito no puede ser negativo")
         if self.doctype=="HS Folio":

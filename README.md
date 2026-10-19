@@ -72,7 +72,7 @@ bench --site hotel.localhost set-config allow_tests true
 bench --site hotel.localhost run-tests --app hospitality_suite
 ```
 
-`before_tests` carga la demostración explícita para las pruebas; cada caso revierte sus movimientos. No ejecutar esta batería en producción. Última batería conjunta: **79 aprobadas** en el sitio adicional limpio, 68 de integración y 11 puras. Los dos casos de concurrencia usan conexiones y commits reales y se ejecutan aparte:
+`before_tests` carga la demostración explícita para las pruebas; cada caso revierte sus movimientos. No ejecutar esta batería en producción. Última batería conjunta: **91 aprobadas** en el sitio adicional limpio, 80 de integración y 11 puras. Los dos casos de concurrencia usan conexiones y commits reales y se ejecutan aparte:
 
 ```sh
 bench --site hospitality.localhost execute hospitality_suite.tests.concurrency.verify
@@ -85,6 +85,6 @@ Los helpers de concurrencia están limitados al sitio sintético y conservan anu
 
 ## Alcance y límites actuales
 
-El núcleo incluye disponibilidad serializada, snapshots tarifarios, grupos, folios, facturación, anticipos/garantías reales, caja, servicios/stock y limpieza. Se verificó un circuito completo de motel desde Pages con cajero, recepcionista, limpieza y supervisor.
+El núcleo incluye disponibilidad serializada, snapshots tarifarios, grupos, folios, facturación, anticipos/garantías reales, caja, servicios/stock y limpieza. Las Pages permiten órdenes/recepciones/facturas de compra, pago a proveedor, egresos documentados, clasificación/mínimos, traslados/consumos/conteos y liquidación bancaria con comisiones/retenciones. Se verificaron circuitos de motel y hotel, y compra/pago/liquidación desde las Pages con datos ficticios.
 
 La matriz distingue lo implementado de lo probado y lo pendiente: mantenimiento detallado, servicios incluidos, ampliación de seguridad, red/tiempo real, móvil, recorridos adicionales y recuperación de despliegue requieren cierre. Pasarelas, canales, mensajería y cerraduras solo tienen contratos; no hay proveedor real configurado ni pagos simulados como liquidados.

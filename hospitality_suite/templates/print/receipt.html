@@ -1,1 +1,14 @@
-<div class="hs-print"><p class="eyebrow">RECIBO DE MOVIMIENTO</p><h1>{{ frappe.db.get_value("HS Property",doc.property,"property_name") | e }}</h1><p>Referencia {{ doc.name | e }}</p><table>{% for label, value in [("Concepto",hs_label(doc.kind)),("Cliente",doc.customer),("Estancia / reserva",doc.stay or doc.booking),("Turno",doc.shift),("Moneda",doc.currency),("Importe",doc.get_formatted("amount")),("Recibido / entregado",doc.get_formatted("tendered") if doc.tendered else doc.get_formatted("amount")),("Vuelto",doc.get_formatted("change_amount")),("Tipo de cambio",doc.exchange_rate),("Documento ERPNext",doc.payment_entry or doc.journal_entry),("Referencia",doc.reference or "—"),("Estado",hs_label(doc.status))] %}<tr><th>{{ label }}</th><td>{{ value | e }}</td></tr>{% endfor %}</table><p>{{ (doc.reason or "") | e }}</p><p class="muted">Una garantía es un importe reembolsable separado del alojamiento. Este recibo mantiene el vínculo con el documento estándar de ERPNext.</p></div>
+<div class="hs-print"><p class="eyebrow">RECIBO DE MOVIMIENTO</p>
+<h1>{{ frappe.db.get_value("HS Property",doc.property,"property_name") | e }}</h1><p>Referencia {{ doc.name | e }}</p>
+<table>{% for label, value in [("Concepto",hs_label(doc.kind)),("Cliente / proveedor",doc.customer or doc.supplier or "—"),("Estancia / reserva",doc.stay or doc.booking or "—"),("Turno",doc.shift),("Moneda",doc.currency),("Bruto" if doc.kind=="Settlement" else "Importe",doc.get_formatted("amount")),("Tipo de cambio",doc.exchange_rate),("Documento ERPNext",doc.payment_entry or doc.journal_entry),("Referencia",doc.reference or "—"),("Estado",hs_label(doc.status))] %}<tr><th>{{ label }}</th><td>{{ value | e }}</td></tr>{% endfor %}
+{% if doc.kind=="Settlement" %}
+<tr><th>Dirección bancaria</th><td>{{ hs_label(doc.settlement_direction) | e }}</td></tr>
+<tr><th>Comisión</th><td>{{ hs_money(doc.fee_amount,doc.currency) }}</td></tr>
+<tr><th>Retención</th><td>{{ hs_money(doc.withholding_amount,doc.currency) }}</td></tr>
+<tr><th>Neto bancario</th><td>{{ hs_money(doc.net_amount,doc.currency) }}</td></tr>
+<tr><th>Movimiento original</th><td>{{ doc.source_payment | e }}</td></tr>
+{% elif doc.kind not in ("Expense","Supplier Payment","Withdrawal","Guarantee Applied") %}
+<tr><th>Recibido / entregado</th><td>{{ doc.get_formatted("tendered") if doc.tendered else doc.get_formatted("amount") }}</td></tr>
+<tr><th>Vuelto</th><td>{{ doc.get_formatted("change_amount") }}</td></tr>
+{% endif %}</table><p>{{ (doc.reason or "") | e }}</p>
+<p class="muted">Este comprobante conserva el vínculo con el documento estándar de ERPNext. Las liquidaciones bancarias no representan un segundo cobro al cliente ni efectivo físico.</p></div>

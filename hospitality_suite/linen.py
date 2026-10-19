@@ -47,6 +47,7 @@ def move_linen(prop,data):
         frappe.throw("Indique el motivo de la pérdida")
     entry = frappe.new_doc("Stock Entry")
     entry.company=prop.company
+    entry.hs_stock_purpose="Waste" if direction=="Loss" else "Laundry"
     entry.stock_entry_type="Material Issue" if direction=="Loss" else "Material Transfer"
     entry.append("items",dict(item_code=item.name,qty=float(quantity),cost_center=prop.cost_center,
                                s_warehouse=prop.warehouse if direction=="Send" else prop.laundry_warehouse,

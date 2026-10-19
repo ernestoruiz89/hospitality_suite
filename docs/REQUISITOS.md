@@ -20,13 +20,15 @@ Actualizada el 2026-10-19. **El objetivo sigue activo.** V = prueba ejecutada de
 | F11 | Garantía separada, devolución y aplicación | accounting.py | Pasivo, aplicación antes/después de factura y retorno USD con variación de cambio aprobados | V |
 | F12a | Caja, parciales, monedas y diferencias | accounting.py, cashier.py | NIO/USD, doble envío, diferencia, devolución, retiro probado | V |
 | F12b | Denominaciones y vuelto | cashier.py, workflows JS | Vuelto C$70 y arqueo/cierre de C$630 desde Page; conteo fraccionario rechazado | V |
+| F12c | Egresos y pagos a proveedores | treasury.py, procurement.py, Page Caja | Categoría/límite, efectivo disponible, Payment Entry/Journal Entry, sincronización nativa y cancelación probados; egreso C$20 y proveedor C$100 desde Page | V |
+| F12d | Comisiones, retenciones y liquidación | treasury.py, reconciliation.py, Page Caja | Snapshot, parciales/redondeo, devolución y cambio USD; bruto C$30, gasto C$2.90, activo C$0.30 y banco C$26.80 desde Page | V |
 | F13 | Limpieza, asignación e inspección | housekeeping.py, Page | Checklist incompleto rechazado; circuito de cuatro roles en escritorio y limpieza/inspección en móvil ejecutados | I |
 | F14a | Mantenimiento y objetos | housekeeping.py, linen.py, Pages | Repuestos/costo/stock, devolución, responsable, evidencia privada y resolución probados; falta equipo y carga de archivo en navegador | I |
-| F14b | Ropa de cama | linen.py | Envío, recepción y pérdida con Stock Entry probados; reposición pendiente | I |
+| F14b | Ropa de cama | linen.py, procurement.move_stock | Envío, recepción, pérdida y reposición entre almacenes con Stock Entry probados; ampliar recorrido móvil | I |
 | F15a | Servicios y existencias únicas | inventory.py | Entrega repetida de minibar: una salida y reversión estándar | V |
 | F15d | Servicios incluidos | pricing.py, inventory.py, Pages | Snapshot, cupo reservado, entrega sin otro cargo, stock único, devolución, extensión/cambio probados; configuración en Page pendiente | I |
-| F15b | Venta directa y devolución | direct_sales.py | Factura/pago/salida únicos, reintento, devolución y rollback por falta de stock | V |
-| F15c | Compras, traslados, mínimos y mermas | hooks estándar, inventory_status, linen.py | Mínimos visibles; faltan circuitos completos por establecimiento | I |
+| F15b | Venta directa y devolución | direct_sales.py | Factura/pago/salida únicos, reintento, devolución y rollback por falta de stock; venta de agua C$30 desde Page; devolución en Page pendiente | I |
+| F15c | Compras, traslados, mínimos y mermas | procurement.py, inventario nativo y Pages | Compra parcial, factura sin segundo stock, pagos, mínimos nativos, clasificación, reposición/consumo/merma, conteo obsoleto y reporte de SLE probados; compra/factura/pago desde Page; ampliar traslados/conteo en navegador | I |
 | F16 | Cierre diario y reapertura | closing.py | Cierre repetido, diferencias, snapshot y reapertura autorizada solo del último día probados | V |
 | F17a | KPI con noches y horas separadas | reports.summary | Cortesía, denominador cero, impuesto incluido, horas reales y bloqueo de mantenimiento probados | V |
 | F17b | Reportes, conciliación y exportaciones | reports.py, reconciliation.py, api.export_report | Conciliación hasta origen; PDF y XLSX numérico inspeccionados; auditor no exporta | V |
@@ -64,7 +66,7 @@ Actualizada el 2026-10-19. **El objetivo sigue activo.** V = prueba ejecutada de
 
 ## Evidencia acumulada
 
-Batería conjunta anterior a las últimas ampliaciones: **50 aprobadas** (39 de integración y 11 puras). Ampliación de horarios, acompañantes y KPI: **4 aprobadas** por separado. La cortesía detectó una incompatibilidad con tarifas negativas; se corrigió con descuento en la línea estándar y referencias a sus cargos de origen. Última batería conjunta en hospitality-clean.localhost: **79 aprobadas** (68 integración + 11 puras). También pasaron impuesto incluido, camas extra, Contact/Address, retiro de caja, variación de cambio y exportación numérica.
+Batería conjunta anterior a las últimas ampliaciones: **50 aprobadas** (39 de integración y 11 puras). Ampliación de horarios, acompañantes y KPI: **4 aprobadas** por separado. La cortesía detectó una incompatibilidad con tarifas negativas; se corrigió con descuento en la línea estándar y referencias a sus cargos de origen. Última batería conjunta en hospitality-clean.localhost: **91 aprobadas** (80 integración + 11 puras). También pasaron impuesto incluido, camas extra, Contact/Address, retiro de caja, variación de cambio y exportación numérica.
 
 La matriz no sustituye los registros finales ni las capturas. Integraciones reales de canales, mensajería, pasarelas y cerraduras esperan proveedor/credenciales; HRMS es opcional. No se migró producción ni ningún sitio ajeno.
 

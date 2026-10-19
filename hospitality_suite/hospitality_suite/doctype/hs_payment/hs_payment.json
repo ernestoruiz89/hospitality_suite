@@ -91,7 +91,7 @@
    "fieldname": "kind",
    "label": "Kind",
    "fieldtype": "Select",
-   "options": "Payment\nAdvance\nGuarantee\nRefund\nGuarantee Refund\nGuarantee Applied\nWithdrawal",
+   "options": "Payment\nAdvance\nGuarantee\nRefund\nGuarantee Refund\nGuarantee Applied\nWithdrawal\nExpense\nSupplier Payment\nSettlement",
    "reqd": 1,
    "default": "Payment"
   },
@@ -156,6 +156,65 @@
    "label": "Sales invoice",
    "fieldtype": "Link",
    "options": "Sales Invoice"
+  },
+  {
+   "fieldname": "expense_category",
+   "label": "Expense category",
+   "fieldtype": "Link",
+   "options": "HS Expense Category"
+  },
+  {
+   "fieldname": "supplier",
+   "label": "Supplier",
+   "fieldtype": "Link",
+   "options": "Supplier"
+  },
+  {
+   "fieldname": "purchase_invoice",
+   "label": "Purchase invoice",
+   "fieldtype": "Link",
+   "options": "Purchase Invoice"
+  },
+  {
+   "fieldname": "fee_snapshot",
+   "label": "Fee snapshot",
+   "fieldtype": "Code",
+   "options": "JSON",
+   "hidden": 1,
+   "print_hide": 1
+  },
+  {
+   "fieldname": "fee_amount",
+   "label": "Fee amount",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency"
+  },
+  {
+   "fieldname": "withholding_amount",
+   "label": "Withholding amount",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency"
+  },
+  {
+   "fieldname": "net_amount",
+   "label": "Net amount",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency"
+  },
+  {
+   "fieldname": "clearing_base_amount",
+   "label": "Clearing base amount",
+   "fieldtype": "Currency",
+   "default": 0
+  },
+  {
+   "fieldname": "settlement_direction",
+   "label": "Settlement direction",
+   "fieldtype": "Select",
+   "options": "\nReceive\nPay"
   }
  ],
  "field_order": [
@@ -181,7 +240,16 @@
   "tendered",
   "change_amount",
   "service",
-  "sales_invoice"
+  "sales_invoice",
+  "expense_category",
+  "supplier",
+  "purchase_invoice",
+  "fee_snapshot",
+  "fee_amount",
+  "withholding_amount",
+  "net_amount",
+  "clearing_base_amount",
+  "settlement_direction"
  ],
  "permissions": [
   {

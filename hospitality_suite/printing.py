@@ -8,15 +8,23 @@ def hs_json(value):
     return frappe.parse_json(value)
 
 
-def hs_label(value):
-    return {"Confirmed":"Confirmada","Checked In":"Entrada registrada","Completed":"Completada","Cancelled":"Cancelada","No Show":"No presentada",
+VALUE_LABELS={"Confirmed":"Confirmada","Checked In":"Entrada registrada","Completed":"Completada","Cancelled":"Cancelada","No Show":"No presentada",
             "Hold":"Retención temporal","Active":"Alojado","Checked Out":"Salida registrada","Pending":"Pendiente","In Progress":"En proceso",
             "Inspection":"Pendiente de inspección","Open":"Abierto","Closed":"Cerrado","Review":"Por revisar","Posted":"Contabilizado",
             "Payment":"Cobro","Advance":"Anticipo","Guarantee":"Garantía","Guarantee Refund":"Devolución de garantía",
             "Guarantee Applied":"Aplicación de garantía","Refund":"Devolución","Withdrawal":"Retiro / entrega","Invoiced":"Facturado",
+            "Expense":"Egreso","Supplier Payment":"Pago a proveedor","Settlement":"Liquidación de tarjeta",
+            "Settlement net":"Depósito neto","Settlement fee":"Comisión","Settlement withholding":"Retención","Settlement clearing":"Compensación histórica",
+            "Receive":"Ingreso bancario","Pay":"Débito bancario",
+            "Transfer":"Traslado","Cleaning":"Consumo de limpieza","Waste":"Merma / pérdida","Linen Replacement":"Reposición de ropa","Maintenance":"Mantenimiento","Laundry":"Lavandería","Purchase":"Compra","Sale":"Venta","Adjustment":"Ajuste",
+            "Merchandise":"Mercancía","Linen":"Ropa de cama","Parts":"Repuestos","Asset":"Activo fijo","Stock":"Movimiento estándar sin clasificar",
             "Corrective":"Correctivo","Preventive":"Preventivo","Departure":"Salida","Stay":"Estancia","Deep":"Profunda",
             "Normal":"Normal","High":"Alta","Urgent":"Urgente","Charge":"Cargo","Closed shift":"Turno cerrado",
-            "Principal":"Principal","Acompañante":"Acompañante"}.get(value,value or "—")
+            "Principal":"Principal","Acompañante":"Acompañante"}
+
+
+def hs_label(value):
+    return VALUE_LABELS.get(value,value or "—")
 
 
 def hs_money(value,currency):

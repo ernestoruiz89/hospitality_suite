@@ -1,0 +1,168 @@
+from datetime import timedelta
+import uuid
+
+import frappe
+from frappe.tests import IntegrationTestCase
+from frappe.utils import now_datetime
+
+from hospitality_suite import api
+from hospitality_suite.service import operation
+
+
+class TestTreasury(IntegrationTestCase):
+    def setUp(self):
+        super().setUp()
+        self.addCleanup(frappe.db.rollback)
+        frappe.set_user("Administrator")
+        self.prop=frappe.get_doc("HS Property",{"property_name":"Hotel Jardín Demo"})
+        self.cash=frappe.db.get_value("HS Payment Method",{"property":self.prop.name,"is_cash":1})
+        room=frappe.get_doc("HS Room",{"property":self.prop.name})
+        guest=frappe.get_doc("HS Guest",{"property":self.prop.name})
+        start=now_datetime().replace(microsecond=0)
+        values=dict(starts_at=str(start),ends_at=str(start+timedelta(days=1)),customer=guest.customer,guest=guest.name,
+                    rooms=[dict(category=room.category,room=room.name,people=1)])
+        values["acceptance"]=api.preview(self.prop.name,values)["acceptance"]
+        self.stay=self.call("walk_in",values)
+        self.shift=self.call("open_shift",dict(opening_amount=500))["shift"]
+
+    def tearDown(self):
+        frappe.set_user("Administrator")
+        super().tearDown()
+
+    def call(self,action,data,key=None):
+        return api.execute(self.prop.name,action,key or uuid.uuid4().hex,data)
+
+    def account(self,label,root="Asset",account_type=None,currency=None):
+        parent=frappe.db.get_value("Account",{"company":self.prop.company,"root_type":root,"is_group":1},"name")
+        return frappe.get_doc(dict(doctype="Account",company=self.prop.company,parent_account=parent,account_name=label+uuid.uuid4().hex[:7],
+                                   account_currency=currency or self.prop.currency,account_type=account_type)).insert().name
+
+    def card(self,fee=3,fixed=2,withheld=1,currency=None):
+        clearing=self.account("Compensación ficticia ",account_type="Bank",currency=currency)
+        bank=self.account("Banco neto ficticio ",account_type="Bank",currency=currency)
+        expense=self.account("Comisión ficticia ",root="Expense")
+        tax=self.account("Retención ficticia ")
+        with operation():
+            method=frappe.get_doc(dict(doctype="HS Payment Method",property=self.prop.name,company=self.prop.company,
+                                       mode_of_payment="Efectivo demo",is_cash=0,account=clearing,currency=currency or self.prop.currency,
+                                       fee_percent=fee,fee_fixed=fixed,fee_account=expense,withholding_percent=withheld,
+                                       withholding_account=tax,settlement_account=bank)).insert()
+        return method,clearing,bank,expense,tax
+
+    def receipt(self,method,amount):
+        return self.call("payment",dict(stay=self.stay["stay"],folio=self.stay["folio"],shift=self.shift,method=method.name,amount=amount,
+                                        kind="Advance",reference="Cobro ficticio de tarjeta"))
+
+    def settle(self,payment,amount,key=None):
+        values=dict(source_payment=payment,amount=amount,shift=self.shift,reference="Abono bancario ficticio")
+        values["acceptance"]=api.preview(self.prop.name,values,"settle_payment")["acceptance"]
+        return self.call("settle_payment",values,key)
+
+    def test_cash_expense_native_cost_limit_retry_and_expected_drawer(self):
+        account=self.account("Gasto operativo ficticio ",root="Expense")
+        with operation():
+            category=frappe.get_doc(dict(doctype="HS Expense Category",company=self.prop.company,property=self.prop.name,
+                                         label="Reposición menor ficticia",account=account,max_amount=100,active=1)).insert()
+        values=dict(shift=self.shift,method=self.cash,category=category.name,amount=80,reason="Egreso ficticio documentado")
+        key=uuid.uuid4().hex
+        frappe.set_user("cashier@hospitality.example.invalid")
+        # A cashier cannot spend another user's drawer.
+        with self.assertRaises(frappe.PermissionError):
+            self.call("cash_expense",values,key)
+        frappe.set_user("Administrator")
+        result=self.call("cash_expense",values,key)
+        self.assertEqual(self.call("cash_expense",values,key),result)
+        from hospitality_suite.cashier import expected
+        self.assertEqual(expected(frappe.get_doc("HS Shift",self.shift))["NIO"],"420.00")
+        journal=frappe.get_doc("Journal Entry",result["journal_entry"])
+        self.assertEqual(sum(r.debit for r in journal.accounts if r.account==account),80)
+        with self.assertRaises(frappe.ValidationError):
+            self.call("cash_expense",dict(values,amount=120))
+        from hospitality_suite.reconciliation import differences
+        self.assertEqual(differences(self.prop),[])
+
+    def test_partial_card_settlement_preserves_gross_policy_and_all_native_ledgers(self):
+        method,clearing,bank,expense,tax=self.card()
+        receipt=self.receipt(method,100)
+        one=self.settle(receipt["payment"],40)
+        self.assertEqual((one["fee"],one["withholding"],one["net"]),("2.00","0.40","37.60"))
+        with operation():
+            method.fee_percent,method.fee_fixed,method.withholding_percent=50,0,0
+            method.save()
+        two=self.settle(receipt["payment"],60)
+        self.assertEqual((two["fee"],two["withholding"],two["net"]),("3.00","0.60","56.40"))
+        vouchers=[receipt["payment_entry"],one["journal_entry"],two["journal_entry"]]
+        rows=frappe.get_all("GL Entry",filters={"voucher_no":["in",vouchers],"is_cancelled":0},fields=["account","debit","credit"])
+        balance=lambda account:sum(r.debit-r.credit for r in rows if r.account==account)
+        self.assertEqual(balance(clearing),0)
+        self.assertEqual(balance(bank),94)
+        self.assertEqual(balance(expense),5)
+        self.assertEqual(balance(tax),1)
+        self.assertEqual(frappe.db.get_value("Payment Entry",receipt["payment_entry"],"received_amount"),100)
+        self.assertEqual(frappe.db.count("Sales Invoice",{"hs_stay":self.stay["stay"]}),0)
+        from hospitality_suite.cashier import expected
+        self.assertEqual(expected(frappe.get_doc("HS Shift",self.shift))["NIO"],"500.00")
+        from hospitality_suite.reconciliation import differences
+        self.assertEqual(differences(self.prop),[])
+        native=frappe.get_doc("Payment Entry",receipt["payment_entry"])
+        native.hs_correction_reason="No debe anularse con liquidación vigente"
+        with self.assertRaises(frappe.ValidationError):
+            native.cancel()
+        last=frappe.get_doc("Journal Entry",two["journal_entry"])
+        last.hs_correction_reason="Liquidación ficticia duplicada corregida"
+        last.cancel()
+        q=api.preview(self.prop.name,dict(source_payment=receipt["payment"],amount=60),"settle_payment")
+        self.assertEqual(q["fee"],"3.00")
+        self.assertEqual(q["net"],"56.40")
+        with operation():
+            corrupted=frappe.get_doc("HS Payment",one["payment"])
+            corrupted.net_amount=1
+            corrupted.save()
+        self.assertTrue(any(r["type"]=="Settlement net" for r in differences(self.prop)))
+
+    def test_final_partial_settlement_absorbs_rounding_and_cannot_over_settle(self):
+        method,*_=self.card(fee=0,fixed=.01,withheld=0)
+        receipt=self.receipt(method,1)
+        values=[self.settle(receipt["payment"],amount) for amount in (.33,.33,.34)]
+        self.assertEqual([r["fee"] for r in values],["0.00","0.00","0.01"])
+        self.assertEqual([r["net"] for r in values],["0.33","0.33","0.33"])
+        with self.assertRaises(frappe.ValidationError):
+            self.settle(receipt["payment"],.01)
+
+    def test_cash_method_cannot_apply_card_fee(self):
+        method=frappe.get_doc("HS Payment Method",self.cash)
+        method.fee_percent=3
+        with self.assertRaises(frappe.ValidationError):
+            method.save()
+
+    def test_usd_settlement_clears_historical_base_and_posts_exchange_gain(self):
+        from decimal import Decimal
+        from unittest.mock import patch
+        method,clearing,bank,expense,tax=self.card(currency="USD")
+        receipt=self.receipt(method,10)
+        with patch("hospitality_suite.treasury.exchange",side_effect=lambda source,target,*args: Decimal(37) if source=="USD" else Decimal(1)):
+            result=self.settle(receipt["payment"],10)
+        vouchers=[receipt["payment_entry"],result["journal_entry"]]
+        entries=frappe.get_all("GL Entry",filters={"voucher_no":["in",vouchers],"is_cancelled":0},fields=["account","debit","credit","debit_in_account_currency","credit_in_account_currency"])
+        self.assertAlmostEqual(sum(r.debit-r.credit for r in entries if r.account==clearing),0,places=2)
+        self.assertAlmostEqual(sum(r.debit_in_account_currency-r.credit_in_account_currency for r in entries if r.account==clearing),0,places=2)
+        gain=frappe.db.get_value("Company",self.prop.company,"exchange_gain_loss_account")
+        self.assertAlmostEqual(sum(r.credit-r.debit for r in entries if r.account==gain),3.76,places=2)
+        self.assertAlmostEqual(sum(r.debit-r.credit for r in entries if r.account==bank),281.2,places=2)
+
+    def test_card_refund_settlement_is_outgoing_without_duplicating_receipts(self):
+        method,clearing,bank,*_=self.card()
+        receipt=self.receipt(method,100)
+        incoming=self.settle(receipt["payment"],100)
+        refund=self.call("payment",dict(stay=self.stay["stay"],folio=self.stay["folio"],shift=self.shift,method=method.name,
+                                        kind="Refund",amount=20,source_payment=receipt["payment"],reason="Devolución parcial ficticia"))
+        returned=self.settle(refund["payment"],20)
+        self.assertEqual(returned["net"],"20.00")
+        record=frappe.get_doc("HS Payment",returned["payment"])
+        self.assertEqual(record.settlement_direction,"Pay")
+        vouchers=[receipt["payment_entry"],refund["payment_entry"] or refund["journal_entry"],incoming["journal_entry"],returned["journal_entry"]]
+        entries=frappe.get_all("GL Entry",filters={"voucher_no":["in",vouchers],"is_cancelled":0},fields=["account","debit","credit"])
+        self.assertEqual(sum(r.debit-r.credit for r in entries if r.account==clearing),0)
+        self.assertEqual(sum(r.debit-r.credit for r in entries if r.account==bank),74)
+        from hospitality_suite.reconciliation import differences
+        self.assertEqual(differences(self.prop),[])

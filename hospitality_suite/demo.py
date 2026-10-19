@@ -10,6 +10,44 @@ from hospitality_suite.schema import ROLES
 from hospitality_suite.service import operation
 
 
+def finance_stock():
+    """Explicit synthetic configuration for the extended Pages UX walkthrough."""
+    if frappe.local.site!="hospitality.localhost" or not frappe.conf.get("allow_tests") or frappe.session.user!="Administrator":
+        frappe.throw("Configuración demostrativa solo en hospitality.localhost con Administrator y allow_tests")
+    prop=frappe.get_doc("HS Property",{"property_name":"Hotel Jardín Demo"})
+    def account(label,root,kind=None):
+        name=frappe.db.get_value("Account",{"company":prop.company,"account_name":label})
+        if name:
+            return name
+        return frappe.get_doc(dict(doctype="Account",company=prop.company,account_name=label,root_type=root,account_type=kind,
+                                   parent_account=frappe.db.get_value("Account",{"company":prop.company,"root_type":root,"is_group":1},"name"),account_currency=prop.currency)).insert().name
+    clearing=account("Compensación tarjetas demo","Asset","Bank")
+    bank=account("Banco liquidación demo","Asset","Bank")
+    fee=account("Comisiones tarjetas demo","Expense")
+    retained=account("Retenciones por cobrar demo","Asset")
+    expense=account("Gastos menores demo","Expense")
+    if not frappe.db.exists("Mode of Payment","Tarjeta demo"):
+        frappe.get_doc(dict(doctype="Mode of Payment",mode_of_payment="Tarjeta demo",type="Bank")).insert()
+    with operation():
+        if not frappe.db.exists("HS Payment Method",{"property":prop.name,"mode_of_payment":"Tarjeta demo"}):
+            frappe.get_doc(dict(doctype="HS Payment Method",property=prop.name,company=prop.company,mode_of_payment="Tarjeta demo",account=clearing,currency=prop.currency,
+                                is_cash=0,reference_required=1,fee_percent=3,fee_fixed=2,fee_account=fee,withholding_percent=1,withholding_account=retained,settlement_account=bank)).insert()
+        if not frappe.db.exists("HS Expense Category",{"property":prop.name,"label":"Gasto menor demo"}):
+            frappe.get_doc(dict(doctype="HS Expense Category",property=prop.name,company=prop.company,label="Gasto menor demo",account=expense,max_amount=100,active=1)).insert()
+    if not frappe.db.exists("Item","HS-DEMO-LINEN"):
+        frappe.get_doc(dict(doctype="Item",item_code="HS-DEMO-LINEN",item_name="Sábana de demostración",item_group="Products",stock_uom="Nos",is_stock_item=1,is_sales_item=0,is_purchase_item=1)).insert()
+    from hospitality_suite import api
+    vendor=frappe.db.get_value("Supplier",{"supplier_name":"Proveedor de ropa demo"})
+    if not vendor:
+        vendor=api.execute(prop.name,"register_supplier","finance-stock-supplier-demo",dict(supplier_name="Proveedor de ropa demo"))["supplier"]
+    elif not frappe.db.exists("HS Supplier",{"property":prop.name,"supplier":vendor}):
+        with operation():
+            frappe.get_doc(dict(doctype="HS Supplier",property=prop.name,company=prop.company,supplier=vendor,active=1)).insert()
+    if not frappe.db.exists("HS Stock Policy",{"property":prop.name,"item":"HS-DEMO-LINEN","warehouse":prop.warehouse}):
+        api.execute(prop.name,"stock_policy","finance-stock-linen-policy-demo",dict(item="HS-DEMO-LINEN",purpose="Linen",minimum=10,reorder_quantity=10))
+    return dict(property=prop.name,card_method="Tarjeta demo",supplier=vendor,item="HS-DEMO-LINEN",purpose="Synthetic UX only")
+
+
 def seed():
     if frappe.local.site != "hospitality.localhost" and not frappe.conf.get("hospitality_allow_demo"):
         frappe.throw("La demostración requiere hospitality_allow_demo en un sitio de pruebas")

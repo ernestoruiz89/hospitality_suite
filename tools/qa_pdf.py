@@ -7,11 +7,12 @@ from pypdf import PdfReader
 
 parser=argparse.ArgumentParser()
 parser.add_argument("directory")
+parser.add_argument("--expected-files",type=int,default=10)
 args=parser.parse_args()
 result=[]
 paths=sorted(Path(args.directory).glob("*.pdf"))
-if len(paths)!=10:
-    raise SystemExit("Se esperaban diez PDF reales de la app")
+if len(paths)!=args.expected_files:
+    raise SystemExit(f"Se esperaban {args.expected_files} PDF reales de la app")
 for path in paths:
     reader=PdfReader(path)
     pages=[page.extract_text() or "" for page in reader.pages]

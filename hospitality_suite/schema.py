@@ -5,7 +5,7 @@ ROLES = ["HS Administrator", "HS Manager", "HS Supervisor", "HS Receptionist", "
 OPERATORS = ROLES[:5] + ["HS Accountant", "HS Auditor"]
 MANAGERS = ROLES[:3]
 FINANCE = ROLES[:3] + ["HS Cashier", "HS Accountant", "HS Auditor"]
-STANDARD_SCOPED=("Sales Invoice","Payment Entry","Journal Entry","Stock Entry","Purchase Invoice","Purchase Receipt","Purchase Order","Material Request","Delivery Note","Sales Order")
+STANDARD_SCOPED=("Sales Invoice","Payment Entry","Journal Entry","Stock Entry","Stock Reconciliation","Purchase Invoice","Purchase Receipt","Purchase Order","Material Request","Delivery Note","Sales Order")
 
 
 def f(name, kind="Data", options=None, required=False, **kwargs):
@@ -106,7 +106,15 @@ SCHEMA = {
         f("invoice_item"), f("reason", "Small Text"), f("quote_snapshot", "Code", "JSON"),link("applies_to_charge","HS Charge",False),
         f("adjustment_type","Select","\nDiscount\nCourtesy\nSurcharge")]),
     "HS Payment Method": dict(roles=FINANCE, writable=True, fields=[*SCOPE, link("mode_of_payment", "Mode of Payment"),
-        link("account", "Account"), link("currency", "Currency"), f("reference_required", "Check"), f("is_cash", "Check")]),
+        link("account", "Account"), link("currency", "Currency"), f("reference_required", "Check"), f("is_cash", "Check"),
+        f("fee_percent","Percent"),f("fee_fixed","Currency","currency"),link("fee_account","Account",False),
+        f("refund_fee_percent","Percent"),f("refund_fee_fixed","Currency","currency"),
+        f("withholding_percent","Percent"),link("withholding_account","Account",False),link("settlement_account","Account",False)]),
+    "HS Expense Category":dict(roles=FINANCE,writable=True,fields=[*SCOPE,f("label",required=True),link("account","Account"),
+        link("currency","Currency",read_only=1),f("max_amount","Currency","currency"),f("active","Check",default=1)]),
+    "HS Supplier":dict(roles=FINANCE,writable=True,fields=[*SCOPE,link("supplier","Supplier"),f("active","Check",default=1)]),
+    "HS Stock Policy":dict(roles=FINANCE,writable=True,fields=[*SCOPE,link("item","Item"),link("warehouse","Warehouse"),
+        select("purpose",["Merchandise","Cleaning","Linen","Parts","Asset"])]),
     "HS Shift": dict(roles=FINANCE, fields=[*SCOPE, link("cashier", "User"), f("opened_at", "Datetime"), f("closed_at", "Datetime"),
         select("status", ["Open", "Review", "Closed"]), link("currency", "Currency"), f("opening_amount", "Currency", "currency"),
         f("expected_amount", "Currency", "currency"), f("counted_amount", "Currency", "currency"), f("difference", "Currency", "currency"),
@@ -114,10 +122,12 @@ SCHEMA = {
     "HS Payment": dict(roles=FINANCE, fields=[*SCOPE, link("stay", "HS Stay", False), link("booking", "HS Booking", False),
         link("folio", "HS Folio", False), link("customer", "Customer",False), link("shift", "HS Shift"), link("method", "HS Payment Method"),
         *MONEY, f("exchange_rate", "Float", default=1), f("base_amount", "Currency"),
-        select("kind", ["Payment", "Advance", "Guarantee", "Refund", "Guarantee Refund", "Guarantee Applied", "Withdrawal"]),
+        select("kind", ["Payment", "Advance", "Guarantee", "Refund", "Guarantee Refund", "Guarantee Applied", "Withdrawal","Expense","Supplier Payment","Settlement"]),
         select("status", ["Posted", "Cancelled"]), link("payment_entry", "Payment Entry", False), link("journal_entry", "Journal Entry", False),
         f("reference"), link("source_payment", "HS Payment", False), f("reason", "Small Text"),
-        f("tendered","Currency","currency"),f("change_amount","Currency","currency"),link("service","HS Service Request",False),link("sales_invoice","Sales Invoice",False)]),
+        f("tendered","Currency","currency"),f("change_amount","Currency","currency"),link("service","HS Service Request",False),link("sales_invoice","Sales Invoice",False),
+        link("expense_category","HS Expense Category",False),link("supplier","Supplier",False),link("purchase_invoice","Purchase Invoice",False),
+        f("fee_snapshot","Code","JSON",hidden=1,print_hide=1),f("fee_amount","Currency","currency"),f("withholding_amount","Currency","currency"),f("net_amount","Currency","currency"),f("clearing_base_amount","Currency"),f("settlement_direction","Select","\nReceive\nPay")]),
     "HS Cleaning Task": dict(roles=ROLES, fields=[*SCOPE, link("room", "HS Room"), link("stay", "HS Stay", False),
         select("kind", ["Departure", "Stay", "Deep"]), select("priority", ["Normal", "High", "Urgent"]), link("assigned_to", "User", False),
         select("status", ["Pending", "In Progress", "Inspection", "Completed"]), f("started_at", "Datetime"), f("completed_at", "Datetime"),

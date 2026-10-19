@@ -1,0 +1,32 @@
+[
+  {
+    "file": "egresos.pdf",
+    "pages": 1,
+    "characters": 531
+  },
+  {
+    "file": "expense.pdf",
+    "pages": 1,
+    "characters": 463
+  },
+  {
+    "file": "finance-stock-shift.pdf",
+    "pages": 1,
+    "characters": 678
+  },
+  {
+    "file": "liquidaciones.pdf",
+    "pages": 1,
+    "characters": 356
+  },
+  {
+    "file": "movimientos de inventario.pdf",
+    "pages": 1,
+    "characters": 924
+  },
+  {
+    "file": "settlement.pdf",
+    "pages": 1,
+    "characters": 572
+  }
+]
