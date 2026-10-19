@@ -1,0 +1,86 @@
+[
+  {
+    "file": "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/output/pdf/reservation.pdf",
+    "source_doctype": "HS Booking",
+    "source": "kh48obir08",
+    "format": "HS Confirmación de reserva",
+    "bytes": 13078,
+    "sha256": "659a069c4229360d0812f47a47d0f47d83c426356d95636ddee05d2d252a3344"
+  },
+  {
+    "file": "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/output/pdf/registration.pdf",
+    "source_doctype": "HS Stay",
+    "source": "agp2lri219",
+    "format": "HS Registro de huésped",
+    "bytes": 11981,
+    "sha256": "a473109cecfbe34acb4661ec04756ba3605906e2d59d996d8450ba2a51b88651"
+  },
+  {
+    "file": "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/output/pdf/folio.pdf",
+    "source_doctype": "HS Stay",
+    "source": "agp2lri219",
+    "format": "HS Cuenta de estancia",
+    "bytes": 14266,
+    "sha256": "03f8bc9ae6ef130a5e6eea44eae9b825394b04d39227ff06d73c052d59ce3e08"
+  },
+  {
+    "file": "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/output/pdf/receipt.pdf",
+    "source_doctype": "HS Payment",
+    "source": "i283k2gp2s",
+    "format": "HS Recibo",
+    "bytes": 12954,
+    "sha256": "ed38783142c83324e46e887fd2c8a60e4a2efe1c18a833282e01d8888596f377"
+  },
+  {
+    "file": "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/output/pdf/shift.pdf",
+    "source_doctype": "HS Shift",
+    "source": "guh9ip04kn",
+    "format": "HS Arqueo",
+    "bytes": 13338,
+    "sha256": "62b56748c2b5754dfb747ef0b8c5a7350fc138fe3f4a762b05db700b1be52e3d"
+  },
+  {
+    "file": "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/output/pdf/cleaning.pdf",
+    "source_doctype": "HS Cleaning Task",
+    "source": "krb3bd426o",
+    "format": "HS Orden de limpieza",
+    "bytes": 12924,
+    "sha256": "982b3f2b278fed3bc952468991fa725e284016f5e575e82d9bcaeaddaffdfe71"
+  },
+  {
+    "file": "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/output/pdf/maintenance.pdf",
+    "source_doctype": "HS Maintenance Order",
+    "source": "q1d9m8g18h",
+    "format": "HS Orden de mantenimiento",
+    "bytes": 11789,
+    "sha256": "466c444937133a2cc1972a845d841860b556b1e762a1afadab869c9e1c2dcdb0"
+  },
+  {
+    "file": "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/output/pdf/daily_close.pdf",
+    "source_doctype": "HS Daily Close",
+    "source": "q1kraab4o7",
+    "format": "HS Cierre diario",
+    "bytes": 12539,
+    "sha256": "50a291d17f4149f45b68241ad1c3a263459bbd95670311a3d7084713f447581a"
+  },
+  {
+    "file": "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/output/pdf/invoice.pdf",
+    "source_doctype": "Sales Invoice",
+    "source": "ACC-SINV-2026-00001",
+    "format": "HS Factura",
+    "bytes": 20151,
+    "sha256": "8680652e177442995a07eb5268dd13c146de9a2388a407f1029bda0baee2ead2"
+  },
+  {
+    "file": "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/output/reconciliation.xlsx",
+    "format": "xlsx",
+    "bytes": 5664,
+    "sha256": "3c693ecf3d3254c00c3a1661f8c1f30e4e06a83351210d596aa605e99ba01915"
+  },
+  {
+    "file": "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/output/pdf/reconciliation.pdf",
+    "format": "pdf",
+    "bytes": 21639,
+    "sha256": "1b9f44a4073f262ea7b3487d9f9b195c35934eeb5d580bb4b78f76c59f2ef485"
+  }
+]

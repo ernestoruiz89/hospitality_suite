@@ -92,7 +92,8 @@
   {
    "fieldname": "financial_enabled",
    "label": "Financial enabled",
-   "fieldtype": "Check"
+   "fieldtype": "Check",
+   "permlevel": 1
   },
   {
    "fieldname": "allow_credit",
@@ -114,7 +115,8 @@
    "fieldname": "cost_center",
    "label": "Cost center",
    "fieldtype": "Link",
-   "options": "Cost Center"
+   "options": "Cost Center",
+   "permlevel": 1
   },
   {
    "fieldname": "warehouse",
@@ -123,16 +125,31 @@
    "options": "Warehouse"
   },
   {
+   "fieldname": "laundry_warehouse",
+   "label": "Laundry warehouse",
+   "fieldtype": "Link",
+   "options": "Warehouse"
+  },
+  {
    "fieldname": "receivable_account",
    "label": "Receivable account",
    "fieldtype": "Link",
-   "options": "Account"
+   "options": "Account",
+   "permlevel": 1
   },
   {
    "fieldname": "guarantee_account",
    "label": "Guarantee account",
    "fieldtype": "Link",
-   "options": "Account"
+   "options": "Account",
+   "permlevel": 1
+  },
+  {
+   "fieldname": "cash_transfer_account",
+   "label": "Cash transfer account",
+   "fieldtype": "Link",
+   "options": "Account",
+   "permlevel": 1
   },
   {
    "fieldname": "lodging_item",
@@ -144,7 +161,14 @@
    "fieldname": "tax_template",
    "label": "Tax template",
    "fieldtype": "Link",
-   "options": "Sales Taxes and Charges Template"
+   "options": "Sales Taxes and Charges Template",
+   "permlevel": 1
+  },
+  {
+   "fieldname": "price_list",
+   "label": "Price list",
+   "fieldtype": "Link",
+   "options": "Price List"
   },
   {
    "fieldname": "tax_policy_confirmed",
@@ -161,6 +185,117 @@
    "label": "Retention days",
    "fieldtype": "Int",
    "default": 365
+  },
+  {
+   "fieldname": "cancellation_fee_mode",
+   "label": "Cancellation fee mode",
+   "fieldtype": "Select",
+   "options": "None\nFixed\nFirst Night\nPercent",
+   "reqd": 1,
+   "default": "None"
+  },
+  {
+   "fieldname": "cancellation_fee_value",
+   "label": "Cancellation fee value",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency",
+   "permlevel": 1
+  },
+  {
+   "fieldname": "no_show_fee_mode",
+   "label": "No show fee mode",
+   "fieldtype": "Select",
+   "options": "None\nFixed\nFirst Night\nPercent",
+   "reqd": 1,
+   "default": "None"
+  },
+  {
+   "fieldname": "no_show_fee_value",
+   "label": "No show fee value",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency",
+   "permlevel": 1
+  },
+  {
+   "fieldname": "penalty_item",
+   "label": "Penalty item",
+   "fieldtype": "Link",
+   "options": "Item"
+  },
+  {
+   "fieldname": "early_hour_rate",
+   "label": "Early hour rate",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency",
+   "permlevel": 1
+  },
+  {
+   "fieldname": "late_hour_rate",
+   "label": "Late hour rate",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency",
+   "permlevel": 1
+  },
+  {
+   "fieldname": "schedule_grace_minutes",
+   "label": "Schedule grace minutes",
+   "fieldtype": "Int",
+   "default": 0
+  },
+  {
+   "fieldname": "schedule_rounding_minutes",
+   "label": "Schedule rounding minutes",
+   "fieldtype": "Int",
+   "default": 60
+  },
+  {
+   "fieldname": "timing_item",
+   "label": "Timing item",
+   "fieldtype": "Link",
+   "options": "Item"
+  },
+  {
+   "fieldname": "checkout_inspection_required",
+   "label": "Checkout inspection required",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "checkout_quote_minutes",
+   "label": "Checkout quote minutes",
+   "fieldtype": "Int",
+   "default": 5
+  },
+  {
+   "fieldname": "cash_denominations",
+   "label": "Cash denominations",
+   "fieldtype": "Code",
+   "options": "JSON"
+  },
+  {
+   "fieldname": "invoice_series",
+   "label": "Invoice series",
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "payment_series",
+   "label": "Payment series",
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "invoice_print_format",
+   "label": "Invoice print format",
+   "fieldtype": "Link",
+   "options": "Print Format"
+  },
+  {
+   "fieldname": "receipt_print_format",
+   "label": "Receipt print format",
+   "fieldtype": "Link",
+   "options": "Print Format"
   }
  ],
  "field_order": [
@@ -183,13 +318,33 @@
   "hold_minutes",
   "cost_center",
   "warehouse",
+  "laundry_warehouse",
   "receivable_account",
   "guarantee_account",
+  "cash_transfer_account",
   "lodging_item",
   "tax_template",
+  "price_list",
   "tax_policy_confirmed",
   "brand_name",
-  "retention_days"
+  "retention_days",
+  "cancellation_fee_mode",
+  "cancellation_fee_value",
+  "no_show_fee_mode",
+  "no_show_fee_value",
+  "penalty_item",
+  "early_hour_rate",
+  "late_hour_rate",
+  "schedule_grace_minutes",
+  "schedule_rounding_minutes",
+  "timing_item",
+  "checkout_inspection_required",
+  "checkout_quote_minutes",
+  "cash_denominations",
+  "invoice_series",
+  "payment_series",
+  "invoice_print_format",
+  "receipt_print_format"
  ],
  "permissions": [
   {
@@ -279,9 +434,54 @@
    "report": 1,
    "export": 0,
    "print": 1
+  },
+  {
+   "role": "System Manager",
+   "permlevel": 1,
+   "read": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Administrator",
+   "permlevel": 1,
+   "read": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Manager",
+   "permlevel": 1,
+   "read": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Supervisor",
+   "permlevel": 1,
+   "read": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Accountant",
+   "permlevel": 1,
+   "read": 1,
+   "write": 0
+  },
+  {
+   "role": "HS Auditor",
+   "permlevel": 1,
+   "read": 1,
+   "write": 0
+  },
+  {
+   "role": "HS Cashier",
+   "permlevel": 1,
+   "read": 1,
+   "write": 0
   }
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "allow_rename": 0
+ "allow_rename": 0,
+ "title_field": "property_name",
+ "search_fields": "property_name",
+ "show_title_field_in_link": 1
 }

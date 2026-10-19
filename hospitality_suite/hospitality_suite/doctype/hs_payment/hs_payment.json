@@ -44,8 +44,7 @@
    "fieldname": "customer",
    "label": "Cliente pagador",
    "fieldtype": "Link",
-   "options": "Customer",
-   "reqd": 1
+   "options": "Customer"
   },
   {
    "fieldname": "shift",
@@ -72,6 +71,7 @@
    "fieldname": "amount",
    "label": "Amount",
    "fieldtype": "Currency",
+   "default": 0,
    "options": "currency",
    "reqd": 1
   },
@@ -84,13 +84,14 @@
   {
    "fieldname": "base_amount",
    "label": "Base amount",
-   "fieldtype": "Currency"
+   "fieldtype": "Currency",
+   "default": 0
   },
   {
    "fieldname": "kind",
    "label": "Kind",
    "fieldtype": "Select",
-   "options": "Payment\nAdvance\nGuarantee\nRefund\nGuarantee Refund\nWithdrawal",
+   "options": "Payment\nAdvance\nGuarantee\nRefund\nGuarantee Refund\nGuarantee Applied\nWithdrawal",
    "reqd": 1,
    "default": "Payment"
   },
@@ -129,6 +130,32 @@
    "fieldname": "reason",
    "label": "Reason",
    "fieldtype": "Small Text"
+  },
+  {
+   "fieldname": "tendered",
+   "label": "Tendered",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency"
+  },
+  {
+   "fieldname": "change_amount",
+   "label": "Change amount",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency"
+  },
+  {
+   "fieldname": "service",
+   "label": "Service",
+   "fieldtype": "Link",
+   "options": "HS Service Request"
+  },
+  {
+   "fieldname": "sales_invoice",
+   "label": "Sales invoice",
+   "fieldtype": "Link",
+   "options": "Sales Invoice"
   }
  ],
  "field_order": [
@@ -150,7 +177,11 @@
   "journal_entry",
   "reference",
   "source_payment",
-  "reason"
+  "reason",
+  "tendered",
+  "change_amount",
+  "service",
+  "sales_invoice"
  ],
  "permissions": [
   {

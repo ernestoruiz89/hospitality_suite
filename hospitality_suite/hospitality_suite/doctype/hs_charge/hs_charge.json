@@ -58,6 +58,7 @@
    "fieldname": "rate",
    "label": "Rate",
    "fieldtype": "Currency",
+   "default": 0,
    "options": "currency"
   },
   {
@@ -71,6 +72,7 @@
    "fieldname": "amount",
    "label": "Amount",
    "fieldtype": "Currency",
+   "default": 0,
    "options": "currency",
    "reqd": 1
   },
@@ -117,6 +119,18 @@
    "label": "Quote snapshot",
    "fieldtype": "Code",
    "options": "JSON"
+  },
+  {
+   "fieldname": "applies_to_charge",
+   "label": "Applies to charge",
+   "fieldtype": "Link",
+   "options": "HS Charge"
+  },
+  {
+   "fieldname": "adjustment_type",
+   "label": "Adjustment type",
+   "fieldtype": "Select",
+   "options": "\nDiscount\nCourtesy\nSurcharge"
   }
  ],
  "field_order": [
@@ -136,7 +150,9 @@
   "sales_invoice",
   "invoice_item",
   "reason",
-  "quote_snapshot"
+  "quote_snapshot",
+  "applies_to_charge",
+  "adjustment_type"
  ],
  "permissions": [
   {

@@ -64,6 +64,7 @@
    "fieldname": "amount",
    "label": "Amount",
    "fieldtype": "Currency",
+   "default": 0,
    "options": "currency",
    "reqd": 1
   },
@@ -94,6 +95,18 @@
    "options": "Stock Entry"
   },
   {
+   "fieldname": "credit_note",
+   "label": "Credit note",
+   "fieldtype": "Link",
+   "options": "Sales Invoice"
+  },
+  {
+   "fieldname": "sales_invoice",
+   "label": "Sales invoice",
+   "fieldtype": "Link",
+   "options": "Sales Invoice"
+  },
+  {
    "fieldname": "notes",
    "label": "Notes",
    "fieldtype": "Small Text"
@@ -113,6 +126,8 @@
   "charge",
   "stock_entry",
   "return_stock_entry",
+  "credit_note",
+  "sales_invoice",
   "notes"
  ],
  "permissions": [

@@ -1,3 +1,5 @@
 [pre_model_sync]
 
 [post_model_sync]
+hospitality_suite.patches.v0_1.backfill_booking_lines
+hospitality_suite.patches.v0_1.backfill_allocation_rates

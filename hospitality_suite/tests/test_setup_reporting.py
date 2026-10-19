@@ -1,0 +1,132 @@
+from datetime import timedelta
+import uuid
+
+import frappe
+from frappe.tests import IntegrationTestCase
+from frappe.utils import now_datetime
+
+from hospitality_suite import api,reports,reconciliation
+from hospitality_suite.service import operation
+
+
+class TestSetupReporting(IntegrationTestCase):
+    def setUp(self):
+        super().setUp()
+        self.addCleanup(frappe.db.rollback)
+        frappe.set_user("Administrator")
+        self.prop=frappe.get_doc("HS Property",{"property_name":"Hotel Jardín Demo"})
+        self.room=frappe.get_all("HS Room",filters={"property":self.prop.name},fields=["*"],order_by="room_number")[0]
+        self.guest=frappe.get_all("HS Guest",filters={"property":self.prop.name},fields=["*"])[0]
+
+    def tearDown(self):
+        frappe.set_user("Administrator")
+        super().tearDown()
+
+    def call(self,action,data,key=None):
+        return api.execute(self.prop.name,action,key or uuid.uuid4().hex,data)
+
+    def values(self,beds=0):
+        start=now_datetime().replace(microsecond=0)
+        return dict(starts_at=str(start),ends_at=str(start+timedelta(days=1)),guest=self.guest.name,customer=self.guest.customer,
+                    rooms=[dict(category=self.room.category,room=self.room.name,people=2,extra_beds=beds)])
+
+    def test_extra_bed_and_historic_rate(self):
+        with operation():
+            cat=frappe.get_doc("HS Category",self.room.category)
+            cat.max_extra_beds=1
+            cat.save()
+            rate=frappe.get_doc("HS Rate",{"property":self.prop.name,"category":cat.name})
+            rate.extra_bed_rate=200
+            rate.save()
+        values=self.values(1)
+        quote=api.preview(self.prop.name,values)
+        self.assertEqual(quote["amount"],"1700.00")
+        values["acceptance"]=quote["acceptance"]
+        booking=self.call("reserve",values)
+        with operation():
+            rate.extra_bed_rate=400
+            rate.save()
+        book=frappe.get_doc("HS Booking",booking["booking"])
+        self.assertEqual(book.rooms[0].extra_beds,1)
+        entered=self.call("check_in",dict(booking=book.name,modified=str(book.modified),guest=self.guest.name,room=self.room.name))
+        self.assertEqual(frappe.db.get_value("HS Stay",entered["stay"],"amount"),1700)
+
+    def test_guest_uses_standard_contact_address_and_is_idempotent(self):
+        key=uuid.uuid4().hex
+        values=dict(full_name="Persona ficticia contacto "+key[:6],email="fictional-"+key[:6]+"@example.invalid",phone="00000000",
+                    address_line1="Dirección ficticia",city="Ciudad de prueba",country="Nicaragua")
+        one=api.create_guest(self.prop.name,values,key)
+        self.assertEqual(one,api.create_guest(self.prop.name,values,key))
+        guest=frappe.get_doc("HS Guest",one["guest"])
+        self.assertEqual(frappe.db.get_value("Contact",guest.contact,"email_id"),values["email"])
+        self.assertEqual(frappe.db.get_value("Address",guest.address,"city"),values["city"])
+        self.assertTrue(frappe.db.exists("Dynamic Link",{"parent":guest.contact,"link_doctype":"Customer","link_name":one["customer"]}))
+
+    def test_user_wizard_restricted_and_series_validated(self):
+        email="wizard-"+uuid.uuid4().hex[:8]+"@example.invalid"
+        values=dict(email=email,first_name="Usuario ficticio",roles=["HS Housekeeping"],reason="Prueba de configuración")
+        result=self.call("assign_user",values)
+        self.assertEqual(result["user"],email)
+        self.assertTrue(frappe.db.exists("HS Access",{"user":email,"property":self.prop.name}))
+        frappe.set_user("manager@hospitality.example.invalid")
+        with self.assertRaises(frappe.PermissionError):
+            self.call("assign_user",{**values,"roles":["HS Administrator"]})
+        frappe.set_user("Administrator")
+        with self.assertRaises(frappe.ValidationError):
+            api.save_setup(self.prop.name,"property",dict(invoice_series="NO-EXISTE-.YYYY.-"),uuid.uuid4().hex,str(self.prop.modified))
+
+    def test_tax_inclusive_net_kpi_and_document_reconciliation(self):
+        company=frappe.get_doc("Company",self.prop.company)
+        parent=frappe.db.get_value("Account",{"company":company.name,"root_type":"Liability","is_group":1})
+        account=frappe.get_doc(dict(doctype="Account",company=company.name,account_name="Impuesto ficticio "+uuid.uuid4().hex[:6],
+                                  parent_account=parent,account_type="Tax",account_currency="NIO")).insert()
+        template=frappe.get_doc(dict(doctype="Sales Taxes and Charges Template",title="Impuesto ficticio incluido "+uuid.uuid4().hex[:6],company=company.name,
+                                     taxes=[dict(charge_type="On Net Total",account_head=account.name,description="Impuesto sintético 15%",rate=15,included_in_print_rate=1,cost_center=self.prop.cost_center)])).insert()
+        with operation():
+            self.prop.tax_template=template.name
+            self.prop.save()
+        values=self.values()
+        values["acceptance"]=api.preview(self.prop.name,values)["acceptance"]
+        stay=self.call("walk_in",values)
+        invoice=self.call("invoice",dict(folio=stay["folio"]))
+        inv=frappe.get_doc("Sales Invoice",invoice["invoice"])
+        self.assertEqual(inv.grand_total,1500)
+        self.assertAlmostEqual(inv.net_total,1304.35,places=2)
+        day=str(now_datetime().date())
+        summary=reports.summary(self.prop,day+" 00:00:00",str(now_datetime().date()+timedelta(days=1))+" 00:00:00")
+        self.assertEqual(summary["hotel_lodging_net"],"1304.35")
+        self.assertEqual(summary["ADR"],"1304.35")
+        self.assertFalse(reconciliation.differences(self.prop))
+        # A damaged operational link must be surfaced, rather than hidden in a total.
+        with operation():
+            charge=frappe.get_doc("HS Charge",{"stay":stay["stay"],"kind":"Lodging"})
+            charge.invoice_item="missing-line"
+            charge.save()
+        differences=reconciliation.differences(self.prop)
+        self.assertEqual(differences[0]["source"],charge.name)
+        self.assertEqual(differences[0]["difference"],"-1500.00")
+        before=str(self.prop.business_date)
+        with self.assertRaises(frappe.ValidationError):
+            self.call("daily_close",dict(confirm=True))
+        self.assertEqual(str(frappe.db.get_value("HS Property",self.prop.name,"business_date")),before)
+
+    def test_export_numeric_types_and_auditor_permission(self):
+        import io
+        import zipfile
+        from xml.etree import ElementTree as ET
+        values=self.values()
+        values["acceptance"]=api.preview(self.prop.name,values)["acceptance"]
+        stay=self.call("walk_in",values)
+        self.call("invoice",dict(folio=stay["folio"]))
+        frappe.local.response=frappe._dict()
+        api.export_report(self.prop.name,"Conciliación",{},"xlsx")
+        with zipfile.ZipFile(io.BytesIO(frappe.local.response.filecontent)) as archive:
+            xml=ET.fromstring(archive.read("xl/worksheets/sheet1.xml"))
+        ns={"x":"http://schemas.openxmlformats.org/spreadsheetml/2006/main"}
+        expected=xml.find(".//x:c[@r='D2']",ns)
+        self.assertNotIn(expected.get("t"),("s","inlineStr"))
+        self.assertEqual(float(expected.find("x:v",ns).text),1500)
+        self.assertFalse(xml.findall(".//x:f",ns))
+        frappe.set_user("auditor@hospitality.example.invalid")
+        with self.assertRaises(frappe.PermissionError):
+            api.export_report(self.prop.name,"Conciliación",{},"xlsx")

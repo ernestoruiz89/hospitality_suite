@@ -1,3 +1,4 @@
+from hospitality_suite.service import current_all, locked_doc
 import frappe
 
 from hospitality_suite.accounting import ready, post_standard
@@ -7,7 +8,7 @@ from hospitality_suite.pricing import decimal, money
 
 
 def stock_movement(prop, item, quantity, returning=False):
-    item_doc = frappe.get_doc("Item", item)
+    item_doc = locked_doc("Item", item)
     if not item_doc.is_stock_item:
         return None
     entry = frappe.new_doc("Stock Entry")
@@ -22,16 +23,17 @@ def request_service(prop, data):
     ready(prop)
     stay = document("HS Stay", data["stay"], "service")
     folio = document("HS Folio", data["folio"], "service")
-    if stay.status != "Active" or folio.status != "Open" or folio.stay != stay.name:
+    matches=folio.stay==stay.name if folio.stay else bool(folio.booking and folio.booking==stay.booking)
+    if stay.status != "Active" or folio.status != "Open" or not matches:
         frappe.throw("El consumo requiere una estancia activa y una cuenta abierta")
-    item = frappe.get_doc("Item", data["item"])
+    item = locked_doc("Item", data["item"])
     if item.disabled or not item.is_sales_item:
         frappe.throw("El artículo no está habilitado para venta")
     quantity = decimal(data.get("quantity") or 1)
     if quantity <= 0:
         frappe.throw("La cantidad debe ser positiva")
     # A configured ERPNext Item Price is the authority; callers cannot invent prices.
-    price_list = data.get("price_list") or frappe.db.get_single_value("Selling Settings", "selling_price_list")
+    price_list = prop.get("price_list") or frappe.db.get_single_value("Selling Settings", "selling_price_list")
     price = frappe.db.get_value("Item Price", {"item_code": item.name, "price_list": price_list, "currency": folio.currency, "selling": 1}, "price_list_rate")
     if price is None:
         frappe.throw("Configure el precio de venta del artículo en ERPNext")
@@ -44,6 +46,8 @@ def request_service(prop, data):
 def update_service(prop, data):
     from hospitality_suite.operations import charge
     doc = document("HS Service Request", data["service"], "service")
+    if not doc.stay:
+        frappe.throw("Use Devolver venta directa para esta operación")
     assert_version(doc, data.get("modified"))
     target = data["status"]
     transitions = {"Requested": ["In Progress", "Delivered", "Cancelled"], "In Progress": ["Delivered", "Cancelled"], "Delivered": ["Returned"]}
@@ -62,14 +66,16 @@ def update_service(prop, data):
         require(prop.name, "approve")
         if not data.get("reason"):
             frappe.throw("Indique el motivo de la devolución")
-        original = frappe.get_doc("HS Charge", doc.charge)
-        if original.status == "Invoiced":
+        original = locked_doc("HS Charge", doc.charge)
+        if original.status == "Invoiced" and not doc.credit_note:
             frappe.throw("Cree la nota de crédito antes de devolver un consumo facturado")
-        original.status, original.reason = "Reversed", data["reason"]
-        original.save()
+        if original.status != "Invoiced":
+            original.status, original.reason = "Reversed", data["reason"]
+            original.save()
         if doc.stock_entry:
-            entry = frappe.get_doc("Stock Entry", doc.stock_entry)
+            entry = locked_doc("Stock Entry", doc.stock_entry)
             entry.flags.ignore_permissions = True
+            entry.hs_correction_reason=data["reason"]
             entry.cancel()  # standard ledger reversal, no second inventory path
     doc.status = target
     doc.save()

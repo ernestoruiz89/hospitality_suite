@@ -2,10 +2,11 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 .ruff_cache/
-node_modules/
+node_modules
 *.egg-info/
-dist/
+dist
 .venv/
 .local/
 playwright-report/
 test-results/
+output/

@@ -1,0 +1,13 @@
+<div class="hs-print">
+  <p class="eyebrow">CIERRE DIARIO</p>
+  <h1>{{ frappe.db.get_value("HS Property",doc.property,"property_name") | e }}</h1>
+  <p>{{ doc.name | e }} · Fecha operativa {{ doc.business_date }} · {{ hs_label(doc.status) | e }}</p>
+  <p>Cierre: {{ hs_date(doc.closed_at,doc.property) }} · Moneda {{ frappe.db.get_value("HS Property",doc.property,"currency") | e }}</p>
+  {% set snapshot=hs_json(doc.summary or '{}') %}
+  <table><thead><tr><th>Indicador conservado al ejecutar</th><th>Valor</th></tr></thead><tbody>
+  {% for key,label in [('production','Producción operativa'),('hotel_lodging_net','Alojamiento hotel neto facturado'),('motel_lodging_net','Alojamiento motel neto facturado'),('room_nights','Habitaciones-noche comercializadas'),('occupied_hours','Horas de motel ocupadas'),('ADR','ADR hotel'),('RevPAR','RevPAR hotel')] %}
+  <tr><th>{{ label }}</th><td>{{ snapshot.get(key,'—') | e }}</td></tr>{% endfor %}</tbody></table>
+  <h2>Pendientes conservados</h2>
+  {% for issue in hs_json(doc.blockers or '[]') %}<p>{{ issue.type | e }}: {{ issue.documents | join(', ') | e }}</p>{% else %}<p>Sin pendientes registrados.</p>{% endfor %}
+  <p>{{ (doc.reason or '') | e }}</p><p class="muted">Reporte del snapshot guardado. La reapertura y los documentos de origen se conservan en la bitácora.</p>
+</div>

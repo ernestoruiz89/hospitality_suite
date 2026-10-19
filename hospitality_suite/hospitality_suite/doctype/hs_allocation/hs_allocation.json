@@ -81,6 +81,42 @@
    "options": "HS Stay"
   },
   {
+   "fieldname": "booking_room",
+   "label": "Booking room",
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "portal_request",
+   "label": "Portal request",
+   "fieldtype": "Link",
+   "options": "HS Portal Request"
+  },
+  {
+   "fieldname": "rate",
+   "label": "Rate",
+   "fieldtype": "Link",
+   "options": "HS Rate"
+  },
+  {
+   "fieldname": "currency",
+   "label": "Moneda",
+   "fieldtype": "Link",
+   "options": "Currency"
+  },
+  {
+   "fieldname": "accepted_amount",
+   "label": "Accepted amount",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency"
+  },
+  {
+   "fieldname": "quote_snapshot",
+   "label": "Quote snapshot",
+   "fieldtype": "Code",
+   "options": "JSON"
+  },
+  {
    "fieldname": "maintenance",
    "label": "Maintenance",
    "fieldtype": "Link",
@@ -99,6 +135,12 @@
   "status",
   "booking",
   "stay",
+  "booking_room",
+  "portal_request",
+  "rate",
+  "currency",
+  "accepted_amount",
+  "quote_snapshot",
   "maintenance"
  ],
  "permissions": [
@@ -155,13 +197,6 @@
   },
   {
    "role": "HS Auditor",
-   "read": 1,
-   "report": 1,
-   "export": 0,
-   "print": 1
-  },
-  {
-   "role": "HS Maintenance",
    "read": 1,
    "report": 1,
    "export": 0,

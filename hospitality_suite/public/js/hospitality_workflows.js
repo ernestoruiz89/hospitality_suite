@@ -1,0 +1,75 @@
+/* Focused cashier and counter workflows; amounts are quoted by the server. */
+(() => {
+  const Desk=window.hospitality_suite.Desk;
+  const e=x=>frappe.utils.escape_html(String(x??""));
+  const f=(fieldname,label,fieldtype="Data",extra={})=>({fieldname,label:__(label),fieldtype,...extra});
+  const pick=(name,label,rows,labelKey="name",required=true)=>f(name,label,"Select",{reqd:required,options:[{value:"",label:"Seleccione…"},...rows.map(r=>({value:r.name,label:r[labelKey]||r.name}))]});
+  const kinds={Payment:"Cobro",Advance:"Anticipo",Guarantee:"Garantía",Refund:"Devolución","Guarantee Refund":"Devolución de garantía"};
+  const originalDialog=Desk.prototype.dialog;
+  Desk.prototype.dialog=async function(title,fields,...args){
+    const choiceLabels={None:"Sin cargo",Fixed:"Importe fijo","First Night":"Primera noche",Percent:"Porcentaje",Mixed:"Mixto",Company:"Empresa",Agency:"Agencia",Individual:"Persona",Corrective:"Correctivo",Preventive:"Preventivo"};
+    for(const df of fields.filter(x=>x.fieldtype==="Select"&&Array.isArray(x.options)))df.options=df.options.map(option=>typeof option==="string"&&choiceLabels[option]?{value:option,label:choiceLabels[option]}:option);
+    for(const table of fields.filter(df=>df.fieldtype==="Table"))for(const df of table.fields||[])if(df.fieldname==="value"&&df.fieldtype==="Currency"){df.fieldtype="Float";df.precision=2;}
+    for(const df of fields.filter(x=>x.fieldtype==="Select"&&Array.isArray(x.options))){
+      const rows={stay:this.data.stays,folio:this.data.folios,booking:this.data.bookings,shift:this.data.shifts}[df.fieldname];
+      if(!rows)continue;
+      df.options=df.options.map(option=>{if(!option.value)return option;const row=rows.find(r=>r.name===option.value);if(!row)return option;let label=option.label;
+        if(df.fieldname==="stay")label=`Habitación ${this.roomName(row.room)} · ${this.date(row.starts_at)}`;
+        if(df.fieldname==="booking")label=`${this.date(row.starts_at)} · ${row.name}`;
+        if(df.fieldname==="shift")label=`${this.date(row.opened_at)} · ${row.cashier} · ${row.currency}`;
+        if(df.fieldname==="folio"){const stay=this.data.stays.find(s=>s.name===row.stay);label=`${row.label} · ${stay?"Habitación "+this.roomName(stay.room):"Grupo "+row.booking}`;}
+        return {...option,label};
+      });
+    }
+    const rooms=fields.find(df=>df.fieldname==="rooms"&&df.fieldtype==="Table");
+    if(rooms&&!rooms.fields.some(df=>df.fieldname==="extra_beds"))rooms.fields.push(f("extra_beds","Camas extra","Int",{default:0,in_list_view:1}));
+    if(fields.some(df=>df.fieldname==="category_name")&&!fields.some(df=>df.fieldname==="max_extra_beds"))fields.push(f("max_extra_beds","Camas extra admitidas","Int",{default:0}));
+    if(fields.some(df=>df.fieldname==="block_hours"))fields.push(f("included_people","Personas incluidas","Int",{default:2}),f("additional_person_rate","Persona adicional","Currency"),f("extra_bed_rate","Cama extra","Currency"),f("valid_from","Vigente desde","Date"),f("valid_to","Vigente hasta","Date"),f("weekdays","Días (0=lunes … 6=domingo; vacío=todos)"),f("customer","Tarifa negociada para cliente","Link",{options:"Customer"}),f("night_start","Inicio del paquete nocturno","Time"),f("night_end","Fin de ventana nocturna","Time"));
+    if(fields.some(df=>df.fieldname==="identity_number"))fields.push(f("address_line1","Dirección (opcional)"),f("city","Ciudad"),f("country","País","Link",{options:"Country",default:"Nicaragua"}));
+    return originalDialog.call(this,title,fields,...args);
+  };
+  const oldButton=Desk.prototype.button;
+  const originalRender=Desk.prototype.render;
+  Desk.prototype.render=function(){originalRender.call(this);this.root.find(".hs-sidebar-foot").prepend(`<div>${e(frappe.session.user)}</div>`);this.root.find(".hs-header-actions").append(this.button("logout","Cerrar sesión"));};
+  Desk.prototype.action_logout=function(){frappe.app.logout();};
+  Desk.prototype.invoiceLink=function(name){return name?`<a target="_blank" rel="noopener" href="/printview?doctype=Sales%20Invoice&name=${encodeURIComponent(name)}&format=${encodeURIComponent(this.data.print_formats?.invoice||"HS Factura")}">${e(name)}</a>`:"—";};
+  Desk.prototype.button=function(action,...args){const permission={direct_sale:"finance",return_direct_sale:"approve",schedule_cleaning:"inspect",companions:"guest"}[action];if(action==="cleaning"&&this.data.cleaning.find(t=>t.name===args[1])?.status==="Inspection"&&!this.allowed("inspect"))return "";return permission&&!this.allowed(permission)?"":oldButton.call(this,action,...args);};
+  Desk.prototype.action_payment=async function(stayId){
+    if(!this.allowed("finance"))return;
+    const key=frappe.utils.get_random(24),fields=[pick("stay","Estancia",this.data.stays||[],"name",false),pick("booking","Reserva para anticipo",this.data.bookings||[],"name",false),pick("folio","Cuenta",this.data.folios||[],"label",false),pick("shift","Turno abierto",this.data.shifts.filter(s=>s.status==="Open")),pick("method","Medio de pago",this.data.payment_methods.map(m=>({...m,label:`${m.mode_of_payment} · ${m.currency}`})),"label"),f("kind","Concepto","Select",{reqd:1,default:"Payment",options:Object.entries(kinds).map(([value,label])=>({value,label}))}),f("amount","Importe en moneda del medio","Currency",{reqd:1}),f("tendered","Efectivo recibido (vacío = importe)","Currency"),f("reference","Referencia bancaria"),f("credit_note","Nota de crédito para devolución","Link",{options:"Sales Invoice",get_query:()=>({filters:{hs_property:this.property,is_return:1,docstatus:1}})}),pick("source_payment","Movimiento original para devolución",this.data.payments.filter(p=>p.status==="Posted"),"name",false),f("reason","Motivo de devolución","Small Text")];
+    const dialog=await this.dialog("Cobrar o devolver",fields,async(values,d)=>{
+      const q=await this.call("preview",{property_name:this.property,action:"payment",data:JSON.stringify(values)});
+      await this.dialog("Revisar movimiento",[f("quote","Importes","HTML",{options:`<h3>${e(kinds[values.kind])}: ${e(this.amount(q.amount,q.currency))}</h3><p>Equivalente en el establecimiento: ${e(this.amount(q.property_amount,q.property_currency))}</p><p>Tipo de cambio a ${e(q.base_currency)}: ${e(q.exchange_rate)} · Base: ${e(this.amount(q.base_amount,q.base_currency))}</p><p>Recibido: ${e(this.amount(q.tendered,q.currency))} · Vuelto: <strong>${e(this.amount(q.change,q.currency))}</strong></p>`})],async(v,c)=>{const result=await this.mutate("payment",{...values,fx_acceptance:q.acceptance},key);c.hide();d.hide();frappe.msgprint({title:__("Movimiento registrado"),message:`${e(result.payment)} · Vuelto ${e(this.amount(result.change,result.currency))}<br><a target="_blank" rel="noopener" href="/printview?doctype=HS%20Payment&name=${encodeURIComponent(result.payment)}&format=HS%20Recibo">Ver recibo</a>`});},"Confirmar movimiento");
+    },"Revisar importes");
+    if(stayId){await dialog.set_value("stay",stayId);const folio=this.data.folios.find(r=>r.stay===stayId&&r.status==="Open");if(folio)await dialog.set_value("folio",folio.name);}
+    const ownShift=this.data.shifts.find(s=>s.status==="Open"&&s.cashier===frappe.session.user);if(ownShift)await dialog.set_value("shift",ownShift.name);
+  };
+  const services=Desk.prototype.render_services;
+  Desk.prototype.render_services=function(el){services.call(this,el);el.find(".hs-toolbar").append(this.button("direct_sale","Venta directa"));};
+  Desk.prototype.action_direct_sale=async function(){
+    const key=frappe.utils.get_random(24);
+    return this.dialog("Venta directa",[pick("customer","Pagador",this.data.customers,"customer_name"),pick("item","Artículo",this.data.items,"item_name"),f("quantity","Cantidad","Float",{reqd:1,default:1}),pick("method","Medio de pago",this.data.payment_methods.map(m=>({...m,label:`${m.mode_of_payment} · ${m.currency}`})),"label"),pick("shift","Turno abierto",this.data.shifts.filter(s=>s.status==="Open")),f("tendered","Efectivo recibido (vacío = importe)","Currency"),f("reference","Referencia bancaria")],async(values,d)=>{
+      const q=await this.call("preview",{property_name:this.property,action:"direct_sale",data:JSON.stringify(values)});
+      await this.dialog("Confirmar venta",[f("summary","Importe","HTML",{options:`<h3>Total con impuestos: ${e(this.amount(q.total,q.currency))}</h3><p>A cobrar: ${e(this.amount(q.payment_amount,q.payment_currency))}</p><p>Tipo de cambio a moneda base: ${e(q.exchange_rate)}</p>`})],async(v,c)=>{const result=await this.mutate("direct_sale",{...values,acceptance:q.acceptance},key);c.hide();d.hide();frappe.msgprint({title:__("Venta registrada"),message:`Factura ${e(result.invoice)} · Vuelto ${e(this.amount(result.change,result.currency))}`});},"Vender y cobrar");
+    },"Cotizar venta");
+  };
+  const serviceStatus=Desk.prototype.action_service_status;
+  Desk.prototype.action_service_status=async function(id){const service=this.data.services.find(s=>s.name===id);if(service.stay)return serviceStatus.call(this,id);return this.action_return_direct_sale(id);};
+  Desk.prototype.action_return_direct_sale=async function(id){if(!this.allowed("approve")){frappe.msgprint(__("La devolución requiere gerencia."));return;}const key=frappe.utils.get_random(24);return this.dialog("Devolver venta directa",[pick("shift","Turno abierto para devolver",this.data.shifts.filter(s=>s.status==="Open")),f("reason","Motivo de devolución completa","Small Text",{reqd:1})],async(v,d)=>{await this.mutate("return_direct_sale",{...v,service:id},key);d.hide();},"Crear nota de crédito y devolver");};
+  const cleaning=Desk.prototype.render_housekeeping;
+  Desk.prototype.render_housekeeping=function(el){cleaning.call(this,el);el.find(".hs-toolbar").append(this.button("schedule_cleaning","Programar limpieza"));};
+  Desk.prototype.action_schedule_cleaning=async function(){const key=frappe.utils.get_random(24);return this.dialog("Programar limpieza",[pick("room","Habitación",this.data.rooms,"room_number"),f("kind","Tipo","Select",{reqd:1,options:[{value:"Stay",label:"Durante estancia"},{value:"Deep",label:"Profunda"},{value:"Departure",label:"De salida"}]}),f("priority","Prioridad","Select",{reqd:1,options:[{value:"Normal",label:"Normal"},{value:"High",label:"Alta"},{value:"Urgent",label:"Urgente"}]}),f("assigned_to","Responsable (correo)"),f("notes","Indicaciones","Small Text")],async(v,d)=>{await this.mutate("schedule_cleaning",v,key);d.hide();});};
+  const setup=Desk.prototype.render_setup;
+  Desk.prototype.render_setup=function(el){setup.call(this,el);el.find(".hs-shortcuts").append(this.button("document_settings","9. Series y formatos")+(frappe.user.has_role("System Manager")||frappe.session.user==="Administrator"?this.button("assign_user","10. Usuarios y roles"):""));};
+  Desk.prototype.action_document_settings=async function(){const config=await this.call("configuration",{property_name:this.property}),options=await this.call("setup_options",{property_name:this.property}),key=frappe.utils.get_random(24);const fields=[f("invoice_series","Serie de facturas","Select",{options:["",...options.series["Sales Invoice"]]}),f("payment_series","Serie de pagos","Select",{options:["",...options.series["Payment Entry"]]}),f("invoice_print_format","Formato de factura","Select",{options:["",...options.formats["Sales Invoice"]]}),f("receipt_print_format","Formato de recibo","Select",{options:["",...options.formats["HS Payment"]]})].map(df=>({...df,default:config[df.fieldname]||""}));return this.dialog("Series y formatos",fields,async(v,d)=>{await this.call("save_setup",{property_name:this.property,section:"property",data:JSON.stringify(v),request_key:key,expected_modified:config.modified});d.hide();await this.load();});};
+  Desk.prototype.action_assign_user=async function(){const options=await this.call("setup_options",{property_name:this.property}),key=frappe.utils.get_random(24);return this.dialog("Usuario y acceso al establecimiento",[f("email","Correo del usuario","Data",{reqd:1}),f("first_name","Nombre (usuario nuevo)"),...options.roles.map((role,i)=>f("role_"+i,role.replace("HS ",""),"Check")),f("reason","Motivo de la asignación","Small Text",{reqd:1})],async(v,d)=>{const roles=options.roles.filter((r,i)=>v["role_"+i]);const result=await this.mutate("assign_user",{email:v.email,first_name:v.first_name,roles,reason:v.reason},key);d.hide();frappe.msgprint(__(result.message));},"Conceder acceso a este establecimiento");};
+  const detail=Desk.prototype.action_detail;
+  Desk.prototype.action_detail=async function(id){const dialog=await detail.call(this,id);if(dialog)dialog.$wrapper.find(".hs-dialog-actions").append(this.button("print_stay","Imprimir cuenta",id));};
+  Desk.prototype.action_print_stay=function(id){window.open(`/printview?doctype=HS%20Stay&name=${encodeURIComponent(id)}&format=${encodeURIComponent("HS Cuenta de estancia")}`,"_blank","noopener");};
+  Desk.prototype.action_print_close=function(id){window.open(`/printview?doctype=HS%20Daily%20Close&name=${encodeURIComponent(id)}&format=${encodeURIComponent("HS Cierre diario")}`,"_blank","noopener");};
+  const management=Desk.prototype.render_management;
+  Desk.prototype.render_management=function(el){management.call(this,el);if(this.data.closes?.length)el.append(`<section class="hs-section"><h2>Historial de cierres</h2>${this.table(["Fecha operativa","Estado","Reporte conservado"],this.data.closes.map(c=>[e(c.business_date),this.badge(c.status),this.button("print_close","Imprimir cierre",c.name)]))}</section>`);};
+  const booking=Desk.prototype.action_booking;
+  Desk.prototype.action_booking=async function(id){const dialog=await booking.call(this,id);if(dialog)dialog.$wrapper.find(".modal-footer").prepend(`<a class="btn btn-secondary" target="_blank" rel="noopener" href="/printview?doctype=HS%20Booking&name=${encodeURIComponent(id)}&format=${encodeURIComponent("HS Confirmación de reserva")}">Imprimir confirmación</a>`);};
+  Desk.prototype.action_companions=async function(id){const info=await this.call("stay_detail",{name:id}),key=frappe.utils.get_random(24);const rows=this.data.guests.filter(g=>g.name!==info.stay.guest);return this.dialog("Acompañantes registrados",[f("help","Ocupación","HTML",{options:`<p>Capacidad aceptada: ${e(JSON.parse(info.stay.quote_snapshot).people||1)} personas, incluido el huésped principal.</p>`}),...rows.map((guest,i)=>f("guest_"+i,guest.full_name,"Check",{default:info.stay.guests.some(g=>g.guest===guest.name)?1:0}))],async(v,d)=>{await this.mutate("companions",{stay:id,modified:info.stay.modified,guests:rows.filter((g,i)=>v["guest_"+i]).map(g=>g.name)},key);d.hide();});};
+})();

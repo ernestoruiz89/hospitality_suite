@@ -175,5 +175,8 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "allow_rename": 0
+ "allow_rename": 0,
+ "title_field": "room_number",
+ "search_fields": "room_number",
+ "show_title_field_in_link": 1
 }

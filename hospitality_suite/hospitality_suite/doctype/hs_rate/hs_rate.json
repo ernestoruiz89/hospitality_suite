@@ -54,6 +54,7 @@
    "fieldname": "amount",
    "label": "Amount",
    "fieldtype": "Currency",
+   "default": 0,
    "options": "currency",
    "reqd": 1
   },
@@ -67,6 +68,7 @@
    "fieldname": "extra_hour_rate",
    "label": "Extra hour rate",
    "fieldtype": "Currency",
+   "default": 0,
    "options": "currency"
   },
   {
@@ -85,6 +87,7 @@
    "fieldname": "additional_person_rate",
    "label": "Additional person rate",
    "fieldtype": "Currency",
+   "default": 0,
    "options": "currency"
   },
   {
@@ -97,6 +100,7 @@
    "fieldname": "extra_bed_rate",
    "label": "Extra bed rate",
    "fieldtype": "Currency",
+   "default": 0,
    "options": "currency"
   },
   {
@@ -242,5 +246,8 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "allow_rename": 0
+ "allow_rename": 0,
+ "title_field": "title",
+ "search_fields": "title",
+ "show_title_field_in_link": 1
 }

@@ -1,0 +1,11 @@
+{
+ "doctype": "Print Format",
+ "name": "HS Orden de mantenimiento",
+ "doc_type": "HS Maintenance Order",
+ "module": "Hospitality Suite",
+ "standard": "Yes",
+ "custom_format": 1,
+ "print_format_type": "Jinja",
+ "html": "<div class=\"hs-print\"><p class=\"eyebrow\">ORDEN DE MANTENIMIENTO</p><h1>{{ doc.title | e }}</h1><p>{{ frappe.db.get_value(\"HS Property\",doc.property,\"property_name\") | e }} · Habitación {{ frappe.db.get_value(\"HS Room\",doc.room,\"room_number\") | e }}</p><table>{% for label, value in [(\"Referencia\",doc.name),(\"Tipo\",hs_label(doc.kind)),(\"Estado\",hs_label(doc.status)),(\"Responsable\",doc.assigned_to or \"Sin asignar\"),(\"Desde\",hs_date(doc.starts_at,doc.property)),(\"Hasta\",hs_date(doc.ends_at,doc.property)),(\"Reapertura autorizada por\",doc.reopened_by or \"Pendiente\")] %}<tr><th>{{ label }}</th><td>{{ value | e }}</td></tr>{% endfor %}</table><p>{{ (doc.notes or \"\") | e }}</p></div>\n",
+ "css": ".hs-print{font-family:Arial,sans-serif;color:#173c32;font-size:11px}.hs-print h1{font-size:25px}.hs-print h2{font-size:15px;margin-top:25px}.hs-print table{width:100%;border-collapse:collapse;margin:18px 0}.hs-print th,.hs-print td{border-bottom:1px solid #dce5dc;padding:10px;text-align:left}.hs-print th{background:#edf2e9}.eyebrow{font-size:9px;letter-spacing:2px}.muted{color:#6c7b70;font-size:9px}"
+}

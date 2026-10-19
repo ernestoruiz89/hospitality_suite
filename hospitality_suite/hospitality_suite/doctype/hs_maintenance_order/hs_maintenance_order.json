@@ -82,7 +82,9 @@
   {
    "fieldname": "cost",
    "label": "Cost",
-   "fieldtype": "Currency"
+   "fieldtype": "Currency",
+   "default": 0,
+   "permlevel": 1
   },
   {
    "fieldname": "stock_entry",
@@ -201,6 +203,48 @@
    "report": 1,
    "export": 0,
    "print": 1
+  },
+  {
+   "role": "System Manager",
+   "permlevel": 1,
+   "read": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Administrator",
+   "permlevel": 1,
+   "read": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Manager",
+   "permlevel": 1,
+   "read": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Supervisor",
+   "permlevel": 1,
+   "read": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Accountant",
+   "permlevel": 1,
+   "read": 1,
+   "write": 0
+  },
+  {
+   "role": "HS Auditor",
+   "permlevel": 1,
+   "read": 1,
+   "write": 0
+  },
+  {
+   "role": "HS Maintenance",
+   "permlevel": 1,
+   "read": 1,
+   "write": 0
   }
  ],
  "sort_field": "modified",

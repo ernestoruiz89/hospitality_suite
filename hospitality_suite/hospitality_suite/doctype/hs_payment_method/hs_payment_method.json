@@ -128,5 +128,8 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "allow_rename": 0
+ "allow_rename": 0,
+ "title_field": "mode_of_payment",
+ "search_fields": "mode_of_payment",
+ "show_title_field_in_link": 1
 }

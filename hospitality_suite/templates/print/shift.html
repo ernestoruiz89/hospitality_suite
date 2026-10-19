@@ -1,0 +1,8 @@
+<div class="hs-print"><p class="eyebrow">ARQUEO Y CIERRE DE CAJA</p><h1>{{ frappe.db.get_value("HS Property",doc.property,"property_name") | e }}</h1>
+<p>Turno {{ doc.name | e }} · {{ hs_label(doc.status) | e }}</p>
+<table>{% for label,value in [("Responsable",doc.cashier),("Apertura",hs_date(doc.opened_at,doc.property)),("Cierre",hs_date(doc.closed_at,doc.property)),("Moneda principal",doc.currency),("Fondo inicial",doc.get_formatted("opening_amount")),("Efectivo esperado",doc.get_formatted("expected_amount")),("Efectivo contado",doc.get_formatted("counted_amount")),("Diferencia",doc.get_formatted("difference")),("Aprobación",doc.approved_by or "No requerida / pendiente")] %}<tr><th>{{ label }}</th><td>{{ value | e }}</td></tr>{% endfor %}</table>
+{% set counts=hs_json(doc.denominations or '{}') %}
+<h2>Conteo por denominaciones</h2><table><thead><tr><th>Moneda</th><th>Denominación</th><th>Cantidad</th><th>Total</th></tr></thead><tbody>
+{% for currency,rows in counts.get('counts',{}).items() %}{% for row in rows %}<tr><td>{{ currency | e }}</td><td>{{ hs_money(row.value,currency) }}</td><td>{{ row.count }}</td><td>{{ hs_money(row.value*row.count,currency) }}</td></tr>{% endfor %}{% endfor %}</tbody></table>
+<h2>Movimientos</h2><table><thead><tr><th>Concepto</th><th>Importe</th><th>Documento</th></tr></thead><tbody>
+{% for row in frappe.get_all("HS Payment",filters={"shift":doc.name},fields=["kind","currency","amount","payment_entry","journal_entry","status"],order_by="creation asc") %}<tr><td>{{ hs_label(row.kind) | e }} · {{ hs_label(row.status) | e }}</td><td>{{ hs_money(row.amount,row.currency) }}</td><td>{{ (row.payment_entry or row.journal_entry or '') | e }}</td></tr>{% endfor %}</tbody></table><p>{{ (doc.reason or '') | e }}</p></div>

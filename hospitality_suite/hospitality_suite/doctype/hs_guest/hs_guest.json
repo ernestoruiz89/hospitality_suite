@@ -64,6 +64,18 @@
    "label": "Cliente pagador",
    "fieldtype": "Link",
    "options": "Customer"
+  },
+  {
+   "fieldname": "contact",
+   "label": "Contact",
+   "fieldtype": "Link",
+   "options": "Contact"
+  },
+  {
+   "fieldname": "address",
+   "label": "Address",
+   "fieldtype": "Link",
+   "options": "Address"
   }
  ],
  "field_order": [
@@ -76,7 +88,9 @@
   "identity_number",
   "nationality",
   "identity_file",
-  "customer"
+  "customer",
+  "contact",
+  "address"
  ],
  "permissions": [
   {
@@ -152,5 +166,8 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "allow_rename": 0
+ "allow_rename": 0,
+ "title_field": "full_name",
+ "search_fields": "full_name",
+ "show_title_field_in_link": 1
 }

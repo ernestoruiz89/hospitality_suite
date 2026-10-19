@@ -58,24 +58,28 @@
    "fieldname": "opening_amount",
    "label": "Opening amount",
    "fieldtype": "Currency",
+   "default": 0,
    "options": "currency"
   },
   {
    "fieldname": "expected_amount",
    "label": "Expected amount",
    "fieldtype": "Currency",
+   "default": 0,
    "options": "currency"
   },
   {
    "fieldname": "counted_amount",
    "label": "Counted amount",
    "fieldtype": "Currency",
+   "default": 0,
    "options": "currency"
   },
   {
    "fieldname": "difference",
    "label": "Difference",
    "fieldtype": "Currency",
+   "default": 0,
    "options": "currency"
   },
   {

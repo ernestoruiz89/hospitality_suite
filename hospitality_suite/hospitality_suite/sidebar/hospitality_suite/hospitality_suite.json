@@ -1,0 +1,77 @@
+{
+ "doctype": "Sidebar",
+ "name": "Hospitality Suite",
+ "title": "Hospitality Suite",
+ "module": "Hospitality Suite",
+ "app": "hospitality_suite",
+ "standard": 1,
+ "header_icon": "hotel",
+ "items": [
+  {
+   "type": "Link",
+   "link_type": "Page",
+   "link_to": "hospitality-home",
+   "label": "Inicio"
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
+   "link_to": "hospitality-reception",
+   "label": "Recepción"
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
+   "link_to": "hospitality-reservations",
+   "label": "Reservas"
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
+   "link_to": "hospitality-stays",
+   "label": "Estancias"
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
+   "link_to": "hospitality-cashier",
+   "label": "Caja"
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
+   "link_to": "hospitality-housekeeping",
+   "label": "Limpieza"
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
+   "link_to": "hospitality-maintenance",
+   "label": "Mantenimiento"
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
+   "link_to": "hospitality-services",
+   "label": "Consumos e inventario"
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
+   "link_to": "hospitality-guests",
+   "label": "Clientes y huéspedes"
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
+   "link_to": "hospitality-management",
+   "label": "Gerencia"
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
+   "link_to": "hospitality-setup",
+   "label": "Configuración"
+  }
+ ]
+}

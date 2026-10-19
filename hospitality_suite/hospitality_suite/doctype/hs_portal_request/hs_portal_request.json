@@ -1,0 +1,231 @@
+{
+ "doctype": "DocType",
+ "name": "HS Portal Request",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "hash",
+ "naming_rule": "Random",
+ "fields": [
+  {
+   "fieldname": "company",
+   "label": "Compañía",
+   "fieldtype": "Link",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "property",
+   "label": "Establecimiento",
+   "fieldtype": "Link",
+   "options": "HS Property",
+   "reqd": 1
+  },
+  {
+   "fieldname": "full_name",
+   "label": "Full name",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "email",
+   "label": "Email",
+   "fieldtype": "Data",
+   "options": "Email"
+  },
+  {
+   "fieldname": "phone",
+   "label": "Phone",
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "starts_at",
+   "label": "Desde",
+   "fieldtype": "Datetime",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ends_at",
+   "label": "Hasta",
+   "fieldtype": "Datetime",
+   "reqd": 1
+  },
+  {
+   "fieldname": "category",
+   "label": "Categoría",
+   "fieldtype": "Link",
+   "options": "HS Category",
+   "reqd": 1
+  },
+  {
+   "fieldname": "rooms",
+   "label": "Rooms",
+   "fieldtype": "Int",
+   "default": 1
+  },
+  {
+   "fieldname": "people",
+   "label": "People",
+   "fieldtype": "Int",
+   "default": 1
+  },
+  {
+   "fieldname": "mode",
+   "label": "Mode",
+   "fieldtype": "Select",
+   "options": "Hotel\nMotel",
+   "reqd": 1,
+   "default": "Hotel"
+  },
+  {
+   "fieldname": "status",
+   "label": "Estado",
+   "fieldtype": "Select",
+   "options": "Hold\nConverted\nExpired\nCancelled",
+   "reqd": 1,
+   "default": "Hold"
+  },
+  {
+   "fieldname": "hold_until",
+   "label": "Hold until",
+   "fieldtype": "Datetime"
+  },
+  {
+   "fieldname": "currency",
+   "label": "Moneda",
+   "fieldtype": "Link",
+   "options": "Currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amount",
+   "label": "Amount",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "quote_snapshot",
+   "label": "Quote snapshot",
+   "fieldtype": "Code",
+   "options": "JSON"
+  },
+  {
+   "fieldname": "request_key",
+   "label": "Request key",
+   "fieldtype": "Data",
+   "unique": 1,
+   "hidden": 1
+  },
+  {
+   "fieldname": "payload_hash",
+   "label": "Payload hash",
+   "fieldtype": "Data",
+   "hidden": 1
+  },
+  {
+   "fieldname": "booking",
+   "label": "Booking",
+   "fieldtype": "Link",
+   "options": "HS Booking"
+  }
+ ],
+ "field_order": [
+  "company",
+  "property",
+  "full_name",
+  "email",
+  "phone",
+  "starts_at",
+  "ends_at",
+  "category",
+  "rooms",
+  "people",
+  "mode",
+  "status",
+  "hold_until",
+  "currency",
+  "amount",
+  "quote_snapshot",
+  "request_key",
+  "payload_hash",
+  "booking"
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Administrator",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Supervisor",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Receptionist",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Cashier",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Accountant",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Auditor",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0
+}

@@ -26,8 +26,13 @@
    "fieldname": "stay",
    "label": "Stay",
    "fieldtype": "Link",
-   "options": "HS Stay",
-   "reqd": 1
+   "options": "HS Stay"
+  },
+  {
+   "fieldname": "booking",
+   "label": "Booking",
+   "fieldtype": "Link",
+   "options": "HS Booking"
   },
   {
    "fieldname": "customer",
@@ -62,6 +67,7 @@
   "company",
   "property",
   "stay",
+  "booking",
   "customer",
   "currency",
   "status",
@@ -141,5 +147,8 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "allow_rename": 0
+ "allow_rename": 0,
+ "title_field": "label",
+ "search_fields": "label",
+ "show_title_field_in_link": 1
 }

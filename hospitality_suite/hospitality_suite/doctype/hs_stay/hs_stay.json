@@ -97,6 +97,7 @@
    "fieldname": "amount",
    "label": "Amount",
    "fieldtype": "Currency",
+   "default": 0,
    "options": "currency",
    "reqd": 1
   },
@@ -115,6 +116,41 @@
   {
    "fieldname": "reason",
    "label": "Reason",
+   "fieldtype": "Small Text"
+  },
+  {
+   "fieldname": "early_fee",
+   "label": "Early fee",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency"
+  },
+  {
+   "fieldname": "late_fee",
+   "label": "Late fee",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency"
+  },
+  {
+   "fieldname": "departure_expires_at",
+   "label": "Departure expires at",
+   "fieldtype": "Datetime"
+  },
+  {
+   "fieldname": "departure_inspected_by",
+   "label": "Departure inspected by",
+   "fieldtype": "Link",
+   "options": "User"
+  },
+  {
+   "fieldname": "departure_inspected_at",
+   "label": "Departure inspected at",
+   "fieldtype": "Datetime"
+  },
+  {
+   "fieldname": "departure_notes",
+   "label": "Departure notes",
    "fieldtype": "Small Text"
   }
  ],
@@ -135,7 +171,13 @@
   "amount",
   "quote_snapshot",
   "guests",
-  "reason"
+  "reason",
+  "early_fee",
+  "late_fee",
+  "departure_expires_at",
+  "departure_inspected_by",
+  "departure_inspected_at",
+  "departure_notes"
  ],
  "permissions": [
   {

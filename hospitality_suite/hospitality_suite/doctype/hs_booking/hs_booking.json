@@ -94,6 +94,7 @@
    "fieldname": "amount",
    "label": "Amount",
    "fieldtype": "Currency",
+   "default": 0,
    "options": "currency",
    "reqd": 1
   },
@@ -102,6 +103,19 @@
    "label": "Quote snapshot",
    "fieldtype": "Code",
    "options": "JSON"
+  },
+  {
+   "fieldname": "fee_invoice",
+   "label": "Fee invoice",
+   "fieldtype": "Link",
+   "options": "Sales Invoice"
+  },
+  {
+   "fieldname": "fee_amount",
+   "label": "Fee amount",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency"
   },
   {
    "fieldname": "portal_token_hash",
@@ -132,6 +146,8 @@
   "currency",
   "amount",
   "quote_snapshot",
+  "fee_invoice",
+  "fee_amount",
   "portal_token_hash",
   "portal_expires_at"
  ],

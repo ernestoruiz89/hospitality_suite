@@ -6,7 +6,31 @@ from frappe.utils import get_datetime
 from hospitality_suite.schema import WRITABLE
 
 
+class ScopedERPNotifications:
+    def notify_update(self):
+        prop=self.get("hs_property")
+        if any(frappe.flags.get(k) for k in ("in_import","in_patch","in_migrate","in_install")):
+            return
+        # Document subscriptions are authorized by Frappe for this exact document.
+        # A global list_update would disclose its name/user to other properties.
+        frappe.publish_realtime("doc_update",{"modified":self.modified,"doctype":self.doctype,"name":self.name},
+                                doctype=self.doctype,docname=self.name,after_commit=True)
+        from hospitality_suite.security import realtime
+        if prop:
+            realtime(prop)
+        from frappe.permissions import has_permission
+        for user in frappe.get_all("User",filters={"enabled":1,"user_type":"System User"},pluck="name"):
+            if has_permission(self.doctype,"read",doc=self,user=user,print_logs=False):
+                frappe.publish_realtime("list_update",{"doctype":self.doctype,"name":self.name,"user":frappe.session.user},user=user,after_commit=True)
+
+
 class ScopedDocument(Document):
+    def notify_update(self):
+        from hospitality_suite.security import realtime
+        prop=self.name if self.doctype=="HS Property" else self.get("property")
+        if prop:
+            realtime(prop)
+
     def validate(self):
         if self.meta.istable:
             return
@@ -24,6 +48,7 @@ class ScopedDocument(Document):
             if not internal:
                 from hospitality_suite.security import require
                 require(self.property, "setup")
+                frappe.db.sql("SELECT name FROM `tabHS Property` WHERE name=%s FOR UPDATE",(self.property,))
             for field in ("room", "category", "booking", "stay", "folio", "rate", "shift", "method", "guest"):
                 value = self.get(field)
                 df = self.meta.get_field(field)
@@ -35,8 +60,29 @@ class ScopedDocument(Document):
             if get_datetime(self.starts_at) >= get_datetime(self.ends_at):
                 frappe.throw(_("La fecha final debe ser posterior a la inicial"))
         if self.doctype == "HS Property":
+            from hospitality_suite.setup import validate_document_settings
+            validate_document_settings(self)
             from zoneinfo import ZoneInfo
-            ZoneInfo(self.time_zone)
+            try:
+                ZoneInfo(self.time_zone)
+            except (KeyError,ValueError):
+                frappe.throw("Seleccione una zona horaria IANA válida")
+            if self.cleaning_minutes<0 or not 1<=self.hold_minutes<=1440:
+                frappe.throw("Revise el margen de limpieza y la duración de las retenciones")
+            if (self.schedule_grace_minutes or 0)<0 or (self.schedule_rounding_minutes or 0)<=0 or (self.early_hour_rate or 0)<0 or (self.late_hour_rate or 0)<0 or not 1<=(self.checkout_quote_minutes or 0)<=60:
+                frappe.throw("Revise tolerancias, fracciones y cargos por horario")
+            if self.cash_denominations:
+                from hospitality_suite.pricing import decimal
+                values=frappe.parse_json(self.cash_denominations)
+                if not isinstance(values,dict):
+                    frappe.throw("Revise las denominaciones de caja")
+                for currency,denominations in values.items():
+                    if not frappe.db.exists("Currency",currency) or not isinstance(denominations,list) or not 1<=len(denominations)<=50 or any(decimal(v)<=0 for v in denominations):
+                        frappe.throw("Moneda o denominación inválida")
+            old=self.get_doc_before_save()
+            if old and (old.company!=self.company or old.currency!=self.currency):
+                if frappe.db.exists("HS Room",{"property":self.name}) or frappe.db.exists("HS Booking",{"property":self.name}):
+                    frappe.throw("No cambie compañía o moneda de un establecimiento con datos; requiere una migración contable explícita")
             if not internal:
                 from hospitality_suite.security import require, is_system
                 if self.is_new() and not is_system():
@@ -46,18 +92,38 @@ class ScopedDocument(Document):
             if self.financial_enabled:
                 from hospitality_suite.install import validate_financial_configuration
                 validate_financial_configuration(self)
+            if self.portal_enabled:
+                from frappe.utils.password import get_encryption_key
+                get_encryption_key()
         if self.doctype == "HS Rate":
-            if self.amount < 0 or self.block_hours <= 0 or self.rounding_minutes <= 0:
+            if self.amount < 0 or self.block_hours <= 0 or self.rounding_minutes <= 0 or (self.grace_minutes or 0)<0 or any((self.get(field) or 0)<0 for field in ("extra_hour_rate","extra_bed_rate","additional_person_rate")) or self.included_people<1:
                 frappe.throw(_("Revise el precio, bloque y redondeo de la tarifa"))
+            if self.valid_from and self.valid_to and self.valid_to<self.valid_from:
+                frappe.throw("El período de vigencia de la tarifa es inválido")
+            if bool(self.night_start)!=bool(self.night_end):
+                frappe.throw("Indique ambos límites del paquete nocturno")
+            if self.weekdays and any(day.strip() not in tuple(str(i) for i in range(7)) for day in self.weekdays.split(",")):
+                frappe.throw("Los días admitidos son 0 a 6")
+        if self.doctype=="HS Category" and (self.capacity<1 or (self.max_extra_beds or 0)<0):
+            frappe.throw("Revise la capacidad y las camas extra de la categoría")
         if self.doctype == "HS Room" and not self.is_new():
             old = self.get_doc_before_save()
+            if old and old.cleaning_status!=self.cleaning_status and not internal:
+                frappe.throw("Cambie el estado de limpieza desde la página de Limpieza")
             if old and (old.category != self.category or old.active != self.active):
-                if frappe.db.exists("HS Allocation", {"room": self.name, "status": "Active"}):
+                if frappe.db.sql("SELECT name FROM `tabHS Allocation` WHERE room=%s AND status='Active' FOR UPDATE",(self.name,)):
                     frappe.throw(_("No puede cambiar categoría o disponibilidad con asignaciones activas"))
         if self.doctype == "HS Payment Method":
             account = frappe.get_doc("Account", self.account)
             if account.company != self.company or account.is_group or account.account_currency != self.currency:
                 frappe.throw(_("La cuenta de cobro no coincide con compañía/moneda o es una cuenta agrupadora"))
+        if self.doctype=="HS Billing Party" and self.credit_limit<0:
+            frappe.throw("El límite de crédito no puede ser negativo")
+        if self.doctype=="HS Folio":
+            if not self.stay and not self.booking:
+                frappe.throw("Una cuenta debe pertenecer a una estancia o reserva grupal")
+            if self.stay and self.booking and frappe.db.get_value("HS Stay",self.stay,"booking")!=self.booking:
+                frappe.throw("La cuenta y la reserva no corresponden a la misma estancia")
 
     def on_trash(self):
         if self.doctype not in WRITABLE:

@@ -1,0 +1,1 @@
+{"passed": true, "case": "room", "sessions": [{"session": 1, "result": "rejected"}, {"session": 2, "result": "confirmed", "booking": "avri9jr4ns"}], "isolation": "REPEATABLE-READ"}

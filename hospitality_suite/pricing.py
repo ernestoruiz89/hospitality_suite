@@ -37,22 +37,52 @@ def calculate(rate, start, end, people=1, extra_beds=0, precision=2):
                 explanation=details, rules=dict(rate), start=start.isoformat(), end=end.isoformat(), precision=precision)
 
 
-def quote(prop, category, starts_at, ends_at, people=1, rate_name=None, customer=None):
+def quote(prop, category, starts_at, ends_at, people=1, rate_name=None, customer=None, mode=None,extra_beds=0):
     import frappe
+    from hospitality_suite.service import current_all
     from hospitality_suite.time import local
     start, end = local(starts_at, prop), local(ends_at, prop)
-    rates = frappe.get_all("HS Rate", filters={"property": prop.name, "category": category, "active": 1}, fields=["*"])
+    rates = current_all("HS Rate", filters={"property": prop.name, "category": category, "active": 1}, fields=["*"])
     if rate_name:
         rates = [r for r in rates if r.name == rate_name]
-    rates = [r for r in rates if (not r.customer or r.customer == customer)
-             and (not r.valid_from or r.valid_from <= start.date())
-             and (not r.valid_to or r.valid_to >= end.date())
-             and (not r.weekdays or all(str((start.date() + timedelta(days=i)).weekday()) in r.weekdays.split(",")
-                                       for i in range(max(1, (end.date() - start.date()).days))))]
-    rates.sort(key=lambda r: (-r.priority, -bool(r.customer), r.name))
-    if not rates:
-        frappe.throw("No existe una tarifa aplicable al intervalo y pagador")
-    if len(rates) > 1 and (rates[0].priority, bool(rates[0].customer)) == (rates[1].priority, bool(rates[1].customer)):
-        frappe.throw("Hay tarifas con la misma prioridad; defina una prioridad inequívoca")
+    selected_mode=mode or (prop.mode if prop.mode!="Mixed" else "Hotel")
+    if prop.mode!="Mixed" and selected_mode!=prop.mode:
+        frappe.throw("El establecimiento no permite esa modalidad")
+    rates=[r for r in rates if r.mode==selected_mode and (not r.customer or r.customer==customer)]
+
+    def choose(day):
+        matches=[r for r in rates if (not r.valid_from or r.valid_from<=day) and (not r.valid_to or r.valid_to>=day)
+                 and (not r.weekdays or str(day.weekday()) in [d.strip() for d in r.weekdays.split(",")])]
+        if selected_mode=="Motel":
+            from frappe.utils import get_time
+            def in_window(r):
+                if not r.night_start or not r.night_end:
+                    return True
+                a,b,t=get_time(r.night_start),get_time(r.night_end),start.time().replace(tzinfo=None)
+                return (a<=t<b) if a<b else (t>=a or t<b)
+            matches=[r for r in matches if in_window(r)]
+        matches.sort(key=lambda r:(-r.priority,-bool(r.customer),r.name))
+        if not matches:
+            frappe.throw("No existe una tarifa aplicable a la fecha y al pagador")
+        if len(matches)>1 and (matches[0].priority,bool(matches[0].customer))==(matches[1].priority,bool(matches[1].customer)):
+            frappe.throw("Hay tarifas con la misma prioridad; defina una prioridad inequívoca")
+        return matches[0]
     precision = frappe.db.get_single_value("System Settings", "currency_precision") or 2
-    return calculate(rates[0], start, end, int(people), precision=int(precision))
+    if selected_mode=="Motel":
+        result=calculate(choose(start.date()),start,end,int(people),extra_beds=int(extra_beds),precision=int(precision))
+    else:
+        nightly=[]
+        for i in range(max(1,(end.date()-start.date()).days)):
+            day=start.date()+timedelta(days=i)
+            rate=choose(day)
+            price=decimal(rate.amount)+max(0,int(people)-int(rate.included_people or 2))*decimal(rate.additional_person_rate)+int(extra_beds)*decimal(rate.extra_bed_rate)
+            nightly.append(dict(date=str(day),amount=str(money(price,int(precision))),rules=dict(rate)))
+        currencies={r["rules"]["currency"] for r in nightly}
+        if len(currencies)!=1:
+            frappe.throw("Las tarifas por noche deben usar una sola moneda")
+        result=dict(currency=nightly[0]["rules"]["currency"],amount=str(money(sum(decimal(r["amount"]) for r in nightly),int(precision))),
+                    units=len(nightly),explanation=[f"{r['date']}: {r['amount']} ({r['rules']['title']})" for r in nightly],
+                    nightly=nightly,rules=nightly[0]["rules"],start=start.isoformat(),end=end.isoformat(),precision=int(precision))
+    result["people"]=int(people)
+    result["extra_beds"]=int(extra_beds)
+    return result

@@ -28,6 +28,12 @@
    "default": 1
   },
   {
+   "fieldname": "extra_beds",
+   "label": "Extra beds",
+   "fieldtype": "Int",
+   "default": 0
+  },
+  {
    "fieldname": "rate",
    "label": "Rate",
    "fieldtype": "Link",
@@ -39,6 +45,7 @@
   "category",
   "room",
   "people",
+  "extra_beds",
   "rate"
  ],
  "permissions": [],

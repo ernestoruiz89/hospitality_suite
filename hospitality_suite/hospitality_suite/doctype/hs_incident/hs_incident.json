@@ -57,7 +57,8 @@
   {
    "fieldname": "quantity",
    "label": "Quantity",
-   "fieldtype": "Float"
+   "fieldtype": "Float",
+   "default": 0
   },
   {
    "fieldname": "status",

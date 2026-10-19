@@ -35,6 +35,12 @@
    "default": 2
   },
   {
+   "fieldname": "max_extra_beds",
+   "label": "Max extra beds",
+   "fieldtype": "Int",
+   "default": 0
+  },
+  {
    "fieldname": "amenities",
    "label": "Amenities",
    "fieldtype": "Small Text"
@@ -45,6 +51,7 @@
   "property",
   "category_name",
   "capacity",
+  "max_extra_beds",
   "amenities"
  ],
  "permissions": [
@@ -139,5 +146,8 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "allow_rename": 0
+ "allow_rename": 0,
+ "title_field": "category_name",
+ "search_fields": "category_name",
+ "show_title_field_in_link": 1
 }

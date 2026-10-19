@@ -11,6 +11,9 @@ requires-python = ">=3.14"
 dynamic = ["version"]
 dependencies = []
 
+[project.optional-dependencies]
+test = ["unittest-xml-reporting==4.0.0"]
+
 [tool.bench.frappe-dependencies]
 frappe = ">=16.52.0,<17.0.0"
 erpnext = ">=16.51.1,<17.0.0"

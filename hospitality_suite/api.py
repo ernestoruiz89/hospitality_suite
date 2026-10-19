@@ -1,0 +1,358 @@
+"""Authenticated API for Desk Pages. Every mutation is POST + scoped + idempotent."""
+import json
+
+import frappe
+from frappe.utils import now_datetime
+
+from hospitality_suite import operations, cashier, housekeeping, inventory, accounting, closing, linen, portal,timing,direct_sales
+from hospitality_suite.security import allowed_properties, require, document, ACTIONS, is_system
+from hospitality_suite.service import command, insert, audit, canonical
+from hospitality_suite.time import to_site, now_local
+from hospitality_suite.schema import PAGES
+from hospitality_suite import setup
+
+COMMANDS = {
+    "reserve": ("reserve", operations.reserve), "booking_status": ("reserve", operations.update_booking),
+    "check_in": ("stay", operations.check_in), "walk_in": ("stay", operations.walk_in),
+    "extend": ("stay", operations.extend), "change_room": ("stay", operations.change_room),
+    "check_out": ("stay", operations.check_out), "create_folio": ("stay", operations.create_folio),
+    "move_charge": ("stay", operations.move_charge), "invoice": ("finance", accounting.invoice_folio),
+    "payment": ("finance", accounting.payment), "open_shift": ("finance", cashier.open_shift),
+    "close_shift": ("finance", cashier.close_shift), "cleaning": ("clean", housekeeping.update_cleaning),
+    "maintenance": ("maintain", housekeeping.maintenance), "request_service": ("service", inventory.request_service),
+    "update_service": ("service", inventory.update_service), "daily_close": ("report", closing.daily_close),
+    "reopen_day": ("approve", closing.reopen),
+    "credit_note": ("approve", accounting.credit_note),
+    "apply_guarantee": ("approve", accounting.apply_guarantee),
+    "incident": ("clean", linen.incident), "linen": ("clean", linen.move_linen),
+    "convert_portal": ("reserve", portal.convert), "portal_link": ("reserve", portal.link),
+    "withdrawal": ("finance",cashier.withdrawal),
+    "modify_reservation": ("reserve",operations.modify_reservation),
+    "prepare_departure":("stay",timing.prepare_departure),"inspect_departure":("inspect",timing.inspect_departure),
+    "adjustment":("approve",operations.adjustment),
+    "schedule_cleaning":("inspect",housekeeping.schedule_cleaning),
+    "direct_sale":("finance",direct_sales.sell),"return_direct_sale":("approve",direct_sales.return_sale),
+    "assign_user":("setup",setup.assign_user),"companions":("guest",operations.companions),
+}
+
+
+def payload(value):
+    if isinstance(value, str):
+        if len(value) > 100000:
+            frappe.throw("Solicitud demasiado grande")
+        value = json.loads(value)
+    if not isinstance(value, dict):
+        frappe.throw("Se requiere un objeto JSON")
+    return value
+
+
+@frappe.whitelist(methods=["POST"])
+def execute(property_name, action, request_key, data=None):
+    data = payload(data or {})
+    if action not in COMMANDS:
+        frappe.throw("Acción desconocida")
+    permission, handler = COMMANDS[action]
+    body = {**data, "operation": action}
+    return command(property_name, permission, request_key, body, lambda prop: handler(prop, data))
+
+
+@frappe.whitelist()
+def preview(property_name, data, action="reserve"):
+    permission="finance" if action in ("payment","direct_sale") else "reserve" if action in ("reserve","booking_status","modify_reservation","convert_portal") else "stay"
+    prop = require(property_name, permission)
+    data = payload(data)
+    if action == "reserve":
+        return operations.quote_request(prop, data)
+    if action == "extend":
+        return operations.extension_quote(prop, data)
+    if action=="change_room":
+        return operations.room_change_quote(prop,data)
+    if action=="modify_reservation":
+        doc,values,excluded=operations.modification_values(prop,data)
+        return operations.quote_request(prop,values,exclude=excluded)
+    if action=="booking_status":
+        booking=document("HS Booking",data["booking"],"reserve")
+        return accounting.cancellation_fee(prop,booking,data["status"])
+    if action=="check_in":
+        return operations.arrival_quote(prop,data)
+    if action=="departure":
+        return timing.departure(prop,data)
+    if action=="direct_sale":
+        require(prop.name,"finance")
+        return direct_sales.quote(prop,data)
+    if action=="payment":
+        require(prop.name,"finance")
+        return accounting.payment_quote(prop,data)
+    if action=="convert_portal":
+        request_doc,values=portal.conversion_values(prop,data)
+        excluded=frappe.get_all("HS Allocation",filters={"portal_request":request_doc.name,"status":"Active"},pluck="name")
+        return operations.quote_request(prop,values,exclude=excluded)
+    frappe.throw("Cotización desconocida")
+
+
+def may(action):
+    return is_system() or bool(set(ACTIONS[action]).intersection(frappe.get_roles()))
+
+
+def project(dt, prop, fields=None, filters=None):
+    return frappe.get_list(dt, filters={"property": prop.name, **(filters or {})}, fields=fields or ["*"], limit_page_length=500, order_by="creation desc")
+
+
+@frappe.whitelist()
+def bootstrap(property_name=None):
+    names = allowed_properties()
+    props = frappe.get_all("HS Property", filters={"name": ["in", names]}, fields=["name", "property_name", "brand_name", "mode", "time_zone", "currency", "business_date", "discreet_mode", "inspection_required"])
+    roles = frappe.get_roles()
+    pages = [dict(route=route, title=title) for route, (title, accepted) in PAGES.items() if is_system() or set(roles).intersection(accepted)]
+    result = dict(properties=props, pages=pages, actions=[a for a in ACTIONS if may(a)], server_time=str(now_datetime()))
+    result["system_timezone"] = frappe.utils.get_system_timezone()
+    if not property_name:
+        return result
+    prop = require(property_name)
+    result["property_now"] = now_local(prop).isoformat()
+    result["print_formats"]=dict(invoice=prop.invoice_print_format or "HS Factura",receipt=prop.receipt_print_format or "HS Recibo")
+    result["rooms"] = project("HS Room", prop, ["name", "room_number", "category", "floor", "zone", "cleaning_status", "active", "parking"])
+    result["categories"] = project("HS Category", prop, ["name", "category_name", "capacity"])
+    if may("clean") or may("service"):
+        result["items"]=frappe.get_all("Item",filters={"disabled":0},fields=["name","item_name","is_stock_item"],limit_page_length=500)
+    # Minimal operational projection is intentionally separate from stay documents.
+    active = frappe.get_all("HS Stay", filters={"property": prop.name, "status": "Active"}, fields=["name", "room", "ends_at"])
+    result["occupied"] = active
+    result["blocks"] = frappe.get_all("HS Allocation", filters={"property": prop.name, "kind": "Maintenance", "status": "Active"}, fields=["room", "starts_at", "ends_at"])
+    result["rooms"].sort(key=lambda r: r.room_number)
+    if may("stay") or may("finance"):
+        result["stays"] = project("HS Stay", prop)
+        result["bookings"] = project("HS Booking", prop)
+        result["guests"] = project("HS Guest", prop, ["name", "full_name", "customer"])
+        result["rates"] = project("HS Rate", prop, ["name", "title", "category", "mode", "currency", "amount", "block_hours"])
+        result["folios"] = project("HS Folio", prop)
+        result["portal_requests"] = project("HS Portal Request",prop,filters={"status":"Hold"})
+        result["services"] = project("HS Service Request", prop)
+        result["billing_parties"]=project("HS Billing Party",prop)
+        customers = set(r.customer for r in result["guests"] + result["folios"] + result["bookings"] + result["billing_parties"] if r.get("customer"))
+        result["customers"] = [dict(name=n, customer_name=frappe.db.get_value("Customer", n, "customer_name")) for n in sorted(customers)]
+    if may("finance") or may("report"):
+        result["denominations"]=frappe.parse_json(prop.get("cash_denominations") or "{}")
+        result["shifts"] = project("HS Shift", prop)
+        for shift in result["shifts"]:
+            shift["current_expected"]=cashier.expected(shift)
+            frozen=frappe.parse_json(shift.denominations or "{}")
+            shift["expected_by_currency"] = frozen.get("expected",shift["current_expected"]) if shift.status=="Closed" else shift["current_expected"]
+        result["payment_methods"] = project("HS Payment Method", prop)
+        result["payments"] = project("HS Payment", prop)
+    result["cleaning"] = project("HS Cleaning Task", prop, ["name", "room", "kind", "status", "priority", "assigned_to", "modified", "checklist", "notes"])
+    result["maintenance"] = project("HS Maintenance Order", prop, ["name", "room", "title", "starts_at", "ends_at", "status", "modified", "notes"])
+    if may("report"):
+        from hospitality_suite.reports import summary, REPORTS
+        result["summary"] = summary(prop)
+        result["reports"] = list(REPORTS)
+        result["closes"] = project("HS Daily Close", prop)
+    return result
+
+
+@frappe.whitelist()
+def stay_detail(name):
+    doc = document("HS Stay", name)
+    prop = require(doc.property)
+    folios = accounting.folios_for_stay(doc)
+    for folio in folios:
+        folio["balance"] = accounting.folio_balance(folio.name)
+    return dict(stay=doc.as_dict(), folios=folios, charges=project("HS Charge", prop, filters={"stay": name}),
+                segments=project("HS Allocation", prop, filters={"stay": name}))
+
+
+@frappe.whitelist()
+def availability_search(property_name, starts_at, ends_at, category, people=1):
+    from hospitality_suite.availability import check
+    prop = require(property_name, "reserve")
+    if int(people) < 1 or int(people) > frappe.db.get_value("HS Category", category, "capacity"):
+        frappe.throw("Cantidad de personas inválida")
+    return check(prop, category, to_site(starts_at, prop), to_site(ends_at, prop))
+
+
+@frappe.whitelist()
+def report(property_name, report_name, filters=None):
+    from hospitality_suite.reports import rows
+    prop = require(property_name, "report")
+    return rows(prop, report_name, payload(filters or {}))
+
+
+@frappe.whitelist()
+def export_report(property_name, report_name, filters=None, file_format="xlsx"):
+    from hospitality_suite.reports import rows
+    prop=require(property_name,"report")
+    if not is_system() and not set(frappe.get_roles()).intersection(["HS Administrator","HS Manager","HS Accountant"]):
+        frappe.throw("La exportación requiere gerencia o contabilidad",frappe.PermissionError)
+    records=rows(prop,report_name,payload(filters or {}))
+    headers=list(records[0]) if records else ["Sin datos"]
+    from hospitality_suite.report_formatting import xlsx_data,label,display
+    if file_format=="xlsx":
+        from frappe.utils.xlsxutils import make_xlsx
+        data,widths,styles=xlsx_data(records,headers)
+        content=make_xlsx(data,"Reporte",column_widths=widths,styles=styles).getvalue()
+    elif file_format=="pdf":
+        from frappe.utils.pdf import get_pdf
+        from html import escape
+        heading=f"<style>body{{font-family:Arial,sans-serif;color:#173c32;font-size:10px}}h1{{font-size:24px}}table{{width:100%;border-collapse:collapse}}th{{background:#eaf0e9;text-align:left}}th,td{{padding:7px;border-bottom:1px solid #dce5dc}}thead{{display:table-header-group}}tr{{page-break-inside:avoid}}</style><h1>{escape(report_name)}</h1><p>{escape(prop.property_name)} · Hasta 1 000 registros autorizados</p>"
+        table="<table><thead><tr>"+"".join(f"<th>{escape(label(k))}</th>" for k in headers)+"</tr></thead><tbody>"
+        table+="".join("<tr>"+"".join(f"<td>{escape(str(display(k,row.get(k)) if row.get(k) is not None else ''))}</td>" for k in headers)+"</tr>" for row in records)+"</tbody></table>"
+        content=get_pdf(heading+table,{"orientation":"Landscape"})
+    else:
+        frappe.throw("Formato no permitido")
+    frappe.local.response.update(filename="hospitality-report."+file_format,filecontent=content,type="binary")
+
+
+@frappe.whitelist(methods=["POST"])
+def save_setup(property_name, section, data, request_key, expected_modified=None):
+    values = payload(data)
+    allowed = {
+        "property": ["brand_name", "mode", "time_zone", "check_in_time", "check_out_time", "cleaning_minutes", "inspection_required", "discreet_mode", "hold_minutes", "guest_id_required", "allow_credit", "close_time", "retention_days", "portal_enabled", "cost_center", "warehouse", "laundry_warehouse", "receivable_account", "guarantee_account", "cash_transfer_account", "price_list", "lodging_item", "tax_template", "tax_policy_confirmed", "financial_enabled", "cancellation_fee_mode", "cancellation_fee_value", "no_show_fee_mode", "no_show_fee_value", "penalty_item", "early_hour_rate", "late_hour_rate", "schedule_grace_minutes", "schedule_rounding_minutes", "timing_item", "checkout_inspection_required", "checkout_quote_minutes", "cash_denominations"],
+        "room": ["room_number", "category", "floor", "zone", "beds", "parking", "active"],
+        "category": ["category_name", "capacity", "amenities","max_extra_beds"],
+        "rate": ["title", "category", "mode", "currency", "amount", "block_hours", "extra_hour_rate", "grace_minutes", "rounding_minutes", "additional_person_rate", "included_people","extra_bed_rate", "priority", "valid_from", "valid_to", "weekdays", "customer", "night_start","night_end","active"],
+        "payment_method": ["mode_of_payment", "account", "currency", "reference_required", "is_cash"],
+        "billing_party": ["customer","kind","credit_authorized","credit_limit","valid_until","reason"],
+    }
+    allowed["property"] += ["invoice_series","payment_series","invoice_print_format","receipt_print_format"]
+    if section not in allowed or any(k not in allowed[section] for k in values):
+        frappe.throw("Campo de configuración no admitido")
+    def save(prop):
+        if section == "property":
+            from hospitality_suite.service import assert_version
+            assert_version(prop,expected_modified)
+            prop.update(values)
+            prop.save()
+            doc = prop
+        else:
+            dt = {"room": "HS Room", "category": "HS Category", "rate": "HS Rate", "payment_method": "HS Payment Method","billing_party":"HS Billing Party"}[section]
+            doc = insert(dt, prop, **values)
+        audit(prop, "Setup " + section, doc)
+        return dict(name=doc.name)
+    return command(property_name, "setup", request_key, dict(operation="setup_" + section, **values), save)
+
+
+@frappe.whitelist(methods=["POST"])
+def create_guest(property_name, data, request_key):
+    values = payload(data)
+    def save(prop):
+        if not values.get("full_name"):
+            frappe.throw("Escriba el nombre del huésped")
+        customer = values.get("customer")
+        if not customer:
+            group = frappe.db.get_single_value("Selling Settings", "customer_group") or frappe.db.get_value("Customer Group", {"is_group": 0}, "name")
+            territory = frappe.db.get_single_value("Selling Settings", "territory") or frappe.db.get_value("Territory", {"is_group": 0}, "name")
+            customer_doc = frappe.get_doc(dict(doctype="Customer", customer_name=values["full_name"], customer_type="Individual", customer_group=group, territory=territory))
+            customer = customer_doc.insert(ignore_permissions=True).name  # explicit guest registration delegation only
+        doc = insert("HS Guest", prop, **{k: values.get(k) for k in ["full_name", "email", "phone", "identity_type", "identity_number", "nationality"]}, customer=customer)
+        if values.get("email") or values.get("phone"):
+            contact=frappe.get_doc(dict(doctype="Contact",first_name=values["full_name"],
+                                      links=[dict(link_doctype="Customer",link_name=customer)]))
+            if values.get("email"):
+                contact.append("email_ids",dict(email_id=values["email"],is_primary=1))
+            if values.get("phone"):
+                contact.append("phone_nos",dict(phone=values["phone"],is_primary_phone=1))
+            doc.contact=contact.insert(ignore_permissions=True).name
+        if values.get("address_line1"):
+            if not values.get("city") or not values.get("country"):
+                frappe.throw("Indique ciudad y país de la dirección")
+            address=frappe.get_doc(dict(doctype="Address",address_title=values["full_name"],address_type="Personal",
+                                       address_line1=values["address_line1"],city=values["city"],country=values["country"],
+                                       links=[dict(link_doctype="Customer",link_name=customer)]))
+            doc.address=address.insert(ignore_permissions=True).name
+        if doc.contact or doc.address:
+            doc.save()
+        audit(prop, "Register guest", doc)
+        return dict(guest=doc.name, customer=customer)
+    return command(property_name, "guest", request_key, dict(operation="create_guest", **values), save)
+
+
+@frappe.whitelist(methods=["POST"])
+def create_property(data, request_key):
+    if not is_system():
+        frappe.throw("Se requiere administración del sistema", frappe.PermissionError)
+    values = payload(data)
+    if not request_key or any(k not in ("property_name", "company", "mode", "currency", "time_zone") for k in values):
+        frappe.throw("Configuración no válida")
+    from hospitality_suite.service import operation
+    from frappe.utils import nowdate
+    with operation():
+        doc = frappe.get_doc(dict(doctype="HS Property", **values, business_date=nowdate()))
+        doc.insert()
+    return dict(property=doc.name)
+
+
+@frappe.whitelist()
+def configuration(property_name):
+    return require(property_name,"setup").as_dict()
+
+
+@frappe.whitelist()
+def setup_options(property_name):
+    return setup.document_settings(require(property_name,"setup"))
+
+
+@frappe.whitelist()
+def booking_detail(name):
+    doc = document("HS Booking",name)
+    return dict(booking=doc.as_dict(), allocations=project("HS Allocation",require(doc.property),
+                fields=["name","room","category","booking_room"],filters={"booking":name,"kind":"Reservation","status":"Active"}))
+
+
+@frappe.whitelist()
+def calendar(property_name,starts_at,ends_at):
+    from hospitality_suite.time import local
+    prop=require(property_name)
+    start,end=to_site(starts_at,prop),to_site(ends_at,prop)
+    if end<=start or (end-start).days>31:
+        frappe.throw("Consulte un intervalo de hasta 31 días")
+    rows=project("HS Allocation",prop,fields=["name","room","category","starts_at","ends_at","kind","status","booking","stay"],
+                 filters={"starts_at":["<",end],"ends_at":[">",start]})
+    result=[]
+    for row in rows:
+        if row.status=="Released" and row.kind!="Stay":
+            continue
+        if row.kind=="Stay" and row.stay:
+            stay=frappe.get_doc("HS Stay",row.stay)
+            row.starts_at=max(frappe.utils.get_datetime(row.starts_at),frappe.utils.get_datetime(stay.actual_check_in))
+            if stay.actual_check_out:
+                row.ends_at=min(frappe.utils.get_datetime(row.ends_at),frappe.utils.get_datetime(stay.actual_check_out))
+            if row.ends_at<=row.starts_at:
+                continue
+        row.starts_at=local(row.starts_at,prop).isoformat()
+        row.ends_at=local(row.ends_at,prop).isoformat()
+        result.append(row)
+    return result
+
+
+@frappe.whitelist()
+def room_balances(property_name):
+    prop=require(property_name)
+    if not may("stay") and not may("finance"):
+        frappe.throw("No tiene acceso a saldos",frappe.PermissionError)
+    result={}
+    for stay in project("HS Stay",prop,fields=["name"],filters={"status":"Active"}):
+        total=0
+        shared=False
+        stay_doc=frappe.get_doc("HS Stay",stay.name)
+        for folio in accounting.folios_for_stay(stay_doc):
+            total+=float(accounting.folio_balance(folio.name)["outstanding"])
+            shared=shared or not bool(folio.stay)
+        result[stay.name]=dict(amount=total,shared=shared)
+    return result
+
+
+@frappe.whitelist()
+def inventory_status(property_name):
+    prop=require(property_name)
+    if not may("service") and not may("report"):
+        frappe.throw("No tiene permiso para consultar existencias",frappe.PermissionError)
+    if not prop.warehouse:
+        return dict(warehouse=None,items=[])
+    bins=frappe.get_all("Bin",filters={"warehouse":prop.warehouse},fields=["item_code","actual_qty","projected_qty"])
+    minimums={r.parent:r for r in frappe.get_all("Item Reorder",filters={"warehouse":prop.warehouse},fields=["parent","warehouse_reorder_level","warehouse_reorder_qty"])}
+    for row in bins:
+        row["item_name"]=frappe.db.get_value("Item",row.item_code,"item_name")
+        setting=minimums.get(row.item_code)
+        row["minimum"]=setting.warehouse_reorder_level if setting else None
+        row["needs_restock"]=bool(setting and row.actual_qty<setting.warehouse_reorder_level)
+    return dict(warehouse=prop.warehouse,items=bins)
