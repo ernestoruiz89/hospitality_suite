@@ -54,6 +54,11 @@
    "default": 1
   },
   {
+   "fieldname": "included",
+   "label": "Included",
+   "fieldtype": "Check"
+  },
+  {
    "fieldname": "currency",
    "label": "Moneda",
    "fieldtype": "Link",
@@ -120,6 +125,7 @@
   "customer",
   "item",
   "quantity",
+  "included",
   "currency",
   "amount",
   "status",

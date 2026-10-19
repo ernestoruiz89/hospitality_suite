@@ -189,6 +189,81 @@ class TestFinance(IntegrationTestCase):
         self.assertTrue(all(c.kwargs.get("user") for c in listed))
         self.assertNotIn("housekeeping@hospitality.example.invalid",[c.kwargs["user"] for c in listed])
 
+    def external_invoice(self,source,sources,rate):
+        return frappe.get_doc(dict(doctype="Sales Invoice",company=self.prop.company,customer=self.guest.customer,currency=self.prop.currency,
+                                  debit_to=self.prop.receivable_account,cost_center=self.prop.cost_center,hs_property=self.prop.name,
+                                  hs_stay=self.stay["stay"],hs_folio=self.stay["folio"],update_stock=0,
+                                  items=[dict(item_code=source.item,qty=source.quantity,rate=rate,price_list_rate=source.rate,
+                                              cost_center=self.prop.cost_center,hs_charge=source.name,hs_charge_sources=frappe.as_json(sources))]))
+
+    def test_external_invoice_requires_all_adjustments_and_syncs_every_source(self):
+        source=frappe.get_doc("HS Charge",{"stay":self.stay["stay"],"status":"Pending"})
+        adjustment=self.run_command("adjustment",dict(charge=source.name,adjustment_type="Discount",amount=100,reason="Descuento ficticio autorizado"))["charge"]
+        with self.assertRaises(frappe.ValidationError):
+            self.external_invoice(source,[source.name],source.rate).insert()
+        invoice=self.external_invoice(source,[source.name,adjustment],1400).insert()
+        invoice.submit()
+        for name in (source.name,adjustment):
+            record=frappe.get_doc("HS Charge",name)
+            self.assertEqual((record.status,record.sales_invoice,record.invoice_item),("Invoiced",invoice.name,invoice.items[0].name))
+        from hospitality_suite.reconciliation import differences
+        self.assertEqual(differences(self.prop),[])
+        invoice.hs_correction_reason="Anulación de prueba"
+        invoice.cancel()
+        self.assertEqual(frappe.db.get_value("HS Charge",adjustment,"status"),"Pending")
+
+    def test_external_invoice_rejects_reversed_charge(self):
+        source=frappe.get_doc("HS Charge",{"stay":self.stay["stay"],"status":"Pending"})
+        with operation():
+            source.status="Reversed"
+            source.save()
+        with self.assertRaises(frappe.ValidationError):
+            self.external_invoice(source,[source.name],source.rate).insert()
+
+    def test_used_payment_method_cannot_reclassify_history(self):
+        self.pay(100,"Advance")
+        method=frappe.get_doc("HS Payment Method",self.method)
+        method.is_cash=not method.is_cash
+        with self.assertRaises(frappe.ValidationError):
+            method.save()
+
+    def test_native_currency_precision_three_and_zero(self):
+        from hospitality_suite.pricing import money
+        original=frappe.db.get_default("currency_precision")
+        try:
+            frappe.db.set_default("currency_precision","3")
+            self.assertEqual(str(money("10.1235")),"10.124")
+            result=self.pay("100.123","Advance")
+            self.assertEqual(frappe.db.get_value("HS Payment",result["payment"],"amount"),100.123)
+            self.assertEqual(frappe.db.get_value("Payment Entry",result["payment_entry"],"received_amount"),100.123)
+            from hospitality_suite.cashier import expected
+            self.assertEqual(expected(frappe.get_doc("HS Shift",self.shift))["NIO"],"100.123")
+            frappe.db.set_default("currency_precision","0")
+            self.assertEqual(str(money("10.5")),"11")
+            start=now_datetime().replace(microsecond=0)
+            values=dict(starts_at=str(start),ends_at=str(start+timedelta(days=1)),customer=self.guest.customer,guest=self.guest.name,
+                        rooms=[dict(category=self.room.category,people=1)])
+            quote=api.preview(self.prop.name,values)
+            self.assertEqual(quote["lines"][0]["precision"],0)
+            self.assertEqual(quote["amount"],"1500")
+        finally:
+            frappe.db.set_default("currency_precision",original)
+
+    def test_untracked_native_cash_is_visible_and_blocks_shift_close(self):
+        journal=frappe.get_doc(dict(doctype="Journal Entry",company=self.prop.company,posting_date=frappe.utils.nowdate(),
+                                   hs_property=self.prop.name,hs_shift=self.shift,
+                                   accounts=[dict(account=frappe.db.get_value("HS Payment Method",self.method,"account"),debit_in_account_currency=50),
+                                             dict(account=self.prop.guarantee_account,credit_in_account_currency=50)] )).insert()
+        journal.submit()
+        from hospitality_suite.reconciliation import differences
+        self.assertTrue(any(r["erp_document"]==journal.name for r in differences(self.prop)))
+        shift=frappe.get_doc("HS Shift",self.shift)
+        with self.assertRaises(frappe.ValidationError):
+            self.run_command("close_shift",dict(shift=shift.name,modified=str(shift.modified),denominations={}))
+        journal.hs_correction_reason="Anulación de movimiento sin conciliar"
+        journal.cancel()
+        self.assertEqual(differences(self.prop),[])
+
     def test_departed_visit_cannot_receive_new_advance(self):
         self.pay(1500,"Payment")
         stay=frappe.get_doc("HS Stay",self.stay["stay"])

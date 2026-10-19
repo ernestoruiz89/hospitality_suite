@@ -108,6 +108,12 @@
    "options": "JSON"
   },
   {
+   "fieldname": "service_entitlements",
+   "label": "Service entitlements",
+   "fieldtype": "Code",
+   "options": "JSON"
+  },
+  {
    "fieldname": "guests",
    "label": "Guests",
    "fieldtype": "Table",
@@ -170,6 +176,7 @@
   "currency",
   "amount",
   "quote_snapshot",
+  "service_entitlements",
   "guests",
   "reason",
   "early_fee",

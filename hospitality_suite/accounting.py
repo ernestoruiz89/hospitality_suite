@@ -207,7 +207,7 @@ def apply_guarantee(prop, data):
     if source.kind != "Guarantee" or source.status != "Posted" or not matches or source.customer != folio.customer or not data.get("reason"):
         frappe.throw("Garantía, pagador o motivo incompatible")
     used = sum(decimal(p.amount) for p in current_all("HS Payment", filters={"source_payment": source.name, "status":"Posted"}, fields=["amount"]))
-    amount = money(data["amount"])
+    amount = money(data["amount"],currency=source.currency)
     if amount <= 0 or amount + used > decimal(source.amount):
         frappe.throw("El importe supera la garantía disponible")
     shifts=current_all("HS Shift",filters={"property":prop.name,"cashier":frappe.session.user,"status":"Open"},fields=["name"])
@@ -342,11 +342,11 @@ def payment(prop, data):
     method = document("HS Payment Method", data["method"], "finance")
     if method.reference_required and not data.get("reference"):
         frappe.throw("La referencia bancaria es obligatoria")
-    amount = money(data["amount"])
+    amount = money(data["amount"],currency=method.currency)
     if amount <= 0:
         frappe.throw("El importe debe ser positivo")
-    tendered=money(data.get("tendered") or amount)
-    change=money(tendered-amount)
+    tendered=money(data.get("tendered") or amount,currency=method.currency)
+    change=money(tendered-amount,currency=method.currency)
     if tendered<amount or (change and not method.is_cash):
         frappe.throw("Revise el efectivo recibido; el vuelto solo se permite en medios de efectivo")
     kind = data.get("kind", "Payment")
@@ -491,16 +491,16 @@ def payment_quote(prop,data):
     import hashlib
     from hospitality_suite.service import canonical
     method=document("HS Payment Method",data["method"],"finance")
-    amount=money(data["amount"])
-    tendered=money(data.get("tendered") or amount)
+    amount=money(data["amount"],currency=method.currency)
+    tendered=money(data.get("tendered") or amount,currency=method.currency)
     if amount<=0 or tendered<amount or (tendered!=amount and not method.is_cash):
         frappe.throw("Revise el importe y el efectivo recibido")
     company_currency=frappe.db.get_value("Company",prop.company,"default_currency")
     fx=exchange(method.currency,company_currency)
     property_fx=exchange(prop.currency,company_currency)
-    values=dict(amount=str(amount),currency=method.currency,exchange_rate=str(fx),base_amount=str(money(amount*fx)),
-                base_currency=company_currency,property_amount=str(money(amount*fx/property_fx)),property_currency=prop.currency,
-                tendered=str(tendered),change=str(money(tendered-amount)),method=method.name)
+    values=dict(amount=str(amount),currency=method.currency,exchange_rate=str(fx),base_amount=str(money(amount*fx,currency=company_currency)),
+                base_currency=company_currency,property_amount=str(money(amount*fx/property_fx,currency=prop.currency)),property_currency=prop.currency,
+                tendered=str(tendered),change=str(money(tendered-amount,currency=method.currency)),method=method.name)
     values["acceptance"]=hashlib.sha256(canonical(values).encode()).hexdigest()
     return values
 
@@ -548,10 +548,13 @@ def sync_document(doc, method=None):
                                     sales_invoice=doc.name, invoice_item=row.name)
                     row.db_set("hs_charge", charge.name, update_modified=False)
                 else:
-                    if charge.status == "Invoiced" and charge.sales_invoice != doc.name:
-                        frappe.throw("Este cargo ya se facturó en otro documento")
-                    charge.status, charge.sales_invoice, charge.invoice_item = "Invoiced", doc.name, row.name
-                    charge.save(ignore_permissions=True)
+                    sources=frappe.parse_json(row.get("hs_charge_sources") or "[]") or [charge.name]
+                    for source in sources:
+                        linked=locked_doc("HS Charge",source)
+                        if linked.status == "Invoiced" and linked.sales_invoice != doc.name:
+                            frappe.throw("Este cargo ya se facturó en otro documento")
+                        linked.status, linked.sales_invoice, linked.invoice_item = "Invoiced", doc.name, row.name
+                        linked.save(ignore_permissions=True)
         if doc.doctype == "Sales Invoice" and doc.docstatus == 2:
             for name in current_all("HS Charge", filters={"sales_invoice": doc.name}, pluck="name"):
                 charge = locked_doc("HS Charge", name)
@@ -563,7 +566,7 @@ def sync_document(doc, method=None):
                 payment_doc = locked_doc("HS Payment", name)
                 payment_doc.status = "Cancelled"
                 payment_doc.save(ignore_permissions=True)
-        if (stay or doc.get("hs_booking")) and doc.doctype == "Payment Entry" and doc.docstatus == 1 and not frappe.db.exists("HS Payment", {"payment_entry": doc.name}) and not getattr(frappe.local, "hs_posting", False):
+        if doc.doctype == "Payment Entry" and doc.party_type=="Customer" and doc.docstatus == 1 and not frappe.db.exists("HS Payment", {"payment_entry": doc.name}) and not getattr(frappe.local, "hs_posting", False):
             account = doc.paid_to if doc.payment_type == "Receive" else doc.paid_from
             method_name = frappe.db.get_value("HS Payment Method", {"property": prop.name, "account": account})
             if not doc.get("hs_shift") or not method_name:

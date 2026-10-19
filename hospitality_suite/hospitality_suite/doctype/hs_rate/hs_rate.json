@@ -142,6 +142,12 @@
    "fieldtype": "Time"
   },
   {
+   "fieldname": "included_services",
+   "label": "Included services",
+   "fieldtype": "Table",
+   "options": "HS Rate Service"
+  },
+  {
    "fieldname": "active",
    "label": "Active",
    "fieldtype": "Check",
@@ -170,6 +176,7 @@
   "customer",
   "night_start",
   "night_end",
+  "included_services",
   "active"
  ],
  "permissions": [

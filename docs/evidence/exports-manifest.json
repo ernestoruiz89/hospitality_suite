@@ -52,8 +52,8 @@
     "source_doctype": "HS Maintenance Order",
     "source": "q1d9m8g18h",
     "format": "HS Orden de mantenimiento",
-    "bytes": 11789,
-    "sha256": "466c444937133a2cc1972a845d841860b556b1e762a1afadab869c9e1c2dcdb0"
+    "bytes": 20546,
+    "sha256": "0943229f4594ec337712401e808ddd58088fe8868ee8738e708e0b7432b82ca4"
   },
   {
     "file": "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/output/pdf/daily_close.pdf",
@@ -69,18 +69,18 @@
     "source": "ACC-SINV-2026-00001",
     "format": "HS Factura",
     "bytes": 20151,
-    "sha256": "8680652e177442995a07eb5268dd13c146de9a2388a407f1029bda0baee2ead2"
+    "sha256": "391c8c9999ec0944acc5fab67483c68dc6daaaed3c34db64b47a99a057131bce"
   },
   {
     "file": "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/output/reconciliation.xlsx",
     "format": "xlsx",
     "bytes": 5664,
-    "sha256": "3c693ecf3d3254c00c3a1661f8c1f30e4e06a83351210d596aa605e99ba01915"
+    "sha256": "41c41277fc9b3d1f769519802d10ae9a3088f20b2217d7f358dbc0266ffbaaaa"
   },
   {
     "file": "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/output/pdf/reconciliation.pdf",
     "format": "pdf",
     "bytes": 21639,
-    "sha256": "1b9f44a4073f262ea7b3487d9f9b195c35934eeb5d580bb4b78f76c59f2ef485"
+    "sha256": "e6459ab19568b9625f58e22c9687da2ee30263c0a5fbe35a19b68585cfd8797c"
   }
 ]

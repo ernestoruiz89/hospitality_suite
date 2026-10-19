@@ -39,13 +39,17 @@ El rol HS Receptionist registra la operación. Para cobrar con ese mismo usuario
 
 ## Mantenimiento y servicios
 
-Los bloqueos de mantenimiento se reservan por intervalo con el mismo motor de disponibilidad. Un conflicto con reserva/estancia se rechaza; no cancela al huésped silenciosamente. Supervisión autoriza la liberación al completar la orden. La ampliación de repuestos/costos/evidencias está señalada en la matriz.
+Los bloqueos de mantenimiento se reservan por intervalo con el mismo motor de disponibilidad. Un conflicto con reserva/estancia se rechaza. Asigne una persona con rol y acceso al establecimiento. Desde Repuestos se registra una salida estándar; el costo procede de su valoración de inventario. Gerencia puede devolver repuestos sin usar con motivo. Supervisión autoriza completar la orden y liberar el bloqueo. Evidencia carga archivos privados vinculados a la orden; la impresión incluye repuestos y costos solo para roles autorizados. Los daños y objetos encontrados se resuelven con constancia y usuario responsable.
 
 En Consumos, la solicitud no descuenta stock. Entregado genera un cargo y una única salida de inventario. Reintentar la entrega no repite la salida. Si el consumo ya se facturó, cree la nota de crédito antes de devolverlo. Venta directa crea factura, cobro y salida estándar sin estancia; su devolución completa se hace desde ese servicio con autorización.
+
+En una tarifa puede configurar artículos incluidos una vez por estancia o por noche de hotel. La cotización conserva las cantidades aceptadas. Al solicitar marque Consumir del plan incluido: el sistema reserva su cupo, no agrega otro cargo y descuenta stock al entregar. Cancelar o devolver libera ese cupo. El beneficio por estancia se concede una sola vez; si cambian las tarifas entre noches, se usa el mayor beneficio por estancia de esas noches. Cambiar habitación conserva los beneficios aceptados sin duplicarlos; extender hotel añade solo las cantidades por noche de la extensión. Editar una tarifa no modifica estancias existentes.
 
 ## Gerencia y contabilidad
 
 Consulte producción, facturas, cobros, anticipos, garantías y pendientes por separado. Conciliación lleva cada diferencia al documento de origen. Exporte solo con rol autorizado. Los importes del XLSX son numéricos y mantienen su moneda; no sume monedas diferentes sin conversión explícita.
+
+Los medios utilizados conservan cuenta, moneda y clasificación para que los arqueos históricos no cambien. Cree otro medio si necesita cambiarlas. Una factura externa debe incluir el cargo y todos sus ajustes una vez; no admite cargos revertidos. Un movimiento nativo de caja sin registro operativo aparece en conciliación y bloquea el cierre del turno. Los usuarios con roles HS usan los saldos de sus cuentas de estancia y reportes; una consulta global de cuenta contable podría agregar otros establecimientos y se restringe.
 
 Revise el cierre diario antes de confirmar: llegadas pendientes, estancias vencidas, cargos, turnos y diferencias contables. Confirmar avanza la fecha operativa una sola vez por solicitud. Reabrir el último día requiere motivo y autorización. El formato de cierre imprime el snapshot conservado.
 

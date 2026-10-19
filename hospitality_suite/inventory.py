@@ -32,13 +32,19 @@ def request_service(prop, data):
     quantity = decimal(data.get("quantity") or 1)
     if quantity <= 0:
         frappe.throw("La cantidad debe ser positiva")
+    included=data.get("included") in (True,1,"1")
+    if included:
+        entitlement=sum(decimal(r["quantity"]) for r in frappe.parse_json(stay.service_entitlements or "[]") if r["item"]==item.name)
+        used=sum(decimal(r.quantity) for r in current_all("HS Service Request",filters={"stay":stay.name,"item":item.name,"included":1,"status":["in",["Requested","In Progress","Delivered"]]},fields=["quantity"]))
+        if quantity>entitlement-used:
+            frappe.throw("La solicitud supera los servicios incluidos disponibles de la estancia")
     # A configured ERPNext Item Price is the authority; callers cannot invent prices.
     price_list = prop.get("price_list") or frappe.db.get_single_value("Selling Settings", "selling_price_list")
     price = frappe.db.get_value("Item Price", {"item_code": item.name, "price_list": price_list, "currency": folio.currency, "selling": 1}, "price_list_rate")
-    if price is None:
+    if price is None and not included:
         frappe.throw("Configure el precio de venta del artículo en ERPNext")
     doc = insert("HS Service Request", prop, stay=stay.name, folio=folio.name, customer=folio.customer, item=item.name,
-                 quantity=quantity, amount=money(quantity * decimal(price)), currency=folio.currency, status="Requested", notes=data.get("notes"))
+                 quantity=quantity,included=included, amount=0 if included else money(quantity * decimal(price)), currency=folio.currency, status="Requested", notes=data.get("notes"))
     audit(prop, "Request service", doc)
     return dict(service=doc.name, amount=str(doc.amount))
 
@@ -60,18 +66,20 @@ def update_service(prop, data):
             frappe.throw("La estancia o cuenta ya está cerrada")
         entry = stock_movement(prop, doc.item, doc.quantity)
         doc.stock_entry = entry.name if entry else None
-        doc.charge = charge(prop, stay, folio, doc.item, doc.amount, "Service", frappe.db.get_value("Item", doc.item, "item_name"), quantity=doc.quantity).name
+        if not doc.included:
+            doc.charge = charge(prop, stay, folio, doc.item, doc.amount, "Service", frappe.db.get_value("Item", doc.item, "item_name"), quantity=doc.quantity).name
     elif target == "Returned":
         from hospitality_suite.security import require
         require(prop.name, "approve")
         if not data.get("reason"):
             frappe.throw("Indique el motivo de la devolución")
-        original = locked_doc("HS Charge", doc.charge)
-        if original.status == "Invoiced" and not doc.credit_note:
-            frappe.throw("Cree la nota de crédito antes de devolver un consumo facturado")
-        if original.status != "Invoiced":
-            original.status, original.reason = "Reversed", data["reason"]
-            original.save()
+        if doc.charge:
+            original = locked_doc("HS Charge", doc.charge)
+            if original.status == "Invoiced" and not doc.credit_note:
+                frappe.throw("Cree la nota de crédito antes de devolver un consumo facturado")
+            if original.status != "Invoiced":
+                original.status, original.reason = "Reversed", data["reason"]
+                original.save()
         if doc.stock_entry:
             entry = locked_doc("Stock Entry", doc.stock_entry)
             entry.flags.ignore_permissions = True

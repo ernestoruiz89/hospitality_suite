@@ -42,3 +42,11 @@ def hs_account_context(name):
                          fields=["name","stay","booking","folio","kind","amount","currency","payment_entry","journal_entry"])
     payments=[p for p in payments if p.stay==stay.name or (p.folio and p.folio in [f.name for f in folios]) or (stay.booking and p.booking==stay.booking and not p.stay)]
     return dict(folios=folios,invoices=invoices,payments=payments)
+
+
+def hs_maintenance_context(name):
+    from hospitality_suite.security import ACTIONS,is_system
+    order=document("HS Maintenance Order",name)
+    allowed=is_system() or set(frappe.get_roles()).intersection(ACTIONS["maintain"]+ACTIONS["report"])
+    return dict(parts=[r.as_dict() for r in order.parts] if allowed else [],cost=order.cost if allowed else None,
+                currency=frappe.db.get_value("Company",order.company,"default_currency"))

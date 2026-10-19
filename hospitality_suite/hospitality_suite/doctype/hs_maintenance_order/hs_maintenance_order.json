@@ -90,7 +90,15 @@
    "fieldname": "stock_entry",
    "label": "Stock entry",
    "fieldtype": "Link",
-   "options": "Stock Entry"
+   "options": "Stock Entry",
+   "permlevel": 1
+  },
+  {
+   "fieldname": "parts",
+   "label": "Parts",
+   "fieldtype": "Table",
+   "options": "HS Maintenance Part",
+   "permlevel": 1
   },
   {
    "fieldname": "reopened_by",
@@ -113,6 +121,7 @@
   "evidence",
   "cost",
   "stock_entry",
+  "parts",
   "reopened_by"
  ],
  "permissions": [

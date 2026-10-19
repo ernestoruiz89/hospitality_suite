@@ -32,7 +32,7 @@ def expected(shift):
             continue
         sign = -1 if row.kind in ("Refund", "Guarantee Refund", "Withdrawal") else 1
         amounts[row.currency] = amounts.get(row.currency, decimal(0)) + decimal(row.amount) * sign
-    return {k: str(money(v)) for k, v in amounts.items()}
+    return {k: str(money(v,currency=k)) for k, v in amounts.items()}
 
 
 def close_shift(prop, data):
@@ -42,12 +42,15 @@ def close_shift(prop, data):
         frappe.throw("El turno ya está cerrado")
     if doc.cashier != frappe.session.user:
         require(prop.name, "approve")
+    from hospitality_suite.reconciliation import unmatched_cash
+    if unmatched_cash(prop,doc.name):
+        frappe.throw("Conciliación pendiente: existen movimientos nativos del turno sin registro operativo")
     denominations = data.get("denominations") or {}
     totals = {}
     for currency, rows in denominations.items():
         if not frappe.db.exists("Currency",currency) or any(decimal(r["value"]) <= 0 or int(r["count"]) < 0 or decimal(r["count"])!=decimal(int(r["count"])) for r in rows):
             frappe.throw("Denominaciones inválidas")
-        totals[currency] = money(sum(decimal(r["value"]) * int(r["count"]) for r in rows))
+        totals[currency] = money(sum(decimal(r["value"]) * int(r["count"]) for r in rows),currency=currency)
     exp = expected(doc)
     differences = {c: str(money(totals.get(c,decimal(0))-decimal(exp.get(c,0)))) for c in set(exp)|set(totals)}
     if any(decimal(v) for v in differences.values()):

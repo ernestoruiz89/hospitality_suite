@@ -20,11 +20,12 @@ COMMANDS = {
     "payment": ("finance", accounting.payment), "open_shift": ("finance", cashier.open_shift),
     "close_shift": ("finance", cashier.close_shift), "cleaning": ("clean", housekeeping.update_cleaning),
     "maintenance": ("maintain", housekeeping.maintenance), "request_service": ("service", inventory.request_service),
+    "maintenance_parts":("maintain",housekeeping.maintenance_parts),
     "update_service": ("service", inventory.update_service), "daily_close": ("report", closing.daily_close),
     "reopen_day": ("approve", closing.reopen),
     "credit_note": ("approve", accounting.credit_note),
     "apply_guarantee": ("approve", accounting.apply_guarantee),
-    "incident": ("clean", linen.incident), "linen": ("clean", linen.move_linen),
+    "incident": ("incident", linen.incident), "linen": ("clean", linen.move_linen),
     "convert_portal": ("reserve", portal.convert), "portal_link": ("reserve", portal.link),
     "withdrawal": ("finance",cashier.withdrawal),
     "modify_reservation": ("reserve",operations.modify_reservation),
@@ -109,11 +110,12 @@ def bootstrap(property_name=None):
     if not property_name:
         return result
     prop = require(property_name)
+    result["inventory_currency"]=frappe.db.get_value("Company",prop.company,"default_currency")
     result["property_now"] = now_local(prop).isoformat()
     result["print_formats"]=dict(invoice=prop.invoice_print_format or "HS Factura",receipt=prop.receipt_print_format or "HS Recibo")
     result["rooms"] = project("HS Room", prop, ["name", "room_number", "category", "floor", "zone", "cleaning_status", "active", "parking"])
     result["categories"] = project("HS Category", prop, ["name", "category_name", "capacity"])
-    if may("clean") or may("service"):
+    if may("clean") or may("service") or may("maintain"):
         result["items"]=frappe.get_all("Item",filters={"disabled":0},fields=["name","item_name","is_stock_item"],limit_page_length=500)
     # Minimal operational projection is intentionally separate from stay documents.
     active = frappe.get_all("HS Stay", filters={"property": prop.name, "status": "Active"}, fields=["name", "room", "ends_at"])
@@ -141,7 +143,13 @@ def bootstrap(property_name=None):
         result["payment_methods"] = project("HS Payment Method", prop)
         result["payments"] = project("HS Payment", prop)
     result["cleaning"] = project("HS Cleaning Task", prop, ["name", "room", "kind", "status", "priority", "assigned_to", "modified", "checklist", "notes"])
-    result["maintenance"] = project("HS Maintenance Order", prop, ["name", "room", "title", "starts_at", "ends_at", "status", "modified", "notes"])
+    result["maintenance"] = project("HS Maintenance Order", prop, ["name", "room", "title", "starts_at", "ends_at", "status", "modified", "notes","assigned_to","evidence"])
+    result["incidents"]=project("HS Incident",prop,["name","room","kind","description","status","evidence","resolution","modified"])
+    if may("maintain") or may("report"):
+        for order in result["maintenance"]:
+            doc=frappe.get_doc("HS Maintenance Order",order.name)
+            order["cost"]=doc.cost
+            order["parts"]=[r.as_dict() for r in doc.parts]
     if may("report"):
         from hospitality_suite.reports import summary, REPORTS
         result["summary"] = summary(prop)
@@ -214,6 +222,12 @@ def save_setup(property_name, section, data, request_key, expected_modified=None
         "billing_party": ["customer","kind","credit_authorized","credit_limit","valid_until","reason"],
     }
     allowed["property"] += ["invoice_series","payment_series","invoice_print_format","receipt_print_format"]
+    allowed["rate"].append("included_services")
+    if "included_services" in values:
+        services=values["included_services"]
+        if not isinstance(services,list) or len(services)>100:
+            frappe.throw("Revise la lista de servicios incluidos")
+        values["included_services"]=[{key:row.get(key) for key in ("item","quantity","basis")} for row in services]
     if section not in allowed or any(k not in allowed[section] for k in values):
         frappe.throw("Campo de configuración no admitido")
     def save(prop):

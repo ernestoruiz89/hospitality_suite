@@ -104,6 +104,15 @@ class ScopedDocument(Document):
                 frappe.throw("Indique ambos límites del paquete nocturno")
             if self.weekdays and any(day.strip() not in tuple(str(i) for i in range(7)) for day in self.weekdays.split(",")):
                 frappe.throw("Los días admitidos son 0 a 6")
+            from hospitality_suite.pricing import decimal
+            keys=set()
+            for row in self.included_services:
+                if decimal(row.quantity)<=0 or (self.mode!="Hotel" and row.basis=="Night") or (row.item,row.basis) in keys:
+                    frappe.throw("Revise las cantidades de servicios incluidos; por noche solo aplica a hotel y no admite duplicados")
+                item=frappe.get_doc("Item",row.item)
+                if item.disabled or not item.is_sales_item:
+                    frappe.throw("El servicio incluido debe ser un artículo de venta habilitado")
+                keys.add((row.item,row.basis))
         if self.doctype=="HS Category" and (self.capacity<1 or (self.max_extra_beds or 0)<0):
             frappe.throw("Revise la capacidad y las camas extra de la categoría")
         if self.doctype == "HS Room" and not self.is_new():
@@ -117,6 +126,9 @@ class ScopedDocument(Document):
             account = frappe.get_doc("Account", self.account)
             if account.company != self.company or account.is_group or account.account_currency != self.currency:
                 frappe.throw(_("La cuenta de cobro no coincide con compañía/moneda o es una cuenta agrupadora"))
+            old=self.get_doc_before_save()
+            if old and any(old.get(k)!=self.get(k) for k in ("property","company","account","currency","is_cash","mode_of_payment")) and frappe.db.exists("HS Payment",{"method":self.name}):
+                frappe.throw("Conserve el medio utilizado para la trazabilidad; cree otro para cambiar su cuenta, moneda o clasificación")
         if self.doctype=="HS Billing Party" and self.credit_limit<0:
             frappe.throw("El límite de crédito no puede ser negativo")
         if self.doctype=="HS Folio":

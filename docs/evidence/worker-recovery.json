@@ -1,0 +1,1 @@
+{"failed_job": "hospitality.localhost||hs-recovery-fail-844bec531a4d47c58d9bcdf4b01380b4", "failed_status": "jobstatus.failed", "rollback_preserved_hold": true, "recovered_job": "hospitality.localhost||hs-recovery-ok-938bd7c2dbfb4a5681206de2cca2c353", "recovered_status": "jobstatus.finished", "booking": "up6s584a44", "final_booking_status": "Cancelled", "active_allocations": 0}

@@ -1,0 +1,44 @@
+{
+ "doctype": "DocType",
+ "name": "HS Rate Service",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "hash",
+ "naming_rule": "Random",
+ "fields": [
+  {
+   "fieldname": "item",
+   "label": "Item",
+   "fieldtype": "Link",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "quantity",
+   "label": "Quantity",
+   "fieldtype": "Float",
+   "default": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "basis",
+   "label": "Basis",
+   "fieldtype": "Select",
+   "options": "Stay\nNight",
+   "reqd": 1,
+   "default": "Stay"
+  }
+ ],
+ "field_order": [
+  "item",
+  "quantity",
+  "basis"
+ ],
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0,
+ "istable": 1
+}

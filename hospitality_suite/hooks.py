@@ -31,7 +31,12 @@ for dt in ("Account","Company","Cost Center","Warehouse","Sales Taxes and Charge
     permission_query_conditions[dt]="hospitality_suite.security.query_master_"+dt.lower().replace(" ","_")
     has_permission[dt]="hospitality_suite.security.master_permission"
 override_whitelisted_methods={"frappe.desk.query_report.run":"hospitality_suite.security.run_scoped_report",
-                              "frappe.desk.query_report.export_query":"hospitality_suite.security.export_scoped_report"}
+                              "frappe.desk.query_report.export_query":"hospitality_suite.security.export_scoped_report",
+                              "erpnext.accounts.utils.get_balance_on":"hospitality_suite.security.scoped_account_balance",
+                              "erpnext.stock.utils.get_stock_balance":"hospitality_suite.security.scoped_stock_balance"}
+for dt in ("Bin","Stock Ledger Entry"):
+    permission_query_conditions[dt]="hospitality_suite.security.query_"+dt.lower().replace(" ","_")
+    has_permission[dt]="hospitality_suite.security.stock_permission"
 doc_events.update({
     "File": {"validate": "hospitality_suite.security.validate_file"},
 })

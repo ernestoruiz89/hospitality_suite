@@ -85,3 +85,39 @@ class TestSecurityRecovery(IntegrationTestCase):
         room=frappe.get_all("HS Room",filters={"property":self.prop.name,"name":["!=",self.room.name]},pluck="name")[0]
         with self.assertRaises(frappe.TimestampMismatchError):
             self.invoke("change_room",dict(stay=stay["stay"],room=room,modified="2000-01-01 00:00:00",reason="stale request"))
+
+    def test_second_company_and_standard_roles_cannot_bypass_property_stock_scope(self):
+        company=frappe.get_doc(dict(doctype="Company",company_name="Compañía sintética "+uuid.uuid4().hex[:7],abbr=uuid.uuid4().hex[:5].upper(),
+                                   country="Nicaragua",default_currency="NIO",chart_of_accounts="Standard")).insert()
+        with operation():
+            foreign=frappe.get_doc(dict(doctype="HS Property",property_name="Establecimiento de compañía aislada",company=company.name,
+                                        mode="Hotel",time_zone="America/Managua",currency="NIO",business_date=frappe.utils.nowdate(),financial_enabled=0)).insert()
+        warehouse=frappe.get_doc(dict(doctype="Warehouse",warehouse_name="Almacén no asignado "+uuid.uuid4().hex[:6],company=self.prop.company)).insert()
+        user="combined-"+uuid.uuid4().hex[:8]+"@example.invalid"
+        frappe.get_doc(dict(doctype="User",email=user,first_name="Roles combinados de prueba",send_welcome_email=0,user_type="System User",
+                            roles=[dict(role=role) for role in ("HS Receptionist","Stock User","Accounts User","Sales User")])).insert()
+        with operation():
+            frappe.get_doc(dict(doctype="HS Access",company=self.prop.company,property=self.prop.name,user=user)).insert()
+        own_bin=frappe.get_doc("Bin",{"warehouse":self.prop.warehouse,"item_code":"HS-DEMO-WATER"})
+        hidden_bin=frappe.get_doc(dict(doctype="Bin",warehouse=warehouse.name,item_code="HS-DEMO-WATER")).insert()
+        frappe.set_user(user)
+        self.assertFalse(frappe.has_permission("Company",doc=company,ptype="read"))
+        self.assertFalse(frappe.has_permission("HS Property",doc=foreign,ptype="read"))
+        with self.assertRaises(frappe.PermissionError):
+            api.bootstrap(foreign.name)
+        self.assertTrue(frappe.has_permission("Bin",doc=own_bin,ptype="read"))
+        self.assertFalse(frappe.has_permission("Bin",doc=hidden_bin,ptype="read"))
+        self.assertNotIn(hidden_bin.name,frappe.get_list("Bin",pluck="name"))
+        self.assertNotIn(warehouse.name,frappe.get_list("Warehouse",pluck="name"))
+        self.assertNotIn(company.name,frappe.get_list("Company",pluck="name"))
+        forbidden=frappe.get_doc(dict(doctype="Stock Entry",company=self.prop.company,hs_property=self.prop.name,
+                                      items=[dict(item_code="HS-DEMO-WATER",s_warehouse=warehouse.name,qty=1)]))
+        with self.assertRaises(frappe.PermissionError):
+            security.validate_standard(forbidden)
+        stock_rpc=frappe.get_attr(frappe.override_whitelisted_method("erpnext.stock.utils.get_stock_balance"))
+        with self.assertRaises(frappe.PermissionError):
+            stock_rpc("HS-DEMO-WATER",warehouse.name)
+        self.assertEqual(stock_rpc("HS-DEMO-WATER",self.prop.warehouse),100)
+        account_rpc=frappe.get_attr(frappe.override_whitelisted_method("erpnext.accounts.utils.get_balance_on"))
+        with self.assertRaises(frappe.PermissionError):
+            account_rpc(account=self.prop.receivable_account)

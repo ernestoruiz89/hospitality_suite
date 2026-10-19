@@ -13,6 +13,7 @@ ACTIONS = {
     "service": MANAGERS + ["HS Receptionist", "HS Cashier"],
     "report": MANAGERS + ["HS Accountant", "HS Auditor"], "approve": MANAGERS[:2],
     "guest": MANAGERS + ["HS Receptionist"],
+    "incident": MANAGERS + ["HS Housekeeping","HS Maintenance"],
 }
 
 
@@ -78,6 +79,16 @@ def validate_file(doc, method=None):
         if not doc.is_private:
             frappe.throw(_("Los archivos de Hospitality Suite deben ser privados"))
         target.check_permission("write")
+
+
+def private_evidence(url,target):
+    if not url:
+        return None
+    files=frappe.get_all("File",filters={"file_url":url,"is_private":1,"attached_to_doctype":target.doctype,"attached_to_name":target.name},pluck="name")
+    if not files or not url.startswith("/private/files/"):
+        frappe.throw("Adjunte una evidencia privada a este documento")
+    frappe.get_doc("File",files[0]).check_permission("read")
+    return url
 
 
 def realtime(property_name):
@@ -180,6 +191,7 @@ def validate_standard(doc, method=None):
     if doc.doctype == "Sales Invoice":
         if doc.discount_amount or doc.additional_discount_percentage:
             frappe.throw("Registre los descuentos y cortesías mediante un ajuste autorizado de la cuenta")
+        used_sources=set()
         for row in doc.items:
             if row.get("hs_charge"):
                 charge = document("HS Charge", row.hs_charge)
@@ -193,13 +205,22 @@ def validate_standard(doc, method=None):
                 if not isinstance(sources,list) or charge.name not in sources or len(sources)!=len(set(sources)):
                     frappe.throw("Referencias de cargos inválidas")
                 linked=[document("HS Charge",name) for name in sources]
-                if any(c.folio!=charge.folio or c.item!=charge.item or (c.name!=charge.name and c.applies_to_charge!=charge.name) for c in linked):
+                if charge.applies_to_charge or any(c.folio!=charge.folio or c.currency!=doc.currency or c.item!=charge.item or (c.name!=charge.name and c.applies_to_charge!=charge.name) for c in linked):
                     frappe.throw("Los ajustes no pertenecen al cargo de esta línea")
+                if any(c.status not in ("Pending","Invoiced") for c in linked):
+                    frappe.throw("No puede facturar un cargo revertido")
                 if any(c.status=="Invoiced" and c.sales_invoice!=doc.name for c in linked):
                     frappe.throw("Un cargo de esta línea ya está facturado en otro documento")
+                from hospitality_suite.service import current_all
+                adjustments=set(current_all("HS Charge",filters={"applies_to_charge":charge.name,"status":["!=","Reversed"]},pluck="name"))
+                if set(sources)!={charge.name}|adjustments or used_sources.intersection(sources):
+                    frappe.throw("Incluya el cargo y todos sus ajustes una sola vez en la misma línea")
+                used_sources.update(sources)
                 total=sum(decimal(c.amount) for c in linked)
+                if total!=money(total,currency=doc.currency):
+                    frappe.throw("La precisión monetaria cambió respecto al cargo aceptado; revise la configuración antes de facturar")
                 expected_rate=total/decimal(charge.quantity)
-                if decimal(row.qty)!=decimal(charge.quantity) or money(row.rate)!=money(expected_rate):
+                if decimal(row.qty)!=decimal(charge.quantity) or money(row.rate,currency=doc.currency)!=money(expected_rate,currency=doc.currency):
                     frappe.throw("La cantidad y tarifa deben coincidir con el cargo; use un ajuste autorizado")
             elif doc.get("hs_stay") and not doc.is_return:
                 pending=frappe.get_all("HS Charge",filters={"stay":doc.hs_stay,"item":row.item_code,"status":"Pending"},pluck="name")
@@ -290,6 +311,8 @@ def master_permission(doc,user=None,**kwargs):
     if is_system(user) or not set(frappe.get_roles(user)).intersection(ROLES):
         return True
     companies=frappe.get_all("HS Property",filters={"name":["in",allowed_properties(user)]},pluck="company")
+    if doc.doctype=="Warehouse":
+        return doc.name in inventory_warehouses(user)
     return (doc.name if doc.doctype=="Company" else doc.company) in companies
 
 
@@ -297,6 +320,9 @@ def master_query(dt,user=None):
     if is_system(user) or not set(frappe.get_roles(user)).intersection(ROLES):
         return ""
     companies=frappe.get_all("HS Property",filters={"name":["in",allowed_properties(user)]},pluck="company")
+    if dt=="Warehouse":
+        values=",".join(frappe.db.escape(w) for w in inventory_warehouses(user)) or "NULL"
+        return f"`tabWarehouse`.`name` IN ({values})"
     values=",".join(frappe.db.escape(c) for c in set(companies)) or "NULL"
     field="name" if dt=="Company" else "company"
     return f"`tab{dt}`.`{field}` IN ({values})"
@@ -304,3 +330,50 @@ def master_query(dt,user=None):
 
 for _master in ("Account","Company","Cost Center","Warehouse","Sales Taxes and Charges Template"):
     globals()["query_master_"+_master.lower().replace(" ","_")]=lambda user=None,dt=_master:master_query(dt,user)
+
+
+def inventory_warehouses(user=None):
+    props=allowed_properties(user)
+    configured=frappe.get_all("HS Property",filters={"name":["in",props]},fields=["warehouse","laundry_warehouse","company"])
+    companies={p.company for p in configured}
+    names={p.get(field) for p in configured for field in ("warehouse","laundry_warehouse") if p.get(field)}
+    names.update(frappe.get_all("Warehouse",filters={"hs_property":["in",props]},pluck="name"))
+    return [w for w in sorted(names) if frappe.db.get_value("Warehouse",w,"company") in companies]
+
+
+def stock_permission(doc,user=None,**kwargs):
+    if is_system(user) or not set(frappe.get_roles(user)).intersection(ROLES):
+        return True
+    return doc.warehouse in inventory_warehouses(user)
+
+
+def stock_query(dt,user=None):
+    if is_system(user) or not set(frappe.get_roles(user)).intersection(ROLES):
+        return ""
+    values=",".join(frappe.db.escape(w) for w in inventory_warehouses(user)) or "NULL"
+    return f"`tab{dt}`.`warehouse` IN ({values})"
+
+
+def query_bin(user=None):
+    return stock_query("Bin",user)
+
+
+def query_stock_ledger_entry(user=None):
+    return stock_query("Stock Ledger Entry",user)
+
+
+@frappe.whitelist()
+def scoped_account_balance(*args,**kwargs):
+    if not is_system() and set(frappe.get_roles()).intersection(ROLES):
+        frappe.throw("Use los saldos y reportes del establecimiento; el saldo agregado de una cuenta puede incluir otros establecimientos",frappe.PermissionError)
+    from erpnext.accounts.utils import get_balance_on
+    return get_balance_on(*args,**kwargs)
+
+
+@frappe.whitelist()
+def scoped_stock_balance(item_code,warehouse=None,**kwargs):
+    if not is_system() and set(frappe.get_roles()).intersection(ROLES):
+        if not warehouse or warehouse not in inventory_warehouses():
+            frappe.throw("Seleccione un almacén de su establecimiento",frappe.PermissionError)
+    from erpnext.stock.utils import get_stock_balance
+    return get_stock_balance(item_code,warehouse,**kwargs)

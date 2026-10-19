@@ -73,6 +73,22 @@
    "label": "Stock entry",
    "fieldtype": "Link",
    "options": "Stock Entry"
+  },
+  {
+   "fieldname": "resolution",
+   "label": "Resolution",
+   "fieldtype": "Small Text"
+  },
+  {
+   "fieldname": "resolved_by",
+   "label": "Resolved by",
+   "fieldtype": "Link",
+   "options": "User"
+  },
+  {
+   "fieldname": "resolved_at",
+   "label": "Resolved at",
+   "fieldtype": "Datetime"
   }
  ],
  "field_order": [
@@ -85,7 +101,10 @@
   "item",
   "quantity",
   "status",
-  "stock_entry"
+  "stock_entry",
+  "resolution",
+  "resolved_by",
+  "resolved_at"
  ],
  "permissions": [
   {

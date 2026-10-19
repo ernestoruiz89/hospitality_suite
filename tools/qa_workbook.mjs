@@ -1,6 +1,11 @@
 // Read-only inspection of the XLSX produced by Frappe's installed export API.
 import fs from "node:fs/promises";
-import { FileBlob,SpreadsheetFile } from "@oai/artifact-tool";
+import { createRequire } from "node:module";
+import { pathToFileURL } from "node:url";
+// The bundled Node runtime resolves its own QA libraries without adding a
+// node_modules link inside the app's public assets (which slows native migrate).
+const runtimeRequire=createRequire(process.execPath);
+const { FileBlob,SpreadsheetFile }=await import(pathToFileURL(runtimeRequire.resolve("@oai/artifact-tool")).href);
 
 const path=process.argv[2];
 const workbook=await SpreadsheetFile.importXlsx(await FileBlob.load(path));

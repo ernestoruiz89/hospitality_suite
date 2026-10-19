@@ -195,6 +195,7 @@ def check_in(prop, data,accept_timing=False):
                   rate=line["rules"]["name"], currency=prop.currency, amount=line["amount"], quote_snapshot=canonical(line),
                   guests=[dict(guest=guest.name, relationship="Principal")])
     stay.early_fee,stay.late_fee=fees["early"],fees["late"]
+    stay.service_entitlements=canonical(line.get("included_services") or [])
     stay.save()
     folio = insert("HS Folio", prop, stay=stay.name,booking=stay.booking, customer=stay.customer, currency=prop.currency, status="Open", label="Cuenta principal")
     resource = locked_doc("HS Allocation", alloc.name)
@@ -244,6 +245,9 @@ def extension_quote(prop, data):
     original = json.loads(current.quote_snapshot or stay.quote_snapshot)
     if original["rules"]["mode"]=="Hotel":
         calculation=quote(prop,current.category,stay.ends_at,end,original.get("people",1),customer=stay.customer,mode="Hotel",extra_beds=original.get("extra_beds",0))
+        from hospitality_suite.pricing import included_services
+        calculation["included_services"]=included_services(calculation,night_only=True)
+        calculation["explanation"]=[s for s in calculation["explanation"] if not s.startswith("Incluido:")]+[f"Incluido en extensión: {r['item']} × {r['quantity']}" for r in calculation["included_services"]]
         calculation["difference"]=calculation["amount"]
         calculation["amount"]=str(money(decimal(stay.amount)+decimal(calculation["difference"])))
     else:
@@ -264,6 +268,12 @@ def extend(prop, data):
     result = extension_quote(prop, data)
     if result["acceptance"] != data.get("acceptance"):
         frappe.throw("Revise y acepte la nueva cotización")
+    if result["rules"]["mode"]=="Hotel":
+        from hospitality_suite.pricing import included_services
+        benefits={r["item"]:decimal(r["quantity"]) for r in json.loads(stay.service_entitlements or "[]")}
+        for row in included_services(result,night_only=True):
+            benefits[row["item"]]=benefits.get(row["item"],decimal(0))+decimal(row["quantity"])
+        stay.service_entitlements=canonical([dict(item=item,quantity=str(quantity)) for item,quantity in sorted(benefits.items())])
     stay.ends_at, stay.amount = to_site(data["ends_at"], prop), result["amount"]
     stay.save()
     active = current_all("HS Allocation", filters={"stay": stay.name, "status": "Active"}, fields=["name", "starts_at"], order_by="starts_at desc")
@@ -386,7 +396,7 @@ def room_change_quote(prop,data):
             unused=money(decimal(current.accepted_amount)*decimal(fraction))
             explanation="Se acredita proporcionalmente el tiempo restante del segmento anterior y se cotiza el bloque de destino."
         difference=money(decimal(q["amount"])-unused)
-    result=dict(quote=q,difference=str(difference),explanation=explanation+" El prorrateo se calcula por minuto iniciado; revise nuevamente si cambia el minuto de la cotización.",valid_until=str(now+timedelta(minutes=1)))
+    result=dict(quote=q,difference=str(difference),explanation=explanation+" Los servicios incluidos ya aceptados se conservan, sin duplicarlos por el cambio. El prorrateo se calcula por minuto iniciado; revise nuevamente si cambia el minuto de la cotización.",valid_until=str(now+timedelta(minutes=1)))
     result["acceptance"]=hashlib.sha256(canonical(dict(stay=stay.name,modified=str(stay.modified),room=room.name,
                                                           amount=result["difference"],rate=q["rules"]["name"],mode=mode)).encode()).hexdigest()
     return result

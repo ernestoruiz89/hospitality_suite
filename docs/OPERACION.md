@@ -50,7 +50,9 @@ bench build --app hospitality_suite
 
 La restauración reemplaza datos del destino: confirme su identidad y respaldo antes de ejecutarla. Proporcione las credenciales de base por el mecanismo de administración del entorno; no las escriba en una guía, historial compartido o repositorio. Preserve la clave de cifrado del origen sin sustituir la identidad/conexión del destino por accidente.
 
-Valide cantidades de establecimientos/habitaciones/reservas, snapshots de tarifas, vínculos de facturas y pagos, archivos privados, cuentas por cobrar y saldos de stock. Ejecute pruebas de lectura y un recorrido ficticio en el destino. El ensayo de restauración final aún debe quedar acreditado en la matriz.
+Valide cantidades de establecimientos/habitaciones/reservas, snapshots de tarifas, vínculos de facturas y pagos, archivos privados, cuentas por cobrar y saldos de stock. Ejecute pruebas de lectura y un recorrido ficticio en el destino.
+
+Ensayo ejecutado: respaldo nativo con archivos de hospitality.localhost y restauración en hospitality-restore.localhost, base hospitality_restore. Se conservaron exactamente 52 tablas y 295 filas operativas/nativas, incluidos GL Entry, Payment Ledger Entry y Stock Ledger Entry; SHA-256 idéntico antes y después de migrate. La configuración del destino mantuvo su base y credenciales y recibió la clave de cifrado del respaldo. El scheduler del destino está pausado. `tools/restore_wsl.py` solo admite este tercer sitio aislado; reemplaza sus datos y no es un restaurador para producción. La referencia completa permanece privada en el bench; los hashes y resultados están en docs/evidence.
 
 ## Actualización y reversión de despliegue
 

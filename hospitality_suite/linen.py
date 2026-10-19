@@ -1,13 +1,29 @@
 import frappe
 
 from hospitality_suite.accounting import ready, post_standard
-from hospitality_suite.security import document
-from hospitality_suite.service import insert, audit
+from hospitality_suite.security import document,require,private_evidence
+from hospitality_suite.service import insert, audit,assert_version
 from hospitality_suite.pricing import decimal
 
 
 def incident(prop, data):
-    room = document("HS Room",data["room"],"clean")
+    if data.get("incident"):
+        record=document("HS Incident",data["incident"],"incident")
+        assert_version(record,data.get("modified"))
+        if record.status!="Open":
+            frappe.throw("La novedad ya está resuelta")
+        if data.get("evidence"):
+            record.evidence=private_evidence(data["evidence"],record)
+        if data.get("resolve"):
+            require(prop.name,"inspect")
+            if not data.get("resolution"):
+                frappe.throw("Describa la resolución o entrega del objeto")
+            record.status,record.resolution="Resolved",data["resolution"]
+            record.resolved_by,record.resolved_at=frappe.session.user,frappe.utils.now_datetime()
+        record.save()
+        audit(prop,"Resolve incident" if data.get("resolve") else "Incident evidence",record,record.resolution)
+        return dict(incident=record.name,status=record.status)
+    room = document("HS Room",data["room"],"incident")
     if data.get("kind") not in ("Damage","Lost Property") or not data.get("description"):
         frappe.throw("Indique tipo y descripción de la novedad")
     record = insert("HS Incident",prop,room=room.name,kind=data["kind"],description=data["description"],status="Open")

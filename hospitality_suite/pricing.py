@@ -7,7 +7,19 @@ def decimal(value):
     return Decimal(str(value or 0))
 
 
-def money(value, precision=2):
+def currency_precision(currency=None):
+    import sys
+    frappe=sys.modules.get("frappe")
+    if not frappe or not getattr(frappe.local,"site",None):
+        return 2  # The pure calculation kernel also runs outside a Frappe site.
+    from frappe.utils import get_currency_precision
+    from frappe.model.meta import get_precision_from_currency_format
+    precision=get_currency_precision()
+    return int(precision) if precision is not None else get_precision_from_currency_format(currency or frappe.defaults.get_global_default("currency"))
+
+
+def money(value, precision=None, currency=None):
+    precision=currency_precision(currency) if precision is None else int(precision)
     return decimal(value).quantize(Decimal(10) ** -precision, rounding=ROUND_HALF_UP)
 
 
@@ -43,6 +55,8 @@ def quote(prop, category, starts_at, ends_at, people=1, rate_name=None, customer
     from hospitality_suite.time import local
     start, end = local(starts_at, prop), local(ends_at, prop)
     rates = current_all("HS Rate", filters={"property": prop.name, "category": category, "active": 1}, fields=["*"])
+    for rate in rates:
+        rate["included_services"]=current_all("HS Rate Service",filters={"parent":rate.name,"parenttype":"HS Rate"},fields=["item","quantity","basis"])
     if rate_name:
         rates = [r for r in rates if r.name == rate_name]
     selected_mode=mode or (prop.mode if prop.mode!="Mixed" else "Hotel")
@@ -67,7 +81,7 @@ def quote(prop, category, starts_at, ends_at, people=1, rate_name=None, customer
         if len(matches)>1 and (matches[0].priority,bool(matches[0].customer))==(matches[1].priority,bool(matches[1].customer)):
             frappe.throw("Hay tarifas con la misma prioridad; defina una prioridad inequívoca")
         return matches[0]
-    precision = frappe.db.get_single_value("System Settings", "currency_precision") or 2
+    precision = currency_precision(choose(start.date()).currency)
     if selected_mode=="Motel":
         result=calculate(choose(start.date()),start,end,int(people),extra_beds=int(extra_beds),precision=int(precision))
     else:
@@ -85,4 +99,24 @@ def quote(prop, category, starts_at, ends_at, people=1, rate_name=None, customer
                     nightly=nightly,rules=nightly[0]["rules"],start=start.isoformat(),end=end.isoformat(),precision=int(precision))
     result["people"]=int(people)
     result["extra_beds"]=int(extra_beds)
+    result["included_services"]=included_services(result)
+    for row in result["included_services"]:
+        result["explanation"].append(f"Incluido: {row['item']} × {row['quantity']}")
     return result
+
+
+def included_services(snapshot,night_only=False):
+    """Night quantities accumulate; a stay benefit is granted once (largest plan
+    allowance across its accepted nights). Room moves keep accepted benefits.
+    """
+    amounts={}
+    once={}
+    rules=[r["rules"] for r in snapshot.get("nightly",[])] or [snapshot["rules"]]
+    for rule in rules:
+        for service in rule.get("included_services",[]):
+            item,quantity=service["item"],decimal(service["quantity"])
+            if service["basis"]=="Night":
+                amounts[item]=amounts.get(item,decimal(0))+quantity
+            elif not night_only:
+                once[item]=max(once.get(item,decimal(0)),quantity)
+    return [dict(item=item,quantity=str(amounts.get(item,decimal(0))+once.get(item,decimal(0)))) for item in sorted(set(amounts)|set(once))]

@@ -1,0 +1,59 @@
+{
+ "doctype": "DocType",
+ "name": "HS Maintenance Part",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "hash",
+ "naming_rule": "Random",
+ "fields": [
+  {
+   "fieldname": "item",
+   "label": "Item",
+   "fieldtype": "Link",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "quantity",
+   "label": "Quantity",
+   "fieldtype": "Float",
+   "default": 0,
+   "reqd": 1
+  },
+  {
+   "fieldname": "stock_entry",
+   "label": "Stock entry",
+   "fieldtype": "Link",
+   "options": "Stock Entry",
+   "reqd": 1
+  },
+  {
+   "fieldname": "cost",
+   "label": "Cost",
+   "fieldtype": "Currency",
+   "default": 0
+  },
+  {
+   "fieldname": "status",
+   "label": "Estado",
+   "fieldtype": "Select",
+   "options": "Issued\nReturned",
+   "reqd": 1,
+   "default": "Issued"
+  }
+ ],
+ "field_order": [
+  "item",
+  "quantity",
+  "stock_entry",
+  "cost",
+  "status"
+ ],
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0,
+ "istable": 1
+}

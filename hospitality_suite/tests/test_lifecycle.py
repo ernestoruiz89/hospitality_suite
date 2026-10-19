@@ -156,3 +156,21 @@ class TestLifecycle(IntegrationTestCase):
         closed=self.command("daily_close",dict(confirm=True),key)
         self.assertEqual(self.command("daily_close",dict(confirm=True),key),closed)
         self.assertEqual(str(frappe.db.get_value("HS Property",self.prop.name,"business_date")),str(add_days(old,1)))
+
+    def test_reopen_last_day_requires_authorization_reason_and_preserves_snapshot(self):
+        first=self.command("daily_close",dict(confirm=True))["close"]
+        snapshot=frappe.db.get_value("HS Daily Close",first,"summary")
+        second=self.command("daily_close",dict(confirm=True))["close"]
+        with self.assertRaises(frappe.ValidationError):
+            self.command("reopen_day",dict(close=first,reason="Intento de reabrir un día anterior"))
+        with self.assertRaises(frappe.ValidationError):
+            self.command("reopen_day",dict(close=second))
+        frappe.set_user("supervisor@hospitality.example.invalid")
+        with self.assertRaises(frappe.PermissionError):
+            self.command("reopen_day",dict(close=second,reason="Intento sin gerencia"))
+        frappe.set_user("Administrator")
+        date=frappe.db.get_value("HS Daily Close",second,"business_date")
+        self.command("reopen_day",dict(close=second,reason="Corrección sintética del último día"))
+        self.assertEqual(frappe.db.get_value("HS Property",self.prop.name,"business_date"),date)
+        self.assertEqual(frappe.db.get_value("HS Daily Close",first,"summary"),snapshot)
+        self.assertEqual(frappe.db.get_value("HS Daily Close",second,"status"),"Reopened")

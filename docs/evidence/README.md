@@ -1,10 +1,10 @@
 # Evidencia de pruebas
 
-Sitios ficticios locales: hospitality.localhost y hospitality-clean.localhost, bench separado en WSL Ubuntu 24.04. Frappe 16.52.0, ERPNext 16.51.1 y app 0.2.0. No hay datos ni operaciones de producción.
+Sitios ficticios locales: hospitality.localhost, hospitality-clean.localhost y hospitality-restore.localhost, bench separado en WSL Ubuntu 24.04. Frappe 16.52.0, ERPNext 16.51.1 y app 0.2.0. No hay datos ni operaciones de producción.
 
 ## Automatizadas
 
-- `tests-clean.log`: última batería conjunta, **65 aprobadas**: 54 integración y 11 puras.
+- `tests-clean.log`: última batería conjunta, **79 aprobadas**: 68 integración y 11 puras.
 - `tests-clean.xml`: JUnit normalizado para CI, sin fallos ni errores. `tests-clean.raw.txt` conserva la salida original; Frappe 16 concatena un documento XML por cohorte. `tools/normalize_junit.py` los combina sin alterar casos/resultados.
 - `concurrency.log` y `category-race.log`: dos conexiones reales por caso, exactamente una confirmación y un rechazo, bajo REPEATABLE-READ; anulaciones de limpieza auditadas.
 - Los escenarios, fuentes y limitaciones están descritos en `../REQUISITOS.md` y `../AVANCE.md`.
@@ -20,7 +20,16 @@ Sitios ficticios locales: hospitality.localhost y hospitality-clean.localhost, b
 
 La reserva es kh48obir08 y la estancia agp2lri219, ambas sintéticas. El consumo de agua redujo existencias de 100 a 99; la extensión agregó C$150 al alojamiento C$450 y consumo C$30. Factura ACC-SINV-2026-00001 y Payment Entry ACC-PAY-2026-00001.
 
-Las capturas prueban escritorio. No acreditan vista móvil, fallo de red, portal ni todos los recorridos de grupo/hotel; siguen en la matriz.
+Las capturas 01 a 06 prueban escritorio. La ampliación 07 a 12 prueba mantenimiento móvil, panel de hotel en tableta/móvil, cuenta saldada, arqueo cerrado y limpieza/inspección móvil. No acredita fallo de red, portal ni grupo.
+
+7. `07-maintenance-mobile.png`: orden con responsable y repuesto, vista adaptada.
+8. `08-hotel-tablet-panel.png`: panel lateral 1024×768.
+9. `09-hotel-mobile-panel.png`: panel lateral 390×844, acciones y cuenta legibles.
+10. `10-hotel-settled.png`: alojamiento C$3,000 + consumo C$60, factura y saldo cero.
+11. `11-hotel-cashier-closed.png`: turno C$3,060 cerrado; anticipo C$500 y pago C$2,560.
+12. `12-hotel-housekeeping-mobile.png`: limpieza/inspección terminadas, cero pendientes.
+
+`countdown.json` acredita descenso con la misma referencia del servidor. `worker-recovery.json` conserva fallo/rollback y recuperación. `restore-baseline-summary.json`, `restore-verify.json` y `restore-after-migrate.json` conservan cantidades/hash; no contienen credenciales ni volcado. Referencia y respaldos completos permanecen privados en WSL.
 
 ## Impresiones y exportación
 
