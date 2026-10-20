@@ -168,6 +168,8 @@ def bootstrap(property_name=None):
             shift["expected_by_currency"] = frozen.get("expected",shift["current_expected"]) if shift.status=="Closed" else shift["current_expected"]
         result["payment_methods"] = project("HS Payment Method", prop)
         result["payments"] = project("HS Payment", prop)
+        from hospitality_suite.native_pos import movements
+        result["native_pos"]=[{**row,"amount":str(row["amount"])} for row in movements(prop.name)]
         result["expense_categories"]=project("HS Expense Category",prop)
         result["suppliers"]=project("HS Supplier",prop)
         result["purchase_orders"]=frappe.get_list("Purchase Order",filters={"hs_property":prop.name,"docstatus":1,"status":["not in",["Closed","Cancelled","Completed"]]},fields=["name","supplier","currency","grand_total","schedule_date"],limit=500)

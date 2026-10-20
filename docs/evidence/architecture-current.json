@@ -91,6 +91,11 @@
       "HS Administrator",
       "HS Manager"
     ],
+    "cash_approve": [
+      "HS Administrator",
+      "HS Manager",
+      "HS Supervisor"
+    ],
     "guest": [
       "HS Administrator",
       "HS Manager",
@@ -1390,13 +1395,13 @@
   "assets": [
     {
       "name": "hospitality.bundle.js",
-      "bytes": 136859,
-      "sha256": "7dab0869f19057754905bb85ac115a5a88584dfbca6a3b8b1f3556ef915479d7"
+      "bytes": 137850,
+      "sha256": "3f88483c3679ac8881fdf5bb8028cd08237fadd526462ca11f6671a1310d54d2"
     },
     {
       "name": "hospitality.bundle.css",
       "bytes": 9982,
-      "sha256": "e12c73e22dd88ca26bebcc572fbe91dc0aaf3fb775150ac9422e198a477e36b5"
+      "sha256": "ca2d071841eb74c45357c18bc25b92775cd77d1191e063a4caf76f4024e5a35a"
     }
   ]
 }

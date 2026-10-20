@@ -1541,10 +1541,27 @@
       "line": 145,
       "kind": "enumerated",
       "requirement": "- Mostrar efectivo esperado y contado, diferencias y aprobación del supervisor. No ocultar faltantes mediante ajustes automáticos.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/cashier.py",
+        "hospitality_suite/native_pos.py",
+        "hospitality_suite/security.py",
+        "hospitality_suite/public/js/hospitality_extras.js",
+        "hospitality_suite/public/js/hospitality_pos.js",
+        "hospitality_suite/templates/print/shift.html"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_CAJA_POS.md",
+        "docs/evidence/pos-native-tests.xml::TestNativePos / TestFinance / TestReportDimensions",
+        "docs/evidence/pos-js-tests.log",
+        "docs/evidence/72-native-pos-cashier.png",
+        "docs/evidence/73-native-pos-count.png",
+        "docs/evidence/74-native-pos-shift-closed.png",
+        "docs/evidence/75-native-pos-shift-pdf.png",
+        "docs/evidence/pos-items-ui.json",
+        "docs/evidence/pos-ux-restored.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S09-15",

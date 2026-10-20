@@ -32,6 +32,10 @@ def expected(shift):
             continue
         sign = -1 if row.kind in ("Refund", "Guarantee Refund", "Withdrawal","Expense","Supplier Payment") else 1
         amounts[row.currency] = amounts.get(row.currency, decimal(0)) + decimal(row.amount) * sign
+    from hospitality_suite.native_pos import movements
+    for row in movements(shift.property,shift.name):
+        if row["mapped"] and row["is_cash"]:
+            amounts[row["currency"]]=amounts.get(row["currency"],decimal(0))+row["amount"]
     return {k: str(money(v,currency=k)) for k, v in amounts.items()}
 
 
@@ -41,7 +45,7 @@ def close_shift(prop, data):
     if doc.status not in ("Open", "Review"):
         frappe.throw(frappe._("El turno ya está cerrado"))
     if doc.cashier != frappe.session.user:
-        require(prop.name, "approve")
+        require(prop.name, "cash_approve")
     from hospitality_suite.reconciliation import unmatched_cash
     if unmatched_cash(prop,doc.name):
         frappe.throw(frappe._("Conciliación pendiente: existen movimientos nativos del turno sin registro operativo"))
@@ -57,7 +61,7 @@ def close_shift(prop, data):
         if not data.get("reason"):
             frappe.throw(frappe._("Indique el motivo de la diferencia de arqueo"))
         if data.get("approve"):
-            require(prop.name, "approve")
+            require(prop.name, "cash_approve")
             doc.approved_by = frappe.session.user
             doc.status = "Closed"
         else:

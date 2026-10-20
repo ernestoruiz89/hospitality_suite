@@ -64,24 +64,15 @@ def snapshot(prop,operational):
             detail=frappe.parse_json(event.details or "{}")
             if isinstance(detail,dict) and detail.get("doctype")=="Sales Invoice" and detail.get("docstatus")==1:
                 submissions.setdefault(detail.get("name"),event.business_date)
-        for name in pos:
-            invoice=frappe.get_doc("Sales Invoice",name,for_update=True)
-            accounts={row.account for row in invoice.payments if row.account}
-            if invoice.account_for_change_amount:
-                accounts.add(invoice.account_for_change_amount)
-            sums=defaultdict(lambda:decimal(0))
-            for entry in current_all("GL Entry",filters={"voucher_type":"Sales Invoice","voucher_no":name,"is_cancelled":0},fields=["account","account_currency","debit_in_account_currency","credit_in_account_currency"]):
-                if entry.account in accounts:
-                    sums[(entry.account,entry.account_currency)]+=decimal(entry.debit_in_account_currency)-decimal(entry.credit_in_account_currency)
-            for (account,currency),amount in sorted(sums.items()):
-                if not amount:
-                    continue
-                record=dict(name=name,account=account,currency=currency,net=str(amount),business_date=str(submissions[name]) if submissions.get(name) else None)
-                if not record["business_date"]:
-                    sources["unattributed_movements"].append(record)
-                elif getdate(record["business_date"])==day:
-                    totals[currency]["pos_collections" if amount>0 else "pos_refunds"]+=abs(amount)
-                    sources["native_pos"].append(record)
+        from hospitality_suite.native_pos import movements
+        for movement in movements(prop.name):
+            name,currency,amount=movement["name"],movement["currency"],movement["amount"]
+            record=dict(name=name,account=movement["account"],currency=currency,net=str(amount),business_date=str(submissions[name]) if submissions.get(name) else None)
+            if not record["business_date"]:
+                sources["unattributed_movements"].append(record)
+            elif getdate(record["business_date"])==day:
+                totals[currency]["pos_collections" if amount>0 else "pos_refunds"]+=abs(amount)
+                sources["native_pos"].append(record)
     for row in current_all("HS Charge",filters={"property":prop.name,"status":"Pending"},fields=["name","currency","amount","folio"]):
         totals[row.currency]["pending_charges"]+=decimal(row.amount)
         sources["pending_charges"].append(dict(row))

@@ -1,0 +1,30 @@
+✔ catalogue keeps human names and immutable item keys, including duplicate descriptions (2.0699ms)
+✔ outdated catalogue responses cannot overwrite results or authorize a failed search (1.2284ms)
+✔ historical close reads only the saved financial values, with distinct date bases (1.7302ms)
+✔ close confirmation carries the reviewed digest and blockers disable confirmation (1.4319ms)
+✔ booking descriptions use people and dates while respecting discreet mode and preserving keys (3.1834ms)
+✔ report scope changes ignore old options and keep a failed scope unqueryable (2.5553ms)
+✔ an older success cannot overwrite a newer property response (1.4323ms)
+✔ an old failure cannot clear busy or replace a newer result with an error (0.8155ms)
+✔ an invalidation during a failed mutation is refreshed once the request ends (0.8578ms)
+✔ dialog keeps numeric edits across row refreshes and leaves untouched hidden rows alone (1.1936ms)
+✔ a partly arrived group exposes its remaining numbered request and valid actions (2.2473ms)
+✔ a native business rejection keeps its server message; a lost response gets recovery guidance (0.9574ms)
+✔ property wall-clock controls preserve native single-digit hours (1.3097ms)
+✔ native operational selects translate labels and preserve values, defaults and disabled state (2.5169ms)
+✔ master-data names are literal text even when matching a translation key or containing markup (1.8479ms)
+✔ cashier identifies native POS cash, refunds and missing attribution without exposing raw shift IDs (1.7852ms)
+✔ disabled receipts keep existing-fund refunds available and wire values stable (2.4016ms)
+✔ approval options explain the restriction and remain available to an approver (1.3232ms)
+✔ editing dates while a quote is in flight invalidates its response (1.7609ms)
+✔ an uncertain request unlocks controls and retries the same quote and key (1.4953ms)
+✔ service setup shows escaped names and saves only mappings/list with the reviewed version (2.1141ms)
+✔ old service prices cannot overwrite a newer selection or a closed dialog (0.9355ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 22
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 108.992

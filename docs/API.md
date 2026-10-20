@@ -8,6 +8,8 @@ Use sesión Frappe con CSRF o credenciales API estándar del usuario mediante `A
 
 Base RPC: `/api/method/hospitality_suite.api.`.
 
+bootstrap devuelve native_pos solo a roles de finanzas/reportes del establecimiento: proyección de facturas Sales Invoice con is_pos y sus movimientos reales de GL, turno, moneda, importe y clasificación. No crea HS Payment ni Payment Entry. close_shift usa cash_approve para aprobar diferencias o cerrar el turno de otro cajero: Administrador HS, Gerente y Supervisor. Las demás autorizaciones gerenciales conservan approve.
+
 | Método | Parámetros principales | Resultado / permiso |
 |---|---|---|
 | `bootstrap` | `property_name` opcional | Establecimientos, navegación y proyección limitada al rol |

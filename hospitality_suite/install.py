@@ -1,4 +1,6 @@
 import frappe
+import json
+from pathlib import Path
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 
 from hospitality_suite.schema import ROLES, SCOPED,STANDARD_SCOPED
@@ -45,6 +47,23 @@ def after_migrate():
     frappe.db.add_unique("HS Supplier",["property","supplier"],"hs_supplier_unique")
     frappe.db.add_unique("HS Stock Policy",["property","item","warehouse"],"hs_stock_policy_unique")
     frappe.db.add_unique("HS Equipment",["property","equipment_code"],"hs_equipment_unique")
+    sync_print_formats()
+
+
+def sync_print_formats():
+    """Refresh app-owned formats by content, including a site's future timestamp."""
+    from frappe.modules.import_file import import_file_by_path
+    folder=Path(frappe.get_app_path("hospitality_suite","hospitality_suite","print_format"))
+    for path in sorted(folder.glob('*/*.json')):
+        source=json.loads(path.read_text(encoding='utf-8'))
+        if frappe.db.exists('Print Format',source['name']):
+            current=frappe.get_doc('Print Format',source['name'])
+            if current.standard!='Yes' or current.module!='Hospitality Suite':
+                continue
+            if all(current.get(field)==source.get(field) for field in ('doc_type','html','css','print_format_type','custom_format')):
+                continue
+        import_file_by_path(str(path),force=True,ignore_version=True)
+        frappe.clear_document_cache('Print Format',source['name'])
 
 
 def validate_financial_configuration(prop):

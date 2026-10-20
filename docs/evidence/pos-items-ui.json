@@ -1,0 +1,19 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "synthetic": true,
+  "fixture_origin": "ERPNext Sales Invoice controller",
+  "closed_from_page": true,
+  "opening": "100.00",
+  "receipt": "60.00",
+  "tendered": "100.00",
+  "change": "40.00",
+  "expected": "160.00",
+  "counted": "160.00",
+  "difference": "0.00",
+  "operational_payments": 0,
+  "payment_entries": 0,
+  "invoice": "ACC-SINV-2026-00001",
+  "shift": "nsv5a191uo",
+  "pdf_pages": 1,
+  "pdf_sha256": "d962af4ff296329839776b9f9bef1b0d40a869ef6cef87f3d8734e4242bc1f5d"
+}

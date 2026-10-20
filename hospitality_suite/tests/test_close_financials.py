@@ -171,7 +171,7 @@ class TestCloseFinancials(IntegrationTestCase):
         self.assertIn("Este cierre histórico no conserva el resumen financiero ampliado.",html)
 
     def test_native_pos_uses_posted_money_net_of_change_and_its_own_operational_date(self):
-        invoice=frappe.get_doc(dict(doctype="Sales Invoice",company=self.prop.company,hs_property=self.prop.name,
+        invoice=frappe.get_doc(dict(doctype="Sales Invoice",company=self.prop.company,hs_property=self.prop.name,hs_shift=self.shift,
                     customer=self.guest.customer,currency=self.prop.currency,debit_to=self.prop.receivable_account,
                     cost_center=self.prop.cost_center,is_pos=1,update_stock=1,account_for_change_amount=self.method.account))
         invoice.append("items",dict(item_code="HS-DEMO-WATER",qty=2,rate=30,cost_center=self.prop.cost_center,warehouse=self.prop.warehouse))
@@ -190,6 +190,7 @@ class TestCloseFinancials(IntegrationTestCase):
         from erpnext.accounts.doctype.sales_invoice.sales_invoice import make_sales_return
         credit=make_sales_return(invoice.name)
         credit.hs_property=self.prop.name
+        credit.hs_shift=self.shift
         # The native mapper copies the tender (100), but a refund returns 60.
         credit.set("payments",[dict(mode_of_payment=self.method.mode_of_payment,account=self.method.account,amount=-60)])
         credit.change_amount=credit.base_change_amount=0

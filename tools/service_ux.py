@@ -14,11 +14,12 @@ BENCH=Path('/home/frappe/benches/hospitality-bench')
 ROOT=Path(__file__).resolve().parents[1]
 SITE='hospitality-acceptance.localhost'
 TARGET=BENCH/'sites'/SITE
-BASE=BENCH/'.hospitality-service-ux-baseline.json'
-RECEIPT=BENCH/'.hospitality-service-ux-restored-receipt.json'
 parser=argparse.ArgumentParser()
-parser.add_argument('action',choices=['before','inspect','restore','verify'])
+parser.add_argument('action',choices=['before','prepare','inspect','restore','verify'])
+parser.add_argument('--phase',choices=['service','pos'],default='service')
 args=parser.parse_args()
+BASE=BENCH/f'.hospitality-{args.phase}-ux-baseline.json'
+RECEIPT=BENCH/f'.hospitality-{args.phase}-ux-restored-receipt.json'
 assert TARGET.resolve()==Path('/home/frappe/benches/hospitality-bench/sites/hospitality-acceptance.localhost')
 config=json.loads((TARGET/'site_config.json').read_text())
 assert config['db_name']=='hospitality_acceptance' and config.get('allow_tests') and config.get('pause_scheduler')
@@ -39,7 +40,7 @@ if args.action=='restore':
     command=[str(BENCH/'env/bin/python'),'-m','frappe.utils.bench_helper','frappe','--site',SITE,'restore',str(backups/baseline['database']),
              '--db-root-username','root','--db-root-password','local-unix-socket-auth',
              '--with-public-files',str(backups/baseline['public_files']),'--with-private-files',str(backups/baseline['private_files'])]
-    log=BENCH/'.hospitality-service-ux-restore.log'
+    log=BENCH/f'.hospitality-{args.phase}-ux-restore.log'
     with log.open('w') as output:
         result=subprocess.run(command,cwd=BENCH/'sites',stdout=output,stderr=subprocess.STDOUT)
     if result.returncode==0:
@@ -79,7 +80,7 @@ try:
     if args.action=='before':
         assert all(tables[dt]['rows']==0 for dt in ('HS Stay','HS Booking','HS Charge','HS Payment','HS Shift','Sales Invoice','Payment Entry','Journal Entry'))
         frappe.db.rollback()
-        with (BENCH/'.hospitality-service-ux-backup.log').open('w') as output:
+        with (BENCH/f'.hospitality-{args.phase}-ux-backup.log').open('w') as output:
             subprocess.run(['/home/frappe/.local/bin/bench','--site',SITE,'backup','--with-files'],cwd=BENCH,stdout=output,stderr=subprocess.STDOUT,check=True)
         backups=TARGET/'private/backups'
         database=max(backups.glob('*-database.sql.gz'),key=lambda p:p.stat().st_mtime)
@@ -93,6 +94,52 @@ try:
         BASE.write_text(json.dumps(baseline,sort_keys=True))
         BASE.chmod(0o600)
         print('Respaldo previo al recorrido UX, 70 tablas sin operaciones')
+    elif args.action=='prepare':
+        assert args.phase=='pos' and BASE.is_file() and tables==json.loads(BASE.read_text())['tables']
+        from hospitality_suite import api
+        import uuid
+        prop=frappe.get_doc('HS Property',{'property_name':'Hotel Jardín Demo'})
+        assert not prop.tax_template
+        method=frappe.get_doc('HS Payment Method',{'property':prop.name,'is_cash':1,'currency':'NIO'})
+        guest=frappe.get_doc('HS Guest',{'property':prop.name})
+        shift=api.execute(prop.name,'open_shift',uuid.uuid4().hex,dict(opening_amount=100))['shift']
+        invoice=frappe.get_doc(dict(doctype='Sales Invoice',company=prop.company,hs_property=prop.name,hs_shift=shift,customer=guest.customer,
+                    currency='NIO',debit_to=prop.receivable_account,cost_center=prop.cost_center,is_pos=1,update_stock=1,account_for_change_amount=method.account))
+        invoice.append('items',dict(item_code='HS-DEMO-WATER',qty=2,rate=30,cost_center=prop.cost_center,warehouse=prop.warehouse))
+        invoice.append('payments',dict(mode_of_payment=method.mode_of_payment,account=method.account,amount=100))
+        invoice.set_missing_values()
+        invoice.insert().submit()
+        fixture=BENCH/'.hospitality-pos-ux-fixture.json'
+        fixture.write_text(json.dumps(dict(property=prop.name,shift=shift,invoice=invoice.name)))
+        fixture.chmod(0o600)
+        frappe.db.commit()
+        print('Fixture POS sintético: fondo 100, venta 60, recibido 100, vuelto 40; sin HS Payment ni Payment Entry')
+    elif args.action=='inspect' and args.phase=='pos':
+        fixture=json.loads((BENCH/'.hospitality-pos-ux-fixture.json').read_text())
+        shift=frappe.get_doc('HS Shift',fixture['shift'])
+        from hospitality_suite.cashier import expected
+        from hospitality_suite.native_pos import movements
+        assert shift.status=='Closed' and shift.expected_amount==shift.counted_amount==160 and shift.difference==0
+        assert expected(shift)=={'NIO':'160.00'}
+        assert frappe.db.count('HS Payment')==frappe.db.count('Payment Entry')==0
+        native=movements(fixture['property'])
+        assert len(native)==1 and native[0]['amount']==60 and native[0]['shift']==shift.name
+        os.environ['PATH']=str(BENCH/'.runtime/wkhtmltox/usr/local/bin')+os.pathsep+os.environ.get('PATH','')
+        frappe.local.lang='es'
+        pdf=frappe.get_print('HS Shift',shift.name,print_format='HS Arqueo',as_pdf=True)
+        output=ROOT/'output/native-pos'
+        output.mkdir(parents=True,exist_ok=True)
+        (output/'shift.pdf').write_bytes(pdf)
+        import io
+        from pypdf import PdfReader
+        pages=PdfReader(io.BytesIO(pdf)).pages
+        text=''.join(page.extract_text() or '' for page in pages)
+        assert 'Movimientos POS vigentes' in text and all(value in text for value in ('60.00','160.00'))
+        proof=dict(site=SITE,synthetic=True,fixture_origin='ERPNext Sales Invoice controller',closed_from_page=True,
+                   opening='100.00',receipt='60.00',tendered='100.00',change='40.00',expected='160.00',counted='160.00',difference='0.00',
+                   operational_payments=0,payment_entries=0,invoice=fixture['invoice'],shift=shift.name,pdf_pages=len(pages),pdf_sha256=hashlib.sha256(pdf).hexdigest())
+        (ROOT/'docs/evidence/pos-items-ui.json').write_text(json.dumps(proof,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
+        print(json.dumps(proof,ensure_ascii=False))
     elif args.action=='inspect':
         from hospitality_suite.pricing import decimal
         prop=frappe.get_doc('HS Property',{'property_name':'Motel Luna Demo'})
@@ -131,7 +178,7 @@ try:
         proof=dict(site=SITE,restored=True,tables=len(tables),rows=sum(r['rows'] for r in tables.values()),
                    aggregate_sha256=hashlib.sha256(json.dumps(tables,sort_keys=True).encode()).hexdigest(),
                    stay_records=frappe.db.count('HS Stay'),invoices=frappe.db.count('Sales Invoice'),payments=frappe.db.count('HS Payment'))
-        (ROOT/'docs/evidence/service-ux-restored.json').write_text(json.dumps(proof,indent=2)+'\n',encoding='utf-8',newline='\n')
+        (ROOT/f'docs/evidence/{args.phase}-ux-restored.json').write_text(json.dumps(proof,indent=2)+'\n',encoding='utf-8',newline='\n')
         print(json.dumps(proof))
 finally:
     frappe.db.rollback()

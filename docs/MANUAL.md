@@ -29,6 +29,7 @@ El rol HS Receptionist registra la operación. Para cobrar con ese mismo usuario
 - Las devoluciones requieren origen y motivo. Un pago facturado necesita nota de crédito; un anticipo disponible puede devolverse parcialmente mediante documentos y conciliación estándar. Una garantía conserva su circuito separado.
 - Cuente por denominaciones y moneda. Una diferencia queda visible y exige motivo; el supervisor autorizado debe aprobarla. No se crea un ajuste automático para ocultarla.
 - Imprima arqueo y recibos. La aplicación de un anticipo o garantía no representa una segunda entrada de efectivo.
+- Cobros POS de ERPNext muestra las facturas estándar con su turno, medio e importe neto de vuelto/devolución. El efectivo ya forma parte del esperado; no registre otro cobro por esa venta. El arqueo impreso incluye ese origen. Una factura histórica sin turno o medio configurado exige revisión en Conciliación.
 
 ## Limpieza y supervisión
 

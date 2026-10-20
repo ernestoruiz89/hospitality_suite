@@ -146,14 +146,22 @@ class ScopedDocument(Document):
                 if frappe.db.sql("SELECT name FROM `tabHS Allocation` WHERE room=%s AND status='Active' FOR UPDATE",(self.name,)):
                     frappe.throw(_("No puede cambiar categoría o disponibilidad con asignaciones activas"))
         if self.doctype == "HS Payment Method":
+            from hospitality_suite.service import lock_property,current_all,operation
+            lock_property(self.property)
             account = frappe.get_doc("Account", self.account)
             if account.company != self.company or account.is_group or account.account_currency != self.currency:
                 frappe.throw(_("La cuenta de cobro no coincide con compañía/moneda o es una cuenta agrupadora"))
             old=self.get_doc_before_save()
-            if old and any(old.get(k)!=self.get(k) for k in ("property","company","account","currency","is_cash","mode_of_payment")) and frappe.db.exists("HS Payment",{"method":self.name}):
-                frappe.throw(frappe._("Conserve el medio utilizado para la trazabilidad; cree otro para cambiar su cuenta, moneda o clasificación"))
+            if old and any(old.get(k)!=self.get(k) for k in ("property","company","account","currency","is_cash","mode_of_payment")):
+                from hospitality_suite.native_pos import method_used
+                if frappe.db.exists("HS Payment",{"method":self.name}) or method_used(old):
+                    frappe.throw(frappe._("Conserve el medio utilizado para la trazabilidad; cree otro para cambiar su cuenta, moneda o clasificación"))
             from hospitality_suite.treasury import validate_method
             validate_method(self)
+            with operation():
+                peers=current_all("HS Payment Method",filters={"property":self.property,"account":self.account,"name":["!=",self.name]},fields=["is_cash"])
+            if any(bool(row.is_cash)!=bool(self.is_cash) for row in peers):
+                frappe.throw(frappe._("Los medios que comparten una cuenta deben conservar la misma clasificación de efectivo"))
         if self.doctype=="HS Expense Category":
             account=frappe.get_doc("Account",self.account)
             self.currency=frappe.db.get_value("Company",self.company,"default_currency")
@@ -174,5 +182,9 @@ class ScopedDocument(Document):
                 frappe.throw(frappe._("La cuenta y la reserva no corresponden a la misma estancia"))
 
     def on_trash(self):
+        if self.doctype=="HS Payment Method":
+            from hospitality_suite.native_pos import method_used
+            if method_used(self):
+                frappe.throw(frappe._("Conserve el medio utilizado en facturas POS para la trazabilidad"))
         if self.doctype not in WRITABLE:
             frappe.throw(_("Conserve la trazabilidad: use una reversión autorizada"))

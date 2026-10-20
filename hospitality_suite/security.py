@@ -12,6 +12,7 @@ ACTIONS = {
     "maintain": MANAGERS + ["HS Maintenance"],
     "service": MANAGERS + ["HS Receptionist", "HS Cashier"],
     "report": MANAGERS + ["HS Accountant", "HS Auditor"], "approve": MANAGERS[:2],
+    "cash_approve": MANAGERS,
     "guest": MANAGERS + ["HS Receptionist"],
     "incident": MANAGERS + ["HS Housekeeping","HS Maintenance"],
     "inventory":MANAGERS+["HS Accountant"],
@@ -274,6 +275,8 @@ def validate_standard(doc, method=None):
         if shift.property != prop.name or (shift.status != "Open" and not reconciles):
             frappe.throw(frappe._("No puede registrar movimientos en un turno cerrado"))
     if doc.doctype == "Sales Invoice":
+        from hospitality_suite.native_pos import validate as validate_pos
+        validate_pos(doc,prop)
         if doc.discount_amount or doc.additional_discount_percentage:
             frappe.throw(frappe._("Registre los descuentos y cortesías mediante un ajuste autorizado de la cuenta"))
         used_sources=set()

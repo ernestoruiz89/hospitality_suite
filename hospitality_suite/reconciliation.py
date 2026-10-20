@@ -35,6 +35,10 @@ def unmatched_cash(prop,shift=None):
             for account,amount in movements.items():
                 if amount:
                     result.append(dict(name=name,doctype=dt,account=account,amount=amount,currency=accounts[account],shift=native.hs_shift,creation=native.creation))
+    from hospitality_suite.native_pos import movements
+    for native in movements(prop.name,shift):
+        if not native["shift"] or not native["mapped"]:
+            result.append(native)
     return result
 
 
