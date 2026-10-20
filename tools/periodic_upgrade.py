@@ -11,7 +11,7 @@ from hospitality_suite.schema import SCHEMA
 
 BENCH=Path('/home/frappe/benches/hospitality-bench')
 ROOT=Path(__file__).resolve().parents[1]
-parser=argparse.ArgumentParser();parser.add_argument('action',choices=['before','verify']);parser.add_argument('--phase',choices=['periodic','billing-ui','board','availability'],default='periodic');args=parser.parse_args()
+parser=argparse.ArgumentParser();parser.add_argument('action',choices=['before','verify']);parser.add_argument('--phase',choices=['periodic','billing-ui','board','availability','drafts'],default='periodic');args=parser.parse_args()
 BASE=BENCH/f'.hospitality-{args.phase}-upgrade.json'
 assert args.action!='before' or not BASE.exists(),'Conserve la línea de base original'
 old=json.loads(BASE.read_text()) if args.action=='verify' else None
@@ -40,6 +40,9 @@ for site,database in {'hospitality.localhost':'hospitality_dev','hospitality-acc
             private[name]=hashlib.sha256(path.read_bytes()).hexdigest()
         if old:
             assert tables==old[site]['tables'] and private==old[site]['private_files']
+            if args.phase=='drafts':
+                assert 'draft_data' in frappe.db.get_table_columns('HS Booking')
+                assert not frappe.db.count('HS Booking',{'draft_data':['is','set']})
             assert not frappe.db.count('HS Charge',{'period_key':['is','set']})
             assert not frappe.db.count('HS Charge',{'status':'Scheduled'})
             assert not frappe.db.count('HS Charge',{'service_date':['is','set']})

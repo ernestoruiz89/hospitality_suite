@@ -37,6 +37,8 @@ VALUE_LABELS.update(Service="Servicio",Lodging="Alojamiento",Difference="Diferen
 
 
 def hs_label(value):
+    if value == 'Draft':
+        return frappe._('Borrador')
     return frappe._(VALUE_LABELS.get(value,value or "—"))
 
 

@@ -16,7 +16,8 @@ SITE='hospitality-acceptance.localhost'
 TARGET=BENCH/'sites'/SITE
 parser=argparse.ArgumentParser()
 parser.add_argument('action',choices=['before','prepare','inspect','restore','verify'])
-parser.add_argument('--phase',choices=['service','pos','refund','guarantee','credits','mixed','accounting','forms','periodic','billing','board','availability'],default='service')
+parser.add_argument('--phase',choices=['service','pos','refund','guarantee','credits','mixed','accounting','forms','periodic','billing','board','availability','drafts'],default='service')
+parser.add_argument('--stage',choices=['partial','confirmed','discarded'],default='discarded')
 args=parser.parse_args()
 BASE=BENCH/f'.hospitality-{args.phase}-ux-baseline.json'
 RECEIPT=BENCH/f'.hospitality-{args.phase}-ux-restored-receipt.json'
@@ -78,7 +79,7 @@ try:
         raw=json.dumps(rows,default=str,sort_keys=True,ensure_ascii=False,separators=(',',':')).encode()
         tables[dt]=dict(rows=len(rows),sha256=hashlib.sha256(raw).hexdigest())
     if args.action=='before':
-        if args.phase in ('forms','periodic','billing','board','availability'):assert not BASE.exists(),'Conserve el respaldo previo al recorrido de interfaz'
+        if args.phase in ('forms','periodic','billing','board','availability','drafts'):assert not BASE.exists(),'Conserve el respaldo previo al recorrido de interfaz'
         assert all(tables[dt]['rows']==0 for dt in ('HS Stay','HS Booking','HS Charge','HS Payment','HS Shift','Sales Invoice','Payment Entry','Journal Entry'))
         frappe.db.rollback()
         with (BENCH/f'.hospitality-{args.phase}-ux-backup.log').open('w') as output:
@@ -184,6 +185,46 @@ try:
         fixture.chmod(0o600)
         frappe.db.commit()
         print('Fixture POS sintético: fondo 100, venta 60, recibido 100, vuelto 40; sin HS Payment ni Payment Entry')
+    elif args.action=='inspect' and args.phase=='drafts':
+        # This phase has no API fixture: the reception Page creates each record.
+        assert BASE.is_file()
+        prop=frappe.get_doc('HS Property',{'property_name':'Hotel Jardín Demo'})
+        path=ROOT/'docs/evidence/drafts-items-ui.json'
+        proof=json.loads(path.read_text()) if path.exists() else dict(site=SITE,synthetic=True,source='Reception Page',stages={})
+        bookings=frappe.get_all('HS Booking',fields=['name','status','customer','guest','starts_at','ends_at','instructions','draft_data','quote_snapshot','amount','modified'])
+        main=[b for b in bookings if b.instructions=='UX-DRAFT-001 solicitud parcial']
+        assert len(main)==1
+        booking=main[0]
+        empty={dt:frappe.db.count(dt) for dt in ('HS Stay','HS Folio','HS Charge','HS Payment','HS Shift','Sales Invoice','Payment Entry','Journal Entry','GL Entry','Stock Ledger Entry')}
+        baseline=json.loads(BASE.read_text())['tables']
+        assert all(tables[dt]==baseline[dt] for dt in empty),empty
+        stage=dict(booking=booking.name,status=booking.status,amount=str(booking.amount),
+                   allocation_count=frappe.db.count('HS Allocation',{'booking':booking.name,'status':'Active'}),unchanged_financial_and_stay_tables=empty)
+        if args.stage=='partial':
+            assert len(bookings)==1 and booking.status=='Draft' and not booking.amount
+            assert not booking.customer and not booking.starts_at and not booking.ends_at and not booking.quote_snapshot
+            assert booking.draft_data and stage['allocation_count']==0
+            proof['original_booking']=booking.name
+            stage.update(customer_missing=True,dates_missing=True,accepted_quote=False)
+        else:
+            assert booking.name==proof['original_booking'] and booking.status=='Confirmed' and booking.amount==1500
+            assert booking.customer and booking.starts_at and booking.ends_at and booking.quote_snapshot and not booking.draft_data
+            assert stage['allocation_count']==1
+            stage['same_record_confirmed']=True
+            if args.stage=='discarded':
+                discarded=[b for b in bookings if b.instructions=='UX-DRAFT-002 descartar']
+                assert len(bookings)==2 and len(discarded)==1 and discarded[0].status=='Cancelled' and discarded[0].draft_data
+                discarded=frappe.get_doc('HS Booking',discarded[0].name)
+                assert discarded.reason=='Solicitud de prueba no continuada' and not discarded.amount and not discarded.quote_snapshot
+                assert not frappe.db.count('HS Allocation',{'booking':discarded.name})
+                assert frappe.db.exists('HS Audit Event',{'source_name':discarded.name,'action':'Discard booking draft'})
+                from hospitality_suite import api
+                assert not api.report(prop.name,'Cancelaciones y no presentaciones')
+                stage.update(discarded_booking=discarded.name,discard_reason=discarded.reason,cancellation_report_rows=0)
+        stage['native_versions']=frappe.db.count('Version',{'ref_doctype':'HS Booking'})
+        proof['stages'][args.stage]=stage
+        path.write_text(json.dumps(proof,default=str,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
+        print(json.dumps(dict(stage=args.stage,booking_status=booking.status,allocations=stage['allocation_count'],financial_and_stay_tables_unchanged=True)))
     elif args.action=='inspect' and args.phase=='availability':
         from hospitality_suite import api
         from hospitality_suite.time import local

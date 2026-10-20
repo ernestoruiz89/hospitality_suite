@@ -232,6 +232,8 @@ def validate_standard(doc, method=None):
         prop_name = stay.property
     if doc.get("hs_booking"):
         booking=document("HS Booking",doc.hs_booking)
+        if doc.docstatus != 2 and (booking.status == 'Draft' or (booking.get('draft_data') and not booking.quote_snapshot)):
+            frappe.throw(frappe._('Un borrador de reserva no admite documentos financieros; confirme la reserva primero'))
         if prop_name and prop_name!=booking.property:
             frappe.throw(frappe._("La reserva y el establecimiento no coinciden"))
         prop_name=booking.property

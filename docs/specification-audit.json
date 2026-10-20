@@ -1348,20 +1348,26 @@
       "line": 92,
       "kind": "enumerated",
       "requirement": "- Estados: borrador, retención temporal, confirmada, entrada registrada, completada, cancelada y no presentada; ajusta la separación reserva/estancia si el modelo lo requiere.",
-      "status": "P",
+      "status": "V",
       "implementation": [
+        "hospitality_suite/booking_drafts.py",
+        "hospitality_suite/api.py",
         "hospitality_suite/operations.py",
-        "hospitality_suite/schema.py",
+        "hospitality_suite/controllers.py",
+        "hospitality_suite/public/js/hospitality_drafts.js",
         "hospitality_suite/public/js/hospitality.js"
       ],
       "evidence": [
-        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
-        "docs/evidence/reservations-audit.json",
-        "docs/evidence/reservations-native-tests.xml::test_hold_expiry_is_idempotent",
-        "docs/evidence/reservations-native-tests.xml::test_group_single_invoice_single_balance_and_checkout",
-        "docs/evidence/reservations-native-tests.xml::test_booking_penalties_use_decision_date_and_native_financial_sources"
+        "docs/BORRADORES_DE_RESERVA.md",
+        "docs/evidence/drafts-native-tests.xml",
+        "docs/evidence/drafts-js-tests.log",
+        "docs/evidence/drafts-items-ui.json",
+        "docs/evidence/drafts-browser.json",
+        "docs/evidence/drafts-upgrade.json",
+        "docs/evidence/drafts-ux-restored.json",
+        "docs/evidence/drafts-final-state.json"
       ],
-      "remaining": "Draft existe en el esquema, pero no hay acción API/Page para guardar y retomar una reserva en borrador. reserve crea Hold/Confirmed y el controlador impide la escritura directa de HS Booking. Implementar borrador persistente sin ocupar cupo y confirmación con nueva revisión de disponibilidad/precio."
+      "remaining": ""
     },
     {
       "id": "S06-04",

@@ -138,3 +138,9 @@ Gerencia → Revisar cierre del día presenta ocupación, producción, facturaci
 Resuelva los pendientes antes de confirmar. Si cambia la información financiera mientras revisa, actualice la revisión. Historial de cierres → Ver resumen consulta lo conservado en esa ejecución, sin recalcularlo con pagos posteriores. Imprimir cierre utiliza ese mismo resumen. Los cierres antiguos que no conservan el desglose lo indican expresamente.
 
 Si un POS tiene fondos de otros documentos o una valoración incoherente, la operación se rechaza antes de registrar una devolución. En esta versión, use Venta directa para nuevos cobros afectados por el vuelto en moneda extranjera. Los documentos históricos requieren revisión contable; no vuelva a pagar su importe bruto.
+
+## Guardar y retomar solicitudes incompletas
+
+En Reservas → Reservar puede usar «Guardar borrador» aunque falten pagador, fechas o categoría. No ocupa cupo ni fija precio. Cierre el formulario y retómelo en «Borradores por completar». Las pestañas separan Fechas y pagador, Habitaciones y Opciones; huésped principal puede elegirse al ingresar.
+
+Complete pagador, fechas y las habitaciones solicitadas y pulse «Revisar precio». La siguiente ventana explica el precio vigente y permite confirmar o retener temporalmente. Esa aceptación convierte el mismo borrador. Si cambia la disponibilidad o la tarifa, vuelva a revisar. «Descartar borrador» solicita un motivo y conserva el registro sin penalización.

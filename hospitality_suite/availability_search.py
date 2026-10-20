@@ -9,16 +9,17 @@ from hospitality_suite.service import current_all
 from hospitality_suite.time import to_site
 
 
-def positive_integer(value, label):
+def positive_integer(value, label, allow_zero=False):
     try:
         if isinstance(value, bool) or len(str(value)) > 32:
             raise ValueError()
         number = Decimal(str(value))
-        if not number.is_finite() or not 1 <= number <= 2147483647 or number != number.to_integral_value():
+        if not number.is_finite() or not (0 if allow_zero else 1) <= number <= 2147483647 or number != number.to_integral_value():
             raise ValueError()
         return int(number)
     except (InvalidOperation, TypeError, ValueError):
-        frappe.throw(frappe._('{0} debe ser un número entero mayor que cero').format(label))
+        message = frappe._('{0}: introduzca un número entero no negativo') if allow_zero else frappe._('{0}: introduzca un número entero mayor que cero')
+        frappe.throw(message.format(label))
 
 
 def search(property_name, starts_at, ends_at, category, people=1, quantity=1):

@@ -26,8 +26,7 @@
    "fieldname": "customer",
    "label": "Cliente pagador",
    "fieldtype": "Link",
-   "options": "Customer",
-   "reqd": 1
+   "options": "Customer"
   },
   {
    "fieldname": "guest",
@@ -38,14 +37,12 @@
   {
    "fieldname": "starts_at",
    "label": "Desde",
-   "fieldtype": "Datetime",
-   "reqd": 1
+   "fieldtype": "Datetime"
   },
   {
    "fieldname": "ends_at",
    "label": "Hasta",
-   "fieldtype": "Datetime",
-   "reqd": 1
+   "fieldtype": "Datetime"
   },
   {
    "fieldname": "status",
@@ -62,7 +59,7 @@
   },
   {
    "fieldname": "channel",
-   "label": "Channel",
+   "label": "Canal",
    "fieldtype": "Data",
    "default": "Recepción"
   },
@@ -75,8 +72,7 @@
    "fieldname": "rooms",
    "label": "Rooms",
    "fieldtype": "Table",
-   "options": "HS Booking Room",
-   "reqd": 1
+   "options": "HS Booking Room"
   },
   {
    "fieldname": "reason",
@@ -97,6 +93,15 @@
    "default": 0,
    "options": "currency",
    "reqd": 1
+  },
+  {
+   "fieldname": "draft_data",
+   "label": "Datos del borrador",
+   "fieldtype": "Code",
+   "options": "JSON",
+   "hidden": 1,
+   "print_hide": 1,
+   "read_only": 1
   },
   {
    "fieldname": "quote_snapshot",
@@ -145,6 +150,7 @@
   "reason",
   "currency",
   "amount",
+  "draft_data",
   "quote_snapshot",
   "fee_invoice",
   "fee_amount",

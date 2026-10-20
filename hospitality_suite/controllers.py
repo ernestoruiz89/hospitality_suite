@@ -81,6 +81,10 @@ class ScopedDocument(Document):
                     other = frappe.db.get_value(df.options, value, "property")
                     if other != self.property:
                         frappe.throw(_("La referencia {0} pertenece a otro establecimiento").format(df.label))
+        if self.doctype == 'HS Booking':
+            partial = self.status == 'Draft' or (self.status == 'Cancelled' and self.get('draft_data') and not self.quote_snapshot)
+            if not partial and any(not self.get(field) for field in ('customer','starts_at','ends_at','rooms')):
+                frappe.throw(frappe._('Una reserva confirmada requiere pagador, entrada, salida y habitaciones'))
         if self.get("starts_at") and self.get("ends_at"):
             if get_datetime(self.starts_at) >= get_datetime(self.ends_at):
                 frappe.throw(_("La fecha final debe ser posterior a la inicial"))

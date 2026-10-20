@@ -35,8 +35,9 @@
         group(__("Cancelaciones"),["cancellation_fee_mode","cancellation_fee_value"],["no_show_fee_mode","no_show_fee_value","penalty_item"])];
     }else if(has("rooms","starts_at","ends_at")&&(names.has("guest")||names.has("reason"))){
       kind="reservation";action=__("Revisar precio");
-      groups=[group(names.has("guest")?__("Huésped y fechas"):__("Fechas y pagador"),["guest","starts_at","mode"],["customer","ends_at"]),
-        group(__("Habitaciones"),["rooms"]),group(__("Opciones"),["channel","hold","instructions","reason"])];
+      groups=names.has("draft_help")?
+        [group(__("Fechas y pagador"),["draft_help","starts_at","mode"],["customer","ends_at"]),group(__("Habitaciones"),["rooms"]),group(__("Opciones"),["guest","channel"],["hold","instructions"])]:
+        [group(names.has("guest")?__("Huésped y fechas"):__("Fechas y pagador"),["guest","starts_at","mode"],["customer","ends_at"]),group(__("Habitaciones"),["rooms"]),group(__("Opciones"),["channel","hold","instructions","reason"])];
     }else if(has("source_payment","kind","tendered","shift","method")){
       kind="payment";
       const method=doc=>(this.data.payment_methods||[]).find(row=>row.name===doc.method);
@@ -91,6 +92,10 @@
         parent.$wrapper.removeClass("hs-form-suspended").removeAttr("inert");
         if(parent.display)parent.$wrapper.removeAttr("aria-hidden");
       });
+    }
+    if(dialog.fields_dict?.allocation&&dialog.fields_dict.status){
+      const update=()=>{const action=dialog.get_value("status"),labels={"Check In":__("Registrar entrada"),Modify:__("Modificar reserva"),Confirmed:__("Confirmar reserva"),Cancelled:__("Revisar cancelación"),"No Show":__("Revisar no presentación")};dialog.get_primary_btn().text(labels[action]||__("Continuar"));};
+      dialog.fields_dict.status.$input.on("change.hsBookingAction",update);update();
     }
     if(!layout)return;
     dialog.$wrapper.attr("data-hs-form",layout.kind);

@@ -316,7 +316,10 @@ def projected_rows(prop, report, filters):
     requested = set(fields) | {"creation", "owner"} | {r["value"] for r in meta["date_fields"]}
     requested |= {"stay", "booking", "folio", "hs_booking", "hs_shift", "applies_to_charge", "cashier", "assigned_to", "kind", "status", "adjustment_type", "method", "quantity", "invoice_item", "guest", "fee_invoice", "fee_amount", "reason", "denominations"}
     requested = [k for k in sorted(requested) if k in {"name", "creation", "owner", "modified", "modified_by", "docstatus"} or frappe.get_meta(dt).has_field(k)]
-    sources = permitted_all(dt, filters={"hs_property" if dt == "Sales Invoice" else "property": prop.name}, fields=requested)
+    source_filters = {"hs_property" if dt == "Sales Invoice" else "property": prop.name}
+    if report == 'Cancelaciones y no presentaciones' and frappe.get_meta(dt).has_field('draft_data'):
+        source_filters['draft_data'] = ['is','not set']
+    sources = permitted_all(dt, filters=source_filters, fields=requested)
     if base == "Producción" and report != "Descuentos y cortesías":
         sources += direct_sales(prop) + native_invoice_lines(prop)
         sources.sort(key=lambda r:(get_datetime(r.creation),r.name),reverse=True)

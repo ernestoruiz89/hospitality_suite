@@ -114,8 +114,24 @@ test('a partly arrived group exposes its remaining numbered request and valid ac
   const allocation=fields.find(f=>f.fieldname==='allocation');assert.equal(allocation.default,'allocation');
   assert.match(allocation.options[1].label,/Solicitud 1.*2 persona/);
   assert.equal(fields.find(f=>f.fieldname==='guest').default,'principal');
+  assert.equal(allocation.depends_on({status:'Modify'}),false);
+  assert.equal(fields.find(f=>f.fieldname==='guest').mandatory_depends_on({status:'Check In'}),true);
+  assert.equal(fields.find(f=>f.fieldname==='reason').depends_on({status:'Check In'}),false);
+  assert.equal(fields.find(f=>f.fieldname==='reason').mandatory_depends_on({status:'Cancelled'}),true);
   info.allocations=[];let message;context.__=value=>value;context.frappe.msgprint=value=>{message=value;};fields=undefined;
   await desk.action_booking('group');assert.equal(fields,undefined);assert(message);
+});
+
+test('partial dialog submission bypasses required-field checks and still captures typed numeric values',async()=>{
+  const {desk,context}=fixture();let checks=0,accepted;
+  const primary={off(){return this;},on(){return this;},prop(){return this;}};
+  context.frappe.ui={Dialog:class{
+    constructor(){this.fields_dict={customer:{df:{fieldname:'customer',fieldtype:'Select'},get_value:()=>''},people:{df:{fieldname:'people',fieldtype:'Int'},$input:{is:()=>true},get_input_value:()=>0,async parse_validate_and_set_in_model(){},get_value:()=>0},help:{df:{fieldname:'help',fieldtype:'HTML'},get_value:()=>'<p>Help</p>'}};this.$wrapper={addClass(){},on(){}};}
+    get_close_btn(){return{attr(){}};}get_primary_btn(){return primary;}show(){}get_values(){checks++;return null;}
+  }};
+  const dialog=await desk.dialog('Draft',[],async()=>{throw Error('must use secondary handler');});
+  await dialog._hsSubmit({validate:false,handler:async values=>{accepted=values;}});
+  assert.equal(checks,0);assert.equal(accepted.customer,'');assert.equal(accepted.people,0);assert.equal(accepted.help,undefined);
 });
 test('a native business rejection keeps its server message; a lost response gets recovery guidance',async()=>{
   const {desk,context}=fixture();let submit;const messages=[];

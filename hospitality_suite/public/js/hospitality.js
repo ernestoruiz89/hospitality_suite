@@ -129,8 +129,10 @@ window.hospitality_suite = window.hospitality_suite || {};
     updateTimers() {const now=Date.now()+(this.clockOffset||0);this.root.find("[data-countdown]").each((_,node)=>{const min=Math.round((moment.tz(node.dataset.countdown,this.data.system_timezone).valueOf()-now)/60000);node.textContent=min>=0?__("Tiempo restante: {0} h {1} min",[Math.floor(min/60),min%60]):__("Tiempo excedido: {0} min",[Math.abs(min)]);});}
     table(headers,rows){return rows.length?`<div class="hs-table-wrap"><table class="hs-table"><thead><tr>${headers.map(h=>`<th scope="col">${esc(__(h))}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map((v,i)=>`<td data-label="${esc(__(headers[i]))}">${v}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`:this.empty();}
     render_reservations(el) {
-      const bookings=(this.data.bookings||[]).filter(b=>this.bookingHistory||!["Cancelled","No Show","Completed"].includes(b.status));
-      el.html(`<div class="hs-toolbar"><div><h2>${frappe.utils.escape_html(__("Reservas vigentes"))}</h2><p>${frappe.utils.escape_html(__("Reservas individuales y grupales; las retenciones liberan cupo al vencer."))}</p><label><input id="hs-booking-history" type="checkbox" ${this.bookingHistory?"checked":""}> ${frappe.utils.escape_html(__("Mostrar historial"))}</label></div>${this.button("reserve",__("Reservar"),"","primary")}${this.button("availability",__("Buscar disponibilidad"))}</div>${this.table([__("Reserva"),__("Llegada / salida"),__("Canal"),__("Estado"),__("Importe"),__("Acciones")],bookings.map(b=>[esc(this.bookingLabel(b.name)),`${esc(this.date(b.starts_at))}<br>${esc(this.date(b.ends_at))}`,esc(b.channel),this.badge(b.status),this.amount(b.amount,b.currency),this.button("booking",__("Ver reserva"),b.name)]))}`);
+      const bookings=(this.data.bookings||[]).filter(b=>b.status!=="Draft"&&(this.bookingHistory||!["Cancelled","No Show","Completed"].includes(b.status)));
+      const drafts=this.allowed("reserve")?(this.data.bookings||[]).filter(b=>b.status==="Draft"):[];
+      const draftList=drafts.length?`<section class="hs-section"><h2>${esc(__("Borradores por completar"))} (${drafts.length})</h2><p>${esc(__("No ocupan cupo ni fijan precio. Retome uno para completar datos y revisar la cotización."))}</p>${this.table([__("Solicitante"),__("Entrada prevista"),__("Precio"),__("Acciones")],drafts.map(b=>[esc(b.guest?this.guestName(b.guest):(this.data.customers||[]).find(c=>c.name===b.customer)?.customer_name||__("Por definir")),esc(b.starts_at?this.date(b.starts_at):__("Por definir")),esc(__("Sin cotizar")),this.button("booking",__("Retomar borrador"),b.name)]))}</section>`:"";
+      el.html(`<div class="hs-toolbar"><div><h2>${frappe.utils.escape_html(__("Reservas vigentes"))}</h2><p>${frappe.utils.escape_html(__("Reservas individuales y grupales; las retenciones liberan cupo al vencer."))}</p><label><input id="hs-booking-history" type="checkbox" ${this.bookingHistory?"checked":""}> ${frappe.utils.escape_html(__("Mostrar historial"))}</label></div>${this.button("reserve",__("Reservar"),"","primary")}${this.button("availability",__("Buscar disponibilidad"))}</div>${draftList}${this.table([__("Reserva"),__("Llegada / salida"),__("Canal"),__("Estado"),__("Importe"),__("Acciones")],bookings.map(b=>[esc(this.bookingLabel(b.name)),`${esc(this.date(b.starts_at))}<br>${esc(this.date(b.ends_at))}`,esc(b.channel),this.badge(b.status),b.draft_data?esc(__("Sin cotizar")):this.amount(b.amount,b.currency),this.button("booking",__("Ver reserva"),b.name)]))}`);
     }
     render_stays(el) {el.html(`<div class="hs-toolbar"><h2>${frappe.utils.escape_html(__("Huéspedes alojados y cuentas"))}</h2>${this.button("walk_in",__("Registrar entrada inmediata"),"","primary")}</div>${this.table([__("Habitación"),__("Huésped"),__("Salida prevista"),__("Estado"),__("Acciones")],(this.data.stays||[]).map(s=>[esc(this.roomName(s.room)),esc(this.guestName(s.guest)),esc(this.date(s.ends_at)),this.badge(s.status),this.button("detail",__("Ver cuenta"),s.name)]))}`);}
     render_cashier(el) {
@@ -175,7 +177,7 @@ window.hospitality_suite = window.hospitality_suite || {};
           }
         }
       });
-      d.get_primary_btn().off("click").on("click",async()=>{
+      d._hsSubmit=async({validate=true,handler=onSubmit}={})=>{
         if(d._hsBusy)return;d._hsBusy=true;d.get_primary_btn().prop("disabled",true);
         try{
           const pending=[];
@@ -193,10 +195,14 @@ window.hospitality_suite = window.hospitality_suite || {};
           for(const {control,raw} of pending)await control.parse_validate_and_set_in_model(raw);
           // Frappe's get_values may refresh a required input whose model is empty.
           // Synchronize first and validate once, without the default double read.
-          const values=d.get_values();if(values)await onSubmit(values,d);else this.reveal_form_error?.(d);
+          const values=validate?d.get_values():Object.fromEntries(Object.values(d.fields_dict)
+            .filter(control=>control.get_value&&!["HTML","Button","Tab Break","Section Break","Column Break"].includes(control.df.fieldtype))
+            .map(control=>[control.df.fieldname,control.get_value()]));
+          if(values)await handler(values,d);else this.reveal_form_error?.(d);
         }catch(error){if(!serverMessage(error))frappe.msgprint({title:__("Sin confirmación del servidor"),message:__("Mantenga esta ventana y reintente con los mismos datos. La solicitud conserva su referencia para evitar duplicados."),indicator:"orange"});}
         finally{d._hsBusy=false;d.get_primary_btn().prop("disabled",Boolean(d._hsCatalogBlocked));}
-      }); for(const df of fields.filter(f=>f._hsDateTime||f._hsTime||f._hsDate)){const c=d.fields_dict[df.fieldname];c.$input.attr({type:df._hsTime?"time":df._hsDate?"date":"datetime-local",step:"1"});if(df.default)c.set_value(df._hsTime?String(df.default).replace(/^(\d):/,"0$1:"):String(df.default).replace(" ","T"));} d.show();this.configure_form_dialog?.(d,layout);return d;
+      };d.get_primary_btn().off("click").on("click",()=>d._hsSubmit());
+      for(const df of fields.filter(f=>f._hsDateTime||f._hsTime||f._hsDate)){const c=d.fields_dict[df.fieldname];c.$input.attr({type:df._hsTime?"time":df._hsDate?"date":"datetime-local",step:"1"});if(df.default)c.set_value(df._hsTime?String(df.default).replace(/^(\d):/,"0$1:"):String(df.default).replace(" ","T"));} d.show();this.configure_form_dialog?.(d,layout);return d;
     }
     async mutate(action,data,key) {
       this.busy=true;this.connection();

@@ -15,4 +15,5 @@ import "./js/hospitality_service_accounting.js";
 import "./js/hospitality_invoicing.js";
 import "./js/hospitality_board.js";
 import "./js/hospitality_availability.js";
+import "./js/hospitality_drafts.js";
 import "./js/hospitality_forms.js";

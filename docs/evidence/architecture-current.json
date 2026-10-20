@@ -375,7 +375,7 @@
     {
       "doctype": "HS Booking",
       "child": false,
-      "fields": 19,
+      "fields": 20,
       "indexes": {
         "PRIMARY": {
           "unique": true,
@@ -1420,13 +1420,13 @@
   "assets": [
     {
       "name": "hospitality.bundle.js",
-      "bytes": 169305,
-      "sha256": "ad10ac12ddf555262bda3b433d1ee2a5224cda0102b3f27ba51bb944b4199f8a"
+      "bytes": 178544,
+      "sha256": "85010eb03f1541e162a0dcb8ad29af2e7719a27ac637bbd5226877a9eee78a09"
     },
     {
       "name": "hospitality.bundle.css",
       "bytes": 15111,
-      "sha256": "29207a9b8a99be92ecae6be7964b61c4f67f13da74aa323b83ef01e83b9bbeb4"
+      "sha256": "c74209071ad88b4118fb8ee8dd9315f34b1969e9b9472189c4c8889538dfafb7"
     }
   ]
 }

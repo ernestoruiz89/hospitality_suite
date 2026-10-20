@@ -20,8 +20,10 @@ def quote_request(prop, data, exclude=None):
     results = []
     proposed = []
     for row in rooms:
-        people = int(row.get("people") or 1)
-        beds=int(row.get("extra_beds") or 0)
+        from hospitality_suite.availability_search import positive_integer
+        people = positive_integer(row.get('people',1),frappe._('Personas por habitación'))
+        raw_beds = row.get('extra_beds')
+        beds = positive_integer(0 if raw_beds in (None,'') else raw_beds,frappe._('Camas extra'),allow_zero=True)
         if beds<0 or beds>(frappe.db.get_value("HS Category",row["category"],"max_extra_beds") or 0):
             frappe.throw(frappe._("Las camas extra superan la configuración de la categoría"))
         if people > frappe.db.get_value("HS Category", row["category"], "capacity"):
@@ -45,6 +47,14 @@ def quote_request(prop, data, exclude=None):
     return response
 
 
+def allocate_booking(prop, doc, calculation):
+    for index, row in enumerate(doc.rooms):
+        line = calculation['lines'][index]
+        insert('HS Allocation', prop, category=row.category, room=row.room, starts_at=doc.starts_at, ends_at=doc.ends_at,
+            buffer_minutes=prop.cleaning_minutes, kind='Reservation', status='Active', booking=doc.name, booking_room=row.name,
+            rate=line['rules']['name'], currency=line['currency'], accepted_amount=line['amount'], quote_snapshot=canonical(line))
+
+
 def reserve(prop, data):
     data = {**data, "rooms": [{k: r.get(k) for k in ("category", "room", "people", "rate","extra_beds")} for r in (data.get("rooms") or [data])]}
     availability.expire_locked(prop)
@@ -59,11 +69,7 @@ def reserve(prop, data):
                  status=status, rooms=data["rooms"], currency=prop.currency, amount=calculation["amount"],
                  quote_snapshot=canonical(calculation), channel=data.get("channel") or "Recepción", instructions=data.get("instructions"),
                  hold_until=now_datetime() + timedelta(minutes=prop.hold_minutes or 15) if status == "Hold" else None)
-    for index,row in enumerate(doc.rooms):
-        line=calculation["lines"][index]
-        insert("HS Allocation", prop, category=row.category, room=row.room, starts_at=doc.starts_at, ends_at=doc.ends_at,
-               buffer_minutes=prop.cleaning_minutes, kind="Reservation", status="Active", booking=doc.name, booking_room=row.name,
-               rate=line["rules"]["name"],currency=line["currency"],accepted_amount=line["amount"],quote_snapshot=canonical(line))
+    allocate_booking(prop, doc, calculation)
     audit(prop, "Reserve", doc, details=calculation)
     return dict(booking=doc.name, status=doc.status, modified=str(doc.modified))
 
@@ -71,6 +77,8 @@ def reserve(prop, data):
 def update_booking(prop, data):
     doc = document("HS Booking", data["booking"], "reserve")
     assert_version(doc, data.get("modified"))
+    if doc.status == 'Draft':
+        frappe.throw(frappe._('Retome el borrador y revise su cotización antes de confirmar; para descartarlo use la acción de borradores'))
     if doc.status not in ("Hold", "Confirmed", "Draft"):
         frappe.throw(frappe._("La reserva no admite esta transición"))
     target = data["status"]
@@ -100,7 +108,7 @@ def update_booking(prop, data):
 
 def modification_values(prop,data):
     doc=document("HS Booking",data["booking"],"reserve")
-    if doc.status not in ("Draft","Hold","Confirmed") or current_all("HS Stay",filters={"booking":doc.name}):
+    if doc.status not in ("Hold","Confirmed") or current_all("HS Stay",filters={"booking":doc.name}):
         frappe.throw(frappe._("Solo puede modificar una reserva antes de registrar la primera entrada"))
     from hospitality_suite.time import local
     values=dict(starts_at=data.get("starts_at") or local(doc.starts_at,prop).isoformat(),
@@ -178,6 +186,8 @@ def check_in(prop, data,accept_timing=False):
     assert_version(booking, data.get("modified"))
     if booking.status not in ("Confirmed", "Checked In"):
         frappe.throw(frappe._("Confirme la reserva antes de registrar entrada"))
+    if not (data.get('guest') or booking.guest):
+        frappe.throw(frappe._('Seleccione el huésped principal antes de registrar la entrada'))
     guest = document("HS Guest", data.get("guest") or booking.guest, "stay")
     if prop.guest_id_required and not guest.identity_number:
         frappe.throw(frappe._("La política requiere identificación del huésped principal"))

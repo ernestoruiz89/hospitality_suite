@@ -1,0 +1,73 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "synthetic": true,
+  "source": "Reception Page",
+  "stages": {
+    "partial": {
+      "booking": "09vl00au45",
+      "status": "Draft",
+      "amount": "0.0",
+      "allocation_count": 0,
+      "unchanged_financial_and_stay_tables": {
+        "HS Stay": 0,
+        "HS Folio": 0,
+        "HS Charge": 0,
+        "HS Payment": 0,
+        "HS Shift": 0,
+        "Sales Invoice": 0,
+        "Payment Entry": 0,
+        "Journal Entry": 0,
+        "GL Entry": 2,
+        "Stock Ledger Entry": 1
+      },
+      "customer_missing": true,
+      "dates_missing": true,
+      "accepted_quote": false,
+      "native_versions": 0
+    },
+    "confirmed": {
+      "booking": "09vl00au45",
+      "status": "Confirmed",
+      "amount": "1500.0",
+      "allocation_count": 1,
+      "unchanged_financial_and_stay_tables": {
+        "HS Stay": 0,
+        "HS Folio": 0,
+        "HS Charge": 0,
+        "HS Payment": 0,
+        "HS Shift": 0,
+        "Sales Invoice": 0,
+        "Payment Entry": 0,
+        "Journal Entry": 0,
+        "GL Entry": 2,
+        "Stock Ledger Entry": 1
+      },
+      "same_record_confirmed": true,
+      "native_versions": 1
+    },
+    "discarded": {
+      "booking": "09vl00au45",
+      "status": "Confirmed",
+      "amount": "1500.0",
+      "allocation_count": 1,
+      "unchanged_financial_and_stay_tables": {
+        "HS Stay": 0,
+        "HS Folio": 0,
+        "HS Charge": 0,
+        "HS Payment": 0,
+        "HS Shift": 0,
+        "Sales Invoice": 0,
+        "Payment Entry": 0,
+        "Journal Entry": 0,
+        "GL Entry": 2,
+        "Stock Ledger Entry": 1
+      },
+      "same_record_confirmed": true,
+      "discarded_booking": "1mt3gv6kp2",
+      "discard_reason": "Solicitud de prueba no continuada",
+      "cancellation_report_rows": 0,
+      "native_versions": 2
+    }
+  },
+  "original_booking": "09vl00au45"
+}

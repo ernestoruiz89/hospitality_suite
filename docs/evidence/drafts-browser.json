@@ -1,0 +1,66 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "user": "receptionist@hospitality.example.invalid",
+  "property_label": "Hotel Jardín Demo",
+  "source": "Reception Page",
+  "saved_with_missing_customer_and_dates": true,
+  "closed_reloaded_and_resumed": true,
+  "reviewed_amount": "1500.00",
+  "currency": "NIO",
+  "confirmed_same_record_verified_in": "drafts-items-ui.json",
+  "discarded_second_partial_draft_with_reason": true,
+  "mobile_geometry": {
+    "body": {
+      "bottom": 549,
+      "clientWidth": 372,
+      "height": 481,
+      "scrollWidth": 372,
+      "top": 68,
+      "width": 372
+    },
+    "content": {
+      "bottom": 665,
+      "clientWidth": 372,
+      "height": 657,
+      "scrollWidth": 372,
+      "top": 8,
+      "width": 374
+    },
+    "primary": {
+      "bottom": 649,
+      "clientWidth": 340,
+      "height": 44,
+      "scrollWidth": 340,
+      "top": 605,
+      "width": 342
+    },
+    "secondary": {
+      "bottom": 605,
+      "clientWidth": 131,
+      "height": 40,
+      "scrollWidth": 131,
+      "top": 565,
+      "width": 133.328125
+    },
+    "viewport": {
+      "height": 844,
+      "width": 390
+    }
+  },
+  "conditional_management_fields_observed": {
+    "action": "Cancelar reserva",
+    "visible": [
+      "Acción",
+      "Motivo"
+    ],
+    "primary": "Revisar cancelación"
+  },
+  "screenshots": [
+    "122-borrador-parcial-escritorio.jpg",
+    "123-borrador-revision-precio.jpg",
+    "124-borrador-confirmado.jpg",
+    "125-borrador-formulario-movil.jpg",
+    "126-borrador-descarte-movil.jpg",
+    "127-gestion-reserva-accion-clara-movil.jpg"
+  ]
+}

@@ -12,8 +12,12 @@ from hospitality_suite.schema import PAGES
 from hospitality_suite import setup
 from hospitality_suite import service_accounting
 from hospitality_suite import periodic
+from hospitality_suite import booking_drafts
 
 COMMANDS = {
+    'save_booking_draft':('reserve',booking_drafts.save),
+    'confirm_booking_draft':('reserve',booking_drafts.confirm),
+    'discard_booking_draft':('reserve',booking_drafts.discard),
     "generate_lodging":("finance",periodic.generate_command),
     "service_accounting":("setup",service_accounting.save),
     "reserve": ("reserve", operations.reserve), "booking_status": ("reserve", operations.update_booking),
@@ -70,6 +74,8 @@ def execute(property_name, action, request_key, data=None):
 
 @frappe.whitelist()
 def preview(property_name, data, action="reserve"):
+    if action == 'confirm_booking_draft':
+        return booking_drafts.preview(require(property_name,'reserve'),payload(data))
     permission="inventory" if action=="purchase_order" else "approve" if action in ("adjust_stock","retire_sensitive","credit_note") else "finance" if action in ("invoice","payment","direct_sale","settle_payment","supplier_payment") else "reserve" if action in ("reserve","booking_status","modify_reservation","convert_portal") else "stay"
     prop = require(property_name, permission)
     data = payload(data)
@@ -490,7 +496,8 @@ def setup_options(property_name):
 @frappe.whitelist()
 def booking_detail(name):
     doc = document("HS Booking",name)
-    return dict(booking=doc.as_dict(), allocations=project("HS Allocation",require(doc.property),
+    prop = require(doc.property)
+    return dict(booking=doc.as_dict(), draft=booking_drafts.values_for(doc,prop) if doc.status=='Draft' else None, allocations=project("HS Allocation",prop,
                 fields=["name","room","category","booking_room"],filters={"booking":name,"kind":"Reservation","status":"Active"}))
 
 

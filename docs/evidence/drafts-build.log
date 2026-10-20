@@ -1,0 +1,23 @@
+✔ Application Assets Linked
+
+
+yarn run v1.22.22
+$ node esbuild --production --apps hospitality_suite --run-build-command
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+File                                                        Size
+
+hospitality_suite/dist/js/
+└─ hospitality.bundle.DTBY34Z7.js                           178.54 Kb
+
+hospitality_suite/dist/css/
+└─ hospitality.bundle.SPYYOAWF.css                          15.11 Kb
+
+hospitality_suite/dist/css-rtl/
+└─ hospitality.bundle.GFY2WGPN.css                          15.12 Kb
+
+ DONE  Total Build Time: 335.193ms
+
+Done in 0.95s.
+Compiling translations for hospitality_suite
