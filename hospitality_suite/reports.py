@@ -202,6 +202,8 @@ def summary(prop, starts_at=None, ends_at=None):
     from hospitality_suite.report_queries import direct_sales,native_invoice_lines
     production_by_currency={}
     for row in charges+direct_sales(prop)+native_invoice_lines(prop):
+        if row.get('status')=='Scheduled':
+            continue
         if local_start.date()<=row.business_date<local_end.date():
             production_by_currency[row.currency]=production_by_currency.get(row.currency,decimal(0))+decimal(row.amount)
     production=production_by_currency.get(prop.currency,decimal(0))

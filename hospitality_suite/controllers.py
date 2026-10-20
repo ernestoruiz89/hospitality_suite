@@ -111,7 +111,7 @@ class ScopedDocument(Document):
                     if not frappe.db.exists("Currency",currency) or not isinstance(denominations,list) or not 1<=len(denominations)<=50 or any(decimal(v)<=0 for v in denominations):
                         frappe.throw(frappe._("Moneda o denominación inválida"))
             old=self.get_doc_before_save()
-            if old and any(old.get(field)!=self.get(field) for field in ("advance_policy","guarantee_policy")):
+            if old and any(old.get(field)!=self.get(field) for field in ("advance_policy","guarantee_policy","lodging_charge_policy")):
                 from hospitality_suite.security import require
                 require(self.name,"approve")
             if old and frappe.utils.getdate(old.business_date)!=frappe.utils.getdate(self.business_date) and not internal:

@@ -21,10 +21,18 @@
       "line": 8,
       "kind": "clause",
       "requirement": "La aplicación debe permitir que recepción, caja, limpieza, mantenimiento y gerencia trabajen mediante PÁGINAS PERSONALIZADAS, claras y rápidas. Los DocTypes serán la estructura interna; el usuario operativo no debe necesitar recorrer formularios técnicos de ERPNext para completar sus tareas habituales.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "P",
+      "implementation": [
+        "hospitality_suite/public/js/hospitality.js",
+        "hospitality_suite/public/js/hospitality_workflows.js",
+        "hospitality_suite/api.py"
+      ],
+      "evidence": [
+        "docs/CARGOS_PERIODICOS.md",
+        "docs/evidence/103-cuenta-noches-programadas.png",
+        "docs/evidence/periodic-page-invoice-gap.json"
+      ],
+      "remaining": "Añadir facturación explícita de cuenta desde Pages sin cobrar ni registrar salida, también para importe cero. El servidor tiene invoice; las Pages solo la alcanzan de forma implícita al cobrar/salir. Continúa aceptación del alcance completo por rol."
     },
     {
       "id": "S01-01",
@@ -1927,17 +1935,22 @@
       "line": 177,
       "kind": "enumerated",
       "requirement": "- Generar cargos periódicos conforme a las reglas elegidas, sin duplicarlos al repetir el proceso.",
-      "status": "P",
+      "status": "V",
       "implementation": [
         "hospitality_suite/operations.py",
         "hospitality_suite/closing.py",
-        "hospitality_suite/hooks.py"
+        "hospitality_suite/hooks.py",
+        "hospitality_suite/periodic.py",
+        "hospitality_suite/schema.py"
       ],
       "evidence": [
         "docs/CONTABILIDAD.md",
-        "docs/evidence/flow-audit.json"
+        "docs/evidence/flow-audit.json",
+        "docs/CARGOS_PERIODICOS.md",
+        "docs/evidence/periodic-native-tests.xml::TestPeriodic",
+        "docs/evidence/periodic-items-ui.json"
       ],
-      "remaining": "Implementar una política configurable de cargos periódicos de alojamiento, con origen/período único y reintentos. Hoy se carga el importe aceptado al entrar/extender; el cierre captura y avanza fecha, sin generar cargos periódicos. No equivale a otro libro mayor ni exige devengo contable paralelo."
+      "remaining": ""
     },
     {
       "id": "S12-04",
@@ -2672,19 +2685,25 @@
       "line": 237,
       "kind": "enumerated",
       "requirement": "- Claves de idempotencia para cobros, facturación, cargos periódicos, cierres y webhooks. Reintentar una petición no debe duplicar sus efectos.",
-      "status": "P",
+      "status": "V",
       "implementation": [
         "hospitality_suite/service.py",
         "hospitality_suite/closing.py",
-        "hospitality_suite/integrations.py"
+        "hospitality_suite/integrations.py",
+        "hospitality_suite/periodic.py",
+        "hospitality_suite/operations.py",
+        "hospitality_suite/schema.py"
       ],
       "evidence": [
         "docs/evidence/network-sale-sale.json",
         "docs/evidence/accounting-native-tests.xml::test_double_payment_is_one_posting",
         "docs/evidence/accounting-native-tests.xml::test_repeated_daily_close_advances_business_date_once",
-        "docs/evidence/accounting-native-tests.xml::test_signed_duplicate_is_recorded_once_without_financial_effects"
+        "docs/evidence/accounting-native-tests.xml::test_signed_duplicate_is_recorded_once_without_financial_effects",
+        "docs/CARGOS_PERIODICOS.md",
+        "docs/evidence/periodic-native-tests.xml::TestPeriodic",
+        "docs/evidence/periodic-items-ui.json"
       ],
-      "remaining": "Peticiones de cobro/facturación, cierres y webhooks ya conservan idempotencia probada. Falta la generación periódica de S12-03 y su clave única por origen/período, incluso al repetir con otra clave HTTP."
+      "remaining": ""
     },
     {
       "id": "S16-07",
@@ -2916,18 +2935,24 @@
       "line": 253,
       "kind": "enumerated",
       "requirement": "8) Doble clic/reintento de cobro y cierre nocturno repetido sin duplicados.",
-      "status": "I",
+      "status": "V",
       "implementation": [
         "hospitality_suite/service.py",
         "hospitality_suite/closing.py",
-        "hospitality_suite/accounting.py"
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/periodic.py",
+        "hospitality_suite/operations.py",
+        "hospitality_suite/schema.py"
       ],
       "evidence": [
         "docs/evidence/network-sale-sale.json",
         "docs/evidence/accounting-native-tests.xml::test_double_payment_is_one_posting",
-        "docs/evidence/accounting-native-tests.xml::test_repeated_daily_close_advances_business_date_once"
+        "docs/evidence/accounting-native-tests.xml::test_repeated_daily_close_advances_business_date_once",
+        "docs/CARGOS_PERIODICOS.md",
+        "docs/evidence/periodic-native-tests.xml::TestPeriodic",
+        "docs/evidence/periodic-items-ui.json"
       ],
-      "remaining": "Cobro duplicado y cierre/avance repetido están probados. Completar S12-03 y su prueba de repetición nocturna sin cargos duplicados, también con nueva clave de petición."
+      "remaining": ""
     },
     {
       "id": "S17-09",

@@ -2,7 +2,7 @@
 
 PMS nativo para hoteles, moteles y operación mixta. Recepción, caja, limpieza y gerencia trabajan desde once Pages de Desk en español; la contabilidad y el inventario permanecen en ERPNext.
 
-Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. App 0.5.2. Otras versiones no están acreditadas.
+Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. App 0.6.0. Otras versiones no están acreditadas.
 
 El desarrollo continúa: [matriz de requisitos](docs/REQUISITOS.md), [auditoría punto por punto](docs/AUDITORIA_ESPECIFICACION.md), [registro de avance](docs/AVANCE.md) y [arquitectura](docs/ARQUITECTURA.md). No se declara listo para producción mientras existan pendientes obligatorios.
 
@@ -43,6 +43,8 @@ Abra Configuración con un administrador de sistema o rol autorizado. Seleccione
 
 Los formularios extensos se dividen en pestañas por tarea, con acción visible y adaptación móvil. Reserva/entrada revisa el precio antes de confirmar; caja distingue revisar/confirmar cobro, anticipo, garantía o devolución. [UX y evidencia de formularios](docs/UX_FORMULARIOS.md).
 
+La política de [cargos por noche](docs/CARGOS_PERIODICOS.md) conserva importes aceptados, separa programados/generados y evita duplicados al repetir la auditoría. La actualización mantiene Al ingresar para datos existentes. Sigue pendiente una acción directa de facturación desde Pages sin cobrar ni registrar salida; el servidor ya admite esa operación.
+
 El usuario necesita roles HS y un registro HS Access por establecimiento/compañía. El asistente concede únicamente roles HS; la administración de cuentas de acceso y los roles ERPNext adicionales siguen los mecanismos estándar de Frappe. Un recepcionista que también cobra puede combinar HS Receptionist y HS Cashier.
 
 Consulte el [manual por rol](docs/MANUAL.md), [tratamiento contable](docs/CONTABILIDAD.md) y [operación técnica](docs/OPERACION.md) y [contratos API](docs/API.md).
@@ -77,14 +79,14 @@ bench --site hotel.localhost set-config hospitality_integration_test_site true
 bench --site hotel.localhost run-tests --app hospitality_suite
 ```
 
-`before_tests` exige Redis disponible y un sitio designado sin operaciones; después carga la demostración explícita para las pruebas. Cada caso revierte sus movimientos. Conserve un respaldo inicial para recuperar una ejecución interrumpida; no ejecutar en producción. Última batería conjunta: **196 aprobadas** en hospitality-acceptance.localhost, 182 de integración y 14 puras, ejecutada para 0.5.1. En 0.5.2 se ejecutan **37 regresiones JavaScript** y un recorrido real de formularios, sin cambios de reglas de backend. El sitio limpio anterior conserva un respaldo de diagnóstico tras una interrupción de WSL; no es la línea de base actual. La demostración principal conserva operaciones UX y tampoco representa ese estado inicial. Los dos casos de concurrencia usan conexiones y commits reales y se ejecutan aparte:
+`before_tests` exige Redis disponible y un sitio designado sin operaciones; después carga la demostración explícita para las pruebas. Cada caso revierte sus movimientos. Conserve un respaldo inicial para recuperar una ejecución interrumpida; no ejecutar en producción. Última batería conjunta: **211 aprobadas** en hospitality-acceptance.localhost, 197 de integración y 14 puras, ejecutada para 0.6.0. También aprueban **38 regresiones JavaScript** y el recorrido real de política/programación/auditoría nocturna. El sitio limpio anterior conserva un respaldo de diagnóstico tras una interrupción de WSL; no es la línea de base actual. La demostración principal conserva operaciones UX y tampoco representa ese estado inicial. Los dos casos de concurrencia usan conexiones y commits reales y se ejecutan aparte:
 
 ```sh
 bench --site hospitality.localhost execute hospitality_suite.tests.concurrency.verify
 bench --site hospitality.localhost execute hospitality_suite.tests.concurrency.verify_category
 ```
 
-Las pruebas JS sin servidor cubren transporte, edición numérica, catálogo, traducción/presentación, políticas, cierre, servicios, POS, devoluciones, notas de crédito, formularios y portal: **35 de Desk y dos del portal**. Ejecute las 37 con:
+Las pruebas JS sin servidor cubren transporte, edición numérica, catálogo, traducción/presentación, políticas, cierre, servicios, POS, devoluciones, notas de crédito, formularios y portal: **36 de Desk y dos del portal**. Ejecute las 38 con:
 
 ```sh
 node tools/run_ui_tests.cjs

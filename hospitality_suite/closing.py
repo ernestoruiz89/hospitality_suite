@@ -15,6 +15,7 @@ def blockers(prop):
         ("HS Booking", {"status": "Confirmed", "starts_at": ["<", now_datetime()]}, "Llegadas pendientes"),
         ("HS Shift", {"status": ["in", ["Open", "Review"]]}, "Turnos sin cerrar"),
         ("HS Charge", {"status": "Pending", "business_date": ["<=", prop.business_date]}, "Cargos sin facturar"),
+        ("HS Charge", {"status": "Scheduled", "service_date": ["<=", prop.business_date]}, "Cargos nocturnos sin generar"),
     ]:
         names = current_all(dt, filters={**filters, **extra}, pluck="name")
         if names:
@@ -31,6 +32,10 @@ def daily_close(prop, data):
     doc = locked_doc("HS Daily Close", name) if name else None
     if doc and doc.status == "Closed":
         return dict(close=doc.name, status=doc.status)
+    from hospitality_suite.security import ACTIONS,is_system
+    if is_system() or set(ACTIONS['finance']).intersection(frappe.get_roles()):
+        from hospitality_suite.periodic import generate
+        generate(prop)
     problems = blockers(prop)
     captured=summary(prop)
     from hospitality_suite.close_financials import snapshot

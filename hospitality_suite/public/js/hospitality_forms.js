@@ -13,6 +13,7 @@
     if(has("cleaning_minutes","receivable_account","financial_enabled")){
       kind="property";title=__("Políticas y contabilidad");action=__("Guardar configuración");
       groups=[group(__("Operación"),["brand_name","mode","time_zone","cleaning_minutes"],["inspection_required","discreet_mode","guest_id_required","allow_credit"]),
+        group(__("Cargos de alojamiento"),["lodging_charge_policy"]),
         group(__("Cuentas y almacenes"),["cost_center","receivable_account","guarantee_account"],["warehouse","laundry_warehouse","cash_transfer_account"]),
         group(__("Artículos e impuestos"),["lodging_item","extra_hour_item","timing_item","price_list"],["tax_template","tax_policy_confirmed","financial_enabled"])];
     }else if(has("block_hours","amount","included_services")){

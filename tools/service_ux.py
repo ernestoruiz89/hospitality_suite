@@ -16,7 +16,7 @@ SITE='hospitality-acceptance.localhost'
 TARGET=BENCH/'sites'/SITE
 parser=argparse.ArgumentParser()
 parser.add_argument('action',choices=['before','prepare','inspect','restore','verify'])
-parser.add_argument('--phase',choices=['service','pos','refund','guarantee','credits','mixed','accounting','forms'],default='service')
+parser.add_argument('--phase',choices=['service','pos','refund','guarantee','credits','mixed','accounting','forms','periodic'],default='service')
 args=parser.parse_args()
 BASE=BENCH/f'.hospitality-{args.phase}-ux-baseline.json'
 RECEIPT=BENCH/f'.hospitality-{args.phase}-ux-restored-receipt.json'
@@ -78,7 +78,7 @@ try:
         raw=json.dumps(rows,default=str,sort_keys=True,ensure_ascii=False,separators=(',',':')).encode()
         tables[dt]=dict(rows=len(rows),sha256=hashlib.sha256(raw).hexdigest())
     if args.action=='before':
-        if args.phase=='forms':assert not BASE.exists(),'Conserve el respaldo previo al recorrido de formularios'
+        if args.phase in ('forms','periodic'):assert not BASE.exists(),'Conserve el respaldo previo al recorrido de interfaz'
         assert all(tables[dt]['rows']==0 for dt in ('HS Stay','HS Booking','HS Charge','HS Payment','HS Shift','Sales Invoice','Payment Entry','Journal Entry'))
         frappe.db.rollback()
         with (BENCH/f'.hospitality-{args.phase}-ux-backup.log').open('w') as output:
@@ -115,6 +115,32 @@ try:
         fixture.chmod(0o600)
         frappe.db.commit()
         print('Fixture POS sintético: fondo 100, venta 60, recibido 100, vuelto 40; sin HS Payment ni Payment Entry')
+    elif args.action=='inspect' and args.phase=='periodic':
+        from hospitality_suite.accounting import folio_balance
+        from hospitality_suite.pricing import decimal
+        prop=frappe.get_doc('HS Property',{'property_name':'Hotel Jardín Demo'})
+        assert prop.lodging_charge_policy=='Nightly' and str(prop.business_date)=='2026-10-19'
+        assert frappe.db.count('HS Stay')==frappe.db.count('HS Booking')==1
+        stay=frappe.get_doc('HS Stay',{'property':prop.name})
+        assert stay.lodging_charge_policy=='Nightly' and stay.amount==4500
+        charges=frappe.get_all('HS Charge',filters={'stay':stay.name},fields=['name','status','amount','period_key','service_date','business_date'],order_by='service_date asc')
+        assert len(charges)==3 and len({row.period_key for row in charges})==3
+        assert [row.status for row in charges]==['Pending','Scheduled','Scheduled']
+        assert [str(row.service_date) for row in charges]==['2026-10-19','2026-10-20','2026-10-21']
+        assert all(row.amount==1500 and row.service_date==row.business_date for row in charges)
+        folio=frappe.get_doc('HS Folio',{'stay':stay.name})
+        balance=folio_balance(folio.name)
+        assert balance['pending']=='1500.00' and balance['scheduled']=='3000.00' and balance['outstanding']=='4500.00'
+        assert frappe.db.count('Sales Invoice')==frappe.db.count('Payment Entry')==frappe.db.count('HS Payment')==0
+        assert frappe.db.count('HS Audit Event',{'property':prop.name,'action':'Generate nightly charges'})==1
+        close=frappe.get_doc('HS Daily Close',{'property':prop.name})
+        assert close.status=='Review'
+        proof=dict(site=SITE,synthetic=True,ui_only_entry=True,policy_saved_and_reopened=True,stay_amount='4500.00',
+                   nights=3,generated=1,scheduled=2,pending_amount=balance['pending'],scheduled_amount=balance['scheduled'],
+                   outstanding=balance['outstanding'],generation_batches=1,review_repeated_from_page=True,invoices=0,payments=0,
+                   business_date=str(prop.business_date),close_status=close.status)
+        (ROOT/'docs/evidence/periodic-items-ui.json').write_text(json.dumps(proof,indent=2)+'\n',encoding='utf-8',newline='\n')
+        print(json.dumps(proof))
     elif args.action=='inspect' and args.phase=='forms':
         from hospitality_suite.accounting import folio_balance
         from hospitality_suite.cashier import expected

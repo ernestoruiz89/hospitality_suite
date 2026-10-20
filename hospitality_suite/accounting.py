@@ -49,7 +49,9 @@ def folio_balance(name):
     pending = sum(decimal(r.amount) for r in current_all("HS Charge", filters={"folio": name, "status": "Pending"}, fields=["amount"]))
     invoices = current_all("Sales Invoice", filters={"hs_folio": name, "docstatus": 1}, pluck="name")
     outstanding = sum(decimal(locked_doc("Sales Invoice", inv).outstanding_amount) for inv in set(invoices) if inv)
-    return dict(pending=str(money(pending)), outstanding=str(money(outstanding + pending)), currency=folio.currency)
+    from hospitality_suite.periodic import scheduled_amount
+    scheduled=scheduled_amount(name)
+    return dict(pending=str(money(pending)),scheduled=str(money(scheduled)), outstanding=str(money(outstanding + pending + scheduled)), currency=folio.currency)
 
 
 def folios_for_stay(stay):
@@ -62,6 +64,8 @@ def folios_for_stay(stay):
 def invoice_folio(prop, data):
     ready(prop)
     folio = document("HS Folio", data["folio"])
+    from hospitality_suite.periodic import settle_before_billing
+    settle_before_billing(prop,folio.name)
     charges = current_all("HS Charge", filters={"folio": folio.name, "status": "Pending"}, fields=["*"])
     if not charges:
         reconciled = reconcile_folio_advances(prop, folio)
@@ -626,6 +630,8 @@ def sync_document(doc, method=None):
                         linked=locked_doc("HS Charge",source)
                         if linked.status == "Invoiced" and linked.sales_invoice != doc.name:
                             frappe.throw(frappe._("Este cargo ya se facturó en otro documento"))
+                        if linked.status=='Scheduled':
+                            linked.posted_at=now_datetime()
                         linked.status, linked.sales_invoice, linked.invoice_item = "Invoiced", doc.name, row.name
                         linked.save(ignore_permissions=True)
         if doc.doctype == "Sales Invoice" and doc.docstatus == 2:

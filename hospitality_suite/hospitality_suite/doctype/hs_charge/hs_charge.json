@@ -94,7 +94,7 @@
    "fieldname": "status",
    "label": "Estado",
    "fieldtype": "Select",
-   "options": "Pending\nInvoiced\nReversed",
+   "options": "Pending\nInvoiced\nReversed\nScheduled",
    "reqd": 1,
    "default": "Pending"
   },
@@ -103,6 +103,27 @@
    "label": "Sales invoice",
    "fieldtype": "Link",
    "options": "Sales Invoice"
+  },
+  {
+   "fieldname": "period_key",
+   "label": "Period key",
+   "fieldtype": "Data",
+   "unique": 1,
+   "read_only": 1,
+   "hidden": 1,
+   "print_hide": 1
+  },
+  {
+   "fieldname": "service_date",
+   "label": "Noche de alojamiento",
+   "fieldtype": "Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "posted_at",
+   "label": "Cargo generado el",
+   "fieldtype": "Datetime",
+   "read_only": 1
   },
   {
    "fieldname": "invoice_item",
@@ -148,6 +169,9 @@
   "kind",
   "status",
   "sales_invoice",
+  "period_key",
+  "service_date",
+  "posted_at",
   "invoice_item",
   "reason",
   "quote_snapshot",

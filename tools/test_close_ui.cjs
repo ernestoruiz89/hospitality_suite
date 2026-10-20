@@ -29,3 +29,12 @@ test('close confirmation carries the reviewed digest and blockers disable confir
   const other=fixture(true),blocked=await other.desk.action_daily_close();
   assert.equal(blocked.get_primary_btn().disabled,true);
 });
+test('close groups with amounts open while zero groups retain expandable details',()=>{
+  const {desk,period}=fixture();
+  desk.data.close_financial_groups.push({title:'Sin movimientos',metrics:[{key:'refunds',label:'Devoluciones'}]});
+  period.financial.currencies[0].refunds='0.00';
+  const html=desk.close_summary_html(period);
+  assert.match(html,/<details class="hs-close-group" open><summary>Movimientos<\/summary>/);
+  assert.match(html,/<details class="hs-close-group"><summary>Sin movimientos<\/summary>Devoluciones\|0.00\|NIO<\/details>/);
+  assert.match(html,/100.00/);assert.match(html,/20.00/);
+});

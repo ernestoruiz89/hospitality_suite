@@ -1,0 +1,19 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "synthetic": true,
+  "ui_only_entry": true,
+  "policy_saved_and_reopened": true,
+  "stay_amount": "4500.00",
+  "nights": 3,
+  "generated": 1,
+  "scheduled": 2,
+  "pending_amount": "1500.00",
+  "scheduled_amount": "3000.00",
+  "outstanding": "4500.00",
+  "generation_batches": 1,
+  "review_repeated_from_page": true,
+  "invoices": 0,
+  "payments": 0,
+  "business_date": "2026-10-19",
+  "close_status": "Review"
+}

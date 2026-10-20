@@ -36,6 +36,15 @@
    "reqd": 1
   },
   {
+   "fieldname": "lodging_charge_policy",
+   "label": "Política de cargos aceptada",
+   "fieldtype": "Select",
+   "options": "Arrival\nNightly",
+   "reqd": 1,
+   "default": "Arrival",
+   "read_only": 1
+  },
+  {
    "fieldname": "customer",
    "label": "Cliente pagador",
    "fieldtype": "Link",
@@ -165,6 +174,7 @@
   "property",
   "booking",
   "guest",
+  "lodging_charge_policy",
   "customer",
   "room",
   "starts_at",

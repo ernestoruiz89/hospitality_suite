@@ -1,6 +1,6 @@
 # Manual diario por rol
 
-Aplicación 0.5.2, Frappe 16.52 / ERPNext 16.51. Los recorridos acreditados y las verificaciones pendientes están en REQUISITOS.md.
+Aplicación 0.6.0, Frappe 16.52 / ERPNext 16.51. Los recorridos acreditados y las verificaciones pendientes están en REQUISITOS.md.
 
 Los formularios extensos están organizados en pestañas por tarea. Puede cambiar de sección sin perder lo escrito y guardar desde cualquiera. Los datos adicionales del huésped y las opciones de reserva tienen su propia sección. La acción de guardar o revisar permanece visible; si falta un dato obligatorio, el formulario abre su sección. Al cerrar una revisión de precio o cobro, vuelve al borrador sin registrarlo. Véase UX_FORMULARIOS.md.
 
@@ -66,6 +66,8 @@ Consulte producción, facturas, cobros, anticipos, garantías y pendientes por s
 Los medios utilizados conservan cuenta, moneda y clasificación para que los arqueos históricos no cambien. Cree otro medio si necesita cambiarlas. Una factura externa debe incluir el cargo y todos sus ajustes una vez; no admite cargos revertidos. Un movimiento nativo de caja sin registro operativo aparece en conciliación y bloquea el cierre del turno. Los usuarios con roles HS usan los saldos de sus cuentas de estancia y reportes; una consulta global de cuenta contable podría agregar otros establecimientos y se restringe.
 
 Revise el cierre diario antes de confirmar: llegadas pendientes, estancias vencidas, cargos, turnos y diferencias contables. Confirmar avanza la fecha operativa una sola vez por solicitud. Reabrir el último día requiere motivo y autorización. El formato de cierre imprime el snapshot conservado.
+
+Configuración → Políticas y contabilidad → Cargos de alojamiento elige Al ingresar o Por noche para nuevas estancias hoteleras. La cuenta distingue noches programadas, cargos ya generados y saldo total. Preparar cierre del día genera las noches de la fecha operativa y las vencidas; repetir no duplica cargos. Facturar/cobrar o salir liquida también las programadas. La política de una estancia se conserva al extenderla y el motel sigue cobrando por bloque. Los grupos del cierre se despliegan por separado; los que contienen importes aparecen abiertos. Falta una acción explícita de facturación de cuenta sin cobro ni salida desde Pages: no registre un cobro ficticio para emitir una factura. Véase CARGOS_PERIODICOS.md y PENDIENTES.md.
 
 Configuración → Horarios y penalizaciones define la hora de corte. La fecha operativa D comprende desde ese corte de D hasta el corte de D+1 en la zona del establecimiento, con inicio incluido y fin excluido. Gerencia y el cierre muestran el período real; un día con cambio horario puede durar 23 o 25 horas. El reloj no avanza automáticamente la fecha operativa: el responsable confirma su cierre después de revisar los pendientes. Los informes con fechas explícitas conservan el período elegido.
 

@@ -1,0 +1,16 @@
+{
+  "read_only": true,
+  "page_invoice_handler_present": false,
+  "page_direct_invoice_mutation_present": false,
+  "server_invoice_command_present": true,
+  "payment_requires_positive_amount": true,
+  "observed_actions_screenshot": "103-cuenta-noches-programadas.png",
+  "requirement": "S00-02",
+  "remaining": "Facturación explícita desde Pages sin cobrar ni registrar salida.",
+  "sources": {
+    "hospitality_suite/public/js/hospitality.js": "621702d9e8491ee6f029fa0ed9b0795eaeb42b1d525467a2571dd24d5b502101",
+    "hospitality_suite/public/js/hospitality_workflows.js": "4fd3771399f4e33b73507f319bb4f328eb8e17c053f8517d1adca09b0edfc3fe",
+    "hospitality_suite/api.py": "46b803135cf4699c3e52addc134894cdf69c5c58e9dc108fa6232ec0e3c3c718",
+    "hospitality_suite/accounting.py": "25640e642a982ba2f1c0079638ad301957a6e6d419ed22d784c65e1b2fd51d37"
+  }
+}

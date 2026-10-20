@@ -1,0 +1,46 @@
+✔ catalogue keeps human names and immutable item keys, including duplicate descriptions (1.878ms)
+✔ outdated catalogue responses cannot overwrite results or authorize a failed search (1.3079ms)
+✔ historical close reads only the saved financial values, with distinct date bases (2.3121ms)
+✔ close confirmation carries the reviewed digest and blockers disable confirmation (2.0479ms)
+✔ close groups with amounts open while zero groups retain expandable details (0.8001ms)
+✔ full credit reviews net money and escaped labels before one stable intention posts (3.4237ms)
+✔ partial return sends selected source lines, requotes changed quantities and preserves its intention (2.2047ms)
+✔ additional receipts show remaining credit, dates and native documents without opaque source keys (1.0307ms)
+✔ booking descriptions use people and dates while respecting discreet mode and preserving keys (3.0843ms)
+✔ report scope changes ignore old options and keep a failed scope unqueryable (2.4126ms)
+✔ an older success cannot overwrite a newer property response (1.5198ms)
+✔ an old failure cannot clear busy or replace a newer result with an error (0.8262ms)
+✔ an invalidation during a failed mutation is refreshed once the request ends (0.8515ms)
+✔ dialog keeps numeric edits across row refreshes and leaves untouched hidden rows alone (1.2994ms)
+✔ a partly arrived group exposes its remaining numbered request and valid actions (2.4583ms)
+✔ a native business rejection keeps its server message; a lost response gets recovery guidance (1.0349ms)
+✔ property wall-clock controls preserve native single-digit hours (1.2178ms)
+✔ tabbed forms preserve every original control, callback, required flag and future extension once (1.9916ms)
+✔ hotel rates keep people charges while block/hour options are reserved for motel mode (1.9089ms)
+✔ cash and refund controls follow the selected intent without changing wire values or hiding the amount (1.1175ms)
+✔ missing required controls reveal their tab while zero and hidden values do not become false errors (0.7426ms)
+✔ payment headings and review actions distinguish receiving cash from returning it (0.9872ms)
+✔ tab selection has an explicit accessible state after navigation and required-field recovery (1.1672ms)
+✔ a review hides and makes its parent inert, then restores its unchanged draft on cancellation (0.7542ms)
+✔ native operational selects translate labels and preserve values, defaults and disabled state (2.8285ms)
+✔ master-data names are literal text even when matching a translation key or containing markup (2.0883ms)
+✔ cashier identifies native POS cash, refunds and missing attribution without exposing raw shift IDs (1.7463ms)
+✔ disabled receipts keep existing-fund refunds available and wire values stable (2.335ms)
+✔ approval options explain the restriction and remain available to an approver (1.3537ms)
+✔ editing dates while a quote is in flight invalidates its response (1.6952ms)
+✔ an uncertain request unlocks controls and retries the same quote and key (1.492ms)
+✔ refund source shows date, amount and native receipt while preserving its key (1.5069ms)
+✔ converted guarantee keeps its application key and explains whether an invoice exists (0.7611ms)
+✔ refund labels never filter another workflow source, including card-refund settlement (0.5729ms)
+✔ applied refund review distinguishes original book value and current FX without rendering untrusted HTML (0.6557ms)
+✔ service accounting uses scoped native links and writes only reviewed accounting fields (1.9285ms)
+✔ service setup shows escaped names and saves only mappings/list with the reviewed version (1.9275ms)
+✔ old service prices cannot overwrite a newer selection or a closed dialog (0.84ms)
+ℹ tests 38
+ℹ suites 0
+ℹ pass 38
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 144.1701

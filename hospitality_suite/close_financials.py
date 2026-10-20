@@ -10,7 +10,7 @@ from hospitality_suite.service import current_all
 
 METRICS=("production","invoices_net","invoices_tax","invoices_total","credit_notes_total","rounding_adjustment",
          "payable_billed","payments","advances","guarantees","refunds","guarantee_refunds","guarantees_applied","pos_collections","pos_refunds",
-         "net_customer_receipts","pending_charges","receivables","customer_credits","unallocated_advances","guarantees_held")
+         "net_customer_receipts","pending_charges","scheduled_charges","receivables","customer_credits","unallocated_advances","guarantees_held")
 
 GROUPS=(
     ("Producción operativa",(("production","Importe de cargos y ventas registrados"),)),
@@ -19,7 +19,7 @@ GROUPS=(
     ("Movimientos de clientes por fecha operativa",(("payments","Cobros de facturas"),("advances","Anticipos recibidos"),("guarantees","Garantías recibidas"),
         ("refunds","Devoluciones de cobros y anticipos"),("guarantee_refunds","Garantías devueltas"),("pos_collections","Cobros POS nativos, netos de vuelto"),("pos_refunds","Devoluciones POS nativas"),("net_customer_receipts","Dinero recibido de clientes, neto de devoluciones"),
         ("guarantees_applied","Garantías aplicadas, sin nuevo ingreso de dinero"))),
-    ("Saldos capturados al ejecutar",(("pending_charges","Cargos pendientes de facturar"),("receivables","Facturas pendientes de cobro, en moneda de la cuenta"),
+    ("Saldos capturados al ejecutar",(("pending_charges","Cargos pendientes de facturar"),("scheduled_charges","Alojamiento programado, aún sin generar"),("receivables","Facturas pendientes de cobro, en moneda de la cuenta"),
         ("customer_credits","Créditos pendientes a favor de clientes, en moneda de la cuenta"),("unallocated_advances","Anticipos por aplicar, en moneda de la cuenta"),("guarantees_held","Garantías disponibles, en moneda original")))
 )
 
@@ -31,7 +31,7 @@ def display_groups():
 def snapshot(prop,operational):
     day=getdate(prop.business_date)
     totals=defaultdict(lambda:{key:decimal(0) for key in METRICS})
-    sources=dict(invoices=[],movements=[],native_pos=[],pending_charges=[],receivables=[],unallocated_advances=[],guarantees=[],unattributed_movements=[])
+    sources=dict(invoices=[],movements=[],native_pos=[],pending_charges=[],scheduled_charges=[],receivables=[],unallocated_advances=[],guarantees=[],unattributed_movements=[])
     for currency,amount in operational.get("production_by_currency",{}).items():
         totals[currency]["production"]=decimal(amount)
     invoices=current_all("Sales Invoice",filters={"hs_property":prop.name,"company":prop.company,"docstatus":1},
@@ -77,6 +77,9 @@ def snapshot(prop,operational):
     for row in current_all("HS Charge",filters={"property":prop.name,"status":"Pending"},fields=["name","currency","amount","folio"]):
         totals[row.currency]["pending_charges"]+=decimal(row.amount)
         sources["pending_charges"].append(dict(row))
+    for row in current_all('HS Charge',filters={'property':prop.name,'status':'Scheduled'},fields=['name','currency','amount','folio','service_date']):
+        totals[row.currency]['scheduled_charges']+=decimal(row.amount)
+        sources['scheduled_charges'].append(dict(row))
     kinds={"Payment":"payments","Advance":"advances","Guarantee":"guarantees","Refund":"refunds","Guarantee Refund":"guarantee_refunds","Guarantee Applied":"guarantees_applied"}
     movements=current_all("HS Payment",filters={"property":prop.name,"status":"Posted"},
                            fields=["name","kind","currency","amount","business_date","business_date_source","payment_entry","journal_entry","source_payment"])

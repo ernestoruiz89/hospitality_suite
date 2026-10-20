@@ -11,8 +11,10 @@ from hospitality_suite.time import to_site, now_local
 from hospitality_suite.schema import PAGES
 from hospitality_suite import setup
 from hospitality_suite import service_accounting
+from hospitality_suite import periodic
 
 COMMANDS = {
+    "generate_lodging":("finance",periodic.generate_command),
     "service_accounting":("setup",service_accounting.save),
     "reserve": ("reserve", operations.reserve), "booking_status": ("reserve", operations.update_booking),
     "check_in": ("stay", operations.check_in), "walk_in": ("stay", operations.walk_in),
@@ -392,7 +394,7 @@ def export_report(property_name, report_name, filters=None, file_format="xlsx"):
 def save_setup(property_name, section, data, request_key, expected_modified=None):
     values = payload(data)
     allowed = {
-        "property": ["brand_name", "mode", "time_zone", "check_in_time", "check_out_time", "cleaning_minutes", "inspection_required", "discreet_mode", "hold_minutes", "guest_id_required", "allow_credit", "close_time", "retention_days", "portal_enabled", "cost_center", "warehouse", "laundry_warehouse", "receivable_account", "guarantee_account", "cash_transfer_account", "price_list", "lodging_item", "tax_template", "tax_policy_confirmed", "financial_enabled", "cancellation_fee_mode", "cancellation_fee_value", "no_show_fee_mode", "no_show_fee_value", "penalty_item", "early_hour_rate", "late_hour_rate", "schedule_grace_minutes", "schedule_rounding_minutes", "timing_item", "checkout_inspection_required", "checkout_quote_minutes", "cash_denominations"],
+        "property": ["lodging_charge_policy", "brand_name", "mode", "time_zone", "check_in_time", "check_out_time", "cleaning_minutes", "inspection_required", "discreet_mode", "hold_minutes", "guest_id_required", "allow_credit", "close_time", "retention_days", "portal_enabled", "cost_center", "warehouse", "laundry_warehouse", "receivable_account", "guarantee_account", "cash_transfer_account", "price_list", "lodging_item", "tax_template", "tax_policy_confirmed", "financial_enabled", "cancellation_fee_mode", "cancellation_fee_value", "no_show_fee_mode", "no_show_fee_value", "penalty_item", "early_hour_rate", "late_hour_rate", "schedule_grace_minutes", "schedule_rounding_minutes", "timing_item", "checkout_inspection_required", "checkout_quote_minutes", "cash_denominations"],
         "room": ["room_number", "category", "floor", "zone", "beds", "parking", "active"],
         "category": ["category_name", "capacity", "amenities","max_extra_beds"],
         "rate": ["title", "category", "mode", "currency", "amount", "block_hours", "extra_hour_rate", "grace_minutes", "rounding_minutes", "additional_person_rate", "included_people","extra_bed_rate", "priority", "valid_from", "valid_to", "weekdays", "customer", "night_start","night_end","active"],

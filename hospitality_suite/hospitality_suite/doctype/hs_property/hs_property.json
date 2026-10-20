@@ -85,6 +85,14 @@
    "fieldtype": "Check"
   },
   {
+   "fieldname": "lodging_charge_policy",
+   "label": "Generación de cargos de alojamiento",
+   "fieldtype": "Select",
+   "options": "Arrival\nNightly",
+   "reqd": 1,
+   "default": "Arrival"
+  },
+  {
    "fieldname": "portal_enabled",
    "label": "Portal enabled",
    "fieldtype": "Check"
@@ -354,6 +362,7 @@
   "cleaning_minutes",
   "inspection_required",
   "discreet_mode",
+  "lodging_charge_policy",
   "portal_enabled",
   "financial_enabled",
   "allow_credit",

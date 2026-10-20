@@ -152,7 +152,7 @@
     {
       "doctype": "HS Property",
       "child": false,
-      "fields": 52,
+      "fields": 53,
       "indexes": {
         "PRIMARY": {
           "unique": true,
@@ -467,7 +467,7 @@
     {
       "doctype": "HS Stay",
       "child": false,
-      "fields": 24,
+      "fields": 25,
       "indexes": {
         "PRIMARY": {
           "unique": true,
@@ -531,7 +531,7 @@
     {
       "doctype": "HS Charge",
       "child": false,
-      "fields": 19,
+      "fields": 22,
       "indexes": {
         "PRIMARY": {
           "unique": true,
@@ -556,6 +556,12 @@
           "unique": false,
           "columns": [
             "modified"
+          ]
+        },
+        "period_key": {
+          "unique": true,
+          "columns": [
+            "period_key"
           ]
         }
       }
@@ -1414,13 +1420,13 @@
   "assets": [
     {
       "name": "hospitality.bundle.js",
-      "bytes": 156594,
-      "sha256": "c1eed11b2898c91242927479c9cadc801d8e69b07592ba78cb2fb5907193f9a9"
+      "bytes": 157586,
+      "sha256": "19d35fc247371e6cb01dec9549fda70ec2f3ce5a73c362298c6f448c7bd71bd1"
     },
     {
       "name": "hospitality.bundle.css",
-      "bytes": 11618,
-      "sha256": "497e7b6379b676d3870bcd8c0d1420d47102f695a79c371f63a010fc898cea8a"
+      "bytes": 11775,
+      "sha256": "a2f39403000e150528b6ec3bdd34489bc1b26c099c3f1b71f577dcda9afa30dc"
     }
   ]
 }

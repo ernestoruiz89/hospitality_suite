@@ -347,7 +347,7 @@ def projected_rows(prop, report, filters):
             continue
         if report == "Llegadas" and source.status in ("Cancelled", "No Show", "Draft"):
             continue
-        if base == "Producción" and not filters.get("status") and source.status == "Reversed":
+        if base == "Producción" and not filters.get("status") and source.status in ("Reversed","Scheduled"):
             continue
         actor = source.actor or source.owner
         shift = source.name if base == "Turnos" else source.get("hs_shift") or source.shift

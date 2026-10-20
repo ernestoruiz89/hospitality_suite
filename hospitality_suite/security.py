@@ -297,7 +297,7 @@ def validate_standard(doc, method=None):
                 linked=[document("HS Charge",name) for name in sources]
                 if charge.applies_to_charge or any(c.folio!=charge.folio or c.currency!=doc.currency or c.item!=charge.item or (c.name!=charge.name and c.applies_to_charge!=charge.name) for c in linked):
                     frappe.throw(frappe._("Los ajustes no pertenecen al cargo de esta línea"))
-                if any(c.status not in ("Pending","Invoiced") for c in linked):
+                if any(c.status not in ("Pending","Invoiced","Scheduled") for c in linked):
                     frappe.throw(frappe._("No puede facturar un cargo revertido"))
                 if any(c.status=="Invoiced" and c.sales_invoice!=doc.name for c in linked):
                     frappe.throw(frappe._("Un cargo de esta línea ya está facturado en otro documento"))
@@ -313,7 +313,7 @@ def validate_standard(doc, method=None):
                 if decimal(row.qty)!=decimal(charge.quantity) or money(row.rate,currency=doc.currency)!=money(expected_rate,currency=doc.currency):
                     frappe.throw(frappe._("La cantidad y tarifa deben coincidir con el cargo; use un ajuste autorizado"))
             elif doc.get("hs_stay") and not doc.is_return:
-                pending=frappe.get_all("HS Charge",filters={"stay":doc.hs_stay,"item":row.item_code,"status":"Pending"},pluck="name")
+                pending=frappe.get_all("HS Charge",filters={"stay":doc.hs_stay,"item":row.item_code,"status":["in",["Pending","Scheduled"]]},pluck="name")
                 if pending:
                     frappe.throw(frappe._("Existen cargos pendientes de este artículo. Seleccione su cargo de origen para evitar facturarlo dos veces"))
 

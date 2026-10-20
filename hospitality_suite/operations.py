@@ -146,9 +146,12 @@ def charge(prop, stay, folio, item, amount, kind, description, snapshot=None, qu
                 break
         if not applies_to:
             frappe.throw(frappe._("El crédito supera los cargos pendientes; emita una nota de crédito sobre la factura de origen"))
+    source=locked_doc('HS Charge',applies_to) if applies_to else None
+    scheduled=bool(source and source.status=='Scheduled')
     return insert("HS Charge", prop, stay=stay.name, folio=folio.name, item=item, quantity=quantity,
                   rate=decimal(amount) / decimal(quantity), amount=amount, currency=folio.currency,
-                  business_date=prop.business_date, status="Pending", kind=kind, description=description,
+                  business_date=source.business_date if scheduled else prop.business_date, status="Scheduled" if scheduled else "Pending", kind=kind, description=description,
+                  service_date=source.service_date if scheduled else None,
                   quote_snapshot=canonical(snapshot or {}), reason=reason,applies_to_charge=applies_to)
 
 
@@ -156,9 +159,9 @@ def credit_pending_lodging(prop,stay,folio,amount,snapshot,reason):
     """A room-change credit can span the base and accepted overtime articles."""
     remaining=abs(decimal(amount))
     sources=current_all("HS Charge",filters={"property":prop.name,"stay":stay.name,"folio":folio.name,"kind":"Lodging",
-                        "status":"Pending","amount":[">",0],"applies_to_charge":["is","not set"]},fields=["name","item","amount"],order_by="creation asc,name asc")
+                        "status":["in",["Pending","Scheduled"]],"amount":[">",0],"applies_to_charge":["is","not set"]},fields=["name","item","amount"],order_by="creation asc,name asc")
     for source in sources:
-        adjustments=current_all("HS Charge",filters={"applies_to_charge":source.name,"status":"Pending"},fields=["amount"])
+        adjustments=current_all("HS Charge",filters={"applies_to_charge":source.name,"status":["in",["Pending","Scheduled"]]},fields=["amount"])
         available=max(decimal(0),decimal(source.amount)+sum(decimal(row.amount) for row in adjustments))
         portion=min(remaining,available)
         if portion:
@@ -208,6 +211,7 @@ def check_in(prop, data,accept_timing=False):
         elif data.get("timing_acceptance")!=fees["acceptance"]:
             frappe.throw(frappe._("Revise y acepte los cargos por entrada anticipada y salida tardía programada"))
     stay = insert("HS Stay", prop, booking=booking.name, guest=guest.name, customer=booking.customer, room=room_name,
+                  lodging_charge_policy=prop.lodging_charge_policy if line['rules']['mode']=='Hotel' else 'Arrival',
                   starts_at=start, ends_at=booking.ends_at, actual_check_in=now_datetime(), status="Active",
                   rate=line["rules"]["name"], currency=prop.currency, amount=line["amount"], quote_snapshot=canonical(line),
                   guests=[dict(guest=guest.name, relationship="Principal")])
@@ -222,7 +226,9 @@ def check_in(prop, data,accept_timing=False):
     booking.save()
     extra=decimal(line.get("extra_hours_amount")) if line.get("charge_items") else decimal(0)
     base=decimal(line["amount"])-extra
-    if base or not extra:
+    from hospitality_suite.periodic import schedule
+    scheduled=schedule(prop,stay,folio,line,'entry',base)
+    if not scheduled and (base or not extra):
         charge(prop,stay,folio,bound_item(prop,line,"lodging_item"),base,"Lodging","Alojamiento",line)
     if extra:
         from hospitality_suite.item_configuration import hours_quantity
@@ -298,6 +304,7 @@ def extend(prop, data):
         for row in included_services(result,night_only=True):
             benefits[row["item"]]=benefits.get(row["item"],decimal(0))+decimal(row["quantity"])
         stay.service_entitlements=canonical([dict(item=item,quantity=str(quantity)) for item,quantity in sorted(benefits.items())])
+    previous_end=str(stay.ends_at)
     stay.ends_at, stay.amount = to_site(data["ends_at"], prop), result["amount"]
     stay.save()
     active = current_all("HS Allocation", filters={"stay": stay.name, "status": "Active"}, fields=["name", "starts_at"], order_by="starts_at desc")
@@ -318,7 +325,9 @@ def extend(prop, data):
     folio = locked_doc("HS Folio", data["folio"])
     if (folio.stay!=stay.name if folio.stay else folio.booking!=stay.booking) or folio.status != "Open":
         frappe.throw(frappe._("Cuenta inválida"))
-    if decimal(result["difference"]):
+    from hospitality_suite.periodic import schedule
+    scheduled=schedule(prop,stay,folio,result,'extension:'+previous_end,result['difference'])
+    if decimal(result["difference"]) and not scheduled:
         from hospitality_suite.item_configuration import bound_item,hours_quantity
         motel=result["rules"]["mode"]=="Motel"
         quantity=decimal(result["difference"])/decimal(result["rules"]["extra_hour_rate"]) if motel and decimal(result["rules"].get("extra_hour_rate")) else 1
@@ -449,11 +458,11 @@ def move_charge(prop, data):
     target = document("HS Folio", data["folio"], "stay")
     stay=locked_doc("HS Stay",doc.stay)
     matches=target.stay==doc.stay if target.stay else bool(target.booking and target.booking==stay.booking)
-    if doc.status != "Pending" or target.status != "Open" or not matches or not data.get("reason"):
+    if doc.status not in ("Pending","Scheduled") or target.status != "Open" or not matches or not data.get("reason"):
         frappe.throw(frappe._("Solo puede trasladar cargos pendientes de la misma estancia o grupo con un motivo"))
     if doc.applies_to_charge:
         frappe.throw(frappe._("Traslade el cargo principal; sus descuentos y cortesías se trasladan con él"))
-    for related in current_all("HS Charge",filters={"applies_to_charge":doc.name,"status":"Pending"},pluck="name"):
+    for related in current_all("HS Charge",filters={"applies_to_charge":doc.name,"status":["in",["Pending","Scheduled"]]},pluck="name"):
         adjustment=locked_doc("HS Charge",related)
         adjustment.folio=target.name
         adjustment.save()
@@ -470,7 +479,7 @@ def move_charge(prop, data):
 def adjustment(prop,data):
     source=document("HS Charge",data["charge"],"approve")
     folio=document("HS Folio",source.folio,"approve")
-    if source.status!="Pending" or folio.status!="Open" or not data.get("reason"):
+    if source.status not in ('Pending','Scheduled') or folio.status!="Open" or not data.get("reason"):
         frappe.throw(frappe._("Ajuste cargos pendientes con un motivo; para cargos facturados use una nota de crédito"))
     kind=data["adjustment_type"]
     if kind not in ("Discount","Courtesy","Surcharge"):
