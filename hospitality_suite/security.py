@@ -476,6 +476,14 @@ def party_names(dt,user=None):
     for linked in ("Customer","Supplier"):
         allowed=party_names(linked,user)
         names.update(frappe.get_all("Dynamic Link",filters={"parenttype":dt,"link_doctype":linked,"link_name":["in",list(allowed)]},pluck="parent"))
+    if dt in ('Contact','Address'):
+        field='contact' if dt=='Contact' else 'address'
+        guests=frappe.get_all('HS Guest',filters={'property':['in',props],'customer':['is','not set'],field:['is','set']},fields=['name',field])
+        expected={(row[field],row.name) for row in guests}
+        if expected:
+            links=frappe.get_all('Dynamic Link',filters={'parenttype':dt,'parentfield':'links','parent':['in',[p for p,_ in expected]]},fields=['parent','link_doctype','link_name'])
+            foreign={row.parent for row in links if row.link_doctype in ('Customer','Supplier')}
+            names.update(row.parent for row in links if row.link_doctype=='HS Guest' and (row.parent,row.link_name) in expected and row.parent not in foreign)
     return names
 
 

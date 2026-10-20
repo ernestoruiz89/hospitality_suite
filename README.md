@@ -2,7 +2,7 @@
 
 PMS nativo para modalidades Hotel, Por tiempo y Hotel y por tiempo. Recepción, caja, limpieza y gerencia trabajan desde once Pages de Desk en español; la contabilidad y el inventario permanecen en ERPNext.
 
-Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. App 0.6.6. Otras versiones no están acreditadas.
+Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. App 0.6.7. Otras versiones no están acreditadas.
 
 El desarrollo continúa: [matriz de requisitos](docs/REQUISITOS.md), [auditoría punto por punto](docs/AUDITORIA_ESPECIFICACION.md), [registro de avance](docs/AVANCE.md) y [arquitectura](docs/ARQUITECTURA.md). No se declara listo para producción mientras existan pendientes obligatorios.
 
@@ -51,6 +51,8 @@ El usuario necesita roles HS y un registro HS Access por establecimiento/compañ
 
 [Reservas y precio histórico](docs/EXPLICACION_TARIFA_HISTORICA.md): la cuenta explica la tarifa aceptada, Ver reserva muestra un resumen completo y las habitaciones disponibles abren la reserva con datos preseleccionados. Los nuevos documentos usan [series legibles](docs/SERIES_DOCUMENTALES.md), conservando los identificadores anteriores.
 
+La [gestión de huéspedes](docs/GESTION_HUESPEDES.md) permite corregir la misma ficha con motivo, prioriza la identificación según la política y conserva los documentos estándar y referencias existentes.
+
 El [PDF de cuenta resumido](docs/CUENTA_RESUMIDA.md) presenta cargos, movimientos y saldo, omitiendo fórmulas y secciones vacías; el cálculo histórico se consulta en pantalla.
 
 Consulte el [manual por rol](docs/MANUAL.md), [tratamiento contable](docs/CONTABILIDAD.md) y [operación técnica](docs/OPERACION.md) y [contratos API](docs/API.md).
@@ -64,7 +66,7 @@ bench --site hotel.localhost set-config hospitality_allow_demo true
 bench --site hotel.localhost execute hospitality_suite.demo.seed
 ```
 
-Crea datos ficticios: hotel y motel con diez habitaciones cada uno, huéspedes, precios, existencias de muestra y usuarios por rol. Las contraseñas aleatorias quedan en `sites/<sitio>/private/hospitality-demo-users.json`, modo 600. La carga es repetible y está separada de la instalación normal.
+Crea datos ficticios: Hotel y Por tiempo con diez habitaciones cada uno, huéspedes, precios, existencias de muestra y usuarios por rol. Las contraseñas aleatorias quedan en `sites/<sitio>/private/hospitality-demo-users.json`, modo 600. La carga es repetible y está separada de la instalación normal.
 
 ## Construcción, migración y pruebas
 
@@ -85,14 +87,14 @@ bench --site hotel.localhost set-config hospitality_integration_test_site true
 bench --site hotel.localhost run-tests --app hospitality_suite
 ```
 
-`before_tests` exige Redis disponible y un sitio designado sin operaciones; después carga la demostración explícita para las pruebas. Cada caso revierte sus movimientos. Conserve un respaldo inicial para recuperar una ejecución interrumpida; no ejecutar en producción. Última batería conjunta: **255 aprobadas** en hospitality-acceptance.localhost, 241 de integración y 14 puras, sobre 0.6.4. [DISPONIBILIDAD_POR_CANTIDAD.md](docs/DISPONIBILIDAD_POR_CANTIDAD.md) acredita la consulta por cantidad en escritorio/móvil y los extremos exactos con/sin colchón. [AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md](docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md) conserva el contraste histórico de 32 entradas con siete casos nuevos; su diferencia de consulta por cantidad queda resuelta en 0.6.3 y los borradores se acreditan en BORRADORES_DE_RESERVA.md (0.6.4) y continúa la explicación de cuenta; quedan 68 requisitos por contrastar individualmente. La batería actual aprueba **56 regresiones JavaScript** y el recorrido real de vistas/entrada desde Llegadas con recepcionista; se conserva la evidencia anterior de política/programación/auditoría nocturna. El sitio limpio anterior conserva un respaldo de diagnóstico tras una interrupción de WSL; no es la línea de base actual. La demostración principal conserva operaciones UX y tampoco representa ese estado inicial. Los dos casos de concurrencia usan conexiones y commits reales y se ejecutan aparte:
+`before_tests` exige Redis disponible y un sitio designado sin operaciones; después carga la demostración explícita para las pruebas. Cada caso revierte sus movimientos. Conserve un respaldo inicial para recuperar una ejecución interrumpida; no ejecutar en producción. Última batería conjunta: **284 aprobadas** en hospitality-acceptance.localhost, 270 de integración y 14 puras, sobre 0.6.7. [DISPONIBILIDAD_POR_CANTIDAD.md](docs/DISPONIBILIDAD_POR_CANTIDAD.md) acredita la consulta por cantidad en escritorio/móvil y los extremos exactos con/sin colchón. [AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md](docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md) conserva el contraste histórico de 32 entradas con siete casos nuevos; su diferencia de consulta por cantidad queda resuelta en 0.6.3 y los borradores se acreditan en BORRADORES_DE_RESERVA.md (0.6.4) y continúa la explicación de cuenta; quedan 68 requisitos por contrastar individualmente. La batería actual aprueba **71 regresiones JavaScript** y el recorrido real de vistas/entrada desde Llegadas con recepcionista; se conserva la evidencia anterior de política/programación/auditoría nocturna. El sitio limpio anterior conserva un respaldo de diagnóstico tras una interrupción de WSL; no es la línea de base actual. La demostración principal conserva operaciones UX y tampoco representa ese estado inicial. Los dos casos de concurrencia usan conexiones y commits reales y se ejecutan aparte:
 
 ```sh
 bench --site hospitality.localhost execute hospitality_suite.tests.concurrency.verify
 bench --site hospitality.localhost execute hospitality_suite.tests.concurrency.verify_category
 ```
 
-Las pruebas JS sin servidor cubren transporte, edición numérica, catálogo, traducción/presentación, políticas, cierre, servicios, POS, devoluciones, notas de crédito, formularios y portal: **43 de Desk y dos del portal**. Ejecute las 45 con:
+Las pruebas JS sin servidor cubren transporte, edición numérica, catálogo, traducción/presentación, políticas, cierre, servicios, POS, devoluciones, notas de crédito, formularios y portal: **69 de Desk y dos del portal**. Ejecute las 71 con:
 
 ```sh
 node tools/run_ui_tests.cjs

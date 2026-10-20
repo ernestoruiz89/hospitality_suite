@@ -1823,22 +1823,33 @@
       "line": 118,
       "kind": "enumerated",
       "requirement": "- Registro de huésped, acompañantes y datos exigidos por la política configurada; no recoger información innecesaria.",
-      "status": "I",
+      "status": "V",
       "implementation": [
         "hospitality_suite/operations.py",
         "hospitality_suite/api.py",
         "hospitality_suite/public/js/hospitality.js",
         "hospitality_suite/public/js/hospitality_workflows.js",
-        "hospitality_suite/public/js/hospitality_forms.js"
+        "hospitality_suite/public/js/hospitality_forms.js",
+        "hospitality_suite/guest_profiles.py",
+        "hospitality_suite/public/js/hospitality_guests.js",
+        "hospitality_suite/security.py"
       ],
       "evidence": [
         "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
         "docs/evidence/reservations-audit.json",
         "docs/evidence/reservations-native-tests.xml::test_guest_uses_standard_contact_address_and_is_idempotent",
         "docs/evidence/reservations-native-tests.xml::test_companions_scoped_capacity_and_incomplete_cleaning",
-        "docs/evidence/group-companions.json"
+        "docs/evidence/group-companions.json",
+        "docs/GESTION_HUESPEDES.md",
+        "docs/evidence/guest-profiles-native-tests.xml::TestGuestProfiles (12 casos; incluye referencias principal/acompañante)",
+        "docs/evidence/guest-profiles-js-tests.log",
+        "docs/evidence/guest-profiles-items-ui.json",
+        "docs/evidence/guest-profiles-browser-ui.json",
+        "docs/evidence/guest-profiles-upgrade.json",
+        "docs/evidence/guest-profiles-ux-restored.json",
+        "docs/evidence/guest-profiles-final-state.json"
       ],
-      "remaining": "Registro/acompañantes y política en servidor localizados. bootstrap no proyecta guest_id_required, que el formulario consulta para situar la identificación en Datos principales. Completar corrección de datos del huésped existente desde Page, campos exigidos visibles y aceptación con política activada/desactivada sin duplicar la persona."
+      "remaining": ""
     },
     {
       "id": "S08-03",

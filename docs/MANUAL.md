@@ -1,6 +1,6 @@
 # Manual diario por rol
 
-Aplicación 0.6.3, Frappe 16.52 / ERPNext 16.51. Los recorridos acreditados y las verificaciones pendientes están en REQUISITOS.md.
+Aplicación 0.6.7, Frappe 16.52 / ERPNext 16.51. Los recorridos acreditados y las verificaciones pendientes están en REQUISITOS.md.
 
 Los formularios extensos están organizados en pestañas por tarea. Puede cambiar de sección sin perder lo escrito y guardar desde cualquiera. Los datos adicionales del huésped y las opciones de reserva tienen su propia sección. La acción de guardar o revisar permanece visible; si falta un dato obligatorio, el formulario abre su sección. Al cerrar una revisión de precio o cobro, vuelve al borrador sin registrarlo. Véase UX_FORMULARIOS.md.
 
@@ -9,7 +9,7 @@ Los formularios extensos están organizados en pestañas por tarea. Puede cambia
 En Reservas → **Buscar disponibilidad**, seleccione categoría, cantidad de habitaciones, personas por habitación y fechas. El resultado indica si alcanza el cupo y conserva los filtros para corregirlos y volver a buscar. Ver opciones de habitación despliega las alternativas: pueden ser más numerosas que el cupo restante por las reservas todavía sin asignación. Si se advierte falta de habitaciones continuas para todo el intervalo, revise la asignación antes de reservar. La consulta no conserva habitaciones. Véase DISPONIBILIDAD_POR_CANTIDAD.md.
 
 1. Seleccione el establecimiento. El reloj y las fechas de operación usan su zona horaria; la fecha operativa puede diferir del calendario.
-2. Registre al huésped en Clientes y huéspedes, o elija uno existente. Huésped, acompañante y cliente pagador son entidades diferentes. Contact y Address se crean como documentos estándar cuando se proporcionan datos de contacto/dirección.
+2. En Clientes y huéspedes, use Registrar huésped o Actualizar datos para corregir uno existente con motivo. La primera pestaña señala la identificación exigida por el establecimiento; los demás datos son opcionales y no se presume un país. La corrección conserva la misma ficha y sus visitas. Huésped, acompañante y cliente pagador son entidades diferentes: cambiar el nombre del huésped no renombra al pagador. Contact y Address son estándar y sus registros compartidos se preservan. Véase GESTION_HUESPEDES.md.
 3. En Reservas o Recepción, pulse Reservar. Indique intervalo, categoría, cantidad/personas y habitación si ya la conoce. Una reserva por categoría consume cupo aunque aún no tenga habitación asignada.
 4. La tabla conserva los números escritos al cambiar de fila. En reservas, la vista inicial muestra las vigentes; Mostrar historial permite consultar las terminadas o canceladas. Revise la explicación y acepte la cotización del servidor. La retención es temporal; una confirmación requiere respuesta válida. Una reserva futura no significa habitación ocupada ahora.
 5. Desde Ver reserva, registre entrada y asigne habitación limpia y disponible. El grupo conserva una asignación por habitación y permite entradas separadas. El selector distingue cada solicitud por número y ocupantes; tras la primera entrada solo ofrece registrar las pendientes. Entrada inmediata realiza reserva y entrada en una sola transacción.

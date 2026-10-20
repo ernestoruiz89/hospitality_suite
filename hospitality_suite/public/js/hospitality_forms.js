@@ -51,9 +51,10 @@
         group(__("Importe"),["method","amount"],["tendered","reference"]),
         group(__("Devolución"),["source_payment","credit_note","reason","refund_help"],[],{depends_on:refund})];
     }else if(has("full_name","identity_number","address_line1")){
-      kind="guest";action=__("Guardar huésped");
-      groups=[group(__("Datos principales"),["full_name","phone","email"],this.prop?.guest_id_required?["identity_type","identity_number"]:[]),
-        group(__("Datos adicionales"),["address_line1","city","country"],this.prop?.guest_id_required?["nationality"]:["identity_type","identity_number","nationality"])];
+      kind="guest";action=names.has("reason")?__("Guardar cambios"):__("Registrar huésped");
+      const identity=fields.find(df=>df.fieldname==="identity_number"),required=identity?.reqd!==undefined?Boolean(identity.reqd):Boolean(this.prop?.guest_id_required);
+      groups=[group(__("Datos principales"),["guest_policy","full_name","phone","email"],["payer_summary",...(required?["identity_type","identity_number"]:[])]),
+        group(__("Datos adicionales"),["address_line1","city","country","shared_notice"],[...(required?[]:["identity_type","identity_number"]),"nationality","reason"])];
     }else if(has("property_name","company","business_date")){
       kind="new_property";action=__("Crear establecimiento");
       groups=[group(__("Establecimiento"),["property_name","company"],["mode","currency"]),

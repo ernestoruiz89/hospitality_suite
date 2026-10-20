@@ -33,11 +33,18 @@ bootstrap devuelve native_pos solo a roles de finanzas/reportes del establecimie
 | `report`, `export_report` | establecimiento, nombre, filtros; exportación `file_format` | Datos o descarga XLSX/PDF según rol |
 | `report_page` | los mismos filtros, `offset`, `page_length` (1–200) | `rows`, `columns`, `total`, `has_more`; sin truncar la exportación |
 | `report_options` | `property_name`, `report_name`, `company` opcional | Dimensiones aplicables, tipos de fecha y opciones dentro de los establecimientos autorizados |
+| `guest_detail` | `name` | Perfil autorizado, política, pagador legible y versiones de Guest/Contact/Address; requiere guest |
 | `guest_history` | `name`, `offset`, `page_length` | Visitas como principal o acompañante, limitadas al documento/establecimiento autorizado |
 | `catalog_search` | `property_name`, `txt`, `purpose` (`any`, `sale`, `stock`, `purchase`) | Hasta 50 coincidencias y `has_more`; solo nombres/uso del Item compartido, sin precio/costo/saldo |
 | `configuration`, `setup_options` | establecimiento | Configuración y opciones; requiere permiso de configuración |
 
 En la tabla, establecimiento es el argumento `property_name`; inicio/fin son `starts_at`/`ends_at`, categoría es `category` y personas es `people`. Filtros se envía como objeto JSON en `filters`, con `from_date`, `to_date` y dimensiones admitidas por el reporte. Nombres e identificadores se obtienen de las consultas, no se construyen a partir del número visible de habitación.
+
+### Registro y corrección de huéspedes
+
+`bootstrap.properties` proyecta `guest_id_required`. `create_guest(property_name, data, request_key)` admite nombre, correo/teléfono, identificación/nacionalidad y dirección (`address_line1`, `city`, `country`); `customer` opcional debe estar registrado en ese establecimiento. Requiere `guest`. Devuelve `guest`, `customer`, `modified` y `related_versions` para contacto/dirección, sin cambiar las claves anteriores.
+
+`guest_detail(name)` devuelve esos identificadores/versiones, `property`, `values`, `guest_id_required`, `customer_label`, `shared_contact` y `shared_address`. `update_guest(property_name, name, modified, data, reason, request_key, related_versions)` es POST: campos omitidos conservan su valor; cadenas vacías limpian el valor del perfil. No admite cambiar propiedad, pagador ni enlaces CRM directamente. La identificación sigue la política actual; una dirección requiere ciudad/país. `related_versions` debe contener la versión de cada registro existente que se vaya a modificar; el formulario reenvía ambas. Un conflicto revierte toda la orden y exige consultar de nuevo. El pagador y las referencias de visitas se conservan; los registros CRM compartidos se copian, los exclusivos se corrigen. Véase GESTION_HUESPEDES.md para reintentos y límites.
 
 ### Catálogo de artículos
 

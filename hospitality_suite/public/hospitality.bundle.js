@@ -18,4 +18,5 @@ import "./js/hospitality_board.js";
 import "./js/hospitality_availability.js";
 import "./js/hospitality_drafts.js";
 import "./js/hospitality_tariffs.js";
+import "./js/hospitality_guests.js";
 import "./js/hospitality_forms.js";

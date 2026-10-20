@@ -151,7 +151,7 @@ def project(dt, prop, fields=None, filters=None):
 @frappe.whitelist()
 def bootstrap(property_name=None):
     names = allowed_properties()
-    props = frappe.get_all("HS Property", filters={"name": ["in", names]}, fields=["name", "company", "property_name", "brand_name", "mode", "time_zone", "currency", "business_date", "discreet_mode", "inspection_required"])
+    props = frappe.get_all("HS Property", filters={"name": ["in", names]}, fields=["name", "company", "property_name", "brand_name", "mode", "time_zone", "currency", "business_date", "discreet_mode", "inspection_required", "guest_id_required"])
     roles = frappe.get_roles()
     pages = [dict(route=route, title=title) for route, (title, accepted) in PAGES.items() if is_system() or set(roles).intersection(accepted)]
     result = dict(properties=props, pages=pages, actions=[a for a in ACTIONS if may(a)], server_time=str(now_datetime()))
@@ -452,36 +452,22 @@ def save_setup(property_name, section, data, request_key, expected_modified=None
 @frappe.whitelist(methods=["POST"])
 def create_guest(property_name, data, request_key):
     values = payload(data)
-    def save(prop):
-        if not values.get("full_name"):
-            frappe.throw(frappe._("Escriba el nombre del huésped"))
-        customer = values.get("customer")
-        if not customer:
-            group = frappe.db.get_single_value("Selling Settings", "customer_group") or frappe.db.get_value("Customer Group", {"is_group": 0}, "name")
-            territory = frappe.db.get_single_value("Selling Settings", "territory") or frappe.db.get_value("Territory", {"is_group": 0}, "name")
-            customer_doc = frappe.get_doc(dict(doctype="Customer", customer_name=values["full_name"], customer_type="Individual", customer_group=group, territory=territory))
-            customer = customer_doc.insert(ignore_permissions=True).name  # explicit guest registration delegation only
-        doc = insert("HS Guest", prop, **{k: values.get(k) for k in ["full_name", "email", "phone", "identity_type", "identity_number", "nationality"]}, customer=customer)
-        if values.get("email") or values.get("phone"):
-            contact=frappe.get_doc(dict(doctype="Contact",first_name=values["full_name"],
-                                      links=[dict(link_doctype="Customer",link_name=customer)]))
-            if values.get("email"):
-                contact.append("email_ids",dict(email_id=values["email"],is_primary=1))
-            if values.get("phone"):
-                contact.append("phone_nos",dict(phone=values["phone"],is_primary_phone=1))
-            doc.contact=contact.insert(ignore_permissions=True).name
-        if values.get("address_line1"):
-            if not values.get("city") or not values.get("country"):
-                frappe.throw(frappe._("Indique ciudad y país de la dirección"))
-            address=frappe.get_doc(dict(doctype="Address",address_title=values["full_name"],address_type="Personal",
-                                       address_line1=values["address_line1"],city=values["city"],country=values["country"],
-                                       links=[dict(link_doctype="Customer",link_name=customer)]))
-            doc.address=address.insert(ignore_permissions=True).name
-        if doc.contact or doc.address:
-            doc.save()
-        audit(prop, "Register guest", doc)
-        return dict(guest=doc.name, customer=customer)
-    return command(property_name, "guest", request_key, dict(operation="create_guest", **values), save)
+    from hospitality_suite.guest_profiles import create
+    return command(property_name, "guest", request_key, dict(operation="create_guest", **values), lambda prop:create(prop,values))
+
+
+@frappe.whitelist()
+def guest_detail(name):
+    from hospitality_suite.guest_profiles import detail
+    return detail(name)
+
+
+@frappe.whitelist(methods=["POST"])
+def update_guest(property_name, name, modified, data, reason, request_key, related_versions=None):
+    from hospitality_suite.guest_profiles import update
+    values,versions=payload(data),payload(related_versions or {})
+    body=dict(operation='update_guest',guest=name,modified=modified,values=values,reason=reason,related_versions=versions)
+    return command(property_name,'guest',request_key,body,lambda prop:update(prop,name,modified,values,reason,versions))
 
 
 @frappe.whitelist(methods=["POST"])

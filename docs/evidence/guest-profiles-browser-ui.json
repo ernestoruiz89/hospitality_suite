@@ -1,0 +1,55 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "origin": "http://localhost:8089",
+  "role": "HS Receptionist",
+  "synthetic": true,
+  "optional_registration_from_page": true,
+  "optional_correction_from_page": true,
+  "required_identification_rejection_before_creation": true,
+  "required_registration_and_correction_from_page": true,
+  "persistence_verified_after_reload": true,
+  "customer_unchanged_on_guest_correction": true,
+  "mobile": {
+    "dialog": [
+      {
+        "footer": [
+          {
+            "bottom": 0,
+            "text": "",
+            "top": 0,
+            "width": 0
+          },
+          {
+            "bottom": 728.796875,
+            "text": "Guardar cambios",
+            "top": 684.796875,
+            "width": 342
+          }
+        ],
+        "scrollWidth": 390,
+        "width": 390
+      }
+    ],
+    "documentWidth": 390,
+    "viewport": {
+      "height": 844,
+      "width": 390
+    }
+  },
+  "desktop": {
+    "documentWidth": 1280,
+    "viewport": {
+      "height": 720,
+      "width": 1280
+    }
+  },
+  "captures": [
+    141,
+    142,
+    143,
+    144,
+    145,
+    146,
+    147
+  ]
+}

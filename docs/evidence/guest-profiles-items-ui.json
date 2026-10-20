@@ -1,0 +1,22 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "synthetic": true,
+  "fixture_source": "Policy configuration only",
+  "all_guest_creations_and_corrections_from_page": true,
+  "stage": "final",
+  "actor": "receptionist@hospitality.example.invalid",
+  "optional_guest": "HUE-00001",
+  "required_guest": "HUE-00002",
+  "existing_identity_preserved": true,
+  "unrequested_identification_and_addresses_absent": true,
+  "guests_added": 2,
+  "customers_added": 2,
+  "contacts_added": 1,
+  "no_new_people_on_correction": true,
+  "tables_compared": 72,
+  "tables_unchanged": 65,
+  "protected_operational_and_financial_tables_unchanged": true,
+  "corrections_with_reason": 2,
+  "native_guest_versions_present": true,
+  "audit_details_contain_field_names_only": true
+}
