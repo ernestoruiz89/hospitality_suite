@@ -1732,7 +1732,7 @@
         "hospitality_suite/tariff_explanations.py",
         "hospitality_suite/public/js/hospitality_drafts.js",
         "hospitality_suite/public/js/hospitality_tariffs.js",
-        "hospitality_suite/templates/print/folio.html"
+        "hospitality_suite/api.py"
       ],
       "evidence": [
         "docs/EXPLICACION_TARIFA_HISTORICA.md",
@@ -1741,7 +1741,9 @@
         "docs/evidence/tariffs-browser.json",
         "docs/evidence/tariffs-items-ui.json",
         "docs/evidence/136-cuenta-hotel-tarifa-historica.png",
-        "docs/evidence/137-cuenta-por-tiempo-tarifa-historica.png"
+        "docs/evidence/137-cuenta-por-tiempo-tarifa-historica.png",
+        "docs/CUENTA_RESUMIDA.md",
+        "docs/evidence/account-summary-native-tests.xml::test_compact_print_escapes_descriptions_and_keeps_historical_calculation_on_screen_only"
       ],
       "remaining": ""
     },

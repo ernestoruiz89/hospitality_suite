@@ -1,10 +1,10 @@
-# Precio histórico, reservas y nombres legibles — 0.6.5
+# Precio histórico, reservas y nombres legibles — 0.6.5 / 0.6.6
 
-«Ver cálculo del precio», en cada cargo de la cuenta, despliega la tarifa que fue aceptada. Para Hotel muestra noches, regla de temporada, base, personas y camas adicionales. Para Por tiempo muestra bloque, tolerancia, fracción y tiempo adicional facturable. La Page y el PDF usan la misma proyección de `quote_snapshot`; no consultan el tarifario actual ni recalculan el cargo.
+«Ver cálculo del precio», en cada cargo de la cuenta en pantalla, despliega la tarifa que fue aceptada. Para Hotel muestra noches, regla de temporada, base, personas y camas adicionales. Para Por tiempo muestra bloque, tolerancia, fracción y tiempo adicional facturable. La Page usa la proyección de `quote_snapshot`; no consulta el tarifario actual ni recalcula el cargo.
 
 Una extensión o cambio de habitación distingue el cargo de diferencia de la cotización completa que sirve de referencia. Descuento, cortesía y recargo conservan signo y motivo; el desglose de origen no representa otro cobro. Los cargos por noche explican solamente su noche. Folios compartidos conservan el alcance por estancia. Un registro antiguo sin información suficiente lo indica y mantiene visible su importe registrado. Programados y revertidos explican su tratamiento.
 
-El cálculo previo a confirmar continúa en la cotización. Al revisar la cuenta, el detalle queda plegado para facilitar la lectura; puede abrirse con teclado. El PDF imprime el cálculo completo y resume las referencias de los ajustes para evitar duplicarlo. Las dos cuentas sintéticas revisadas caben en una página cada una: Hotel C$3,800 menos descuento C$100, y Por tiempo C$600 más C$150. Se cambiaron tarifas actuales después de aceptar; los desgloses conservaron las reglas originales.
+El cálculo previo a confirmar continúa en la cotización. Al revisar la cuenta, el detalle queda plegado para facilitar la lectura; puede abrirse con teclado. Por solicitud posterior del usuario, desde 0.6.6 el PDF estándar es resumido y no imprime ese desglose; CUENTA_RESUMIDA.md documenta el ajuste. Los PDF/capturas 136–137 conservan la versión anterior 0.6.5: Hotel C$3,800 menos descuento C$100 y Por tiempo C$600 más C$150. Se cambiaron tarifas actuales después de aceptar; los desgloses de pantalla conservaron las reglas originales.
 
 La terminología visible usa «Hotel», «Por tiempo» y «Hotel y por tiempo». Los valores persistidos `Hotel`, `Motel`, `Mixed`, claves de reportes y fórmulas permanecen compatibles. «Motel Luna Demo» es un nombre comercial y no se reescribe. El diccionario de estas etiquetas no acredita por sí solo toda la traducción de la aplicación.
 

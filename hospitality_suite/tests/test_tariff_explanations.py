@@ -83,7 +83,9 @@ class TestTariffExplanations(IntegrationTestCase):
                 target.title='Tarifa nueva que no debe aparecer';target.amount=9999;target.additional_person_rate=999;target.save()
         fingerprints=self.fingerprints()
         self.assertEqual(self.rows(stay)[0]['pricing'],before)
-        self.assertEqual(hs_account_context(stay)['charges'][0]['pricing'],before)
+        printed=hs_account_context(stay)['charges'][0]
+        self.assertNotIn('pricing',printed)
+        self.assertEqual(printed.amount,3800)
         self.assertEqual(self.fingerprints(),fingerprints)
 
     def test_scheduled_nightly_charges_explain_only_their_own_night(self):
@@ -203,21 +205,42 @@ class TestTariffExplanations(IntegrationTestCase):
             shared=next(f for f in context['folios'] if f.name==folio)
             self.assertEqual(shared.balance['pending'],'3000.00')
 
-    def test_print_escapes_historical_content_and_unauthorized_reads_are_rejected(self):
+    def test_compact_print_escapes_descriptions_and_keeps_historical_calculation_on_screen_only(self):
         stay=self.enter()['stay'];row=self.rows(stay)[0]
         snapshot=json.loads(row.quote_snapshot)
         snapshot['nightly'][0]['rules']['title']='<script>histórico</script>'
         with operation():
-            doc=frappe.get_doc('HS Charge',row.name);doc.quote_snapshot=canonical(snapshot);doc.save()
+            doc=frappe.get_doc('HS Charge',row.name);doc.quote_snapshot=canonical(snapshot);doc.description='Concepto <b>visible</b>';doc.save()
         before=self.fingerprints()
         html=frappe.get_print('HS Stay',stay,print_format='HS Cuenta de estancia',as_pdf=False)
-        self.assertIn('Cálculo histórico del precio',html)
-        self.assertIn('&lt;script&gt;histórico&lt;/script&gt;',html)
+        self.assertNotIn('Cálculo histórico del precio',html)
+        self.assertNotIn('Importe histórico de referencia',html)
+        self.assertNotIn('histórico',html)
+        self.assertIn('Concepto &lt;b&gt;visible&lt;/b&gt;',html)
+        self.assertIn('<script>histórico</script>',canonical(api.stay_detail(stay)['charges'][0].pricing))
+        self.assertNotIn('Facturas y notas de crédito',html)
+        self.assertNotIn('Cobros, anticipos y garantías',html)
         self.assertNotIn('<script>histórico</script>',html)
         self.assertEqual(self.fingerprints(),before)
         frappe.set_user('Guest')
         with self.assertRaises(frappe.PermissionError):
             api.stay_detail(stay)
+
+    def test_compact_print_retains_discount_invoice_tax_payment_and_outstanding_amount(self):
+        entered=self.enter();row=self.rows(entered['stay'])[0]
+        self.command('adjustment',dict(charge=row.name,adjustment_type='Discount',amount=100,reason='Descuento autorizado'))
+        invoice=self.command('invoice',dict(folio=entered['folio']))['invoice']
+        shift=self.command('open_shift',dict(opening_amount=0))['shift']
+        method=frappe.db.get_value('HS Payment Method',{'property':self.prop.name})
+        payment=self.command('payment',dict(stay=entered['stay'],folio=entered['folio'],shift=shift,method=method,kind='Payment',amount=500))
+        before=self.fingerprints()
+        html=frappe.get_print('HS Stay',entered['stay'],print_format='HS Cuenta de estancia',as_pdf=False)
+        from bs4 import BeautifulSoup
+        text=BeautifulSoup(html,'html.parser').get_text(' ',strip=True)
+        for value in ('Descuento autorizado','Facturas y notas de crédito','Impuestos','Total','Cobros, anticipos y garantías',invoice,payment['payment_entry'],'1,400.00','500.00','900.00'):
+            self.assertIn(value,text)
+        self.assertNotIn('Cálculo histórico del precio',text)
+        self.assertEqual(self.fingerprints(),before)
 
     def test_legacy_invalid_and_rounding_snapshots_never_invent_current_prices(self):
         for raw in ('', '[]','{invalid',canonical(dict(rules=dict(mode='Hotel'),nightly=['bad'])),canonical(dict(rules=dict(mode='Hotel'),nightly=[dict(date='bad',amount='NaN')]))):

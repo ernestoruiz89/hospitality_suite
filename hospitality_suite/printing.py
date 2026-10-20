@@ -66,10 +66,8 @@ def hs_account_context(name):
     payments=current_all("HS Payment",filters={"property":stay.property,"status":"Posted"},
                          fields=["name","stay","booking","folio","kind","amount","currency","payment_entry","journal_entry"])
     payments=[p for p in payments if p.stay==stay.name or (p.folio and p.folio in [f.name for f in folios]) or (stay.booking and p.booking==stay.booking and not p.stay)]
-    from hospitality_suite.tariff_explanations import describe_charge
     charges=current_all('HS Charge',filters={'property':stay.property,'stay':stay.name},fields=['*'],order_by='creation asc,name asc')
     for row in charges:
-        row['pricing']=describe_charge(row)
         from hospitality_suite.display_labels import generated_label
         row['description_label']=generated_label(row.description)
     return dict(folios=folios,invoices=invoices,payments=payments,charges=charges)

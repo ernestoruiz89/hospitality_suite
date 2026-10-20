@@ -2,7 +2,11 @@
 
 Actualizado el 20/10/2026. El alcance obligatorio sigue abierto: **132 V, dieciocho I, cero P y 68 R**, de las mismas 218 entradas y huella. R significa contraste individual pendiente y no función ausente. Los recuentos no son un porcentaje de programación ni una fecha de terminación.
 
-## Última fase comprobada — 0.6.5
+## Última fase comprobada — 0.6.6
+
+CUENTA_RESUMIDA.md documenta el ajuste pedido por el usuario: el PDF estándar omite los cálculos repetidos y las secciones financieras vacías, conservando movimientos/saldos. La explicación histórica continúa disponible en pantalla. Pasaron 272 pruebas nativas y 66 JS; descarga nativa de PDF por recepción, extracción y revisión visual acreditadas. Capturas 138–140 y account-summary-browser.json/items-ui.json delimitan el recorrido sin escrituras. Aceptación restaurada, formato recargado en ambos sitios, datos/archivos principales conservados, servicios activos y 8089 apagado. No cambia el recuento de requisitos. Continuar con identificación/edición de huéspedes (S08-02), los demás I y las 68 R.
+
+## Fase anterior comprobada — 0.6.5
 
 S07-09 pasa a V: cuenta y PDF explican las reglas históricas aceptadas, sin consultar precios actuales. Además, se atendieron las observaciones del usuario: etiquetas Hotel/Por tiempo, resumen completo de Ver reserva, selección de habitación disponible con fechas/personas/categoría preseleccionadas y 24 series documentales nativas para nuevos registros. EXPLICACION_TARIFA_HISTORICA.md y SERIES_DOCUMENTALES.md delimitan los cambios. Los registros existentes conservan referencias e historial.
 

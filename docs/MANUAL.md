@@ -152,3 +152,5 @@ En Buscar disponibilidad, pulse un número de habitación para abrir Nueva reser
 «Ver reserva» presenta el resumen incluso después del ingreso: huésped según modo discreto, cliente que paga, fechas, modalidad, importe y habitaciones. «Ver estancia y cuenta» abre los cargos y el saldo actual. En cada cargo puede desplegar «Ver cálculo del precio» para consultar las reglas aceptadas; un cambio posterior de tarifa no altera esa explicación. Hotel y Por tiempo son las etiquetas de modalidad.
 
 Los documentos nuevos tienen números como RES-2026-00001, EST-2026-00001 y CTA-2026-00001. Los registros anteriores conservan sus referencias. Consulte SERIES_DOCUMENTALES.md para el resto de prefijos; no interprete el importe de la reserva como saldo actual ni el consecutivo como número de operaciones.
+
+«Imprimir cuenta» genera un PDF resumido de cargos, movimientos y saldo. Las secciones de facturas y pagos aparecen cuando tienen registros. Las fórmulas y reglas históricas se consultan en pantalla con «Ver cálculo del precio»; no se repiten en el comprobante.

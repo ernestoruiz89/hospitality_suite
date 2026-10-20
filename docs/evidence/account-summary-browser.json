@@ -1,0 +1,21 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "browser_host": "http://localhost:8089",
+  "role": "HS Receptionist",
+  "native_download_control": "Obtener PDF",
+  "browser_download_succeeded": true,
+  "native_pdf_without_cli_host_override": true,
+  "source_filename": "EST-2026-00001.pdf",
+  "pages": 1,
+  "download_sha256": "d4c32a8a0fa4e5dacef557722311a51a51cd8091b6ea04721dda1d8e3f68de48",
+  "text_matches_cli_pdf": true,
+  "empty_sections_omitted": true,
+  "calculation_blocks_absent": true,
+  "screenshot": "140-cuenta-resumida-impresion-nativa.jpg",
+  "business_mutations": false,
+  "unauthenticated_guest_rejected": true,
+  "download_visually_reviewed": true,
+  "logged_out": true,
+  "agent_tab_closed": true,
+  "viewport_changed": false
+}

@@ -17,10 +17,13 @@ from hospitality_suite.service import operation,canonical
 BENCH=Path('/home/frappe/benches/hospitality-bench')
 ROOT=Path(__file__).resolve().parents[1]
 SITE='hospitality-acceptance.localhost'
-BASE=BENCH/'.hospitality-tariffs-ux-baseline.json'
-FIXTURE=BENCH/'.hospitality-tariffs-ui-fixture.json'
-PROOF=ROOT/'docs/evidence/tariffs-items-ui.json'
-parser=argparse.ArgumentParser();parser.add_argument('action',choices=['prepare','inspect','pdf']);args=parser.parse_args()
+parser=argparse.ArgumentParser();parser.add_argument('action',choices=['prepare','inspect','pdf'])
+parser.add_argument('--phase',choices=['tariffs','account-summary'],default='tariffs');args=parser.parse_args()
+BASE=BENCH/f'.hospitality-{args.phase}-ux-baseline.json'
+FIXTURE=BENCH/f'.hospitality-{args.phase}-ui-fixture.json'
+PROOF=ROOT/f'docs/evidence/{args.phase}-items-ui.json'
+if args.action=='pdf':
+    assert args.phase=='account-summary','El impreso actual es resumido; use --phase account-summary. La evidencia histórica de 0.6.5 se conserva.'
 assert BASE.is_file(),'Conserve primero el respaldo con archivos y su línea de base'
 baseline=json.loads(BASE.read_text())
 os.chdir(BENCH/'sites');frappe.init(site=SITE,sites_path=str(BENCH/'sites'));frappe.connect()
@@ -91,7 +94,8 @@ def inspect():
         detail=api.stay_detail(case['stay'])
         # The user's later terminology change adds mode_label to the read model;
         # retain the original fixture and compare every original price field.
-        projected={r.name:{k:v for k,v in r.pricing.items() if k!='mode_label'} for r in detail['charges']}
+        legacy=not all('mode_label' in value for value in case['pricing'].values())
+        projected={r.name:{k:v for k,v in r.pricing.items() if not (legacy and k=='mode_label')} for r in detail['charges']}
         assert projected==case['pricing']
         assert all(r.pricing.get('mode_label')==('Hotel' if mode=='Hotel' else 'Por tiempo') for r in detail['charges'])
         assert decimal(detail['stay'].amount)==decimal(case['accepted_amount'])
@@ -135,15 +139,18 @@ try:
             pdfs=[]
             for mode in ('Hotel','Motel'):
                 pdf=frappe.get_print('HS Stay',fixture[mode]['stay'],print_format='HS Cuenta de estancia',as_pdf=True)
-                path=output/('cuenta-historica-'+('hotel' if mode=='Hotel' else 'por-tiempo')+'.pdf');path.write_bytes(pdf)
+                path=output/('cuenta-resumida-'+('hotel' if mode=='Hotel' else 'por-tiempo')+'.pdf');path.write_bytes(pdf)
                 pages=PdfReader(io.BytesIO(pdf)).pages;text=''.join(p.extract_text() or '' for p in pages)
-                assert 'Cálculo histórico del precio' in text and 'Importe histórico de referencia' in text
+                assert all(value not in text for value in ('Cálculo histórico del precio','Importe histórico de referencia','Fracciones aceptadas','Precio base:','Temporada aceptada'))
+                assert 'Cuentas y saldo' in text and 'Saldo total pendiente' in text
+                assert 'Facturas y notas de crédito' not in text and 'Cobros, anticipos y garantías' not in text
                 assert 'actual modificada' not in text
-                if mode=='Hotel':assert 'Temporada aceptada' in text and 'Descuento autorizado' in text and '3,700.00' in text
-                else:assert 'Fracciones aceptadas: 2 de 30 min.' in text and '750.00' in text and 'Por tiempo' in text
+                if mode=='Hotel':assert 'Descuento autorizado' in text and '3,800.00' in text and '-100.00' in text and '3,700.00' in text
+                else:assert all(value in text for value in ('600.00','150.00','750.00','Horas adicionales por tiempo'))
                 pdfs.append(dict(mode=mode,path=str(path.relative_to(ROOT)),pages=len(pages),sha256=hashlib.sha256(pdf).hexdigest()))
             proof['pdfs']=pdfs
             proof['pdf_asset_origin']='http://127.0.0.1:8089 (process-local CLI setting)'
+            proof['pdf_style']='Resumen sin desglose tarifario ni secciones vacías; Page conserva cálculo histórico'
             assert hashes()==fixture['hashes']
         PROOF.write_text(json.dumps(proof,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
         print(json.dumps(dict(site=SITE,tables_unchanged=proof['tables_unchanged'],cases=list(proof['cases']),pdfs=proof.get('pdfs',[]))))
