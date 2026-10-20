@@ -1,0 +1,11 @@
+{
+  "pdf": "output/native-pos/credits-shift.pdf",
+  "pages": 1,
+  "sha256": "8ba318b748916cd8e267eeea1741aa529306a07f60703eb8d70d0291b81e8e76",
+  "expected_and_counted": "100.00",
+  "refunds": [
+    "-30.00",
+    "-30.00"
+  ],
+  "render": "docs/evidence/86-pos-credit-shift-pdf.png"
+}

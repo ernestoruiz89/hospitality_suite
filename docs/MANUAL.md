@@ -30,7 +30,11 @@ El rol HS Receptionist registra la operación. Para cobrar con ese mismo usuario
 - Cuente por denominaciones y moneda. Una diferencia queda visible y exige motivo; el supervisor autorizado debe aprobarla. No se crea un ajuste automático para ocultarla.
 - Aplicar garantía exige autorización, recibo de garantía recibido, cuenta destino, turno abierto, importe y motivo. El recibo se muestra por fecha, importe y documento ERPNext. El resultado Garantía aplicada (sin nuevo ingreso) permite distinguirlo del dinero recibido.
 - Imprima arqueo y recibos. La aplicación de un anticipo o garantía no representa una segunda entrada de efectivo.
-- Cobros POS de ERPNext muestra las facturas estándar con su turno, medio e importe neto de vuelto/devolución. El efectivo ya forma parte del esperado; no registre otro cobro por esa venta. El arqueo impreso incluye ese origen. Una factura histórica sin turno o medio configurado exige revisión en Conciliación.
+- Cobros POS de ERPNext muestra facturas y documentos de devolución vinculados con su turno, medio e importe neto de vuelto/devolución. El efectivo ya forma parte del esperado; no registre otro cobro por esa venta. El arqueo impreso incluye ese origen. Una factura histórica sin turno o medio configurado exige revisión en Conciliación.
+
+- Nota de crédito pide factura y motivo. Para un original POS elija también turno de devolución y referencia bancaria si corresponde. Use Seleccionar cantidades para devolver solo algunas unidades, por nombre del artículo/servicio. Revise el total, las existencias y el dinero de cada medio antes de confirmar.
+- Una nota POS devuelve el dinero en esa misma operación; no registre otro cobro o devolución. El resultado entrega la nota y el asiento estándar. La devolución de una factura de estancia conserva el paso posterior de Cobrar con el origen correspondiente. Las ventas directas usan Devolver en Consumos e inventario, que incluye dinero y stock. Si la revisión indica Recibir, esa parte recupera efectivo que se entregó como vuelto de otro medio.
+- Las correcciones conservan los originales. Para cancelar una nota POS con devolución vigente, revierta primero su asiento con autorización y motivo.
 
 ## Limpieza y supervisión
 
@@ -121,3 +125,5 @@ En Configuración → Anticipos y garantías, elija una política para cada tipo
 Gerencia → Revisar cierre del día presenta ocupación, producción, facturación, dinero recibido y saldos separados por moneda. La fecha contable selecciona las facturas; la fecha operativa selecciona los movimientos. Los saldos corresponden al instante de la revisión e incluyen todas las fechas. Anticipos y garantías se distinguen del ingreso por alojamiento; un crédito a favor no elimina una factura sin conciliación.
 
 Resuelva los pendientes antes de confirmar. Si cambia la información financiera mientras revisa, actualice la revisión. Historial de cierres → Ver resumen consulta lo conservado en esa ejecución, sin recalcularlo con pagos posteriores. Imprimir cierre utiliza ese mismo resumen. Los cierres antiguos que no conservan el desglose lo indican expresamente.
+
+Si un POS tiene fondos de otros documentos o una valoración incoherente, la operación se rechaza antes de registrar una devolución. En esta versión, use Venta directa para nuevos cobros afectados por el vuelto en moneda extranjera. Los documentos históricos requieren revisión contable; no vuelva a pagar su importe bruto.

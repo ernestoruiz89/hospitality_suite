@@ -36,6 +36,10 @@ class TestDirectSales(IntegrationTestCase):
         self.assertTrue(all(row.warehouse==self.prop.warehouse for row in invoice.items))
         self.assertEqual(frappe.db.get_value("Stock Entry",service.stock_entry,"docstatus"),1)
         frappe.set_user("Administrator")
+        before=frappe.db.count('Sales Invoice')
+        with self.assertRaises(frappe.ValidationError):
+            api.preview(self.prop.name,dict(invoice=invoice.name,shift=self.shift,reason='Devolver por el flujo completo'),'credit_note')
+        self.assertEqual(frappe.db.count('Sales Invoice'),before)
         result=self.call("return_direct_sale",dict(service=service.name,shift=self.shift,reason="Devolución de venta de prueba"))
         self.assertEqual(frappe.db.get_value("Stock Entry",service.stock_entry,"docstatus"),2)
         self.assertEqual(frappe.db.get_value("Sales Invoice",result["credit_note"],"outstanding_amount"),0)

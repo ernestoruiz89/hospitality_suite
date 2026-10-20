@@ -322,6 +322,9 @@ def guard_cancel(doc,method=None):
         require(prop_name,"approve")
         if not doc.get("hs_correction_reason"):
             frappe.throw(frappe._("Indique el motivo de corrección antes de cancelar un documento de alojamiento"))
+        if doc.doctype=='Sales Invoice' and doc.is_return and doc.return_against and frappe.db.get_value('Sales Invoice',doc.return_against,'is_pos'):
+            if frappe.db.exists('Journal Entry Account',{'reference_type':'Sales Invoice','reference_name':doc.name,'docstatus':1}):
+                frappe.throw(frappe._('Revierta primero el asiento de devolución vinculado a esta nota POS'))
         field={"Payment Entry":"payment_entry","Journal Entry":"journal_entry"}.get(doc.doctype)
         if field:
             originals=frappe.get_all("HS Payment",filters={field:doc.name,"status":"Posted"},pluck="name")

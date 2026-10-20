@@ -1,0 +1,39 @@
+{
+  "acceptance": {
+    "site": "hospitality-acceptance.localhost",
+    "installed_apps": [
+      "frappe",
+      "erpnext",
+      "hospitality_suite"
+    ],
+    "operation_counts": {
+      "HS Stay": 0,
+      "HS Booking": 0,
+      "HS Charge": 0,
+      "HS Payment": 0,
+      "HS Shift": 0,
+      "HS Daily Close": 0,
+      "Sales Invoice": 0,
+      "Payment Entry": 0,
+      "Journal Entry": 0
+    },
+    "designated_test_site": true,
+    "scheduler_paused": true,
+    "initial_backup_exists": true
+  },
+  "main": {
+    "site": "hospitality.localhost",
+    "integration_fixture_guard_rejects": true,
+    "native_tables_unchanged": 36,
+    "business_date": "2026-10-19"
+  },
+  "ports": {
+    "8086": true,
+    "8089": false,
+    "9001": true,
+    "11001": true,
+    "13001": true
+  },
+  "main_http": 200,
+  "mutations": false
+}

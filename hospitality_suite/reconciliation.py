@@ -14,12 +14,17 @@ def unmatched_cash(prop,shift=None):
     """
     methods=current_all("HS Payment Method",filters={"property":prop.name},fields=["account","currency"])
     accounts={m.account:m.currency for m in methods}
+    from hospitality_suite.native_pos import movements as pos_movements
+    pos=pos_movements(prop.name,shift)
+    recognized={(row['doctype'],row['name']) for row in pos}
     result=[]
     for dt,field in (("Payment Entry","payment_entry"),("Journal Entry","journal_entry")):
         filters={"hs_property":prop.name,"docstatus":1}
         if shift:
             filters["hs_shift"]=shift
         for name in current_all(dt,filters=filters,pluck="name"):
+            if (dt,name) in recognized:
+                continue
             if current_all("HS Payment",filters={field:name,"status":"Posted"},pluck="name"):
                 continue
             native=locked_doc(dt,name)
@@ -35,8 +40,7 @@ def unmatched_cash(prop,shift=None):
             for account,amount in movements.items():
                 if amount:
                     result.append(dict(name=name,doctype=dt,account=account,amount=amount,currency=accounts[account],shift=native.hs_shift,creation=native.creation))
-    from hospitality_suite.native_pos import movements
-    for native in movements(prop.name,shift):
+    for native in pos:
         if not native["shift"] or not native["mapped"]:
             result.append(native)
     return result

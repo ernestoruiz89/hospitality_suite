@@ -16,6 +16,19 @@ class DeferredRetentionFile:
 
 
 class ScopedERPNotifications:
+    def validate_against_voucher_outstanding(self):
+        if not (self.doctype=='Sales Invoice' and self.is_return and self.flags.get('hs_credit_reviewed') and getattr(frappe.local,'hs_operation',False) and getattr(frappe.local,'hs_posting',False)):
+            return super().validate_against_voucher_outstanding()
+        # Keep ERPNext's validation/state updates. This method only advises on
+        # manual reconciliation, already explained by the accepted PMS review.
+        # Frappe 16's mute_messages still raises validation exceptions.
+        before=frappe.flags.mute_messages
+        frappe.flags.mute_messages=True
+        try:
+            return super().validate_against_voucher_outstanding()
+        finally:
+            frappe.flags.mute_messages=before
+
     def notify_update(self):
         prop=self.get("hs_property")
         if any(frappe.flags.get(k) for k in ("in_import","in_patch","in_migrate","in_install")):

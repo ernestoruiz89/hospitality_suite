@@ -62,12 +62,13 @@ def snapshot(prop,operational):
         submissions={}
         for event in current_all("HS Audit Event",filters={"property":prop.name,"action":"on_submit"},fields=["business_date","details"],order_by="occurred_at asc,name asc"):
             detail=frappe.parse_json(event.details or "{}")
-            if isinstance(detail,dict) and detail.get("doctype")=="Sales Invoice" and detail.get("docstatus")==1:
-                submissions.setdefault(detail.get("name"),event.business_date)
+            if isinstance(detail,dict) and detail.get("doctype") in ('Sales Invoice','Journal Entry','Payment Entry') and detail.get("docstatus")==1:
+                submissions.setdefault((detail.get('doctype'),detail.get("name")),event.business_date)
         from hospitality_suite.native_pos import movements
         for movement in movements(prop.name):
             name,currency,amount=movement["name"],movement["currency"],movement["amount"]
-            record=dict(name=name,account=movement["account"],currency=currency,net=str(amount),business_date=str(submissions[name]) if submissions.get(name) else None)
+            date=submissions.get((movement['doctype'],name))
+            record=dict(name=name,doctype=movement['doctype'],account=movement["account"],currency=currency,net=str(amount),business_date=str(date) if date else None)
             if not record["business_date"]:
                 sources["unattributed_movements"].append(record)
             elif getdate(record["business_date"])==day:

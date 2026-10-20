@@ -47,13 +47,28 @@ def movements(property_name,shift=None):
         filters["hs_shift"]=shift
     methods=current_all("HS Payment Method",filters={"property":property_name},fields=["account","currency","is_cash"])
     result=[]
-    for name in current_all("Sales Invoice",filters=filters,pluck="name"):
-        invoice=locked_doc("Sales Invoice",name)
-        accounts={row.account for row in invoice.payments if row.account}
-        if invoice.account_for_change_amount:
-            accounts.add(invoice.account_for_change_amount)
+    documents=[locked_doc('Sales Invoice',name) for name in current_all('Sales Invoice',filters=filters,pluck='name')]
+    originals=current_all('Sales Invoice',filters={'hs_property':property_name,'is_pos':1,'is_return':0,'docstatus':1},pluck='name')
+    credits=current_all('Sales Invoice',filters={'hs_property':property_name,'return_against':['in',originals],'is_return':1,'docstatus':1},pluck='name') if originals else []
+    from hospitality_suite.pos_returns import linked_vouchers
+    for dt,names in linked_vouchers(property_name,credits).items():
+        field='journal_entry' if dt=='Journal Entry' else 'payment_entry'
+        for name in names:
+            if current_all('HS Payment',filters={field:name,'status':'Posted'},pluck='name'):
+                continue
+            doc=locked_doc(dt,name)
+            if not shift or doc.hs_shift==shift:
+                documents.append(doc)
+    for invoice in documents:
+        name=invoice.name
+        if invoice.doctype=='Sales Invoice':
+            accounts={row.account for row in invoice.payments if row.account}
+            if invoice.account_for_change_amount:
+                accounts.add(invoice.account_for_change_amount)
+        else:
+            accounts={row.account for row in methods}
         sums=defaultdict(lambda:decimal(0))
-        for entry in current_all("GL Entry",filters={"voucher_type":"Sales Invoice","voucher_no":name,"is_cancelled":0},
+        for entry in current_all("GL Entry",filters={"voucher_type":invoice.doctype,"voucher_no":name,"is_cancelled":0},
                                  fields=["account","account_currency","debit_in_account_currency","credit_in_account_currency"]):
             if entry.account in accounts:
                 sums[(entry.account,entry.account_currency)]+=decimal(entry.debit_in_account_currency)-decimal(entry.credit_in_account_currency)
@@ -62,7 +77,17 @@ def movements(property_name,shift=None):
                 continue
             mappings={(row.currency,bool(row.is_cash)) for row in methods if row.account==account}
             mapped=len(mappings)==1 and next(iter(mappings))[0]==currency
-            result.append(dict(name=name,doctype="Sales Invoice",shift=invoice.hs_shift,creation=invoice.creation,
+            result.append(dict(name=name,doctype=invoice.doctype,shift=invoice.hs_shift,creation=invoice.creation,
                                posting_date=invoice.posting_date,account=account,currency=currency,amount=amount,
                                is_cash=next(iter(mappings))[1] if mapped else False,mapped=mapped))
     return result
+
+
+def validate_posted(doc):
+    if not doc.is_pos:
+        return
+    from hospitality_suite.pos_returns import ledger,validate_valuation
+    accounts={row.account for row in doc.payments if row.account}
+    if doc.account_for_change_amount:
+        accounts.add(doc.account_for_change_amount)
+    validate_valuation(doc,ledger([doc.name],accounts))

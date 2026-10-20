@@ -1,0 +1,36 @@
+✔ catalogue keeps human names and immutable item keys, including duplicate descriptions (2.5997ms)
+✔ outdated catalogue responses cannot overwrite results or authorize a failed search (1.6598ms)
+✔ historical close reads only the saved financial values, with distinct date bases (1.9317ms)
+✔ close confirmation carries the reviewed digest and blockers disable confirmation (1.6883ms)
+✔ full credit reviews net money and escaped labels before one stable intention posts (3.188ms)
+✔ partial return sends selected source lines, requotes changed quantities and preserves its intention (2.947ms)
+✔ booking descriptions use people and dates while respecting discreet mode and preserving keys (3.5656ms)
+✔ report scope changes ignore old options and keep a failed scope unqueryable (3.8406ms)
+✔ an older success cannot overwrite a newer property response (1.7381ms)
+✔ an old failure cannot clear busy or replace a newer result with an error (0.9674ms)
+✔ an invalidation during a failed mutation is refreshed once the request ends (1.0166ms)
+✔ dialog keeps numeric edits across row refreshes and leaves untouched hidden rows alone (1.7237ms)
+✔ a partly arrived group exposes its remaining numbered request and valid actions (2.4825ms)
+✔ a native business rejection keeps its server message; a lost response gets recovery guidance (0.9919ms)
+✔ property wall-clock controls preserve native single-digit hours (1.153ms)
+✔ native operational selects translate labels and preserve values, defaults and disabled state (2.6819ms)
+✔ master-data names are literal text even when matching a translation key or containing markup (2.0096ms)
+✔ cashier identifies native POS cash, refunds and missing attribution without exposing raw shift IDs (1.9181ms)
+✔ disabled receipts keep existing-fund refunds available and wire values stable (2.4103ms)
+✔ approval options explain the restriction and remain available to an approver (1.303ms)
+✔ editing dates while a quote is in flight invalidates its response (1.8464ms)
+✔ an uncertain request unlocks controls and retries the same quote and key (1.5085ms)
+✔ refund source shows date, amount and native receipt while preserving its key (1.6991ms)
+✔ converted guarantee keeps its application key and explains whether an invoice exists (0.8339ms)
+✔ refund labels never filter another workflow source, including card-refund settlement (0.6368ms)
+✔ applied refund review distinguishes original book value and current FX without rendering untrusted HTML (0.7078ms)
+✔ service setup shows escaped names and saves only mappings/list with the reviewed version (2.2858ms)
+✔ old service prices cannot overwrite a newer selection or a closed dialog (1.0158ms)
+ℹ tests 28
+ℹ suites 0
+ℹ pass 28
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 125.8173

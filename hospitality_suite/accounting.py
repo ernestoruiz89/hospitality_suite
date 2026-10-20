@@ -165,17 +165,21 @@ def reconcile_folio_advances(prop, folio):
     return rows
 
 
-def credit_note(prop, data):
+def credit_draft(prop, data):
     ready(prop)
     require(prop.name, "approve")
     inv = locked_doc("Sales Invoice", data["invoice"])
-    if inv.hs_property != prop.name or inv.docstatus != 1 or inv.is_return or not data.get("reason"):
+    if inv.hs_property != prop.name or inv.company!=prop.company or inv.docstatus != 1 or inv.is_return or not data.get("reason"):
         frappe.throw(frappe._("Seleccione una factura presentada de este establecimiento e indique el motivo"))
     from erpnext.accounts.doctype.sales_invoice.sales_invoice import make_sales_return
     target=frappe.new_doc("Sales Invoice")
     target.flags.ignore_permissions=True
     credit = make_sales_return(inv.name,target_doc=target)
     selected = {r["invoice_item"]: decimal(r["quantity"]) for r in data.get("items", [])}
+    if len(selected)!=len(data.get('items',[])):
+        frappe.throw(frappe._('Seleccione cada línea de devolución una sola vez'))
+    if 'items' in data and not selected:
+        frappe.throw(frappe._('Seleccione al menos una cantidad para devolver'))
     if selected:
         kept = []
         for row in credit.items:
@@ -188,13 +192,55 @@ def credit_note(prop, data):
         if len(kept) != len(selected):
             frappe.throw(frappe._("Línea de factura desconocida"))
         credit.set("items", kept)
+    credit.set('items',[row for row in credit.items if decimal(row.qty)<0])
+    if not credit.items:
+        frappe.throw(frappe._('La factura ya no tiene cantidades pendientes de devolución'))
     # Native POS invoices own their stock ledger; operational deliveries use
     # Stock Entry and keep update_stock=0 on both invoice and credit note.
     credit.update(dict(hs_stay=inv.hs_stay,hs_booking=inv.hs_booking, hs_folio=inv.hs_folio, update_stock=inv.update_stock, remarks=data["reason"]))
     for row in credit.items:
         row.hs_charge = None
         row.hs_charge_sources=None
+    credit.calculate_taxes_and_totals()
+    return inv,credit
+
+
+def credit_review(prop,inv,credit,data):
+    import hashlib
+    from hospitality_suite.service import canonical
+    from hospitality_suite.pos_returns import total
+    returns=[locked_doc('Sales Invoice',name) for name in current_all('Sales Invoice',filters={'return_against':inv.name,'docstatus':1},pluck='name',order_by='name')]
+    pos=None
+    if inv.is_pos:
+        from hospitality_suite.pos_returns import configure
+        pos=configure(prop,inv,credit,data,returns)
+    values=dict(invoice=inv.name,invoice_modified=str(inv.modified),currency=inv.currency,total=str(money(-total(credit),currency=inv.currency)),
+                rounding_adjustment=str(money(-decimal(credit.rounding_adjustment),currency=inv.currency)),
+                is_pos=bool(inv.is_pos),update_stock=bool(credit.update_stock),write_off=str(credit.write_off_amount),pos=pos,
+                items=[dict(invoice_item=row.sales_invoice_item,item_name=row.item_name or row.item_code,quantity=str(-decimal(row.qty)),amount=str(-decimal(row.amount))) for row in credit.items if row.qty],
+                returns=[dict(name=row.name,modified=str(row.modified),total=str(total(row))) for row in returns])
+    values['acceptance']=hashlib.sha256(canonical(values).encode()).hexdigest()
+    return values
+
+
+def credit_note_quote(prop,data):
+    inv,credit=credit_draft(prop,data)
+    if current_all('HS Service Request',filters={'property':prop.name,'sales_invoice':inv.name,'stay':['is','not set']},pluck='name'):
+        frappe.throw(frappe._('Para una venta directa, use Devolver en Consumos e inventario; ese flujo devuelve también el dinero y las existencias'))
+    return credit_review(prop,inv,credit,data)
+
+
+def credit_note(prop,data):
+    inv,credit=credit_draft(prop,data)
+    review=credit_review(prop,inv,credit,data)
+    if (inv.is_pos or data.get('acceptance')) and data.get('acceptance')!=review['acceptance']:
+        frappe.throw(frappe._('La factura o sus devoluciones cambiaron; revise la nota de crédito otra vez'))
+    credit.flags.hs_credit_reviewed=bool(data.get('acceptance'))
     post_standard(credit, prop)
+    refund_journal=None
+    if review['pos']:
+        from hospitality_suite.pos_returns import post
+        refund_journal=post(prop,inv,credit,review['pos'],data)
     for row in credit.items:
         original = next((i for i in inv.items if i.name == row.sales_invoice_item), None)
         if original and abs(decimal(row.qty)) == decimal(original.qty):
@@ -203,8 +249,8 @@ def credit_note(prop, data):
                 service = locked_doc("HS Service Request", service_name)
                 service.credit_note = credit.name
                 service.save()
-    audit(prop, "Credit note", locked_doc("HS Folio",inv.hs_folio) if inv.hs_folio else inv, data["reason"], {"invoice": inv.name, "credit_note": credit.name})
-    return dict(credit_note=credit.name, amount=credit.grand_total)
+    audit(prop, "Credit note", locked_doc("HS Folio",inv.hs_folio) if inv.hs_folio else inv, data["reason"], {"invoice": inv.name, "credit_note": credit.name,"refund_journal":refund_journal,"review":review})
+    return dict(credit_note=credit.name, amount=credit.grand_total,currency=credit.currency,pos=review['pos'],refund_journal=refund_journal)
 
 
 def apply_guarantee(prop, data):
@@ -544,6 +590,9 @@ def sync_document(doc, method=None):
     from hospitality_suite.service import lock_property
     lock_property(prop.name)
     with operation():
+        if doc.doctype=='Sales Invoice' and doc.docstatus==1:
+            from hospitality_suite.native_pos import validate_posted
+            validate_posted(doc)
         if (stay or doc.get("hs_folio")) and doc.doctype == "Sales Invoice" and doc.docstatus == 1:
             folio_name = doc.get("hs_folio")
             if not folio_name and stay:

@@ -66,7 +66,7 @@ def execute(property_name, action, request_key, data=None):
 
 @frappe.whitelist()
 def preview(property_name, data, action="reserve"):
-    permission="inventory" if action=="purchase_order" else "approve" if action in ("adjust_stock","retire_sensitive") else "finance" if action in ("payment","direct_sale","settle_payment","supplier_payment") else "reserve" if action in ("reserve","booking_status","modify_reservation","convert_portal") else "stay"
+    permission="inventory" if action=="purchase_order" else "approve" if action in ("adjust_stock","retire_sensitive","credit_note") else "finance" if action in ("payment","direct_sale","settle_payment","supplier_payment") else "reserve" if action in ("reserve","booking_status","modify_reservation","convert_portal") else "stay"
     prop = require(property_name, permission)
     data = payload(data)
     if action == "reserve":
@@ -91,6 +91,8 @@ def preview(property_name, data, action="reserve"):
     if action=="payment":
         require(prop.name,"finance")
         return accounting.payment_quote(prop,data)
+    if action=='credit_note':
+        return accounting.credit_note_quote(prop,data)
     if action=="settle_payment":
         return treasury.settlement_quote(prop,data)
     if action=="supplier_payment":

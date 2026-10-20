@@ -1490,7 +1490,12 @@
         "hospitality_suite/accounting.py",
         "hospitality_suite/refunds.py",
         "hospitality_suite/public/js/hospitality_refunds.js",
-        "hospitality_suite/public/js/hospitality_workflows.js"
+        "hospitality_suite/public/js/hospitality_workflows.js",
+        "hospitality_suite/pos_returns.py",
+        "hospitality_suite/native_pos.py",
+        "hospitality_suite/public/js/hospitality_credits.js",
+        "hospitality_suite/controllers.py",
+        "hospitality_suite/security.py"
       ],
       "evidence": [
         "docs/AUDITORIA_DEVOLUCIONES.md",
@@ -1501,9 +1506,20 @@
         "docs/evidence/78-refund-confirmed-cashier.png",
         "docs/evidence/refund-items-ui.json",
         "docs/evidence/refund-ux-restored.json",
-        "docs/AUDITORIA_GARANTIAS_APLICADAS.md"
+        "docs/AUDITORIA_GARANTIAS_APLICADAS.md",
+        "docs/AUDITORIA_NOTAS_POS.md",
+        "docs/evidence/credits-native-tests.xml::TestPosCreditNotes / TestAppliedRefunds / TestGuaranteeRefunds / TestFinance",
+        "docs/evidence/credits-js-tests.log",
+        "docs/evidence/82-pos-credit-partial-quantity.png",
+        "docs/evidence/83-pos-credit-net-review.png",
+        "docs/evidence/84-pos-credit-confirmed.png",
+        "docs/evidence/85-pos-credit-closed-cashier.png",
+        "docs/evidence/86-pos-credit-shift-pdf.png",
+        "docs/evidence/credits-items-ui.json",
+        "docs/evidence/credits-pdf-check.json",
+        "docs/evidence/credits-ux-restored.json"
       ],
-      "remaining": "Anticipos, cobros y garantías aplicadas/disponibles tienen devolución nativa probada. Continuar el contraste de notas POS desde las Pages antes de verificar la entrada completa."
+      "remaining": "Notas y devoluciones ordinarias, anticipos/garantías y POS simples/parciales probados. Completar las notas POS con cobros adicionales de otros documentos, devolviendo cada origen y conservando el crédito restante; actualmente se rechazan sin escrituras para no convertir esos fondos en diferencia de cambio."
     },
     {
       "id": "S09-09",
