@@ -596,17 +596,27 @@
       "line": 48,
       "kind": "enumerated",
       "requirement": "- Artículos de alojamiento, horas adicionales, alimentación, minibar, lavandería y otros servicios.",
-      "status": "I",
+      "status": "V",
       "implementation": [
-        "hospitality_suite/catalog.py",
+        "hospitality_suite/item_configuration.py",
         "hospitality_suite/pricing.py",
-        "hospitality_suite/public/js/hospitality_catalog.js"
+        "hospitality_suite/operations.py",
+        "hospitality_suite/timing.py",
+        "hospitality_suite/inventory.py",
+        "hospitality_suite/public/js/hospitality_items.js"
       ],
       "evidence": [
-        "docs/evidence/catalog-native-tests.xml",
-        "docs/AUDITORIA_ARQUITECTURA.md"
+        "docs/AUDITORIA_SERVICIOS.md",
+        "docs/evidence/service-native-tests.xml::TestServiceItems / TestPricing",
+        "docs/evidence/service-js-tests.log",
+        "docs/evidence/68-service-items-configured.png",
+        "docs/evidence/69-service-current-price.png",
+        "docs/evidence/70-motel-extra-hours-quote.png",
+        "docs/evidence/71-motel-separated-charges.png",
+        "docs/evidence/service-items-ui.json",
+        "docs/evidence/service-ux-restored.json"
       ],
-      "remaining": "Catálogo completo y artículos de alojamiento/horario/consumo operan. Contrastar la configuración/asignación de todos los servicios pedidos, en particular el artículo para horas adicionales, antes de acreditar toda la entrada."
+      "remaining": ""
     },
     {
       "id": "S03-07",

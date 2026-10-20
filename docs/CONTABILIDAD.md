@@ -10,6 +10,8 @@ Configure la plantilla tributaria, incluidos o añadidos, y confirme su revisió
 
 ## Momento de reconocimiento
 
+Los artículos de alojamiento/tiempo se seleccionan por establecimiento y se conservan en las cotizaciones nuevas. Las horas adicionales de motel se registran por separado con su importe/horas aceptados, manteniendo clasificación de alojamiento para indicadores. La extensión y el exceso de salida cobran solo el incremento. La migración conserva el artículo anterior en propiedades existentes y no recategoriza documentos. Alimentación, minibar, lavandería de huésped y otros consumos usan Item Price vigente por lista/moneda/unidad/pagador; la entrega de stock sigue en Stock Entry y la factura no repite la salida.
+
 Se conserva como cargo operativo el importe aceptado de alojamiento/consumos. Se convierte en contabilidad al presentar Sales Invoice. No se implementa otro devengo diario ni un asiento paralelo de alojamiento. Repetir el cierre no reconoce nuevamente lo facturado.
 
 La factura de folio toma cargos pendientes, conserva su origen y los marca facturados después de presentar el documento estándar. La cuenta compartida puede reunir varias estancias de una reserva y un único pagador. Los descuentos/cortesías de cargos pendientes se incluyen en la línea estándar con sus referencias; no necesitan habilitar tarifas negativas en Selling Settings. Si el origen ya está contabilizado, la corrección financiera requiere documentos de reversión.

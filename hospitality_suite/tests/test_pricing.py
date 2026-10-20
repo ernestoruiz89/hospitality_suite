@@ -2,7 +2,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 import unittest
 
-from hospitality_suite.pricing import calculate, money
+from hospitality_suite.pricing import calculate, money,decimal
 from hospitality_suite.reports import union_seconds
 
 
@@ -38,6 +38,14 @@ class TestPricing(unittest.TestCase):
 
     def test_decimal_rounding(self):
         self.assertEqual(str(money("1.005")), "1.01")
+
+    def test_overtime_components_keep_total_and_fraction_at_currency_precision(self):
+        from datetime import timedelta
+        self.rate.update(amount='450.125',extra_hour_rate='150.125',rounding_minutes=15,grace_minutes=0)
+        for precision in (0,2,3):
+            result=calculate(self.rate,self.start,self.start+timedelta(hours=3,minutes=16),precision=precision)
+            self.assertEqual(result['extra_hours_quantity'],'0.5')
+            self.assertEqual(decimal(result['lodging_amount'])+decimal(result['extra_hours_amount']),decimal(result['amount']))
 
     def test_snapshot_copies_rules(self):
         from datetime import timedelta

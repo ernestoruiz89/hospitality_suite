@@ -1,5 +1,6 @@
 """Read-only proof of the isolated acceptance baseline and main native ledger."""
 import hashlib
+import argparse
 import json
 import os
 from pathlib import Path
@@ -9,6 +10,9 @@ import urllib.request
 import frappe
 
 bench=Path('/home/frappe/benches/hospitality-bench')
+parser=argparse.ArgumentParser()
+parser.add_argument('--phase',choices=['financial','service'],default='financial')
+args=parser.parse_args()
 root=Path(__file__).resolve().parents[1]
 os.chdir(bench/'sites')
 proof={}
@@ -54,5 +58,5 @@ with urllib.request.urlopen('http://localhost:8086/login') as response:
     assert response.status==200
 proof['main_http']=200
 proof['mutations']=False
-(root/'docs/evidence/financial-final-state.json').write_text(json.dumps(proof,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
+(root/('docs/evidence/'+args.phase+'-final-state.json')).write_text(json.dumps(proof,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
 print(json.dumps(proof,ensure_ascii=False))

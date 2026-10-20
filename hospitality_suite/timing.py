@@ -49,6 +49,8 @@ def departure(prop,data):
         quote=calculate(snapshot["rules"],local(start,prop),local(end,prop),snapshot.get("people",1),extra_beds=snapshot.get("extra_beds",0),precision=snapshot.get("precision",2))
         difference=max(decimal(0),decimal(quote["amount"])-decimal(current.accepted_amount))
         kind="Lodging"
+        from hospitality_suite.item_configuration import bindings
+        quote["charge_items"]=bindings(prop,snapshot)
     else:
         day=get_datetime(snapshot["start"]).date()+timedelta(days=int(snapshot.get("units") or len(snapshot.get("nightly") or []) or 1))
         boundary=aware(datetime.combine(day,get_time(prop.check_out_time)),prop.time_zone)
@@ -56,11 +58,13 @@ def departure(prop,data):
         difference=max(decimal(0),fee(minutes,prop.late_hour_rate,prop)-decimal(stay.late_fee))
         quote=dict(explanation=[frappe._("Salida tardía: tolerancia y fracción configuradas")],start=snapshot["start"],end=local(end,prop).isoformat(),rules=snapshot["rules"])
         kind="Service"
+        from hospitality_suite.item_configuration import bindings
+        quote["charge_items"]=bindings(prop,snapshot)
     result=dict(stay=stay.name,amount=str(money(difference)),currency=prop.currency,kind=kind,quote=quote,
                 explanation=quote["explanation"],inspection_required=bool(prop.checkout_inspection_required),
                 inspected=bool(stay.departure_inspected_by))
     # Economic acceptance remains valid while the rounded amount is unchanged.
-    result["acceptance"]=hashlib.sha256(canonical(dict(stay=stay.name,modified=str(stay.modified),amount=result["amount"],kind=kind)).encode()).hexdigest()
+    result["acceptance"]=hashlib.sha256(canonical(dict(stay=stay.name,modified=str(stay.modified),amount=result["amount"],kind=kind,charge_items=quote["charge_items"])).encode()).hexdigest()
     return result
 
 
@@ -75,16 +79,22 @@ def prepare_departure(prop,data):
         frappe.throw(frappe._("Seleccione una cuenta abierta de esta estancia"))
     amount=decimal(quote["amount"])
     if amount:
-        item=prop.lodging_item if quote["kind"]=="Lodging" else prop.timing_item
-        if not item:
-            frappe.throw(frappe._("Configure el artículo para cargos por horario"))
-        charge(prop,stay,folio,item,amount,quote["kind"],"Liquidación de tiempo de estancia",quote["quote"])
+        from hospitality_suite.item_configuration import bound_item,hours_quantity
+        motel=quote["kind"]=="Lodging"
+        item=bound_item(prop,quote["quote"],"extra_hour_item" if motel else "timing_item")
+        hour_rate=decimal(quote["quote"]["rules"].get("extra_hour_rate")) if motel else 0
+        charge(prop,stay,folio,item,amount,quote["kind"],"Liquidación de tiempo de estancia",quote["quote"],quantity=hours_quantity(prop,quote["quote"],amount/hour_rate) if hour_rate else 1)
         if quote["kind"]=="Lodging":
             segments=current_all("HS Allocation",filters={"stay":stay.name,"status":"Active"},fields=["name"],order_by="starts_at desc")
             segment=locked_doc("HS Allocation",segments[0].name)
             segment.accepted_amount=money(decimal(segment.accepted_amount)+amount)
             segment.ends_at=max(get_datetime(segment.ends_at),now_datetime())
+            snapshot=frappe.parse_json(segment.quote_snapshot or stay.quote_snapshot)
+            snapshot.update({key:quote["quote"][key] for key in ("end","lodging_amount","extra_hours_amount","extra_hours_quantity","charge_items")})
+            snapshot["amount"]=str(segment.accepted_amount)
+            segment.quote_snapshot=canonical(snapshot)
             segment.save(ignore_permissions=True)
+            stay.quote_snapshot=canonical(snapshot)
             stay.amount=money(decimal(stay.amount)+amount)
         else:
             stay.late_fee=money(decimal(stay.late_fee)+amount)

@@ -108,6 +108,12 @@ def preview(property_name, data, action="reserve"):
     frappe.throw(frappe._("Cotización desconocida"))
 
 
+@frappe.whitelist()
+def service_configuration(property_name,item=None):
+    from hospitality_suite.item_configuration import configuration
+    return configuration(property_name,item)
+
+
 def may(action):
     return is_system() or bool(set(ACTIONS[action]).intersection(frappe.get_roles()))
 
@@ -383,7 +389,7 @@ def save_setup(property_name, section, data, request_key, expected_modified=None
         "billing_party": ["customer","kind","credit_authorized","credit_limit","valid_until","reason"],
     }
     allowed["property"] += ["invoice_series","payment_series","invoice_print_format","receipt_print_format"]
-    allowed["property"] += ["advance_policy","guarantee_policy"]
+    allowed["property"] += ["advance_policy","guarantee_policy","extra_hour_item"]
     allowed["rate"].append("included_services")
     allowed["payment_method"]+=list(treasury.METHOD_FIELDS)
     allowed["expense_category"]=["label","account","max_amount","active"]

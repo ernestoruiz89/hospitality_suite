@@ -41,16 +41,21 @@ def prepare():
 
 
 def main():
+    global SITE
     parser=argparse.ArgumentParser()
     parser.add_argument('action',choices=['prepare','start','stop'])
+    parser.add_argument('--site',choices=['hospitality-clean.localhost','hospitality-acceptance.localhost'],default=SITE)
     args=parser.parse_args()
+    SITE=args.site
     config=json.loads((BENCH/'sites'/SITE/'site_config.json').read_text())
-    assert config['db_name']=='hospitality_clean' and config.get('allow_tests')
+    assert config['db_name']==('hospitality_clean' if SITE=='hospitality-clean.localhost' else 'hospitality_acceptance') and config.get('allow_tests')
     if args.action=='prepare':
+        assert SITE=='hospitality-clean.localhost','El catálogo de 606 artículos solo se prepara en el sitio limpio'
         prepare()
         return
     state=BENCH/'.hospitality-run'
-    pidfile=state/'catalog-web.pid'
+    stem='catalog-web' if SITE=='hospitality-clean.localhost' else 'acceptance-web'
+    pidfile=state/(stem+'.pid')
     if args.action=='stop':
         if pidfile.exists():
             process=Path('/proc')/pidfile.read_text().strip()
@@ -63,7 +68,7 @@ def main():
         return
     with socket.socket() as connection:
         assert connection.connect_ex(('127.0.0.1',PORT))!=0,'Puerto ocupado; no se reutiliza'
-    with (state/'catalog-web.log').open('ab') as log:
+    with (state/(stem+'.log')).open('ab') as log:
         environment={**os.environ,'DEV_SERVER':'true'}
         process=subprocess.Popen(['/home/frappe/.local/bin/bench','--site',SITE,'serve','--port',str(PORT),'--noreload'],cwd=BENCH,env=environment,
                                  stdin=subprocess.DEVNULL,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)

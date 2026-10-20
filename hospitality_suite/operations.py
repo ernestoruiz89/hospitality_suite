@@ -152,6 +152,23 @@ def charge(prop, stay, folio, item, amount, kind, description, snapshot=None, qu
                   quote_snapshot=canonical(snapshot or {}), reason=reason,applies_to_charge=applies_to)
 
 
+def credit_pending_lodging(prop,stay,folio,amount,snapshot,reason):
+    """A room-change credit can span the base and accepted overtime articles."""
+    remaining=abs(decimal(amount))
+    sources=current_all("HS Charge",filters={"property":prop.name,"stay":stay.name,"folio":folio.name,"kind":"Lodging",
+                        "status":"Pending","amount":[">",0],"applies_to_charge":["is","not set"]},fields=["name","item","amount"],order_by="creation asc,name asc")
+    for source in sources:
+        adjustments=current_all("HS Charge",filters={"applies_to_charge":source.name,"status":"Pending"},fields=["amount"])
+        available=max(decimal(0),decimal(source.amount)+sum(decimal(row.amount) for row in adjustments))
+        portion=min(remaining,available)
+        if portion:
+            charge(prop,stay,folio,source.item,-portion,"Lodging","Cambio de habitación y tarifa",snapshot,reason=reason,applies_to=source.name)
+            remaining-=portion
+        if not remaining:
+            return
+    frappe.throw(frappe._("El crédito supera los cargos pendientes; emita una nota de crédito sobre la factura de origen"))
+
+
 def check_in(prop, data,accept_timing=False):
     availability.expire_locked(prop)
     booking = document("HS Booking", data["booking"], "stay")
@@ -180,10 +197,10 @@ def check_in(prop, data,accept_timing=False):
     line = accepted["lines"][requested.idx-1]
     from hospitality_suite.timing import arrival
     fees=arrival(prop,booking,line)
+    from hospitality_suite.item_configuration import bound_item
     timing_total=decimal(fees["early"])+decimal(fees["late"])
     if timing_total:
-        if not prop.timing_item:
-            frappe.throw(frappe._("Configure el artículo para cargos por horario"))
+        bound_item(prop,line,"timing_item")
         if accept_timing:
             estimate=line.get("timing_estimate") or {}
             if timing_total>decimal(estimate.get("early"))+decimal(estimate.get("late")):
@@ -203,13 +220,18 @@ def check_in(prop, data,accept_timing=False):
     resource.save(ignore_permissions=True)
     booking.status = "Checked In"
     booking.save()
-    if not prop.lodging_item:
-        frappe.throw(frappe._("Configure el artículo de alojamiento"))
-    charge(prop, stay, folio, prop.lodging_item, line["amount"], "Lodging", "Alojamiento", line)
+    extra=decimal(line.get("extra_hours_amount")) if line.get("charge_items") else decimal(0)
+    base=decimal(line["amount"])-extra
+    if base or not extra:
+        charge(prop,stay,folio,bound_item(prop,line,"lodging_item"),base,"Lodging","Alojamiento",line)
+    if extra:
+        from hospitality_suite.item_configuration import hours_quantity
+        charge(prop,stay,folio,bound_item(prop,line,"extra_hour_item"),extra,"Lodging","Horas adicionales de motel",line,
+               quantity=hours_quantity(prop,line,line["extra_hours_quantity"]))
     if decimal(fees["early"]):
-        charge(prop,stay,folio,prop.timing_item,fees["early"],"Service","Entrada anticipada",fees)
+        charge(prop,stay,folio,bound_item(prop,line,"timing_item"),fees["early"],"Service","Entrada anticipada",fees)
     if decimal(fees["late"]):
-        charge(prop,stay,folio,prop.timing_item,fees["late"],"Service","Salida tardía programada",fees)
+        charge(prop,stay,folio,bound_item(prop,line,"timing_item"),fees["late"],"Service","Salida tardía programada",fees)
     audit(prop, "Check in", stay)
     return dict(stay=stay.name, folio=folio.name, room=room_name)
 
@@ -256,6 +278,8 @@ def extension_quote(prop, data):
         calculation["difference"] = str(money(decimal(calculation["amount"]) - decimal(current.accepted_amount or stay.amount)))
         calculation["segment_amount"]=calculation["amount"]
         calculation["amount"]=str(money(decimal(stay.amount)+decimal(calculation["difference"])))
+        from hospitality_suite.item_configuration import bindings
+        calculation["charge_items"]=bindings(prop,original)
     calculation["service_start"]=local(stay.ends_at,prop).isoformat()
     calculation["service_end"]=local(end,prop).isoformat()
     calculation["acceptance"] = hashlib.sha256(canonical(calculation).encode()).hexdigest()
@@ -282,6 +306,8 @@ def extend(prop, data):
     alloc.accepted_amount=money(decimal(alloc.accepted_amount)+decimal(result["difference"]))
     snapshot=json.loads(alloc.quote_snapshot or stay.quote_snapshot)
     snapshot.update(end=result["end"],amount=str(alloc.accepted_amount))
+    if result["rules"]["mode"]=="Motel":
+        snapshot.update({key:result[key] for key in ("lodging_amount","extra_hours_amount","extra_hours_quantity","charge_items")})
     if result.get("nightly"):
         snapshot["nightly"]=snapshot.get("nightly",[])+result["nightly"]
         snapshot["units"]=len(snapshot["nightly"])
@@ -293,7 +319,10 @@ def extend(prop, data):
     if (folio.stay!=stay.name if folio.stay else folio.booking!=stay.booking) or folio.status != "Open":
         frappe.throw(frappe._("Cuenta inválida"))
     if decimal(result["difference"]):
-        charge(prop, stay, folio, prop.lodging_item, result["difference"], "Lodging", "Extensión de estancia", result)
+        from hospitality_suite.item_configuration import bound_item,hours_quantity
+        motel=result["rules"]["mode"]=="Motel"
+        quantity=decimal(result["difference"])/decimal(result["rules"]["extra_hour_rate"]) if motel and decimal(result["rules"].get("extra_hour_rate")) else 1
+        charge(prop,stay,folio,bound_item(prop,result,"extra_hour_item" if motel else "lodging_item"),result["difference"],"Lodging","Extensión de estancia",result,quantity=hours_quantity(prop,result,quantity) if motel else 1)
     audit(prop, "Extend", stay, data.get("reason"), result)
     return dict(stay=stay.name, amount=result["amount"])
 
@@ -359,7 +388,11 @@ def change_room(prop, data):
         folio=document("HS Folio",data["folio"],"stay")
         if (folio.stay!=stay.name if folio.stay else folio.booking!=stay.booking) or folio.status!="Open":
             frappe.throw(frappe._("Seleccione una cuenta abierta de la estancia"))
-        charge(prop,stay,folio,prop.lodging_item,calculation["difference"],"Lodging","Cambio de habitación y tarifa",calculation["quote"],reason=data["reason"])
+        if decimal(calculation["difference"])<0:
+            credit_pending_lodging(prop,stay,folio,calculation["difference"],calculation["quote"],data["reason"])
+        else:
+            from hospitality_suite.item_configuration import bound_item
+            charge(prop,stay,folio,bound_item(prop,calculation["quote"],"lodging_item"),calculation["difference"],"Lodging","Cambio de habitación y tarifa",calculation["quote"],reason=data["reason"])
     audit(prop, "Change room", stay, data["reason"], {"from": before, "to": room.name})
     return dict(stay=stay.name, room=room.name)
 

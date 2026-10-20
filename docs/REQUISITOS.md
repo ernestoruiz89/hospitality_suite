@@ -2,7 +2,7 @@
 
 Actualizada el 2026-10-19. **El objetivo sigue activo.** V = prueba ejecutada de la parte indicada; I = implementado, verificación pendiente; P = trabajo pendiente. Las pruebas de backend no acreditan por sí solas un recorrido completo de interfaz.
 
-La [auditoría punto por punto](AUDITORIA_ESPECIFICACION.md) conserva el texto original y su huella: 201 elementos enumerados, diez cláusulas adicionales y siete fases, 218 entradas. Cuarenta y seis entradas tienen contraste individual, incluidas políticas de caja y desglose del cierre; dos mantienen verificación parcial y 170 esperan contraste individual. R no significa función ausente. Esta matriz resume las fases y no sustituye esa auditoría.
+La [auditoría punto por punto](AUDITORIA_ESPECIFICACION.md) conserva el texto original y su huella: 201 elementos enumerados, diez cláusulas adicionales y siete fases, 218 entradas. Cuarenta y siete entradas tienen contraste individual, incluidos artículos/servicios, políticas de caja y desglose del cierre; una mantiene verificación parcial y 170 esperan contraste individual. R no significa función ausente. Esta matriz resume las fases y no sustituye esa auditoría.
 
 | ID | Requisito | Implementación | Evidencia y trabajo pendiente | Estado |
 |---|---|---|---|---|
@@ -12,6 +12,7 @@ La [auditoría punto por punto](AUDITORIA_ESPECIFICACION.md) conserva el texto o
 | F03d | Políticas de anticipos y garantías | payment_policies.py, controllers.py, hospitality_policies.js | Manual/Approval/Disabled por tipo, servidor/cotización/ERP nativo, actor conservado, supervisor rechazado y fondos anteriores reversibles. Guardado/recarga en Page, captura 67 | V |
 | F03b | Usuarios, series y formatos desde Page | setup.py, hospitality_workflows.js | Series/formatos guardados y reabiertos en Page; recepción rechazada; formulario de roles inspeccionado sin conceder nuevos accesos. Alta y rechazo de gerente probados en integración | V |
 | F03c | Alta de establecimientos y fecha operativa inicial | setup.create_property, Page Configuración | Fecha/corte editables, default según zona/corte, petición única y auditoría; controles de fecha y primer establecimiento sin this.prop probados. Alta/recarga de mixto en sitio limpio sin movimientos financieros, capturas 62/63 | V |
+| F03e | Artículos y servicios | item_configuration.py, pricing.py, inventory.py, hospitality_items.js | Asignaciones conservadas, horas adicionales separadas y precios vigentes por pagador/lista/unidad. Siete pruebas nativas, fracciones en factura/compatibilidad con artículo anterior, crédito entre cargos y componentes 0/2/3; dos JS y entrada real C$450+C$150/cuenta PDF, capturas 68–71; sitio de aceptación restaurado | V |
 | F04 | Ocupación, limpieza y bloqueos separados | HS Room, HS Allocation | test_operations, lifecycle y role_flow | V |
 | F05 | Intervalos, grupos y cupo por categoría | availability.py, service.current_all | Dos conexiones reales: exactamente una confirmación en habitación y último cupo | V |
 | F06a | Hotel/motel y snapshots históricos | pricing.py, operations.py | Límites, gracia, medianoche/año, DST, extensión y cambio de categoría | V |
@@ -74,7 +75,7 @@ La [auditoría punto por punto](AUDITORIA_ESPECIFICACION.md) conserva el texto o
 
 ## Evidencia acumulada
 
-Batería conjunta anterior a las últimas ampliaciones: **50 aprobadas** (39 de integración y 11 puras). Ampliación de horarios, acompañantes y KPI: **4 aprobadas** por separado. La cortesía detectó una incompatibilidad con tarifas negativas; se corrigió con descuento en la línea estándar y referencias a sus cargos de origen. Última batería conjunta en hospitality-acceptance.localhost: **145 aprobadas** (132 integración + 13 puras), además de **17 de Desk y 2 del portal**. Ambas carreras reales se repitieron tras reutilizar el motor de cupos en reportes, con una confirmación y un rechazo por carrera. También pasaron impuesto incluido, camas extra, Contact/Address, retiro de caja, variación de cambio, penalizaciones, devolución POS nativa y exportación numérica.
+Batería conjunta anterior a las últimas ampliaciones: **50 aprobadas** (39 de integración y 11 puras). Ampliación de horarios, acompañantes y KPI: **4 aprobadas** por separado. La cortesía detectó una incompatibilidad con tarifas negativas; se corrigió con descuento en la línea estándar y referencias a sus cargos de origen. Última batería conjunta en hospitality-acceptance.localhost: **153 aprobadas** (139 integración + 14 puras), además de **19 de Desk y 2 del portal**. Ambas carreras reales se repitieron tras reutilizar el motor de cupos en reportes, con una confirmación y un rechazo por carrera. También pasaron impuesto incluido, camas extra, Contact/Address, retiro de caja, variación de cambio, penalizaciones, devolución POS nativa y exportación numérica.
 
 La matriz no sustituye los registros finales ni las capturas. Integraciones reales de canales, mensajería, pasarelas y cerraduras esperan proveedor/credenciales; HRMS es opcional. No se migró producción ni ningún sitio ajeno.
 

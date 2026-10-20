@@ -155,3 +155,14 @@ La revisión anterior de diez páginas fue sustituida por un PDF de 18 páginas,
 `financial-close-ui-export.json`: revisión real guardada, fuentes/importes/pendientes y exportación sin mutaciones; PDF nativo en output/financial-close/daily-close.pdf, dos páginas renderizadas/revisadas. `payment-policy-ui.json` confirma política del fixture vacío, finanzas deshabilitadas y cero operaciones/documentos propios. La sesión administrativa temporal se cerró; 8089 se detuvo y no acredita otro Socket.IO.
 
 La interrupción de WSL y las ejecuciones fallidas se describen en AVANCE.md y AUDITORIA_CIERRE_POLITICAS.md. El antiguo sitio limpio conserva respaldo de diagnóstico y scheduler pausado; la aceptación final usa un sitio nuevo independiente. Los resultados anteriores no se presentan como la aceptación de esta revisión. La matriz conserva 218 entradas: 46 V, dos I y 170 R; objetivo activo.
+
+68. `68-service-items-configured.png`: nombres/asignaciones del asistente guardados y recargados; artículo propio de horas adicionales de motel.
+69. `69-service-current-price.png`: agua por C$30, lista guardada y entrega con inventario; los nombres se muestran como texto.
+70. `70-motel-extra-hours-quote.png`: revisión de cuatro horas por C$600 antes de confirmar.
+71. `71-motel-separated-charges.png`: entrada real de prueba y cuenta con alojamiento C$450/horas adicionales C$150, sin factura ni cobro.
+
+`service-native-tests.log/xml`: 153 aprobadas (139 integración + catorce puras). Siete casos nuevos de servicios/configuración/precios/contratos anteriores/crédito entre cargos y una prueba pura de componentes/fracciones a precisión 0/2/3. La factura usa fracciones de Hour; el artículo anterior conserva una unidad de cargo y se rechaza un artículo distinto con unidad entera. `service-js-tests.log`: 21 aprobadas; las dos nuevas prueban nombres escapados/guardado restringido y respuestas atrasadas/cierre. `service-build.log` y ambos service-*-migrate.log acreditan sincronización/compilación.
+
+`service-upgrade-before/after.json`: mismas 70 tablas/911 filas y un archivo privado; solo se excluye la nueva columna extra_hour_item. `service-items-ui.json`: entrada confirmada desde Recepción, artículos/importes/cuenta y PDF de una página renderizada/revisada, en output/service-items/account.pdf. `service-ux-restored.json`: restauración nativa del respaldo previo al recorrido, 70 tablas/185 filas idénticas y cero estancias/facturas/cobros. No acredita recuperación del archivo privado de la demostración ni reversión final de código.
+
+`service-final-state.json`: sitio de aceptación designado sin operaciones, scheduler pausado y respaldo, demostración rechazada por la guardia de fixtures con 36 tablas nativas sin cambios, HTTP 200 y 8089 cerrado desde WSL. La sesión temporal llegó a Login y se cerró. La copia no tiene segundo Socket.IO. AUDITORIA_SERVICIOS.md explica el alcance y los pendientes; matriz actual 47 V, una I y 170 R de 218 entradas.

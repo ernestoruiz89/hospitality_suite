@@ -1,0 +1,32 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "synthetic": true,
+  "stay": "9vv0oji15t",
+  "room": "M101",
+  "amount": "600.0",
+  "charges": [
+    {
+      "description": "Horas adicionales de motel",
+      "item": "HS-DEMO-EXTRA-HOUR",
+      "quantity": 1.0,
+      "amount": 150.0,
+      "status": "Pending",
+      "item_name": "Hora adicional de motel"
+    },
+    {
+      "description": "Alojamiento",
+      "item": "HS-DEMO-LODGING",
+      "quantity": 1.0,
+      "amount": 450.0,
+      "status": "Pending",
+      "item_name": "Alojamiento (demostración)"
+    }
+  ],
+  "accepted_item": "HS-DEMO-EXTRA-HOUR",
+  "invoices": 0,
+  "payments": 0,
+  "ui_only_entry": true,
+  "pdf_pages": 1,
+  "pdf_sha256": "d0466213951ede93d9c7b32ddcd929240c0bea2ee3011c90cbd7bf102524cf61",
+  "pdf": "output/service-items/account.pdf"
+}

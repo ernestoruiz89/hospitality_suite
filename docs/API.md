@@ -70,6 +70,12 @@ Las acciones sobre documentos existentes exigen su `modified` actual cuando corr
 
 `create_property(data, request_key)` requiere administración del sistema. Admite `property_name`, `company`, `mode`, `currency`, `time_zone`, `close_time` y `business_date` inicial opcional en formato AAAA-MM-DD. La compañía ya debe existir. Sin fecha inicial, usa el día de la zona elegida y el corte local (antes del corte corresponde D−1). Registra auditoría y resultado en HS Request, serializando el alta en Company; mismo usuario/compañía/clave/carga devuelve el mismo `property`, otra carga con esa clave se rechaza. No habilita finanzas ni crea cuentas/tributos. `bootstrap.can_create_property` informa si la interfaz puede presentar esa acción; el servidor vuelve a comprobar el permiso.
 
+## Artículos y precios de servicios
+
+`service_configuration(property_name,item=None)` requiere configuración. Devuelve `modified`, asignaciones/nombres y lista/moneda; al indicar un artículo de venta habilitado añade su precio general vigente y estado `Priced`, `Missing` o `Ambiguous`. No concede lectura de costos/saldos del catálogo. `save_setup(section="property")` admite `extra_hour_item` junto con los artículos/lista ya existentes y exige `expected_modified`.
+
+Los consumos y ventas consultan la misma selección de Item Price por lista/moneda, vigencia, unidad y pagador. Se rechaza la ausencia o superposición aplicable. Las cotizaciones nuevas conservan `charge_items`; el cálculo de motel conserva `lodging_amount`, `extra_hours_amount` y `extra_hours_quantity`. Las cotizaciones/estancias antiguas pueden carecer de esas claves y mantienen su cargo aceptado. Los importes no se recalculan a partir de nombres ni descripciones traducidas.
+
 ## Políticas y cierre diario
 
 `save_setup(section="property")` admite `advance_policy` y `guarantee_policy`: `Manual`, `Approval` o `Disabled`. Cambiarlas requiere aprobación además de configuración y `expected_modified`. `bootstrap.payment_policies` sirve para presentar las opciones de caja; el servidor vuelve a autorizarlas en cotización/contabilización y en documentos nativos nuevos. El cambio no invalida la devolución/aplicación autorizada de fondos anteriores.

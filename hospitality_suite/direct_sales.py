@@ -19,17 +19,14 @@ def draft(prop,data):
     quantity=decimal(data.get("quantity") or 0)
     if item.disabled or not item.is_sales_item or item.is_fixed_asset or quantity<=0:
         frappe.throw(frappe._("Artículo o cantidad inválida"))
-    price_list=prop.price_list or frappe.db.get_single_value("Selling Settings","selling_price_list")
-    prices=current_all("Item Price",filters={"item_code":item.name,"price_list":price_list,"currency":prop.currency,"selling":1},fields=["price_list_rate","valid_from","valid_upto"])
-    prices=[p for p in prices if (not p.valid_from or str(p.valid_from)<=nowdate()) and (not p.valid_upto or str(p.valid_upto)>=nowdate())]
-    if len(prices)!=1:
-        frappe.throw(frappe._("Configure un precio de venta vigente e inequívoco para este artículo"))
+    from hospitality_suite.item_configuration import selling_price
+    price=selling_price(prop,item.name,prop.currency,customer)
     inv=frappe.new_doc("Sales Invoice")
     inv.flags.ignore_permissions=True
     inv.update(dict(company=prop.company,customer=customer,currency=prop.currency,posting_date=nowdate(),due_date=nowdate(),
                     debit_to=prop.receivable_account,cost_center=prop.cost_center,hs_property=prop.name,update_stock=0,
                     taxes_and_charges=prop.tax_template))
-    inv.append("items",dict(item_code=item.name,qty=float(quantity),rate=prices[0].price_list_rate,cost_center=prop.cost_center,warehouse=prop.warehouse))
+    inv.append("items",dict(item_code=item.name,qty=float(quantity),rate=price.price_list_rate,cost_center=prop.cost_center,warehouse=prop.warehouse))
     inv.set_missing_values()
     if prop.tax_template:
         from erpnext.controllers.accounts_controller import get_taxes_and_charges
@@ -40,7 +37,7 @@ def draft(prop,data):
     fx=accounting.exchange(method.currency,company_currency)
     property_fx=accounting.exchange(prop.currency,company_currency)
     amount=money(decimal(inv.grand_total)*property_fx/fx)
-    values=dict(item=item.name,quantity=str(quantity),rate=str(money(prices[0].price_list_rate)),customer=customer,
+    values=dict(item=item.name,item_price=price.name,quantity=str(quantity),rate=str(money(price.price_list_rate)),customer=customer,
                 total=str(money(inv.grand_total)),currency=prop.currency,tax_template=prop.tax_template,
                 method=method.name,payment_amount=str(amount),payment_currency=method.currency,exchange_rate=str(fx),property_rate=str(property_fx))
     values["acceptance"]=hashlib.sha256(canonical(values).encode()).hexdigest()

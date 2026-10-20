@@ -40,13 +40,12 @@ def request_service(prop, data):
         if quantity>entitlement-used:
             frappe.throw(frappe._("La solicitud supera los servicios incluidos disponibles de la estancia"))
     # A configured ERPNext Item Price is the authority; callers cannot invent prices.
-    price_list = prop.get("price_list") or frappe.db.get_single_value("Selling Settings", "selling_price_list")
-    price = frappe.db.get_value("Item Price", {"item_code": item.name, "price_list": price_list, "currency": folio.currency, "selling": 1}, "price_list_rate")
-    if price is None and not included:
-        frappe.throw(frappe._("Configure el precio de venta del artículo en ERPNext"))
+    from hospitality_suite.item_configuration import selling_price
+    price_row=None if included else selling_price(prop,item.name,folio.currency,folio.customer)
+    price=price_row.price_list_rate if price_row else 0
     doc = insert("HS Service Request", prop, stay=stay.name, folio=folio.name, customer=folio.customer, item=item.name,
                  quantity=quantity,included=included, amount=0 if included else money(quantity * decimal(price)), currency=folio.currency, status="Requested", notes=data.get("notes"))
-    audit(prop, "Request service", doc)
+    audit(prop,"Request service",doc,details=dict(item_price=price_row.name,rate=str(price_row.price_list_rate),valid_from=price_row.valid_from,valid_upto=price_row.valid_upto) if price_row else dict(included=True))
     return dict(service=doc.name, amount=str(doc.amount))
 
 

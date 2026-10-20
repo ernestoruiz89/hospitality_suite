@@ -51,7 +51,7 @@ SCHEMA = {
         link("cost_center", "Cost Center", False), link("warehouse", "Warehouse", False), link("laundry_warehouse", "Warehouse", False),
         link("receivable_account", "Account", False), link("guarantee_account", "Account", False),
         link("cash_transfer_account","Account",False),
-        link("lodging_item", "Item", False), link("tax_template", "Sales Taxes and Charges Template", False),
+        link("lodging_item", "Item", False), link("extra_hour_item","Item",False,label="Artículo de horas adicionales de motel"), link("tax_template", "Sales Taxes and Charges Template", False),
         link("price_list","Price List",False),
         f("tax_policy_confirmed", "Check"), f("brand_name"), f("retention_days", "Int", default=365),
         select("cancellation_fee_mode",["None","Fixed","First Night","Percent"]),f("cancellation_fee_value","Currency","currency"),

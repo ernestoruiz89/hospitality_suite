@@ -100,6 +100,16 @@ Administración del sistema dispone de «Crear establecimiento» en Configuraci�
 
 El alta no crea cuentas ni impuestos y conserva finanzas deshabilitadas. Complete políticas/contabilidad, categorías, habitaciones, tarifas y medios antes de habilitarlas. La fecha posterior avanza mediante cierre diario; una corrección usa la reapertura autorizada. Un reintento con los mismos datos conserva la referencia del formulario y recupera el establecimiento ya creado.
 
+## Artículos y servicios
+
+En Configuración → Artículos y servicios, seleccione los artículos estándar de alojamiento, horas adicionales de motel y horarios de hotel, junto con la lista de precios de consumos. La tabla superior muestra sus nombres actuales. Los artículos automáticos de alojamiento/tiempo deben estar habilitados para venta y no manejar inventario.
+
+Si elige un artículo distinto para horas adicionales, su unidad debe representar horas y admitir fracciones (por ejemplo, Hour). Las propiedades migradas que mantienen el mismo artículo de alojamiento conservan una unidad de cargo por registro, con el importe de la fracción aceptada.
+
+Busque un servicio para consultar su precio general vigente y si requiere entrega con inventario. Alimentación, minibar, lavandería de huésped y otros servicios usan Item/Item Price de ERPNext; un precio específico del pagador puede prevalecer. Si cambia la lista, guarde y vuelva a abrir para consultar sus precios. Un precio vencido, futuro o superpuesto no autoriza un consumo.
+
+Las horas adicionales de motel se muestran separadas del alojamiento en la cuenta. Las extensiones y la preparación de salida registran solo el incremento correspondiente. Una asignación nueva no modifica los cargos ya aceptados; las reservas antiguas conservan su tratamiento original.
+
 ## Políticas de anticipos y garantías
 
 En Configuración → Anticipos y garantías, elija una política para cada tipo: manual según rol de caja, con autorización de gerencia o sin nuevos movimientos. Guardar el cambio requiere permiso de aprobación. La caja muestra las opciones que correspondan y avisa cuando requiere gerencia; el servidor comprueba nuevamente el permiso al registrar. Los fondos recibidos anteriormente conservan su devolución o aplicación autorizada.

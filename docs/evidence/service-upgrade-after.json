@@ -1,0 +1,20 @@
+{
+  "stage": "after",
+  "site": "hospitality.localhost",
+  "passed": true,
+  "tables": 70,
+  "rows": 911,
+  "private_files": 1,
+  "excluded_new_columns": {
+    "HS Property": [
+      "extra_hour_item"
+    ]
+  },
+  "aggregate_sha256": "d3855afce900d1f533201c45ef94b45a76242e8718c9ec396966b455cfc685e2",
+  "payment_dates": {
+    "Audit": 11
+  },
+  "property_policies": {
+    "Manual/Manual": 2
+  }
+}

@@ -30,6 +30,9 @@ def calculate(rate, start, end, people=1, extra_beds=0, precision=2):
     if people < 1 or extra_beds < 0:
         raise ValueError(_("Ocupación inválida"))
     details = []
+    extra_amount=decimal(0)
+    extra_units=decimal(0)
+    rounding=decimal(rate.get("rounding_minutes") or 60)
     extra_people = max(0, int(people) - int(rate.get("included_people") or 2))
     extras = decimal(rate.get("additional_person_rate")) * extra_people + decimal(rate.get("extra_bed_rate")) * extra_beds
     if rate["mode"] == "Hotel":
@@ -46,7 +49,10 @@ def calculate(rate, start, end, people=1, extra_beds=0, precision=2):
         units = 1
         subtotal = decimal(rate["amount"]) + extras + extra_amount
         details.append(_("Bloque {0} h: {1}; {2} fracción(es) de {3} min: {4}; personas/camas: {5}",[block/60,rate['amount'],extra_units,rounding,extra_amount,extras]))
-    return dict(currency=rate["currency"], amount=str(money(subtotal, precision)), units=units,
+    total=money(subtotal,precision)
+    additional=money(extra_amount,precision)
+    return dict(currency=rate["currency"], amount=str(total),lodging_amount=str(total-additional),extra_hours_amount=str(additional),
+                extra_hours_quantity=str(extra_units*rounding/60),units=units,
                 explanation=details, rules=dict(rate), start=start.isoformat(), end=end.isoformat(), precision=precision)
 
 
@@ -98,6 +104,8 @@ def quote(prop, category, starts_at, ends_at, people=1, rate_name=None, customer
         result=dict(currency=nightly[0]["rules"]["currency"],amount=str(money(sum(decimal(r["amount"]) for r in nightly),int(precision))),
                     units=len(nightly),explanation=[f"{r['date']}: {r['amount']} ({r['rules']['title']})" for r in nightly],
                     nightly=nightly,rules=nightly[0]["rules"],start=start.isoformat(),end=end.isoformat(),precision=int(precision))
+    from hospitality_suite.item_configuration import bindings
+    result["charge_items"]=bindings(prop)
     result["people"]=int(people)
     result["extra_beds"]=int(extra_beds)
     result["included_services"]=included_services(result)

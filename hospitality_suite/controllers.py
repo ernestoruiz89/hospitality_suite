@@ -117,6 +117,8 @@ class ScopedDocument(Document):
                 from frappe.utils.password import get_encryption_key
                 get_encryption_key()
         if self.doctype == "HS Rate":
+            if self.get("property") and prop.financial_enabled and self.mode=="Motel" and self.active and self.extra_hour_rate>0 and not prop.get("extra_hour_item"):
+                frappe.throw(frappe._("Configure el artículo para horas adicionales de motel"))
             if self.amount < 0 or self.block_hours <= 0 or self.rounding_minutes <= 0 or (self.grace_minutes or 0)<0 or any((self.get(field) or 0)<0 for field in ("extra_hour_rate","extra_bed_rate","additional_person_rate")) or self.included_people<1:
                 frappe.throw(_("Revise el precio, bloque y redondeo de la tarifa"))
             if self.valid_from and self.valid_to and self.valid_to<self.valid_from:

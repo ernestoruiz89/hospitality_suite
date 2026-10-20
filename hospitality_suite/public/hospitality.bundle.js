@@ -7,3 +7,4 @@ import "./js/hospitality_reporting.js";
 import "./js/hospitality_policies.js";
 import "./js/hospitality_close.js";
 import "./js/hospitality_catalog.js";
+import "./js/hospitality_items.js";

@@ -93,6 +93,14 @@ def seed():
         frappe.get_doc(dict(doctype="Item", item_code="HS-DEMO-WATER", item_name="Agua minibar (demostración)",
                             item_group="Products", stock_uom="Nos", is_stock_item=1, is_sales_item=1,
                             valuation_rate=10, item_defaults=[dict(company=company.name, income_account=company.default_income_account)])).insert()
+    if not frappe.db.exists("Item","HS-DEMO-EXTRA-HOUR"):
+        frappe.get_doc(dict(doctype="Item",item_code="HS-DEMO-EXTRA-HOUR",item_name="Hora adicional de motel",item_group="Services",
+                            stock_uom="Hour",is_stock_item=0,is_sales_item=1,item_defaults=[dict(company=company.name,income_account=company.default_income_account)])).insert()
+    else:
+        extra_item=frappe.get_doc("Item","HS-DEMO-EXTRA-HOUR")
+        if extra_item.stock_uom=="Nos" and not frappe.db.exists("Sales Invoice Item",{"item_code":extra_item.name}):
+            extra_item.stock_uom="Hour"
+            extra_item.save()
     price_list = "HS Demo NIO"
     if not frappe.db.exists("Price List", price_list):
         frappe.get_doc(dict(doctype="Price List", price_list_name=price_list, selling=1, currency="NIO", enabled=1)).insert()
@@ -128,11 +136,12 @@ def seed():
                                            time_zone="America/Managua", business_date=nowdate(), currency="NIO", cleaning_minutes=30,
                                            inspection_required=1, discreet_mode=mode=="Motel", hold_minutes=15,
                                            cost_center=company.cost_center, warehouse=warehouse, receivable_account=company.default_receivable_account,
-                                           guarantee_account=guarantee, lodging_item="HS-DEMO-LODGING", tax_policy_confirmed=1, financial_enabled=1)).insert()
+                                           guarantee_account=guarantee, lodging_item="HS-DEMO-LODGING",extra_hour_item="HS-DEMO-EXTRA-HOUR", tax_policy_confirmed=1, financial_enabled=1)).insert()
             else:
                 prop = frappe.get_doc("HS Property", prop_name)
-                prop.warehouse = warehouse
-                prop.save()
+                if prop.warehouse!=warehouse:
+                    prop.warehouse = warehouse
+                    prop.save()
             cat_name = frappe.db.get_value("HS Category", {"property": prop.name, "category_name": "Estándar"})
             if not cat_name:
                 cat_name = frappe.get_doc(dict(doctype="HS Category", property=prop.name, company=company.name,
