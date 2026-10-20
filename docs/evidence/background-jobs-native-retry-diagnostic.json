@@ -1,0 +1,50 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "synthetic": true,
+  "frappe_version": "16.52.0",
+  "rq_job": "hospitality-acceptance.localhost||hs-background-jobs-probe-1c7e45c0acdb42c8bf15772a906e4807",
+  "final_rq_status": "failed",
+  "attempts": [
+    {
+      "job": "hospitality-acceptance.localhost||hs-background-jobs-probe-1c7e45c0acdb42c8bf15772a906e4807",
+      "before": {
+        "booking": "Hold",
+        "portal": "Hold",
+        "active": 2,
+        "events": 0
+      }
+    },
+    {
+      "job": "hospitality-acceptance.localhost||hs-background-jobs-probe-1c7e45c0acdb42c8bf15772a906e4807",
+      "before": {
+        "booking": "Hold",
+        "portal": "Hold",
+        "active": 2,
+        "events": 0
+      }
+    },
+    {
+      "job": "hospitality-acceptance.localhost||hs-background-jobs-probe-1c7e45c0acdb42c8bf15772a906e4807",
+      "before": {
+        "booking": "Hold",
+        "portal": "Hold",
+        "active": 2,
+        "events": 0
+      }
+    }
+  ],
+  "booking_states": [
+    {
+      "name": "RES-2026-00001",
+      "status": "Cancelled"
+    }
+  ],
+  "portal_states": [
+    {
+      "name": "SOL-2026-00001",
+      "status": "Expired"
+    }
+  ],
+  "native_retry_traceback": "Traceback (most recent call last):\n  File \"/home/frappe/benches/hospitality-bench/apps/frappe/frappe/utils/background_jobs.py\", line 273, in execute_job\n    retval = method(**kwargs)\n  File \"/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/tests/worker_retries.py\", line 60, in expire_with_fault\n    raise frappe.RetryBackgroundJobError('HS synthetic transient after expiry; rollback is required')\nfrappe.exceptions.RetryBackgroundJobError: HS synthetic transient after expiry; rollback is required\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/home/frappe/benches/hospitality-bench/apps/frappe/frappe/utils/background_jobs.py\", line 290, in execute_job\n    return execute_job(site, method, event, job_name, kwargs, is_async=is_async, retry=retry + 1)\n  File \"/home/frappe/benches/hospitality-bench/apps/frappe/frappe/utils/background_jobs.py\", line 314, in execute_job\n    frappe.local.job.after_job.run()\n    ^^^^^^^^^^^^^^^^\n  File \"/home/frappe/benches/hospitality-bench/apps/frappe/frappe/utils/local.py\", line 28, in __getattribute__\n    raise AttributeError(name)\nAttributeError: job\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/home/frappe/benches/hospitality-bench/env/lib/python3.14/site-packages/rq/worker.py\", line 1439, in perform_job\n    return_value = job.perform()\n  File \"/home/frappe/benches/hospitality-bench/env/lib/python3.14/site-packages/rq/job.py\", line 1318, in perform\n    self._result = self._execute()\n                   ~~~~~~~~~~~~~^^\n  File \"/home/frappe/benches/hospitality-bench/env/lib/python3.14/site-packages/rq/job.py\", line 1376, in _execute\n    result = self.func(*self.args, **self.kwargs)\n  File \"/home/frappe/benches/hospitality-bench/apps/frappe/frappe/utils/background_jobs.py\", line 314, in execute_job\n    frappe.local.job.after_job.run()\n    ^^^^^^^^^^^^^^^^\n  File \"/home/frappe/benches/hospitality-bench/apps/frappe/frappe/utils/local.py\", line 28, in __getattribute__\n    raise AttributeError(name)\nAttributeError: job\n",
+  "accepted_as_completion": false
+}

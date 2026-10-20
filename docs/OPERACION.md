@@ -33,11 +33,11 @@ Verifique la respuesta de recepción, una consulta de disponibilidad, estado de 
 
 ## Retenciones y trabajos
 
-El scheduler despacha por establecimiento cada cinco minutos. Cada job bloquea el establecimiento y libera retenciones vencidas de reservas y portal con auditoría. Su ejecución es repetible; no factura ni liquida dinero. Hay deduplicación del job por establecimiento. Los reintentos transitorios limitados de Frappe no sustituyen la revisión de fallos de negocio.
+El scheduler despacha por establecimiento cada cinco minutos. Cada job bloquea el establecimiento y libera retenciones vencidas de reservas y portal con auditoría. Su ejecución es repetible; no factura ni liquida dinero. Hay deduplicación por establecimiento. Desde 0.6.8, la aplicación limita el mismo trabajo a tres intentos para errores transitorios, con rollback completo y esperas de uno/dos segundos; los errores no transitorios fallan inmediatamente. TRABAJOS_Y_REINTENTOS.md documenta la diferencia detectada en el reintento nativo de Frappe 16.52 y las pruebas con el worker real.
 
-Ante un fallo, conserve Failed Job Log y el traceback, corrija la causa y vuelva a ejecutar la operación o su job por los mecanismos estándar. No marque manualmente como pagado ni cambie Allocation para eludir un bloqueo. Una ejecución posterior vuelve a examinar el estado real y no debe duplicar la liberación.
+Ante un fallo, revise RQ Job / Failed Jobs y Error Log con su metadata de trabajo/establecimiento. Conserve el traceback antes de reencolar o de un nuevo despacho periódico, que puede reemplazar la entrada RQ de la misma clave; Error Log SQL conserva el fallo según la retención estándar. Corrija la causa y reencole el job mediante los controles estándar. Un nuevo despacho cada cinco minutos tiene un presupuesto propio; no prolonga los reintentos del anterior. Compruebe finalización y cupo liberado. No marque manualmente como pagado ni cambie Allocation para eludir un bloqueo. Una ejecución posterior vuelve a examinar el estado real y no duplica la liberación.
 
-Se verificaron ejecución real de expire_property, fallo con rollback y reintento posterior por el worker. La propagación entre sesiones, aislamiento y reconexión bajo corte ya se comprobaron con tráfico real.
+Se verificaron seis escenarios del worker real: recuperaciones transitorias, agotamiento, fallos no transitorios, rollback, logs y recuperación, con reserva y portal. Las clases de bloqueo se inyectaron después de caducar datos reales; no se presenta como una nueva carrera de dos conexiones. La propagación entre sesiones, aislamiento y reconexión bajo corte conservan su evidencia anterior.
 
 ## Retención revisada de datos sensibles
 

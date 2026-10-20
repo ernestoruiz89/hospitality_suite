@@ -586,6 +586,7 @@ def metadata_messages():
         frappe._("La aplicación no conserva una cuenta y valoración de cliente inequívocas"),
         frappe._("La aplicación no conserva una garantía y un documento de origen vigentes"),
         frappe._("La asignación no conserva la línea de reserva de origen"),
+        frappe._("La caducidad de retenciones no pudo completarse; revise Error Log y vuelva a ejecutar el trabajo después de corregir la causa"),
         frappe._("La cantidad de personas supera la capacidad de la categoría"),
         frappe._("La cantidad debe ser positiva"),
         frappe._("La cantidad recibida supera lo pendiente de la orden"),

@@ -1468,18 +1468,26 @@
       "line": 97,
       "kind": "enumerated",
       "requirement": "- Las retenciones temporales expiran y liberan cupo de manera fiable.",
-      "status": "I",
+      "status": "V",
       "implementation": [
         "hospitality_suite/jobs.py",
-        "hospitality_suite/availability.py"
+        "hospitality_suite/availability.py",
+        "hospitality_suite/tests/worker_retries.py",
+        "hospitality_suite/tests/test_background_jobs.py"
       ],
       "evidence": [
         "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
         "docs/evidence/reservations-audit.json",
         "docs/evidence/reservations-native-tests.xml::test_hold_expiry_is_idempotent",
-        "docs/evidence/worker-recovery.json"
+        "docs/evidence/worker-recovery.json",
+        "docs/TRABAJOS_Y_REINTENTOS.md",
+        "docs/evidence/background-jobs-worker.json",
+        "docs/evidence/background-jobs-native-tests.xml::TestHoldExpiry (aislamiento y caducidad exacta)",
+        "docs/evidence/background-jobs-upgrade.json",
+        "docs/evidence/background-jobs-ux-restored.json",
+        "docs/evidence/background-jobs-final-state.json"
       ],
-      "remaining": "Expiración idempotente/liberación y fallo con rollback/recuperación RQ acreditados. Falta la política y aceptación de reintentos limitados automáticos del mismo trabajo; el despacho periódico y la recuperación manual no la prueban (S16-10)."
+      "remaining": ""
     },
     {
       "id": "S06-09",
@@ -3458,16 +3466,25 @@
       "line": 241,
       "kind": "enumerated",
       "requirement": "- Background jobs con reintentos limitados, registro de fallos y acciones de recuperación claras.",
-      "status": "I",
+      "status": "V",
       "implementation": [
         "hospitality_suite/jobs.py",
-        "hospitality_suite/privacy.py"
+        "hospitality_suite/privacy.py",
+        "hospitality_suite/tests/worker_retries.py",
+        "hospitality_suite/tests/test_background_jobs.py"
       ],
       "evidence": [
         "docs/evidence/worker-recovery.json",
-        "docs/OPERACION.md"
+        "docs/OPERACION.md",
+        "docs/TRABAJOS_Y_REINTENTOS.md",
+        "docs/evidence/background-jobs-worker.json",
+        "docs/evidence/background-jobs-native-tests.xml::TestHoldExpiry (aislamiento y caducidad exacta)",
+        "docs/evidence/background-jobs-upgrade.json",
+        "docs/evidence/background-jobs-ux-restored.json",
+        "docs/evidence/background-jobs-final-state.json",
+        "hospitality_suite/tests/test_privacy.py::test_file_failure_has_bounded_attempts_and_authorized_recovery"
       ],
-      "remaining": "La expiración tiene job deduplicado, fallo/rollback y recuperación RQ acreditados; retención dispone de intentos limitados. Contrastar y documentar la política acotada de reintento del job de expiración, diferenciándola de nuevos despachos periódicos y de la recuperación manual."
+      "remaining": ""
     },
     {
       "id": "S17-01",
