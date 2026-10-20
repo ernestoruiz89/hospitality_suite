@@ -40,7 +40,9 @@
       ],
       "evidence": [
         "docs/AUDITORIA_ARQUITECTURA.md",
-        "docs/evidence/architecture-current.json"
+        "docs/evidence/architecture-current.json",
+        "docs/UX_FORMULARIOS.md",
+        "docs/evidence/forms-items-ui.json"
       ],
       "remaining": ""
     },
@@ -305,7 +307,9 @@
       "evidence": [
         "docs/AUDITORIA_ARQUITECTURA.md",
         "docs/evidence/architecture-current.json",
-        "docs/evidence/README.md"
+        "docs/evidence/README.md",
+        "docs/UX_FORMULARIOS.md",
+        "docs/evidence/forms-items-ui.json"
       ],
       "remaining": ""
     },
@@ -504,7 +508,9 @@
         "docs/evidence/initial-setup-native-tests.xml",
         "docs/evidence/62-alta-fecha-corte.png",
         "docs/evidence/63-alta-conservada.png",
-        "docs/evidence/initial-setup-ui.json"
+        "docs/evidence/initial-setup-ui.json",
+        "docs/UX_FORMULARIOS.md",
+        "docs/evidence/forms-items-ui.json"
       ],
       "remaining": ""
     },

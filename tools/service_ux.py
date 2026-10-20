@@ -16,7 +16,7 @@ SITE='hospitality-acceptance.localhost'
 TARGET=BENCH/'sites'/SITE
 parser=argparse.ArgumentParser()
 parser.add_argument('action',choices=['before','prepare','inspect','restore','verify'])
-parser.add_argument('--phase',choices=['service','pos','refund','guarantee','credits','mixed','accounting'],default='service')
+parser.add_argument('--phase',choices=['service','pos','refund','guarantee','credits','mixed','accounting','forms'],default='service')
 args=parser.parse_args()
 BASE=BENCH/f'.hospitality-{args.phase}-ux-baseline.json'
 RECEIPT=BENCH/f'.hospitality-{args.phase}-ux-restored-receipt.json'
@@ -78,6 +78,7 @@ try:
         raw=json.dumps(rows,default=str,sort_keys=True,ensure_ascii=False,separators=(',',':')).encode()
         tables[dt]=dict(rows=len(rows),sha256=hashlib.sha256(raw).hexdigest())
     if args.action=='before':
+        if args.phase=='forms':assert not BASE.exists(),'Conserve el respaldo previo al recorrido de formularios'
         assert all(tables[dt]['rows']==0 for dt in ('HS Stay','HS Booking','HS Charge','HS Payment','HS Shift','Sales Invoice','Payment Entry','Journal Entry'))
         frappe.db.rollback()
         with (BENCH/f'.hospitality-{args.phase}-ux-backup.log').open('w') as output:
@@ -114,6 +115,35 @@ try:
         fixture.chmod(0o600)
         frappe.db.commit()
         print('Fixture POS sintético: fondo 100, venta 60, recibido 100, vuelto 40; sin HS Payment ni Payment Entry')
+    elif args.action=='inspect' and args.phase=='forms':
+        from hospitality_suite.accounting import folio_balance
+        from hospitality_suite.cashier import expected
+        prop=frappe.get_doc('HS Property',{'property_name':'Hotel Jardín Demo'})
+        assert prop.brand_name=='Hotel UX Formularios'
+        rate=frappe.get_doc('HS Rate',{'property':prop.name,'title':'Tarifa UX Formularios'})
+        assert rate.amount==1234 and rate.included_people==3 and rate.priority==1 and rate.mode=='Hotel'
+        guests=frappe.get_all('HS Guest',filters={'property':prop.name,'full_name':'Visitante UX Formularios'},fields=['name','email','customer'])
+        assert len(guests)==1 and guests[0].email=='formularios@example.invalid'
+        assert frappe.db.count('HS Stay')==frappe.db.count('HS Booking')==frappe.db.count('HS Folio')==1
+        stay=frappe.get_doc('HS Stay',{'property':prop.name})
+        assert stay.guest==guests[0].name and stay.customer==guests[0].customer and stay.amount==1500
+        assert frappe.db.get_value('HS Room',stay.room,'room_number')=='H101'
+        assert frappe.db.count('HS Payment')==frappe.db.count('Payment Entry')==frappe.db.count('Sales Invoice')==1
+        payment=frappe.get_doc('HS Payment',{'stay':stay.name})
+        assert payment.kind=='Payment' and payment.status=='Posted' and payment.amount==1500 and payment.tendered==1600 and payment.change_amount==100
+        assert frappe.db.get_value('Payment Entry',payment.payment_entry,'docstatus')==1
+        assert folio_balance(payment.folio)['outstanding']=='0.00'
+        shift=frappe.get_doc('HS Shift',payment.shift)
+        assert shift.status=='Closed' and shift.expected_amount==shift.counted_amount==1500 and shift.difference==0
+        assert expected(shift)=={'NIO':'1500.00'}
+        assert frappe.db.count('Journal Entry')==0
+        proof=dict(site=SITE,synthetic=True,ui_only_entry=True,property_saved_from_last_tab=True,
+                   rate=dict(amount=str(rate.amount),included_people=rate.included_people,priority=rate.priority),
+                   guest=dict(name_preserved=True,email_preserved=True),room='H101',stay_amount='1500.00',
+                   invoices=1,payments=1,payment_entries=1,received='1600.00',change='100.00',outstanding='0.00',
+                   shift_closed=True,expected='1500.00',counted='1500.00',difference='0.00')
+        (ROOT/'docs/evidence/forms-items-ui.json').write_text(json.dumps(proof,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
+        print(json.dumps(proof,ensure_ascii=False))
     elif args.action=='inspect' and args.phase=='pos':
         fixture=json.loads((BENCH/'.hospitality-pos-ux-fixture.json').read_text())
         shift=frappe.get_doc('HS Shift',fixture['shift'])

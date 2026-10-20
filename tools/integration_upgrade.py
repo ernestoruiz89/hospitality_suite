@@ -14,7 +14,7 @@ BENCH=Path('/home/frappe/benches/hospitality-bench')
 ROOT=Path(__file__).resolve().parents[1]
 BASE=BENCH/'.hospitality-integration-upgrade.json'
 SITES={'hospitality.localhost':'hospitality_dev','hospitality-acceptance.localhost':'hospitality_acceptance'}
-parser=argparse.ArgumentParser();parser.add_argument('action',choices=['before','verify']);args=parser.parse_args()
+parser=argparse.ArgumentParser();parser.add_argument('action',choices=['before','verify']);parser.add_argument('--phase',choices=['integration','forms'],default='integration');args=parser.parse_args()
 native=json.loads((BENCH/'.hospitality-financial-upgrade.json').read_text())['tables']
 names=sorted(set(SCHEMA)|set(native)|{'Version'})
 previous=json.loads(BASE.read_text()) if args.action=='verify' else None
@@ -75,5 +75,5 @@ else:
                           private_files_preserved=len(current[site]['private_files']),backup_with_files=True,existing_integration_events=0)
     proof=dict(sites=result,all_columns_compared=True,legacy_migration_evidence='integration-native-tests.xml::TestWebhook',
                synchronization_enabled=False)
-    (ROOT/'docs/evidence/integration-upgrade.json').write_text(json.dumps(proof,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
+    (ROOT/('docs/evidence/'+args.phase+'-upgrade.json')).write_text(json.dumps(proof,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
     print(json.dumps(proof))

@@ -1,0 +1,27 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "synthetic": true,
+  "ui_only_entry": true,
+  "property_saved_from_last_tab": true,
+  "rate": {
+    "amount": "1234.0",
+    "included_people": 3,
+    "priority": 1
+  },
+  "guest": {
+    "name_preserved": true,
+    "email_preserved": true
+  },
+  "room": "H101",
+  "stay_amount": "1500.00",
+  "invoices": 1,
+  "payments": 1,
+  "payment_entries": 1,
+  "received": "1600.00",
+  "change": "100.00",
+  "outstanding": "0.00",
+  "shift_closed": true,
+  "expected": "1500.00",
+  "counted": "1500.00",
+  "difference": "0.00"
+}

@@ -222,3 +222,16 @@ No se ejecutó una batería ni un recorrido nuevo y no se cambió código de apl
 integration-native-tests.log/xml acredita 196 aprobadas (182 integración y catorce puras); integration-js-tests.log conserva treinta regresiones. integration-upgrade.json compara 72 tablas con Version/1191 filas y dos archivos privados en demostración, 195 filas en aceptación, después de respaldos con archivos y migrate. Los recibos legacy y su Version se ejercitan en tests revertidos: esos sitios tenían cero eventos de proveedor. integration-final-state.json confirma guardia de fixtures, aceptación sin operaciones, HTTP/puertos y núcleo nativo preservado con la caché Company acreditada. AUDITORIA_RECEPTOR.md delimita resultados.
 
 No se implementa ni activa sincronización con Airbnb/Booking/otros canales, pendiente por indicación del usuario. S14-08 pasa a V: 80 V, ocho I, dos P y 128 R. La prioridad siguiente incluye claridad y longitud de formularios en escritorio/móvil, junto con el alcance operativo pendiente.
+
+## Formularios por tarea, 0.5.2
+
+96. `96-formulario-operacion.png`: políticas divididas en Operación, Cuentas y almacenes, Artículos e impuestos; acción de guardar visible.
+97. `97-tarifa-precio-claro.png`: borrador de tarifa con precio por noche y cuatro secciones.
+98. `98-huesped-movil-breve.png`: borrador de huésped a 390×844, datos esenciales y botón de 44 px a todo el ancho.
+99. `99-tarifa-validacion-movil.png`: intento de guardar desde otra pestaña vuelve a Precio; ningún alta incompleta.
+100. `100-cobro-confirmacion-unica.png`: revisión de cobro 1500, recibido 1600, vuelto 100; formulario anterior oculto/inactivo.
+101. `101-formularios-cobro-cierre.png`: un cobro contabilizado y turno cerrado en 1500 sin diferencia.
+
+`forms-js-tests.log`: 37 aprobadas, siete nuevas; no son recorridos de navegador. El backend vigente conserva 196 aprobadas de 0.5.1, sin nueva ejecución conjunta en esta fase. `forms-build.log` y `forms-*-migrate.log`: compilación/migración. `forms-items-ui.json`: valores guardados desde otras pestañas, reserva/estancia/cuenta únicas, una factura y Payment Entry, saldo cero y cierre. Toda la captura/confirmación del escenario se hizo desde Pages con datos ficticios; inspect solo lee y revierte sus bloqueos. Se prueba cancelar/reabrir revisión sin perder datos, y se inspecciona la sección Devolución sin registrarla.
+
+`forms-ux-restored.json`: restauración nativa con archivos, 71 tablas/185 filas idénticas. `forms-upgrade.json`: comparación adicional de todas las columnas de 72 tablas con Version, 1191 filas y dos archivos privados principales/195 filas de aceptación conservados. `forms-final-state.json`: aceptación sin operaciones, fecha principal conservada, HTTP/servicios y 8089 detenido. `architecture-current.json`: núcleos limpios, assets, 35 DocTypes y once Pages. UX_FORMULARIOS.md delimita evidencia, correcciones detectadas y alcance pendiente. F22a V para este cambio; F22 general I y matriz canónica sin cambios: 80 V, ocho I, dos P y 128 R de 218. No sustituye la recuperación final de la revisión que se entregue.

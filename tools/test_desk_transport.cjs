@@ -94,8 +94,8 @@ test('dialog keeps numeric edits across row refreshes and leaves untouched hidde
   const primary={off(){return this;},on(event,callback){submit=callback;return this;},prop(){return this;}};
   context.__=value=>value;
   context.frappe.ui={Dialog:class{
-    constructor(){this.fields_dict={rows:{df:{fieldname:'rows',fieldtype:'Table'},grid:{grid_rows:[{doc:row1,on_grid_fields_dict:{people:edited}},{doc:row2,on_grid_fields_dict:{people:hidden}}]}}};this.$wrapper={on(events,selector,callback){capture=callback;}};}
-    get_primary_btn(){return primary;}show(){}get_values(){return{rows:[row1,row2]};}
+    constructor(){this.fields_dict={rows:{df:{fieldname:'rows',fieldtype:'Table'},grid:{grid_rows:[{doc:row1,on_grid_fields_dict:{people:edited}},{doc:row2,on_grid_fields_dict:{people:hidden}}]}}};this.$wrapper={addClass(){},on(events,selector,callback){capture=callback;}};}
+    get_close_btn(){return{attr(){}};}get_primary_btn(){return primary;}show(){}get_values(){return{rows:[row1,row2]};}
   }};
   let accepted;
   await desk.dialog('Counts',[{fieldname:'rows',fieldtype:'Table'}],async values=>{accepted=values;});
@@ -121,7 +121,7 @@ test('a native business rejection keeps its server message; a lost response gets
   const {desk,context}=fixture();let submit;const messages=[];
   context.frappe.msgprint=message=>messages.push(message);
   const primary={off(){return this;},on(event,callback){submit=callback;return this;},prop(){return this;}};
-  context.frappe.ui={Dialog:class{constructor(){this.fields_dict={};this.$wrapper={on(){}};}get_primary_btn(){return primary;}show(){}get_values(){return{};}}};
+  context.frappe.ui={Dialog:class{constructor(){this.fields_dict={};this.$wrapper={addClass(){},on(){}};}get_close_btn(){return{attr(){}};}get_primary_btn(){return primary;}show(){}get_values(){return{};}}};
   let error={status:417,responseJSON:{_server_messages:'["Cupo agotado"]'}};
   await desk.dialog('Request',[],async()=>{throw error;});await submit();assert.equal(messages.length,0);
   error={status:0};await submit();assert.equal(messages.length,1);assert.equal(messages[0].title,'Sin confirmación del servidor');
@@ -132,8 +132,8 @@ test('property wall-clock controls preserve native single-digit hours',async()=>
   desk.prop={time_zone:'America/Managua'};
   const primary={off(){return this;},on(){return this;},prop(){return this;}};
   context.frappe.ui={Dialog:class{
-    constructor(options){received=options.fields[0];this.fields_dict={[received.fieldname]:{$input:{attr(v){attributes=v;}},set_value(v){value=v;}}};this.$wrapper={on(){}};}
-    get_primary_btn(){return primary;}show(){}get_values(){return{};}
+    constructor(options){received=options.fields[0];this.fields_dict={[received.fieldname]:{$input:{attr(v){attributes=v;}},set_value(v){value=v;}}};this.$wrapper={addClass(){},on(){}};}
+    get_close_btn(){return{attr(){}};}get_primary_btn(){return primary;}show(){}get_values(){return{};}
   }};
   await desk.dialog('Cutoff',[{fieldname:'cutoff',fieldtype:'Time',default:'6:45:00'}],async()=>{});
   assert.equal(received.fieldtype,'Data');assert.match(received.description,/America\/Managua/);

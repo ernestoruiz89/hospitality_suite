@@ -1,0 +1,21 @@
+{
+  "sites": {
+    "hospitality.localhost": {
+      "tables_preserved": 72,
+      "rows_preserved": 1191,
+      "private_files_preserved": 2,
+      "backup_with_files": true,
+      "existing_integration_events": 0
+    },
+    "hospitality-acceptance.localhost": {
+      "tables_preserved": 72,
+      "rows_preserved": 195,
+      "private_files_preserved": 0,
+      "backup_with_files": true,
+      "existing_integration_events": 0
+    }
+  },
+  "all_columns_compared": true,
+  "legacy_migration_evidence": "integration-native-tests.xml::TestWebhook",
+  "synchronization_enabled": false
+}

@@ -11,7 +11,7 @@ import frappe
 
 bench=Path('/home/frappe/benches/hospitality-bench')
 parser=argparse.ArgumentParser()
-parser.add_argument('--phase',choices=['financial','service','pos','refund','guarantee','credits','mixed','accounting','integration'],default='financial')
+parser.add_argument('--phase',choices=['financial','service','pos','refund','guarantee','credits','mixed','accounting','integration','forms'],default='financial')
 args=parser.parse_args()
 root=Path(__file__).resolve().parents[1]
 os.chdir(bench/'sites')
@@ -47,7 +47,7 @@ for site,database in [('hospitality-acceptance.localhost','hospitality_acceptanc
                 rows=frappe.db.sql('SELECT * FROM `tab'+dt+'` ORDER BY name',as_dict=True)
                 raw=json.dumps(rows,default=str,sort_keys=True,ensure_ascii=False,separators=(',',':')).encode()
                 actual=dict(rows=len(rows),sha256=hashlib.sha256(raw).hexdigest())
-                if args.phase in ('accounting','integration') and dt=='Company' and actual!=expected:
+                if args.phase in ('accounting','integration','forms') and dt=='Company' and actual!=expected:
                     cache=json.loads((bench/'.hospitality-accounting-company-cache.json').read_text())
                     assert cache['source_company_sha256']==expected['sha256'] and cache['current_company_sha256']==actual['sha256']
                     assert cache['changed_fields']==['modified','sales_monthly_history','transactions_annual_history']

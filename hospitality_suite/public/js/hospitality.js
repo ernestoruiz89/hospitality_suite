@@ -144,12 +144,16 @@ window.hospitality_suite = window.hospitality_suite || {};
     render_management(el) {const s=this.data.summary || {};const metrics=this.prop.mode==="Motel"?[[__("Utilización horaria"),`${s.utilization||0} %`],[__("Rotaciones por habitación"),s.rotations_per_room],[__("Entradas"),s.rotations],[__("Ingreso / hora disponible"),this.amount(s.revenue_per_available_hour)],[__("Duración media"),`${s.average_stay_hours} h`]]:[[__("Habitaciones-noche ocupadas"),s.room_nights],[__("ADR"),this.amount(s.ADR)],[__("RevPAR"),this.amount(s.RevPAR)],[__("Producción alojamiento"),this.amount(s.lodging_production)]];el.html(`<div class="hs-metrics">${metrics.map(([k,v])=>`<article><span>${esc(__(k))}</span><strong>${esc(v)}</strong></article>`).join("")}</div><p class="hs-note">${frappe.utils.escape_html(__("Período operativo:"))} ${esc(s.local_starts_at||s.starts_at||"")} → ${esc(s.local_ends_at||s.ends_at||"")} · ${esc(s.time_zone||this.prop.time_zone)}</p><p class="hs-note">${esc(s.definitions||"")}</p><section class="hs-section"><h2>${frappe.utils.escape_html(__("Reportes y conciliación"))}</h2><div class="hs-shortcuts">${(this.data.reports||[]).map(r=>`<button class="hs-report-link" data-act="report" data-id="${esc(r)}">${esc(r)} →</button>`).join("")}</div></section><section class="hs-section"><h2>${frappe.utils.escape_html(__("Auditoría nocturna"))}</h2><p>${frappe.utils.escape_html(__("Revise llegadas, salidas, cargos pendientes y turnos antes del cierre."))}</p>${this.button("daily_close",__("Revisar cierre del día"),"","primary")}</section>`);}
     render_setup(el) {el.html(`<section class="hs-welcome"><div><h2>${frappe.utils.escape_html(__("Configure la operación paso a paso"))}</h2><p>${frappe.utils.escape_html(__("Las cuentas e impuestos se seleccionan explícitamente de ERPNext."))}</p></div>${this.data.can_create_property?this.button("new_property",__("Crear establecimiento"),"","primary"):""}</section><div class="hs-shortcuts">${[["property",__("1. Políticas y contabilidad")],["category",__("2. Categorías")],["room",__("3. Habitaciones")],["rate",__("4. Tarifas")],["payment_method",__("5. Medios de pago")]].map(([id,label])=>`<button class="hs-report-link" data-act="setup" data-id="${id}">${esc(__(label))} →</button>`).join("")}</div><section class="hs-section"><h2>${frappe.utils.escape_html(__("Configuración actual"))}</h2><p>${this.data.rooms.length} ${frappe.utils.escape_html(__("habitaciones ·"))} ${this.data.categories.length} ${frappe.utils.escape_html(__("categorías ·"))} ${(this.data.rates||[]).length} ${frappe.utils.escape_html(__("tarifas"))}</p></section>`);}
     async dialog(titleText,fields,onSubmit,label="Guardar",size="large") {
+      const layout=this.form_layout?.(fields);
+      if(layout){fields=layout.fields;titleText=layout.title||titleText;label=layout.action||label;}
       for(const df of fields.filter(field=>field.fieldtype==="Time")){
         df.fieldtype="Data";df._hsTime=true;df.description=df.description||__("Hora local del establecimiento")+": "+(this.prop?.time_zone||__("Zona elegida al configurar"));
       }
       const selectors=fields.filter(df=>df.fieldtype==="Select").map(df=>({df,options:df.options}));
       for(const {df} of selectors)df.options=[];
       const d=new frappe.ui.Dialog({title:__(titleText),fields,size,primary_action_label:__(label),primary_action:()=>{}});
+      d.$wrapper.addClass("hs-form-dialog");
+      d.get_close_btn().attr("aria-label",__("Cerrar formulario"));
       for(const {df,options} of selectors){
         const control=d.fields_dict[df.fieldname];df.options=options;control.df.options=options;control.last_options=null;control.set_options=safeSelectOptions;control.set_options();
         if(df.default!==undefined)await control.set_value(df.default);
@@ -188,10 +192,10 @@ window.hospitality_suite = window.hospitality_suite || {};
           for(const {control,raw} of pending)await control.parse_validate_and_set_in_model(raw);
           // Frappe's get_values may refresh a required input whose model is empty.
           // Synchronize first and validate once, without the default double read.
-          const values=d.get_values();if(values)await onSubmit(values,d);
+          const values=d.get_values();if(values)await onSubmit(values,d);else this.reveal_form_error?.(d);
         }catch(error){if(!serverMessage(error))frappe.msgprint({title:__("Sin confirmación del servidor"),message:__("Mantenga esta ventana y reintente con los mismos datos. La solicitud conserva su referencia para evitar duplicados."),indicator:"orange"});}
         finally{d._hsBusy=false;d.get_primary_btn().prop("disabled",Boolean(d._hsCatalogBlocked));}
-      }); for(const df of fields.filter(f=>f._hsDateTime||f._hsTime||f._hsDate)){const c=d.fields_dict[df.fieldname];c.$input.attr({type:df._hsTime?"time":df._hsDate?"date":"datetime-local",step:"1"});if(df.default)c.set_value(df._hsTime?String(df.default).replace(/^(\d):/,"0$1:"):String(df.default).replace(" ","T"));} d.show();return d;
+      }); for(const df of fields.filter(f=>f._hsDateTime||f._hsTime||f._hsDate)){const c=d.fields_dict[df.fieldname];c.$input.attr({type:df._hsTime?"time":df._hsDate?"date":"datetime-local",step:"1"});if(df.default)c.set_value(df._hsTime?String(df.default).replace(/^(\d):/,"0$1:"):String(df.default).replace(" ","T"));} d.show();this.configure_form_dialog?.(d,layout);return d;
     }
     async mutate(action,data,key) {
       this.busy=true;this.connection();
