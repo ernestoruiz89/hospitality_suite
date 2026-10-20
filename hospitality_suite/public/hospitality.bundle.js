@@ -2,6 +2,7 @@ import "./js/hospitality.js";
 import "./js/hospitality_booking_summary.js";
 import "./js/hospitality_extras.js";
 import "./js/hospitality_workflows.js";
+import "./js/hospitality_housekeeping.js";
 import "./js/hospitality_finance_stock.js";
 import "./js/hospitality_privacy.js";
 import "./js/hospitality_reporting.js";

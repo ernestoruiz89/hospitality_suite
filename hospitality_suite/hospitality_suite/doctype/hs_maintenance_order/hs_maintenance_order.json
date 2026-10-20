@@ -53,10 +53,17 @@
    "reqd": 1
   },
   {
+   "fieldname": "until_reopened",
+   "label": "Hasta reapertura autorizada",
+   "fieldtype": "Check",
+   "default": 0
+  },
+  {
    "fieldname": "ends_at",
    "label": "Hasta",
    "fieldtype": "Datetime",
-   "reqd": 1
+   "mandatory_depends_on": "eval:!doc.until_reopened",
+   "depends_on": "eval:!doc.until_reopened"
   },
   {
    "fieldname": "kind",
@@ -127,6 +134,7 @@
   "blocks_room",
   "title",
   "starts_at",
+  "until_reopened",
   "ends_at",
   "kind",
   "status",

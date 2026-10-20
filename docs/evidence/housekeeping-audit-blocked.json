@@ -1,0 +1,16 @@
+{
+  "no_fabricated_deadline": true,
+  "property_scoped": true,
+  "checks": [
+    {
+      "days_ahead": 0,
+      "available": 9,
+      "blocked_room_excluded": true
+    },
+    {
+      "days_ahead": 36500,
+      "available": 9,
+      "blocked_room_excluded": true
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+Starting test run with parameters: site=hospitality-acceptance.localhost, module=hospitality_suite.tests.test_housekeeping_audit, verbose=False, tests=(), force=False, profile=False, junit_xml_output=/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/.local/housekeeping-audit/target.xml, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/frappe/benches/hospitality-bench/logs/frappe.testing.log
+
+Running 9 integration tests for hospitality_suite
+
+Running tests...
+----------------------------------------------------------------------
+.F...E...
+======================================================================
+ERROR [0.260s]: test_real_linen_send_receive_loss_and_replenishment_use_native_stock_only (hospitality_suite.tests.test_housekeeping_audit.TestHousekeepingAudit.test_real_linen_send_receive_loss_and_replenishment_use_native_stock_only)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/tests/test_housekeeping_audit.py", line 155, in test_real_linen_send_receive_loss_and_replenishment_use_native_stock_only
+    receipt=frappe.new_doc('Stock Entry');receipt.update(company=self.prop.company,stock_entry_type='Material Receipt')
+                                          ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: BaseDocument.update() got an unexpected keyword argument 'company'
+
+======================================================================
+FAIL [0.396s]: test_authorized_release_clips_calendar_and_kpis_at_the_immutable_completion_time (hospitality_suite.tests.test_housekeeping_audit.TestHousekeepingAudit.test_authorized_release_clips_calendar_and_kpis_at_the_immutable_completion_time)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/tests/test_housekeeping_audit.py", line 129, in test_authorized_release_clips_calendar_and_kpis_at_the_immutable_completion_time
+    self.assertEqual(api.calendar(self.prop.name,str(completed+timedelta(days=1)),str(completed+timedelta(days=2))),[])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [{'name': 'lqk981fmg5', 'room': 'qmf5ju94j[240 chars]rue}] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+{'name': 'lqk981fmg5', 'room': 'qmf5ju94js', 'category': 'qmcbb8qlvg', 'starts_at': '2026-10-20T14:56:40-06:00', 'ends_at': '2026-10-20T16:56:40-06:00', 'kind': 'Maintenance', 'status': 'Released', 'booking': None, 'stay': None, 'maintenance': 'MAN-2026-00001', 'until_reopened': True}
+
++ []
+- [{'booking': None,
+-   'category': 'qmcbb8qlvg',
+-   'ends_at': '2026-10-20T16:56:40-06:00',
+-   'kind': 'Maintenance',
+-   'maintenance': 'MAN-2026-00001',
+-   'name': 'lqk981fmg5',
+-   'room': 'qmf5ju94js',
+-   'starts_at': '2026-10-20T14:56:40-06:00',
+-   'status': 'Released',
+-   'stay': None,
+-   'until_reopened': True}]
+
+----------------------------------------------------------------------
+Ran 9 tests in 3.264s
+
+FAILED (failures=1, errors=1)
+
+Generating XML reports...

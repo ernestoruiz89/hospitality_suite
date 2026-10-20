@@ -1,0 +1,68 @@
+Starting test run with parameters: site=hospitality-acceptance.localhost, app=hospitality_suite, verbose=False, tests=(), force=False, profile=False, junit_xml_output=/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/.local/housekeeping-audit/native-final.xml, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/frappe/benches/hospitality-bench/logs/frappe.testing.log
+
+Running 293 integration tests for hospitality_suite
+
+Running tests...
+----------------------------------------------------------------------
+.......................................................E.............................................................................................................................................................................................................................................
+======================================================================
+ERROR [0.271s]: test_equipment_room_conflict_does_not_cancel_booking_and_nonblocking_is_explicit (hospitality_suite.tests.test_equipment.TestEquipment.test_equipment_room_conflict_does_not_cancel_booking_and_nonblocking_is_explicit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/tests/test_equipment.py", line 72, in test_equipment_room_conflict_does_not_cancel_booking_and_nonblocking_is_explicit
+    self.call("maintenance",self.values(equipment),prop=self.other)
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/tests/test_equipment.py", line 27, in call
+    return api.execute((prop or self.prop).name,action,key or uuid.uuid4().hex,data)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/utils/typing_validations.py", line 36, in wrapper
+    return func(*args, **kwargs)
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/api.py", line 72, in execute
+    return command(property_name, permission, request_key, body, lambda prop: handler(prop, data))
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/service.py", line 78, in command
+    result = handler(prop)
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/api.py", line 72, in <lambda>
+    return command(property_name, permission, request_key, body, lambda prop: handler(prop, data))
+                                                                              ~~~~~~~^^^^^^^^^^^^
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/housekeeping.py", line 112, in maintenance
+    equipment=property_document(prop,"HS Equipment",data["equipment"],"maintain") if data.get("equipment") else None
+              ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/security.py", line 55, in property_document
+    frappe.throw(_("El documento no pertenece al establecimiento seleccionado"),frappe.PermissionError)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/utils/messages.py", line 159, in throw
+    msgprint(
+    ~~~~~~~~^
+    	msg,
+     ^^^^
+    ...<7 lines>...
+    	allow_dangerous_html=allow_dangerous_html,
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/utils/messages.py", line 118, in msgprint
+    _raise_exception()
+    ~~~~~~~~~~~~~~~~^^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/utils/messages.py", line 59, in _raise_exception
+    raise exc
+frappe.exceptions.PermissionError: El documento no pertenece al establecimiento seleccionado
+
+----------------------------------------------------------------------
+Ran 293 tests in 105.825s
+
+FAILED (errors=1)
+
+Generating XML reports...
+
+Running tests...
+----------------------------------------------------------------------
+
+Running 14 unspecified-category tests for hospitality_suite
+..............
+----------------------------------------------------------------------
+Ran 14 tests in 0.136s
+
+OK
+
+Generating XML reports...

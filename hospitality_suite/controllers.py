@@ -88,6 +88,13 @@ class ScopedDocument(Document):
         if self.get("starts_at") and self.get("ends_at"):
             if get_datetime(self.starts_at) >= get_datetime(self.ends_at):
                 frappe.throw(_("La fecha final debe ser posterior a la inicial"))
+        if self.doctype=="HS Maintenance Order":
+            if bool(self.until_reopened)==bool(self.ends_at):
+                frappe.throw(_("Indique fin previsto o mantenimiento hasta reapertura autorizada"))
+        if self.doctype=="HS Allocation" and not self.ends_at:
+            order=frappe.db.get_value("HS Maintenance Order",self.maintenance,["property","until_reopened"],as_dict=True) if self.maintenance else None
+            if self.kind!="Maintenance" or not order or order.property!=self.property or not order.until_reopened:
+                frappe.throw(_("Solo un bloqueo de mantenimiento hasta reapertura puede omitir la fecha final"))
         if self.doctype == "HS Property":
             from hospitality_suite.service_accounting import validate_configuration
             validate_configuration(self)

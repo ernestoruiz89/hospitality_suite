@@ -16,6 +16,10 @@ def active_allocations(prop, start, end, exclude=None):
     for row in rows:
         if row.name in excluded:
             continue
+        if row.kind=="Maintenance" and not row.ends_at:
+            # Project an open block only to this query's horizon; never store a
+            # fabricated deadline or silently release it as time passes.
+            row.ends_at=get_datetime(end)
         if row.kind=="Stay" and row.stay and get_datetime(row.ends_at)<=now_datetime():
             stay=locked_doc("HS Stay",row.stay)
             if stay.status=="Active" and stay.room==row.room:
@@ -25,7 +29,7 @@ def active_allocations(prop, start, end, exclude=None):
     return result
 
 
-def capacity(prop, category, start, end, exclude=None, proposed=None):
+def capacity(prop, category, start, end, exclude=None, proposed=None,buffer_minutes=None):
     """The same interval sweep serves reports, quotes and locked mutations.
 
     Physical candidates are alternatives: roomless demand reduces category
@@ -38,7 +42,7 @@ def capacity(prop, category, start, end, exclude=None, proposed=None):
     if cat.property != prop.name:
         frappe.throw(frappe._("Categoría de otro establecimiento"), frappe.PermissionError)
     rooms = current_all("HS Room", filters={"property": prop.name, "category": category, "active": 1}, fields=["name", "cleaning_status"])
-    end_buffer = end + timedelta(minutes=prop.cleaning_minutes or 0)
+    end_buffer = end + timedelta(minutes=(prop.cleaning_minutes or 0) if buffer_minutes is None else buffer_minutes)
     rows = active_allocations(prop, start, end_buffer, exclude) + list(proposed or [])
     rows = [r for r in rows if r.category == category and overlapping(start, end_buffer, r.starts_at, get_datetime(r.ends_at)+timedelta(minutes=r.buffer_minutes or 0))]
     events = []
@@ -54,8 +58,8 @@ def capacity(prop, category, start, end, exclude=None, proposed=None):
     return dict(rooms=rooms, candidates=candidates, available=max(0, len(rooms)-peak))
 
 
-def check(prop, category, start, end, room=None, exclude=None, for_entry=False, proposed=None):
-    inventory = capacity(prop, category, start, end, exclude, proposed)
+def check(prop, category, start, end, room=None, exclude=None, for_entry=False, proposed=None,buffer_minutes=None):
+    inventory = capacity(prop, category, start, end, exclude, proposed,buffer_minutes)
     by_name = {r.name: r for r in inventory["rooms"]}
     if room:
         if room not in by_name:
@@ -71,6 +75,22 @@ def check(prop, category, start, end, room=None, exclude=None, for_entry=False, 
     if not inventory["available"]:
         frappe.throw(frappe._("No queda cupo de esta categoría en el intervalo solicitado"))
     return inventory["candidates"]
+
+
+def check_until_reopened(prop,category,start,room):
+    """Check every known future obligation before adding a permanent block.
+
+    Beyond the last finite endpoint only open allocations remain, so checking
+    through that frontier also checks the continuing category demand.
+    """
+    endpoints=[get_datetime(start),now_datetime()]
+    for row in current_all("HS Allocation",filters={"property":prop.name,"status":"Active"},fields=["starts_at","ends_at","buffer_minutes"]):
+        endpoints.append(get_datetime(row.ends_at or row.starts_at)+timedelta(minutes=row.buffer_minutes or 0))
+    try:
+        horizon=max(endpoints)+timedelta(days=1)
+    except OverflowError:
+        frappe.throw(frappe._("Revise las fechas fuera del horizonte de planificación"))
+    return check(prop,category,start,horizon,room,buffer_minutes=0)
 
 
 def expire_locked(prop):

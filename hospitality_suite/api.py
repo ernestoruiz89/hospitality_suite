@@ -206,9 +206,11 @@ def bootstrap(property_name=None):
         result["purchase_invoices"]=frappe.get_list("Purchase Invoice",filters={"hs_property":prop.name,"docstatus":1,"outstanding_amount":[">",0],"is_return":0},fields=["name","supplier","currency","outstanding_amount","bill_no"],limit=500)
     if any(may(a) for a in ("inventory","clean","maintain","report","service")):
         result["warehouses"]=[dict(name=n,warehouse_name=frappe.db.get_value("Warehouse",n,"warehouse_name")) for n in procurement.warehouses(prop)]
-    result["cleaning"] = project("HS Cleaning Task", prop, ["name", "room", "kind", "status", "priority", "assigned_to", "modified", "checklist", "notes"])
+    result["cleaning"] = project("HS Cleaning Task", prop, ["name", "room", "kind", "status", "priority", "assigned_to", "modified", "checklist", "notes","started_at","completed_at","inspected_by"])
+    for task in result["cleaning"]:
+        task["assigned_label"]=frappe.db.get_value("User",task.assigned_to,"full_name") if task.assigned_to else None
     result["equipment"]=project("HS Equipment",prop,["name","equipment_code","label","room","active","instructions"])
-    result["maintenance"] = project("HS Maintenance Order", prop, ["name", "room","equipment","blocks_room", "title", "starts_at", "ends_at", "status", "modified", "notes","assigned_to"])
+    result["maintenance"] = project("HS Maintenance Order", prop, ["name", "room","equipment","blocks_room","until_reopened", "title", "starts_at", "ends_at", "status", "modified", "notes","assigned_to"])
     if may("setup"):
         result["assets"] = frappe.get_all("Asset",filters={"hs_property":prop.name,"company":prop.company,"docstatus":["!=",2]},fields=["name","asset_name"],limit=500)
     result["incidents"]=project("HS Incident",prop,["name","room","kind","description","status","evidence","resolution","modified"])
@@ -514,9 +516,14 @@ def calendar(property_name,starts_at,ends_at):
     if end<=start or (end-start).days>31:
         frappe.throw(frappe._("Consulte un intervalo de hasta 31 días"))
     rows=project("HS Allocation",prop,fields=["name","room","category","starts_at","ends_at","kind","status","booking","stay","maintenance"],
-                 filters={"starts_at":["<",end],"ends_at":[">",start]})
+                 filters={"starts_at":["<",end]})
     result=[]
     for row in rows:
+        if row.ends_at and frappe.utils.get_datetime(row.ends_at)<=start:
+            continue
+        row["until_reopened"]=row.kind=="Maintenance" and not row.ends_at
+        if not row.ends_at:
+            row.ends_at=end
         if row.status=="Released" and row.kind not in ("Stay","Maintenance"):
             continue
         if row.status=="Released" and row.kind=="Maintenance":
@@ -533,6 +540,8 @@ def calendar(property_name,starts_at,ends_at):
                 row.ends_at=min(frappe.utils.get_datetime(row.ends_at),frappe.utils.get_datetime(stay.actual_check_out))
             if row.ends_at<=row.starts_at:
                 continue
+        if frappe.utils.get_datetime(row.ends_at)<=start:
+            continue
         row.starts_at=local(row.starts_at,prop).isoformat()
         row.ends_at=local(row.ends_at,prop).isoformat()
         result.append(row)

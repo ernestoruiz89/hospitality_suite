@@ -1,0 +1,16 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "cleaning_completed": "Completed",
+  "inspected_by": "supervisor@hospitality.example.invalid",
+  "notes_preserved": true,
+  "rework_required_checks_reset": true,
+  "original_cleaner_preserved": true,
+  "maintenance_completed": "Completed",
+  "no_fabricated_deadline": true,
+  "allocation_released": true,
+  "distant_availability_restored": true,
+  "order_print_html_explains_indefinite_end": true,
+  "unrelated_tables_unchanged": 65,
+  "native_financial_and_stock_unchanged": true,
+  "mutations_from_page": true
+}

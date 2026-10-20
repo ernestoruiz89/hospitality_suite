@@ -2,11 +2,13 @@
 
 PMS nativo para modalidades Hotel, Por tiempo y Hotel y por tiempo. Recepción, caja, limpieza y gerencia trabajan desde once Pages de Desk en español; la contabilidad y el inventario permanecen en ERPNext.
 
-Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. App 0.7.0. Otras versiones no están acreditadas.
+Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. App 0.7.1. Otras versiones no están acreditadas.
 
 El desarrollo continúa: [matriz de requisitos](docs/REQUISITOS.md), [auditoría punto por punto](docs/AUDITORIA_ESPECIFICACION.md), [registro de avance](docs/AVANCE.md) y [arquitectura](docs/ARQUITECTURA.md). No se declara listo para producción mientras existan pendientes obligatorios.
 
-[Caja y contabilidad](docs/AUDITORIA_CAJA_CONTABILIDAD.md): conciliación por estancia/turno, cuentas grupales completas y filtros más compactos. 294 pruebas nativas y 80 JS aprobadas. Matriz: 150 V, 14 I y 54 R; 68 entradas sin cierre. El PDF habitual de cuenta mantiene la [presentación resumida](docs/CUENTA_RESUMIDA.md).
+[Caja y contabilidad](docs/AUDITORIA_CAJA_CONTABILIDAD.md): conciliación por estancia/turno, cuentas grupales completas y filtros más compactos. 294 pruebas nativas y 80 JS aprobadas. Resultados de esa fase en su auditoría. El PDF habitual de cuenta mantiene la [presentación resumida](docs/CUENTA_RESUMIDA.md).
+
+[Limpieza y mantenimiento](docs/AUDITORIA_LIMPIEZA_MANTENIMIENTO.md): bloqueo hasta reapertura, inspección y correcciones explícitas. 307 nativas y 85 JS aprobadas. Matriz: 157 V, 14 I y 47 R; 61 entradas sin cierre.
 
 ## Instalación en Bench
 
@@ -95,7 +97,7 @@ bench --site hotel.localhost run-tests --app hospitality_suite
 
 `before_tests` exige Redis disponible y un sitio designado sin operaciones; después carga la demostración explícita. Cada caso revierte sus movimientos. Conserve un respaldo inicial para recuperar una ejecución interrumpida. Última batería conjunta: **286 aprobadas** en hospitality-acceptance.localhost, 272 de integración y 14 puras, sobre 0.6.8. Seis escenarios adicionales con el worker real acreditan reintentos, agotamiento, rollback, logs y recuperación de reserva/portal en TRABAJOS_Y_REINTENTOS.md.
 
-La fase 0.6.9 modifica la interfaz: **79 regresiones JavaScript aprobadas**, con ocho casos nuevos de reloj/recarga/reanudación/selección obsoleta y aceptación de recepción en escritorio/móvil bajo reloj emulado. La lógica Python de negocio conserva la batería anterior de 286 casos de 0.6.8. La matriz registra 136 V, 14 I, 0 P y 68 R; cada entrada conserva su evidencia y límites. El sitio limpio anterior mantiene respaldo de diagnóstico, y la demostración principal conserva operaciones UX: ninguno sustituye el sitio de aceptación. Los dos casos de concurrencia usan conexiones y commits reales; se ejecutan aparte sobre aceptación con respaldo y restauración posterior:
+La fase actual 0.7.1 acredita **307 pruebas nativas y 85 JS**, con trece casos nuevos de limpieza, bloqueos y contexto de establecimiento. La matriz registra 157 V, 14 I, 0 P y 47 R; cada entrada conserva su evidencia y límites. Las auditorías anteriores mantienen los recorridos históricos. El sitio limpio anterior conserva respaldo de diagnóstico, y la demostración principal conserva operaciones UX: ninguno sustituye el sitio de aceptación. Los dos casos de concurrencia usan conexiones y commits reales; se ejecutan aparte sobre aceptación con respaldo y restauración posterior:
 
 ```sh
 bench --site hospitality-acceptance.localhost execute hospitality_suite.tests.concurrency.verify

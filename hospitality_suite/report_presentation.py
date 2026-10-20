@@ -218,6 +218,8 @@ def prepare(report,records,props,level="operational"):
                 hints["source_name"]=data.origin(row.source_doctype,row.get("source_name"))
             if base=="Auditoría":
                 hints["action"]=action_label(row.get("action"))
+            if base=="Mantenimiento" and row.get("until_reopened"):
+                hints["ends_at"]=frappe._("Hasta reapertura autorizada")
             if base=="Conciliación":
                 source_type={"Charge":"HS Charge","Payment":"HS Payment","Closed shift":"HS Shift"}.get(row.get("type"))
                 if source_type:

@@ -117,7 +117,9 @@ class TestFinancialAudit(IntegrationTestCase):
         finally:
             book.close()
         from hospitality_suite.report_queries import describe_filters
-        self.assertIn('Habitación H101',describe_filters([self.prop],'Conciliación',dict(stay=first['stay'])))
+        selected_room=frappe.db.get_value('HS Stay',first['stay'],'room')
+        number=frappe.db.get_value('HS Room',selected_room,'room_number')
+        self.assertIn('Habitación '+number,describe_filters([self.prop],'Conciliación',dict(stay=first['stay'])))
 
     def test_reconciliation_options_and_filters_are_scoped_and_company_selection_narrows_to_the_visit(self):
         own=self.stay()

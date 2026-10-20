@@ -1,0 +1,44 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "roles": [
+    "HS Housekeeping",
+    "HS Supervisor"
+  ],
+  "cleaning_started_and_inspection_requested": true,
+  "housekeeper_cannot_release_from_page": true,
+  "supervisor_completed_h101": true,
+  "supervisor_requested_h103_rework": true,
+  "notes_preserved": true,
+  "required_title_rejection_recovered": true,
+  "indefinite_order_created_from_page": true,
+  "blocked_card": "HABITACIÓN\nH104\nEstándar · Piso 1\nFuera de servicio\nLimpia\n\nHasta reapertura autorizada\n\nReapertura pendiente",
+  "reopened_card": "HABITACIÓN\nH104\nEstándar · Piso 1\nSin ocupación\nLimpia\nConsulte la disponibilidad para el período deseado.\nReservar",
+  "maintenance_mobile": {
+    "actions": [],
+    "documentWidth": 390,
+    "height": 844,
+    "tabs": [
+      "Trabajo y ubicación",
+      "Plazo y responsable"
+    ],
+    "width": 390,
+    "action": {
+      "bottom": 565.5,
+      "height": 44
+    }
+  },
+  "financial_actions_from_page": false,
+  "stock_actions_from_page": false,
+  "print_downloads_from_page": false,
+  "viewport_handle_refreshed_after_initial_interaction_errors": true,
+  "cleaning_mobile_dom": {
+    "actionHeights": [
+      42,
+      42
+    ],
+    "documentWidth": 390,
+    "height": 844,
+    "width": 390
+  },
+  "cleaning_mobile_screenshot_verified": false
+}

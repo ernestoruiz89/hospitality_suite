@@ -50,6 +50,10 @@
       groups=[group(__("Cuenta y concepto"),["kind","stay","booking"],["folio","shift"]),
         group(__("Importe"),["method","amount"],["tendered","reference"]),
         group(__("Devolución"),["source_payment","credit_note","reason","refund_help"],[],{depends_on:refund})];
+    }else if(has("blocks_room","equipment","until_reopened","starts_at","ends_at")){
+      kind="maintenance";action=__("Crear orden de mantenimiento");
+      groups=[group(__("Trabajo y ubicación"),["title","kind"],["room","equipment","blocks_room"]),
+        group(__("Plazo y responsable"),["starts_at","until_reopened","ends_at"],["assigned_to","notes"])];
     }else if(has("full_name","identity_number","address_line1")){
       kind="guest";action=names.has("reason")?__("Guardar cambios"):__("Registrar huésped");
       const identity=fields.find(df=>df.fieldname==="identity_number"),required=identity?.reqd!==undefined?Boolean(identity.reqd):Boolean(this.prop?.guest_id_required);

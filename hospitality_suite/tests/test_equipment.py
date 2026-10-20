@@ -68,7 +68,7 @@ class TestEquipment(IntegrationTestCase):
         equipment.active=0
         with self.assertRaises(frappe.ValidationError):
             equipment.save()
-        with self.assertRaises(frappe.ValidationError):
+        with self.assertRaises(frappe.PermissionError):
             self.call("maintenance",self.values(equipment),prop=self.other)
 
     def test_native_asset_link_scope_duplicates_and_private_financial_projection(self):

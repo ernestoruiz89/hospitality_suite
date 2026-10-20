@@ -2506,10 +2506,24 @@
       "line": 152,
       "kind": "enumerated",
       "requirement": "- Limpieza de salida, estancia y profunda; prioridad, responsable, inicio/fin, checklist y observaciones.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/housekeeping.py",
+        "hospitality_suite/operations.py",
+        "hospitality_suite/public/js/hospitality_housekeeping.js",
+        "hospitality_suite/security.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_LIMPIEZA_MANTENIMIENTO.md",
+        "docs/evidence/housekeeping-audit-native-tests.xml::TestHousekeepingAudit / TestMaintenanceLinen / TestEquipment / TestRoleFlow / TestProcurement / TestSecurityRecovery",
+        "docs/evidence/158-limpieza-tipo-prioridad.jpg",
+        "docs/evidence/160-limpieza-sin-liberacion-prematura.jpg",
+        "docs/evidence/161-limpieza-liberacion-supervision.jpg",
+        "docs/evidence/162-limpieza-correccion-motivada.jpg",
+        "docs/evidence/housekeeping-audit-browser.json",
+        "docs/evidence/housekeeping-audit-items-ui.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S10-02",
@@ -2518,10 +2532,23 @@
       "line": 153,
       "kind": "enumerated",
       "requirement": "- Inspección opcional por supervisión antes de liberar la habitación.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/housekeeping.py",
+        "hospitality_suite/public/js/hospitality_housekeeping.js",
+        "hospitality_suite/security.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_LIMPIEZA_MANTENIMIENTO.md",
+        "docs/evidence/housekeeping-audit-native-tests.xml::TestHousekeepingAudit / TestMaintenanceLinen / TestEquipment / TestRoleFlow / TestProcurement / TestSecurityRecovery",
+        "docs/evidence/158-limpieza-tipo-prioridad.jpg",
+        "docs/evidence/160-limpieza-sin-liberacion-prematura.jpg",
+        "docs/evidence/161-limpieza-liberacion-supervision.jpg",
+        "docs/evidence/162-limpieza-correccion-motivada.jpg",
+        "docs/evidence/housekeeping-audit-browser.json",
+        "docs/evidence/housekeeping-audit-items-ui.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S10-03",
@@ -2530,10 +2557,19 @@
       "line": 154,
       "kind": "enumerated",
       "requirement": "- Registro de daños, objetos olvidados y reposición de artículos, con acceso restringido a los datos necesarios.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/linen.py",
+        "hospitality_suite/security.py",
+        "hospitality_suite/procurement.py",
+        "hospitality_suite/api.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_LIMPIEZA_MANTENIMIENTO.md",
+        "docs/evidence/housekeeping-audit-native-tests.xml::TestHousekeepingAudit / TestMaintenanceLinen / TestEquipment / TestRoleFlow / TestProcurement / TestSecurityRecovery",
+        "docs/evidence/equipment.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S10-04",
@@ -2542,10 +2578,17 @@
       "line": 155,
       "kind": "enumerated",
       "requirement": "- Control básico de ropa de cama: entregada a lavandería, recibida, pérdida y reposición; integrar existencias si estos artículos se controlan como inventario.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/linen.py",
+        "hospitality_suite/procurement.py",
+        "hospitality_suite/security.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_LIMPIEZA_MANTENIMIENTO.md",
+        "docs/evidence/housekeeping-audit-native-tests.xml::TestHousekeepingAudit / TestMaintenanceLinen / TestEquipment / TestRoleFlow / TestProcurement / TestSecurityRecovery"
+      ],
+      "remaining": ""
     },
     {
       "id": "S10-05",
@@ -2554,10 +2597,27 @@
       "line": 156,
       "kind": "enumerated",
       "requirement": "- Incidencias correctivas y mantenimiento preventivo por habitación o equipo.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/housekeeping.py",
+        "hospitality_suite/equipment.py",
+        "hospitality_suite/security.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_LIMPIEZA_MANTENIMIENTO.md",
+        "docs/evidence/housekeeping-audit-native-tests.xml::TestHousekeepingAudit / TestMaintenanceLinen / TestEquipment / TestRoleFlow / TestProcurement / TestSecurityRecovery",
+        "docs/evidence/housekeeping-audit-js-tests.log",
+        "docs/evidence/164-mantenimiento-hasta-reapertura.jpg",
+        "docs/evidence/166-recepcion-bloqueo-hasta-reapertura.jpg",
+        "docs/evidence/167-mantenimiento-reapertura-autorizada.jpg",
+        "docs/evidence/168-mantenimiento-formulario-movil.jpg",
+        "docs/evidence/169-recepcion-habitacion-reabierta.jpg",
+        "docs/evidence/housekeeping-audit-blocked.json",
+        "docs/evidence/housekeeping-audit-items-ui.json",
+        "docs/evidence/housekeeping-audit-upgrade.json",
+        "docs/evidence/housekeeping-audit-ux-restored.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S10-06",
@@ -2566,10 +2626,33 @@
       "line": 157,
       "kind": "enumerated",
       "requirement": "- Bloqueo parcial por intervalo o completo, responsable, repuestos, costos, evidencias y reapertura autorizada.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/housekeeping.py",
+        "hospitality_suite/availability.py",
+        "hospitality_suite/controllers.py",
+        "hospitality_suite/schema.py",
+        "hospitality_suite/api.py",
+        "hospitality_suite/reports.py",
+        "hospitality_suite/public/js/hospitality_forms.js",
+        "hospitality_suite/public/js/hospitality_workflows.js",
+        "hospitality_suite/security.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_LIMPIEZA_MANTENIMIENTO.md",
+        "docs/evidence/housekeeping-audit-native-tests.xml::TestHousekeepingAudit / TestMaintenanceLinen / TestEquipment / TestRoleFlow / TestProcurement / TestSecurityRecovery",
+        "docs/evidence/housekeeping-audit-js-tests.log",
+        "docs/evidence/164-mantenimiento-hasta-reapertura.jpg",
+        "docs/evidence/166-recepcion-bloqueo-hasta-reapertura.jpg",
+        "docs/evidence/167-mantenimiento-reapertura-autorizada.jpg",
+        "docs/evidence/168-mantenimiento-formulario-movil.jpg",
+        "docs/evidence/169-recepcion-habitacion-reabierta.jpg",
+        "docs/evidence/housekeeping-audit-blocked.json",
+        "docs/evidence/housekeeping-audit-items-ui.json",
+        "docs/evidence/housekeeping-audit-upgrade.json",
+        "docs/evidence/housekeeping-audit-ux-restored.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S10-07",
@@ -2578,10 +2661,27 @@
       "line": 158,
       "kind": "enumerated",
       "requirement": "- Resolver conflictos entre mantenimiento planificado, reservas existentes y estancias; no cancelar una reserva silenciosamente.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/availability.py",
+        "hospitality_suite/housekeeping.py",
+        "hospitality_suite/security.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_LIMPIEZA_MANTENIMIENTO.md",
+        "docs/evidence/housekeeping-audit-native-tests.xml::TestHousekeepingAudit / TestMaintenanceLinen / TestEquipment / TestRoleFlow / TestProcurement / TestSecurityRecovery",
+        "docs/evidence/housekeeping-audit-js-tests.log",
+        "docs/evidence/164-mantenimiento-hasta-reapertura.jpg",
+        "docs/evidence/166-recepcion-bloqueo-hasta-reapertura.jpg",
+        "docs/evidence/167-mantenimiento-reapertura-autorizada.jpg",
+        "docs/evidence/168-mantenimiento-formulario-movil.jpg",
+        "docs/evidence/169-recepcion-habitacion-reabierta.jpg",
+        "docs/evidence/housekeeping-audit-blocked.json",
+        "docs/evidence/housekeeping-audit-items-ui.json",
+        "docs/evidence/housekeeping-audit-upgrade.json",
+        "docs/evidence/housekeeping-audit-ux-restored.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S11-01",

@@ -44,8 +44,7 @@
   {
    "fieldname": "ends_at",
    "label": "Hasta",
-   "fieldtype": "Datetime",
-   "reqd": 1
+   "fieldtype": "Datetime"
   },
   {
    "fieldname": "buffer_minutes",

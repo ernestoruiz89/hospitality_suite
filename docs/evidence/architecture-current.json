@@ -871,7 +871,7 @@
       "doctype": "HS Maintenance Order",
       "child": false,
       "autoname": "MAN-.YYYY.-.#####",
-      "fields": 17,
+      "fields": 18,
       "indexes": {
         "PRIMARY": {
           "unique": true,
@@ -1455,13 +1455,13 @@
   "assets": [
     {
       "name": "hospitality.bundle.js",
-      "bytes": 190036,
-      "sha256": "89ebef33f12e35e5a5ca439fa94e8266e15cbe7c97cbc64e220803c5f019672f"
+      "bytes": 194016,
+      "sha256": "f7d70498928b049757279338f9e7f7b8ee610102498aa245a32a701c6d762652"
     },
     {
       "name": "hospitality.bundle.css",
       "bytes": 16977,
-      "sha256": "5d6f7593db3cbf35ee3b535be528eee1ad394b2e26b2eb52ed6590d6462f71d2"
+      "sha256": "93de54fde5974be4a220f302e563a060b4b46c812cffd65a86fdcdebd4263a6d"
     }
   ]
 }

@@ -1,14 +1,14 @@
 import frappe
 
 from hospitality_suite.accounting import ready, post_standard
-from hospitality_suite.security import document,require,private_evidence
+from hospitality_suite.security import property_document,require,private_evidence
 from hospitality_suite.service import insert, audit,assert_version
 from hospitality_suite.pricing import decimal
 
 
 def incident(prop, data):
     if data.get("incident"):
-        record=document("HS Incident",data["incident"],"incident")
+        record=property_document(prop,"HS Incident",data["incident"],"incident")
         assert_version(record,data.get("modified"))
         if record.status!="Open":
             frappe.throw(frappe._("La novedad ya está resuelta"))
@@ -23,7 +23,7 @@ def incident(prop, data):
         record.save()
         audit(prop,"Resolve incident" if data.get("resolve") else "Incident evidence",record,record.resolution)
         return dict(incident=record.name,status=record.status)
-    room = document("HS Room",data["room"],"incident")
+    room = property_document(prop,"HS Room",data["room"],"incident")
     if data.get("kind") not in ("Damage","Lost Property") or not data.get("description"):
         frappe.throw(frappe._("Indique tipo y descripción de la novedad"))
     record = insert("HS Incident",prop,room=room.name,kind=data["kind"],description=data["description"],status="Open")
@@ -32,6 +32,7 @@ def incident(prop, data):
 
 
 def move_linen(prop,data):
+    room=property_document(prop,"HS Room",data["room"],"clean")
     ready(prop)
     if not prop.get("laundry_warehouse") or prop.laundry_warehouse==prop.warehouse:
         frappe.throw(frappe._("Configure un almacén de lavandería diferente al almacén operativo"))
@@ -53,7 +54,6 @@ def move_linen(prop,data):
                                s_warehouse=prop.warehouse if direction=="Send" else prop.laundry_warehouse,
                                t_warehouse=None if direction=="Loss" else (prop.warehouse if direction=="Receive" else prop.laundry_warehouse)))
     post_standard(entry,prop)
-    room = document("HS Room",data["room"],"clean")
     record = insert("HS Incident",prop,room=room.name,kind="Linen",description=data.get("reason") or direction,
                     item=item.name,quantity=float(quantity),status="Resolved",stock_entry=entry.name)
     audit(prop,"Linen "+direction,record,data.get("reason"))

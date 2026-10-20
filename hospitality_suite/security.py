@@ -49,6 +49,16 @@ def document(dt, name, action=None):
     return doc
 
 
+def property_document(prop,dt,name,action=None):
+    """A multi-property user still must act inside the selected command scope."""
+    if not frappe.db.get_value(dt,{"name":name,"property":prop.name,"company":prop.company},"name"):
+        frappe.throw(_("El documento no pertenece al establecimiento seleccionado"),frappe.PermissionError)
+    doc=document(dt,name,action)
+    if doc.property!=prop.name or doc.company!=prop.company:
+        frappe.throw(_("El documento no pertenece al establecimiento seleccionado"),frappe.PermissionError)
+    return doc
+
+
 def has_scope_permission(doc, user=None, permission_type=None, **kwargs):
     prop = doc.name if doc.doctype == "HS Property" else doc.get("property")
     if not prop or prop not in allowed_properties(user):

@@ -56,3 +56,7 @@ stateDiagram-v2
 Ocupación, limpieza y mantenimiento son dimensiones independientes. Salida → sucia → en limpieza → inspección opcional → limpia. Ningún estado de reserva futura convierte una habitación en ocupada actualmente.
 
 Referencias contrastadas con el código instalado: [Page API](https://docs.frappe.io/framework/user/en/api/page), [transacciones](https://docs.frappe.io/framework/user/en/api/database), [anticipos ERPNext](https://docs.frappe.io/erpnext/advance-payment-entry).
+
+## Bloqueo sin vencimiento — 0.7.1
+
+HS Maintenance Order.until_reopened permite ends_at vacío. HS Allocation admite fin vacío únicamente para mantenimiento respaldado por esa política; el controlador exige fin en reservas/estancias. Las consultas proyectan el bloqueo al horizonte solicitado y la creación contrasta todas las obligaciones futuras. No se guardan fechas centinela ni se cambia HS Room.active. Completar con supervisión libera la asignación; calendario/indicadores recortan el historial en el evento de finalización. Los intervalos existentes conservan fechas, política y registros, acreditados en housekeeping-audit-upgrade.json.

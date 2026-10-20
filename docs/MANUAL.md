@@ -1,6 +1,6 @@
 # Manual diario por rol
 
-Aplicación 0.7.0, Frappe 16.52 / ERPNext 16.51. Los recorridos acreditados y las verificaciones pendientes están en REQUISITOS.md.
+Aplicación 0.7.1, Frappe 16.52 / ERPNext 16.51. Los recorridos acreditados y las verificaciones pendientes están en REQUISITOS.md.
 
 Los formularios extensos están organizados en pestañas por tarea. Puede cambiar de sección sin perder lo escrito y guardar desde cualquiera. Los datos adicionales del huésped y las opciones de reserva tienen su propia sección. La acción de guardar o revisar permanece visible; si falta un dato obligatorio, el formulario abre su sección. Al cerrar una revisión de precio o cobro, vuelve al borrador sin registrarlo. Véase UX_FORMULARIOS.md.
 
@@ -156,3 +156,9 @@ En Buscar disponibilidad, pulse un número de habitación para abrir Nueva reser
 Los documentos nuevos tienen números como RES-2026-00001, EST-2026-00001 y CTA-2026-00001. Los registros anteriores conservan sus referencias. Consulte SERIES_DOCUMENTALES.md para el resto de prefijos; no interprete el importe de la reserva como saldo actual ni el consecutivo como número de operaciones.
 
 «Imprimir cuenta» genera un PDF resumido de cargos, movimientos y saldo. Las secciones de facturas y pagos aparecen cuando tienen registros. Las fórmulas y reglas históricas se consultan en pantalla con «Ver cálculo del precio»; no se repiten en el comprobante.
+
+## Limpieza e intervalos de mantenimiento — 0.7.1
+
+Programar limpieza deja la habitación sucia hasta completar la tarea. Las tarjetas identifican tipo, prioridad y responsable; las indicaciones se conservan. Solicitar inspección no libera: Supervisión debe Inspeccionar y liberar. Solicitar corrección requiere explicar qué debe repetirse y devuelve la tarea al mismo responsable. Si la política no exige inspección, Limpieza puede Finalizar limpieza.
+
+Nueva orden separa Trabajo y ubicación de Plazo y responsable. Indique un fin previsto o marque Hasta reapertura autorizada: no se liberará por transcurso del tiempo. Se rechaza si invade reservas futuras, aunque no tengan habitación asignada, o una estancia. Solo supervisión puede Completar y liberar bloqueo. Recepción identifica ese estado y vuelve a habilitar Reservar tras la reapertura; el estado de limpieza se conserva por separado. Reposición de ropa por ubicación se registra desde Mover / consumir stock con supervisión, destino y motivo. Véase AUDITORIA_LIMPIEZA_MANTENIMIENTO.md.

@@ -1,0 +1,35 @@
+Starting test run with parameters: site=hospitality-acceptance.localhost, app=hospitality_suite, verbose=False, tests=(), force=False, profile=False, junit_xml_output=/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/.local/housekeeping-audit/native-verified.xml, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/frappe/benches/hospitality-bench/logs/frappe.testing.log
+
+Running tests...
+----------------------------------------------------------------------
+
+Running 293 integration tests for hospitality_suite
+....................................................................................F................................................................................................................................................................................................................
+======================================================================
+FAIL [1.021s]: test_shared_group_documents_are_complete_for_each_stay_and_export_has_a_readable_filter (hospitality_suite.tests.test_financial_audit.TestFinancialAudit.test_shared_group_documents_are_complete_for_each_stay_and_export_has_a_readable_filter)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/tests/test_financial_audit.py", line 120, in test_shared_group_documents_are_complete_for_each_stay_and_export_has_a_readable_filter
+    self.assertIn('Habitación H101',describe_filters([self.prop],'Conciliación',dict(stay=first['stay'])))
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'Habitación H101' not found in 'Fecha: Fecha de origen (operativa / contable / registro) · Estancia: Habitación H102 · Huésped ficticio H3 · 20/10/2026'
+
+----------------------------------------------------------------------
+Ran 293 tests in 112.719s
+
+FAILED (failures=1)
+
+Generating XML reports...
+
+Running 14 unspecified-category tests for hospitality_suite
+
+Running tests...
+----------------------------------------------------------------------
+..............
+----------------------------------------------------------------------
+Ran 14 tests in 0.220s
+
+OK
+
+Generating XML reports...
