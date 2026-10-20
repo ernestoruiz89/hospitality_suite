@@ -1420,13 +1420,13 @@
   "assets": [
     {
       "name": "hospitality.bundle.js",
-      "bytes": 160194,
-      "sha256": "f3f91d6bd7f87ee5c938a21d5c0756a513debe9c934c8188be1f161eab69e256"
+      "bytes": 166050,
+      "sha256": "bfe667463eba9b2f59806dda262deb0bf8936339e72c96e7d81042b6028ff59b"
     },
     {
       "name": "hospitality.bundle.css",
-      "bytes": 11775,
-      "sha256": "b64f02ad306a7e5bf0028f8fc4758aef7d9c16f96a2dc70531cfcd6c896c22ea"
+      "bytes": 14233,
+      "sha256": "1991095bd7982c2d5b535f8459ec60c704b929fa798ac5fdbe0c4739f9e2e8c3"
     }
   ]
 }

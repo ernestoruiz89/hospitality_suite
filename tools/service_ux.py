@@ -16,7 +16,7 @@ SITE='hospitality-acceptance.localhost'
 TARGET=BENCH/'sites'/SITE
 parser=argparse.ArgumentParser()
 parser.add_argument('action',choices=['before','prepare','inspect','restore','verify'])
-parser.add_argument('--phase',choices=['service','pos','refund','guarantee','credits','mixed','accounting','forms','periodic','billing'],default='service')
+parser.add_argument('--phase',choices=['service','pos','refund','guarantee','credits','mixed','accounting','forms','periodic','billing','board'],default='service')
 args=parser.parse_args()
 BASE=BENCH/f'.hospitality-{args.phase}-ux-baseline.json'
 RECEIPT=BENCH/f'.hospitality-{args.phase}-ux-restored-receipt.json'
@@ -78,7 +78,7 @@ try:
         raw=json.dumps(rows,default=str,sort_keys=True,ensure_ascii=False,separators=(',',':')).encode()
         tables[dt]=dict(rows=len(rows),sha256=hashlib.sha256(raw).hexdigest())
     if args.action=='before':
-        if args.phase in ('forms','periodic','billing'):assert not BASE.exists(),'Conserve el respaldo previo al recorrido de interfaz'
+        if args.phase in ('forms','periodic','billing','board'):assert not BASE.exists(),'Conserve el respaldo previo al recorrido de interfaz'
         assert all(tables[dt]['rows']==0 for dt in ('HS Stay','HS Booking','HS Charge','HS Payment','HS Shift','Sales Invoice','Payment Entry','Journal Entry'))
         frappe.db.rollback()
         with (BENCH/f'.hospitality-{args.phase}-ux-backup.log').open('w') as output:
@@ -95,6 +95,25 @@ try:
         BASE.write_text(json.dumps(baseline,sort_keys=True))
         BASE.chmod(0o600)
         print('Respaldo previo al recorrido UX,',len(tables),'tablas sin operaciones')
+    elif args.action=='prepare' and args.phase=='board':
+        from hospitality_suite import api
+        from datetime import datetime,time,timedelta
+        import uuid
+        assert BASE.is_file() and tables==json.loads(BASE.read_text())['tables']
+        prop=frappe.get_doc('HS Property',{'property_name':'Hotel Jardín Demo'})
+        from hospitality_suite.time import now_local
+        day=now_local(prop).date()
+        guest=frappe.get_doc('HS Guest',{'property':prop.name})
+        for number,start,end,action in [('H101',datetime.combine(day-timedelta(days=1),time(14)),datetime.combine(day,time(12)),'walk_in'),
+                                       ('H102',datetime.combine(day+timedelta(days=1),time(14)),datetime.combine(day+timedelta(days=2),time(12)),'reserve'),
+                                       ('H103',datetime.combine(day,time(14)),datetime.combine(day+timedelta(days=1),time(12)),'reserve')]:
+            room=frappe.get_doc('HS Room',{'property':prop.name,'room_number':number})
+            values=dict(starts_at=str(start),ends_at=str(end),guest=guest.name,customer=guest.customer,rooms=[dict(category=room.category,room=room.name,people=1)])
+            values['acceptance']=api.preview(prop.name,values)['acceptance']
+            api.execute(prop.name,action,uuid.uuid4().hex,values)
+        assert api.stay_board(prop.name)['counts']==dict(hosted=1,arrivals=1,departures=1,accounts=1)
+        frappe.db.commit()
+        print('Fixture API de tablero: H101 alojado/salida hoy, H102 llegada mañana, H103 llegada hoy; sin facturas ni pagos.')
     elif args.action=='prepare' and args.phase=='billing':
         from hospitality_suite import api
         from frappe.utils import now_datetime
@@ -137,6 +156,22 @@ try:
         fixture.chmod(0o600)
         frappe.db.commit()
         print('Fixture POS sintético: fondo 100, venta 60, recibido 100, vuelto 40; sin HS Payment ni Payment Entry')
+    elif args.action=='inspect' and args.phase=='board':
+        from hospitality_suite import api
+        prop=frappe.get_doc('HS Property',{'property_name':'Hotel Jardín Demo'})
+        stays=frappe.get_all('HS Stay',filters={'property':prop.name},fields=['room','status','owner'])
+        assert len(stays)==2 and {row.status for row in stays}=={'Active'}
+        assert sorted(row.owner for row in stays)==['Administrator','receptionist@hospitality.example.invalid']
+        assert all(frappe.db.count(dt)==0 for dt in ('Sales Invoice','HS Payment','HS Shift','Payment Entry','Journal Entry','HS Daily Close','HS Cleaning Task'))
+        board=api.stay_board(prop.name)
+        assert board['counts']==dict(hosted=2,arrivals=0,departures=1,accounts=2)
+        assert frappe.db.count('HS Charge')==2 and frappe.db.count('HS Charge',{'status':'Pending'})==2
+        proof=dict(site=SITE,synthetic=True,fixture_origin='API: three bookings and one initial stay',
+                   second_entry_from_page=True,entry_actor='HS Receptionist',counts=board['counts'],
+                   active_rooms=sorted(frappe.db.get_value('HS Room',row.room,'room_number') for row in stays),
+                   future_arrival_room='H102',invoices=0,payments=0,shifts=0,business_date=str(prop.business_date))
+        (ROOT/'docs/evidence/board-items-ui.json').write_text(json.dumps(proof,indent=2)+'\n',encoding='utf-8',newline='\n')
+        print(json.dumps(proof))
     elif args.action=='inspect' and args.phase=='billing':
         from hospitality_suite.accounting import folio_balance
         prop=frappe.get_doc('HS Property',{'property_name':'Hotel Jardín Demo'})

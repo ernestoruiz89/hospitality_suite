@@ -2,7 +2,7 @@
 
 PMS nativo para hoteles, moteles y operación mixta. Recepción, caja, limpieza y gerencia trabajan desde once Pages de Desk en español; la contabilidad y el inventario permanecen en ERPNext.
 
-Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. App 0.6.1. Otras versiones no están acreditadas.
+Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. App 0.6.2. Otras versiones no están acreditadas.
 
 El desarrollo continúa: [matriz de requisitos](docs/REQUISITOS.md), [auditoría punto por punto](docs/AUDITORIA_ESPECIFICACION.md), [registro de avance](docs/AVANCE.md) y [arquitectura](docs/ARQUITECTURA.md). No se declara listo para producción mientras existan pendientes obligatorios.
 
@@ -40,6 +40,8 @@ PDF requiere wkhtmltopdf con Qt parcheado. En este bench, `tools/bootstrap_pdf_r
 ## Configuración y operación
 
 Abra Configuración con un administrador de sistema o rol autorizado. Seleccione compañía, moneda y zona; cree categorías, habitaciones, tarifas, medios de pago y políticas. El asistente valida cuentas, almacenes y centro de costo antes de habilitar finanzas. Revise expresamente impuestos, identificación, crédito y formatos de factura para la instalación.
+
+[Estancias](docs/ESTANCIAS_Y_LLEGADAS.md) separa alojados, llegadas, salidas y cuentas abiertas, con conteos y paginación. Recepción muestra la próxima llegada pendiente y abre la reserva existente; una reserva futura conserva su diferencia con la ocupación actual. La cabecera móvil y las fichas del tablero se compactan para mostrar antes datos y acciones.
 
 Los formularios extensos se dividen en pestañas por tarea, con acción visible y adaptación móvil. Reserva/entrada revisa el precio antes de confirmar; caja distingue revisar/confirmar cobro, anticipo, garantía o devolución. [UX y evidencia de formularios](docs/UX_FORMULARIOS.md).
 
@@ -79,14 +81,14 @@ bench --site hotel.localhost set-config hospitality_integration_test_site true
 bench --site hotel.localhost run-tests --app hospitality_suite
 ```
 
-`before_tests` exige Redis disponible y un sitio designado sin operaciones; después carga la demostración explícita para las pruebas. Cada caso revierte sus movimientos. Conserve un respaldo inicial para recuperar una ejecución interrumpida; no ejecutar en producción. Última batería conjunta: **220 aprobadas** en hospitality-acceptance.localhost, 206 de integración y 14 puras, ejecutada para 0.6.1. También aprueban **41 regresiones JavaScript** y el recorrido real de facturación sin cobro/salida; se conserva la evidencia anterior de política/programación/auditoría nocturna. El sitio limpio anterior conserva un respaldo de diagnóstico tras una interrupción de WSL; no es la línea de base actual. La demostración principal conserva operaciones UX y tampoco representa ese estado inicial. Los dos casos de concurrencia usan conexiones y commits reales y se ejecutan aparte:
+`before_tests` exige Redis disponible y un sitio designado sin operaciones; después carga la demostración explícita para las pruebas. Cada caso revierte sus movimientos. Conserve un respaldo inicial para recuperar una ejecución interrumpida; no ejecutar en producción. Última batería conjunta: **229 aprobadas** en hospitality-acceptance.localhost, 215 de integración y 14 puras, ejecutada para 0.6.2. También aprueban **45 regresiones JavaScript** y el recorrido real de vistas/entrada desde Llegadas con recepcionista; se conserva la evidencia anterior de política/programación/auditoría nocturna. El sitio limpio anterior conserva un respaldo de diagnóstico tras una interrupción de WSL; no es la línea de base actual. La demostración principal conserva operaciones UX y tampoco representa ese estado inicial. Los dos casos de concurrencia usan conexiones y commits reales y se ejecutan aparte:
 
 ```sh
 bench --site hospitality.localhost execute hospitality_suite.tests.concurrency.verify
 bench --site hospitality.localhost execute hospitality_suite.tests.concurrency.verify_category
 ```
 
-Las pruebas JS sin servidor cubren transporte, edición numérica, catálogo, traducción/presentación, políticas, cierre, servicios, POS, devoluciones, notas de crédito, formularios y portal: **39 de Desk y dos del portal**. Ejecute las 41 con:
+Las pruebas JS sin servidor cubren transporte, edición numérica, catálogo, traducción/presentación, políticas, cierre, servicios, POS, devoluciones, notas de crédito, formularios y portal: **43 de Desk y dos del portal**. Ejecute las 45 con:
 
 ```sh
 node tools/run_ui_tests.cjs

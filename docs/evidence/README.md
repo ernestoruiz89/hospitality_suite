@@ -1,8 +1,8 @@
 # Evidencia de pruebas
 
-Índice acumulado de evidencia histórica y actual. Versión de aplicación vigente: 0.6.1; Frappe 16.52.0 y ERPNext 16.51.1, en un bench separado de WSL Ubuntu 24.04. Sitios ficticios: hospitality.localhost, hospitality-clean.localhost, hospitality-restore.localhost y hospitality-acceptance.localhost. No hay datos ni operaciones de producción.
+Índice acumulado de evidencia histórica y actual. Versión de aplicación vigente: 0.6.2; Frappe 16.52.0 y ERPNext 16.51.1, en un bench separado de WSL Ubuntu 24.04. Sitios ficticios: hospitality.localhost, hospitality-clean.localhost, hospitality-restore.localhost y hospitality-acceptance.localhost. No hay datos ni operaciones de producción.
 
-La batería vigente está en billing-native-tests.log/xml: **220 aprobadas** (206 integración y catorce puras), y billing-js-tests.log: **41 regresiones JavaScript** (39 Desk y dos portal). FACTURACION_DESDE_PAGES.md delimita el nuevo recorrido real y sus fixtures. Los resultados menores que siguen pertenecen a fases anteriores; no representan otra ejecución ni recorridos adicionales.
+La batería vigente está en board-native-tests.log/xml: **229 aprobadas** (215 integración y catorce puras), y board-js-tests.log: **45 regresiones JavaScript** (43 Desk y dos portal). ESTANCIAS_Y_LLEGADAS.md delimita el nuevo recorrido con recepcionista y sus fixtures. Los resultados menores que siguen pertenecen a fases anteriores; no representan otra ejecución ni recorridos adicionales.
 
 ## Automatizadas
 
@@ -264,3 +264,12 @@ La matriz canónica conserva 218 entradas: 83 V, ocho I, cero P y 127 R. F22b ac
 ## Contraste de Pages y habitaciones sobre 3563ef0
 
 `pages-rooms-audit.json` y `../AUDITORIA_PAGES_HABITACIONES.md` revisan las 27 entradas de las secciones 4 y 5 con código/aserciones/evidencia existentes: 16 V, nueve I y dos P. Verifica nombres de casos aprobados en billing-native-tests.xml y conserva huellas del código. No es otra ejecución ni un recorrido adicional. Las dos P son vistas de llegadas/salidas/cuentas en Estancias y llegada prevista en tarjetas. La auditoría canónica vigente queda en **99 V, diecisiete I, dos P y 100 R**, las mismas 218 entradas/huella. Los recuentos de las fases anteriores de este índice son históricos.
+
+## Estancias y próximas llegadas, 0.6.2
+
+- `board-native-tests.log/xml`: 229 aprobadas, nueve nuevas en test_desk_board.py. `board-js-tests.log`: 45 aprobadas, cuatro nuevas para presentación/escapado, respuestas obsoletas y contexto/paginación. `board-build.log` y `board-*-migrate.log`: construcción y migraciones de ambos sitios.
+- `111-estancias-llegadas.png`: llegada pendiente de hoy. `112-estancias-cuentas-movil.png`: cuenta, saldo y Ver cuenta visibles en 390×844, ficha de 352 px/scrollWidth 352 y botón 44 px. `113-recepcion-proxima-llegada.png`: estancia actual y próxima reserva separadas, con Ver reserva. `114-estancias-entrada-confirmada.png`: dos alojados tras registrar H103. `115-estancias-salidas.png`: salida pendiente. `116-estancias-fecha-llegadas.png`: consulta hasta mañana, dos llegadas. `117-estancias-llegada-completada.png`: entrada confirmada y estado vacío de llegadas de hoy.
+- `board-items-ui.json`: fixture API de tres reservas/primera estancia y segunda entrada desde Pages por recepcionista. Dos Active, dos Pending y cero facturas/pagos/turnos/limpieza/cierre. No acredita operación grupal desde navegador, todos los roles ni tiempo real.
+- `board-upgrade.json`: 72 tablas/1191 filas/dos archivos privados principales y 195 filas de aceptación conservados, sin cambios de negocio. `board-ux-restored.json`: 71 tablas/185 filas idénticas tras restauración Bench con archivos. `board-final-state.json`: aceptación sin operaciones, principal conservado, guardias, HTTP 200/8086 y 8089 cerrado. `architecture-current.json`: núcleos limpios y metadatos/assets vigentes.
+
+Las dos P históricas de pages-rooms-audit.json quedan resueltas y acreditadas: matriz vigente **101 V, diecisiete I, cero P y 100 R**, las mismas 218 entradas/huella. Continúan verificaciones I, contraste restante y recuperación final; sincronización externa pendiente por instrucción del usuario.

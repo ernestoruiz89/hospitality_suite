@@ -4,6 +4,8 @@ Revisión del 20/10/2026 sobre aplicación 0.6.1, commit `3563ef0`. Se contrasta
 
 En este bloque, **16 entradas pasan a V, nueve a I y dos a P**. El inventario original conserva texto, líneas, huella y sus 218 entradas: **99 V, diecisiete I, dos P y 100 R**. Estos recuentos representan aceptación documentada, no porcentaje de programación. `evidence/pages-rooms-audit.json` identifica casos aprobados del JUnit actual, referencias, huellas del código y las dos reproducciones estáticas.
 
+> Resolución posterior: las dos P de este contraste sobre 3563ef0 quedaron implementadas y probadas en 0.6.2. [ESTANCIAS_Y_LLEGADAS.md](ESTANCIAS_Y_LLEGADAS.md) conserva esa evidencia; la matriz canónica indica los recuentos vigentes. Este documento y su JSON conservan el contraste histórico.
+
 ## Pages acreditadas y sus límites
 
 Recepción ofrece tablero, panel lateral de estancia y cuenta; Reservas añade calendario por habitación y búsqueda de disponibilidad con el mismo motor de cupos. La prueba de calendario conserva 610 asignaciones y la de disponibilidad respeta demanda sin habitación. Los recorridos grupales y de hotel acreditan operación desde Pages. El calendario ordinario no constituye por sí solo un historial completo de todos los cambios.

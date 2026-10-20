@@ -1,0 +1,22 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "synthetic": true,
+  "fixture_origin": "API: three bookings and one initial stay",
+  "second_entry_from_page": true,
+  "entry_actor": "HS Receptionist",
+  "counts": {
+    "hosted": 2,
+    "arrivals": 0,
+    "departures": 1,
+    "accounts": 2
+  },
+  "active_rooms": [
+    "H101",
+    "H103"
+  ],
+  "future_arrival_room": "H102",
+  "invoices": 0,
+  "payments": 0,
+  "shifts": 0,
+  "business_date": "2026-10-19"
+}

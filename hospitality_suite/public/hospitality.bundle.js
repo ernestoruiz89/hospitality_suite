@@ -13,4 +13,5 @@ import "./js/hospitality_refunds.js";
 import "./js/hospitality_credits.js";
 import "./js/hospitality_service_accounting.js";
 import "./js/hospitality_invoicing.js";
+import "./js/hospitality_board.js";
 import "./js/hospitality_forms.js";

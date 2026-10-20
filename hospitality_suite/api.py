@@ -131,6 +131,12 @@ def may(action):
     return is_system() or bool(set(ACTIONS[action]).intersection(frappe.get_roles()))
 
 
+@frappe.whitelist()
+def stay_board(property_name,date=None,view='hosted',offset=0,page_length=25):
+    from hospitality_suite.desk_board import board
+    return board(property_name,date,view,offset,page_length)
+
+
 def project(dt, prop, fields=None, filters=None):
     from hospitality_suite.paging import permitted_all
     return permitted_all(dt, filters={"property": prop.name, **(filters or {})}, fields=fields or ["*"])
@@ -155,11 +161,13 @@ def bootstrap(property_name=None):
     result["rooms"] = project("HS Room", prop, ["name", "room_number", "category", "floor", "zone", "cleaning_status", "active", "parking"])
     result["categories"] = project("HS Category", prop, ["name", "category_name", "capacity"])
     # Minimal operational projection is intentionally separate from stay documents.
-    active = frappe.get_all("HS Stay", filters={"property": prop.name, "status": "Active"}, fields=["name", "room", "ends_at"])
+    active = frappe.get_all("HS Stay", filters={"property": prop.name, "status": "Active"}, fields=["name", "room", "starts_at", "ends_at"])
     result["occupied"] = active
     result["blocks"] = frappe.get_all("HS Allocation", filters={"property": prop.name, "kind": "Maintenance", "status": "Active"}, fields=["room", "starts_at", "ends_at"])
     result["rooms"].sort(key=lambda r: r.room_number)
     if may("stay") or may("finance"):
+        from hospitality_suite.desk_board import room_arrivals
+        result["room_arrivals"]=room_arrivals(prop)
         result["stays"] = project("HS Stay", prop)
         result["bookings"] = project("HS Booking", prop)
         result["guests"] = project("HS Guest", prop, ["name", "full_name", "customer"])
