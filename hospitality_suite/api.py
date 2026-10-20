@@ -5,7 +5,7 @@ import frappe
 from frappe.utils import now_datetime
 
 from hospitality_suite import operations, cashier, housekeeping, inventory, accounting, closing, linen, portal,timing,direct_sales,treasury,procurement,privacy
-from hospitality_suite.security import allowed_properties, require, document, ACTIONS, is_system
+from hospitality_suite.security import allowed_properties, require, document, ACTIONS, is_system, selected_property
 from hospitality_suite.service import command, insert, audit, canonical
 from hospitality_suite.time import to_site, now_local
 from hospitality_suite.schema import PAGES
@@ -13,6 +13,7 @@ from hospitality_suite import setup
 from hospitality_suite import service_accounting
 from hospitality_suite import periodic
 from hospitality_suite import booking_drafts
+from hospitality_suite.inputs import object_payload as payload
 
 COMMANDS = {
     'save_booking_draft':('reserve',booking_drafts.save),
@@ -52,20 +53,10 @@ COMMANDS = {
 }
 
 
-def payload(value):
-    if isinstance(value, str):
-        if len(value) > 100000:
-            frappe.throw(frappe._("Solicitud demasiado grande"))
-        value = json.loads(value)
-    if not isinstance(value, dict):
-        frappe.throw(frappe._("Se requiere un objeto JSON"))
-    return value
-
-
 @frappe.whitelist(methods=["POST"])
 def execute(property_name, action, request_key, data=None):
-    data = payload(data or {})
-    if action not in COMMANDS:
+    data = payload({} if data is None else data)
+    if not isinstance(action,str) or action not in COMMANDS:
         frappe.throw(frappe._("Acción desconocida"))
     permission, handler = COMMANDS[action]
     body = {**data, "operation": action}
@@ -74,11 +65,15 @@ def execute(property_name, action, request_key, data=None):
 
 @frappe.whitelist()
 def preview(property_name, data, action="reserve"):
-    if action == 'confirm_booking_draft':
-        return booking_drafts.preview(require(property_name,'reserve'),payload(data))
-    permission="inventory" if action=="purchase_order" else "approve" if action in ("adjust_stock","retire_sensitive","credit_note") else "finance" if action in ("invoice","payment","direct_sale","settle_payment","supplier_payment") else "reserve" if action in ("reserve","booking_status","modify_reservation","convert_portal") else "stay"
+    permission="inventory" if action=="purchase_order" else "approve" if action in ("adjust_stock","retire_sensitive","credit_note") else "finance" if action in ("invoice","payment","direct_sale","settle_payment","supplier_payment") else "reserve" if action in ("reserve","booking_status","modify_reservation","convert_portal","confirm_booking_draft") else "stay"
     prop = require(property_name, permission)
-    data = payload(data)
+    with selected_property(prop):
+        return _preview(prop,payload(data),action)
+
+
+def _preview(prop,data,action):
+    if action == 'confirm_booking_draft':
+        return booking_drafts.preview(prop,data)
     if action=='invoice':
         return accounting.invoice_quote(prop,data)
     if action == "reserve":

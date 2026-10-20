@@ -151,7 +151,7 @@ class TestPosCreditNotes(IntegrationTestCase):
         frappe.set_user('Administrator')
         motel=frappe.get_doc('HS Property',{'property_name':'Motel Luna Demo'})
         other=api.execute(motel.name,'open_shift',uuid.uuid4().hex,dict(opening_amount=0))['shift']
-        with self.assertRaises(frappe.ValidationError):self.review(dict(part,shift=other))
+        with self.assertRaises(frappe.PermissionError):self.review(dict(part,shift=other))
 
     def test_partially_paid_source_returns_only_received_money_and_reverses_write_off(self):
         original=self.invoice(payments=[(self.method,30)])

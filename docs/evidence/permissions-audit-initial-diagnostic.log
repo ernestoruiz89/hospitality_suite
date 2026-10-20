@@ -1,0 +1,9 @@
+Directed reproduction before selected-property guard, base HEAD f65c1e5 with the new regression test.
+Raw local diagnostic SHA256: 4b2910b11c68b61d1f56e7f40fe345afeefef9a6784d15cdb6cdb57805f576f3
+ FAIL  test_multi_property_actor_cannot_cancel_a_booking_from_another_selected_property (hospitality_suite.tests.test_permissions_audit.TestPermissionsAudit.test_multi_property_actor_cannot_cancel_a_booking_from_another_selected_property)
+Traceback (most recent call last):
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/tests/test_permissions_audit.py", line 51, in test_multi_property_actor_cannot_cancel_a_booking_from_another_selected_property
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/tests/test_permissions_audit.py", line 43, in rejected
+Ran 1 test in 1.180s
+FAILED (failures=1)
+AssertionError: PermissionError not raised

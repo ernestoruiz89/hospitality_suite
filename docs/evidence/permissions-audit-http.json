@@ -1,0 +1,105 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "base_url": "http://localhost:8089",
+  "real_http": true,
+  "checks": [
+    {
+      "check": "Guest authenticated bootstrap denied",
+      "status": 403,
+      "exception": "PermissionError"
+    },
+    {
+      "check": "Guest native resource denied",
+      "status": 403,
+      "exception": "PermissionError"
+    },
+    {
+      "check": "Disabled portal exposes no catalog",
+      "status": 200,
+      "exception": null
+    },
+    {
+      "check": "Disabled public quote denied",
+      "status": 403,
+      "exception": "PermissionError"
+    },
+    {
+      "check": "Disabled webhook denied",
+      "status": 403,
+      "exception": "PermissionError"
+    },
+    {
+      "check": "Native per-IP catalog limit",
+      "allowed": 30,
+      "status": 429
+    },
+    {
+      "check": "Cross-context command denied for multi-property reception",
+      "status": 403,
+      "exception": "PermissionError"
+    },
+    {
+      "check": "Cross-context quote denied",
+      "status": 403,
+      "exception": "PermissionError"
+    },
+    {
+      "check": "Mutation using GET denied",
+      "status": 403,
+      "exception": "PermissionError"
+    },
+    {
+      "check": "Missing CSRF token denied",
+      "status": 400,
+      "exception": "CSRFTokenError"
+    },
+    {
+      "check": "Malformed JSON handled",
+      "status": 417,
+      "exception": "ValidationError"
+    },
+    {
+      "check": "Non-object payload handled",
+      "status": 417,
+      "exception": "ValidationError"
+    },
+    {
+      "check": "Unknown action handled",
+      "status": 417,
+      "exception": "ValidationError"
+    },
+    {
+      "check": "Foreign guest document denied with combined native role",
+      "status": 403,
+      "exception": "PermissionError"
+    },
+    {
+      "check": "Native room list restricted to one property",
+      "rows": 10,
+      "status": 200
+    },
+    {
+      "check": "Native link search excludes foreign guest",
+      "rows": 0,
+      "status": 200
+    },
+    {
+      "check": "Identity file denied to housekeeping",
+      "status": 403,
+      "exception": null
+    },
+    {
+      "check": "Housekeeping projection excludes personal and financial documents",
+      "status": 200
+    },
+    {
+      "check": "Read-only auditor cannot open cash shift",
+      "status": 403,
+      "exception": "PermissionError"
+    }
+  ],
+  "authenticated_sessions_logged_out": 4,
+  "ui_navigation_executed": false,
+  "external_providers_enabled": false,
+  "business_mutations_from_http": 0
+}

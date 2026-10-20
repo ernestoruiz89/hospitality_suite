@@ -56,6 +56,8 @@ class ScopedDocument(Document):
     def validate(self):
         if self.meta.istable:
             return
+        from hospitality_suite.security import check_selected_document
+        check_selected_document(self)
         internal = bool(getattr(frappe.local, "hs_operation", False))
         if self.doctype not in WRITABLE and not internal:
             frappe.throw(_("Use las acciones de Hospitality Suite para modificar este documento"))

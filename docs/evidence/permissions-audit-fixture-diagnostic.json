@@ -1,0 +1,7 @@
+{
+  "native_user_fixture_enqueued_contact": true,
+  "contact_added_for_synthetic_user": 1,
+  "other_contacts_unchanged": true,
+  "original_fixture_not_replaced": true,
+  "corrected_fixture_runs_native_contact_creation_synchronously": true
+}

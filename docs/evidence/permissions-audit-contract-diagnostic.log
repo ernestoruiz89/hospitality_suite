@@ -1,0 +1,72 @@
+Starting test run with parameters: site=hospitality-acceptance.localhost, app=hospitality_suite, verbose=False, tests=(), force=False, profile=False, junit_xml_output=/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/.local/permissions-audit/full-1-raw.xml, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/frappe/benches/hospitality-bench/logs/frappe.testing.log
+
+Running tests...
+----------------------------------------------------------------------
+
+Running 305 integration tests for hospitality_suite
+......................................................................................................................................................................................................................E..........................................................................................
+======================================================================
+ERROR [0.684s]: test_review_rejects_another_return_and_unauthorized_or_foreign_closed_shift (hospitality_suite.tests.test_pos_credit_notes.TestPosCreditNotes.test_review_rejects_another_return_and_unauthorized_or_foreign_closed_shift)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/tests/test_pos_credit_notes.py", line 154, in test_review_rejects_another_return_and_unauthorized_or_foreign_closed_shift
+    with self.assertRaises(frappe.ValidationError):self.review(dict(part,shift=other))
+                                                   ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/tests/test_pos_credit_notes.py", line 41, in review
+    def review(self,values):return api.preview(self.prop.name,values,'credit_note')
+                                   ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/utils/typing_validations.py", line 36, in wrapper
+    return func(*args, **kwargs)
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/api.py", line 71, in preview
+    return _preview(prop,payload(data),action)
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/api.py", line 102, in _preview
+    return accounting.credit_note_quote(prop,data)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/accounting.py", line 266, in credit_note_quote
+    return credit_review(prop,inv,credit,data)
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/accounting.py", line 252, in credit_review
+    pos=configure(prop,inv,credit,data,returns)
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/pos_returns.py", line 87, in configure
+    shift=document('HS Shift',data.get('shift'),'approve')
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/security.py", line 77, in document
+    check_selected_reference(dt,name)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/security.py", line 66, in check_selected_reference
+    frappe.throw(_("El documento no pertenece al establecimiento seleccionado"),frappe.PermissionError)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/utils/messages.py", line 159, in throw
+    msgprint(
+    ~~~~~~~~^
+    	msg,
+     ^^^^
+    ...<7 lines>...
+    	allow_dangerous_html=allow_dangerous_html,
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/utils/messages.py", line 118, in msgprint
+    _raise_exception()
+    ~~~~~~~~~~~~~~~~^^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/utils/messages.py", line 59, in _raise_exception
+    raise exc
+frappe.exceptions.PermissionError: El documento no pertenece al establecimiento seleccionado
+
+----------------------------------------------------------------------
+Ran 305 tests in 114.113s
+
+FAILED (errors=1)
+
+Generating XML reports...
+
+Running tests...
+----------------------------------------------------------------------
+
+Running 14 unspecified-category tests for hospitality_suite
+..............
+----------------------------------------------------------------------
+Ran 14 tests in 0.125s
+
+OK
+
+Generating XML reports...

@@ -1,0 +1,9 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "synthetic_api_fixture": true,
+  "unchanged_tables": 72,
+  "rows": 203,
+  "private_file_preserved": true,
+  "booking_status": "Confirmed",
+  "http_business_writes": 0
+}

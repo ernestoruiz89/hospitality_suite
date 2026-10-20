@@ -3375,10 +3375,19 @@
       "line": 218,
       "kind": "clause",
       "requirement": "Roles mínimos: administrador, gerente, supervisor, recepcionista, cajero, limpieza, mantenimiento, contabilidad y auditor de lectura.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/schema.py",
+        "hospitality_suite/security.py",
+        "hospitality_suite/install.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_SEGURIDAD.md",
+        "docs/evidence/permissions-audit-native-tests.xml",
+        "hospitality_suite/tests/test_permissions_audit.py::all_nine_roles_advertise_only_authorized_actions_and_enforce_them_before_handlers",
+        "docs/evidence/architecture-current.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S15-02",
@@ -3387,10 +3396,21 @@
       "line": 220,
       "kind": "enumerated",
       "requirement": "- Matriz de permisos por acción, documento, compañía y establecimiento, aplicada en el servidor además de la interfaz.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/security.py",
+        "hospitality_suite/service.py",
+        "hospitality_suite/controllers.py",
+        "hospitality_suite/api.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_SEGURIDAD.md",
+        "docs/evidence/permissions-audit-native-tests.xml",
+        "hospitality_suite/tests/test_permissions_audit.py",
+        "hospitality_suite/tests/test_security_recovery.py",
+        "docs/evidence/permissions-audit-http.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S15-03",
@@ -3399,10 +3419,22 @@
       "line": 221,
       "kind": "enumerated",
       "requirement": "- No asumir que un filtro visual o habilitar multicompañía aísla los datos. Verificar listados, enlaces, reportes, exportaciones, archivos, APIs y eventos de tiempo real.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/security.py",
+        "hospitality_suite/hooks.py",
+        "hospitality_suite/report_queries.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_SEGURIDAD.md",
+        "docs/evidence/permissions-audit-native-tests.xml",
+        "hospitality_suite/tests/test_security_recovery.py",
+        "hospitality_suite/tests/test_reporting_history.py",
+        "hospitality_suite/tests/test_report_dimensions.py",
+        "docs/evidence/permissions-audit-http.json",
+        "docs/evidence/transport-sessions.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S15-04",
@@ -3411,10 +3443,22 @@
       "line": 222,
       "kind": "enumerated",
       "requirement": "- No usar ignore_permissions como solución general ni exponer operaciones privadas a Guest.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/service.py",
+        "hospitality_suite/api.py",
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/guest_profiles.py",
+        "hospitality_suite/integrations.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_SEGURIDAD.md",
+        "docs/evidence/permissions-audit-native-tests.xml",
+        "hospitality_suite/tests/test_operations.py::direct_rest_mutation_cannot_bypass_engine",
+        "docs/evidence/permissions-audit-source.json",
+        "docs/evidence/permissions-audit-http.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S15-05",
@@ -3423,10 +3467,20 @@
       "line": 223,
       "kind": "enumerated",
       "requirement": "- Limpieza y mantenimiento no deben ver documentos de identidad ni información financiera innecesaria.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/security.py",
+        "hospitality_suite/api.py",
+        "hospitality_suite/housekeeping.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_SEGURIDAD.md",
+        "docs/evidence/permissions-audit-native-tests.xml",
+        "hospitality_suite/tests/test_security_recovery.py",
+        "hospitality_suite/tests/test_housekeeping_audit.py",
+        "docs/evidence/permissions-audit-http.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S15-06",
@@ -3435,10 +3489,20 @@
       "line": 224,
       "kind": "enumerated",
       "requirement": "- Acceso restringido y archivos privados para identificaciones y evidencias sensibles; políticas configurables de retención de datos.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/security.py",
+        "hospitality_suite/privacy.py",
+        "hospitality_suite/controllers.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_SEGURIDAD.md",
+        "docs/evidence/permissions-audit-native-tests.xml",
+        "hospitality_suite/tests/test_privacy.py",
+        "docs/evidence/privacy-worker.json",
+        "docs/evidence/permissions-audit-http.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S15-07",
@@ -3447,10 +3511,22 @@
       "line": 225,
       "kind": "enumerated",
       "requirement": "- Bitácora con usuario, momento, acción, documento, motivo y valores relevantes para tarifas, descuentos, extensiones, anulaciones, devoluciones y cierres.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "I",
+      "implementation": [
+        "hospitality_suite/service.py",
+        "hospitality_suite/operations.py",
+        "hospitality_suite/cashier.py",
+        "hospitality_suite/closing.py",
+        "hospitality_suite/accounting.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_SEGURIDAD.md",
+        "docs/evidence/permissions-audit-native-tests.xml",
+        "hospitality_suite/tests/test_lifecycle.py",
+        "hospitality_suite/tests/test_treasury.py",
+        "hospitality_suite/tests/test_guest_profiles.py"
+      ],
+      "remaining": "Contrastar actor, momento, documento, motivo y valores relevantes en tarifas, descuentos, extensiones, anulaciones, devoluciones y cierres, incluidas ediciones estándar de maestros; no inferir cobertura completa de eventos localizados."
     },
     {
       "id": "S15-08",
@@ -3459,10 +3535,20 @@
       "line": 226,
       "kind": "enumerated",
       "requirement": "- No permitir borrar movimientos financieros confirmados para ocultar errores. Usar cancelación/reversión conforme al estándar.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/controllers.py",
+        "hospitality_suite/security.py",
+        "hospitality_suite/accounting.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_SEGURIDAD.md",
+        "docs/evidence/permissions-audit-native-tests.xml",
+        "hospitality_suite/tests/test_permissions_audit.py::confirmed_operational_documents_cannot_be_deleted_even_by_administrator",
+        "hospitality_suite/tests/test_pos_credit_notes.py",
+        "hospitality_suite/tests/test_guarantee_refunds.py"
+      ],
+      "remaining": ""
     },
     {
       "id": "S15-09",
@@ -3471,10 +3557,20 @@
       "line": 227,
       "kind": "enumerated",
       "requirement": "- Modo discreto en el tablero de moteles que oculte nombres y datos personales sin eliminar trazabilidad interna.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/desk_board.py",
+        "hospitality_suite/booking_presentation.py",
+        "hospitality_suite/public/js/hospitality.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_SEGURIDAD.md",
+        "docs/evidence/permissions-audit-native-tests.xml",
+        "hospitality_suite/tests/test_desk_board.py::roles_scope_discreet_names_and_read_only_posting_guards",
+        "hospitality_suite/tests/test_tariff_explanations.py::booking_summary_preserves_group_rows_unassigned_rooms_and_discreet_names",
+        "tools/test_booking_summary_ui.cjs"
+      ],
+      "remaining": ""
     },
     {
       "id": "S15-10",
@@ -3483,10 +3579,24 @@
       "line": 228,
       "kind": "enumerated",
       "requirement": "- Proteger endpoints contra acceso a documentos ajenos, entradas inválidas, inyección y exposición de secretos. Aplicar limitación de solicitudes donde corresponda.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/inputs.py",
+        "hospitality_suite/security.py",
+        "hospitality_suite/api.py",
+        "hospitality_suite/portal.py",
+        "hospitality_suite/integrations.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_SEGURIDAD.md",
+        "docs/evidence/permissions-audit-native-tests.xml",
+        "hospitality_suite/tests/test_permissions_audit.py",
+        "hospitality_suite/tests/test_integrations.py",
+        "hospitality_suite/tests/test_portal.py",
+        "docs/evidence/permissions-audit-http.json",
+        "docs/evidence/permissions-audit-source.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S16-01",

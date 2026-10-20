@@ -162,3 +162,7 @@ Los documentos nuevos tienen números como RES-2026-00001, EST-2026-00001 y CTA-
 Programar limpieza deja la habitación sucia hasta completar la tarea. Las tarjetas identifican tipo, prioridad y responsable; las indicaciones se conservan. Solicitar inspección no libera: Supervisión debe Inspeccionar y liberar. Solicitar corrección requiere explicar qué debe repetirse y devuelve la tarea al mismo responsable. Si la política no exige inspección, Limpieza puede Finalizar limpieza.
 
 Nueva orden separa Trabajo y ubicación de Plazo y responsable. Indique un fin previsto o marque Hasta reapertura autorizada: no se liberará por transcurso del tiempo. Se rechaza si invade reservas futuras, aunque no tengan habitación asignada, o una estancia. Solo supervisión puede Completar y liberar bloqueo. Recepción identifica ese estado y vuelve a habilitar Reservar tras la reapertura; el estado de limpieza se conserva por separado. Reposición de ropa por ubicación se registra desde Mover / consumir stock con supervisión, destino y motivo. Véase AUDITORIA_LIMPIEZA_MANTENIMIENTO.md.
+
+## Establecimiento de la operación — 0.7.2
+
+Las acciones y cotizaciones deben pertenecer al establecimiento seleccionado. Si aparece «El documento no pertenece al establecimiento seleccionado», seleccione el establecimiento correcto y vuelva a abrir el registro desde su lista. Un intento rechazado no guarda cambios parciales. Tener acceso a varios establecimientos no mezcla sus operaciones. El auditor puede consultar sus reportes; no puede abrir turnos ni registrar cobros.

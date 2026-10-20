@@ -60,3 +60,9 @@ Referencias contrastadas con el código instalado: [Page API](https://docs.frapp
 ## Bloqueo sin vencimiento — 0.7.1
 
 HS Maintenance Order.until_reopened permite ends_at vacío. HS Allocation admite fin vacío únicamente para mantenimiento respaldado por esa política; el controlador exige fin en reservas/estancias. Las consultas proyectan el bloqueo al horizonte solicitado y la creación contrasta todas las obligaciones futuras. No se guardan fechas centinela ni se cambia HS Room.active. Completar con supervisión libera la asignación; calendario/indicadores recortan el historial en el evento de finalización. Los intervalos existentes conservan fechas, política y registros, acreditados en housekeeping-audit-upgrade.json.
+
+## Contexto de operación y entradas — 0.7.2
+
+service.command fija (establecimiento, compañía) durante operation; api.preview usa el mismo contexto sin marcar una escritura. security valida referencias antes de leer y después de cargar; locked_doc y ScopedDocument aplican ese alcance a documentos HS, y validate_standard al origen contable. Las operaciones anidadas no pueden cambiar de establecimiento y el contexto se restaura en finally. Los permisos de rol/lectura permanecen separados y obligatorios. No se restringen artificialmente maestros compartidos de compañía ni candidatos internos de conciliación.
+
+inputs.object_payload limita tamaño/profundidad y rechaza JSON inválido/no finito también cuando Frappe ya lo decodificó. Portal conserva los límites nativos por IP, POST y enlaces firmados acotados. AUDITORIA_SEGURIDAD.md delimita 319 pruebas nativas, 19 controles HTTP y el alcance de la revisión estática; no sustituye la recuperación final ni la bitácora completa pendiente.

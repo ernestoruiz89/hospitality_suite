@@ -1,0 +1,7 @@
+{
+  "acceptance_only": true,
+  "after_confirmed_restore": true,
+  "checked_fixture_generations": 2,
+  "removed_synthetic_orphan_files": 2,
+  "sha256_checked_before_removal": true
+}

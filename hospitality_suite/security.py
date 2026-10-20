@@ -1,4 +1,5 @@
 """Authorization is enforced before every query/mutation, including direct REST access."""
+from contextlib import contextmanager
 import frappe
 from frappe import _
 
@@ -42,8 +43,40 @@ def require(property_name, action=None):
     return frappe.get_doc("HS Property", property_name)
 
 
+@contextmanager
+def selected_property(prop):
+    """Bind a command/quote to one property, even for multi-property administrators."""
+    before=getattr(frappe.local,"hs_selected_property",None)
+    scope=(prop.name,prop.company)
+    if before and before!=scope:
+        frappe.throw(_("El documento no pertenece al establecimiento seleccionado"),frappe.PermissionError)
+    frappe.local.hs_selected_property=scope
+    try:
+        yield
+    finally:
+        frappe.local.hs_selected_property=before
+
+
+def check_selected_reference(dt,name):
+    scope=getattr(frappe.local,"hs_selected_property",None)
+    if scope and dt in SCOPED:
+        filters={"name":name,"company":scope[1]}
+        filters["name" if dt=="HS Property" else "property"]=scope[0]
+        if (dt=="HS Property" and name!=scope[0]) or not frappe.db.exists(dt,filters):
+            frappe.throw(_("El documento no pertenece al establecimiento seleccionado"),frappe.PermissionError)
+
+
+def check_selected_document(doc):
+    scope=getattr(frappe.local,"hs_selected_property",None)
+    if scope and doc.doctype in SCOPED:
+        if (doc.name if doc.doctype=="HS Property" else doc.property)!=scope[0] or doc.company!=scope[1]:
+            frappe.throw(_("El documento no pertenece al establecimiento seleccionado"),frappe.PermissionError)
+
+
 def document(dt, name, action=None):
+    check_selected_reference(dt,name)
     doc = frappe.get_doc(dt, name, for_update=bool(getattr(frappe.local, "hs_operation", False)))
+    check_selected_document(doc)
     require(doc.name if dt == "HS Property" else doc.property, action)
     doc.check_permission("read")
     return doc
@@ -252,6 +285,9 @@ def validate_standard(doc, method=None):
         if party and party not in payers:
             frappe.throw(frappe._("El pagador no coincide con la reserva o sus cuentas"))
     prop = require(prop_name)
+    scope=getattr(frappe.local,"hs_selected_property",None)
+    if scope and (prop.name,prop.company)!=scope:
+        frappe.throw(_("El documento no pertenece al establecimiento seleccionado"),frappe.PermissionError)
     if doc.company != prop.company:
         frappe.throw(frappe._("El documento contable pertenece a otra compañía"))
     if doc.doctype in ("Purchase Order","Purchase Receipt","Purchase Invoice") and doc.get("supplier"):

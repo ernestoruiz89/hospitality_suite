@@ -13,6 +13,7 @@ from frappe.rate_limiter import rate_limit
 from hospitality_suite import operations, availability
 from hospitality_suite.service import operation, canonical, insert, audit, current_all
 from hospitality_suite.security import document
+from hospitality_suite.inputs import object_payload
 from hospitality_suite.time import to_site, local
 
 
@@ -33,6 +34,8 @@ def sign(data):
 
 def verify(token):
     try:
+        if not isinstance(token,str) or len(token)>4096:
+            raise ValueError()
         if not frappe.conf.get("encryption_key"):
             raise ValueError()
         raw,signature=token.split(".")
@@ -56,10 +59,23 @@ def catalog():
 
 
 def request_values(data):
-    if isinstance(data,str):
-        data=json.loads(data)
-    count=int(data.get("quantity") or 1)
-    people=int(data.get("people") or 1)
+    data=object_payload(data)
+    if any(data.get(key) is not None and not isinstance(data[key],str) for key in
+           ("full_name","email","phone","starts_at","ends_at","category","mode","acceptance")):
+        frappe.throw(frappe._("Revise los datos de la solicitud"))
+    if len(data.get("phone") or "")>140:
+        frappe.throw(frappe._("El teléfono es demasiado largo"))
+    try:
+        if isinstance(data.get("quantity"),bool) or isinstance(data.get("people"),bool):
+            raise ValueError()
+        quantity=data.get("quantity") if data.get("quantity") not in (None,"") else 1
+        persons=data.get("people") if data.get("people") not in (None,"") else 1
+        count=int(quantity)
+        people=int(persons)
+        if float(quantity)!=count or float(persons)!=people:
+            raise ValueError()
+    except (ValueError,TypeError,OverflowError):
+        frappe.throw(frappe._("Cantidad de habitaciones o personas inválida"))
     if not 1<=count<=10 or not 1<=people<=20:
         frappe.throw(frappe._("Cantidad de habitaciones o personas inválida"))
     values={k:data.get(k) for k in ("full_name","email","phone","starts_at","ends_at","category","mode","quantity","people","acceptance")}
@@ -77,7 +93,7 @@ def quote(property_name,data):
 @rate_limit(limit=5,seconds=60)
 def request(property_name,data,request_key):
     prop=enabled(property_name)
-    if not request_key or len(request_key)>100:
+    if not isinstance(request_key,str) or not request_key.strip() or len(request_key)>100:
         frappe.throw(frappe._("Clave de solicitud inválida"))
     values=request_values(data)
     if not values.get("full_name") or not values.get("email"):

@@ -1,5 +1,5 @@
 """One local database transaction per command; request boundary owns commit/rollback."""
-from contextlib import contextmanager
+from contextlib import contextmanager, nullcontext
 import hashlib
 import json
 
@@ -7,7 +7,7 @@ import frappe
 from frappe import _
 from frappe.utils import now_datetime
 
-from hospitality_suite.security import require, realtime
+from hospitality_suite.security import require, realtime, selected_property, check_selected_reference, check_selected_document
 
 
 def canonical(value):
@@ -15,11 +15,12 @@ def canonical(value):
 
 
 @contextmanager
-def operation():
+def operation(prop=None):
     before = getattr(frappe.local, "hs_operation", False)
     frappe.local.hs_operation = True
     try:
-        yield
+        with selected_property(prop) if prop else nullcontext():
+            yield
     finally:
         frappe.local.hs_operation = before
 
@@ -30,8 +31,11 @@ def lock_property(name, action=None):
     return frappe.get_doc("HS Property", name, for_update=True)
 
 
-def locked_doc(*args, **kwargs):
-    return frappe.get_doc(*args, **kwargs, for_update=bool(getattr(frappe.local, "hs_operation", False)))
+def locked_doc(dt, name, **kwargs):
+    check_selected_reference(dt,name)
+    doc=frappe.get_doc(dt,name,**kwargs,for_update=bool(getattr(frappe.local,"hs_operation",False)))
+    check_selected_document(doc)
+    return doc
 
 
 def current_all(dt, filters=None, fields=None, pluck=None, order_by=None):
@@ -60,7 +64,7 @@ def audit(prop, action, doc, reason=None, details=None):
 
 def command(property_name, action, key, payload, handler):
     prop = lock_property(property_name, action)
-    if not key or len(str(key)) > 140:
+    if not isinstance(key,str) or not key.strip() or len(key) > 140:
         frappe.throw(_("Se requiere una clave de idempotencia válida"))
     op = payload.get("operation", action)
     request_key = hashlib.sha256(f"{frappe.session.user}|{property_name}|{op}|{key}".encode()).hexdigest()
@@ -74,7 +78,7 @@ def command(property_name, action, key, payload, handler):
     savepoint="hs_"+request_key[:24]
     frappe.db.savepoint(savepoint)
     try:
-        with operation():
+        with operation(prop):
             result = handler(prop)
             insert("HS Request", prop, request_key=request_key, payload_hash=digest, operation=op, result=canonical(result))
             realtime(prop.name)
