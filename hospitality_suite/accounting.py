@@ -395,9 +395,14 @@ def payment(prop, data):
     company_currency = frappe.db.get_value("Company", prop.company, "default_currency")
     fx = exchange(method.currency, company_currency)
     property_fx = exchange(prop.currency, company_currency)
+    refund_plan=None
+    if source and kind=='Refund':
+        from hospitality_suite.refunds import plan
+        refund_plan=plan(prop,source,amount,method,data.get('credit_note'))
     if data.get("fx_acceptance") and data["fx_acceptance"]!=payment_quote(prop,data)["acceptance"]:
-        frappe.throw(frappe._("El tipo de cambio cambió; revise el movimiento otra vez"))
-    party_amount = money(amount * fx / property_fx)
+        frappe.throw(frappe._("Los importes o fondos disponibles cambiaron; revise el movimiento otra vez"))
+    party_amount = refund_plan.party_amount if refund_plan else money(amount * fx / property_fx)
+    party_rate=refund_plan.party_rate if refund_plan else property_fx
     is_refund = kind in ("Refund", "Guarantee Refund")
     if kind in ("Guarantee", "Guarantee Refund"):
         journal = frappe.new_doc("Journal Entry")
@@ -421,25 +426,24 @@ def payment(prop, data):
         balance_exchange(journal,prop)
         post_standard(journal, prop)
         pe = None
-    elif source and source.kind == "Advance":
+    elif source and source.kind == "Advance" and not refund_plan.credit:
         # ERPNext 16.51.1 validates customer references on Payment Entry as invoice
         # fields, so use a standard party Journal Entry and reconcile the original
         # advance through ERPNext's supported reconciliation controller.
-        original = locked_doc("Payment Entry", source.payment_entry)
-        if party_amount > decimal(original.unallocated_amount):
-            frappe.throw(frappe._("El anticipo ya está aplicado; use una nota de crédito"))
+        original = refund_plan.original
         journal = frappe.new_doc("Journal Entry")
         journal.update(dict(company=prop.company,posting_date=nowdate(),voucher_type="Journal Entry",multi_currency=1,
                             hs_stay=stay.name if stay else None,hs_shift=shift.name,hs_folio=folio.name if folio else None,user_remark=data["reason"]))
-        journal.append("accounts",dict(account=prop.receivable_account,party_type="Customer",party=customer,
-                                       debit_in_account_currency=float(party_amount),exchange_rate=float(property_fx),cost_center=prop.cost_center))
+        journal.append("accounts",dict(account=refund_plan.account,party_type="Customer",party=customer,
+                                       debit_in_account_currency=float(party_amount),exchange_rate=float(party_rate),cost_center=prop.cost_center))
         journal.append("accounts",dict(account=method.account,credit_in_account_currency=float(amount),exchange_rate=float(fx),cost_center=prop.cost_center))
+        balance_exchange(journal,prop)
         post_standard(journal,prop)
         from erpnext.accounts.utils import reconcile_against_document
         reconcile_against_document([frappe._dict(voucher_type="Payment Entry",voucher_no=original.name,voucher_detail_no=None,
                                                 against_voucher_type="Journal Entry",against_voucher=journal.name,
-                                                account=prop.receivable_account,party_type="Customer",party=customer,
-                                                exchange_rate=float(property_fx),is_advance="Yes",dr_or_cr="credit_in_account_currency",
+                                                account=refund_plan.account,party_type="Customer",party=customer,
+                                                exchange_rate=float(party_rate),is_advance="Yes",dr_or_cr="credit_in_account_currency",
                                                 unadjusted_amount=original.unallocated_amount,unreconciled_amount=original.unallocated_amount,
                                                 allocated_amount=float(party_amount),difference_amount=0,cost_center=prop.cost_center)])
         pe = None
@@ -453,28 +457,15 @@ def payment(prop, data):
             invoices = [locked_doc("Sales Invoice", n) for n in names if n]
             if party_amount > sum(decimal(inv.outstanding_amount) for inv in invoices):
                 frappe.throw(frappe._("El cobro supera el saldo; registre un anticipo separado si corresponde"))
-        elif source and source.kind == "Advance":
-            unallocated = decimal(frappe.db.get_value("Payment Entry", source.payment_entry, "unallocated_amount"))
-            if party_amount > unallocated:
-                frappe.throw(frappe._("El anticipo ya está aplicado; use nota de crédito y devolución contra factura"))
-        elif source and source.kind == "Payment":
-            if not data.get("credit_note"):
-                frappe.throw(frappe._("Seleccione la nota de crédito para devolver un pago facturado"))
-            refund_invoice=locked_doc("Sales Invoice",data["credit_note"])
-            original=locked_doc("Payment Entry",source.payment_entry)
-            if refund_invoice.docstatus!=1 or not refund_invoice.is_return or refund_invoice.hs_property!=prop.name or refund_invoice.customer!=customer:
-                frappe.throw(frappe._("La nota de crédito no corresponde al pagador y establecimiento"))
-            if refund_invoice.return_against not in [r.reference_name for r in original.references if r.reference_doctype=="Sales Invoice"]:
-                frappe.throw(frappe._("La nota de crédito no corresponde a una factura del pago original"))
-            if party_amount>abs(min(decimal(0),decimal(refund_invoice.outstanding_amount))):
-                frappe.throw(frappe._("La devolución supera el crédito disponible"))
+        elif refund_plan:
+            refund_invoice=refund_plan.credit
         pe = frappe.new_doc("Payment Entry")
         pe.update(dict(company=prop.company, payment_type="Pay" if is_refund else "Receive", posting_date=nowdate(),
                        party_type="Customer", party=customer, mode_of_payment=method.mode_of_payment,
                        paid_from=method.account if is_refund else prop.receivable_account,
-                       paid_to=prop.receivable_account if is_refund else method.account,
+                       paid_to=refund_plan.account if refund_plan else prop.receivable_account if is_refund else method.account,
                        paid_amount=float(amount if is_refund else party_amount), received_amount=float(party_amount if is_refund else amount),
-                       source_exchange_rate=float(fx if is_refund else property_fx), target_exchange_rate=float(property_fx if is_refund else fx),
+                       source_exchange_rate=float(fx if is_refund else property_fx), target_exchange_rate=float(party_rate if is_refund else fx),
                        reference_no=data.get("reference") or f"HS-{shift.name}", reference_date=nowdate(), cost_center=prop.cost_center,
                        hs_stay=stay.name if stay else None, hs_shift=shift.name, hs_folio=folio.name if folio else None, hs_booking=booking.name if booking else None))
         if kind == "Payment":
@@ -484,16 +475,22 @@ def payment(prop, data):
                 if allocation > 0:
                     pe.append("references", dict(reference_doctype="Sales Invoice", reference_name=invoice.name, allocated_amount=float(allocation)))
                     remaining -= allocation
-        elif source and source.kind=="Payment":
+        elif refund_plan and refund_plan.credit:
             pe.append("references",dict(reference_doctype="Sales Invoice",reference_name=refund_invoice.name,allocated_amount=-float(party_amount)))
+            if prop.get('exchange_gain_loss_account') and money(amount*fx-party_amount*party_rate,currency=company_currency):
+                account=locked_doc('Account',prop.exchange_gain_loss_account)
+                if account.company!=prop.company or account.is_group or account.account_currency!=company_currency or account.root_type not in ('Income','Expense'):
+                    frappe.throw(frappe._('Revise la cuenta de diferencia cambiaria'))
+                pe.append('deductions',dict(account=account.name,cost_center=prop.cost_center,is_exchange_gain_loss=1))
         post_standard(pe, prop)
         journal = None
     record = insert("HS Payment", prop, stay=stay.name if stay else None, booking=booking.name if booking else (stay.booking if stay else None),
                     folio=folio.name if folio else None, customer=customer, shift=shift.name, method=method.name, amount=amount,
                     currency=method.currency, exchange_rate=fx, base_amount=money(amount * fx), kind=kind, status="Posted",
                     payment_entry=pe.name if pe else None, journal_entry=journal.name if journal else None,
+                    sales_invoice=refund_plan.credit.name if refund_plan and refund_plan.credit else None,
                     source_payment=source.name if source else None, reference=data.get("reference"), reason=data.get("reason"),tendered=tendered,change_amount=change)
-    audit(prop, kind, record, data.get("reason"),dict(payment_policy=policy) if policy else None)
+    audit(prop, kind, record, data.get("reason"),dict(payment_policy=policy,refund=refund_plan.proof if refund_plan else None) if policy or refund_plan else None)
     return dict(payment=record.name, payment_entry=record.payment_entry, journal_entry=record.journal_entry, amount=str(amount), currency=method.currency,
                 tendered=str(tendered),change=str(change),exchange_rate=str(fx),base_amount=str(record.base_amount))
 
@@ -516,6 +513,11 @@ def payment_quote(prop,data):
                 base_currency=company_currency,property_amount=str(money(amount*fx/property_fx,currency=prop.currency)),property_currency=prop.currency,
                 tendered=str(tendered),change=str(money(tendered-amount,currency=method.currency)),method=method.name)
     values["payment_policy"]=policy
+    if data.get('kind')=='Refund':
+        from hospitality_suite.refunds import plan
+        source=document('HS Payment',data.get('source_payment'),'finance')
+        refund=plan(prop,source,amount,method,data.get('credit_note'))
+        values['refund']={**refund.proof,'exchange_difference':str(money(amount*fx-refund.party_amount*refund.party_rate,currency=company_currency))}
     values["acceptance"]=hashlib.sha256(canonical(values).encode()).hexdigest()
     return values
 

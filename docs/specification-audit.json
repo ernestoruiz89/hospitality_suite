@@ -1469,10 +1469,24 @@
       "line": 139,
       "kind": "enumerated",
       "requirement": "- Crear notas de crédito y devoluciones con documentos estándar; no modificar importes contabilizados directamente.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "I",
+      "implementation": [
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/refunds.py",
+        "hospitality_suite/public/js/hospitality_refunds.js",
+        "hospitality_suite/public/js/hospitality_workflows.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_DEVOLUCIONES.md",
+        "docs/evidence/refund-native-tests.xml::TestAppliedRefunds / TestFinance / TestNativePos",
+        "docs/evidence/refund-js-tests.log",
+        "docs/evidence/76-refund-readable-source.png",
+        "docs/evidence/77-refund-applied-review.png",
+        "docs/evidence/78-refund-confirmed-cashier.png",
+        "docs/evidence/refund-items-ui.json",
+        "docs/evidence/refund-ux-restored.json"
+      ],
+      "remaining": "Anticipos aplicados/disponibles y cobros contra nota estándar probados. Continuar el contraste de garantías ya aplicadas y de notas POS desde las Pages antes de verificar la entrada completa."
     },
     {
       "id": "S09-09",

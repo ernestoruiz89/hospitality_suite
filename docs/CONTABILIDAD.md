@@ -24,7 +24,9 @@ Un anticipo es un Payment Entry del cliente y queda sin asignar hasta su aplicac
 
 También se concilian anticipos recibidos después de existir una factura. La app utiliza Payment Reconciliation de ERPNext. Actualizar referencias de un anticipo histórico puede ser válido con el turno original cerrado; no cambia el importe, moneda, cuenta o caja originales. No puede usarse esa excepción para cambiar dinero de un turno cerrado.
 
-Para devolver un anticipo no aplicado, se utiliza un Journal Entry del cliente/efectivo y conciliación estándar con el Payment Entry original, que es el mecanismo verificado en ERPNext 16.51.1. Un cobro facturado se devuelve contra nota de crédito real.
+Para devolver un anticipo no aplicado, se utiliza un Journal Entry del cliente/efectivo y conciliación estándar con el Payment Entry original, que es el mecanismo verificado en ERPNext 16.51.1. Un anticipo aplicado o cobro facturado se devuelve mediante Payment Entry de salida contra una nota de crédito real de la factura de origen. Se comprueba el límite aplicado por ese movimiento a cada factura, el crédito pendiente y los fondos originales menos devoluciones vigentes. No se deshace la asignación histórica.
+
+La devolución liquida el valor original en la cuenta del cliente y entrega el dinero al cambio actual, con diferencia cambiaria estándar. La última devolución absorbe el residuo de redondeo. Una revisión obsoleta se rechaza aunque el tipo de cambio sea el mismo. Caja presenta el origen por fecha, importe y recibo estándar, y separa el valor liquidado de la conversión actual. Véase AUDITORIA_DEVOLUCIONES.md.
 
 ## Garantías reembolsables
 

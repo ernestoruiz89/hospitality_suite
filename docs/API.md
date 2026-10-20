@@ -2,6 +2,8 @@
 
 Contrato verificado contra Frappe 16.52.0 / ERPNext 16.51.1. Las Pages usan estos mismos servicios. Las respuestas RPC estándar envuelven el resultado en `message`; un error no confirma una operación.
 
+preview(action=payment, kind=Refund) devuelve refund con modalidad, documento original, nota/factura, valor y moneda de la cuenta del cliente, valoración histórica y diferencia de cambio actual. Su acceptance incluye fondos, asignación y saldo del crédito. execute(payment) vuelve a validarlos y conserva la nota en HS Payment.sales_invoice y el origen en source_payment. Un anticipo ya aplicado admite devolución solo contra crédito válido de una de sus facturas y hasta su aportación restante; sin nota solo se devuelve lo no aplicado.
+
 ## Acceso y consultas
 
 Use sesión Frappe con CSRF o credenciales API estándar del usuario mediante `Authorization: token <api_key>:<api_secret>`, siempre por HTTPS fuera del desarrollo local. No coloque claves en URLs ni en el repositorio. El usuario necesita el rol de la acción y HS Access para compañía/establecimiento. El servidor aplica el alcance aunque se conozca el identificador de un documento.

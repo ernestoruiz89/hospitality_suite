@@ -9,3 +9,4 @@ import "./js/hospitality_close.js";
 import "./js/hospitality_catalog.js";
 import "./js/hospitality_items.js";
 import "./js/hospitality_pos.js";
+import "./js/hospitality_refunds.js";

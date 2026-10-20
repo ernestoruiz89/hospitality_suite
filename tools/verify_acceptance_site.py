@@ -11,7 +11,7 @@ import frappe
 
 bench=Path('/home/frappe/benches/hospitality-bench')
 parser=argparse.ArgumentParser()
-parser.add_argument('--phase',choices=['financial','service','pos'],default='financial')
+parser.add_argument('--phase',choices=['financial','service','pos','refund'],default='financial')
 args=parser.parse_args()
 root=Path(__file__).resolve().parents[1]
 os.chdir(bench/'sites')
