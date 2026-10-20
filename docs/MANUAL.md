@@ -1,6 +1,6 @@
 # Manual diario por rol
 
-Aplicación 0.6.0, Frappe 16.52 / ERPNext 16.51. Los recorridos acreditados y las verificaciones pendientes están en REQUISITOS.md.
+Aplicación 0.6.1, Frappe 16.52 / ERPNext 16.51. Los recorridos acreditados y las verificaciones pendientes están en REQUISITOS.md.
 
 Los formularios extensos están organizados en pestañas por tarea. Puede cambiar de sección sin perder lo escrito y guardar desde cualquiera. Los datos adicionales del huésped y las opciones de reserva tienen su propia sección. La acción de guardar o revisar permanece visible; si falta un dato obligatorio, el formulario abre su sección. Al cerrar una revisión de precio o cobro, vuelve al borrador sin registrarlo. Véase UX_FORMULARIOS.md.
 
@@ -24,6 +24,7 @@ El rol HS Receptionist registra la operación. Para cobrar con ese mismo usuario
 - Abra su turno con moneda y fondo inicial. Un movimiento pertenece a un único turno abierto; las operaciones ordinarias se bloquean cuando está cerrado o en revisión.
 - En Cobrar, elija estancia/reserva, cuenta, medio e importe en la moneda de ese medio. Anticipo, cobro y garantía tienen efectos diferentes. La referencia bancaria es obligatoria si así se configuró.
 - Revise importe, conversión, recibido y vuelto. El vuelto se expresa en la moneda del efectivo recibido. Confirme y conserve el recibo/documento ERPNext que devuelve el servidor.
+- Para emitir una factura sin recibir dinero, abra Ver estancia → Facturar cuenta, elija la cuenta y pulse Revisar factura. Compruebe total, impuestos, anticipos y saldo; confirme Emitir factura. Admite importe cero y conserva la estancia activa. La confirmación permite abrir el documento estándar. No requiere abrir un turno de caja. Véase FACTURACION_DESDE_PAGES.md.
 - Los pagos parciales y combinados se registran como movimientos separados contra el mismo saldo. Un cobro ordinario no puede superar el saldo; use Anticipo cuando corresponda y exista una visita vigente.
 - Retirar / entregar efectivo registra un Journal Entry hacia la cuenta de traslado configurada. No se elimina un cobro para representar la entrega.
 - Registrar egreso exige categoría, comprobante y efectivo disponible; respeta su límite configurado. Pagar proveedor selecciona una factura pendiente, cotiza moneda/saldo y registra Payment Entry. Ambos reducen el esperado si se pagan en efectivo.
@@ -67,7 +68,7 @@ Los medios utilizados conservan cuenta, moneda y clasificación para que los arq
 
 Revise el cierre diario antes de confirmar: llegadas pendientes, estancias vencidas, cargos, turnos y diferencias contables. Confirmar avanza la fecha operativa una sola vez por solicitud. Reabrir el último día requiere motivo y autorización. El formato de cierre imprime el snapshot conservado.
 
-Configuración → Políticas y contabilidad → Cargos de alojamiento elige Al ingresar o Por noche para nuevas estancias hoteleras. La cuenta distingue noches programadas, cargos ya generados y saldo total. Preparar cierre del día genera las noches de la fecha operativa y las vencidas; repetir no duplica cargos. Facturar/cobrar o salir liquida también las programadas. La política de una estancia se conserva al extenderla y el motel sigue cobrando por bloque. Los grupos del cierre se despliegan por separado; los que contienen importes aparecen abiertos. Falta una acción explícita de facturación de cuenta sin cobro ni salida desde Pages: no registre un cobro ficticio para emitir una factura. Véase CARGOS_PERIODICOS.md y PENDIENTES.md.
+Configuración → Políticas y contabilidad → Cargos de alojamiento elige Al ingresar o Por noche para nuevas estancias hoteleras. La cuenta distingue noches programadas, cargos ya generados y saldo total. Preparar cierre del día genera las noches de la fecha operativa y las vencidas; repetir no duplica cargos. Facturar/cobrar o salir liquida también las programadas. La política de una estancia se conserva al extenderla y el motel sigue cobrando por bloque. Los grupos del cierre se despliegan por separado; los que contienen importes aparecen abiertos. Facturar cuenta permite revisar y emitir sin cobrar ni registrar salida, también para importe cero. Véase CARGOS_PERIODICOS.md, FACTURACION_DESDE_PAGES.md y PENDIENTES.md.
 
 Configuración → Horarios y penalizaciones define la hora de corte. La fecha operativa D comprende desde ese corte de D hasta el corte de D+1 en la zona del establecimiento, con inicio incluido y fin excluido. Gerencia y el cierre muestran el período real; un día con cambio horario puede durar 23 o 25 horas. El reloj no avanza automáticamente la fecha operativa: el responsable confirma su cierre después de revisar los pendientes. Los informes con fechas explícitas conservan el período elegido.
 

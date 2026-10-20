@@ -1,0 +1,22 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "synthetic": true,
+  "zero_stay_entered_from_page": true,
+  "positive_stay_origin": "API fixture",
+  "both_invoices_emitted_from_page": true,
+  "invoice_totals": [
+    "0.00",
+    "1250.00"
+  ],
+  "outstanding_totals": [
+    "0.00",
+    "1250.00"
+  ],
+  "active_stays": 2,
+  "invoiced_charges": 3,
+  "shifts": 0,
+  "payments": 0,
+  "payment_entries": 0,
+  "cleaning_tasks": 0,
+  "business_date": "2026-10-19"
+}

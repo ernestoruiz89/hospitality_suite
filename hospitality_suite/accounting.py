@@ -7,7 +7,7 @@ from frappe.utils import nowdate, now_datetime
 
 from hospitality_suite.pricing import decimal, money
 from hospitality_suite.security import document, require
-from hospitality_suite.service import insert, audit, operation
+from hospitality_suite.service import insert, audit, operation, canonical
 
 
 def ready(prop):
@@ -61,13 +61,25 @@ def folios_for_stay(stay):
     return list({r.name:r for r in rows}.values())
 
 
-def invoice_folio(prop, data):
+def invoice_quote(prop,data):
+    return invoice_folio(prop,data,preview=True)
+
+
+def invoice_folio(prop, data, *, preview=False):
     ready(prop)
     folio = document("HS Folio", data["folio"])
+    if folio.property!=prop.name or folio.company!=prop.company:
+        frappe.throw(frappe._('La cuenta no corresponde al establecimiento de esta operación'),frappe.PermissionError)
+    if not preview and data.get('invoice_acceptance'):
+        if invoice_quote(prop,data).get('acceptance')!=data['invoice_acceptance']:
+            frappe.throw(frappe._('La cuenta o la configuración de facturación cambió. Revise nuevamente la factura'))
     from hospitality_suite.periodic import settle_before_billing
-    settle_before_billing(prop,folio.name)
-    charges = current_all("HS Charge", filters={"folio": folio.name, "status": "Pending"}, fields=["*"])
+    if not preview:
+        settle_before_billing(prop,folio.name)
+    charges = current_all("HS Charge", filters={"folio": folio.name, "status": ['in',['Pending','Scheduled']]}, fields=["*"],order_by='creation asc,name asc')
     if not charges:
+        if preview:
+            return dict(ready=False,folio=folio.name,currency=folio.currency)
         reconciled = reconcile_folio_advances(prop, folio)
         return dict(invoices=current_all("Sales Invoice", filters={"hs_folio":folio.name,"docstatus":1},pluck="name"),reconciled=reconciled)
     stay = locked_doc("HS Stay", folio.stay) if folio.stay else None
@@ -77,6 +89,7 @@ def invoice_folio(prop, data):
     inv.update(dict(company=prop.company, customer=folio.customer, posting_date=nowdate(), due_date=nowdate(),
                     currency=folio.currency, debit_to=prop.receivable_account, cost_center=prop.cost_center,
                     hs_stay=stay.name if stay else None,hs_booking=booking_name, hs_folio=folio.name, update_stock=0, taxes_and_charges=prop.tax_template))
+    inv.party_account_currency=frappe.db.get_value('Account',prop.receivable_account,'account_currency') or frappe.db.get_value('Company',prop.company,'default_currency')
     mapping = []
     for charge in charges:
         if charge.applies_to_charge:
@@ -98,7 +111,7 @@ def invoice_folio(prop, data):
         from erpnext.controllers.accounts_controller import get_taxes_and_charges
         inv.set("taxes", get_taxes_and_charges("Sales Taxes and Charges Template", prop.tax_template))
     inv.calculate_taxes_and_totals()
-    remaining = decimal(inv.grand_total)
+    remaining = decimal(inv.rounded_total or inv.grand_total)
     advances = current_all("HS Payment", filters={"property": prop.name, "customer": folio.customer, "kind": ["in", ["Advance", "Guarantee Applied"]], "status": "Posted"}, fields=["*"])
     for payment in advances:
         matches=(stay and payment.stay==stay.name) or (booking_name and payment.booking==booking_name)
@@ -126,6 +139,25 @@ def invoice_folio(prop, data):
             inv.append("advances", dict(reference_type="Payment Entry", reference_name=pe.name,
                                        advance_amount=pe.unallocated_amount, allocated_amount=float(amount), ref_exchange_rate=pe.source_exchange_rate))
             remaining -= amount
+    if preview:
+        # Native calculation, without insert/submit, naming series or allocations.
+        inv.calculate_taxes_and_totals()
+        from hashlib import sha256
+        item_fields=('item_code','qty','rate','amount','net_rate','net_amount','income_account','expense_account','cost_center','warehouse','hs_charge','hs_charge_sources')
+        tax_fields=('charge_type','account_head','rate','tax_amount','total','included_in_print_rate','cost_center','add_deduct_tax')
+        advance_fields=('reference_type','reference_name','reference_row','advance_amount','allocated_amount','ref_exchange_rate')
+        totals={key:inv.get(key) for key in ('currency','party_account_currency','posting_date','conversion_rate','net_total','total_taxes_and_charges','grand_total','rounded_total','disable_rounded_total','total_advance','outstanding_amount','debit_to','cost_center')}
+        signature=dict(property_modified=str(prop.modified),folio_modified=str(folio.modified),charges=charges,totals=totals,
+                       items=[{key:row.get(key) for key in item_fields} for row in inv.items],
+                       taxes=[{key:row.get(key) for key in tax_fields} for row in inv.taxes],
+                       advances=[{key:row.get(key) for key in advance_fields} for row in inv.advances])
+        return dict(ready=True,folio=folio.name,label=folio.label,customer=frappe.db.get_value('Customer',folio.customer,'customer_name'),
+                    posting_date=str(inv.posting_date),currency=inv.currency,net_total=str(money(inv.net_total,currency=inv.currency)),
+                    taxes=str(money(inv.total_taxes_and_charges,currency=inv.currency)),total=str(money(inv.grand_total,currency=inv.currency)),
+                    payable=str(money(inv.rounded_total or inv.grand_total,currency=inv.currency)),advance=str(money(inv.total_advance,currency=inv.currency)),
+                    outstanding=str(money(inv.outstanding_amount,currency=inv.party_account_currency or inv.currency)),outstanding_currency=inv.party_account_currency or inv.currency,
+                    scheduled=str(money(sum(decimal(row.amount) for row in charges if row.status=='Scheduled'),currency=inv.currency)),
+                    lines=len(inv.items),acceptance=sha256(canonical(signature).encode()).hexdigest())
     post_standard(inv, prop)
     for name, row in mapping:
         doc = locked_doc("HS Charge", name)

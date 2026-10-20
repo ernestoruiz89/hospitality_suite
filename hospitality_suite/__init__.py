@@ -1,3 +1,3 @@
 """Hospitality Suite: operaciones de alojamiento integradas con ERPNext."""
 
-__version__ = "0.6.0"
+__version__ = "0.6.1"

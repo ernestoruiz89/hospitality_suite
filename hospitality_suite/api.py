@@ -70,9 +70,11 @@ def execute(property_name, action, request_key, data=None):
 
 @frappe.whitelist()
 def preview(property_name, data, action="reserve"):
-    permission="inventory" if action=="purchase_order" else "approve" if action in ("adjust_stock","retire_sensitive","credit_note") else "finance" if action in ("payment","direct_sale","settle_payment","supplier_payment") else "reserve" if action in ("reserve","booking_status","modify_reservation","convert_portal") else "stay"
+    permission="inventory" if action=="purchase_order" else "approve" if action in ("adjust_stock","retire_sensitive","credit_note") else "finance" if action in ("invoice","payment","direct_sale","settle_payment","supplier_payment") else "reserve" if action in ("reserve","booking_status","modify_reservation","convert_portal") else "stay"
     prop = require(property_name, permission)
     data = payload(data)
+    if action=='invoice':
+        return accounting.invoice_quote(prop,data)
     if action == "reserve":
         return operations.quote_request(prop, data)
     if action == "extend":

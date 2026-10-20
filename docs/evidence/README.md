@@ -1,8 +1,8 @@
 # Evidencia de pruebas
 
-Índice acumulado de evidencia histórica y actual. Versión de aplicación vigente: 0.5.1; Frappe 16.52.0 y ERPNext 16.51.1, en un bench separado de WSL Ubuntu 24.04. Sitios ficticios: hospitality.localhost, hospitality-clean.localhost, hospitality-restore.localhost y hospitality-acceptance.localhost. No hay datos ni operaciones de producción.
+Índice acumulado de evidencia histórica y actual. Versión de aplicación vigente: 0.6.1; Frappe 16.52.0 y ERPNext 16.51.1, en un bench separado de WSL Ubuntu 24.04. Sitios ficticios: hospitality.localhost, hospitality-clean.localhost, hospitality-restore.localhost y hospitality-acceptance.localhost. No hay datos ni operaciones de producción.
 
-La batería vigente está en integration-native-tests.log/xml: **196 aprobadas** (182 integración y catorce puras), y integration-js-tests.log: **30 regresiones JavaScript** (veintiocho Desk y dos portal). Los resultados menores que siguen pertenecen a fases anteriores. El contraste de 38 requisitos sobre esa evidencia está en ../AUDITORIA_FLUJOS_TRANSACCIONES.md y flow-audit.json; no representa otra ejecución de pruebas ni recorridos adicionales.
+La batería vigente está en billing-native-tests.log/xml: **220 aprobadas** (206 integración y catorce puras), y billing-js-tests.log: **41 regresiones JavaScript** (39 Desk y dos portal). FACTURACION_DESDE_PAGES.md delimita el nuevo recorrido real y sus fixtures. Los resultados menores que siguen pertenecen a fases anteriores; no representan otra ejecución ni recorridos adicionales.
 
 ## Automatizadas
 
@@ -249,3 +249,14 @@ No se implementa ni activa sincronización con Airbnb/Booking/otros canales, pen
 `periodic-items-ui.json`: configuración/entrada/preparación repetida desde Pages con datos ficticios, tres orígenes únicos, una bitácora y sin facturas/pagos. No se confirma el cierre. `periodic-pdf.json`: una página, huella y texto/importes verificados; render completo revisado. `periodic-ux-restored.json`: restauración nativa con archivos, 71 tablas/185 filas idénticas después del recorrido y de la batería. `periodic-upgrade.json`: columnas anteriores de 72 tablas/1191 filas y dos archivos privados principales/195 filas de aceptación conservados; política inicial y sin programación retroactiva. `periodic-final-state.json`: aceptación sin operaciones, fecha principal, HTTP/puertos y 8089 cerrado. architecture-current.json acredita núcleos limpios y metadatos/assets.
 
 `periodic-page-invoice-gap.json` contrasta de forma estática la acción invoice presente en servidor y ausente en Pages; captura 103 muestra las acciones disponibles. S00-02/F22 P: hace falta emitir factura explícita sin cobrar/salir. S12-03/S16-06/S17-08 V; matriz actual 83 V, siete I, una P y 127 R de las mismas 218 entradas. CARGOS_PERIODICOS.md delimita reglas y verificación. La recuperación final actual y el resto del alcance siguen abiertos; sincronización externa pendiente por indicación del usuario.
+
+## Facturación explícita desde Pages, 0.6.1
+
+- `billing-native-tests.log/xml`: batería conjunta, 220 aprobadas; nueve casos nuevos en test_invoice_page.py. `billing-js-tests.log`: 41 aprobadas, tres nuevas para revisión/confirmación, cero y reintento.
+- `billing-build.log`, `billing-main-migrate.log` y `billing-acceptance-migrate.log`: construcción y migraciones nativas de ambos sitios.
+- `106-cuenta-accion-facturar.png`: acción explícita desde estancia. `107-factura-cero-revision-movil.png`: revisión compacta 390×844. `108-factura-cero-emitida.png`: dos cargos cero facturados y estancia activa. `109-factura-revision-sin-cobro.png`: revisión C$1250. `110-factura-emitida-estancia-activa.png`: confirmación con total, saldo y enlace estándar.
+- `billing-items-ui.json`: dos emisiones desde Pages por gerencia; entrada cero por Page y entrada positiva como fixture API, ambas identificadas. Sin pagos, turnos, asientos de garantía ni limpiezas. No acredita tiempo real ni todos los roles.
+- `billing-ui-upgrade.json`: todas las columnas de 72 tablas conservadas, 1191 filas/dos archivos privados principales y 195 filas de aceptación. `billing-ux-restored.json`: 71 tablas/185 filas tras restauración nativa. `billing-final-state.json`: aceptación vacía, principal conservado, 8089 apagado/8086 operativo y guardias. `architecture-current.json`: núcleos limpios, 35 DocTypes/once Pages/nueve roles.
+- `periodic-page-invoice-gap.json` sigue siendo evidencia histórica de f424e2d; su diferencia quedó resuelta en esta revisión. No ejecutar su reproducción como comprobación del código actual.
+
+La matriz canónica conserva 218 entradas: 83 V, ocho I, cero P y 127 R. F22b acredita este flujo; S00-02/F22 requieren aceptación completa por rol. La recuperación final de F26 continúa pendiente. No se implementó sincronización de canales.

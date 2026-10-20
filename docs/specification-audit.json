@@ -21,18 +21,25 @@
       "line": 8,
       "kind": "clause",
       "requirement": "La aplicación debe permitir que recepción, caja, limpieza, mantenimiento y gerencia trabajen mediante PÁGINAS PERSONALIZADAS, claras y rápidas. Los DocTypes serán la estructura interna; el usuario operativo no debe necesitar recorrer formularios técnicos de ERPNext para completar sus tareas habituales.",
-      "status": "P",
+      "status": "I",
       "implementation": [
         "hospitality_suite/public/js/hospitality.js",
         "hospitality_suite/public/js/hospitality_workflows.js",
-        "hospitality_suite/api.py"
+        "hospitality_suite/api.py",
+        "hospitality_suite/public/js/hospitality_forms.js",
+        "hospitality_suite/public/js/hospitality_invoicing.js",
+        "hospitality_suite/accounting.py"
       ],
       "evidence": [
-        "docs/CARGOS_PERIODICOS.md",
-        "docs/evidence/103-cuenta-noches-programadas.png",
-        "docs/evidence/periodic-page-invoice-gap.json"
+        "docs/UX_FORMULARIOS.md",
+        "docs/FACTURACION_DESDE_PAGES.md",
+        "docs/evidence/billing-native-tests.xml",
+        "docs/evidence/billing-js-tests.log",
+        "docs/evidence/billing-items-ui.json",
+        "docs/evidence/107-factura-cero-revision-movil.png",
+        "docs/evidence/110-factura-emitida-estancia-activa.png"
       ],
-      "remaining": "Añadir facturación explícita de cuenta desde Pages sin cobrar ni registrar salida, también para importe cero. El servidor tiene invoice; las Pages solo la alcanzan de forma implícita al cobrar/salir. Continúa aceptación del alcance completo por rol."
+      "remaining": "Completar el contraste y la aceptación de todas las tareas habituales de cada rol desde Pages, incluido recorrido con un usuario combinado de recepción/caja y sesión contable. La facturación explícita sin cobro/salida, incluido cero, queda acreditada en 0.6.1."
     },
     {
       "id": "S01-01",

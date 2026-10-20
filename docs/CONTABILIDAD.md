@@ -20,7 +20,9 @@ Los artículos de alojamiento/tiempo se seleccionan por establecimiento y se con
 
 Se conserva el importe aceptado de alojamiento/consumos y se convierte en contabilidad al presentar Sales Invoice. La política Al ingresar genera el cargo completo al entrar. Por noche conserva cada noche como Programada y Preparar cierre del día genera las de la fecha operativa y las vencidas una sola vez. Los importes futuros se muestran aparte y no integran la producción ordinaria; el saldo incluye la obligación aceptada completa. Facturar o salir liquida también las noches programadas. No se implementa otro devengo diario ni un asiento paralelo de alojamiento. Repetir el cierre no reconoce nuevamente lo facturado. Véase CARGOS_PERIODICOS.md para identidad de origen, extensiones, recuperación y límites de interfaz.
 
-La factura de folio toma cargos pendientes, conserva su origen y los marca facturados después de presentar el documento estándar. La cuenta compartida puede reunir varias estancias de una reserva y un único pagador. Los descuentos/cortesías de cargos pendientes se incluyen en la línea estándar con sus referencias; no necesitan habilitar tarifas negativas en Selling Settings. Si el origen ya está contabilizado, la corrección financiera requiere documentos de reversión.
+Facturar cuenta desde Pages revisa valores nativos, impuestos, anticipos y saldo antes de emitir; admite cero sin cobro ni salida. La cotización no guarda factura ni aplica conciliaciones y la confirmación rechaza valores que hayan cambiado. Véase FACTURACION_DESDE_PAGES.md.
+
+La factura de folio toma cargos pendientes y programados, conserva su origen y los marca facturados después de presentar el documento estándar. La cuenta compartida puede reunir varias estancias de una reserva y un único pagador. Los descuentos/cortesías de cargos pendientes se incluyen en la línea estándar con sus referencias; no necesitan habilitar tarifas negativas en Selling Settings. Si el origen ya está contabilizado, la corrección financiera requiere documentos de reversión.
 
 ## Anticipos
 

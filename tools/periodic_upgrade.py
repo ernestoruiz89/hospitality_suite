@@ -11,8 +11,8 @@ from hospitality_suite.schema import SCHEMA
 
 BENCH=Path('/home/frappe/benches/hospitality-bench')
 ROOT=Path(__file__).resolve().parents[1]
-BASE=BENCH/'.hospitality-periodic-upgrade.json'
-parser=argparse.ArgumentParser();parser.add_argument('action',choices=['before','verify']);args=parser.parse_args()
+parser=argparse.ArgumentParser();parser.add_argument('action',choices=['before','verify']);parser.add_argument('--phase',choices=['periodic','billing-ui'],default='periodic');args=parser.parse_args()
+BASE=BENCH/f'.hospitality-{args.phase}-upgrade.json'
 assert args.action!='before' or not BASE.exists(),'Conserve la línea de base original'
 old=json.loads(BASE.read_text()) if args.action=='verify' else None
 native=json.loads((BENCH/'.hospitality-financial-upgrade.json').read_text())['tables']
@@ -69,5 +69,5 @@ if args.action=='before':
 else:
     proof=dict(previous_columns_preserved=True,default_policy_preserves_existing_stays=True,
                sites={site:dict(tables=len(value['tables']),rows=sum(row['rows'] for row in value['tables'].values()),private_files=len(value['private_files'])) for site,value in result.items()})
-    (ROOT/'docs/evidence/periodic-upgrade.json').write_text(json.dumps(proof,indent=2)+'\n',encoding='utf-8',newline='\n')
+    (ROOT/f'docs/evidence/{args.phase}-upgrade.json').write_text(json.dumps(proof,indent=2)+'\n',encoding='utf-8',newline='\n')
     print(json.dumps(proof))
