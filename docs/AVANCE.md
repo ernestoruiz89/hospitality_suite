@@ -1,6 +1,6 @@
 # Registro de implementación
 
-Actualización: 2026-10-19. Objetivo activo; el alcance obligatorio aún tiene verificaciones y componentes pendientes en REQUISITOS.md. No se declara aptitud para producción.
+Actualización: 2026-10-20. Objetivo activo; el alcance obligatorio aún tiene verificaciones y componentes pendientes en REQUISITOS.md. No se declara aptitud para producción.
 
 ## Entorno aislado
 
@@ -399,3 +399,11 @@ Recorrido real con recepcionista: fixtures API dejan tres reservas y una estanci
 Respaldos/migraciones/bundle y restauración Bench con archivos completados: 72 tablas/1191 filas/dos archivos privados principales y 195 filas de aceptación preservados; 71 tablas/185 filas al restaurar y cero operaciones. 8089 cerrado; web/worker/servicios principales actualizados, HTTP 200, núcleos limpios, fecha principal 19/10 conservada. Company mantiene la acreditación estrecha de sus cachés y las 36 tablas nativas coinciden con el respaldo previo.
 
 S04-04/S05-01 pasan P→V y F22c V. El inventario conserva **101 V, diecisiete I, cero P y 100 R**, 218 entradas/huella. La aceptación general por rol no se infiere de este cambio: faltan alertas, filtros/teclado, estados secundarios, historial/límites, formularios secundarios, demo, traducciones, reintentos y recuperación final. La gestión de reserva aún puede reducir motivo/campos según acción. ESTANCIAS_Y_LLEGADAS.md conserva reglas, evidencia y límites. Sincronización externa pendiente por instrucción del usuario; objetivo activo.
+
+## Contraste de reservas, tarifas y estancias — 20/10/2026
+
+Se revisan individualmente las 32 R de las secciones 6–8, sin alterar S08-10 ni texto/líneas/huella originales. Resultado 26 V, tres I y tres P; inventario vigente **127 V, veinte I, tres P y 68 R** de 218. AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md y reservations-audit.json identifican casos por obligación y las diferencias: consulta por cantidad, borrador persistente y explicación de la tarifa aplicada en cuenta. Continúan reintentos limitados, contador tras recarga y datos exigidos/edición del huésped desde Page, además del resto de aceptación UX/roles.
+
+Siete casos nuevos de integración acreditan selección estacional/día/pagador/plan y empate, bloques 2/3/6/12/24/fracciones/ventana nocturna, cambio explícito de modalidad, entrada anticipada, mes/año/DST, cuenta nativa con impuesto/descuento/consumo/cobro/garantía y nota posterior a salida con permiso/motivo/auditoría. Se ajustaron expectativas iniciales del fixture para cambio un minuto después de entrada y redondeo nativo; la aplicación no cambió. La ejecución conjunta aprueba **236 casos (222 integración y catorce puros), sin fallos/errores/omisiones**. La cuenta imprimible ya acredita los componentes financieros; la explicación histórica sigue pendiente. No se generó un PDF ni se repitió un recorrido UI/45 JS en esta fase.
+
+Durante una repetición se solaparon por error dos baterías: seis errores de bloqueo en una y cancelación de la adicional. Se descartaron ambas, se guardó diagnóstico y se restauró nativamente el respaldo original con archivos antes de repetir. La batería final secuencial aprueba los 236 casos. Después de ella todas las columnas de 72 tablas/1191 filas/dos archivos privados principales y 72 tablas/195 filas de aceptación coinciden con la línea de base conservada. reservations-recovery.json acredita la recuperación y no se sustituyeron huellas. Aceptación sin operaciones, HTTP 200/8086, Socket.IO/Redis activos, 8089 apagado y fecha principal 19/10 sin confirmar cierre. Se conserva la acreditación histórica acotada de Company. reservations-conservation.json conserva comprobaciones posteriores. Sin migración ni cambio de versión de aplicación; sincronización de canales pendiente por instrucción del usuario y objetivo activo.

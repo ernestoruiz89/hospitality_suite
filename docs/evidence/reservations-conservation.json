@@ -1,0 +1,88 @@
+{
+  "application_version": "0.6.2",
+  "application_code_changed": false,
+  "designated_test_site": "hospitality-acceptance.localhost",
+  "full_tests": {
+    "total": 236,
+    "integration": 222,
+    "pure": 14,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "restore_required": true,
+  "baseline_comparison": {
+    "previous_columns_preserved": true,
+    "default_policy_preserves_existing_stays": true,
+    "sites": {
+      "hospitality.localhost": {
+        "tables": 72,
+        "rows": 1191,
+        "private_files": 2
+      },
+      "hospitality-acceptance.localhost": {
+        "tables": 72,
+        "rows": 195,
+        "private_files": 0
+      }
+    }
+  },
+  "post_tests_health": {
+    "acceptance": {
+      "site": "hospitality-acceptance.localhost",
+      "installed_apps": [
+        "frappe",
+        "erpnext",
+        "hospitality_suite"
+      ],
+      "operation_counts": {
+        "HS Stay": 0,
+        "HS Booking": 0,
+        "HS Charge": 0,
+        "HS Payment": 0,
+        "HS Shift": 0,
+        "HS Daily Close": 0,
+        "Sales Invoice": 0,
+        "Payment Entry": 0,
+        "Journal Entry": 0
+      },
+      "designated_test_site": true,
+      "scheduler_paused": true,
+      "initial_backup_exists": true
+    },
+    "main": {
+      "site": "hospitality.localhost",
+      "integration_fixture_guard_rejects": true,
+      "native_tables_unchanged": 35,
+      "business_date": "2026-10-19",
+      "native_derived_cache_refreshed": [
+        "Company"
+      ],
+      "native_tables_equal_pre_phase_backup": 36,
+      "company_cache_evidence": "accounting-company-cache.json"
+    },
+    "ports": {
+      "8086": true,
+      "8089": false,
+      "9001": true,
+      "11001": true,
+      "13001": true
+    },
+    "main_http": 200,
+    "mutations": false
+  },
+  "verification_commands": [
+    "env/bin/python apps/hospitality_suite/tools/periodic_upgrade.py verify --phase board",
+    "env/bin/python apps/hospitality_suite/tools/verify_acceptance_site.py --phase board"
+  ],
+  "baseline_replaced": false,
+  "reused_verifier_outputs_sha256": {
+    "docs/evidence/board-upgrade.json": "9cf60ff024f0dc46e2599d8b4650b78f2ba368e5782404df869c8ccd2ee3c6be",
+    "docs/evidence/board-final-state.json": "be2c2c91150f20dc4d3c1fc685489b71e54401bed84c319d68b42fe8dafca4dd"
+  },
+  "final_sequential_test_writes_reverted": true,
+  "native_restore_succeeded": true,
+  "restoration_evidence": "docs/evidence/reservations-recovery.json",
+  "overlapping_attempts_discarded": true,
+  "final_sequential_run_after_restore": true
+}

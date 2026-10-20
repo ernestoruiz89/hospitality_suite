@@ -1292,10 +1292,20 @@
       "line": 90,
       "kind": "enumerated",
       "requirement": "- Consulta de disponibilidad por fechas y horas, categoría, capacidad y cantidad de habitaciones.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "P",
+      "implementation": [
+        "hospitality_suite/api.py",
+        "hospitality_suite/availability.py",
+        "hospitality_suite/operations.py",
+        "hospitality_suite/public/js/hospitality.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_category_last_unit_roomless_then_assign",
+        "docs/evidence/reservations-native-tests.xml::test_availability_shares_capacity_with_roomless_reservations"
+      ],
+      "remaining": "Buscar disponibilidad admite fechas/horas/categoría/personas, pero no cantidad solicitada de habitaciones ni respuesta de cupo para esa cantidad. La cotización grupal sí controla el conjunto; completar la consulta desde Page/API y su aceptación sin crear reservas."
     },
     {
       "id": "S06-02",
@@ -1304,10 +1314,19 @@
       "line": 91,
       "kind": "enumerated",
       "requirement": "- Reservas por habitación concreta o por categoría, con control del cupo cuando todavía no exista asignación física.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/availability.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_category_last_unit_roomless_then_assign",
+        "docs/evidence/concurrency-final.json",
+        "docs/evidence/group-reserved.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S06-03",
@@ -1316,10 +1335,20 @@
       "line": 92,
       "kind": "enumerated",
       "requirement": "- Estados: borrador, retención temporal, confirmada, entrada registrada, completada, cancelada y no presentada; ajusta la separación reserva/estancia si el modelo lo requiere.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "P",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/schema.py",
+        "hospitality_suite/public/js/hospitality.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_hold_expiry_is_idempotent",
+        "docs/evidence/reservations-native-tests.xml::test_group_single_invoice_single_balance_and_checkout",
+        "docs/evidence/reservations-native-tests.xml::test_booking_penalties_use_decision_date_and_native_financial_sources"
+      ],
+      "remaining": "Draft existe en el esquema, pero no hay acción API/Page para guardar y retomar una reserva en borrador. reserve crea Hold/Confirmed y el controlador impide la escritura directa de HS Booking. Implementar borrador persistente sin ocupar cupo y confirmación con nueva revisión de disponibilidad/precio."
     },
     {
       "id": "S06-04",
@@ -1328,10 +1357,19 @@
       "line": 93,
       "kind": "enumerated",
       "requirement": "- Canales: recepción, teléfono, web, empresa, agencia y otros configurables.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/public/js/hospitality.js",
+        "hospitality_suite/reports.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_arrival_departure_and_registration_are_distinct",
+        "docs/evidence/group-reserved.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S06-05",
@@ -1340,10 +1378,20 @@
       "line": 94,
       "kind": "enumerated",
       "requirement": "- Reservas individuales y grupales, varias habitaciones, huéspedes y pagadores.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/accounting.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_group_split_folios_has_no_duplicate_charges",
+        "docs/evidence/reservations-native-tests.xml::test_group_single_invoice_single_balance_and_checkout",
+        "docs/evidence/reservations-native-tests.xml::test_hosted_guests_include_principal_and_companions_with_names",
+        "docs/evidence/group-checked-out.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S06-06",
@@ -1352,10 +1400,24 @@
       "line": 95,
       "kind": "enumerated",
       "requirement": "- Cotización, anticipos, garantía, instrucciones, solicitudes especiales y confirmación imprimible.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/public/js/hospitality.js",
+        "hospitality_suite/templates/print/reservation.html"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_01_hotel_advance_consumption_checkout_cleaning",
+        "docs/evidence/reservations-native-tests.xml::test_guarantee_is_liability_then_refund",
+        "docs/evidence/reservations-native-tests.xml::test_guarantee_application_is_standard_advance",
+        "docs/evidence/exports-manifest.json",
+        "docs/evidence/pdf-qa.json",
+        "docs/evidence/group-reserved.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S06-07",
@@ -1364,10 +1426,21 @@
       "line": 96,
       "kind": "enumerated",
       "requirement": "- Modificación, reasignación, cancelación y no presentación con motivos y reglas de cobro.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/public/js/hospitality_extras.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_modify_reservation_quotes_and_releases_old_interval",
+        "docs/evidence/reservations-native-tests.xml::test_cancellation_penalty_uses_invoice_and_advance",
+        "docs/evidence/reservations-native-tests.xml::test_booking_penalties_use_decision_date_and_native_financial_sources",
+        "docs/evidence/group-modified.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S06-08",
@@ -1376,10 +1449,18 @@
       "line": 97,
       "kind": "enumerated",
       "requirement": "- Las retenciones temporales expiran y liberan cupo de manera fiable.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "I",
+      "implementation": [
+        "hospitality_suite/jobs.py",
+        "hospitality_suite/availability.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_hold_expiry_is_idempotent",
+        "docs/evidence/worker-recovery.json"
+      ],
+      "remaining": "Expiración idempotente/liberación y fallo con rollback/recuperación RQ acreditados. Falta la política y aceptación de reintentos limitados automáticos del mismo trabajo; el despacho periódico y la recuperación manual no la prueban (S16-10)."
     },
     {
       "id": "S06-09",
@@ -1388,10 +1469,21 @@
       "line": 98,
       "kind": "enumerated",
       "requirement": "- Prohibir sobreventa por defecto. No habilitar sobreventa como atajo para resolver conflictos de disponibilidad.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/availability.py",
+        "hospitality_suite/operations.py",
+        "hospitality_suite/service.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_conflicting_room_is_rejected",
+        "docs/evidence/reservations-native-tests.xml::test_category_last_unit_roomless_then_assign",
+        "docs/evidence/reservations-native-tests.xml::test_extension_rejects_next_booking",
+        "docs/evidence/concurrency-final.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S06-10",
@@ -1400,10 +1492,21 @@
       "line": 99,
       "kind": "enumerated",
       "requirement": "- El inventario de categorías y las asignaciones físicas deben compartir la misma lógica de disponibilidad y no contabilizar dos veces una reserva.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/availability.py",
+        "hospitality_suite/operations.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_category_last_unit_roomless_then_assign",
+        "docs/evidence/reservations-native-tests.xml::test_availability_shares_capacity_with_roomless_reservations",
+        "docs/evidence/reservations-native-tests.xml::test_mixed_property_quotes_both_modes_and_shares_room_capacity",
+        "docs/evidence/concurrency-final.json",
+        "docs/evidence/group-stays.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S07-01",
@@ -1412,10 +1515,21 @@
       "line": 103,
       "kind": "enumerated",
       "requirement": "- Hotel: precio por noche, tipo de habitación, ocupación, temporada, día de semana, empresa/agencia y plan de alojamiento.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/pricing.py",
+        "hospitality_suite/schema.py",
+        "hospitality_suite/tests/test_booking_rate_audit.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_season_weekday_payer_plan_and_priority_have_one_winner_per_night",
+        "docs/evidence/reservations-native-tests.xml::test_hotel_nights_and_extra_people",
+        "docs/evidence/plan-configured.json",
+        "docs/evidence/plan-stay.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S07-02",
@@ -1424,10 +1538,19 @@
       "line": 104,
       "kind": "enumerated",
       "requirement": "- Motel: bloques configurables, por ejemplo 2, 3, 6, 12 o 24 horas; tarifas por fracción o por hora adicional y paquetes nocturnos con ventanas definidas.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/pricing.py",
+        "hospitality_suite/schema.py",
+        "hospitality_suite/tests/test_booking_rate_audit.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_motel_blocks_fraction_boundaries_and_night_window",
+        "docs/evidence/reservations-native-tests.xml::test_overtime_is_separate_and_keeps_accepted_article_through_extension_and_departure"
+      ],
+      "remaining": ""
     },
     {
       "id": "S07-03",
@@ -1436,10 +1559,20 @@
       "line": 105,
       "kind": "enumerated",
       "requirement": "- Operación mixta con reglas explícitas para cambiar de modalidad.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/pricing.py",
+        "hospitality_suite/operations.py",
+        "hospitality_suite/public/js/hospitality_extras.js",
+        "hospitality_suite/tests/test_booking_rate_audit.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_active_mode_change_requires_mixed_property_and_accepted_new_price",
+        "docs/evidence/reservations-native-tests.xml::test_mixed_property_quotes_both_modes_and_shares_room_capacity"
+      ],
+      "remaining": ""
     },
     {
       "id": "S07-04",
@@ -1448,10 +1581,26 @@
       "line": 106,
       "kind": "enumerated",
       "requirement": "- Persona adicional, cama extra, servicios incluidos, descuentos, cortesías, tarifas negociadas e impuestos incluidos o añadidos.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/pricing.py",
+        "hospitality_suite/operations.py",
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/inventory.py",
+        "hospitality_suite/tests/test_booking_rate_audit.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_season_weekday_payer_plan_and_priority_have_one_winner_per_night",
+        "docs/evidence/reservations-native-tests.xml::test_extra_bed_and_historic_rate",
+        "docs/evidence/reservations-native-tests.xml::test_included_delivery_stock_once_no_extra_invoice_and_return",
+        "docs/evidence/reservations-native-tests.xml::test_courtesy_occupies_without_revenue_and_zero_denominator",
+        "docs/evidence/reservations-native-tests.xml::test_credit_and_discount_require_approval_and_a_current_sufficient_limit",
+        "docs/evidence/reservations-native-tests.xml::test_included_tax_review_matches_the_native_posted_invoice",
+        "docs/evidence/reservations-native-tests.xml::test_changed_tax_template_requires_a_new_review_even_when_the_property_did_not_change"
+      ],
+      "remaining": ""
     },
     {
       "id": "S07-05",
@@ -1460,10 +1609,22 @@
       "line": 107,
       "kind": "enumerated",
       "requirement": "- Prioridades inequívocas si coinciden varias reglas. No acumules recargos o descuentos accidentalmente.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/pricing.py",
+        "hospitality_suite/operations.py",
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/tests/test_booking_rate_audit.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_season_weekday_payer_plan_and_priority_have_one_winner_per_night",
+        "docs/evidence/reservations-native-tests.xml::test_snapshot_room_move_and_extension_do_not_duplicate_stay_benefit",
+        "docs/evidence/reservations-native-tests.xml::test_motel_midnight_grace_overtime_and_prepare_retry",
+        "docs/evidence/reservations-native-tests.xml::test_external_invoice_requires_all_adjustments_and_syncs_every_source"
+      ],
+      "remaining": ""
     },
     {
       "id": "S07-06",
@@ -1472,10 +1633,24 @@
       "line": 108,
       "kind": "enumerated",
       "requirement": "- Define tolerancias, redondeo, límites exactos de cada bloque, extensiones, entrada anticipada y salida tardía.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/pricing.py",
+        "hospitality_suite/timing.py",
+        "hospitality_suite/operations.py",
+        "hospitality_suite/tests/test_booking_rate_audit.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_motel_blocks_fraction_boundaries_and_night_window",
+        "docs/evidence/reservations-native-tests.xml::test_hotel_early_arrival_exact_grace_and_fraction_boundaries",
+        "docs/evidence/reservations-native-tests.xml::test_hotel_late_rounding_and_inspection_gate",
+        "docs/evidence/reservations-native-tests.xml::test_motel_midnight_grace_overtime_and_prepare_retry",
+        "docs/evidence/reservations-native-tests.xml::test_overtime_is_separate_and_keeps_accepted_article_through_extension_and_departure",
+        "docs/evidence/reservations-native-tests.xml::test_extension_rejects_next_booking"
+      ],
+      "remaining": ""
     },
     {
       "id": "S07-07",
@@ -1484,10 +1659,21 @@
       "line": 109,
       "kind": "enumerated",
       "requirement": "- Calcula importes con precisión decimal y redondeo monetario consistente con ERPNext.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/pricing.py",
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/tests/test_booking_rate_audit.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_decimal_rounding",
+        "docs/evidence/reservations-native-tests.xml::test_native_currency_precision_three_and_zero",
+        "docs/evidence/reservations-native-tests.xml::test_overtime_components_keep_total_and_fraction_at_currency_precision",
+        "docs/evidence/reservations-native-tests.xml::test_printed_account_includes_native_tax_discount_services_payment_and_guarantee"
+      ],
+      "remaining": ""
     },
     {
       "id": "S07-08",
@@ -1496,10 +1682,22 @@
       "line": 110,
       "kind": "enumerated",
       "requirement": "- Conserva la tarifa y sus reglas aplicadas como una versión histórica. Cambiar el tarifario no debe alterar cargos ya aceptados.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/pricing.py",
+        "hospitality_suite/operations.py",
+        "hospitality_suite/periodic.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_snapshot_copies_rules",
+        "docs/evidence/reservations-native-tests.xml::test_extra_bed_and_historic_rate",
+        "docs/evidence/reservations-native-tests.xml::test_unequal_accepted_nights_are_not_averaged_or_counted_as_current_production",
+        "docs/evidence/reservations-native-tests.xml::test_overtime_is_separate_and_keeps_accepted_article_through_extension_and_departure",
+        "docs/evidence/plan-extended.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S07-09",
@@ -1508,10 +1706,18 @@
       "line": 111,
       "kind": "enumerated",
       "requirement": "- Muestra una explicación del cálculo antes de confirmar y al revisar la cuenta.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "P",
+      "implementation": [
+        "hospitality_suite/pricing.py",
+        "hospitality_suite/operations.py",
+        "hospitality_suite/public/js/hospitality.js",
+        "hospitality_suite/templates/print/folio.html"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json"
+      ],
+      "remaining": "La revisión previa muestra explicación y la cuenta conserva snapshots, pero la Page y el impreso de cuenta no presentan el desglose de la tarifa aplicada. Mostrar noches/bloque, regla histórica y suplementos/ajustes con nombres legibles; conservar alcance de cuenta/segmento y no reconstruir precios con el tarifario actual."
     },
     {
       "id": "S07-10",
@@ -1520,10 +1726,21 @@
       "line": 112,
       "kind": "enumerated",
       "requirement": "- El servidor es la autoridad del tiempo y del importe. El contador de la pantalla es informativo y debe sobrevivir a recargas.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "I",
+      "implementation": [
+        "hospitality_suite/public/js/hospitality.js",
+        "hospitality_suite/operations.py",
+        "hospitality_suite/timing.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_idempotent_booking_and_changed_payload",
+        "docs/evidence/reservations-native-tests.xml::test_changed_charge_requires_a_new_review_before_settling_scheduled_nights",
+        "docs/evidence/reservations-native-tests.xml::test_motel_midnight_grace_overtime_and_prepare_retry",
+        "docs/evidence/countdown.json"
+      ],
+      "remaining": "Servidor y aceptación del importe acreditados; el contador se deriva de fin/hora del servidor y la evidencia existente muestra su avance. Falta prueba explícita de recarga y reloj cliente desfasado que conserve el mismo vencimiento sin alterar importe/estado."
     },
     {
       "id": "S07-11",
@@ -1532,10 +1749,21 @@
       "line": 113,
       "kind": "enumerated",
       "requirement": "- Cubrir cruces de medianoche, meses y años; verificar cambios de hora en zonas que los utilicen.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/pricing.py",
+        "hospitality_suite/time.py",
+        "hospitality_suite/tests/test_booking_rate_audit.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_midnight_and_year_boundary",
+        "docs/evidence/reservations-native-tests.xml::test_dst_uses_elapsed_instant",
+        "docs/evidence/reservations-native-tests.xml::test_calendar_month_year_and_dst_use_calendar_nights_and_explicit_instants",
+        "docs/evidence/reservations-native-tests.xml::test_dst_boundaries_have_23_or_25_elapsed_hours"
+      ],
+      "remaining": ""
     },
     {
       "id": "S08-01",
@@ -1544,10 +1772,21 @@
       "line": 117,
       "kind": "enumerated",
       "requirement": "- Entrada desde reserva o ingreso inmediato sin reserva.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/public/js/hospitality.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_01_hotel_advance_consumption_checkout_cleaning",
+        "docs/evidence/reservations-native-tests.xml::test_room_change_retains_segments_and_price",
+        "docs/UX_FORMULARIOS.md",
+        "docs/ESTANCIAS_Y_LLEGADAS.md",
+        "docs/evidence/board-items-ui.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S08-02",
@@ -1556,10 +1795,22 @@
       "line": 118,
       "kind": "enumerated",
       "requirement": "- Registro de huésped, acompañantes y datos exigidos por la política configurada; no recoger información innecesaria.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "I",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/api.py",
+        "hospitality_suite/public/js/hospitality.js",
+        "hospitality_suite/public/js/hospitality_workflows.js",
+        "hospitality_suite/public/js/hospitality_forms.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_guest_uses_standard_contact_address_and_is_idempotent",
+        "docs/evidence/reservations-native-tests.xml::test_companions_scoped_capacity_and_incomplete_cleaning",
+        "docs/evidence/group-companions.json"
+      ],
+      "remaining": "Registro/acompañantes y política en servidor localizados. bootstrap no proyecta guest_id_required, que el formulario consulta para situar la identificación en Datos principales. Completar corrección de datos del huésped existente desde Page, campos exigidos visibles y aceptación con política activada/desactivada sin duplicar la persona."
     },
     {
       "id": "S08-03",
@@ -1568,10 +1819,23 @@
       "line": 119,
       "kind": "enumerated",
       "requirement": "- Asignación de habitación, tarifa, fechas/horas, anticipo, garantía y responsable de pago.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/public/js/hospitality.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_extra_bed_and_historic_rate",
+        "docs/evidence/reservations-native-tests.xml::test_group_split_folios_has_no_duplicate_charges",
+        "docs/evidence/reservations-native-tests.xml::test_01_hotel_advance_consumption_checkout_cleaning",
+        "docs/evidence/reservations-native-tests.xml::test_guarantee_is_liability_then_refund",
+        "docs/evidence/reservations-native-tests.xml::test_guarantee_application_is_standard_advance",
+        "docs/evidence/group-stays.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S08-04",
@@ -1580,10 +1844,24 @@
       "line": 120,
       "kind": "enumerated",
       "requirement": "- Cuenta de estancia con alojamiento, servicios, consumos, descuentos, impuestos, pagos y saldo.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/api.py",
+        "hospitality_suite/printing.py",
+        "hospitality_suite/templates/print/folio.html",
+        "hospitality_suite/tests/test_booking_rate_audit.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_printed_account_includes_native_tax_discount_services_payment_and_guarantee",
+        "docs/evidence/reservations-native-tests.xml::test_review_includes_existing_advance_and_uses_it_without_another_receipt",
+        "docs/evidence/exports-manifest.json",
+        "docs/evidence/pdf-qa.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S08-05",
@@ -1592,10 +1870,21 @@
       "line": 121,
       "kind": "enumerated",
       "requirement": "- Cambios de habitación con historial y efectos tarifarios claros.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/public/js/hospitality_extras.js",
+        "hospitality_suite/tests/test_booking_rate_audit.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_room_change_retains_segments_and_price",
+        "docs/evidence/reservations-native-tests.xml::test_category_change_applies_accepted_price_difference",
+        "docs/evidence/reservations-native-tests.xml::test_active_mode_change_requires_mixed_property_and_accepted_new_price",
+        "docs/evidence/plan-moved.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S08-06",
@@ -1604,10 +1893,20 @@
       "line": 122,
       "kind": "enumerated",
       "requirement": "- Extensiones sujetas a disponibilidad y nueva cotización antes de confirmar.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/public/js/hospitality_extras.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_extension_rejects_next_booking",
+        "docs/evidence/reservations-native-tests.xml::test_overtime_is_separate_and_keeps_accepted_article_through_extension_and_departure",
+        "docs/evidence/plan-conflict.json",
+        "docs/evidence/plan-extended.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S08-07",
@@ -1616,10 +1915,20 @@
       "line": 123,
       "kind": "enumerated",
       "requirement": "- Varias cuentas por estancia; repartir cargos entre huésped, acompañantes, empresa o agencia sin duplicarlos.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/accounting.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_group_split_folios_has_no_duplicate_charges",
+        "docs/evidence/reservations-native-tests.xml::test_group_single_invoice_single_balance_and_checkout",
+        "docs/evidence/group-billed.json",
+        "docs/evidence/group-checked-out.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S08-08",
@@ -1628,10 +1937,25 @@
       "line": 124,
       "kind": "enumerated",
       "requirement": "- Salida con revisión de consumos, inspección si corresponde, aplicación de anticipos, liquidación y comprobantes.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/timing.py",
+        "hospitality_suite/templates/print/receipt.html"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_01_hotel_advance_consumption_checkout_cleaning",
+        "docs/evidence/reservations-native-tests.xml::test_hotel_late_rounding_and_inspection_gate",
+        "docs/evidence/reservations-native-tests.xml::test_guarantee_application_is_standard_advance",
+        "docs/evidence/reservations-native-tests.xml::test_group_single_invoice_single_balance_and_checkout",
+        "docs/evidence/exports-manifest.json",
+        "docs/evidence/pdf-qa.json",
+        "docs/evidence/group-checked-out.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S08-09",
@@ -1640,10 +1964,18 @@
       "line": 125,
       "kind": "enumerated",
       "requirement": "- Salida a crédito solamente para clientes y usuarios autorizados, conservando la cuenta por cobrar.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/security.py",
+        "hospitality_suite/payment_policies.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_credit_and_discount_require_approval_and_a_current_sufficient_limit"
+      ],
+      "remaining": ""
     },
     {
       "id": "S08-10",
@@ -1680,10 +2012,19 @@
       "line": 127,
       "kind": "enumerated",
       "requirement": "- Después de una salida, genera la tarea de limpieza correspondiente.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/housekeeping.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_01_hotel_advance_consumption_checkout_cleaning",
+        "docs/evidence/reservations-native-tests.xml::test_group_single_invoice_single_balance_and_checkout",
+        "docs/evidence/group-checked-out.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S08-12",
@@ -1692,10 +2033,23 @@
       "line": 128,
       "kind": "enumerated",
       "requirement": "- Las correcciones posteriores requieren permisos, motivo, trazabilidad y documentos de reversión cuando exista efecto financiero.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/security.py",
+        "hospitality_suite/refunds.py",
+        "hospitality_suite/tests/test_booking_rate_audit.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_after_checkout_credit_requires_permission_reason_native_return_and_audit",
+        "docs/evidence/reservations-native-tests.xml::test_standard_payment_cancellation_updates_folio",
+        "docs/evidence/reservations-native-tests.xml::test_credit_note_and_paid_invoice_refund",
+        "docs/evidence/reservations-native-tests.xml::test_invoice_and_payment_created_outside_pms_sync_and_reverse"
+      ],
+      "remaining": ""
     },
     {
       "id": "S09-01",

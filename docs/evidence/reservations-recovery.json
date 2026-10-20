@@ -1,0 +1,55 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "diagnostic_backup_before_restore": true,
+  "diagnostic_files": {
+    "20261020_080709-hospitality-acceptance_localhost-database.sql.gz": {
+      "bytes": 1044620,
+      "sha256": "bdf641b9ff4881610e9008672c2858028820f76ea421926808df40139bd89267",
+      "mode": "0600"
+    },
+    "20261020_080709-hospitality-acceptance_localhost-files.tar": {
+      "bytes": 10240,
+      "sha256": "9ed5d7d1158f9520fa59b7c78143bf7c2e34a297d93953e81b6db7af1a9c6489",
+      "mode": "0600"
+    },
+    "20261020_080709-hospitality-acceptance_localhost-private-files.tar": {
+      "bytes": 614400,
+      "sha256": "ca1d1f6d634509e73caa31f77d857ea6aacdb7d730c48d5b4f574f4f0727a8e2",
+      "mode": "0600"
+    },
+    "20261020_080709-hospitality-acceptance_localhost-site_config_backup.json": {
+      "bytes": 469,
+      "sha256": "91ead9bd7226a25f4b0779eadcac775f5764e378fb9a16665eebe634081a15fb",
+      "mode": "0600"
+    }
+  },
+  "original_baseline_replaced": false,
+  "restoration_receipt_matches_original_baseline": true,
+  "native_restore_command": "env/bin/python apps/hospitality_suite/tools/service_ux.py restore --phase board",
+  "restored_business_tables": {
+    "site": "hospitality-acceptance.localhost",
+    "restored": true,
+    "tables": 71,
+    "rows": 185,
+    "aggregate_sha256": "3552ed74dc0dc17235ccdc968a944f02c61dff83a72a349c1d351fb34bc1134f",
+    "stay_records": 0,
+    "invoices": 0,
+    "payments": 0
+  },
+  "conserved_tables_with_version": {
+    "previous_columns_preserved": true,
+    "default_policy_preserves_existing_stays": true,
+    "sites": {
+      "hospitality.localhost": {
+        "tables": 72,
+        "rows": 1191,
+        "private_files": 2
+      },
+      "hospitality-acceptance.localhost": {
+        "tables": 72,
+        "rows": 195,
+        "private_files": 0
+      }
+    }
+  }
+}

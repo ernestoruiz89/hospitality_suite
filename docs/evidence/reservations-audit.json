@@ -1,0 +1,819 @@
+{
+  "source_commit": "43ce506a1b394df614241d7c4de3d91aed4abb9f",
+  "app_version": "0.6.2",
+  "source_specification_sha256": "876632e08057a1ea0386bd9e01fde6f477c62380a9414bed23e2a852765fb651",
+  "reviewed_count": 32,
+  "previously_verified_untouched": [
+    "S08-10"
+  ],
+  "new_backend_execution": true,
+  "new_browser_walkthrough": false,
+  "native_junit": {
+    "path": "docs/evidence/reservations-native-tests.xml",
+    "tests": 236,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "new_cases": 7,
+    "final_sequential_run_after_restore": true
+  },
+  "new_test_source_sha256": "f2d22fc821e5f117f5805d9fabaf084571c705fea767559c5ca174fd568f72b4",
+  "source_sha256": {
+    "hospitality_suite/accounting.py": "7d7e6de7d76d591f07afa920d0f193e94ea24cf5728fdcb1843534bfb1324f0b",
+    "hospitality_suite/api.py": "1fc090ed0f6e11de71edd8c97d62fefe3ba3511f53f4ffc9deddebdc9e892309",
+    "hospitality_suite/availability.py": "22d09a9373c958890c3b96116eb21469653009f818f13bfdcf396a219d775101",
+    "hospitality_suite/housekeeping.py": "aa434fd22582d3fe5f8d4eb734dda90ee0f648326bf3f2c3486f9266c5fa2028",
+    "hospitality_suite/inventory.py": "edcd450251f484d4c50a9e9d217bb210559a075f831258620a1c279e092bfa42",
+    "hospitality_suite/jobs.py": "082e6fb3890aac33ff2c1a53dbdd8070051c812fdf27d9e7fa0ee587120dfd6c",
+    "hospitality_suite/operations.py": "31bb6dcf8d107f5cc61acbe1845714c3a215fb193b6fba294a55b26a9fdc07ac",
+    "hospitality_suite/payment_policies.py": "c3bd32195eeff93d3da902cc37f935062abcbbdb882e00474580d367d3d719e7",
+    "hospitality_suite/periodic.py": "bbb58360c5b9396b1e02d0b4728ae32a391cbb3bfd4558b31080e796d2c4ca15",
+    "hospitality_suite/pricing.py": "e14aeca381b106bb3c4450ddacdd718e20c6732df6c45b17abe1869682d9cec4",
+    "hospitality_suite/printing.py": "888bf0959e3ecba6e9065b99ee70d4b58616373ec2f3cd99346c8e53c061cfca",
+    "hospitality_suite/public/js/hospitality.js": "2f0c583485c39d2556ccc8f9c7a8e9a7fd2a0ac5f7fba48fa15d53a9bdcacb5b",
+    "hospitality_suite/public/js/hospitality_extras.js": "4f3ccd7b683482b390fd16f98dbdd8bbd5416cc92ccab7bdb39321d7622bb795",
+    "hospitality_suite/public/js/hospitality_forms.js": "b200d76ab42b71d7b4bfeec72cb16c26e794dd2b46ac2760cfc4440d6d635f20",
+    "hospitality_suite/public/js/hospitality_workflows.js": "4fd3771399f4e33b73507f319bb4f328eb8e17c053f8517d1adca09b0edfc3fe",
+    "hospitality_suite/refunds.py": "c22c9aa00d861bd52f0c35398a061902abb653cdc146cb7d7f4833e4b62e50b1",
+    "hospitality_suite/reports.py": "d2cf917c0efe50df1bf113ce4307d6d1627377c8746655a668c591a273a9bb3d",
+    "hospitality_suite/schema.py": "f13bb981d08cf80a608550c660f7bc32ab5395045bd47736eb9274e5f212488c",
+    "hospitality_suite/security.py": "1cdef2605e21615fdf2d0c14318bcc8d545e1c7ac8499fd78cafa51187d7bd33",
+    "hospitality_suite/service.py": "c9a41435caede6287bc9fac4b4798ca4b13b8c7b2e2bb8b912e7e8203831ae18",
+    "hospitality_suite/templates/print/folio.html": "0e01ee75d7a15e7149ad3493c129f933fe9162a0ab91881b2f1dd0dfc0d29488",
+    "hospitality_suite/templates/print/receipt.html": "a5a034db87b0a0be0f44f81ea4495a429a4df93f2e93cc8472d481850dbcb247",
+    "hospitality_suite/templates/print/reservation.html": "25daeaa12516350bc3aa96a1cc99c03cd9b03876c311aac42f003e8c1d164412",
+    "hospitality_suite/tests/test_booking_rate_audit.py": "f2d22fc821e5f117f5805d9fabaf084571c705fea767559c5ca174fd568f72b4",
+    "hospitality_suite/time.py": "2e6a2e8edced84be6a4e4d8e0c939b30a2991826d18b4b8cd1f2eed759473654",
+    "hospitality_suite/timing.py": "4e5bfda379176c4416f2f195fb0fd990df4a496279ddb37696feb4eae64a5fc4"
+  },
+  "findings": {
+    "availability_search_arguments": [
+      "property_name",
+      "starts_at",
+      "ends_at",
+      "category",
+      "people"
+    ],
+    "quantity_filter_absent_from_search": true,
+    "reservation_creation_status_expression": "'Hold' if data.get('hold') else 'Confirmed'",
+    "draft_not_created_by_reserve": true,
+    "account_page_omits_rate_explanation": true,
+    "account_print_omits_rate_explanation": true,
+    "required_guest_id_omitted_from_bootstrap": true,
+    "guest_form_reads_that_flag": true,
+    "native_account_financial_test_passed": true,
+    "native_financial_example": {
+      "base_lodging": "3000.00",
+      "discount": "-100.00",
+      "service": "30.00",
+      "net": "2930.00",
+      "tax": "439.50",
+      "grand_total": "3369.50",
+      "rounding_adjustment": "0.50",
+      "payable": "3370.00",
+      "payment": "500.00",
+      "outstanding": "2870.00",
+      "separate_guarantee": "200.00"
+    }
+  },
+  "requirements": [
+    {
+      "id": "S06-01",
+      "status": "P",
+      "implementation": [
+        "hospitality_suite/api.py",
+        "hospitality_suite/availability.py",
+        "hospitality_suite/operations.py",
+        "hospitality_suite/public/js/hospitality.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_category_last_unit_roomless_then_assign",
+        "docs/evidence/reservations-native-tests.xml::test_availability_shares_capacity_with_roomless_reservations"
+      ],
+      "remaining": "Buscar disponibilidad admite fechas/horas/categoría/personas, pero no cantidad solicitada de habitaciones ni respuesta de cupo para esa cantidad. La cotización grupal sí controla el conjunto; completar la consulta desde Page/API y su aceptación sin crear reservas.",
+      "passed_native_cases": [
+        "test_category_last_unit_roomless_then_assign",
+        "test_availability_shares_capacity_with_roomless_reservations"
+      ]
+    },
+    {
+      "id": "S06-02",
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/availability.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_category_last_unit_roomless_then_assign",
+        "docs/evidence/concurrency-final.json",
+        "docs/evidence/group-reserved.json"
+      ],
+      "remaining": "",
+      "passed_native_cases": [
+        "test_category_last_unit_roomless_then_assign"
+      ]
+    },
+    {
+      "id": "S06-03",
+      "status": "P",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/schema.py",
+        "hospitality_suite/public/js/hospitality.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_hold_expiry_is_idempotent",
+        "docs/evidence/reservations-native-tests.xml::test_group_single_invoice_single_balance_and_checkout",
+        "docs/evidence/reservations-native-tests.xml::test_booking_penalties_use_decision_date_and_native_financial_sources"
+      ],
+      "remaining": "Draft existe en el esquema, pero no hay acción API/Page para guardar y retomar una reserva en borrador. reserve crea Hold/Confirmed y el controlador impide la escritura directa de HS Booking. Implementar borrador persistente sin ocupar cupo y confirmación con nueva revisión de disponibilidad/precio.",
+      "passed_native_cases": [
+        "test_hold_expiry_is_idempotent",
+        "test_group_single_invoice_single_balance_and_checkout",
+        "test_booking_penalties_use_decision_date_and_native_financial_sources"
+      ]
+    },
+    {
+      "id": "S06-04",
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/public/js/hospitality.js",
+        "hospitality_suite/reports.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_arrival_departure_and_registration_are_distinct",
+        "docs/evidence/group-reserved.json"
+      ],
+      "remaining": "",
+      "passed_native_cases": [
+        "test_arrival_departure_and_registration_are_distinct"
+      ]
+    },
+    {
+      "id": "S06-05",
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/accounting.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_group_split_folios_has_no_duplicate_charges",
+        "docs/evidence/reservations-native-tests.xml::test_group_single_invoice_single_balance_and_checkout",
+        "docs/evidence/reservations-native-tests.xml::test_hosted_guests_include_principal_and_companions_with_names",
+        "docs/evidence/group-checked-out.json"
+      ],
+      "remaining": "",
+      "passed_native_cases": [
+        "test_group_split_folios_has_no_duplicate_charges",
+        "test_group_single_invoice_single_balance_and_checkout",
+        "test_hosted_guests_include_principal_and_companions_with_names"
+      ]
+    },
+    {
+      "id": "S06-06",
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/public/js/hospitality.js",
+        "hospitality_suite/templates/print/reservation.html"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_01_hotel_advance_consumption_checkout_cleaning",
+        "docs/evidence/reservations-native-tests.xml::test_guarantee_is_liability_then_refund",
+        "docs/evidence/reservations-native-tests.xml::test_guarantee_application_is_standard_advance",
+        "docs/evidence/exports-manifest.json",
+        "docs/evidence/pdf-qa.json",
+        "docs/evidence/group-reserved.json"
+      ],
+      "remaining": "",
+      "passed_native_cases": [
+        "test_01_hotel_advance_consumption_checkout_cleaning",
+        "test_guarantee_is_liability_then_refund",
+        "test_guarantee_application_is_standard_advance"
+      ]
+    },
+    {
+      "id": "S06-07",
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/public/js/hospitality_extras.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_modify_reservation_quotes_and_releases_old_interval",
+        "docs/evidence/reservations-native-tests.xml::test_cancellation_penalty_uses_invoice_and_advance",
+        "docs/evidence/reservations-native-tests.xml::test_booking_penalties_use_decision_date_and_native_financial_sources",
+        "docs/evidence/group-modified.json"
+      ],
+      "remaining": "",
+      "passed_native_cases": [
+        "test_modify_reservation_quotes_and_releases_old_interval",
+        "test_cancellation_penalty_uses_invoice_and_advance",
+        "test_booking_penalties_use_decision_date_and_native_financial_sources"
+      ]
+    },
+    {
+      "id": "S06-08",
+      "status": "I",
+      "implementation": [
+        "hospitality_suite/jobs.py",
+        "hospitality_suite/availability.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_hold_expiry_is_idempotent",
+        "docs/evidence/worker-recovery.json"
+      ],
+      "remaining": "Expiración idempotente/liberación y fallo con rollback/recuperación RQ acreditados. Falta la política y aceptación de reintentos limitados automáticos del mismo trabajo; el despacho periódico y la recuperación manual no la prueban (S16-10).",
+      "passed_native_cases": [
+        "test_hold_expiry_is_idempotent"
+      ]
+    },
+    {
+      "id": "S06-09",
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/availability.py",
+        "hospitality_suite/operations.py",
+        "hospitality_suite/service.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_conflicting_room_is_rejected",
+        "docs/evidence/reservations-native-tests.xml::test_category_last_unit_roomless_then_assign",
+        "docs/evidence/reservations-native-tests.xml::test_extension_rejects_next_booking",
+        "docs/evidence/concurrency-final.json"
+      ],
+      "remaining": "",
+      "passed_native_cases": [
+        "test_conflicting_room_is_rejected",
+        "test_category_last_unit_roomless_then_assign",
+        "test_extension_rejects_next_booking"
+      ]
+    },
+    {
+      "id": "S06-10",
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/availability.py",
+        "hospitality_suite/operations.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_category_last_unit_roomless_then_assign",
+        "docs/evidence/reservations-native-tests.xml::test_availability_shares_capacity_with_roomless_reservations",
+        "docs/evidence/reservations-native-tests.xml::test_mixed_property_quotes_both_modes_and_shares_room_capacity",
+        "docs/evidence/concurrency-final.json",
+        "docs/evidence/group-stays.json"
+      ],
+      "remaining": "",
+      "passed_native_cases": [
+        "test_category_last_unit_roomless_then_assign",
+        "test_availability_shares_capacity_with_roomless_reservations",
+        "test_mixed_property_quotes_both_modes_and_shares_room_capacity"
+      ]
+    },
+    {
+      "id": "S07-01",
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/pricing.py",
+        "hospitality_suite/schema.py",
+        "hospitality_suite/tests/test_booking_rate_audit.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_season_weekday_payer_plan_and_priority_have_one_winner_per_night",
+        "docs/evidence/reservations-native-tests.xml::test_hotel_nights_and_extra_people",
+        "docs/evidence/plan-configured.json",
+        "docs/evidence/plan-stay.json"
+      ],
+      "remaining": "",
+      "passed_native_cases": [
+        "test_season_weekday_payer_plan_and_priority_have_one_winner_per_night",
+        "test_hotel_nights_and_extra_people"
+      ]
+    },
+    {
+      "id": "S07-02",
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/pricing.py",
+        "hospitality_suite/schema.py",
+        "hospitality_suite/tests/test_booking_rate_audit.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_motel_blocks_fraction_boundaries_and_night_window",
+        "docs/evidence/reservations-native-tests.xml::test_overtime_is_separate_and_keeps_accepted_article_through_extension_and_departure"
+      ],
+      "remaining": "",
+      "passed_native_cases": [
+        "test_motel_blocks_fraction_boundaries_and_night_window",
+        "test_overtime_is_separate_and_keeps_accepted_article_through_extension_and_departure"
+      ]
+    },
+    {
+      "id": "S07-03",
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/pricing.py",
+        "hospitality_suite/operations.py",
+        "hospitality_suite/public/js/hospitality_extras.js",
+        "hospitality_suite/tests/test_booking_rate_audit.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_active_mode_change_requires_mixed_property_and_accepted_new_price",
+        "docs/evidence/reservations-native-tests.xml::test_mixed_property_quotes_both_modes_and_shares_room_capacity"
+      ],
+      "remaining": "",
+      "passed_native_cases": [
+        "test_active_mode_change_requires_mixed_property_and_accepted_new_price",
+        "test_mixed_property_quotes_both_modes_and_shares_room_capacity"
+      ]
+    },
+    {
+      "id": "S07-04",
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/pricing.py",
+        "hospitality_suite/operations.py",
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/inventory.py",
+        "hospitality_suite/tests/test_booking_rate_audit.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_season_weekday_payer_plan_and_priority_have_one_winner_per_night",
+        "docs/evidence/reservations-native-tests.xml::test_extra_bed_and_historic_rate",
+        "docs/evidence/reservations-native-tests.xml::test_included_delivery_stock_once_no_extra_invoice_and_return",
+        "docs/evidence/reservations-native-tests.xml::test_courtesy_occupies_without_revenue_and_zero_denominator",
+        "docs/evidence/reservations-native-tests.xml::test_credit_and_discount_require_approval_and_a_current_sufficient_limit",
+        "docs/evidence/reservations-native-tests.xml::test_included_tax_review_matches_the_native_posted_invoice",
+        "docs/evidence/reservations-native-tests.xml::test_changed_tax_template_requires_a_new_review_even_when_the_property_did_not_change"
+      ],
+      "remaining": "",
+      "passed_native_cases": [
+        "test_season_weekday_payer_plan_and_priority_have_one_winner_per_night",
+        "test_extra_bed_and_historic_rate",
+        "test_included_delivery_stock_once_no_extra_invoice_and_return",
+        "test_courtesy_occupies_without_revenue_and_zero_denominator",
+        "test_credit_and_discount_require_approval_and_a_current_sufficient_limit",
+        "test_included_tax_review_matches_the_native_posted_invoice",
+        "test_changed_tax_template_requires_a_new_review_even_when_the_property_did_not_change"
+      ]
+    },
+    {
+      "id": "S07-05",
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/pricing.py",
+        "hospitality_suite/operations.py",
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/tests/test_booking_rate_audit.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_season_weekday_payer_plan_and_priority_have_one_winner_per_night",
+        "docs/evidence/reservations-native-tests.xml::test_snapshot_room_move_and_extension_do_not_duplicate_stay_benefit",
+        "docs/evidence/reservations-native-tests.xml::test_motel_midnight_grace_overtime_and_prepare_retry",
+        "docs/evidence/reservations-native-tests.xml::test_external_invoice_requires_all_adjustments_and_syncs_every_source"
+      ],
+      "remaining": "",
+      "passed_native_cases": [
+        "test_season_weekday_payer_plan_and_priority_have_one_winner_per_night",
+        "test_snapshot_room_move_and_extension_do_not_duplicate_stay_benefit",
+        "test_motel_midnight_grace_overtime_and_prepare_retry",
+        "test_external_invoice_requires_all_adjustments_and_syncs_every_source"
+      ]
+    },
+    {
+      "id": "S07-06",
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/pricing.py",
+        "hospitality_suite/timing.py",
+        "hospitality_suite/operations.py",
+        "hospitality_suite/tests/test_booking_rate_audit.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_motel_blocks_fraction_boundaries_and_night_window",
+        "docs/evidence/reservations-native-tests.xml::test_hotel_early_arrival_exact_grace_and_fraction_boundaries",
+        "docs/evidence/reservations-native-tests.xml::test_hotel_late_rounding_and_inspection_gate",
+        "docs/evidence/reservations-native-tests.xml::test_motel_midnight_grace_overtime_and_prepare_retry",
+        "docs/evidence/reservations-native-tests.xml::test_overtime_is_separate_and_keeps_accepted_article_through_extension_and_departure",
+        "docs/evidence/reservations-native-tests.xml::test_extension_rejects_next_booking"
+      ],
+      "remaining": "",
+      "passed_native_cases": [
+        "test_motel_blocks_fraction_boundaries_and_night_window",
+        "test_hotel_early_arrival_exact_grace_and_fraction_boundaries",
+        "test_hotel_late_rounding_and_inspection_gate",
+        "test_motel_midnight_grace_overtime_and_prepare_retry",
+        "test_overtime_is_separate_and_keeps_accepted_article_through_extension_and_departure",
+        "test_extension_rejects_next_booking"
+      ]
+    },
+    {
+      "id": "S07-07",
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/pricing.py",
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/tests/test_booking_rate_audit.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_decimal_rounding",
+        "docs/evidence/reservations-native-tests.xml::test_native_currency_precision_three_and_zero",
+        "docs/evidence/reservations-native-tests.xml::test_overtime_components_keep_total_and_fraction_at_currency_precision",
+        "docs/evidence/reservations-native-tests.xml::test_printed_account_includes_native_tax_discount_services_payment_and_guarantee"
+      ],
+      "remaining": "",
+      "passed_native_cases": [
+        "test_decimal_rounding",
+        "test_native_currency_precision_three_and_zero",
+        "test_overtime_components_keep_total_and_fraction_at_currency_precision",
+        "test_printed_account_includes_native_tax_discount_services_payment_and_guarantee"
+      ]
+    },
+    {
+      "id": "S07-08",
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/pricing.py",
+        "hospitality_suite/operations.py",
+        "hospitality_suite/periodic.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_snapshot_copies_rules",
+        "docs/evidence/reservations-native-tests.xml::test_extra_bed_and_historic_rate",
+        "docs/evidence/reservations-native-tests.xml::test_unequal_accepted_nights_are_not_averaged_or_counted_as_current_production",
+        "docs/evidence/reservations-native-tests.xml::test_overtime_is_separate_and_keeps_accepted_article_through_extension_and_departure",
+        "docs/evidence/plan-extended.json"
+      ],
+      "remaining": "",
+      "passed_native_cases": [
+        "test_snapshot_copies_rules",
+        "test_extra_bed_and_historic_rate",
+        "test_unequal_accepted_nights_are_not_averaged_or_counted_as_current_production",
+        "test_overtime_is_separate_and_keeps_accepted_article_through_extension_and_departure"
+      ]
+    },
+    {
+      "id": "S07-09",
+      "status": "P",
+      "implementation": [
+        "hospitality_suite/pricing.py",
+        "hospitality_suite/operations.py",
+        "hospitality_suite/public/js/hospitality.js",
+        "hospitality_suite/templates/print/folio.html"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json"
+      ],
+      "remaining": "La revisión previa muestra explicación y la cuenta conserva snapshots, pero la Page y el impreso de cuenta no presentan el desglose de la tarifa aplicada. Mostrar noches/bloque, regla histórica y suplementos/ajustes con nombres legibles; conservar alcance de cuenta/segmento y no reconstruir precios con el tarifario actual.",
+      "passed_native_cases": []
+    },
+    {
+      "id": "S07-10",
+      "status": "I",
+      "implementation": [
+        "hospitality_suite/public/js/hospitality.js",
+        "hospitality_suite/operations.py",
+        "hospitality_suite/timing.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_idempotent_booking_and_changed_payload",
+        "docs/evidence/reservations-native-tests.xml::test_changed_charge_requires_a_new_review_before_settling_scheduled_nights",
+        "docs/evidence/reservations-native-tests.xml::test_motel_midnight_grace_overtime_and_prepare_retry",
+        "docs/evidence/countdown.json"
+      ],
+      "remaining": "Servidor y aceptación del importe acreditados; el contador se deriva de fin/hora del servidor y la evidencia existente muestra su avance. Falta prueba explícita de recarga y reloj cliente desfasado que conserve el mismo vencimiento sin alterar importe/estado.",
+      "passed_native_cases": [
+        "test_idempotent_booking_and_changed_payload",
+        "test_changed_charge_requires_a_new_review_before_settling_scheduled_nights",
+        "test_motel_midnight_grace_overtime_and_prepare_retry"
+      ]
+    },
+    {
+      "id": "S07-11",
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/pricing.py",
+        "hospitality_suite/time.py",
+        "hospitality_suite/tests/test_booking_rate_audit.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_midnight_and_year_boundary",
+        "docs/evidence/reservations-native-tests.xml::test_dst_uses_elapsed_instant",
+        "docs/evidence/reservations-native-tests.xml::test_calendar_month_year_and_dst_use_calendar_nights_and_explicit_instants",
+        "docs/evidence/reservations-native-tests.xml::test_dst_boundaries_have_23_or_25_elapsed_hours"
+      ],
+      "remaining": "",
+      "passed_native_cases": [
+        "test_midnight_and_year_boundary",
+        "test_dst_uses_elapsed_instant",
+        "test_calendar_month_year_and_dst_use_calendar_nights_and_explicit_instants",
+        "test_dst_boundaries_have_23_or_25_elapsed_hours"
+      ]
+    },
+    {
+      "id": "S08-01",
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/public/js/hospitality.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_01_hotel_advance_consumption_checkout_cleaning",
+        "docs/evidence/reservations-native-tests.xml::test_room_change_retains_segments_and_price",
+        "docs/UX_FORMULARIOS.md",
+        "docs/ESTANCIAS_Y_LLEGADAS.md",
+        "docs/evidence/board-items-ui.json"
+      ],
+      "remaining": "",
+      "passed_native_cases": [
+        "test_01_hotel_advance_consumption_checkout_cleaning",
+        "test_room_change_retains_segments_and_price"
+      ]
+    },
+    {
+      "id": "S08-02",
+      "status": "I",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/api.py",
+        "hospitality_suite/public/js/hospitality.js",
+        "hospitality_suite/public/js/hospitality_workflows.js",
+        "hospitality_suite/public/js/hospitality_forms.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_guest_uses_standard_contact_address_and_is_idempotent",
+        "docs/evidence/reservations-native-tests.xml::test_companions_scoped_capacity_and_incomplete_cleaning",
+        "docs/evidence/group-companions.json"
+      ],
+      "remaining": "Registro/acompañantes y política en servidor localizados. bootstrap no proyecta guest_id_required, que el formulario consulta para situar la identificación en Datos principales. Completar corrección de datos del huésped existente desde Page, campos exigidos visibles y aceptación con política activada/desactivada sin duplicar la persona.",
+      "passed_native_cases": [
+        "test_guest_uses_standard_contact_address_and_is_idempotent",
+        "test_companions_scoped_capacity_and_incomplete_cleaning"
+      ]
+    },
+    {
+      "id": "S08-03",
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/public/js/hospitality.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_extra_bed_and_historic_rate",
+        "docs/evidence/reservations-native-tests.xml::test_group_split_folios_has_no_duplicate_charges",
+        "docs/evidence/reservations-native-tests.xml::test_01_hotel_advance_consumption_checkout_cleaning",
+        "docs/evidence/reservations-native-tests.xml::test_guarantee_is_liability_then_refund",
+        "docs/evidence/reservations-native-tests.xml::test_guarantee_application_is_standard_advance",
+        "docs/evidence/group-stays.json"
+      ],
+      "remaining": "",
+      "passed_native_cases": [
+        "test_extra_bed_and_historic_rate",
+        "test_group_split_folios_has_no_duplicate_charges",
+        "test_01_hotel_advance_consumption_checkout_cleaning",
+        "test_guarantee_is_liability_then_refund",
+        "test_guarantee_application_is_standard_advance"
+      ]
+    },
+    {
+      "id": "S08-04",
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/api.py",
+        "hospitality_suite/printing.py",
+        "hospitality_suite/templates/print/folio.html",
+        "hospitality_suite/tests/test_booking_rate_audit.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_printed_account_includes_native_tax_discount_services_payment_and_guarantee",
+        "docs/evidence/reservations-native-tests.xml::test_review_includes_existing_advance_and_uses_it_without_another_receipt",
+        "docs/evidence/exports-manifest.json",
+        "docs/evidence/pdf-qa.json"
+      ],
+      "remaining": "",
+      "passed_native_cases": [
+        "test_printed_account_includes_native_tax_discount_services_payment_and_guarantee",
+        "test_review_includes_existing_advance_and_uses_it_without_another_receipt"
+      ]
+    },
+    {
+      "id": "S08-05",
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/public/js/hospitality_extras.js",
+        "hospitality_suite/tests/test_booking_rate_audit.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_room_change_retains_segments_and_price",
+        "docs/evidence/reservations-native-tests.xml::test_category_change_applies_accepted_price_difference",
+        "docs/evidence/reservations-native-tests.xml::test_active_mode_change_requires_mixed_property_and_accepted_new_price",
+        "docs/evidence/plan-moved.json"
+      ],
+      "remaining": "",
+      "passed_native_cases": [
+        "test_room_change_retains_segments_and_price",
+        "test_category_change_applies_accepted_price_difference",
+        "test_active_mode_change_requires_mixed_property_and_accepted_new_price"
+      ]
+    },
+    {
+      "id": "S08-06",
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/public/js/hospitality_extras.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_extension_rejects_next_booking",
+        "docs/evidence/reservations-native-tests.xml::test_overtime_is_separate_and_keeps_accepted_article_through_extension_and_departure",
+        "docs/evidence/plan-conflict.json",
+        "docs/evidence/plan-extended.json"
+      ],
+      "remaining": "",
+      "passed_native_cases": [
+        "test_extension_rejects_next_booking",
+        "test_overtime_is_separate_and_keeps_accepted_article_through_extension_and_departure"
+      ]
+    },
+    {
+      "id": "S08-07",
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/accounting.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_group_split_folios_has_no_duplicate_charges",
+        "docs/evidence/reservations-native-tests.xml::test_group_single_invoice_single_balance_and_checkout",
+        "docs/evidence/group-billed.json",
+        "docs/evidence/group-checked-out.json"
+      ],
+      "remaining": "",
+      "passed_native_cases": [
+        "test_group_split_folios_has_no_duplicate_charges",
+        "test_group_single_invoice_single_balance_and_checkout"
+      ]
+    },
+    {
+      "id": "S08-08",
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/timing.py",
+        "hospitality_suite/templates/print/receipt.html"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_01_hotel_advance_consumption_checkout_cleaning",
+        "docs/evidence/reservations-native-tests.xml::test_hotel_late_rounding_and_inspection_gate",
+        "docs/evidence/reservations-native-tests.xml::test_guarantee_application_is_standard_advance",
+        "docs/evidence/reservations-native-tests.xml::test_group_single_invoice_single_balance_and_checkout",
+        "docs/evidence/exports-manifest.json",
+        "docs/evidence/pdf-qa.json",
+        "docs/evidence/group-checked-out.json"
+      ],
+      "remaining": "",
+      "passed_native_cases": [
+        "test_01_hotel_advance_consumption_checkout_cleaning",
+        "test_hotel_late_rounding_and_inspection_gate",
+        "test_guarantee_application_is_standard_advance",
+        "test_group_single_invoice_single_balance_and_checkout"
+      ]
+    },
+    {
+      "id": "S08-09",
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/security.py",
+        "hospitality_suite/payment_policies.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_credit_and_discount_require_approval_and_a_current_sufficient_limit"
+      ],
+      "remaining": "",
+      "passed_native_cases": [
+        "test_credit_and_discount_require_approval_and_a_current_sufficient_limit"
+      ]
+    },
+    {
+      "id": "S08-11",
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/housekeeping.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_01_hotel_advance_consumption_checkout_cleaning",
+        "docs/evidence/reservations-native-tests.xml::test_group_single_invoice_single_balance_and_checkout",
+        "docs/evidence/group-checked-out.json"
+      ],
+      "remaining": "",
+      "passed_native_cases": [
+        "test_01_hotel_advance_consumption_checkout_cleaning",
+        "test_group_single_invoice_single_balance_and_checkout"
+      ]
+    },
+    {
+      "id": "S08-12",
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/security.py",
+        "hospitality_suite/refunds.py",
+        "hospitality_suite/tests/test_booking_rate_audit.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/evidence/reservations-audit.json",
+        "docs/evidence/reservations-native-tests.xml::test_after_checkout_credit_requires_permission_reason_native_return_and_audit",
+        "docs/evidence/reservations-native-tests.xml::test_standard_payment_cancellation_updates_folio",
+        "docs/evidence/reservations-native-tests.xml::test_credit_note_and_paid_invoice_refund",
+        "docs/evidence/reservations-native-tests.xml::test_invoice_and_payment_created_outside_pms_sync_and_reverse"
+      ],
+      "remaining": "",
+      "passed_native_cases": [
+        "test_after_checkout_credit_requires_permission_reason_native_return_and_audit",
+        "test_standard_payment_cancellation_updates_folio",
+        "test_credit_note_and_paid_invoice_refund",
+        "test_invoice_and_payment_created_outside_pms_sync_and_reverse"
+      ]
+    }
+  ],
+  "discarded_overlapping_runs": {
+    "first_errors": 6,
+    "error_type": "QueryDeadlockError",
+    "additional_run_aborted": true,
+    "used_as_acceptance_evidence": false,
+    "recovery_evidence": "docs/evidence/reservations-recovery.json"
+  }
+}
