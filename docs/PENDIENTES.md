@@ -1,16 +1,23 @@
 # Siguiente fase del objetivo activo
 
-Actualizado el 20/10/2026. El alcance obligatorio sigue abierto: **83 V, ocho I, cero P y 127 R**, de las mismas 218 entradas y huella. R significa contraste individual pendiente y no función ausente. Los recuentos no son un porcentaje de programación ni una fecha de terminación.
+Actualizado el 20/10/2026. El alcance obligatorio sigue abierto: **99 V, diecisiete I, dos P y 100 R**, de las mismas 218 entradas y huella. R significa contraste individual pendiente y no función ausente. Los recuentos no son un porcentaje de programación ni una fecha de terminación.
 
 ## Diferencia de interfaz resuelta
 
-**Facturación explícita desde Pages — 0.6.1.** Facturar cuenta revisa y emite sin cobro ni salida, incluido cero. Nueve casos nativos y tres JS nuevos, dos facturas emitidas desde Page con estancias activas y cero pagos/turnos. FACTURACION_DESDE_PAGES.md y capturas 106–110 conservan la evidencia. S00-02/F22 pasan a I por la aceptación completa de tareas y roles que continúa pendiente. No hay diferencias P en las entradas ya contrastadas; las 127 R requieren revisión y pueden descubrir otras.
+**Facturación explícita desde Pages — 0.6.1.** Facturar cuenta revisa y emite sin cobro ni salida, incluido cero. Nueve casos nativos y tres JS nuevos, dos facturas emitidas desde Page con estancias activas y cero pagos/turnos. FACTURACION_DESDE_PAGES.md y capturas 106–110 conservan la evidencia. S00-02/F22 pasan a I por la aceptación completa de tareas y roles que continúa pendiente. El contraste posterior de 27 entradas de Pages/habitaciones confirma otras dos diferencias P; las 100 R restantes pueden descubrir otras.
 
 S12-03/S16-06/S17-08 pasan a V en 0.6.0. La política por noche conserva importes/orígenes, genera una vez por fecha y liquida anticipadamente al facturar; repetición, recuperación, extensión cero y facturación nativa están probadas. CARGOS_PERIODICOS.md delimita reglas y evidencia. S14-08 quedó resuelto en 0.5.1 con recibos mínimos; no activa canales.
 
+## Diferencias de Pages confirmadas después de 0.6.1
+
+1. **S04-04 / F22c:** Estancias muestra una tabla general; añadir vistas breves de llegadas, salidas y cuentas abiertas con conteos y acciones adecuadas.
+2. **S05-01 / F22c:** mostrar entrada prevista o próxima llegada en tarjetas de Recepción. Conservar reserva futura separada de ocupación, y limpieza/mantenimiento como dimensiones independientes.
+
+AUDITORIA_PAGES_HABITACIONES.md y pages-rooms-audit.json documentan las reproducciones estáticas en 3563ef0. El bloque revisa 27 entradas con evidencia existente: 16 V, nueve I y dos P. No representa otra batería ni recorrido de navegador.
+
 ## Contraste y verificaciones pendientes
 
-1. **Auditoría y UX completa.** Continuar las 127 R de Pages, habitaciones, reservas, tarifas, estancias, contabilidad, limpieza/mantenimiento, inventario, cierre, seguridad y entregables. Relacionar cada obligación con código/aserciones/evidencia. Ya se agrupan formularios, se conserva el borrador entre pestañas y se diferencian revisar/confirmar; UX_FORMULARIOS.md acredita 0.5.2 y CARGOS_PERIODICOS.md amplía la política y las secciones del cierre; FACTURACION_DESDE_PAGES.md acredita emisión independiente sin cobro/salida. Completar la aceptación de cada flujo, sin inferirla de una batería verde.
+1. **Auditoría y UX completa.** Continuar las 100 R de reservas, tarifas, estancias, contabilidad, limpieza/mantenimiento, inventario, cierre, seguridad y entregables. Completar las nueve I del contraste de Pages/habitaciones: Inicio/alertas, tareas por rol, persistencia de filtros, estados secundarios/validación, teclado, estados sugeridos, historial completo y límites del colchón. Relacionar cada obligación con código/aserciones/evidencia. Ya se agrupan formularios, se conserva el borrador entre pestañas y se diferencian revisar/confirmar; UX_FORMULARIOS.md acredita 0.5.2 y CARGOS_PERIODICOS.md amplía la política y las secciones del cierre; FACTURACION_DESDE_PAGES.md acredita emisión independiente sin cobro/salida. Completar la aceptación de cada flujo, sin inferirla de una batería verde.
 2. **Límites y trabajos.** Probar extremos exactos de [inicio, fin) y colchón de limpieza, incluido el instante anterior y el extremo permitido (S16-03). Contrastar reintentos limitados del job de expiración, separándolos de nuevos despachos periódicos y recuperación manual (S16-10). Ya existen pruebas de carreras reales, fallo/rollback y recuperación RQ.
 3. **Contratos externos.** Acreditar las otras familias de contratos/simulaciones, además del doble de pago y receptor sintético (S14-05/07). El usuario pidió dejar pendiente la sincronización con Airbnb, Booking y otros canales: no implementarla ni activarla. Los proveedores reales son opcionales; INTEGRACIONES.md conserva alcance y fuentes. No presentar simulaciones como operativas.
 4. **Aceptación y demo.** Crear un escenario explícito reproducible que deje reservas/consumos identificados, separado de instalación y tests revertidos (S17-17). Acreditar un usuario autorizado de recepción+caja en un recorrido Pages completo y una sesión contable rastreando documentos/reportes (S17-18). Los recorridos previos alternan recepción/cajero/gerencia; conservar permisos por función.

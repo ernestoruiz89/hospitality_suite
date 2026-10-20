@@ -1,0 +1,373 @@
+{
+  "source_commit": "3563ef0f0515abd0ff1f079299d45698dfc5dc3c",
+  "app_version": "0.6.1",
+  "source_specification_sha256": "876632e08057a1ea0386bd9e01fde6f477c62380a9414bed23e2a852765fb651",
+  "reviewed_count": 27,
+  "new_backend_execution": false,
+  "new_browser_walkthrough": false,
+  "native_junit": {
+    "path": "docs/evidence/billing-native-tests.xml",
+    "tests": 220,
+    "failures": 0,
+    "errors": 0
+  },
+  "static_findings": {
+    "stays_is_one_general_table": true,
+    "no_later_stays_renderer_override": true,
+    "room_cards_omit_expected_arrival": true
+  },
+  "source_sha256": {
+    "hospitality_suite/public/js/hospitality.js": "8559ca047a1a23cfa69bf3dbfe4c442fb68f2e4cc7b7a57d58eb838e75d95311",
+    "hospitality_suite/public/js/hospitality_extras.js": "4f3ccd7b683482b390fd16f98dbdd8bbd5416cc92ccab7bdb39321d7622bb795",
+    "hospitality_suite/public/js/hospitality_workflows.js": "4fd3771399f4e33b73507f319bb4f328eb8e17c053f8517d1adca09b0edfc3fe",
+    "hospitality_suite/public/js/hospitality_forms.js": "b200d76ab42b71d7b4bfeec72cb16c26e794dd2b46ac2760cfc4440d6d635f20",
+    "hospitality_suite/api.py": "d5343eb0eb0e67577f26b3608f69e22f569a17561f83da8da85d18e36dc45358",
+    "hospitality_suite/availability.py": "22d09a9373c958890c3b96116eb21469653009f818f13bfdcf396a219d775101",
+    "hospitality_suite/public/hospitality.bundle.css": "a6317724776f1e25671ab297a1a5703ecb162c2990b5c75d0ea496f88f8b9b32"
+  },
+  "requirements": [
+    {
+      "id": "S04-01",
+      "status": "I",
+      "passed_native_cases": [],
+      "evidence": [
+        "docs/UX_FORMULARIOS.md"
+      ],
+      "remaining": "Inicio muestra indicadores de ocupación, pendientes de limpieza/mantenimiento y accesos. Completar revisión de alertas accionables de llegada/salida y aceptación de Inicio; los indicadores agregados no acreditan por sí solos todas las alertas."
+    },
+    {
+      "id": "S04-02",
+      "status": "V",
+      "passed_native_cases": [
+        "test_01_hotel_advance_consumption_checkout_cleaning"
+      ],
+      "evidence": [
+        "docs/evidence/billing-native-tests.xml",
+        "docs/evidence/08-hotel-tablet-panel.png",
+        "docs/evidence/09-hotel-mobile-panel.png",
+        "docs/evidence/106-cuenta-accion-facturar.png"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "S04-03",
+      "status": "V",
+      "passed_native_cases": [
+        "test_calendar_keeps_more_than_500_assignments",
+        "test_availability_shares_capacity_with_roomless_reservations"
+      ],
+      "evidence": [
+        "docs/evidence/billing-native-tests.xml",
+        "docs/evidence/24-grupo-modificacion.png",
+        "docs/evidence/report-dimensions.json"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "S04-04",
+      "status": "P",
+      "passed_native_cases": [],
+      "evidence": [
+        "docs/MANUAL.md"
+      ],
+      "remaining": "render_stays muestra una tabla general con huésped, habitación, salida y acceso al detalle. Faltan vistas diferenciadas de llegadas, salidas y cuentas abiertas en esta Page; los reportes de Gerencia no sustituyen ese flujo operativo."
+    },
+    {
+      "id": "S04-05",
+      "status": "V",
+      "passed_native_cases": [
+        "test_reception_cashier_cleaning_supervisor_end_to_end",
+        "test_double_payment_is_one_posting",
+        "test_close_difference_needs_supervisor_and_blocks_new_payment"
+      ],
+      "evidence": [
+        "docs/evidence/billing-native-tests.xml",
+        "docs/evidence/03-caja-turno-cerrado.png",
+        "docs/evidence/refund-items-ui.json",
+        "docs/evidence/forms-items-ui.json"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "S04-06",
+      "status": "V",
+      "passed_native_cases": [
+        "test_reception_cashier_cleaning_supervisor_end_to_end",
+        "test_companions_scoped_capacity_and_incomplete_cleaning"
+      ],
+      "evidence": [
+        "docs/evidence/billing-native-tests.xml",
+        "docs/evidence/12-hotel-housekeeping-mobile.png",
+        "docs/evidence/05-limpieza-inspeccion.png"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "S04-07",
+      "status": "V",
+      "passed_native_cases": [
+        "test_equipment_without_room_overlap_limits_and_authorized_completion",
+        "test_equipment_room_conflict_does_not_cancel_booking_and_nonblocking_is_explicit"
+      ],
+      "evidence": [
+        "docs/evidence/billing-native-tests.xml",
+        "docs/evidence/equipment.json",
+        "docs/evidence/15-equipo-evidencia-resolucion.png"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "S04-08",
+      "status": "V",
+      "passed_native_cases": [
+        "test_stock_delivery_only_once_and_reversal",
+        "test_stock_transfer_cleaning_loss_replacement_and_count_adjustment"
+      ],
+      "evidence": [
+        "docs/evidence/billing-native-tests.xml",
+        "docs/evidence/inventory-ui.json",
+        "docs/evidence/finance-stock.json",
+        "docs/evidence/plan-delivered.json"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "S04-09",
+      "status": "V",
+      "passed_native_cases": [
+        "test_guest_history_includes_companion_and_denies_other_property",
+        "test_housekeeping_cannot_access_finance_or_guest_api"
+      ],
+      "evidence": [
+        "docs/evidence/billing-native-tests.xml",
+        "docs/evidence/history-ui.json",
+        "docs/evidence/group-companions.json"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "S04-10",
+      "status": "V",
+      "passed_native_cases": [
+        "test_company_scope_only_aggregates_authorized_properties_and_options",
+        "test_credit_and_discount_require_approval_and_a_current_sufficient_limit"
+      ],
+      "evidence": [
+        "docs/evidence/billing-native-tests.xml",
+        "docs/evidence/minimum-reports-http.json",
+        "docs/evidence/report-dimensions.json",
+        "docs/evidence/payment-policy-ui.json"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "S04-11",
+      "status": "V",
+      "passed_native_cases": [
+        "test_initial_date_cutoff_retry_and_no_implicit_financial_masters",
+        "test_invalid_configuration_and_operational_roles_cannot_create",
+        "test_user_wizard_restricted_and_series_validated"
+      ],
+      "evidence": [
+        "docs/evidence/billing-native-tests.xml",
+        "docs/evidence/initial-setup-ui.json",
+        "docs/evidence/payment-policy-ui.json",
+        "docs/evidence/forms-items-ui.json"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "S04-12",
+      "status": "V",
+      "passed_native_cases": [],
+      "evidence": [
+        "docs/UX_FORMULARIOS.md",
+        "docs/evidence/07-maintenance-mobile.png",
+        "docs/evidence/08-hotel-tablet-panel.png",
+        "docs/evidence/12-hotel-housekeeping-mobile.png",
+        "docs/evidence/107-factura-cero-revision-movil.png"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "S04-13",
+      "status": "V",
+      "passed_native_cases": [],
+      "evidence": [
+        "docs/evidence/01-recepcion-entrada.png",
+        "docs/evidence/04-recepcion-salida-sucia.png",
+        "docs/evidence/106-cuenta-accion-facturar.png",
+        "docs/UX_FORMULARIOS.md"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "S04-14",
+      "status": "I",
+      "passed_native_cases": [],
+      "evidence": [
+        "docs/UX_FORMULARIOS.md",
+        "docs/FACTURACION_DESDE_PAGES.md"
+      ],
+      "remaining": "Paneles y formularios operativos localizados y recorridos financieros/stock/limpieza ejecutados. Completar el contraste de todas las tareas habituales de cada rol; S00-02 y S17-18 siguen abiertos."
+    },
+    {
+      "id": "S04-15",
+      "status": "I",
+      "passed_native_cases": [],
+      "evidence": [
+        "docs/evidence/106-cuenta-accion-facturar.png"
+      ],
+      "remaining": "Búsqueda textual y filtros de limpieza/piso/categoría implementados; establecimiento y filtros se guardan en localStorage por propiedad. Falta ejecutar combinación de filtros, persistencia al recargar/cambiar propiedad y estado sin resultados; no se infiere ese recorrido de una captura."
+    },
+    {
+      "id": "S04-16",
+      "status": "I",
+      "passed_native_cases": [],
+      "evidence": [
+        "docs/evidence/billing-js-tests.log",
+        "docs/UX_FORMULARIOS.md",
+        "docs/evidence/19-respuesta-perdida.png"
+      ],
+      "remaining": "Carga/error global, vacíos, bloqueo de doble envío, validación nativa y recuperación de pestaña probados en parte. Completar aceptación de validación junto al campo y estados asíncronos de vistas secundarias, incluido calendario al cambiar de fecha rápidamente."
+    },
+    {
+      "id": "S04-17",
+      "status": "I",
+      "passed_native_cases": [],
+      "evidence": [
+        "docs/UX_FORMULARIOS.md",
+        "docs/evidence/billing-js-tests.log"
+      ],
+      "remaining": "Controles nativos, etiquetas/ARIA, foco visible, selección de pestaña y estados con texto localizados. Falta recorrido completo solo con teclado y comprobación de foco al abrir/cerrar paneles y revisiones por rol."
+    },
+    {
+      "id": "S04-18",
+      "status": "V",
+      "passed_native_cases": [
+        "test_realtime_contains_only_scoped_invalidation"
+      ],
+      "evidence": [
+        "docs/evidence/billing-native-tests.xml",
+        "docs/evidence/transport-sessions.json",
+        "docs/evidence/22-tiempo-real-interrumpido.png",
+        "docs/evidence/23-tiempo-real-recuperado.png"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "S04-19",
+      "status": "V",
+      "passed_native_cases": [
+        "test_failure_rolls_back_invoice_payment_and_retries_safely",
+        "test_idempotent_booking_and_changed_payload"
+      ],
+      "evidence": [
+        "docs/evidence/billing-native-tests.xml",
+        "docs/evidence/network-sale-sale.json",
+        "docs/evidence/19-respuesta-perdida.png",
+        "docs/evidence/20-reintento-confirmado.png",
+        "docs/evidence/billing-js-tests.log"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "S04-20",
+      "status": "I",
+      "passed_native_cases": [],
+      "evidence": [
+        "docs/REQUISITOS.md",
+        "docs/FACTURACION_DESDE_PAGES.md"
+      ],
+      "remaining": "Existen recorridos reales de hotel/motel, caja, grupos, inventario, mantenimiento, limpieza y portal. Completar aceptación del conjunto por rol, usuario combinado y sesión contable S17-18; no equivale a una batería backend aprobada."
+    },
+    {
+      "id": "S05-01",
+      "status": "P",
+      "passed_native_cases": [],
+      "evidence": [
+        "docs/evidence/106-cuenta-accion-facturar.png",
+        "docs/evidence/countdown.json"
+      ],
+      "remaining": "Las tarjetas muestran habitación/categoría, ocupación/bloqueo, limpieza, salida, tiempo y saldo autorizado. Falta presentar la entrada prevista o próxima llegada de una reserva en la tarjeta, conservando reserva futura separada de ocupación."
+    },
+    {
+      "id": "S05-02",
+      "status": "V",
+      "passed_native_cases": [
+        "test_conflicting_room_is_rejected",
+        "test_equipment_room_conflict_does_not_cancel_booking_and_nonblocking_is_explicit",
+        "test_reception_cashier_cleaning_supervisor_end_to_end"
+      ],
+      "evidence": [
+        "docs/evidence/billing-native-tests.xml",
+        "docs/evidence/report-dimensions.json",
+        "docs/evidence/group-reserved.json"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "S05-03",
+      "status": "I",
+      "passed_native_cases": [],
+      "evidence": [
+        "docs/evidence/countdown.json",
+        "docs/evidence/report-dimensions.json",
+        "docs/evidence/12-hotel-housekeeping-mobile.png"
+      ],
+      "remaining": "Limpieza/inspección, ocupación, bloqueo y tiempo restante/excedido se expresan con texto. Completar contraste del estado reservado para intervalo consultado y llegada/salida próxima, vinculado a S05-01; los nombres sugeridos no se convierten en un único estado persistido."
+    },
+    {
+      "id": "S05-04",
+      "status": "I",
+      "passed_native_cases": [
+        "test_calendar_keeps_more_than_500_assignments",
+        "test_completed_maintenance_remains_in_history_after_later_document_edit"
+      ],
+      "evidence": [
+        "docs/evidence/billing-native-tests.xml",
+        "docs/evidence/history-ui.json",
+        "docs/evidence/report-dimensions.json"
+      ],
+      "remaining": "Calendario conserva segmentos de estancia y mantenimiento finalizado, y auditoría pagina sin el antiguo tope. Falta contrastar explícitamente todo el historial de cambios/bloqueos de habitación por rango, incluyendo cambios de limpieza y reservas canceladas; la prueba de 610 asignaciones no acredita esa cobertura completa."
+    },
+    {
+      "id": "S05-05",
+      "status": "V",
+      "passed_native_cases": [
+        "test_dirty_room_rejects_checkin",
+        "test_conflicting_room_is_rejected",
+        "test_equipment_room_conflict_does_not_cancel_booking_and_nonblocking_is_explicit"
+      ],
+      "evidence": [
+        "docs/evidence/billing-native-tests.xml",
+        "docs/evidence/plan-conflict.json"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "S05-06",
+      "status": "V",
+      "passed_native_cases": [
+        "test_01_hotel_advance_consumption_checkout_cleaning",
+        "test_reception_cashier_cleaning_supervisor_end_to_end"
+      ],
+      "evidence": [
+        "docs/evidence/billing-native-tests.xml",
+        "docs/evidence/04-recepcion-salida-sucia.png",
+        "docs/evidence/06-recepcion-limpia.png",
+        "docs/evidence/12-hotel-housekeeping-mobile.png"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "S05-07",
+      "status": "I",
+      "passed_native_cases": [],
+      "evidence": [
+        "docs/AUDITORIA_FLUJOS_TRANSACCIONES.md"
+      ],
+      "remaining": "El motor amplía extremos por buffer_minutes/cleaning_minutes y conserva el colchón en asignaciones. Falta prueba explícita del instante anterior y del extremo permitido con y sin colchón, pendiente S16-03."
+    }
+  ]
+}

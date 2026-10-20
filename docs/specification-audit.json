@@ -686,10 +686,17 @@
       "line": 55,
       "kind": "enumerated",
       "requirement": "A. Inicio: indicadores, alertas, pendientes y accesos rápidos.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "I",
+      "implementation": [
+        "hospitality_suite/public/js/hospitality.js",
+        "hospitality_suite/api.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_PAGES_HABITACIONES.md",
+        "docs/UX_FORMULARIOS.md",
+        "docs/evidence/pages-rooms-audit.json"
+      ],
+      "remaining": "Inicio muestra indicadores de ocupación, pendientes de limpieza/mantenimiento y accesos. Completar revisión de alertas accionables de llegada/salida y aceptación de Inicio; los indicadores agregados no acreditan por sí solos todas las alertas."
     },
     {
       "id": "S04-02",
@@ -698,10 +705,21 @@
       "line": 56,
       "kind": "enumerated",
       "requirement": "B. Recepción: tablero de habitaciones y panel lateral de la estancia.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/public/js/hospitality.js",
+        "hospitality_suite/public/js/hospitality_workflows.js",
+        "hospitality_suite/public/hospitality.bundle.css"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_PAGES_HABITACIONES.md",
+        "docs/evidence/billing-native-tests.xml",
+        "docs/evidence/08-hotel-tablet-panel.png",
+        "docs/evidence/09-hotel-mobile-panel.png",
+        "docs/evidence/106-cuenta-accion-facturar.png",
+        "docs/evidence/pages-rooms-audit.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S04-03",
@@ -710,10 +728,20 @@
       "line": 57,
       "kind": "enumerated",
       "requirement": "C. Reservas: calendario por habitación y búsqueda de disponibilidad.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/public/js/hospitality_extras.js",
+        "hospitality_suite/api.py",
+        "hospitality_suite/availability.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_PAGES_HABITACIONES.md",
+        "docs/evidence/billing-native-tests.xml",
+        "docs/evidence/24-grupo-modificacion.png",
+        "docs/evidence/report-dimensions.json",
+        "docs/evidence/pages-rooms-audit.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S04-04",
@@ -722,10 +750,17 @@
       "line": 58,
       "kind": "enumerated",
       "requirement": "D. Estancias: huéspedes alojados, llegadas, salidas y cuentas abiertas.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "P",
+      "implementation": [
+        "hospitality_suite/public/js/hospitality.js",
+        "hospitality_suite/api.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_PAGES_HABITACIONES.md",
+        "docs/MANUAL.md",
+        "docs/evidence/pages-rooms-audit.json"
+      ],
+      "remaining": "render_stays muestra una tabla general con huésped, habitación, salida y acceso al detalle. Faltan vistas diferenciadas de llegadas, salidas y cuentas abiertas en esta Page; los reportes de Gerencia no sustituyen ese flujo operativo."
     },
     {
       "id": "S04-05",
@@ -734,10 +769,21 @@
       "line": 59,
       "kind": "enumerated",
       "requirement": "E. Caja: cobros, devoluciones, turno, arqueo y cierre.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/public/js/hospitality_workflows.js",
+        "hospitality_suite/cashier.py",
+        "hospitality_suite/accounting.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_PAGES_HABITACIONES.md",
+        "docs/evidence/billing-native-tests.xml",
+        "docs/evidence/03-caja-turno-cerrado.png",
+        "docs/evidence/refund-items-ui.json",
+        "docs/evidence/forms-items-ui.json",
+        "docs/evidence/pages-rooms-audit.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S04-06",
@@ -746,10 +792,20 @@
       "line": 60,
       "kind": "enumerated",
       "requirement": "F. Limpieza: tareas, prioridades, responsables e inspección.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/public/js/hospitality_workflows.js",
+        "hospitality_suite/housekeeping.py",
+        "hospitality_suite/public/js/hospitality.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_PAGES_HABITACIONES.md",
+        "docs/evidence/billing-native-tests.xml",
+        "docs/evidence/12-hotel-housekeeping-mobile.png",
+        "docs/evidence/05-limpieza-inspeccion.png",
+        "docs/evidence/pages-rooms-audit.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S04-07",
@@ -758,10 +814,20 @@
       "line": 61,
       "kind": "enumerated",
       "requirement": "G. Mantenimiento: incidencias, bloqueos y órdenes de trabajo.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/public/js/hospitality_workflows.js",
+        "hospitality_suite/housekeeping.py",
+        "hospitality_suite/equipment.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_PAGES_HABITACIONES.md",
+        "docs/evidence/billing-native-tests.xml",
+        "docs/evidence/equipment.json",
+        "docs/evidence/15-equipo-evidencia-resolucion.png",
+        "docs/evidence/pages-rooms-audit.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S04-08",
@@ -770,10 +836,21 @@
       "line": 62,
       "kind": "enumerated",
       "requirement": "H. Consumos e inventario: cargos a habitación, entregas y reposición.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/public/js/hospitality_finance_stock.js",
+        "hospitality_suite/inventory.py",
+        "hospitality_suite/procurement.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_PAGES_HABITACIONES.md",
+        "docs/evidence/billing-native-tests.xml",
+        "docs/evidence/inventory-ui.json",
+        "docs/evidence/finance-stock.json",
+        "docs/evidence/plan-delivered.json",
+        "docs/evidence/pages-rooms-audit.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S04-09",
@@ -782,10 +859,20 @@
       "line": 63,
       "kind": "enumerated",
       "requirement": "I. Clientes y huéspedes: consulta e historial según permisos.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/public/js/hospitality_extras.js",
+        "hospitality_suite/api.py",
+        "hospitality_suite/security.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_PAGES_HABITACIONES.md",
+        "docs/evidence/billing-native-tests.xml",
+        "docs/evidence/history-ui.json",
+        "docs/evidence/group-companions.json",
+        "docs/evidence/pages-rooms-audit.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S04-10",
@@ -794,10 +881,21 @@
       "line": 64,
       "kind": "enumerated",
       "requirement": "J. Gerencia: reportes, indicadores y autorizaciones.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/public/js/hospitality_reporting.js",
+        "hospitality_suite/reports.py",
+        "hospitality_suite/security.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_PAGES_HABITACIONES.md",
+        "docs/evidence/billing-native-tests.xml",
+        "docs/evidence/minimum-reports-http.json",
+        "docs/evidence/report-dimensions.json",
+        "docs/evidence/payment-policy-ui.json",
+        "docs/evidence/pages-rooms-audit.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S04-11",
@@ -806,10 +904,21 @@
       "line": 65,
       "kind": "enumerated",
       "requirement": "K. Configuración: asistente y políticas operativas.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/public/js/hospitality_forms.js",
+        "hospitality_suite/setup.py",
+        "hospitality_suite/controllers.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_PAGES_HABITACIONES.md",
+        "docs/evidence/billing-native-tests.xml",
+        "docs/evidence/initial-setup-ui.json",
+        "docs/evidence/payment-policy-ui.json",
+        "docs/evidence/forms-items-ui.json",
+        "docs/evidence/pages-rooms-audit.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S04-12",
@@ -818,10 +927,21 @@
       "line": 68,
       "kind": "enumerated",
       "requirement": "- Diseño profesional, adaptable a escritorio, tableta y teléfono; limpieza debe funcionar cómodamente desde móvil.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/public/hospitality.bundle.css",
+        "hospitality_suite/public/js/hospitality_forms.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_PAGES_HABITACIONES.md",
+        "docs/UX_FORMULARIOS.md",
+        "docs/evidence/07-maintenance-mobile.png",
+        "docs/evidence/08-hotel-tablet-panel.png",
+        "docs/evidence/12-hotel-housekeeping-mobile.png",
+        "docs/evidence/107-factura-cero-revision-movil.png",
+        "docs/evidence/pages-rooms-audit.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S04-13",
@@ -830,10 +950,21 @@
       "line": 69,
       "kind": "enumerated",
       "requirement": "- Etiquetas comprensibles: Reservar, Registrar entrada, Agregar consumo, Extender estancia, Cambiar habitación, Cobrar, Registrar salida y Marcar limpia.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/public/js/hospitality.js",
+        "hospitality_suite/public/js/hospitality_workflows.js",
+        "hospitality_suite/public/js/hospitality_forms.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_PAGES_HABITACIONES.md",
+        "docs/evidence/01-recepcion-entrada.png",
+        "docs/evidence/04-recepcion-salida-sucia.png",
+        "docs/evidence/106-cuenta-accion-facturar.png",
+        "docs/UX_FORMULARIOS.md",
+        "docs/evidence/pages-rooms-audit.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S04-14",
@@ -842,10 +973,19 @@
       "line": 70,
       "kind": "enumerated",
       "requirement": "- Acciones frecuentes dentro de la página mediante paneles, asistentes breves o diálogos, sin obligar a abrir formularios estándar.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "I",
+      "implementation": [
+        "hospitality_suite/public/js/hospitality.js",
+        "hospitality_suite/public/js/hospitality_forms.js",
+        "hospitality_suite/public/js/hospitality_invoicing.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_PAGES_HABITACIONES.md",
+        "docs/UX_FORMULARIOS.md",
+        "docs/FACTURACION_DESDE_PAGES.md",
+        "docs/evidence/pages-rooms-audit.json"
+      ],
+      "remaining": "Paneles y formularios operativos localizados y recorridos financieros/stock/limpieza ejecutados. Completar el contraste de todas las tareas habituales de cada rol; S00-02 y S17-18 siguen abiertos."
     },
     {
       "id": "S04-15",
@@ -854,10 +994,17 @@
       "line": 71,
       "kind": "enumerated",
       "requirement": "- Búsqueda rápida, filtros por establecimiento/piso/categoría/estado y filtros persistentes cuando resulte útil.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "I",
+      "implementation": [
+        "hospitality_suite/public/js/hospitality.js",
+        "hospitality_suite/public/js/hospitality_extras.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_PAGES_HABITACIONES.md",
+        "docs/evidence/106-cuenta-accion-facturar.png",
+        "docs/evidence/pages-rooms-audit.json"
+      ],
+      "remaining": "Búsqueda textual y filtros de limpieza/piso/categoría implementados; establecimiento y filtros se guardan en localStorage por propiedad. Falta ejecutar combinación de filtros, persistencia al recargar/cambiar propiedad y estado sin resultados; no se infiere ese recorrido de una captura."
     },
     {
       "id": "S04-16",
@@ -866,10 +1013,20 @@
       "line": 72,
       "kind": "enumerated",
       "requirement": "- Estado vacío, carga, error, éxito, validación junto al campo y prevención de doble envío.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "I",
+      "implementation": [
+        "hospitality_suite/public/js/hospitality.js",
+        "hospitality_suite/public/js/hospitality_forms.js",
+        "hospitality_suite/public/js/hospitality_catalog.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_PAGES_HABITACIONES.md",
+        "docs/evidence/billing-js-tests.log",
+        "docs/UX_FORMULARIOS.md",
+        "docs/evidence/19-respuesta-perdida.png",
+        "docs/evidence/pages-rooms-audit.json"
+      ],
+      "remaining": "Carga/error global, vacíos, bloqueo de doble envío, validación nativa y recuperación de pestaña probados en parte. Completar aceptación de validación junto al campo y estados asíncronos de vistas secundarias, incluido calendario al cambiar de fecha rápidamente."
     },
     {
       "id": "S04-17",
@@ -878,10 +1035,19 @@
       "line": 73,
       "kind": "enumerated",
       "requirement": "- Accesibilidad por teclado y etiquetas; el color nunca será la única forma de transmitir un estado.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "I",
+      "implementation": [
+        "hospitality_suite/public/js/hospitality.js",
+        "hospitality_suite/public/js/hospitality_forms.js",
+        "hospitality_suite/public/hospitality.bundle.css"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_PAGES_HABITACIONES.md",
+        "docs/UX_FORMULARIOS.md",
+        "docs/evidence/billing-js-tests.log",
+        "docs/evidence/pages-rooms-audit.json"
+      ],
+      "remaining": "Controles nativos, etiquetas/ARIA, foco visible, selección de pestaña y estados con texto localizados. Falta recorrido completo solo con teclado y comprobación de foco al abrir/cerrar paneles y revisiones por rol."
     },
     {
       "id": "S04-18",
@@ -890,10 +1056,21 @@
       "line": 74,
       "kind": "enumerated",
       "requirement": "- Actualización entre sesiones usando los mecanismos de tiempo real de Frappe; reconexión y recuperación de datos cuando falle la conexión.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/public/js/hospitality.js",
+        "hospitality_suite/security.py",
+        "hospitality_suite/service.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_PAGES_HABITACIONES.md",
+        "docs/evidence/billing-native-tests.xml",
+        "docs/evidence/transport-sessions.json",
+        "docs/evidence/22-tiempo-real-interrumpido.png",
+        "docs/evidence/23-tiempo-real-recuperado.png",
+        "docs/evidence/pages-rooms-audit.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S04-19",
@@ -902,10 +1079,22 @@
       "line": 75,
       "kind": "enumerated",
       "requirement": "- No confirmar una reserva, un cobro o una salida mientras no exista respuesta válida del servidor. No implementar cobros desconectados.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/public/js/hospitality.js",
+        "hospitality_suite/service.py",
+        "hospitality_suite/public/js/hospitality_invoicing.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_PAGES_HABITACIONES.md",
+        "docs/evidence/billing-native-tests.xml",
+        "docs/evidence/network-sale-sale.json",
+        "docs/evidence/19-respuesta-perdida.png",
+        "docs/evidence/20-reintento-confirmado.png",
+        "docs/evidence/billing-js-tests.log",
+        "docs/evidence/pages-rooms-audit.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S04-20",
@@ -914,10 +1103,18 @@
       "line": 76,
       "kind": "enumerated",
       "requirement": "- Prueba los flujos completos desde estas páginas, no solamente desde formularios de administrador.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "I",
+      "implementation": [
+        "hospitality_suite/public/js/hospitality.js",
+        "hospitality_suite/public/js/hospitality_workflows.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_PAGES_HABITACIONES.md",
+        "docs/REQUISITOS.md",
+        "docs/FACTURACION_DESDE_PAGES.md",
+        "docs/evidence/pages-rooms-audit.json"
+      ],
+      "remaining": "Existen recorridos reales de hotel/motel, caja, grupos, inventario, mantenimiento, limpieza y portal. Completar aceptación del conjunto por rol, usuario combinado y sesión contable S17-18; no equivale a una batería backend aprobada."
     },
     {
       "id": "S05-01",
@@ -926,10 +1123,19 @@
       "line": 80,
       "kind": "enumerated",
       "requirement": "- Tarjetas con número, categoría, disponibilidad, limpieza, bloqueo, entrada/salida prevista, tiempo restante o excedido y saldo, según permisos.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "P",
+      "implementation": [
+        "hospitality_suite/public/js/hospitality.js",
+        "hospitality_suite/public/js/hospitality_extras.js",
+        "hospitality_suite/api.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_PAGES_HABITACIONES.md",
+        "docs/evidence/106-cuenta-accion-facturar.png",
+        "docs/evidence/countdown.json",
+        "docs/evidence/pages-rooms-audit.json"
+      ],
+      "remaining": "Las tarjetas muestran habitación/categoría, ocupación/bloqueo, limpieza, salida, tiempo y saldo autorizado. Falta presentar la entrada prevista o próxima llegada de una reserva en la tarjeta, conservando reserva futura separada de ocupación."
     },
     {
       "id": "S05-02",
@@ -938,10 +1144,21 @@
       "line": 81,
       "kind": "enumerated",
       "requirement": "- Usa dimensiones separadas para ocupación, limpieza y mantenimiento. Una habitación puede estar ocupada y requerir limpieza; una reserva futura no equivale a ocupación actual.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/api.py",
+        "hospitality_suite/availability.py",
+        "hospitality_suite/schema.py",
+        "hospitality_suite/public/js/hospitality.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_PAGES_HABITACIONES.md",
+        "docs/evidence/billing-native-tests.xml",
+        "docs/evidence/report-dimensions.json",
+        "docs/evidence/group-reserved.json",
+        "docs/evidence/pages-rooms-audit.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S05-03",
@@ -950,10 +1167,20 @@
       "line": 82,
       "kind": "enumerated",
       "requirement": "- Estados visibles sugeridos: disponible, reservada para el intervalo consultado, ocupada, salida próxima, tiempo excedido, sucia, en limpieza, pendiente de inspección y fuera de servicio.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "I",
+      "implementation": [
+        "hospitality_suite/public/js/hospitality.js",
+        "hospitality_suite/public/js/hospitality_extras.js",
+        "hospitality_suite/api.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_PAGES_HABITACIONES.md",
+        "docs/evidence/countdown.json",
+        "docs/evidence/report-dimensions.json",
+        "docs/evidence/12-hotel-housekeeping-mobile.png",
+        "docs/evidence/pages-rooms-audit.json"
+      ],
+      "remaining": "Limpieza/inspección, ocupación, bloqueo y tiempo restante/excedido se expresan con texto. Completar contraste del estado reservado para intervalo consultado y llegada/salida próxima, vinculado a S05-01; los nombres sugeridos no se convierten en un único estado persistido."
     },
     {
       "id": "S05-04",
@@ -962,10 +1189,21 @@
       "line": 83,
       "kind": "enumerated",
       "requirement": "- Historial completo de cambios y bloqueos por rango de fechas/horas.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "I",
+      "implementation": [
+        "hospitality_suite/api.py",
+        "hospitality_suite/report_queries.py",
+        "hospitality_suite/service.py",
+        "hospitality_suite/public/js/hospitality_extras.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_PAGES_HABITACIONES.md",
+        "docs/evidence/billing-native-tests.xml",
+        "docs/evidence/history-ui.json",
+        "docs/evidence/report-dimensions.json",
+        "docs/evidence/pages-rooms-audit.json"
+      ],
+      "remaining": "Calendario conserva segmentos de estancia y mantenimiento finalizado, y auditoría pagina sin el antiguo tope. Falta contrastar explícitamente todo el historial de cambios/bloqueos de habitación por rango, incluyendo cambios de limpieza y reservas canceladas; la prueba de 610 asignaciones no acredita esa cobertura completa."
     },
     {
       "id": "S05-05",
@@ -974,10 +1212,19 @@
       "line": 84,
       "kind": "enumerated",
       "requirement": "- Impide asignar habitaciones sucias, bloqueadas o fuera de servicio, salvo excepciones expresamente configuradas y autorizadas que no permitan doble ocupación.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/availability.py",
+        "hospitality_suite/operations.py",
+        "hospitality_suite/housekeeping.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_PAGES_HABITACIONES.md",
+        "docs/evidence/billing-native-tests.xml",
+        "docs/evidence/plan-conflict.json",
+        "docs/evidence/pages-rooms-audit.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S05-06",
@@ -986,10 +1233,21 @@
       "line": 85,
       "kind": "enumerated",
       "requirement": "- La salida deja la habitación pendiente de limpieza; su disponibilidad operativa se recupera conforme al flujo configurado.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/housekeeping.py",
+        "hospitality_suite/public/js/hospitality_workflows.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_PAGES_HABITACIONES.md",
+        "docs/evidence/billing-native-tests.xml",
+        "docs/evidence/04-recepcion-salida-sucia.png",
+        "docs/evidence/06-recepcion-limpia.png",
+        "docs/evidence/12-hotel-housekeeping-mobile.png",
+        "docs/evidence/pages-rooms-audit.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S05-07",
@@ -998,10 +1256,17 @@
       "line": 86,
       "kind": "enumerated",
       "requirement": "- Incluye colchones de limpieza en el cálculo de disponibilidad cuando así esté configurado.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "I",
+      "implementation": [
+        "hospitality_suite/availability.py",
+        "hospitality_suite/operations.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_PAGES_HABITACIONES.md",
+        "docs/AUDITORIA_FLUJOS_TRANSACCIONES.md",
+        "docs/evidence/pages-rooms-audit.json"
+      ],
+      "remaining": "El motor amplía extremos por buffer_minutes/cleaning_minutes y conserva el colchón en asignaciones. Falta prueba explícita del instante anterior y del extremo permitido con y sin colchón, pendiente S16-03."
     },
     {
       "id": "S06-01",

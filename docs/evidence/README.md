@@ -260,3 +260,7 @@ No se implementa ni activa sincronización con Airbnb/Booking/otros canales, pen
 - `periodic-page-invoice-gap.json` sigue siendo evidencia histórica de f424e2d; su diferencia quedó resuelta en esta revisión. No ejecutar su reproducción como comprobación del código actual.
 
 La matriz canónica conserva 218 entradas: 83 V, ocho I, cero P y 127 R. F22b acredita este flujo; S00-02/F22 requieren aceptación completa por rol. La recuperación final de F26 continúa pendiente. No se implementó sincronización de canales.
+
+## Contraste de Pages y habitaciones sobre 3563ef0
+
+`pages-rooms-audit.json` y `../AUDITORIA_PAGES_HABITACIONES.md` revisan las 27 entradas de las secciones 4 y 5 con código/aserciones/evidencia existentes: 16 V, nueve I y dos P. Verifica nombres de casos aprobados en billing-native-tests.xml y conserva huellas del código. No es otra ejecución ni un recorrido adicional. Las dos P son vistas de llegadas/salidas/cuentas en Estancias y llegada prevista en tarjetas. La auditoría canónica vigente queda en **99 V, diecisiete I, dos P y 100 R**, las mismas 218 entradas/huella. Los recuentos de las fases anteriores de este índice son históricos.
