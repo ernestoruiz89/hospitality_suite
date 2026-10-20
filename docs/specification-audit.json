@@ -1921,10 +1921,17 @@
       "line": 177,
       "kind": "enumerated",
       "requirement": "- Generar cargos periódicos conforme a las reglas elegidas, sin duplicarlos al repetir el proceso.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "P",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/closing.py",
+        "hospitality_suite/hooks.py"
+      ],
+      "evidence": [
+        "docs/CONTABILIDAD.md",
+        "docs/evidence/flow-audit.json"
+      ],
+      "remaining": "Implementar una política configurable de cargos periódicos de alojamiento, con origen/período único y reintentos. Hoy se carga el importe aceptado al entrar/extender; el cierre captura y avanza fecha, sin generar cargos periódicos. No equivale a otro libro mayor ni exige devengo contable paralelo."
     },
     {
       "id": "S12-04",
@@ -2287,10 +2294,19 @@
       "line": 207,
       "kind": "enumerated",
       "requirement": "- Incluir portal web opcional, desactivado inicialmente, para consultar categorías/disponibilidad, solicitar o crear reservas bajo políticas configuradas y consultar confirmaciones de forma segura.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/portal.py",
+        "hospitality_suite/www/hospitality.html",
+        "hospitality_suite/www/hospitality-confirmation.html"
+      ],
+      "evidence": [
+        "docs/evidence/37-portal-solicitud-visitante.png",
+        "docs/evidence/38-portal-convertido.png",
+        "docs/evidence/accounting-native-tests.xml::test_portal_disabled_by_default",
+        "docs/evidence/accounting-native-tests.xml::test_request_hold_signature_conversion_and_expiry"
+      ],
+      "remaining": ""
     },
     {
       "id": "S14-02",
@@ -2299,10 +2315,18 @@
       "line": 208,
       "kind": "enumerated",
       "requirement": "- Debe usar el mismo motor de disponibilidad, tarifas y retenciones de la recepción.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/portal.py",
+        "hospitality_suite/operations.py",
+        "hospitality_suite/availability.py"
+      ],
+      "evidence": [
+        "docs/evidence/portal-converted.json",
+        "docs/evidence/accounting-native-tests.xml::test_request_hold_signature_conversion_and_expiry",
+        "docs/evidence/accounting-native-tests.xml::test_category_last_unit_roomless_then_assign"
+      ],
+      "remaining": ""
     },
     {
       "id": "S14-03",
@@ -2311,10 +2335,15 @@
       "line": 209,
       "kind": "enumerated",
       "requirement": "- Proteger consultas de reservas mediante autenticación o enlaces firmados con caducidad; no exponer información de otros huéspedes.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/portal.py",
+        "hospitality_suite/www/hospitality-confirmation.html"
+      ],
+      "evidence": [
+        "docs/evidence/accounting-native-tests.xml::test_request_hold_signature_conversion_and_expiry"
+      ],
+      "remaining": ""
     },
     {
       "id": "S14-04",
@@ -2323,10 +2352,17 @@
       "line": 210,
       "kind": "enumerated",
       "requirement": "- Sin pasarela configurada, admitir solicitud y confirmación manual; nunca mostrar un pago como aprobado sin confirmación real.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/portal.py",
+        "hospitality_suite/www/hospitality-confirmation.html"
+      ],
+      "evidence": [
+        "docs/evidence/portal-converted.json",
+        "docs/evidence/accounting-native-tests.xml::test_request_hold_signature_conversion_and_expiry",
+        "docs/evidence/accounting-native-tests.xml::test_simulated_intent_is_never_paid"
+      ],
+      "remaining": ""
     },
     {
       "id": "S14-05",
@@ -2335,10 +2371,15 @@
       "line": 211,
       "kind": "enumerated",
       "requirement": "- Preparar APIs documentadas y adaptadores para pasarelas, correo, WhatsApp, canales de reserva y cerraduras.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "I",
+      "implementation": [
+        "hospitality_suite/integrations.py"
+      ],
+      "evidence": [
+        "docs/API.md",
+        "docs/evidence/accounting-native-tests.xml::test_simulated_intent_is_never_paid"
+      ],
+      "remaining": "Hay contratos abstractos de pago, canales, mensajes y cerraduras y receptor documentado. Contrastar cada contrato y acreditar adaptadores/simulaciones de canales, correo/WhatsApp y cerraduras, además del doble de pago ya probado. No exige activar proveedores reales."
     },
     {
       "id": "S14-06",
@@ -2347,10 +2388,17 @@
       "line": 212,
       "kind": "enumerated",
       "requirement": "- Booking.com, Airbnb, channel managers, mensajería y hardware requieren proveedor, documentación, acceso y credenciales. Trátalos como integraciones externas opcionales, separadas del núcleo obligatorio.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/integrations.py",
+        "hospitality_suite/hooks.py"
+      ],
+      "evidence": [
+        "docs/API.md",
+        "docs/PENDIENTES.md",
+        "docs/evidence/accounting-native-tests.xml::test_simulated_intent_is_never_paid"
+      ],
+      "remaining": ""
     },
     {
       "id": "S14-07",
@@ -2359,10 +2407,17 @@
       "line": 213,
       "kind": "enumerated",
       "requirement": "- Cuando falte acceso externo, entrega contratos/adaptadores y pruebas simuladas claramente identificadas. No presentes una integración simulada como operativa.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "I",
+      "implementation": [
+        "hospitality_suite/integrations.py",
+        "hospitality_suite/tests/test_integrations.py"
+      ],
+      "evidence": [
+        "docs/API.md",
+        "docs/evidence/accounting-native-tests.xml::test_simulated_intent_is_never_paid",
+        "docs/evidence/accounting-native-tests.xml::test_signed_duplicate_is_recorded_once_without_financial_effects"
+      ],
+      "remaining": "La simulación de pago y el webhook sintético están identificados y nunca liquidan dinero. Falta acreditar el conjunto de contratos/adaptadores de las otras familias; véase S14-05."
     },
     {
       "id": "S14-08",
@@ -2371,10 +2426,17 @@
       "line": 214,
       "kind": "enumerated",
       "requirement": "- Validar firmas y evitar duplicados en webhooks; no almacenar datos completos de tarjetas ni secretos en el repositorio.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "P",
+      "implementation": [
+        "hospitality_suite/integrations.py"
+      ],
+      "evidence": [
+        "docs/evidence/flow-audit.json",
+        "docs/evidence/accounting-native-tests.xml::test_signature_and_expiration",
+        "docs/evidence/accounting-native-tests.xml::test_sensitive_fields_redacted",
+        "docs/evidence/accounting-native-tests.xml::test_signed_duplicate_is_recorded_once_without_financial_effects"
+      ],
+      "remaining": "Firma, caducidad y deduplicación probadas. El payload se persiste tras una lista de nombres prohibidos y conserva card.number no reconocido. Limitar los datos persistidos a un contrato permitido y probar estructuras alternativas; no conservar cuerpos arbitrarios con datos de tarjeta/secretos."
     },
     {
       "id": "S15-01",
@@ -2503,10 +2565,21 @@
       "line": 232,
       "kind": "enumerated",
       "requirement": "- Proteger en el servidor las reservas, entradas, cambios de habitación y extensiones con transacciones y un mecanismo de bloqueo o exclusión adecuado a la base de datos utilizada.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/service.py",
+        "hospitality_suite/availability.py",
+        "hospitality_suite/operations.py",
+        "hospitality_suite/api.py"
+      ],
+      "evidence": [
+        "docs/evidence/readability-race-room.json",
+        "docs/evidence/readability-race-category.json",
+        "docs/evidence/accounting-native-tests.xml::test_conflicting_room_is_rejected",
+        "docs/evidence/accounting-native-tests.xml::test_extension_rejects_next_booking",
+        "docs/evidence/accounting-native-tests.xml::test_room_change_retains_segments_and_price"
+      ],
+      "remaining": ""
     },
     {
       "id": "S16-02",
@@ -2515,10 +2588,17 @@
       "line": 233,
       "kind": "enumerated",
       "requirement": "- No basta consultar disponibilidad y luego insertar: dos usuarios simultáneos no deben conseguir la misma habitación o el mismo último cupo.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/service.py",
+        "hospitality_suite/availability.py",
+        "hospitality_suite/tests/concurrency.py"
+      ],
+      "evidence": [
+        "docs/evidence/readability-race-room.json",
+        "docs/evidence/readability-race-category.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S16-03",
@@ -2527,10 +2607,15 @@
       "line": 234,
       "kind": "enumerated",
       "requirement": "- Define intervalos como [inicio, fin), con el margen de limpieza aparte cuando corresponda, y prueba sus límites exactos.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "I",
+      "implementation": [
+        "hospitality_suite/availability.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_FLUJOS_TRANSACCIONES.md",
+        "docs/evidence/accounting-native-tests.xml::test_category_last_unit_roomless_then_assign"
+      ],
+      "remaining": "El motor usa [inicio, fin), libera antes de ocupar en el barrido y separa buffer_minutes. Falta una prueba explícita de extremos exactos de ocupación y colchón de limpieza, incluidos un instante anterior y el extremo permitido; las pruebas de tolerancia tarifaria no sustituyen esa prueba de cupo."
     },
     {
       "id": "S16-04",
@@ -2539,10 +2624,17 @@
       "line": 235,
       "kind": "enumerated",
       "requirement": "- No confiar únicamente en un bloqueo de reservas existentes: también debes proteger la ausencia de registros para evitar carreras al reservar una habitación vacía.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/service.py",
+        "hospitality_suite/availability.py",
+        "hospitality_suite/tests/concurrency.py"
+      ],
+      "evidence": [
+        "docs/evidence/readability-race-room.json",
+        "docs/evidence/readability-race-category.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S16-05",
@@ -2551,10 +2643,20 @@
       "line": 236,
       "kind": "enumerated",
       "requirement": "- Distingue restricciones que pueden resolverse con índices únicos de aquellas que requieren bloquear el recurso o cupo e inspeccionar solapamientos dentro de la transacción.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/install.py",
+        "hospitality_suite/schema.py",
+        "hospitality_suite/service.py",
+        "hospitality_suite/availability.py"
+      ],
+      "evidence": [
+        "docs/ARQUITECTURA.md",
+        "docs/evidence/readability-race-room.json",
+        "docs/evidence/readability-race-category.json",
+        "docs/AUDITORIA_FLUJOS_TRANSACCIONES.md"
+      ],
+      "remaining": ""
     },
     {
       "id": "S16-06",
@@ -2563,10 +2665,19 @@
       "line": 237,
       "kind": "enumerated",
       "requirement": "- Claves de idempotencia para cobros, facturación, cargos periódicos, cierres y webhooks. Reintentar una petición no debe duplicar sus efectos.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "P",
+      "implementation": [
+        "hospitality_suite/service.py",
+        "hospitality_suite/closing.py",
+        "hospitality_suite/integrations.py"
+      ],
+      "evidence": [
+        "docs/evidence/network-sale-sale.json",
+        "docs/evidence/accounting-native-tests.xml::test_double_payment_is_one_posting",
+        "docs/evidence/accounting-native-tests.xml::test_repeated_daily_close_advances_business_date_once",
+        "docs/evidence/accounting-native-tests.xml::test_signed_duplicate_is_recorded_once_without_financial_effects"
+      ],
+      "remaining": "Peticiones de cobro/facturación, cierres y webhooks ya conservan idempotencia probada. Falta la generación periódica de S12-03 y su clave única por origen/período, incluso al repetir con otra clave HTTP."
     },
     {
       "id": "S16-07",
@@ -2575,10 +2686,20 @@
       "line": 238,
       "kind": "enumerated",
       "requirement": "- Definir atomicidad para salida, facturación y cobro. Si parte del proceso depende de un servicio externo, implementar estados recuperables y reconciliación, sin simular una transacción distribuida.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/service.py",
+        "hospitality_suite/operations.py",
+        "hospitality_suite/accounting.py"
+      ],
+      "evidence": [
+        "docs/API.md",
+        "docs/evidence/network-sale-sale.json",
+        "docs/AUDITORIA_FLUJOS_TRANSACCIONES.md",
+        "docs/evidence/accounting-native-tests.xml::test_failure_rolls_back_invoice_payment_and_retries_safely",
+        "docs/evidence/accounting-native-tests.xml::test_01_hotel_advance_consumption_checkout_cleaning"
+      ],
+      "remaining": ""
     },
     {
       "id": "S16-08",
@@ -2587,10 +2708,19 @@
       "line": 239,
       "kind": "enumerated",
       "requirement": "- Respetar el modelo transaccional de Frappe; no introducir commits intermedios que dejen operaciones parcialmente confirmadas.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/service.py",
+        "hospitality_suite/operations.py",
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/closing.py"
+      ],
+      "evidence": [
+        "docs/evidence/flow-audit.json",
+        "docs/evidence/transport-sessions.json",
+        "docs/evidence/accounting-native-tests.xml::test_failure_rolls_back_invoice_payment_and_retries_safely"
+      ],
+      "remaining": ""
     },
     {
       "id": "S16-09",
@@ -2599,10 +2729,15 @@
       "line": 240,
       "kind": "enumerated",
       "requirement": "- Evitar sobrescrituras silenciosas entre usuarios mediante control de versión o modificación del documento.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/service.py",
+        "hospitality_suite/operations.py"
+      ],
+      "evidence": [
+        "docs/evidence/accounting-native-tests.xml::test_stale_version_rejected"
+      ],
+      "remaining": ""
     },
     {
       "id": "S16-10",
@@ -2611,10 +2746,16 @@
       "line": 241,
       "kind": "enumerated",
       "requirement": "- Background jobs con reintentos limitados, registro de fallos y acciones de recuperación claras.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "I",
+      "implementation": [
+        "hospitality_suite/jobs.py",
+        "hospitality_suite/privacy.py"
+      ],
+      "evidence": [
+        "docs/evidence/worker-recovery.json",
+        "docs/OPERACION.md"
+      ],
+      "remaining": "La expiración tiene job deduplicado, fallo/rollback y recuperación RQ acreditados; retención dispone de intentos limitados. Contrastar y documentar la política acotada de reintento del job de expiración, diferenciándola de nuevos despachos periódicos y de la recuperación manual."
     },
     {
       "id": "S17-01",
@@ -2623,10 +2764,19 @@
       "line": 246,
       "kind": "enumerated",
       "requirement": "1) Reserva hotelera de varias noches con anticipo, consumos, saldo y salida.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/inventory.py"
+      ],
+      "evidence": [
+        "docs/evidence/10-hotel-settled.png",
+        "docs/evidence/11-hotel-cashier-closed.png",
+        "docs/evidence/12-hotel-housekeeping-mobile.png",
+        "docs/evidence/accounting-native-tests.xml::test_01_hotel_advance_consumption_checkout_cleaning"
+      ],
+      "remaining": ""
     },
     {
       "id": "S17-02",
@@ -2635,10 +2785,21 @@
       "line": 247,
       "kind": "enumerated",
       "requirement": "2) Ingreso motel por bloque horario, tolerancia, extensión y cruce de medianoche.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/pricing.py",
+        "hospitality_suite/timing.py"
+      ],
+      "evidence": [
+        "docs/evidence/01-recepcion-entrada.png",
+        "docs/evidence/02-caja-cobro-vuelto.png",
+        "docs/evidence/README.md",
+        "docs/evidence/accounting-native-tests.xml::test_midnight_and_year_boundary",
+        "docs/evidence/accounting-native-tests.xml::test_grace_exact_limit_and_fraction",
+        "docs/evidence/accounting-native-tests.xml::test_motel_midnight_grace_overtime_and_prepare_retry"
+      ],
+      "remaining": ""
     },
     {
       "id": "S17-03",
@@ -2647,10 +2808,19 @@
       "line": 248,
       "kind": "enumerated",
       "requirement": "3) Reserva grupal y separación de facturación entre huésped y empresa.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/accounting.py"
+      ],
+      "evidence": [
+        "docs/evidence/group-billed.json",
+        "docs/evidence/group-checked-out.json",
+        "docs/evidence/27-grupo-cuenta-compartida.png",
+        "docs/evidence/accounting-native-tests.xml::test_group_split_folios_has_no_duplicate_charges",
+        "docs/evidence/accounting-native-tests.xml::test_group_single_invoice_single_balance_and_checkout"
+      ],
+      "remaining": ""
     },
     {
       "id": "S17-04",
@@ -2659,10 +2829,16 @@
       "line": 249,
       "kind": "enumerated",
       "requirement": "4) Dos solicitudes simultáneas para la misma habitación: solamente una debe confirmarse.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/service.py",
+        "hospitality_suite/availability.py",
+        "hospitality_suite/tests/concurrency.py"
+      ],
+      "evidence": [
+        "docs/evidence/readability-race-room.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S17-05",
@@ -2671,10 +2847,17 @@
       "line": 250,
       "kind": "enumerated",
       "requirement": "5) Último cupo de categoría y conversión de reserva sin habitación a asignación física.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/service.py",
+        "hospitality_suite/availability.py",
+        "hospitality_suite/operations.py"
+      ],
+      "evidence": [
+        "docs/evidence/readability-race-category.json",
+        "docs/evidence/accounting-native-tests.xml::test_category_last_unit_roomless_then_assign"
+      ],
+      "remaining": ""
     },
     {
       "id": "S17-06",
@@ -2683,10 +2866,18 @@
       "line": 251,
       "kind": "enumerated",
       "requirement": "6) Extensión rechazada por reserva posterior; cambio de habitación con trazabilidad.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py"
+      ],
+      "evidence": [
+        "docs/evidence/35-extension-conflictiva-rechazada.png",
+        "docs/evidence/36-plan-cambio-extension.png",
+        "docs/evidence/accounting-native-tests.xml::test_extension_rejects_next_booking",
+        "docs/evidence/accounting-native-tests.xml::test_room_change_retains_segments_and_price",
+        "docs/evidence/accounting-native-tests.xml::test_category_change_applies_accepted_price_difference"
+      ],
+      "remaining": ""
     },
     {
       "id": "S17-07",
@@ -2695,10 +2886,21 @@
       "line": 252,
       "kind": "enumerated",
       "requirement": "7) Expiración de retención, cancelación, no presentación y devolución parcial.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/availability.py",
+        "hospitality_suite/operations.py",
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/jobs.py"
+      ],
+      "evidence": [
+        "docs/evidence/worker-recovery.json",
+        "docs/evidence/accounting-native-tests.xml::test_hold_expiry_is_idempotent",
+        "docs/evidence/accounting-native-tests.xml::test_cancellation_penalty_uses_invoice_and_advance",
+        "docs/evidence/accounting-native-tests.xml::test_partial_advance_refund_then_invoice",
+        "docs/evidence/accounting-native-tests.xml::test_booking_penalties_use_decision_date_and_native_financial_sources"
+      ],
+      "remaining": ""
     },
     {
       "id": "S17-08",
@@ -2707,10 +2909,18 @@
       "line": 253,
       "kind": "enumerated",
       "requirement": "8) Doble clic/reintento de cobro y cierre nocturno repetido sin duplicados.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "I",
+      "implementation": [
+        "hospitality_suite/service.py",
+        "hospitality_suite/closing.py",
+        "hospitality_suite/accounting.py"
+      ],
+      "evidence": [
+        "docs/evidence/network-sale-sale.json",
+        "docs/evidence/accounting-native-tests.xml::test_double_payment_is_one_posting",
+        "docs/evidence/accounting-native-tests.xml::test_repeated_daily_close_advances_business_date_once"
+      ],
+      "remaining": "Cobro duplicado y cierre/avance repetido están probados. Completar S12-03 y su prueba de repetición nocturna sin cargos duplicados, también con nueva clave de petición."
     },
     {
       "id": "S17-09",
@@ -2719,10 +2929,20 @@
       "line": 254,
       "kind": "enumerated",
       "requirement": "9) Anticipo aplicado a factura sin doble ingreso y garantía devuelta o aplicada correctamente.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/refunds.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_DEVOLUCIONES.md",
+        "docs/AUDITORIA_GARANTIAS_APLICADAS.md",
+        "docs/evidence/accounting-native-tests.xml::test_01_hotel_advance_consumption_checkout_cleaning",
+        "docs/evidence/accounting-native-tests.xml::test_advance_after_invoice_from_closed_shift_reconciles_without_cash_change",
+        "docs/evidence/accounting-native-tests.xml::test_guarantee_is_liability_then_refund",
+        "docs/evidence/accounting-native-tests.xml::test_guarantee_applied_to_existing_invoice_is_not_cash_twice"
+      ],
+      "remaining": ""
     },
     {
       "id": "S17-10",
@@ -2731,10 +2951,19 @@
       "line": 255,
       "kind": "enumerated",
       "requirement": "10) Pagos mixtos y multimoneda, redondeo y arqueo con diferencia.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/cashier.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_CAJA_POS.md",
+        "docs/evidence/accounting-native-tests.xml::test_multicurrency_advance_preserves_exchange",
+        "docs/evidence/accounting-native-tests.xml::test_cash_change_and_fractional_count",
+        "docs/evidence/accounting-native-tests.xml::test_close_difference_needs_supervisor_and_blocks_new_payment",
+        "docs/evidence/accounting-native-tests.xml::test_native_currency_precision_three_and_zero"
+      ],
+      "remaining": ""
     },
     {
       "id": "S17-11",
@@ -2743,10 +2972,19 @@
       "line": 256,
       "kind": "enumerated",
       "requirement": "11) Restricción de acceso entre establecimientos y compañías, incluyendo API y archivos.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/security.py",
+        "hospitality_suite/hooks.py"
+      ],
+      "evidence": [
+        "docs/evidence/transport-sessions.json",
+        "docs/evidence/accounting-native-tests.xml::test_scoped_lists_links_api_and_private_files",
+        "docs/evidence/accounting-native-tests.xml::test_second_company_and_standard_roles_cannot_bypass_property_stock_scope",
+        "docs/evidence/accounting-native-tests.xml::test_native_parties_contacts_and_files_do_not_bypass_guest_privacy",
+        "docs/evidence/accounting-native-tests.xml::test_cleaning_with_accounts_role_cannot_read_native_financial_documents_or_owned_files"
+      ],
+      "remaining": ""
     },
     {
       "id": "S17-12",
@@ -2755,10 +2993,18 @@
       "line": 257,
       "kind": "enumerated",
       "requirement": "12) Salida, limpieza, inspección y vuelta a disponibilidad.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/housekeeping.py"
+      ],
+      "evidence": [
+        "docs/evidence/04-recepcion-salida-sucia.png",
+        "docs/evidence/05-limpieza-inspeccion.png",
+        "docs/evidence/06-recepcion-limpia.png",
+        "docs/evidence/accounting-native-tests.xml::test_reception_cashier_cleaning_supervisor_end_to_end"
+      ],
+      "remaining": ""
     },
     {
       "id": "S17-13",
@@ -2767,10 +3013,17 @@
       "line": 258,
       "kind": "enumerated",
       "requirement": "13) Consumo de minibar con una sola salida de inventario y reversión correcta.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/inventory.py",
+        "hospitality_suite/direct_sales.py"
+      ],
+      "evidence": [
+        "docs/evidence/network-sale-sale.json",
+        "docs/evidence/network-sale-returned.json",
+        "docs/evidence/accounting-native-tests.xml::test_stock_delivery_only_once_and_reversal"
+      ],
+      "remaining": ""
     },
     {
       "id": "S17-14",
@@ -2779,10 +3032,18 @@
       "line": 259,
       "kind": "enumerated",
       "requirement": "14) Factura/pago creado o cancelado desde ERPNext reflejado en la estancia.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/security.py",
+        "hospitality_suite/hooks.py"
+      ],
+      "evidence": [
+        "docs/evidence/accounting-native-tests.xml::test_invoice_and_payment_created_outside_pms_sync_and_reverse",
+        "docs/evidence/accounting-native-tests.xml::test_standard_payment_cancellation_updates_folio",
+        "docs/evidence/accounting-native-tests.xml::test_external_invoice_requires_all_adjustments_and_syncs_every_source"
+      ],
+      "remaining": ""
     },
     {
       "id": "S17-15",
@@ -2791,10 +3052,23 @@
       "line": 260,
       "kind": "enumerated",
       "requirement": "15) Corte de conexión, error de facturación o fallo de trabajo programado sin cobros fantasma ni estados irrecuperables.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/service.py",
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/jobs.py",
+        "hospitality_suite/public/js/hospitality.js"
+      ],
+      "evidence": [
+        "docs/evidence/worker-recovery.json",
+        "docs/evidence/network-sale-sale.json",
+        "docs/evidence/network-sale-returned.json",
+        "docs/evidence/transport-sessions.json",
+        "docs/evidence/19-respuesta-perdida.png",
+        "docs/evidence/20-reintento-confirmado.png",
+        "docs/evidence/accounting-native-tests.xml::test_failure_rolls_back_invoice_payment_and_retries_safely"
+      ],
+      "remaining": ""
     },
     {
       "id": "S17-16",
@@ -2803,10 +3077,20 @@
       "line": 261,
       "kind": "enumerated",
       "requirement": "16) Instalación en sitio limpio y migración de una versión previa de la app sin perder datos.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/install.py",
+        "hospitality_suite/patches.txt",
+        "tools/accounting_upgrade.py"
+      ],
+      "evidence": [
+        "docs/evidence/financial-acceptance-install.log",
+        "docs/evidence/accounting-upgrade.json",
+        "docs/evidence/accounting-ux-restored.json",
+        "docs/evidence/accounting-final-state.json",
+        "docs/AUDITORIA_FLUJOS_TRANSACCIONES.md"
+      ],
+      "remaining": ""
     },
     {
       "id": "S17-17",
@@ -2815,10 +3099,16 @@
       "line": 263,
       "kind": "clause",
       "requirement": "Usa datos ficticios reproducibles: dos establecimientos, uno hotel y otro motel, con al menos diez habitaciones cada uno, tarifas distintas, reservas, consumos y usuarios por rol. La carga de demostración será explícita y separada de la instalación normal.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "I",
+      "implementation": [
+        "hospitality_suite/demo.py",
+        "hospitality_suite/tests/test_operations.py"
+      ],
+      "evidence": [
+        "docs/evidence/README.md",
+        "docs/evidence/accounting-native-tests.xml::test_01_hotel_advance_consumption_checkout_cleaning"
+      ],
+      "remaining": "Seed explícito prepara hotel/motel con diez habitaciones, tarifas y nueve usuarios por rol; los escenarios de pruebas crean reservas/consumos y se revierten. Contrastar y entregar un recorrido demostrativo completo reproducible, separado de instalación y batería, que deje reservas y consumos identificados sin duplicarlos al repetir."
     },
     {
       "id": "S17-18",
@@ -2827,10 +3117,17 @@
       "line": 265,
       "kind": "clause",
       "requirement": "Aceptación funcional: un recepcionista debe poder reservar, registrar entrada, agregar un consumo, extender, cobrar y registrar salida desde las Pages. Limpieza debe liberar la habitación desde su página. Contabilidad debe rastrear los documentos resultantes y gerencia consultar reportes conciliables.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "I",
+      "implementation": [
+        "hospitality_suite/public/js/hospitality.js",
+        "hospitality_suite/security.py",
+        "hospitality_suite/setup.py"
+      ],
+      "evidence": [
+        "docs/evidence/README.md",
+        "docs/evidence/accounting-native-tests.xml::test_reception_cashier_cleaning_supervisor_end_to_end"
+      ],
+      "remaining": "Recorridos Pages de recepción, cajero separado, limpieza y gerencia acreditados. Completar aceptación con un usuario autorizado de recepción+caja en el mismo recorrido y una sesión de contabilidad rastreando los documentos/reportes; no ampliar por defecto los permisos del rol de recepción."
     },
     {
       "id": "S17-19",
@@ -2839,10 +3136,17 @@
       "line": 267,
       "kind": "clause",
       "requirement": "Si no puedes ejecutar pruebas por falta de entorno, identifica cuáles no se ejecutaron y por qué. No declares el sistema listo para producción ni todas las pruebas aprobadas sin evidencia.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "docs/REQUISITOS.md",
+        "docs/PENDIENTES.md"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_FLUJOS_TRANSACCIONES.md",
+        "docs/AVANCE.md",
+        "docs/evidence/flow-audit.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S18-01",

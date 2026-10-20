@@ -1,0 +1,513 @@
+{
+  "reviewed_at": "2026-10-20",
+  "scope": "contraste de evidencia existente, no ejecución nueva de la batería",
+  "app_version": "0.5.0",
+  "application_code_commit": "b52eefb",
+  "runtime_changed": false,
+  "database_mutations": false,
+  "native_evidence": {
+    "path": "docs/evidence/accounting-native-tests.xml",
+    "sha256": "f0d63ca9dd124df61863baff69eabf2823eb9db7cf194009be09b9e08bc21716",
+    "tests": 193,
+    "failures": 0,
+    "errors": 0
+  },
+  "javascript_evidence": {
+    "path": "docs/evidence/accounting-js-tests.log",
+    "tests": 30,
+    "failures": 0,
+    "scope": "regresiones JavaScript de Desk/portal; no son treinta recorridos de navegador"
+  },
+  "runtime_commit_calls": [],
+  "webhook_sanitizer_probe": {
+    "mode": "función pura extraída del AST actual, sin HTTP/DB",
+    "known_cvv_redacted": true,
+    "nested_card_number_preserved": true,
+    "fictional_values_only": true,
+    "source_sha256": "d1b625313ce946be0b3a0dee91b188d11879de0a06307ba664b9607744bcffbe"
+  },
+  "periodic_charges": {
+    "implemented": false,
+    "current_policy": "importe aceptado cargado al entrar/extender",
+    "scheduler": "expire_holds cada cinco minutos",
+    "daily_close": "captura y avance de fecha; no genera cargos"
+  },
+  "reviewed": [
+    {
+      "id": "S12-03",
+      "status": "P",
+      "test_cases": []
+    },
+    {
+      "id": "S14-01",
+      "status": "V",
+      "test_cases": [
+        {
+          "name": "test_portal_disabled_by_default",
+          "classname": "hospitality_suite.tests.test_portal.TestPortal"
+        },
+        {
+          "name": "test_request_hold_signature_conversion_and_expiry",
+          "classname": "hospitality_suite.tests.test_portal.TestPortal"
+        }
+      ]
+    },
+    {
+      "id": "S14-02",
+      "status": "V",
+      "test_cases": [
+        {
+          "name": "test_request_hold_signature_conversion_and_expiry",
+          "classname": "hospitality_suite.tests.test_portal.TestPortal"
+        },
+        {
+          "name": "test_category_last_unit_roomless_then_assign",
+          "classname": "hospitality_suite.tests.test_operations.TestOperations"
+        }
+      ]
+    },
+    {
+      "id": "S14-03",
+      "status": "V",
+      "test_cases": [
+        {
+          "name": "test_request_hold_signature_conversion_and_expiry",
+          "classname": "hospitality_suite.tests.test_portal.TestPortal"
+        }
+      ]
+    },
+    {
+      "id": "S14-04",
+      "status": "V",
+      "test_cases": [
+        {
+          "name": "test_request_hold_signature_conversion_and_expiry",
+          "classname": "hospitality_suite.tests.test_portal.TestPortal"
+        },
+        {
+          "name": "test_simulated_intent_is_never_paid",
+          "classname": "hospitality_suite.tests.test_integrations.TestIntegrationContracts"
+        }
+      ]
+    },
+    {
+      "id": "S14-05",
+      "status": "I",
+      "test_cases": [
+        {
+          "name": "test_simulated_intent_is_never_paid",
+          "classname": "hospitality_suite.tests.test_integrations.TestIntegrationContracts"
+        }
+      ]
+    },
+    {
+      "id": "S14-06",
+      "status": "V",
+      "test_cases": [
+        {
+          "name": "test_simulated_intent_is_never_paid",
+          "classname": "hospitality_suite.tests.test_integrations.TestIntegrationContracts"
+        }
+      ]
+    },
+    {
+      "id": "S14-07",
+      "status": "I",
+      "test_cases": [
+        {
+          "name": "test_simulated_intent_is_never_paid",
+          "classname": "hospitality_suite.tests.test_integrations.TestIntegrationContracts"
+        },
+        {
+          "name": "test_signed_duplicate_is_recorded_once_without_financial_effects",
+          "classname": "hospitality_suite.tests.test_webhook.TestWebhook"
+        }
+      ]
+    },
+    {
+      "id": "S14-08",
+      "status": "P",
+      "test_cases": [
+        {
+          "name": "test_signature_and_expiration",
+          "classname": "hospitality_suite.tests.test_integrations.TestIntegrationContracts"
+        },
+        {
+          "name": "test_sensitive_fields_redacted",
+          "classname": "hospitality_suite.tests.test_integrations.TestIntegrationContracts"
+        },
+        {
+          "name": "test_signed_duplicate_is_recorded_once_without_financial_effects",
+          "classname": "hospitality_suite.tests.test_webhook.TestWebhook"
+        }
+      ]
+    },
+    {
+      "id": "S16-01",
+      "status": "V",
+      "test_cases": [
+        {
+          "name": "test_conflicting_room_is_rejected",
+          "classname": "hospitality_suite.tests.test_operations.TestOperations"
+        },
+        {
+          "name": "test_extension_rejects_next_booking",
+          "classname": "hospitality_suite.tests.test_operations.TestOperations"
+        },
+        {
+          "name": "test_room_change_retains_segments_and_price",
+          "classname": "hospitality_suite.tests.test_lifecycle.TestLifecycle"
+        }
+      ]
+    },
+    {
+      "id": "S16-02",
+      "status": "V",
+      "test_cases": []
+    },
+    {
+      "id": "S16-03",
+      "status": "I",
+      "test_cases": [
+        {
+          "name": "test_category_last_unit_roomless_then_assign",
+          "classname": "hospitality_suite.tests.test_operations.TestOperations"
+        }
+      ]
+    },
+    {
+      "id": "S16-04",
+      "status": "V",
+      "test_cases": []
+    },
+    {
+      "id": "S16-05",
+      "status": "V",
+      "test_cases": []
+    },
+    {
+      "id": "S16-06",
+      "status": "P",
+      "test_cases": [
+        {
+          "name": "test_double_payment_is_one_posting",
+          "classname": "hospitality_suite.tests.test_finance.TestFinance"
+        },
+        {
+          "name": "test_repeated_daily_close_advances_business_date_once",
+          "classname": "hospitality_suite.tests.test_lifecycle.TestLifecycle"
+        },
+        {
+          "name": "test_signed_duplicate_is_recorded_once_without_financial_effects",
+          "classname": "hospitality_suite.tests.test_webhook.TestWebhook"
+        }
+      ]
+    },
+    {
+      "id": "S16-07",
+      "status": "V",
+      "test_cases": [
+        {
+          "name": "test_failure_rolls_back_invoice_payment_and_retries_safely",
+          "classname": "hospitality_suite.tests.test_security_recovery.TestSecurityRecovery"
+        },
+        {
+          "name": "test_01_hotel_advance_consumption_checkout_cleaning",
+          "classname": "hospitality_suite.tests.test_operations.TestOperations"
+        }
+      ]
+    },
+    {
+      "id": "S16-08",
+      "status": "V",
+      "test_cases": [
+        {
+          "name": "test_failure_rolls_back_invoice_payment_and_retries_safely",
+          "classname": "hospitality_suite.tests.test_security_recovery.TestSecurityRecovery"
+        }
+      ]
+    },
+    {
+      "id": "S16-09",
+      "status": "V",
+      "test_cases": [
+        {
+          "name": "test_stale_version_rejected",
+          "classname": "hospitality_suite.tests.test_security_recovery.TestSecurityRecovery"
+        }
+      ]
+    },
+    {
+      "id": "S16-10",
+      "status": "I",
+      "test_cases": []
+    },
+    {
+      "id": "S17-01",
+      "status": "V",
+      "test_cases": [
+        {
+          "name": "test_01_hotel_advance_consumption_checkout_cleaning",
+          "classname": "hospitality_suite.tests.test_operations.TestOperations"
+        }
+      ]
+    },
+    {
+      "id": "S17-02",
+      "status": "V",
+      "test_cases": [
+        {
+          "name": "test_midnight_and_year_boundary",
+          "classname": "hospitality_suite.tests.test_pricing.TestPricing"
+        },
+        {
+          "name": "test_grace_exact_limit_and_fraction",
+          "classname": "hospitality_suite.tests.test_pricing.TestPricing"
+        },
+        {
+          "name": "test_motel_midnight_grace_overtime_and_prepare_retry",
+          "classname": "hospitality_suite.tests.test_timing_metrics.TestTimingMetrics"
+        }
+      ]
+    },
+    {
+      "id": "S17-03",
+      "status": "V",
+      "test_cases": [
+        {
+          "name": "test_group_split_folios_has_no_duplicate_charges",
+          "classname": "hospitality_suite.tests.test_lifecycle.TestLifecycle"
+        },
+        {
+          "name": "test_group_single_invoice_single_balance_and_checkout",
+          "classname": "hospitality_suite.tests.test_lifecycle.TestLifecycle"
+        }
+      ]
+    },
+    {
+      "id": "S17-04",
+      "status": "V",
+      "test_cases": []
+    },
+    {
+      "id": "S17-05",
+      "status": "V",
+      "test_cases": [
+        {
+          "name": "test_category_last_unit_roomless_then_assign",
+          "classname": "hospitality_suite.tests.test_operations.TestOperations"
+        }
+      ]
+    },
+    {
+      "id": "S17-06",
+      "status": "V",
+      "test_cases": [
+        {
+          "name": "test_extension_rejects_next_booking",
+          "classname": "hospitality_suite.tests.test_operations.TestOperations"
+        },
+        {
+          "name": "test_room_change_retains_segments_and_price",
+          "classname": "hospitality_suite.tests.test_lifecycle.TestLifecycle"
+        },
+        {
+          "name": "test_category_change_applies_accepted_price_difference",
+          "classname": "hospitality_suite.tests.test_lifecycle.TestLifecycle"
+        }
+      ]
+    },
+    {
+      "id": "S17-07",
+      "status": "V",
+      "test_cases": [
+        {
+          "name": "test_hold_expiry_is_idempotent",
+          "classname": "hospitality_suite.tests.test_lifecycle.TestLifecycle"
+        },
+        {
+          "name": "test_cancellation_penalty_uses_invoice_and_advance",
+          "classname": "hospitality_suite.tests.test_lifecycle.TestLifecycle"
+        },
+        {
+          "name": "test_partial_advance_refund_then_invoice",
+          "classname": "hospitality_suite.tests.test_finance.TestFinance"
+        },
+        {
+          "name": "test_booking_penalties_use_decision_date_and_native_financial_sources",
+          "classname": "hospitality_suite.tests.test_report_dimensions.TestReportDimensions"
+        }
+      ]
+    },
+    {
+      "id": "S17-08",
+      "status": "I",
+      "test_cases": [
+        {
+          "name": "test_double_payment_is_one_posting",
+          "classname": "hospitality_suite.tests.test_finance.TestFinance"
+        },
+        {
+          "name": "test_repeated_daily_close_advances_business_date_once",
+          "classname": "hospitality_suite.tests.test_lifecycle.TestLifecycle"
+        }
+      ]
+    },
+    {
+      "id": "S17-09",
+      "status": "V",
+      "test_cases": [
+        {
+          "name": "test_01_hotel_advance_consumption_checkout_cleaning",
+          "classname": "hospitality_suite.tests.test_operations.TestOperations"
+        },
+        {
+          "name": "test_advance_after_invoice_from_closed_shift_reconciles_without_cash_change",
+          "classname": "hospitality_suite.tests.test_finance.TestFinance"
+        },
+        {
+          "name": "test_guarantee_is_liability_then_refund",
+          "classname": "hospitality_suite.tests.test_finance.TestFinance"
+        },
+        {
+          "name": "test_guarantee_applied_to_existing_invoice_is_not_cash_twice",
+          "classname": "hospitality_suite.tests.test_finance.TestFinance"
+        }
+      ]
+    },
+    {
+      "id": "S17-10",
+      "status": "V",
+      "test_cases": [
+        {
+          "name": "test_multicurrency_advance_preserves_exchange",
+          "classname": "hospitality_suite.tests.test_finance.TestFinance"
+        },
+        {
+          "name": "test_cash_change_and_fractional_count",
+          "classname": "hospitality_suite.tests.test_finance.TestFinance"
+        },
+        {
+          "name": "test_close_difference_needs_supervisor_and_blocks_new_payment",
+          "classname": "hospitality_suite.tests.test_finance.TestFinance"
+        },
+        {
+          "name": "test_native_currency_precision_three_and_zero",
+          "classname": "hospitality_suite.tests.test_finance.TestFinance"
+        }
+      ]
+    },
+    {
+      "id": "S17-11",
+      "status": "V",
+      "test_cases": [
+        {
+          "name": "test_scoped_lists_links_api_and_private_files",
+          "classname": "hospitality_suite.tests.test_security_recovery.TestSecurityRecovery"
+        },
+        {
+          "name": "test_second_company_and_standard_roles_cannot_bypass_property_stock_scope",
+          "classname": "hospitality_suite.tests.test_security_recovery.TestSecurityRecovery"
+        },
+        {
+          "name": "test_native_parties_contacts_and_files_do_not_bypass_guest_privacy",
+          "classname": "hospitality_suite.tests.test_security_recovery.TestSecurityRecovery"
+        },
+        {
+          "name": "test_cleaning_with_accounts_role_cannot_read_native_financial_documents_or_owned_files",
+          "classname": "hospitality_suite.tests.test_security_recovery.TestSecurityRecovery"
+        }
+      ]
+    },
+    {
+      "id": "S17-12",
+      "status": "V",
+      "test_cases": [
+        {
+          "name": "test_reception_cashier_cleaning_supervisor_end_to_end",
+          "classname": "hospitality_suite.tests.test_role_flow.TestRoleFlow"
+        }
+      ]
+    },
+    {
+      "id": "S17-13",
+      "status": "V",
+      "test_cases": [
+        {
+          "name": "test_stock_delivery_only_once_and_reversal",
+          "classname": "hospitality_suite.tests.test_operations.TestOperations"
+        }
+      ]
+    },
+    {
+      "id": "S17-14",
+      "status": "V",
+      "test_cases": [
+        {
+          "name": "test_invoice_and_payment_created_outside_pms_sync_and_reverse",
+          "classname": "hospitality_suite.tests.test_finance.TestFinance"
+        },
+        {
+          "name": "test_standard_payment_cancellation_updates_folio",
+          "classname": "hospitality_suite.tests.test_finance.TestFinance"
+        },
+        {
+          "name": "test_external_invoice_requires_all_adjustments_and_syncs_every_source",
+          "classname": "hospitality_suite.tests.test_finance.TestFinance"
+        }
+      ]
+    },
+    {
+      "id": "S17-15",
+      "status": "V",
+      "test_cases": [
+        {
+          "name": "test_failure_rolls_back_invoice_payment_and_retries_safely",
+          "classname": "hospitality_suite.tests.test_security_recovery.TestSecurityRecovery"
+        }
+      ]
+    },
+    {
+      "id": "S17-16",
+      "status": "V",
+      "test_cases": []
+    },
+    {
+      "id": "S17-17",
+      "status": "I",
+      "test_cases": [
+        {
+          "name": "test_01_hotel_advance_consumption_checkout_cleaning",
+          "classname": "hospitality_suite.tests.test_operations.TestOperations"
+        }
+      ]
+    },
+    {
+      "id": "S17-18",
+      "status": "I",
+      "test_cases": [
+        {
+          "name": "test_reception_cashier_cleaning_supervisor_end_to_end",
+          "classname": "hospitality_suite.tests.test_role_flow.TestRoleFlow"
+        }
+      ]
+    },
+    {
+      "id": "S17-19",
+      "status": "V",
+      "test_cases": []
+    }
+  ],
+  "reviewed_counts": {
+    "P": 3,
+    "V": 28,
+    "I": 7
+  },
+  "inventory_counts": {
+    "R": 128,
+    "V": 79,
+    "I": 8,
+    "P": 3
+  },
+  "inventory_total": 218
+}

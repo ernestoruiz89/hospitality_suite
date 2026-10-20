@@ -1,10 +1,12 @@
 # Evidencia de pruebas
 
-Sitios ficticios locales: hospitality.localhost, hospitality-clean.localhost y hospitality-restore.localhost, bench separado en WSL Ubuntu 24.04. Frappe 16.52.0, ERPNext 16.51.1 y app 0.2.0. No hay datos ni operaciones de producción.
+Índice acumulado de evidencia histórica y actual. Versión de aplicación vigente: 0.5.0; Frappe 16.52.0 y ERPNext 16.51.1, en un bench separado de WSL Ubuntu 24.04. Sitios ficticios: hospitality.localhost, hospitality-clean.localhost, hospitality-restore.localhost y hospitality-acceptance.localhost. No hay datos ni operaciones de producción.
+
+La batería vigente está en accounting-native-tests.log/xml: **193 aprobadas** (179 integración y catorce puras), y accounting-js-tests.log: **30 regresiones JavaScript** (veintiocho Desk y dos portal). Los resultados menores que siguen pertenecen a fases anteriores. El contraste de 38 requisitos sobre esa evidencia está en ../AUDITORIA_FLUJOS_TRANSACCIONES.md y flow-audit.json; no representa otra ejecución de pruebas ni recorridos adicionales.
 
 ## Automatizadas
 
-- `tests-clean.log`: última batería conjunta, **103 aprobadas**: 92 integración y 11 puras.
+- `tests-clean.log`: batería histórica de 0.2.0, **103 aprobadas**: 92 integración y 11 puras.
 - `tests-clean.xml`: JUnit normalizado para CI, sin fallos ni errores. `tests-clean.raw.txt` conserva la salida original; Frappe 16 concatena un documento XML por cohorte. `tools/normalize_junit.py` los combina sin alterar casos/resultados.
 - `concurrency.log` y `category-race.log`: dos conexiones reales por caso, exactamente una confirmación y un rechazo, bajo REPEATABLE-READ; anulaciones de limpieza auditadas.
 - Los escenarios, fuentes y limitaciones están descritos en `../REQUISITOS.md` y `../AVANCE.md`.
@@ -208,3 +210,9 @@ La interrupción de WSL y las ejecuciones fallidas se describen en AVANCE.md y A
 95. `95-service-accounting-closed-cashier.png`: turno cerrado en 130, fondo 100 y cobro 30.
 
 `accounting-native-tests.xml/log`: 193 aprobadas (179 integración y catorce puras), seis nuevas; `accounting-js-tests.log`: 30 aprobadas, una nueva. `accounting-build.log` y ambos accounting-*-migrate.log: compilación/migración. `accounting-items-ui.json`: configuración/venta/cierre desde Page, ingreso 30/costo 10/centro nativos, Item Default intacto. `accounting-upgrade.json`: 70 tablas/911 filas previas conservadas y nuevos campos vacíos. `accounting-ux-restored.json`: respaldo con archivos restaurado, 71 tablas/185 filas idénticas también después de la batería final. `accounting-final-state.json`: aceptación vacía, HTTP/servicios y 8089 cerrado; 35 tablas nativas con huella histórica y 36 coincidentes con el respaldo previo a 0.5.0. `accounting-company-cache.json`: diferencia histórica de Company limitada a dos cachés/modified, acreditada por fila de respaldo, mantenimiento nativo completado y funciones de lectura. `accounting-main-financial-read.json`: lectura principal sin modificaciones; architecture-current.json acredita 35 DocTypes/once Pages y núcleos limpios. AUDITORIA_CONTABILIDAD_SERVICIOS.md documenta alcance y corrección de fixtures de fecha/compañía. No sustituye recuperación final actual con archivo privado/reversión. S09-09 V; matriz 51 V, una I y 166 R de 218, objetivo activo.
+
+## Contraste de flujos, transacciones y aceptación, 20/10/2026
+
+`flow-audit.json` relaciona 38 entradas con casos aprobados del JUnit vigente y conserva su huella. Comprueba ambas carreras reales y ausencia de llamadas commit en los módulos de ejecución. Su evaluación pura del sanitizador, con marcadores ficticios, demuestra que `nested.card.number` permanece; no ingresa una petición ni escribe una base. Junto con la revisión de cierre/hooks, confirma dos diferencias: cargos periódicos aún ausentes y datos arbitrarios conservados por el webhook. Las tres entradas P representan esas dos diferencias.
+
+No se ejecutó una batería ni un recorrido nuevo y no se cambió código de aplicación. El inventario actual queda en **79 V, ocho I, tres P y 128 R**; 28 V, siete I y tres P provienen de este contraste. Véase ../AUDITORIA_FLUJOS_TRANSACCIONES.md. Continúan traducciones, verificaciones y recuperación final; objetivo activo.
