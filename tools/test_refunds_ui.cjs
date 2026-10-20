@@ -9,10 +9,21 @@ function fixture(){
   return new Desk();
 }
 test('refund source shows date, amount and native receipt while preserving its key',async()=>{
-  const desk=fixture(),fields=await desk.dialog('Payment',[{fieldname:'source_payment',options:[{value:'',label:'Seleccione'},{value:'opaque-source',label:'opaque-source'},{value:'refund-key',label:'refund-key'}]}]);
+  const desk=fixture(),fields=await desk.dialog('Payment',[{fieldname:'source_payment',options:[{value:'',label:'Seleccione'},{value:'opaque-source',label:'opaque-source'},{value:'refund-key',label:'refund-key'}]},{fieldname:'kind',options:[{value:'Refund'}]}]);
   assert.equal(fields[0].options.length,2);assert.equal(fields[0].options[1].value,'opaque-source');
   assert.equal(fields[0].options[1].label,'Anticipo · 19/10 12:00 · 10 USD · ACC-PAY-0001');
-  assert.match(fields[1].options,/anticipo ya aplicado/);
+  assert.match(fields.at(-1).options,/anticipo o garantía ya aplicados/);
+});
+test('converted guarantee keeps its application key and explains whether an invoice exists',async()=>{
+  const desk=fixture();desk.data.payments.push({name:'application-key',kind:'Guarantee Applied',status:'Posted',creation:'19/10 13:00',amount:100,currency:'NIO',journal_entry:'JV-APPLICATION'});
+  const fields=await desk.dialog('Payment',[{fieldname:'source_payment',options:[{value:'application-key',label:'application-key'}]},{fieldname:'kind',options:[{value:'Refund'}]}]);
+  assert.equal(fields[0].options[0].value,'application-key');assert.match(fields[0].options[0].label,/Garantía aplicada.*JV-APPLICATION/);
+  const html=desk.refundSummary({base_currency:'NIO',refund:{mode:'Unallocated Guarantee Application',party_amount:'100',party_currency:'NIO',exchange_difference:'0'}});
+  assert.match(html,/garantía aplicada, aún sin facturar/);assert.doesNotMatch(html,/cobro facturado/);
+});
+test('refund labels never filter another workflow source, including card-refund settlement',async()=>{
+  const fields=await fixture().dialog('Settlement',[{fieldname:'source_payment',options:[{value:'refund-key',label:'Reembolso pendiente'}]}]);
+  assert.equal(fields.length,1);assert.equal(fields[0].options[0].value,'refund-key');
 });
 test('applied refund review distinguishes original book value and current FX without rendering untrusted HTML',()=>{
   const desk=fixture(),html=desk.refundSummary({base_currency:'NIO',refund:{mode:'Applied Advance',credit_note:'CREDIT <unsafe>',party_amount:'366.24',party_currency:'NIO',exchange_difference:'3.76'}});

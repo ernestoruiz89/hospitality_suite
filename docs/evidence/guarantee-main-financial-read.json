@@ -1,0 +1,27 @@
+{
+  "site": "hospitality.localhost",
+  "mutations": false,
+  "financial_read_succeeded": true,
+  "properties": [
+    {
+      "property_name": "Motel Luna Demo",
+      "unallocated": [
+        {
+          "currency": "NIO",
+          "amount": "0.00"
+        }
+      ],
+      "journal_sources": []
+    },
+    {
+      "property_name": "Hotel Jardín Demo",
+      "unallocated": [
+        {
+          "currency": "NIO",
+          "amount": "0.00"
+        }
+      ],
+      "journal_sources": []
+    }
+  ]
+}

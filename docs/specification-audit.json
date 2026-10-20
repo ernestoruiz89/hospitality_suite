@@ -1349,10 +1349,26 @@
       "line": 126,
       "kind": "enumerated",
       "requirement": "- Las garantías reembolsables se gestionan separadamente de los anticipos de alojamiento; registra su devolución o aplicación autorizada.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/refunds.py",
+        "hospitality_suite/payment_policies.py",
+        "hospitality_suite/close_financials.py",
+        "hospitality_suite/public/js/hospitality_extras.js",
+        "hospitality_suite/public/js/hospitality_refunds.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_GARANTIAS_APLICADAS.md",
+        "docs/evidence/guarantee-native-tests.xml::TestGuaranteeRefunds / TestFinance / TestPaymentPolicies",
+        "docs/evidence/guarantee-js-tests.log",
+        "docs/evidence/79-guarantee-application-no-cash.png",
+        "docs/evidence/80-guarantee-refund-review.png",
+        "docs/evidence/81-guarantee-refund-confirmed.png",
+        "docs/evidence/guarantee-items-ui.json",
+        "docs/evidence/guarantee-ux-restored.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S08-11",
@@ -1484,9 +1500,10 @@
         "docs/evidence/77-refund-applied-review.png",
         "docs/evidence/78-refund-confirmed-cashier.png",
         "docs/evidence/refund-items-ui.json",
-        "docs/evidence/refund-ux-restored.json"
+        "docs/evidence/refund-ux-restored.json",
+        "docs/AUDITORIA_GARANTIAS_APLICADAS.md"
       ],
-      "remaining": "Anticipos aplicados/disponibles y cobros contra nota estándar probados. Continuar el contraste de garantías ya aplicadas y de notas POS desde las Pages antes de verificar la entrada completa."
+      "remaining": "Anticipos, cobros y garantías aplicadas/disponibles tienen devolución nativa probada. Continuar el contraste de notas POS desde las Pages antes de verificar la entrada completa."
     },
     {
       "id": "S09-09",

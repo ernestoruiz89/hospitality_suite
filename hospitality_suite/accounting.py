@@ -369,7 +369,7 @@ def payment(prop, data):
         if not data.get("reason") or not data.get("source_payment"):
             frappe.throw(frappe._("Indique el pago original y el motivo de devolución"))
         source = document("HS Payment", data["source_payment"], "finance")
-        expected = "Guarantee" if kind == "Guarantee Refund" else ("Advance", "Payment")
+        expected = "Guarantee" if kind == "Guarantee Refund" else ("Advance", "Payment", "Guarantee Applied")
         if (source.kind != expected if isinstance(expected, str) else source.kind not in expected) or source.status != "Posted":
             frappe.throw(frappe._("Origen de devolución inválido"))
         if source.currency != method.currency:
@@ -426,10 +426,9 @@ def payment(prop, data):
         balance_exchange(journal,prop)
         post_standard(journal, prop)
         pe = None
-    elif source and source.kind == "Advance" and not refund_plan.credit:
-        # ERPNext 16.51.1 validates customer references on Payment Entry as invoice
-        # fields, so use a standard party Journal Entry and reconcile the original
-        # advance through ERPNext's supported reconciliation controller.
+    elif refund_plan and not refund_plan.credit:
+        # Settle unused customer credit with a native Journal Entry, then update
+        # the original PE/JV allocation through ERPNext's reconciliation controller.
         original = refund_plan.original
         journal = frappe.new_doc("Journal Entry")
         journal.update(dict(company=prop.company,posting_date=nowdate(),voucher_type="Journal Entry",multi_currency=1,
@@ -440,12 +439,20 @@ def payment(prop, data):
         balance_exchange(journal,prop)
         post_standard(journal,prop)
         from erpnext.accounts.utils import reconcile_against_document
-        reconcile_against_document([frappe._dict(voucher_type="Payment Entry",voucher_no=original.name,voucher_detail_no=None,
-                                                against_voucher_type="Journal Entry",against_voucher=journal.name,
-                                                account=refund_plan.account,party_type="Customer",party=customer,
-                                                exchange_rate=float(party_rate),is_advance="Yes",dr_or_cr="credit_in_account_currency",
-                                                unadjusted_amount=original.unallocated_amount,unreconciled_amount=original.unallocated_amount,
-                                                allocated_amount=float(party_amount),difference_amount=0,cost_center=prop.cost_center)])
+        remaining=party_amount
+        for row in refund_plan.available_rows:
+            allocated=min(remaining,row['amount'])
+            if allocated<=0:
+                continue
+            reconcile_against_document([frappe._dict(voucher_type=original.doctype,voucher_no=original.name,voucher_detail_no=row['name'],
+                                                    against_voucher_type="Journal Entry",against_voucher=journal.name,
+                                                    account=refund_plan.account,party_type="Customer",party=customer,
+                                                    exchange_rate=float(party_rate),is_advance="Yes",dr_or_cr="credit_in_account_currency",
+                                                    unadjusted_amount=float(row['amount']),unreconciled_amount=float(row['amount']),
+                                                    allocated_amount=float(allocated),difference_amount=0,cost_center=prop.cost_center)])
+            remaining-=allocated
+        if remaining:
+            frappe.throw(frappe._('Los fondos disponibles cambiaron; revise la devolución'))
         pe = None
     else:
         invoice = None

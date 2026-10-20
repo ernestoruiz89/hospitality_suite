@@ -8,7 +8,7 @@ window.hospitality_suite = window.hospitality_suite || {};
     Invoiced:__("Facturado"), Reversed:__("Revertido"), Draft:__("Borrador"), "Checked In":__("Entrada registrada"), Completed:__("Completada"), Cancelled:__("Cancelada"), "No Show":__("No presentada"),
     Pending:__("Pendiente"), "In Progress":__("En proceso"), Open:__("Abierto"), Closed:__("Cerrado"), Review:__("Por revisar"),Resolved:__("Resuelto"),Failed:__("Fallida"),
     Requested:__("Solicitado"), Delivered:__("Entregado"), Returned:__("Devuelto"), Posted:__("Contabilizado"), Payment:__("Cobro"), Advance:__("Anticipo"), Guarantee:__("Garantía"),
-    "Guarantee Refund":__("Devolución de garantía"), Refund:__("Devolución"), Normal:__("Normal"), High:__("Alta"), Urgent:__("Urgente")};
+    "Guarantee Refund":__("Devolución de garantía"), "Guarantee Applied":__("Garantía aplicada (sin nuevo ingreso)"), Refund:__("Devolución"), Normal:__("Normal"), High:__("Alta"), Urgent:__("Urgente")};
   const title = (s) => __(labels[s] || s);
   const field = (fieldname, label, fieldtype="Data", extra={}) => ({fieldname,label:__(label),fieldtype:["Date","Datetime"].includes(fieldtype)?"Data":fieldtype,_hsDateTime:fieldtype==="Datetime",_hsDate:fieldtype==="Date",...extra});
   const select = (name,label,rows,labelKey="name",required=true) => field(name,label,"Select",{reqd:required,_hsDataOptions:true,options:[{value:"",label:__("Seleccione…")},...rows.map(r=>({value:r.name,label:r[labelKey] || r.name}))]});

@@ -100,6 +100,12 @@ def snapshot(prop,operational):
         currency=row.paid_from_account_currency or prop.currency
         totals[currency]["unallocated_advances"]+=decimal(row.unallocated_amount)
         sources["unallocated_advances"].append(dict(name=row.name,currency=currency,unallocated=str(row.unallocated_amount)))
+    from hospitality_suite.refunds import original_funds
+    for application in current_all('HS Payment',filters={'property':prop.name,'kind':'Guarantee Applied','status':'Posted'},fields=['*']):
+        funds=original_funds(prop,application)
+        if funds.unallocated>0:
+            totals[funds.currency]['unallocated_advances']+=funds.unallocated
+            sources['unallocated_advances'].append(dict(name=funds.doc.name,doctype='Journal Entry',currency=funds.currency,unallocated=str(funds.unallocated)))
     currencies=[]
     for currency,current in sorted(totals.items()):
         current["net_customer_receipts"]=current["payments"]+current["advances"]+current["guarantees"]+current["pos_collections"]-current["refunds"]-current["guarantee_refunds"]-current["pos_refunds"]

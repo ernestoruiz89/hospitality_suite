@@ -1,0 +1,22 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "synthetic": true,
+  "fixture_origin": "application API / native ERPNext controllers",
+  "refund_from_page": true,
+  "original": "ACC-JV-2026-00002",
+  "original_doctype": "Journal Entry",
+  "invoice": "ACC-SINV-2026-00001",
+  "credit": "ACC-SINV-2026-00002",
+  "refund": "ACC-PAY-2026-00001",
+  "refund_actor": "manager@hospitality.example.invalid",
+  "original_amount": "1500.00",
+  "refund_amount": "1500.00",
+  "currency": "NIO",
+  "credit_outstanding": "0.00",
+  "shift_expected": "0.00",
+  "original_allocation_preserved": true,
+  "application_from_page": true,
+  "application_actor": "manager@hospitality.example.invalid",
+  "unallocated_before_invoice": "1500.00",
+  "guarantee_liability": "0.00"
+}

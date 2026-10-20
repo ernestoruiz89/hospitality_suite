@@ -2,7 +2,7 @@
 
 PMS nativo para hoteles, moteles y operación mixta. Recepción, caja, limpieza y gerencia trabajan desde once Pages de Desk en español; la contabilidad y el inventario permanecen en ERPNext.
 
-Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. App 0.4.2. Otras versiones no están acreditadas.
+Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. App 0.4.3. Otras versiones no están acreditadas.
 
 El desarrollo continúa: [matriz de requisitos](docs/REQUISITOS.md), [auditoría punto por punto](docs/AUDITORIA_ESPECIFICACION.md), [registro de avance](docs/AVANCE.md) y [arquitectura](docs/ARQUITECTURA.md). No se declara listo para producción mientras existan pendientes obligatorios.
 
@@ -75,7 +75,7 @@ bench --site hotel.localhost set-config hospitality_integration_test_site true
 bench --site hotel.localhost run-tests --app hospitality_suite
 ```
 
-`before_tests` exige Redis disponible y un sitio designado sin operaciones; después carga la demostración explícita para las pruebas. Cada caso revierte sus movimientos. Conserve un respaldo inicial para recuperar una ejecución interrumpida; no ejecutar en producción. Última batería conjunta: **165 aprobadas** en hospitality-acceptance.localhost, 151 de integración y 14 puras, además de veintidós de Desk y dos del portal. El sitio limpio anterior conserva un respaldo de diagnóstico tras una interrupción de WSL; no es la línea de base actual. La demostración principal conserva operaciones UX y tampoco representa ese estado inicial. Los dos casos de concurrencia usan conexiones y commits reales y se ejecutan aparte:
+`before_tests` exige Redis disponible y un sitio designado sin operaciones; después carga la demostración explícita para las pruebas. Cada caso revierte sus movimientos. Conserve un respaldo inicial para recuperar una ejecución interrumpida; no ejecutar en producción. Última batería conjunta: **169 aprobadas** en hospitality-acceptance.localhost, 155 de integración y 14 puras, además de veinticuatro de Desk y dos del portal. El sitio limpio anterior conserva un respaldo de diagnóstico tras una interrupción de WSL; no es la línea de base actual. La demostración principal conserva operaciones UX y tampoco representa ese estado inicial. Los dos casos de concurrencia usan conexiones y commits reales y se ejecutan aparte:
 
 ```sh
 bench --site hospitality.localhost execute hospitality_suite.tests.concurrency.verify
