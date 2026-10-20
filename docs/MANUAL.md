@@ -144,3 +144,11 @@ Si un POS tiene fondos de otros documentos o una valoración incoherente, la ope
 En Reservas → Reservar puede usar «Guardar borrador» aunque falten pagador, fechas o categoría. No ocupa cupo ni fija precio. Cierre el formulario y retómelo en «Borradores por completar». Las pestañas separan Fechas y pagador, Habitaciones y Opciones; huésped principal puede elegirse al ingresar.
 
 Complete pagador, fechas y las habitaciones solicitadas y pulse «Revisar precio». La siguiente ventana explica el precio vigente y permite confirmar o retener temporalmente. Esa aceptación convierte el mismo borrador. Si cambia la disponibilidad o la tarifa, vuelva a revisar. «Descartar borrador» solicita un motivo y conserva el registro sin penalización.
+
+## Seleccionar y consultar reservas
+
+En Buscar disponibilidad, pulse un número de habitación para abrir Nueva reserva con categoría, personas y fechas consultadas. Revise pagador y precio antes de confirmar. Para varias habitaciones, la seleccionada ocupa la primera fila; complete las otras asignaciones si lo necesita. La búsqueda no crea una reserva.
+
+«Ver reserva» presenta el resumen incluso después del ingreso: huésped según modo discreto, cliente que paga, fechas, modalidad, importe y habitaciones. «Ver estancia y cuenta» abre los cargos y el saldo actual. En cada cargo puede desplegar «Ver cálculo del precio» para consultar las reglas aceptadas; un cambio posterior de tarifa no altera esa explicación. Hotel y Por tiempo son las etiquetas de modalidad.
+
+Los documentos nuevos tienen números como RES-2026-00001, EST-2026-00001 y CTA-2026-00001. Los registros anteriores conservan sus referencias. Consulte SERIES_DOCUMENTALES.md para el resto de prefijos; no interprete el importe de la reserva como saldo actual ni el consecutivo como número de operaciones.

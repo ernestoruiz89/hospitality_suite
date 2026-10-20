@@ -7,7 +7,7 @@
   {% set snapshot=hs_json(doc.summary or '{}') %}
   {% if snapshot.get('local_starts_at') %}<p>{{ _("Período:") | e }} {{ snapshot.local_starts_at | e }} → {{ snapshot.local_ends_at | e }} · {{ snapshot.time_zone | e }}</p>{% endif %}
   <table><thead><tr><th>{{ _("Indicador conservado al ejecutar") | e }}</th><th>{{ _("Valor") | e }}</th></tr></thead><tbody>
-  {% for key,label in [('production',_('Producción operativa')),('hotel_lodging_net',_('Alojamiento hotel neto facturado')),('motel_lodging_net',_('Alojamiento motel neto facturado')),('room_nights',_('Habitaciones-noche comercializadas')),('occupied_hours',_('Horas de motel ocupadas')),('ADR',_('ADR hotel')),('RevPAR',_('RevPAR hotel'))] %}
+  {% for key,label in [('production',_('Producción operativa')),('hotel_lodging_net',_('Alojamiento hotel neto facturado')),('motel_lodging_net',_('Alojamiento por tiempo neto facturado')),('room_nights',_('Habitaciones-noche comercializadas')),('occupied_hours',_('Horas ocupadas por tiempo')),('ADR',_('ADR hotel')),('RevPAR',_('RevPAR hotel'))] %}
   <tr><th>{{ _(label) | e }}</th><td>{{ snapshot.get(key,'—') | e }}</td></tr>{% endfor %}</tbody></table>
   {% set financial=snapshot.get('financial') %}
   {% if financial %}

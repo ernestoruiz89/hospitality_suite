@@ -35,6 +35,9 @@ MONEY_FIELDS=NUMBERS-{"quantity","duration_minutes","total_rooms","available_cap
 
 def label(key):
     import frappe
+    if key=='mode':return frappe._('Modalidad')
+    if key=='motel_lodging_net':return frappe._('Alojamiento por tiempo neto facturado')
+    if key=='occupied_hours':return frappe._('Horas ocupadas por tiempo')
     return frappe._(LABELS.get(key,key))
 
 
@@ -42,11 +45,14 @@ def display(key,value,record=None):
     import frappe
     if record and key in record.get("_display",{}):
         return record["_display"][key]
+    if key=='description':
+        from hospitality_suite.display_labels import generated_label
+        return generated_label(value)
     if key=="selected_room_available" and value is not None:
         return frappe._("Sí") if value else frappe._("No")
     if key=="cleaning_status":
         return frappe._({"Clean":"Limpia","Dirty":"Pendiente de limpieza","Cleaning":"En limpieza","Inspection":"Pendiente de inspección"}.get(value,value))
-    if key in ("status","kind","type","cleaning_status","settlement_direction","purpose","classification","adjustment_type"):
+    if key in ("status","kind","type","cleaning_status","settlement_direction","purpose","classification","adjustment_type","mode"):
         from hospitality_suite.printing import hs_label
         return hs_label(value)
     return value

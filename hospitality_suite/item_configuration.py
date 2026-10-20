@@ -7,7 +7,7 @@ from hospitality_suite.service import current_all
 from hospitality_suite.security import require
 
 
-BINDINGS=(("lodging_item","Alojamiento"),("extra_hour_item","Horas adicionales de motel"),("timing_item","Entrada anticipada y salida tardía de hotel"))
+BINDINGS=(("lodging_item","Alojamiento"),("extra_hour_item","Horas adicionales por tiempo"),("timing_item","Entrada anticipada y salida tardía de hotel"))
 
 
 def bindings(prop,snapshot=None):

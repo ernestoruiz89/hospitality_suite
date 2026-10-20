@@ -38,7 +38,7 @@
   const originalDate=(value,saved)=>saved&&comparable(value)===comparable(saved)?saved:value||null;
   suite.draft_dates=(values,saved)=>({...values,starts_at:originalDate(values.starts_at,saved.starts_at),ends_at:originalDate(values.ends_at,saved.ends_at)});
   const originalReservation=Desk.prototype.reservation;
-  Desk.prototype.reservation=function(room,walk=false){return walk?originalReservation.call(this,room,true):this.booking_draft_editor(null,room);};
+  Desk.prototype.reservation=function(room,walk=false,prefill=null){return walk?originalReservation.call(this,room,true):this.booking_draft_editor(null,room,prefill);};
   const originalBooking=Desk.prototype.action_booking;
   Desk.prototype.action_booking=async function(id){
     const b=(this.data.bookings||[]).find(row=>row.name===id);
@@ -47,11 +47,12 @@
     const property=this.property,info=await this.call("booking_detail",{name:id});
     if(this.property===property)return this.booking_draft_editor(info);
   };
-  Desk.prototype.booking_draft_editor=async function(info,roomId){
+  Desk.prototype.booking_draft_editor=async function(info,roomId,prefill=null){
     if(!this.allowed("reserve"))return;
+    if(prefill&&prefill.property!==this.property)return;
     const property=this.property,prop={...this.prop},existing=info?.draft,room=this.data.rooms.find(row=>row.name===roomId);
     const now=(this.data.property_now||this.data.server_time).slice(0,19).replace("T"," ");
-    const values=existing||{mode:prop.mode==="Motel"?"Motel":"Hotel",starts_at:now,ends_at:moment(now).add(prop.mode==="Motel"?3:24,"hours").format("YYYY-MM-DD HH:mm:ss"),channel:"Recepción",rooms:[{category:room?.category,room:roomId||"",people:1,extra_beds:0}]};
+    const values=existing||{mode:prop.mode==="Motel"?"Motel":"Hotel",starts_at:prefill?.starts_at||now,ends_at:prefill?.ends_at||moment(now).add(prop.mode==="Motel"?3:24,"hours").format("YYYY-MM-DD HH:mm:ss"),channel:"Recepción",rooms:prefill?clean({rooms:prefill.rooms}).rooms:[{category:room?.category,room:roomId||"",people:1,extra_beds:0}]};
     const send=(data,key,p)=>this.call("execute",{property_name:p,action:"save_booking_draft",request_key:key,data:JSON.stringify(data)});
     const session=new DraftSession(property,send,info?.booking.name,info?.booking.modified);
     const scope=()=>({filters:{property}});

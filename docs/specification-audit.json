@@ -1725,18 +1725,25 @@
       "line": 111,
       "kind": "enumerated",
       "requirement": "- Muestra una explicación del cálculo antes de confirmar y al revisar la cuenta.",
-      "status": "P",
+      "status": "V",
       "implementation": [
         "hospitality_suite/pricing.py",
         "hospitality_suite/operations.py",
-        "hospitality_suite/public/js/hospitality.js",
+        "hospitality_suite/tariff_explanations.py",
+        "hospitality_suite/public/js/hospitality_drafts.js",
+        "hospitality_suite/public/js/hospitality_tariffs.js",
         "hospitality_suite/templates/print/folio.html"
       ],
       "evidence": [
-        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
-        "docs/evidence/reservations-audit.json"
+        "docs/EXPLICACION_TARIFA_HISTORICA.md",
+        "docs/evidence/tariffs-native-tests.xml::TestTariffExplanations",
+        "docs/evidence/tariffs-js-tests.log",
+        "docs/evidence/tariffs-browser.json",
+        "docs/evidence/tariffs-items-ui.json",
+        "docs/evidence/136-cuenta-hotel-tarifa-historica.png",
+        "docs/evidence/137-cuenta-por-tiempo-tarifa-historica.png"
       ],
-      "remaining": "La revisión previa muestra explicación y la cuenta conserva snapshots, pero la Page y el impreso de cuenta no presentan el desglose de la tarifa aplicada. Mostrar noches/bloque, regla histórica y suplementos/ajustes con nombres legibles; conservar alcance de cuenta/segmento y no reconstruir precios con el tarifario actual."
+      "remaining": ""
     },
     {
       "id": "S07-10",

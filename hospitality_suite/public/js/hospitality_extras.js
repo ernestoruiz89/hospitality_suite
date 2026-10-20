@@ -53,12 +53,17 @@
     }catch(error){el.find(".hs-calendar").text(__("No se pudo cargar el calendario. Actualice la página."));}
   };
   Desk.prototype.action_booking=async function(id){
-    const info=await this.call("booking_detail",{name:id}),b=info.booking,key=frappe.utils.get_random(24);
-    if(!this.allowed("reserve")){frappe.msgprint({title:__("Reserva"),message:`${e(b.name)} · ${e(this.date(b.starts_at))} → ${e(this.date(b.ends_at))}`});return;}
+    const property=this.property,info=await this.call("booking_detail",{name:id}),b=info.booking,key=frappe.utils.get_random(24);
+    if(this.property!==property||b.property!==property)return;
+    const summary=f("booking_summary",__("Resumen de la reserva"),"HTML",{options:this.booking_summary(info)});
     const options=b.status==="Hold"?[{value:"Confirmed",label:__("Confirmar reserva")},{value:"Modify",label:__("Modificar reserva")},{value:"Cancelled",label:__("Cancelar")}]:b.status==="Checked In"?(info.allocations.length?[{value:"Check In",label:__("Registrar entrada")}]:[]):b.status==="Confirmed"?[{value:"Check In",label:__("Registrar entrada")},{value:"Modify",label:__("Modificar reserva")},{value:"Cancelled",label:__("Cancelar reserva")},{value:"No Show",label:__("No presentada")}]:[];
-    if(!options.length){frappe.msgprint({title:__("Reserva"),message:e(id)+" · "+e(b.status)});return;}
+    if(!this.allowed("reserve")||!options.length){
+      const dialog=await this.dialog(__("Ver reserva"),[summary],async(v,d)=>d.hide(),"Cerrar");
+      return this.bind_booking_summary(dialog,property);
+    }
     const allocations=info.allocations.map(a=>{const line=b.rooms.find(r=>r.name===a.booking_room);return{...a,label:__("Solicitud {0} · {1} · {2} · {3} persona(s)",[line?.idx||"",this.data.categories.find(c=>c.name===a.category)?.category_name||"Categoría",a.room?this.roomName(a.room):"Por asignar",line?.people||1])};});
-    return this.dialog(__("Gestionar reserva"),[f("status",__("Acción"),"Select",{reqd:1,options}),{...pick("allocation",__("Habitación solicitada"),allocations,"label",false),default:allocations.length===1?allocations[0].name:"",depends_on:doc=>doc.status==="Check In",mandatory_depends_on:doc=>doc.status==="Check In"},{...pick("guest",__("Huésped principal"),this.data.guests,"full_name",false),default:b.guest,depends_on:doc=>doc.status==="Check In",mandatory_depends_on:doc=>doc.status==="Check In"},{...pick("room",__("Asignar habitación"),this.data.rooms,"room_number",false),depends_on:doc=>doc.status==="Check In"},f("reason",__("Motivo"),"Data",{depends_on:doc=>["Cancelled","No Show"].includes(doc.status),mandatory_depends_on:doc=>["Cancelled","No Show"].includes(doc.status)})],async(v,d)=>{
+    const dialog=await this.dialog(__("Gestionar reserva"),[summary,f("_booking_actions",__("Acciones disponibles"),"Section Break"),f("status",__("Acción"),"Select",{reqd:1,options}),{...pick("allocation",__("Habitación solicitada"),allocations,"label",false),default:allocations.length===1?allocations[0].name:"",depends_on:doc=>doc.status==="Check In",mandatory_depends_on:doc=>doc.status==="Check In"},{...pick("guest",__("Huésped principal"),this.data.guests,"full_name",false),default:b.guest,depends_on:doc=>doc.status==="Check In",mandatory_depends_on:doc=>doc.status==="Check In"},{...pick("room",__("Asignar habitación"),this.data.rooms,"room_number",false),depends_on:doc=>doc.status==="Check In"},f("reason",__("Motivo"),"Data",{depends_on:doc=>["Cancelled","No Show"].includes(doc.status),mandatory_depends_on:doc=>["Cancelled","No Show"].includes(doc.status)})],async(v,d)=>{
+      if(this.property!==property)throw Error("Property changed");
       if(v.status==="Modify"){d.hide();await this.action_booking_edit(id);return;}
       const values={...v,booking:b.name,modified:b.modified};
       if(v.status==="Check In"){
@@ -70,6 +75,7 @@
       }
       await this.mutate(v.status==="Check In"?"check_in":"booking_status",values,key);d.hide();
     },"Confirmar");
+    return this.bind_booking_summary(dialog,property);
   };
   Desk.prototype.action_booking_edit=async function(id){
     const info=await this.call("booking_detail",{name:id}),b=info.booking,key=frappe.utils.get_random(24);
@@ -99,7 +105,7 @@
   Desk.prototype.action_linen=async function(){const key=frappe.utils.get_random(24);return this.dialog(__("Movimiento de ropa de cama"),[pick("room",__("Habitación de referencia"),this.data.rooms,"room_number"),this.item_field(__("Artículo de inventario"),"stock"),f("quantity",__("Cantidad"),"Float",{reqd:1}),f("direction",__("Movimiento"),"Select",{reqd:1,options:[{value:"Send",label:__("Enviar a lavandería")},{value:"Receive",label:__("Recibir de lavandería")},{value:"Loss",label:__("Registrar pérdida")}]}),f("reason",__("Observaciones / motivo"),"Small Text")],async(v,d)=>{await this.mutate("linen",v,key);d.hide();});};
   Desk.prototype.action_report=async function(report){
     const show=async(filters)=>{const rows=await this.call("report",{property_name:this.property,report_name:report,filters:JSON.stringify(filters)}),headers=rows.length?Object.keys(rows[0]):[];
-      const value=(k,v)=>e(["status","kind","type","cleaning_status","settlement_direction","purpose","classification"].includes(k)?(this.data.report_values?.[v]||v):v);
+      const value=(k,v)=>e(["status","kind","type","cleaning_status","settlement_direction","purpose","classification","mode"].includes(k)?(this.data.report_values?.[v]||v):v);
       const d=await this.dialog(report,[f("rows",__("Resultado"),"HTML",{options:`<p>${frappe.utils.escape_html(__("Hasta 1 000 filas por consulta."))}</p>${this.table(headers.map(k=>this.data.report_labels?.[k]||k),rows.map(r=>headers.map(k=>value(k,r[k]))))}<div class="hs-dialog-actions"><button class="btn btn-secondary" data-format="xlsx">${frappe.utils.escape_html(__("Exportar XLSX"))}</button><button class="btn btn-secondary" data-format="pdf">${frappe.utils.escape_html(__("Exportar PDF"))}</button></div>`})],async(v,x)=>x.hide(),"Cerrar","extra-large");
       d.$wrapper.on("click","[data-format]",event=>{const format=$(event.currentTarget).data("format"),params=new URLSearchParams({property_name:this.property,report_name:report,filters:JSON.stringify(filters),file_format:format});window.open("/api/method/hospitality_suite.api.export_report?"+params.toString(),"_blank","noopener");});
     };

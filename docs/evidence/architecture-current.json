@@ -120,6 +120,7 @@
     {
       "doctype": "HS Access",
       "child": false,
+      "autoname": "hash",
       "fields": 3,
       "indexes": {
         "PRIMARY": {
@@ -152,6 +153,7 @@
     {
       "doctype": "HS Property",
       "child": false,
+      "autoname": "ESTAB-.#####",
       "fields": 53,
       "indexes": {
         "PRIMARY": {
@@ -177,6 +179,7 @@
     {
       "doctype": "HS Service Account",
       "child": true,
+      "autoname": "hash",
       "fields": 4,
       "indexes": {
         "PRIMARY": {
@@ -196,6 +199,7 @@
     {
       "doctype": "HS Category",
       "child": false,
+      "autoname": "CAT-.#####",
       "fields": 6,
       "indexes": {
         "PRIMARY": {
@@ -228,6 +232,7 @@
     {
       "doctype": "HS Room",
       "child": false,
+      "autoname": "HAB-.#####",
       "fields": 10,
       "indexes": {
         "PRIMARY": {
@@ -267,6 +272,7 @@
     {
       "doctype": "HS Rate",
       "child": false,
+      "autoname": "TAR-.#####",
       "fields": 23,
       "indexes": {
         "PRIMARY": {
@@ -299,6 +305,7 @@
     {
       "doctype": "HS Rate Service",
       "child": true,
+      "autoname": "hash",
       "fields": 3,
       "indexes": {
         "PRIMARY": {
@@ -318,6 +325,7 @@
     {
       "doctype": "HS Guest",
       "child": false,
+      "autoname": "HUE-.#####",
       "fields": 12,
       "indexes": {
         "PRIMARY": {
@@ -350,6 +358,7 @@
     {
       "doctype": "HS Booking Room",
       "child": true,
+      "autoname": "hash",
       "fields": 5,
       "indexes": {
         "PRIMARY": {
@@ -375,6 +384,7 @@
     {
       "doctype": "HS Booking",
       "child": false,
+      "autoname": "RES-.YYYY.-.#####",
       "fields": 20,
       "indexes": {
         "PRIMARY": {
@@ -407,6 +417,7 @@
     {
       "doctype": "HS Allocation",
       "child": false,
+      "autoname": "hash",
       "fields": 18,
       "indexes": {
         "PRIMARY": {
@@ -448,6 +459,7 @@
     {
       "doctype": "HS Stay Guest",
       "child": true,
+      "autoname": "hash",
       "fields": 2,
       "indexes": {
         "PRIMARY": {
@@ -467,6 +479,7 @@
     {
       "doctype": "HS Stay",
       "child": false,
+      "autoname": "EST-.YYYY.-.#####",
       "fields": 25,
       "indexes": {
         "PRIMARY": {
@@ -499,6 +512,7 @@
     {
       "doctype": "HS Folio",
       "child": false,
+      "autoname": "CTA-.YYYY.-.#####",
       "fields": 8,
       "indexes": {
         "PRIMARY": {
@@ -531,6 +545,7 @@
     {
       "doctype": "HS Charge",
       "child": false,
+      "autoname": "CAR-.YYYY.-.#####",
       "fields": 22,
       "indexes": {
         "PRIMARY": {
@@ -569,6 +584,7 @@
     {
       "doctype": "HS Payment Method",
       "child": false,
+      "autoname": "MED-.#####",
       "fields": 15,
       "indexes": {
         "PRIMARY": {
@@ -601,6 +617,7 @@
     {
       "doctype": "HS Expense Category",
       "child": false,
+      "autoname": "CATGTO-.#####",
       "fields": 7,
       "indexes": {
         "PRIMARY": {
@@ -633,6 +650,7 @@
     {
       "doctype": "HS Supplier",
       "child": false,
+      "autoname": "PROV-.#####",
       "fields": 4,
       "indexes": {
         "PRIMARY": {
@@ -672,6 +690,7 @@
     {
       "doctype": "HS Stock Policy",
       "child": false,
+      "autoname": "POLSTK-.#####",
       "fields": 5,
       "indexes": {
         "PRIMARY": {
@@ -712,6 +731,7 @@
     {
       "doctype": "HS Shift",
       "child": false,
+      "autoname": "TUR-.YYYY.-.#####",
       "fields": 14,
       "indexes": {
         "PRIMARY": {
@@ -744,6 +764,7 @@
     {
       "doctype": "HS Payment",
       "child": false,
+      "autoname": "PAG-.YYYY.-.#####",
       "fields": 34,
       "indexes": {
         "PRIMARY": {
@@ -776,6 +797,7 @@
     {
       "doctype": "HS Cleaning Task",
       "child": false,
+      "autoname": "LIM-.YYYY.-.#####",
       "fields": 13,
       "indexes": {
         "PRIMARY": {
@@ -808,6 +830,7 @@
     {
       "doctype": "HS Equipment",
       "child": false,
+      "autoname": "EQP-.#####",
       "fields": 8,
       "indexes": {
         "PRIMARY": {
@@ -847,6 +870,7 @@
     {
       "doctype": "HS Maintenance Order",
       "child": false,
+      "autoname": "MAN-.YYYY.-.#####",
       "fields": 17,
       "indexes": {
         "PRIMARY": {
@@ -879,6 +903,7 @@
     {
       "doctype": "HS Maintenance Part",
       "child": true,
+      "autoname": "hash",
       "fields": 5,
       "indexes": {
         "PRIMARY": {
@@ -898,6 +923,7 @@
     {
       "doctype": "HS Service Request",
       "child": false,
+      "autoname": "SER-.YYYY.-.#####",
       "fields": 17,
       "indexes": {
         "PRIMARY": {
@@ -930,6 +956,7 @@
     {
       "doctype": "HS Incident",
       "child": false,
+      "autoname": "INC-.YYYY.-.#####",
       "fields": 13,
       "indexes": {
         "PRIMARY": {
@@ -962,6 +989,7 @@
     {
       "doctype": "HS Daily Close",
       "child": false,
+      "autoname": "CIE-.YYYY.-.#####",
       "fields": 8,
       "indexes": {
         "PRIMARY": {
@@ -1001,6 +1029,7 @@
     {
       "doctype": "HS Audit Event",
       "child": false,
+      "autoname": "hash",
       "fields": 10,
       "indexes": {
         "PRIMARY": {
@@ -1033,6 +1062,7 @@
     {
       "doctype": "HS Request",
       "child": false,
+      "autoname": "hash",
       "fields": 6,
       "indexes": {
         "PRIMARY": {
@@ -1071,6 +1101,7 @@
     {
       "doctype": "HS Integration Event",
       "child": false,
+      "autoname": "hash",
       "fields": 8,
       "indexes": {
         "PRIMARY": {
@@ -1109,6 +1140,7 @@
     {
       "doctype": "HS Portal Request",
       "child": false,
+      "autoname": "SOL-.YYYY.-.#####",
       "fields": 19,
       "indexes": {
         "PRIMARY": {
@@ -1147,6 +1179,7 @@
     {
       "doctype": "HS Billing Party",
       "child": false,
+      "autoname": "PAGADOR-.#####",
       "fields": 8,
       "indexes": {
         "PRIMARY": {
@@ -1186,6 +1219,7 @@
     {
       "doctype": "HS Retention Run",
       "child": false,
+      "autoname": "RET-.YYYY.-.#####",
       "fields": 13,
       "indexes": {
         "PRIMARY": {
@@ -1218,6 +1252,7 @@
     {
       "doctype": "HS Retention File",
       "child": true,
+      "autoname": "hash",
       "fields": 6,
       "indexes": {
         "PRIMARY": {
@@ -1420,13 +1455,13 @@
   "assets": [
     {
       "name": "hospitality.bundle.js",
-      "bytes": 178544,
-      "sha256": "85010eb03f1541e162a0dcb8ad29af2e7719a27ac637bbd5226877a9eee78a09"
+      "bytes": 184048,
+      "sha256": "53e5d04090f83a5f7ac1a700d9f5f5ec44c30b6d5c92292c8790a8dea6174068"
     },
     {
       "name": "hospitality.bundle.css",
-      "bytes": 15111,
-      "sha256": "c74209071ad88b4118fb8ee8dd9315f34b1969e9b9472189c4c8889538dfafb7"
+      "bytes": 16811,
+      "sha256": "e56decd9bfb002b9e404a2c9dde1a9ae2dd1a1de1db3129e51e6ce84f791493d"
     }
   ]
 }

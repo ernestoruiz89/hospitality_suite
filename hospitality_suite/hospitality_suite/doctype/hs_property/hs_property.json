@@ -5,8 +5,8 @@
  "custom": 0,
  "engine": "InnoDB",
  "track_changes": 1,
- "autoname": "hash",
- "naming_rule": "Random",
+ "autoname": "ESTAB-.#####",
+ "naming_rule": "Expression (old style)",
  "fields": [
   {
    "fieldname": "property_name",
@@ -204,7 +204,7 @@
   },
   {
    "fieldname": "extra_hour_item",
-   "label": "Artículo de horas adicionales de motel",
+   "label": "Artículo de horas adicionales por tiempo",
    "fieldtype": "Link",
    "options": "Item"
   },

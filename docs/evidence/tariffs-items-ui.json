@@ -1,0 +1,158 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "synthetic": true,
+  "fixture_source": "API",
+  "pages_are_read_only": true,
+  "tables_unchanged": 72,
+  "cases": {
+    "Hotel": {
+      "stay": "fem02qqaju",
+      "room": "H101",
+      "accepted_amount": "3800.00",
+      "actual_charge_amounts": [
+        "-100.0",
+        "3800.0"
+      ],
+      "pricing": {
+        "fera0n42mr": {
+          "title": "Descuento autorizado",
+          "scope": "Este movimiento es un ajuste al cargo original. El desglose de tarifa es una referencia, no otro cobro.",
+          "entries": [
+            {
+              "label": "Noche del 20/10/2026 · Noche estándar",
+              "details": [
+                "Precio base: 1500.0 NIO",
+                "Personas adicionales: 1 × 50.0 = 50.0 NIO",
+                "Camas adicionales: 1 × 100.0 = 100.0 NIO"
+              ],
+              "amount": "1650.00",
+              "currency": "NIO"
+            },
+            {
+              "label": "Noche del 21/10/2026 · Temporada aceptada",
+              "details": [
+                "Precio base: 2000.0 NIO",
+                "Personas adicionales: 1 × 50.0 = 50.0 NIO",
+                "Camas adicionales: 1 × 100.0 = 100.0 NIO"
+              ],
+              "amount": "2150.00",
+              "currency": "NIO"
+            }
+          ],
+          "notes": [
+            "Motivo: Descuento de prueba autorizado",
+            "Los importes aceptados conservan el redondeo histórico a 2 decimales."
+          ],
+          "recorded_amount": "-100.0",
+          "currency": "NIO",
+          "mode_label": "Hotel"
+        },
+        "feqtlcghvo": {
+          "title": "Tarifas aceptadas por noche",
+          "scope": "Desglose del cargo registrado, según la cotización aceptada.",
+          "entries": [
+            {
+              "label": "Noche del 20/10/2026 · Noche estándar",
+              "details": [
+                "Precio base: 1500.0 NIO",
+                "Personas adicionales: 1 × 50.0 = 50.0 NIO",
+                "Camas adicionales: 1 × 100.0 = 100.0 NIO"
+              ],
+              "amount": "1650.00",
+              "currency": "NIO"
+            },
+            {
+              "label": "Noche del 21/10/2026 · Temporada aceptada",
+              "details": [
+                "Precio base: 2000.0 NIO",
+                "Personas adicionales: 1 × 50.0 = 50.0 NIO",
+                "Camas adicionales: 1 × 100.0 = 100.0 NIO"
+              ],
+              "amount": "2150.00",
+              "currency": "NIO"
+            }
+          ],
+          "notes": [
+            "Los importes aceptados conservan el redondeo histórico a 2 decimales."
+          ],
+          "recorded_amount": "3800.0",
+          "currency": "NIO",
+          "mode_label": "Hotel"
+        }
+      }
+    },
+    "Motel": {
+      "stay": "fev6d2vsn4",
+      "room": "M101",
+      "accepted_amount": "750.00",
+      "actual_charge_amounts": [
+        "150.0",
+        "600.0"
+      ],
+      "pricing": {
+        "fevjka94a1": {
+          "title": "Bloque y tiempo adicional aceptados",
+          "scope": "Desglose del cargo registrado, según la cotización aceptada.",
+          "entries": [
+            {
+              "label": "Tiempo adicional · Bloque de 3 horas",
+              "details": [
+                "Tolerancia aceptada: 10 min; fracción de cobro: 30 min.",
+                "Fracciones aceptadas: 2 de 30 min.",
+                "Tiempo adicional facturable: 1 h × 150.0 NIO por hora."
+              ],
+              "amount": "150.00",
+              "currency": "NIO"
+            }
+          ],
+          "notes": [
+            "Intervalo conservado: 20/10/2026 10:12:42 UTC-06:00 → 20/10/2026 13:53:42 UTC-06:00",
+            "Los importes aceptados conservan el redondeo histórico a 2 decimales."
+          ],
+          "recorded_amount": "150.0",
+          "currency": "NIO",
+          "mode_label": "Por tiempo"
+        },
+        "fevpcvqh5q": {
+          "title": "Bloque y tiempo adicional aceptados",
+          "scope": "Desglose del cargo registrado, según la cotización aceptada.",
+          "entries": [
+            {
+              "label": "Bloque de 3.0 h · Bloque de 3 horas",
+              "details": [
+                "Precio base: 450.0 NIO",
+                "Personas adicionales: 1 × 50.0 = 50.0 NIO",
+                "Camas adicionales: 1 × 100.0 = 100.0 NIO"
+              ],
+              "amount": "600.00",
+              "currency": "NIO"
+            }
+          ],
+          "notes": [
+            "Intervalo conservado: 20/10/2026 10:12:42 UTC-06:00 → 20/10/2026 13:53:42 UTC-06:00",
+            "Los importes aceptados conservan el redondeo histórico a 2 decimales."
+          ],
+          "recorded_amount": "600.0",
+          "currency": "NIO",
+          "mode_label": "Por tiempo"
+        }
+      }
+    }
+  },
+  "terminology_change_preserves_original_pricing_fields": true,
+  "pdfs": [
+    {
+      "mode": "Hotel",
+      "path": "output/pdf/cuenta-historica-hotel.pdf",
+      "pages": 1,
+      "sha256": "bc7c748d756c5b3f04636cdec17539682832d691fee26daf0bfbcd59686bd832"
+    },
+    {
+      "mode": "Motel",
+      "path": "output/pdf/cuenta-historica-por-tiempo.pdf",
+      "pages": 1,
+      "sha256": "1c8f737b1616bab8c1de8b485c11d896f2cddd31f0f1d3a23582cc585f77fd95"
+    }
+  ],
+  "pdf_asset_origin": "http://127.0.0.1:8089 (process-local CLI setting)"
+}

@@ -71,3 +71,16 @@ test('draft cards show missing data and unquoted price without leaking identifie
   assert.equal((html.match(/Ver reserva/g)||[]).length,1);
   desk.allowed=()=>false;desk.render_reservations({html(value){html=value;}});assert.doesNotMatch(html,/Retomar borrador/);
 });
+
+test('availability prefill reaches the editor without saving and keeps accepted offsets for price review',async()=>{
+  const {desk,suite}=fixture();desk.allowed=()=>true;let fields;desk.call=async()=>assert.fail('Opening the editor must not save or quote');
+  desk.dialog=async(title,input)=>{fields=input;return {set_secondary_action_label(){},set_secondary_action(){}};};
+  const prefill={property:'hotel',starts_at:'2026-11-01T01:00:00-04:00',ends_at:'2026-11-01T01:00:00-05:00',customer:'INJECTED',amount:5,rooms:[{category:'cat',room:'H103',people:2,extra_beds:0,amount:5}]};
+  await desk.reservation('H103',false,prefill);
+  const value=name=>fields.find(row=>row.fieldname===name);
+  assert.equal(value('starts_at').default,'2026-11-01 01:00:00');assert.equal(value('ends_at').default,'2026-11-01 01:00:00');
+  assert.deepEqual(plain(value('rooms').data),[{category:'cat',room:'H103',rate:null,people:2,extra_beds:0}]);
+  assert.equal(value('customer').default,'');
+  assert.equal(suite.draft_dates({starts_at:value('starts_at').default},prefill).starts_at,prefill.starts_at);
+  fields=null;await desk.reservation('H103',false,{...prefill,property:'foreign'});assert.equal(fields,null);
+});

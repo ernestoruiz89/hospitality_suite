@@ -1,0 +1,37 @@
+Migrating hospitality-acceptance.localhost
+
+Updating DocTypes for frappe        : [========================================] 100%
+
+Updating DocTypes for erpnext       : [========================================] 100%
+
+Updating DocTypes for hospitality_suite: [========================================] 100%
+Syncing jobs...
+Syncing fixtures...
+Syncing dashboards...
+Updating Dashboard for frappe
+Updating Dashboard for erpnext
+Updating Dashboard for hospitality_suite
+Syncing customizations...
+Syncing languages...
+Flushing deferred inserts...
+Removing orphan doctypes...
+
+Command: Sleep | Time: 9s | State: N/A
+Command: Sleep | Time: 19s | State: N/A
+Command: Sleep | Time: 29s | State: N/A
+Command: Sleep | Time: 39s | State: N/A
+Command: Sleep | Time: 49s | State: N/ARemoving orphan Workspaces
+Removing orphan Dashboards
+Removing orphan Pages
+Removing orphan Reports
+Removing orphan Notifications
+Removing orphan Sidebars
+Removing orphan Docks
+Removing orphan List Filters
+Removing orphan Kanban Boards
+Removing orphan Desktop Icons
+Syncing portal menu...
+Updating installed applications...
+Executing `after_migrate` hooks...
+
+Queued rebuilding of search index for hospitality-acceptance.localhost

@@ -5,8 +5,8 @@
  "custom": 0,
  "engine": "InnoDB",
  "track_changes": 1,
- "autoname": "hash",
- "naming_rule": "Random",
+ "autoname": "LIM-.YYYY.-.#####",
+ "naming_rule": "Expression (old style)",
  "fields": [
   {
    "fieldname": "company",

@@ -7,7 +7,8 @@
     const headline=result.enough?
       (result.quantity===1?__("Hay cupo para 1 habitación"):__("Hay cupo para {0} habitaciones",[result.quantity])):
       (result.quantity===1?__("No alcanza el cupo para 1 habitación"):__("No alcanza el cupo para {0} habitaciones",[result.quantity]));
-    const rooms=(result.rooms||[]).map(room=>`<li>${e(room.room_number)}</li>`).join("");
+    const selectable=result.enough&&this.allowed("reserve");
+    const rooms=(result.rooms||[]).map((room,index)=>`<li>${selectable?`<button type="button" class="btn btn-default hs-available-room" data-availability-room="${index}" aria-label="${e(__("Reservar habitación {0}",[room.room_number]))}">${e(room.room_number)}</button>`:e(room.room_number)}</li>`).join("");
     return `<section class="hs-availability-answer ${result.enough?"is-available":"is-unavailable"}"><h3>${e(headline)}</h3><p>${e(result.category_label)} · ${e(__("Personas por habitación: {0}",[result.people]))}</p><p>${e(this.date(result.starts_at))} → ${e(this.date(result.ends_at))}</p><p>${e(__("Cupo disponible: {0} · Habitaciones solicitadas: {1}",[result.available,result.quantity]))}</p>${result.needs_assignment_review?`<p class="hs-availability-warning">${e(__("Hay cupo por categoría, pero no hay suficientes habitaciones libres durante todo el intervalo. Recepción debe revisar la asignación física."))}</p>`:""}${result.available>0&&rooms?`<details><summary>${e(__("Ver opciones de habitación ({0})",[result.physical_available]))}</summary><p>${e(__("Puede elegir entre estas habitaciones, hasta el cupo disponible. La limpieza se verifica antes del ingreso."))}</p><ul>${rooms}</ul></details>`:""}<small>${e(__("Esta consulta no reserva habitaciones. El cupo se vuelve a comprobar al confirmar una reserva."))}</small></section>`;
   };
   Desk.prototype.action_availability=async function(){
@@ -22,10 +23,11 @@
       field("ends_at",__("Salida prevista"),"Data",{reqd:1,_hsDateTime:true,default:end}),
       field("_availability_section","","Section Break"),
       field("_availability_result","","HTML",{options:`<p>${e(__("Elija las fechas y la cantidad que necesita; pulse Buscar disponibilidad."))}</p>`})];
-    let sequence=0,shown=true;
+    let sequence=0,shown=true,accepted=null,opening=false;
     const put=(dialog,html,busy=false)=>dialog.fields_dict._availability_result.$wrapper.attr({role:"status","aria-live":"polite","aria-busy":String(busy)}).html(html);
     const dialog=await this.dialog(__("Buscar disponibilidad"),fields,async(values,d)=>{
       if(this.property!==property){put(d,`<p>${e(__("El establecimiento cambió. Cierre esta ventana y abra una nueva consulta."))}</p>`);return;}
+      accepted=null;
       const token=++sequence,current=()=>shown&&token===sequence&&this.property===property;
       put(d,`<p>${e(__("Consultando disponibilidad…"))}</p>`,true);
       try{
@@ -33,16 +35,36 @@
         const result=await this.call("availability_search",{property_name:property,category,quantity,people,starts_at,ends_at});
         if(!current())return;
         if(result.property!==property)throw Error("Availability context mismatch");
+        accepted=result;
         put(d,this.availability_result(result));
         d.fields_dict._availability_result.$wrapper[0]?.scrollIntoView({block:"nearest"});
       }catch(error){if(current())put(d,`<p role="alert">${e(__("No se pudo consultar. Revise los filtros y pulse Buscar disponibilidad para reintentar."))}</p>`);}
     },__("Buscar disponibilidad"),"large");
     dialog.$wrapper.addClass("hs-availability-dialog");
     dialog.$wrapper.on("input.hsAvailability change.hsAvailability","input,select",()=>{
-      sequence++;
+      sequence++;accepted=null;
       put(dialog,`<p>${e(__("Datos cambiados. Pulse Buscar disponibilidad para actualizar el resultado."))}</p>`);
     });
-    dialog.$wrapper.one("hide.bs.modal.hsAvailability",()=>{shown=false;sequence++;});
+    dialog.$wrapper.on("click.hsAvailabilityRoom","[data-availability-room]",async event=>{
+      if(!shown||opening||this.property!==property||!accepted||!this.allowed("reserve"))return;
+      const index=Number(event.currentTarget.dataset.availabilityRoom);
+      if(!Number.isInteger(index)||index<0)return;
+      const prefill=this.availability_booking_values(accepted,index);
+      if(!prefill)return;
+      opening=true;dialog.hide();
+      try{await this.reservation(prefill.rooms[0].room,false,prefill);}
+      catch(error){frappe.msgprint(__("No se pudo abrir la reserva. Vuelva a consultar la disponibilidad e intente nuevamente."));}
+    });
+    dialog.$wrapper.one("hide.bs.modal.hsAvailability",()=>{shown=false;sequence++;accepted=null;});
     return dialog;
+  };
+  Desk.prototype.availability_booking_values=function(result,index){
+    const quantity=Number(result.quantity),people=Number(result.people),selected=result.rooms?.[index];
+    if(!result.enough||result.property!==this.property||!selected||!Number.isInteger(quantity)||quantity<1||quantity>result.available||quantity>this.data.rooms.length||!Number.isInteger(people)||people<1)return null;
+    const room=this.data.rooms.find(row=>row.name===selected.name&&row.category===result.category);
+    if(!room||!result.starts_at||!result.ends_at||result.time_zone!==this.prop.time_zone)return null;
+    const local=value=>moment.tz(value,this.data.system_timezone).tz(this.prop.time_zone).format("YYYY-MM-DDTHH:mm:ssZ");
+    return {property:this.property,starts_at:local(result.starts_at),ends_at:local(result.ends_at),
+      rooms:Array.from({length:quantity},(_,i)=>({category:result.category,room:i===0?room.name:"",people,extra_beds:0}))};
   };
 })();

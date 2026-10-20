@@ -263,7 +263,13 @@ def stay_detail(name):
     folios = accounting.folios_for_stay(doc)
     for folio in folios:
         folio["balance"] = accounting.folio_balance(folio.name)
-    return dict(stay=doc.as_dict(), folios=folios, charges=project("HS Charge", prop, filters={"stay": name}),
+    from hospitality_suite.tariff_explanations import describe_charge
+    charges=project("HS Charge",prop,filters={"stay":name})
+    for row in charges:
+        row['pricing']=describe_charge(row)
+        from hospitality_suite.display_labels import generated_label
+        row['description_label']=generated_label(row.description)
+    return dict(stay=doc.as_dict(), folios=folios, charges=charges,
                 segments=project("HS Allocation", prop, filters={"stay": name}))
 
 
@@ -497,7 +503,8 @@ def setup_options(property_name):
 def booking_detail(name):
     doc = document("HS Booking",name)
     prop = require(doc.property)
-    return dict(booking=doc.as_dict(), draft=booking_drafts.values_for(doc,prop) if doc.status=='Draft' else None, allocations=project("HS Allocation",prop,
+    from hospitality_suite.booking_presentation import summary
+    return dict(booking=doc.as_dict(), summary=summary(doc,prop), draft=booking_drafts.values_for(doc,prop) if doc.status=='Draft' else None, allocations=project("HS Allocation",prop,
                 fields=["name","room","category","booking_room"],filters={"booking":name,"kind":"Reservation","status":"Active"}))
 
 

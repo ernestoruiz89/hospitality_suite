@@ -3,7 +3,7 @@ from hospitality_suite.schema import SCOPED, ROLES,STANDARD_SCOPED
 app_name = "hospitality_suite"
 app_title = "Hospitality Suite"
 app_publisher = "Hospitality Suite Contributors"
-app_description = "Administración de hoteles y moteles"
+app_description = "Administración de hoteles y alojamiento por tiempo"
 app_email = ""
 app_license = "MIT"
 required_apps = ["erpnext"]

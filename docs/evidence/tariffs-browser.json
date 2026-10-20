@@ -1,0 +1,65 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "user": "receptionist@hospitality.example.invalid",
+  "fixture_source": "API",
+  "page_operations": "Read only; opened details and entry form without submitting",
+  "observations": {
+    "hotel": {
+      "recorded_lodging": "3800.00",
+      "balance_after_discount": "3700.00",
+      "historical_nights": [
+        "Noche estándar",
+        "Temporada aceptada"
+      ],
+      "night_amounts": [
+        "1650.00",
+        "2150.00"
+      ]
+    },
+    "timed": {
+      "displayed_mode": "Por tiempo",
+      "header": "OPERACIÓN POR TIEMPO",
+      "charge_label": "Horas adicionales por tiempo",
+      "recorded_extra": "150.00",
+      "grace_minutes": 10,
+      "rounding_minutes": 30,
+      "fractions": 2,
+      "billable_hours": 1
+    }
+  },
+  "mobile_geometry": {
+    "body": {
+      "bottom": 774,
+      "clientWidth": 378,
+      "height": 694,
+      "scrollWidth": 378,
+      "top": 80,
+      "width": 388
+    },
+    "explanation": {
+      "bottom": 706.65625,
+      "clientWidth": 312,
+      "height": 445.90625,
+      "scrollWidth": 312,
+      "top": 260.75,
+      "width": 312
+    },
+    "panel": {
+      "bottom": 844,
+      "clientWidth": 388,
+      "height": 844,
+      "scrollWidth": 388,
+      "top": 0,
+      "width": 390
+    },
+    "viewport": {
+      "height": 844,
+      "width": 390
+    }
+  },
+  "screenshots": [
+    "128-tarifa-historica-hotel-escritorio.jpg",
+    "129-modalidad-por-tiempo.jpg",
+    "130-tarifa-por-tiempo-movil.jpg"
+  ]
+}

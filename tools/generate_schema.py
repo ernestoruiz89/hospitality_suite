@@ -6,6 +6,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from hospitality_suite.schema import SCHEMA, MANAGERS, PAGES
+from hospitality_suite.document_naming import DOCUMENT_SERIES
 
 
 def write(path, text):
@@ -33,6 +34,8 @@ for name, spec in SCHEMA.items():
                 track_changes=1, autoname="hash", naming_rule="Random", fields=spec["fields"],
                 field_order=[f["fieldname"] for f in spec["fields"]], permissions=perms,
                 sort_field="modified", sort_order="DESC", allow_rename=0)
+    if name in DOCUMENT_SERIES:
+        data.update(autoname=DOCUMENT_SERIES[name], naming_rule="Expression (old style)")
     if spec.get("child"):
         data.update(istable=1, permissions=[])
     titles = {"HS Property":"property_name", "HS Category":"category_name", "HS Room":"room_number", "HS Rate":"title", "HS Guest":"full_name", "HS Payment Method":"mode_of_payment", "HS Folio":"label"}

@@ -18,6 +18,7 @@ try:
     assert frappe.conf.allow_tests and frappe.conf.db_name=='hospitality_dev'
     frappe.set_user('Administrator')
     from hospitality_suite.schema import SCHEMA,PAGES,ROLES,STANDARD_SCOPED
+    from hospitality_suite.document_naming import DOCUMENT_SERIES
     from hospitality_suite.security import ACTIONS
     core={}
     for app in ('frappe','erpnext'):
@@ -30,6 +31,7 @@ try:
     model=[]
     for name,spec in SCHEMA.items():
         meta=frappe.get_meta(name)
+        assert meta.autoname==DOCUMENT_SERIES.get(name,'hash'),name
         assert bool(meta.istable)==bool(spec.get('child')),name
         for expected in spec['fields']:
             actual=meta.get_field(expected['fieldname'])
@@ -45,7 +47,7 @@ try:
         for row in sorted(indexes,key=lambda r:(r.Key_name,r.Seq_in_index)):
             index=grouped.setdefault(row.Key_name,dict(unique=not bool(row.Non_unique),columns=[]))
             index['columns'].append(row.Column_name)
-        model.append(dict(doctype=name,child=bool(meta.istable),fields=len(spec['fields']),indexes=grouped))
+        model.append(dict(doctype=name,child=bool(meta.istable),autoname=meta.autoname,fields=len(spec['fields']),indexes=grouped))
     pages=[]
     for route,(title,roles) in PAGES.items():
         doc=frappe.get_doc('Page',route)

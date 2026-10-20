@@ -105,10 +105,12 @@ test('dialog keeps numeric edits across row refreshes and leaves untouched hidde
 });
 test('a partly arrived group exposes its remaining numbered request and valid actions',async()=>{
   const {desk,context}=fixture();
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../hospitality_suite/public/js/hospitality_booking_summary.js'),'utf8'),context);
   vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../hospitality_suite/public/js/hospitality_extras.js'),'utf8'),context);
-  const info={booking:{name:'group',status:'Checked In',guest:'principal',rooms:[{name:'request',idx:1,people:2}]},allocations:[{name:'allocation',booking_room:'request',category:'standard'}]};
+  const info={booking:{name:'group',property:'hotel',status:'Checked In',guest:'principal',rooms:[{name:'request',idx:1,people:2}]},allocations:[{name:'allocation',booking_room:'request',category:'standard'}]};
   desk.allowed=()=>true;desk.call=async()=>info;desk.data={categories:[{name:'standard',category_name:'Estándar'}],guests:[],rooms:[]};
-  let fields;desk.dialog=async(title,value)=>{fields=value;};
+  desk.date=()=>'';desk.amount=()=>'';
+  let fields;desk.dialog=async(title,value)=>{fields=value;return {$wrapper:{on(){}}};};
   await desk.action_booking('group');
   assert.deepEqual(Array.from(fields.find(f=>f.fieldname==='status').options,o=>o.value),['Check In']);
   const allocation=fields.find(f=>f.fieldname==='allocation');assert.equal(allocation.default,'allocation');
@@ -118,8 +120,8 @@ test('a partly arrived group exposes its remaining numbered request and valid ac
   assert.equal(fields.find(f=>f.fieldname==='guest').mandatory_depends_on({status:'Check In'}),true);
   assert.equal(fields.find(f=>f.fieldname==='reason').depends_on({status:'Check In'}),false);
   assert.equal(fields.find(f=>f.fieldname==='reason').mandatory_depends_on({status:'Cancelled'}),true);
-  info.allocations=[];let message;context.__=value=>value;context.frappe.msgprint=value=>{message=value;};fields=undefined;
-  await desk.action_booking('group');assert.equal(fields,undefined);assert(message);
+  info.allocations=[];fields=undefined;
+  await desk.action_booking('group');assert.equal(fields.length,1);assert.equal(fields[0].fieldname,'booking_summary');
 });
 
 test('partial dialog submission bypasses required-field checks and still captures typed numeric values',async()=>{

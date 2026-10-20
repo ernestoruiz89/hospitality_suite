@@ -1,0 +1,48 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "fixture_source": "API historical tariff fixture",
+  "role": "HS Receptionist",
+  "page_operations_read_only": true,
+  "summary": {
+    "status": "Entrada registrada",
+    "guest_masked": true,
+    "payer": "Cliente ficticio M3",
+    "room": "M101",
+    "people": 3,
+    "extra_beds": 1,
+    "amount": "750.00",
+    "mode": "Por tiempo",
+    "account_button_opened_correct_stay": true,
+    "mobile_viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "mobile_geometry": {
+      "clientWidth": 344,
+      "height": 520.59375,
+      "scrollWidth": 344,
+      "width": 344
+    }
+  },
+  "availability_handoff": {
+    "room": "M103",
+    "category": "Estándar",
+    "people": 2,
+    "quantity": 1,
+    "starts_at": "2026-10-24T10:27:35-06:00",
+    "ends_at": "2026-10-25T13:27:35-06:00",
+    "review_price_available": true,
+    "saved_draft": false,
+    "reservation_created": false,
+    "link_titles_human": true
+  },
+  "screenshots": [
+    "131-resumen-reserva-escritorio.jpg",
+    "132-resumen-reserva-movil.jpg",
+    "133-habitaciones-disponibles-botones.jpg",
+    "134-reserva-fechas-preseleccionadas.jpg",
+    "135-reserva-habitacion-preseleccionada.jpg"
+  ],
+  "logged_out": true,
+  "viewport_reset": true
+}

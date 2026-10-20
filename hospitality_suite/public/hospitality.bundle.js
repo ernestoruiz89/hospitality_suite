@@ -1,4 +1,5 @@
 import "./js/hospitality.js";
+import "./js/hospitality_booking_summary.js";
 import "./js/hospitality_extras.js";
 import "./js/hospitality_workflows.js";
 import "./js/hospitality_finance_stock.js";
@@ -16,4 +17,5 @@ import "./js/hospitality_invoicing.js";
 import "./js/hospitality_board.js";
 import "./js/hospitality_availability.js";
 import "./js/hospitality_drafts.js";
+import "./js/hospitality_tariffs.js";
 import "./js/hospitality_forms.js";
