@@ -1,0 +1,9 @@
+{
+  "site": "hospitality.localhost",
+  "existing_tables_preserved": 70,
+  "existing_rows_preserved": 911,
+  "compared_all_preexisting_columns": true,
+  "new_service_accounts": 0,
+  "new_property_accounts_empty": true,
+  "backup_with_files": true
+}

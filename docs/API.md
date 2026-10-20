@@ -1,5 +1,7 @@
 # API y contratos de integración
 
+service_accounting_configuration(property_name) exige setup y devuelve modified, company, defaults y services con nombres legibles. execute(action=service_accounting) exige esa versión en data.modified, defaults con income_account/expense_account/cost_center y services como lista de item y esos tres campos. Los nombres descriptivos son proyección de lectura; no se envían como campos de escritura. El comando conserva la petición idempotente y audita el cambio completo. Un campo vacío hereda de la sede y después de ERPNext; no cambia Item Default. Una versión obsoleta, cuenta incompatible o duplicado revierte la configuración completa. Las devoluciones conservan las cuentas del original.
+
 Contrato verificado contra Frappe 16.52.0 / ERPNext 16.51.1. Las Pages usan estos mismos servicios. Las respuestas RPC estándar envuelven el resultado en `message`; un error no confirma una operación.
 
 preview(action=payment, kind=Refund) devuelve refund con modalidad, documento original, nota/factura, valor y moneda de la cuenta del cliente, valoración histórica y diferencia de cambio actual. Su acceptance incluye fondos, asignación y saldo del crédito. execute(payment) vuelve a validarlos y conserva la nota en HS Payment.sales_invoice y el origen en source_payment. Un anticipo ya aplicado admite devolución solo contra crédito válido de una de sus facturas y hasta su aportación restante; sin nota solo se devuelve lo no aplicado.

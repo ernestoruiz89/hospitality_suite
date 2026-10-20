@@ -1,0 +1,10 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "restored": true,
+  "tables": 71,
+  "rows": 185,
+  "aggregate_sha256": "5a61bbc0a562bbc9337315d7c359174e1f95272096ab4d5e7cf31ab54df162da",
+  "stay_records": 0,
+  "invoices": 0,
+  "payments": 0
+}

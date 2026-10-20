@@ -252,6 +252,8 @@ def validate_standard(doc, method=None):
                 if row.get(field) and row.get(field) not in owned:
                     frappe.throw(frappe._("El almacén no está asignado a este establecimiento"),frappe.PermissionError)
     doc.hs_property = prop.name
+    from hospitality_suite.service_accounting import apply_defaults
+    apply_defaults(doc,prop,original)
     old=doc.get_doc_before_save()
     if old and old.get("hs_property") and (old.hs_property!=doc.hs_property or old.get("hs_stay")!=doc.get("hs_stay")):
         frappe.throw(frappe._("No puede quitar ni cambiar el origen de un documento vinculado a alojamiento"))

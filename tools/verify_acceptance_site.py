@@ -11,7 +11,7 @@ import frappe
 
 bench=Path('/home/frappe/benches/hospitality-bench')
 parser=argparse.ArgumentParser()
-parser.add_argument('--phase',choices=['financial','service','pos','refund','guarantee','credits','mixed'],default='financial')
+parser.add_argument('--phase',choices=['financial','service','pos','refund','guarantee','credits','mixed','accounting'],default='financial')
 args=parser.parse_args()
 root=Path(__file__).resolve().parents[1]
 os.chdir(bench/'sites')
@@ -41,13 +41,24 @@ for site,database in [('hospitality-acceptance.localhost','hospitality_acceptanc
                 raise AssertionError('The demo must not run integration fixtures')
             before=json.loads((bench/'.hospitality-financial-upgrade.json').read_text())
             checked=[]
+            refreshed=[]
             for dt,expected in before['tables'].items():
                 if dt.startswith('HS '):continue
                 rows=frappe.db.sql('SELECT * FROM `tab'+dt+'` ORDER BY name',as_dict=True)
                 raw=json.dumps(rows,default=str,sort_keys=True,ensure_ascii=False,separators=(',',':')).encode()
-                assert dict(rows=len(rows),sha256=hashlib.sha256(raw).hexdigest())==expected,dt
+                actual=dict(rows=len(rows),sha256=hashlib.sha256(raw).hexdigest())
+                if args.phase=='accounting' and dt=='Company' and actual!=expected:
+                    cache=json.loads((bench/'.hospitality-accounting-company-cache.json').read_text())
+                    assert cache['source_company_sha256']==expected['sha256'] and cache['current_company_sha256']==actual['sha256']
+                    assert cache['changed_fields']==['modified','sales_monthly_history','transactions_annual_history']
+                    assert cache['company_matches_pre_phase_backup'] and cache['cached_histories_match_native_read_functions']
+                    refreshed.append(dt)
+                    continue
+                assert actual==expected,dt
                 checked.append(dt)
             proof['main']=dict(site=site,integration_fixture_guard_rejects=True,native_tables_unchanged=len(checked),business_date=str(frappe.db.get_value('HS Property',{'property_name':'Hotel Jardín Demo'},'business_date')))
+            if refreshed:
+                proof['main'].update(native_derived_cache_refreshed=refreshed,native_tables_equal_pre_phase_backup=len(checked)+len(refreshed),company_cache_evidence='accounting-company-cache.json')
     finally:
         frappe.db.rollback()
         frappe.destroy()

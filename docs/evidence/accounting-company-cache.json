@@ -1,0 +1,21 @@
+{
+  "site": "hospitality.localhost",
+  "mutations": false,
+  "source_company_sha256": "3175f43e7af95da6dd0968286ab0926e06950d09c6015099430039b15d271740",
+  "current_company_sha256": "6b9bdeb62314c11e908bfa6ceacfcb1f50fb79263115a0f478e78c1fe4ce84f1",
+  "source_backup_row_matches_original": true,
+  "changed_fields": [
+    "modified",
+    "sales_monthly_history",
+    "transactions_annual_history"
+  ],
+  "all_other_company_fields_preserved": true,
+  "company_matches_pre_phase_backup": true,
+  "native_method": "erpnext.setup.doctype.company.company.cache_companies_monthly_sales_history",
+  "native_schedule": "daily_maintenance",
+  "job_status": "Complete",
+  "job_started": "2026-10-20 00:00:22.279719",
+  "job_finished": "2026-10-20 00:00:22.355218",
+  "company_modified": "2026-10-20 00:00:22.350588",
+  "cached_histories_match_native_read_functions": true
+}

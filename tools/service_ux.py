@@ -16,7 +16,7 @@ SITE='hospitality-acceptance.localhost'
 TARGET=BENCH/'sites'/SITE
 parser=argparse.ArgumentParser()
 parser.add_argument('action',choices=['before','prepare','inspect','restore','verify'])
-parser.add_argument('--phase',choices=['service','pos','refund','guarantee','credits','mixed'],default='service')
+parser.add_argument('--phase',choices=['service','pos','refund','guarantee','credits','mixed','accounting'],default='service')
 args=parser.parse_args()
 BASE=BENCH/f'.hospitality-{args.phase}-ux-baseline.json'
 RECEIPT=BENCH/f'.hospitality-{args.phase}-ux-restored-receipt.json'
@@ -93,7 +93,7 @@ try:
                       backup_files={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in files})
         BASE.write_text(json.dumps(baseline,sort_keys=True))
         BASE.chmod(0o600)
-        print('Respaldo previo al recorrido UX, 70 tablas sin operaciones')
+        print('Respaldo previo al recorrido UX,',len(tables),'tablas sin operaciones')
     elif args.action=='prepare':
         assert args.phase=='pos' and BASE.is_file() and tables==json.loads(BASE.read_text())['tables']
         from hospitality_suite import api

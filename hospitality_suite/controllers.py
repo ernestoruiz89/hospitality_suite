@@ -85,6 +85,8 @@ class ScopedDocument(Document):
             if get_datetime(self.starts_at) >= get_datetime(self.ends_at):
                 frappe.throw(_("La fecha final debe ser posterior a la inicial"))
         if self.doctype == "HS Property":
+            from hospitality_suite.service_accounting import validate_configuration
+            validate_configuration(self)
             from hospitality_suite.time import cutoff_time
             cutoff_time(self.close_time)
             if not 0<=(self.retention_days or 0)<=36500:

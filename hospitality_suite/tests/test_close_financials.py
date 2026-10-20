@@ -18,6 +18,12 @@ class TestCloseFinancials(IntegrationTestCase):
         self.addCleanup(frappe.db.rollback)
         frappe.set_user("Administrator")
         self.prop=frappe.get_doc("HS Property",{"property_name":"Hotel Jardín Demo"})
+        # These scenarios compare accounting-date invoices with this day's
+        # operational receipts. A persisted demo date must not change the
+        # scenario when the suite is run after midnight on another calendar day.
+        with operation():
+            self.prop.business_date=getdate(now_datetime())
+            self.prop.save()
         self.rooms=frappe.get_all("HS Room",filters={"property":self.prop.name},fields=["name","category"],order_by="room_number")
         self.guest=frappe.get_doc("HS Guest",{"property":self.prop.name})
         self.method=frappe.get_doc("HS Payment Method",{"property":self.prop.name,"is_cash":1,"currency":"NIO"})

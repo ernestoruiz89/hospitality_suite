@@ -1,5 +1,11 @@
 # Configuración contable y conciliación
 
+## Cuentas y centros de costo por servicio
+
+Configuración → 18. Contabilidad por servicio permite elegir ingreso, gasto y centro de costo de la sede y excepciones por Item. Un campo vacío hereda de la sede y después de ERPNext. Las cuentas deben pertenecer a la compañía, estar habilitadas, no ser grupos y tener naturaleza/moneda base adecuadas. No se cambian los valores compartidos de los artículos. Los registros nuevos usan esa clasificación; las notas de crédito y cancelaciones conservan la del original. No se reclasifica historia al guardar la configuración.
+
+El costo de una entrega de venta se registra en Stock Entry y el ingreso en Sales Invoice. Una compra sin inventario usa su gasto configurado; con inventario, ERPNext conserva sus cuentas de existencias/recepción. Los egresos y mermas con categoría explícita usan la cuenta de esa categoría. Véase [auditoría de contabilidad por servicio](AUDITORIA_CONTABILIDAD_SERVICIOS.md).
+
 ## Fuentes de verdad
 
 ERPNext es el único libro mayor y el único inventario. HS Charge, HS Payment y HS Service Request mantienen origen y flujo operativo; no sustituyen GL Entry, Payment Ledger Entry o Stock Ledger Entry. La app no escribe directamente esos libros.

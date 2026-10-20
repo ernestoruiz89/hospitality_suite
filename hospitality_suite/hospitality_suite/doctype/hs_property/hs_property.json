@@ -147,6 +147,27 @@
    "options": "Warehouse"
   },
   {
+   "fieldname": "income_account",
+   "label": "Cuenta de ingresos del establecimiento",
+   "fieldtype": "Link",
+   "options": "Account",
+   "permlevel": 1
+  },
+  {
+   "fieldname": "expense_account",
+   "label": "Cuenta de gastos del establecimiento",
+   "fieldtype": "Link",
+   "options": "Account",
+   "permlevel": 1
+  },
+  {
+   "fieldname": "service_accounts",
+   "label": "Contabilidad por servicio",
+   "fieldtype": "Table",
+   "options": "HS Service Account",
+   "permlevel": 1
+  },
+  {
    "fieldname": "receivable_account",
    "label": "Receivable account",
    "fieldtype": "Link",
@@ -343,6 +364,9 @@
   "cost_center",
   "warehouse",
   "laundry_warehouse",
+  "income_account",
+  "expense_account",
+  "service_accounts",
   "receivable_account",
   "guarantee_account",
   "cash_transfer_account",

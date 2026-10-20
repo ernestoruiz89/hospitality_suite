@@ -67,6 +67,8 @@ def sync_print_formats():
 
 
 def validate_financial_configuration(prop):
+    from hospitality_suite.service_accounting import validate_configuration
+    validate_configuration(prop)
     from hospitality_suite.item_configuration import validate_bindings
     validate_bindings(prop)
     required = ["cost_center", "warehouse", "receivable_account", "guarantee_account", "lodging_item"]

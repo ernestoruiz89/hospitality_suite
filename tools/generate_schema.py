@@ -22,7 +22,7 @@ for name, spec in SCHEMA.items():
         if role == "System Manager" or (role != "HS Auditor" and name not in ("HS Audit Event", "HS Request", "HS Allocation", "HS Access")):
             row.update(create=1, write=1)
         perms.append(row)
-    protected={"HS Property":("cost_center","receivable_account","guarantee_account","cash_transfer_account","tax_template","financial_enabled","early_hour_rate","late_hour_rate","cancellation_fee_value","no_show_fee_value"),"HS Maintenance Order":("cost","parts","stock_entry","evidence")}
+    protected={"HS Property":("cost_center","income_account","expense_account","service_accounts","receivable_account","guarantee_account","cash_transfer_account","tax_template","financial_enabled","early_hour_rate","late_hour_rate","cancellation_fee_value","no_show_fee_value"),"HS Maintenance Order":("cost","parts","stock_entry","evidence")}
     if name in protected:
         for df in spec["fields"]:
             if df["fieldname"] in protected[name]:

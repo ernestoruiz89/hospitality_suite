@@ -10,8 +10,10 @@ from hospitality_suite.service import command, insert, audit, canonical
 from hospitality_suite.time import to_site, now_local
 from hospitality_suite.schema import PAGES
 from hospitality_suite import setup
+from hospitality_suite import service_accounting
 
 COMMANDS = {
+    "service_accounting":("setup",service_accounting.save),
     "reserve": ("reserve", operations.reserve), "booking_status": ("reserve", operations.update_booking),
     "check_in": ("stay", operations.check_in), "walk_in": ("stay", operations.walk_in),
     "extend": ("stay", operations.extend), "change_room": ("stay", operations.change_room),
@@ -114,6 +116,11 @@ def preview(property_name, data, action="reserve"):
 def service_configuration(property_name,item=None):
     from hospitality_suite.item_configuration import configuration
     return configuration(property_name,item)
+
+
+@frappe.whitelist()
+def service_accounting_configuration(property_name):
+    return service_accounting.configuration(property_name)
 
 
 def may(action):

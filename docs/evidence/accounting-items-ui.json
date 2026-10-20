@@ -1,0 +1,30 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "synthetic": true,
+  "fixture_origin": "ERPNext Account and Cost Center controllers; application shift API",
+  "configuration_from_page": true,
+  "sale_from_page": true,
+  "closed_from_page": true,
+  "actor": "manager@hospitality.example.invalid",
+  "defaults": {
+    "income_account": "Ingresos sede UX - HSD",
+    "expense_account": "Gastos sede UX - HSD",
+    "cost_center": "Operación sede UX - HSD"
+  },
+  "service": {
+    "item": "HS-DEMO-WATER",
+    "income_account": "Ingresos minibar UX - HSD",
+    "expense_account": "Costos minibar UX - HSD",
+    "cost_center": "Minibar UX - HSD"
+  },
+  "service_label": "Agua minibar (demostración)",
+  "invoice": "ACC-SINV-2026-00001",
+  "stock_entry": "MAT-STE-2026-00002",
+  "revenue": "30.00",
+  "cost": "10.0",
+  "revenue_and_cost_center_preserved": true,
+  "shared_item_defaults_unchanged": true,
+  "opening": "100.00",
+  "final_expected": "130.00",
+  "difference": "0.00"
+}

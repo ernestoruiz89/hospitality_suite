@@ -1,8 +1,8 @@
 # Matriz de alcance obligatorio
 
-Actualizada el 2026-10-19. **El objetivo sigue activo.** V = prueba ejecutada de la parte indicada; I = implementado, verificación pendiente; P = trabajo pendiente. Las pruebas de backend no acreditan por sí solas un recorrido completo de interfaz.
+Actualizada el 2026-10-20. **El objetivo sigue activo.** V = prueba ejecutada de la parte indicada; I = implementado, verificación pendiente; P = trabajo pendiente. Las pruebas de backend no acreditan por sí solas un recorrido completo de interfaz.
 
-La [auditoría punto por punto](AUDITORIA_ESPECIFICACION.md) conserva el texto original y su huella: 201 elementos enumerados, diez cláusulas adicionales y siete fases, 218 entradas. Cuarenta y nueve entradas tienen contraste individual, incluidos artículos/servicios, políticas de caja, desglose del cierre y arqueo/aprobación del supervisor; dos mantienen verificación parcial y 167 esperan contraste individual. R no significa función ausente. Esta matriz resume las fases y no sustituye esa auditoría.
+La [auditoría punto por punto](AUDITORIA_ESPECIFICACION.md) conserva texto y huella: 201 elementos enumerados, diez cláusulas adicionales y siete fases, 218 entradas. Hay **51 V, una I y 166 R**. V exige contraste individual; R no significa función ausente. Esta matriz resume las fases y conserva su evidencia histórica, sin sustituir esa auditoría ni declarar completa la recuperación de la versión actual.
 
 | ID | Requisito | Implementación | Evidencia y trabajo pendiente | Estado |
 |---|---|---|---|---|
@@ -29,6 +29,7 @@ La [auditoría punto por punto](AUDITORIA_ESPECIFICACION.md) conserva el texto o
 | F12d | Comisiones, retenciones y liquidación | treasury.py, reconciliation.py, Page Caja | Snapshot, parciales/redondeo, devolución y cambio USD; bruto C$30, gasto C$2.90, activo C$0.30 y banco C$26.80 desde Page | V |
 | F12e | POS nativo y aprobación de arqueo | native_pos.py, cashier.py, security.py, Pages y HS Arqueo | Seis casos nativos, NIO/USD/banco, vuelto/devolución/corrección y faltante -10 aprobado por Supervisor sin asiento. Page: fondo 100 + venta neta 60 = arqueo 160; PDF actualizado/renderizado, capturas 72–75; respaldo restaurado | V |
 | F12g | Notas POS desde Caja | pos_returns.py, accounting.py, refunds.py, hospitality_credits.js | Nota/stock y devolución por cada origen nativo, parciales sucesivas, garantía aplicada y USD repartido. Page: nota 60, devuelve POS 30 y otro recibo 30; crédito cero, original 160 conservado y cierre 100. Capturas 87–91 y AUDITORIA_RECIBOS_POS.md | V |
+| F12h | Cuentas y centros por establecimiento y servicio | service_accounting.py, schema.py, security.py, install.py y Page Configuración | Seis casos nativos, dos sedes/una compañía, ingreso/costo/centro reales, stock de compra conservado, reversión histórica y cuenta deshabilitada antes de cotizar. Page: configuración por nombre y venta 30/costo 10/turno 130; capturas 92–95, respaldo restaurado y upgrade sin pérdida | V |
 | F12f | Devolución de anticipo aplicado | refunds.py, accounting.py y Caja | Seis casos nativos: parcial/reintento/revisión obsoleta/cancelación/turno histórico, límite por factura, crédito/remanente, USD con cambio y residuo; dos JS. Page: devuelve C$1500 contra nota estándar, original aplicado conservado y caja cero; capturas 76–78, respaldo restaurado. Alcance general de otras correcciones continúa | V |
 | F13 | Limpieza, asignación e inspección | housekeeping.py, Page | Checklist incompleto rechazado; circuito de cuatro roles en escritorio y limpieza/inspección en móvil ejecutados | V |
 | F14a | Mantenimiento y objetos | housekeeping.py, equipment.py, linen.py, Pages | Equipo sin habitación, vínculo Asset y aislamiento, intervalos y conflictos probados; configuración/equipo/evidencia privada/completar y resolver objeto ejecutados desde Pages | V |
@@ -53,7 +54,7 @@ La [auditoría punto por punto](AUDITORIA_ESPECIFICACION.md) conserva el texto o
 | F23 | Impresiones | templates/print, generador | Nueve formatos y exportador: diez PDF generados, texto/render revisados, campos técnicos ocultos | V |
 | F24 | Demo explícita de 2 × 10 habitaciones y roles | demo.seed | Carga y repetición ejecutadas; credenciales en archivo privado del sitio sintético | V |
 | F25 | Manuales, contabilidad y operación | docs/ | Manuales y API documentados; código anterior 8152ac5 migrado en copia aislada y versión 9ebf30a redesplegada, 70 tablas/866 filas/archivo idénticos | V |
-| F26 | Instalación/migración final sin pérdida | bootstrap WSL, patches | Dos instalaciones; respaldo fresco, restauración/migración/reversión/redespliegue/lectura de Pages conservan 70 tablas/866 filas y archivo privado por hash; origen intacto | V |
+| F26 | Instalación/migración y recuperación final | bootstrap WSL, patches, herramientas de recuperación | Ensayo histórico: 70 tablas/866 filas/archivo idénticos con reversión y redespliegue. 0.5.0 conserva las 70 tablas/911 filas previas y restaura aceptación con 71 tablas/185 filas; falta repetir recuperación con archivo privado y reversión de la versión actual | I |
 
 ## Criterios de aceptación de la especificación
 
@@ -78,7 +79,7 @@ La [auditoría punto por punto](AUDITORIA_ESPECIFICACION.md) conserva el texto o
 
 ## Evidencia acumulada
 
-Batería conjunta anterior a las últimas ampliaciones: **50 aprobadas** (39 de integración y 11 puras). Ampliación de horarios, acompañantes y KPI: **4 aprobadas** por separado. La cortesía detectó una incompatibilidad con tarifas negativas; se corrigió con descuento en la línea estándar y referencias a sus cargos de origen. Última batería conjunta en hospitality-acceptance.localhost: **187 aprobadas** (173 integración + 14 puras), además de **27 de Desk y 2 del portal**. Ambas carreras reales se repitieron tras reutilizar el motor de cupos en reportes, con una confirmación y un rechazo por carrera. También pasaron impuesto incluido, camas extra, Contact/Address, retiro de caja, variación de cambio, penalizaciones, devolución POS nativa y exportación numérica.
+Batería conjunta anterior a las últimas ampliaciones: **50 aprobadas** (39 de integración y 11 puras). Ampliación de horarios, acompañantes y KPI: **4 aprobadas** por separado. La cortesía detectó una incompatibilidad con tarifas negativas; se corrigió con descuento en la línea estándar y referencias a sus cargos de origen. Última batería conjunta en hospitality-acceptance.localhost: **193 aprobadas** (179 integración + 14 puras), además de **28 de Desk y 2 del portal**. Ambas carreras reales se repitieron tras reutilizar el motor de cupos en reportes, con una confirmación y un rechazo por carrera. También pasaron impuesto incluido, camas extra, Contact/Address, retiro de caja, variación de cambio, penalizaciones, devolución POS nativa y exportación numérica.
 
 La matriz no sustituye los registros finales ni las capturas. Integraciones reales de canales, mensajería, pasarelas y cerraduras esperan proveedor/credenciales; HRMS es opcional. No se migró producción ni ningún sitio ajeno.
 

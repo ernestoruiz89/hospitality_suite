@@ -152,7 +152,7 @@
     {
       "doctype": "HS Property",
       "child": false,
-      "fields": 49,
+      "fields": 52,
       "indexes": {
         "PRIMARY": {
           "unique": true,
@@ -170,6 +170,25 @@
           "unique": false,
           "columns": [
             "modified"
+          ]
+        }
+      }
+    },
+    {
+      "doctype": "HS Service Account",
+      "child": true,
+      "fields": 4,
+      "indexes": {
+        "PRIMARY": {
+          "unique": true,
+          "columns": [
+            "name"
+          ]
+        },
+        "parent": {
+          "unique": false,
+          "columns": [
+            "parent"
           ]
         }
       }
@@ -1395,13 +1414,13 @@
   "assets": [
     {
       "name": "hospitality.bundle.js",
-      "bytes": 145741,
-      "sha256": "befc5fb2b0bf9b2513f47f4cc56371ce71aea3d93ec93d5eabdd00690a508ef5"
+      "bytes": 148046,
+      "sha256": "106538f9e99d74b7f2d7d0e093c8e2a580147f5acf2590ec380e4e71cc0f87b9"
     },
     {
       "name": "hospitality.bundle.css",
       "bytes": 9982,
-      "sha256": "7afa2e4e193f6603e51c573fb84845f42cdbed7f3ce42453e4f63a93621d7276"
+      "sha256": "462511cfc86fd2ab504edea51fd6e285e90503dacfd46e018d44a34ead52be81"
     }
   ]
 }

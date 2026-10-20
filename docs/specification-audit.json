@@ -1538,10 +1538,29 @@
       "line": 140,
       "kind": "enumerated",
       "requirement": "- Configurar centros de costo y cuentas de ingresos/gastos por establecimiento y servicio.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/service_accounting.py",
+        "hospitality_suite/schema.py",
+        "hospitality_suite/controllers.py",
+        "hospitality_suite/security.py",
+        "hospitality_suite/install.py",
+        "hospitality_suite/api.py",
+        "hospitality_suite/public/js/hospitality_service_accounting.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_CONTABILIDAD_SERVICIOS.md",
+        "docs/evidence/accounting-native-tests.xml::TestServiceAccounting",
+        "docs/evidence/accounting-js-tests.log",
+        "docs/evidence/92-service-accounting-configured.png",
+        "docs/evidence/93-service-accounting-sale-review.png",
+        "docs/evidence/94-service-accounting-sale-confirmed.png",
+        "docs/evidence/95-service-accounting-closed-cashier.png",
+        "docs/evidence/accounting-items-ui.json",
+        "docs/evidence/accounting-upgrade.json",
+        "docs/evidence/accounting-ux-restored.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S09-10",
