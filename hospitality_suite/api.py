@@ -262,12 +262,9 @@ def stay_detail(name):
 
 
 @frappe.whitelist()
-def availability_search(property_name, starts_at, ends_at, category, people=1):
-    from hospitality_suite.availability import check
-    prop = require(property_name, "reserve")
-    if int(people) < 1 or int(people) > frappe.db.get_value("HS Category", category, "capacity"):
-        frappe.throw(frappe._("Cantidad de personas inválida"))
-    return check(prop, category, to_site(starts_at, prop), to_site(ends_at, prop))
+def availability_search(property_name, starts_at, ends_at, category, people=1, quantity=1):
+    from hospitality_suite.availability_search import search
+    return search(property_name, starts_at, ends_at, category, people, quantity)
 
 
 @frappe.whitelist()

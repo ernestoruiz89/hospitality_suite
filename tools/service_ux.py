@@ -16,7 +16,7 @@ SITE='hospitality-acceptance.localhost'
 TARGET=BENCH/'sites'/SITE
 parser=argparse.ArgumentParser()
 parser.add_argument('action',choices=['before','prepare','inspect','restore','verify'])
-parser.add_argument('--phase',choices=['service','pos','refund','guarantee','credits','mixed','accounting','forms','periodic','billing','board'],default='service')
+parser.add_argument('--phase',choices=['service','pos','refund','guarantee','credits','mixed','accounting','forms','periodic','billing','board','availability'],default='service')
 args=parser.parse_args()
 BASE=BENCH/f'.hospitality-{args.phase}-ux-baseline.json'
 RECEIPT=BENCH/f'.hospitality-{args.phase}-ux-restored-receipt.json'
@@ -78,7 +78,7 @@ try:
         raw=json.dumps(rows,default=str,sort_keys=True,ensure_ascii=False,separators=(',',':')).encode()
         tables[dt]=dict(rows=len(rows),sha256=hashlib.sha256(raw).hexdigest())
     if args.action=='before':
-        if args.phase in ('forms','periodic','billing','board'):assert not BASE.exists(),'Conserve el respaldo previo al recorrido de interfaz'
+        if args.phase in ('forms','periodic','billing','board','availability'):assert not BASE.exists(),'Conserve el respaldo previo al recorrido de interfaz'
         assert all(tables[dt]['rows']==0 for dt in ('HS Stay','HS Booking','HS Charge','HS Payment','HS Shift','Sales Invoice','Payment Entry','Journal Entry'))
         frappe.db.rollback()
         with (BENCH/f'.hospitality-{args.phase}-ux-backup.log').open('w') as output:
@@ -95,6 +95,34 @@ try:
         BASE.write_text(json.dumps(baseline,sort_keys=True))
         BASE.chmod(0o600)
         print('Respaldo previo al recorrido UX,',len(tables),'tablas sin operaciones')
+    elif args.action=='prepare' and args.phase=='availability':
+        from hospitality_suite import api
+        from hospitality_suite.time import now_local
+        from datetime import datetime,time,timedelta
+        import uuid
+        assert BASE.is_file() and tables==json.loads(BASE.read_text())['tables']
+        prop=frappe.get_doc('HS Property',{'property_name':'Hotel Jardín Demo'})
+        guest=frappe.get_doc('HS Guest',{'property':prop.name})
+        category=frappe.db.get_value('HS Category',{'property':prop.name})
+        room_count=frappe.db.count('HS Room',{'property':prop.name,'category':category,'active':1})
+        assert room_count>1
+        day=now_local(prop).date()+timedelta(days=2)
+        values=dict(starts_at=str(datetime.combine(day,time(14))),ends_at=str(datetime.combine(day+timedelta(days=1),time(12))),
+                    guest=guest.name,customer=guest.customer,instructions='UX-AVAILABILITY-001 consulta por cantidad',
+                    rooms=[dict(category=category,people=1) for _ in range(room_count-1)])
+        values['acceptance']=api.preview(prop.name,values)['acceptance']
+        api.execute(prop.name,'reserve',uuid.uuid4().hex,values)
+        frappe.db.commit()
+        fixture_path=BENCH/'.hospitality-availability-ui-fixture.json'
+        assert not fixture_path.exists(),'Conserve la huella del fixture original'
+        fixture={}
+        for dt in [*tables,'Version']:
+            rows=frappe.db.sql('SELECT * FROM `tab'+dt+'` ORDER BY name',as_dict=True)
+            raw=json.dumps(rows,default=str,sort_keys=True,ensure_ascii=False,separators=(',',':')).encode()
+            fixture[dt]=dict(rows=len(rows),sha256=hashlib.sha256(raw).hexdigest())
+        fixture_path.write_text(json.dumps(fixture,sort_keys=True))
+        fixture_path.chmod(0o600)
+        print('Fixture API:',room_count-1,'habitaciones de categoría en una reserva grupal, un cupo restante; sin asignación física, estancia ni cobro.')
     elif args.action=='prepare' and args.phase=='board':
         from hospitality_suite import api
         from datetime import datetime,time,timedelta
@@ -156,6 +184,35 @@ try:
         fixture.chmod(0o600)
         frappe.db.commit()
         print('Fixture POS sintético: fondo 100, venta 60, recibido 100, vuelto 40; sin HS Payment ni Payment Entry')
+    elif args.action=='inspect' and args.phase=='availability':
+        from hospitality_suite import api
+        from hospitality_suite.time import local
+        booking=frappe.get_doc('HS Booking',{'instructions':'UX-AVAILABILITY-001 consulta por cantidad'})
+        prop=frappe.get_doc('HS Property',booking.property)
+        values=dict(property_name=prop.name,starts_at=local(booking.starts_at,prop).isoformat(),ends_at=local(booking.ends_at,prop).isoformat(),category=booking.rooms[0].category,people=1)
+        two=api.availability_search(**values,quantity=2)
+        one=api.availability_search(**values,quantity=1)
+        room_count=frappe.db.count('HS Room',{'property':prop.name,'category':booking.rooms[0].category,'active':1})
+        assert two['available']==one['available']==1 and not two['enough'] and one['enough']
+        assert two['physical_available']==room_count and not two['needs_assignment_review']
+        assert len(booking.rooms)==room_count-1 and frappe.db.count('HS Booking')==1 and frappe.db.count('HS Allocation')==room_count-1
+        assert all(frappe.db.count(dt)==0 for dt in ('HS Stay','HS Charge','HS Payment','HS Shift','Sales Invoice','Payment Entry','Journal Entry','HS Daily Close'))
+        current={}
+        for dt in tables:
+            rows=frappe.db.sql('SELECT * FROM `tab'+dt+'` ORDER BY name',as_dict=True)
+            raw=json.dumps(rows,default=str,sort_keys=True,ensure_ascii=False,separators=(',',':')).encode()
+            current[dt]=dict(rows=len(rows),sha256=hashlib.sha256(raw).hexdigest())
+        assert tables==current
+        fixture=json.loads((BENCH/'.hospitality-availability-ui-fixture.json').read_text())
+        assert current=={dt:value for dt,value in fixture.items() if dt!='Version'}
+        versions=frappe.db.sql('SELECT * FROM `tabVersion` ORDER BY name',as_dict=True)
+        raw=json.dumps(versions,default=str,sort_keys=True,ensure_ascii=False,separators=(',',':')).encode()
+        assert fixture['Version']==dict(rows=len(versions),sha256=hashlib.sha256(raw).hexdigest())
+        proof=dict(site=SITE,synthetic=True,fixture_source='API',booking=booking.name,roomless_allocations=room_count-1,
+                   query_two=two,query_one=one,query_business_mutations=False,tables_equal_after_query=len(tables),tables_equal_after_ui_with_version=len(fixture),
+                   stays=0,charges=0,payments=0,invoices=0,business_date=str(prop.business_date))
+        (ROOT/'docs/evidence/availability-items-ui.json').write_text(json.dumps(proof,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
+        print('Consulta de una/dos habitaciones: cupo 1 y',room_count,'opciones físicas; 71 tablas sin cambios por consulta y sin operaciones financieras.')
     elif args.action=='inspect' and args.phase=='board':
         from hospitality_suite import api
         prop=frappe.get_doc('HS Property',{'property_name':'Hotel Jardín Demo'})

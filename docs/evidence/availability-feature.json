@@ -1,0 +1,109 @@
+{
+  "source_commit": "d7fd37aecfac904605236dc708dc77c3f277c989",
+  "app_version": "0.6.3",
+  "source_specification_sha256": "876632e08057a1ea0386bd9e01fde6f477c62380a9414bed23e2a852765fb651",
+  "source_sha256": {
+    "hospitality_suite/availability_search.py": "7b4422efa5020aef4bb413dad517880a2920d4174304407c3170fe7e9ef76c2a",
+    "hospitality_suite/availability.py": "22d09a9373c958890c3b96116eb21469653009f818f13bfdcf396a219d775101",
+    "hospitality_suite/api.py": "9d9a3b3cf79c3a4eb58cc3801d6c3915e52904c1d0595ab5d1d36b5916161cf0",
+    "hospitality_suite/public/js/hospitality_availability.js": "7a0c33c42288a7ec7d619139042023ffd33cb23f585839cf24291b43a0dc2059",
+    "hospitality_suite/public/js/hospitality_extras.js": "c430da41fb3fc6baa8ee84ff0d56c3fbc17f6e1a0d2dbbbcbc2bcaa2dde7a101",
+    "hospitality_suite/public/js/hospitality.js": "ad275b7dd1cadaf50ae859a4b3f24562c54470d5ef72eedf90664b831b3560a1",
+    "hospitality_suite/public/hospitality.bundle.js": "4f7fd249e613a0fb9fbf6036ec62b1f982fad6003c07834f5afcb5ccbfee3ca6",
+    "hospitality_suite/public/hospitality.bundle.css": "62e4c1f20a7f30068bd9c04664e029be0bbf7a06375ae28314a0359cce8030c5",
+    "hospitality_suite/tests/test_availability_search.py": "a466f98c58c78414221659a7039b94000865c177371acf87d0938283156a08a2",
+    "tools/test_availability_ui.cjs": "00dd686e20628d8f52b2461ed9fa56836fc2339968e1614f59ae4dde4c943dcb"
+  },
+  "native_tests": {
+    "total": 243,
+    "integration": 229,
+    "pure": 14,
+    "new_cases": [
+      "test_category_capacity_does_not_promise_a_fixed_room_for_the_whole_interval",
+      "test_full_roomless_category_returns_zero_without_a_validation_error",
+      "test_half_open_cleaning_buffer_edges_use_the_shared_capacity_engine",
+      "test_invalid_numbers_and_nonpositive_intervals_are_rejected_without_rounding",
+      "test_quantity_and_people_query_is_read_only_and_has_human_room_labels",
+      "test_roomless_group_reduces_quota_and_conversion_does_not_count_twice",
+      "test_scope_and_roles_are_enforced_without_exposing_other_property_inventory"
+    ],
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "javascript_tests": {
+    "total": 49,
+    "desk": 47,
+    "portal": 2,
+    "new_cases": 4,
+    "failures": 0
+  },
+  "new_browser_walkthrough": true,
+  "browser_user": "receptionist@hospitality.example.invalid",
+  "fixture_source": "API",
+  "readonly_query_tables_compared_with_version": 72,
+  "native_ui": "availability-items-ui.json",
+  "browser": "availability-browser.json",
+  "images": {
+    "118-disponibilidad-cantidad-escritorio.jpg": {
+      "format": "JPEG",
+      "width": 1280,
+      "height": 720,
+      "sha256": "d60f2e396198ea707c9a0a65c113712264ccc52a133211461aec675540c84563"
+    },
+    "119-disponibilidad-cantidad-movil.jpg": {
+      "format": "JPEG",
+      "width": 390,
+      "height": 787,
+      "sha256": "be67a07ac32eaedea7598bddbb932eda0cbd8a9c714482969ef2fc54cdd69add"
+    },
+    "120-disponibilidad-filtros-editados.jpg": {
+      "format": "JPEG",
+      "width": 390,
+      "height": 787,
+      "sha256": "dedda709bc6cd57a31595c5d604d73c347eb8628a51f1d60f1df3ca6022dd431"
+    },
+    "121-disponibilidad-opciones.jpg": {
+      "format": "JPEG",
+      "width": 1280,
+      "height": 720,
+      "sha256": "c0a86aa8c66b6745432e6730355b487f0f496ee5589a073c19c79b3ded44d8ca"
+    }
+  },
+  "conservation": {
+    "upgrade": "availability-upgrade.json",
+    "restored": "availability-ux-restored.json",
+    "health": "availability-final-state.json"
+  },
+  "interval_edges": {
+    "existing": [
+      "10:00:00",
+      "11:00:00"
+    ],
+    "with_buffer_minutes": 30,
+    "rejected_arrival_with_buffer": "11:29:59",
+    "accepted_arrival_with_buffer": "11:30:00",
+    "accepted_query_end_with_buffer": "09:30:00",
+    "rejected_query_end_with_buffer": "09:30:01",
+    "without_buffer_minutes": 0,
+    "rejected_arrival_without_buffer": "10:59:59",
+    "accepted_arrival_without_buffer": "11:00:00",
+    "accepted_query_end_without_buffer": "10:00:00",
+    "rejected_query_end_without_buffer": "10:00:01",
+    "checked_by": [
+      "api.availability_search",
+      "availability.check"
+    ]
+  },
+  "requirements": [
+    "S06-01",
+    "S05-07",
+    "S16-03"
+  ],
+  "ota_synchronization_deferred": true,
+  "limitations": [
+    "No persistent draft flow or account pricing explanation is added.",
+    "Hold expiry retries, role-wide acceptance, demo, translations and final recovery remain pending.",
+    "Final UI date/grammar/spacing refinements followed the Python suite; backend Python did not change."
+  ]
+}

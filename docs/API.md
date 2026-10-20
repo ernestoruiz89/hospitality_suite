@@ -4,6 +4,10 @@ service_accounting_configuration(property_name) exige setup y devuelve modified,
 
 Contrato verificado contra Frappe 16.52.0 / ERPNext 16.51.1. Las Pages usan estos mismos servicios. Las respuestas RPC estándar envuelven el resultado en `message`; un error no confirma una operación.
 
+Desde 0.6.3, `availability_search` devuelve un objeto de consulta por cantidad en lugar de la lista anterior de candidatos. Sus consumidores deben leer `rooms`; la Page incluida se actualiza en la misma versión. `quantity` es el número de habitaciones de una categoría y `people` las personas **por habitación**: ambos enteros positivos, sin truncar fracciones. El servidor valida capacidad, establecimiento y fechas en la zona configurada.
+
+La respuesta contiene `property`, `category`, `category_label`, `starts_at`/`ends_at` en la zona del sitio, `time_zone` del establecimiento, `quantity`, `people`, `available`, `enough`, `physical_available`, `needs_assignment_review` y `rooms` con nombre interno/número/limpieza. `available` es el cupo simultáneo de categoría y `enough` indica si alcanza para `quantity`; las habitaciones de `rooms` son alternativas físicas libres todo el intervalo, no unidades que se sumen al cupo. Por ejemplo, una reserva grupal sin habitación física puede dejar cupo 1 y diez alternativas: solicitar 2 devuelve `enough=false`. La fragmentación puede dejar cupo suficiente y pocas opciones continuas; entonces `needs_assignment_review=true`. Cero cupo es una respuesta válida; errores de conexión o de validación no significan cero. La consulta no escribe documentos ni conserva cupo: la confirmación sigue validando el mismo motor de intervalos/colchón bajo bloqueo.
+
 preview(action=payment, kind=Refund) devuelve refund con modalidad, documento original, nota/factura, valor y moneda de la cuenta del cliente, valoración histórica y diferencia de cambio actual. Su acceptance incluye fondos, asignación y saldo del crédito. execute(payment) vuelve a validarlos y conserva la nota en HS Payment.sales_invoice y el origen en source_payment. Un anticipo ya aplicado admite devolución solo contra crédito válido de una de sus facturas y hasta su aportación restante; sin nota solo se devuelve lo no aplicado.
 
 ## Acceso y consultas
@@ -17,7 +21,7 @@ bootstrap devuelve native_pos solo a roles de finanzas/reportes del establecimie
 | Método | Parámetros principales | Resultado / permiso |
 |---|---|---|
 | `bootstrap` | `property_name` opcional | Establecimientos, navegación y proyección limitada al rol |
-| `availability_search` | establecimiento, inicio, fin, categoría, personas | Disponibilidad compartida con recepción |
+| `availability_search` | `property_name`, `starts_at`, `ends_at`, `category`, `people=1`, `quantity=1` | Consulta de cupo por cantidad; requiere acción reserve y acceso al establecimiento |
 | `calendar` | establecimiento, inicio, fin | Asignaciones del establecimiento |
 | `booking_detail`, `stay_detail` | `name` | Documento autorizado y cuentas relacionadas |
 | `room_balances` | establecimiento | Saldos únicamente para roles financieros/recepción autorizados |

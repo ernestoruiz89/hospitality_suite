@@ -1,0 +1,59 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "user": "receptionist@hospitality.example.invalid",
+  "property_label": "Hotel Jardín Demo",
+  "fixture_source": "API",
+  "query_interval": {
+    "starts_at": "2026-10-22 14:00:00",
+    "ends_at": "2026-10-23 12:00:00",
+    "time_zone": "America/Managua"
+  },
+  "observed_requests": [
+    {
+      "quantity": 2,
+      "available": 1,
+      "enough": false,
+      "screenshot": "118-disponibilidad-cantidad-escritorio.jpg"
+    },
+    {
+      "quantity": 1,
+      "available": 1,
+      "enough": true,
+      "screenshot": "119-disponibilidad-cantidad-movil.jpg"
+    }
+  ],
+  "edited_filter_invalidates_previous_result": true,
+  "edited_filter_screenshot": "120-disponibilidad-filtros-editados.jpg",
+  "expanded_result_text": "No alcanza el cupo para 2 habitaciones\n\nEstándar · Personas por habitación: 1\n\n22/10/2026 14:00 → 23/10/2026 12:00\n\nCupo disponible: 1 · Habitaciones solicitadas: 2\n\nVer opciones de habitación (10)\n\nPuede elegir entre estas habitaciones, hasta el cupo disponible. La limpieza se verifica antes del ingreso.\n\nH101\nH102\nH103\nH104\nH105\nH106\nH107\nH108\nH109\nH110\nEsta consulta no reserva habitaciones. El cupo se vuelve a comprobar al confirmar una reserva.",
+  "options_screenshot": "121-disponibilidad-opciones.jpg",
+  "mobile_geometry": {
+    "body": {
+      "bottom": 710.34375,
+      "clientWidth": 372,
+      "height": 642.34375,
+      "scrollWidth": 372,
+      "top": 68,
+      "width": 372
+    },
+    "content": {
+      "bottom": 786.34375,
+      "clientWidth": 372,
+      "height": 778.34375,
+      "scrollWidth": 372,
+      "top": 8,
+      "width": 374
+    },
+    "primary": {
+      "bottom": 770.34375,
+      "clientWidth": 340,
+      "height": 44,
+      "scrollWidth": 340,
+      "top": 726.34375,
+      "width": 342
+    },
+    "viewport": {
+      "height": 844,
+      "width": 390
+    }
+  }
+}

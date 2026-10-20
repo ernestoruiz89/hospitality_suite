@@ -1,10 +1,12 @@
 # Manual diario por rol
 
-Aplicación 0.6.2, Frappe 16.52 / ERPNext 16.51. Los recorridos acreditados y las verificaciones pendientes están en REQUISITOS.md.
+Aplicación 0.6.3, Frappe 16.52 / ERPNext 16.51. Los recorridos acreditados y las verificaciones pendientes están en REQUISITOS.md.
 
 Los formularios extensos están organizados en pestañas por tarea. Puede cambiar de sección sin perder lo escrito y guardar desde cualquiera. Los datos adicionales del huésped y las opciones de reserva tienen su propia sección. La acción de guardar o revisar permanece visible; si falta un dato obligatorio, el formulario abre su sección. Al cerrar una revisión de precio o cobro, vuelve al borrador sin registrarlo. Véase UX_FORMULARIOS.md.
 
 ## Recepción
+
+En Reservas → **Buscar disponibilidad**, seleccione categoría, cantidad de habitaciones, personas por habitación y fechas. El resultado indica si alcanza el cupo y conserva los filtros para corregirlos y volver a buscar. Ver opciones de habitación despliega las alternativas: pueden ser más numerosas que el cupo restante por las reservas todavía sin asignación. Si se advierte falta de habitaciones continuas para todo el intervalo, revise la asignación antes de reservar. La consulta no conserva habitaciones. Véase DISPONIBILIDAD_POR_CANTIDAD.md.
 
 1. Seleccione el establecimiento. El reloj y las fechas de operación usan su zona horaria; la fecha operativa puede diferir del calendario.
 2. Registre al huésped en Clientes y huéspedes, o elija uno existente. Huésped, acompañante y cliente pagador son entidades diferentes. Contact y Address se crean como documentos estándar cuando se proporcionan datos de contacto/dirección.

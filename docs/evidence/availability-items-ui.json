@@ -1,0 +1,147 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "synthetic": true,
+  "fixture_source": "API",
+  "booking": "jlf00b1b4e",
+  "roomless_allocations": 9,
+  "query_two": {
+    "property": "qmbjb0i1qc",
+    "category": "qmcbb8qlvg",
+    "category_label": "Estándar",
+    "starts_at": "2026-10-22 14:00:00",
+    "ends_at": "2026-10-23 12:00:00",
+    "time_zone": "America/Managua",
+    "people": 1,
+    "quantity": 2,
+    "available": 1,
+    "enough": false,
+    "physical_available": 10,
+    "needs_assignment_review": false,
+    "rooms": [
+      {
+        "name": "qmf5ju94js",
+        "room_number": "H101",
+        "cleaning_status": "Clean"
+      },
+      {
+        "name": "qmf24e5qke",
+        "room_number": "H102",
+        "cleaning_status": "Clean"
+      },
+      {
+        "name": "qmfnhs65gb",
+        "room_number": "H103",
+        "cleaning_status": "Clean"
+      },
+      {
+        "name": "qmfodmger0",
+        "room_number": "H104",
+        "cleaning_status": "Clean"
+      },
+      {
+        "name": "qmfvqm1he4",
+        "room_number": "H105",
+        "cleaning_status": "Clean"
+      },
+      {
+        "name": "qmfaq0ktsg",
+        "room_number": "H106",
+        "cleaning_status": "Clean"
+      },
+      {
+        "name": "qmfsq0ov22",
+        "room_number": "H107",
+        "cleaning_status": "Clean"
+      },
+      {
+        "name": "qmfo34k6dr",
+        "room_number": "H108",
+        "cleaning_status": "Clean"
+      },
+      {
+        "name": "qmf4nvo6rd",
+        "room_number": "H109",
+        "cleaning_status": "Clean"
+      },
+      {
+        "name": "qmffump0i2",
+        "room_number": "H110",
+        "cleaning_status": "Clean"
+      }
+    ]
+  },
+  "query_one": {
+    "property": "qmbjb0i1qc",
+    "category": "qmcbb8qlvg",
+    "category_label": "Estándar",
+    "starts_at": "2026-10-22 14:00:00",
+    "ends_at": "2026-10-23 12:00:00",
+    "time_zone": "America/Managua",
+    "people": 1,
+    "quantity": 1,
+    "available": 1,
+    "enough": true,
+    "physical_available": 10,
+    "needs_assignment_review": false,
+    "rooms": [
+      {
+        "name": "qmf5ju94js",
+        "room_number": "H101",
+        "cleaning_status": "Clean"
+      },
+      {
+        "name": "qmf24e5qke",
+        "room_number": "H102",
+        "cleaning_status": "Clean"
+      },
+      {
+        "name": "qmfnhs65gb",
+        "room_number": "H103",
+        "cleaning_status": "Clean"
+      },
+      {
+        "name": "qmfodmger0",
+        "room_number": "H104",
+        "cleaning_status": "Clean"
+      },
+      {
+        "name": "qmfvqm1he4",
+        "room_number": "H105",
+        "cleaning_status": "Clean"
+      },
+      {
+        "name": "qmfaq0ktsg",
+        "room_number": "H106",
+        "cleaning_status": "Clean"
+      },
+      {
+        "name": "qmfsq0ov22",
+        "room_number": "H107",
+        "cleaning_status": "Clean"
+      },
+      {
+        "name": "qmfo34k6dr",
+        "room_number": "H108",
+        "cleaning_status": "Clean"
+      },
+      {
+        "name": "qmf4nvo6rd",
+        "room_number": "H109",
+        "cleaning_status": "Clean"
+      },
+      {
+        "name": "qmffump0i2",
+        "room_number": "H110",
+        "cleaning_status": "Clean"
+      }
+    ]
+  },
+  "query_business_mutations": false,
+  "tables_equal_after_query": 71,
+  "tables_equal_after_ui_with_version": 72,
+  "stays": 0,
+  "charges": 0,
+  "payments": 0,
+  "invoices": 0,
+  "business_date": "2026-10-19"
+}

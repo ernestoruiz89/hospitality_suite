@@ -1273,17 +1273,19 @@
       "line": 86,
       "kind": "enumerated",
       "requirement": "- Incluye colchones de limpieza en el cálculo de disponibilidad cuando así esté configurado.",
-      "status": "I",
+      "status": "V",
       "implementation": [
         "hospitality_suite/availability.py",
-        "hospitality_suite/operations.py"
+        "hospitality_suite/availability_search.py",
+        "hospitality_suite/tests/test_availability_search.py"
       ],
       "evidence": [
-        "docs/AUDITORIA_PAGES_HABITACIONES.md",
-        "docs/AUDITORIA_FLUJOS_TRANSACCIONES.md",
-        "docs/evidence/pages-rooms-audit.json"
+        "docs/DISPONIBILIDAD_POR_CANTIDAD.md",
+        "docs/evidence/availability-feature.json",
+        "docs/evidence/availability-native-tests.xml::test_half_open_cleaning_buffer_edges_use_the_shared_capacity_engine",
+        "docs/evidence/availability-native-tests.xml::test_category_capacity_does_not_promise_a_fixed_room_for_the_whole_interval"
       ],
-      "remaining": "El motor amplía extremos por buffer_minutes/cleaning_minutes y conserva el colchón en asignaciones. Falta prueba explícita del instante anterior y del extremo permitido con y sin colchón, pendiente S16-03."
+      "remaining": ""
     },
     {
       "id": "S06-01",
@@ -1292,20 +1294,31 @@
       "line": 90,
       "kind": "enumerated",
       "requirement": "- Consulta de disponibilidad por fechas y horas, categoría, capacidad y cantidad de habitaciones.",
-      "status": "P",
+      "status": "V",
       "implementation": [
-        "hospitality_suite/api.py",
+        "hospitality_suite/availability_search.py",
         "hospitality_suite/availability.py",
-        "hospitality_suite/operations.py",
-        "hospitality_suite/public/js/hospitality.js"
+        "hospitality_suite/api.py",
+        "hospitality_suite/public/js/hospitality_availability.js",
+        "hospitality_suite/public/hospitality.bundle.css"
       ],
       "evidence": [
-        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
-        "docs/evidence/reservations-audit.json",
-        "docs/evidence/reservations-native-tests.xml::test_category_last_unit_roomless_then_assign",
-        "docs/evidence/reservations-native-tests.xml::test_availability_shares_capacity_with_roomless_reservations"
+        "docs/DISPONIBILIDAD_POR_CANTIDAD.md",
+        "docs/evidence/availability-feature.json",
+        "docs/evidence/availability-native-tests.xml::test_category_capacity_does_not_promise_a_fixed_room_for_the_whole_interval",
+        "docs/evidence/availability-native-tests.xml::test_full_roomless_category_returns_zero_without_a_validation_error",
+        "docs/evidence/availability-native-tests.xml::test_half_open_cleaning_buffer_edges_use_the_shared_capacity_engine",
+        "docs/evidence/availability-native-tests.xml::test_invalid_numbers_and_nonpositive_intervals_are_rejected_without_rounding",
+        "docs/evidence/availability-native-tests.xml::test_quantity_and_people_query_is_read_only_and_has_human_room_labels",
+        "docs/evidence/availability-native-tests.xml::test_roomless_group_reduces_quota_and_conversion_does_not_count_twice",
+        "docs/evidence/availability-native-tests.xml::test_scope_and_roles_are_enforced_without_exposing_other_property_inventory",
+        "docs/evidence/availability-js-tests.log",
+        "docs/evidence/availability-browser.json",
+        "docs/evidence/availability-items-ui.json",
+        "docs/evidence/118-disponibilidad-cantidad-escritorio.jpg",
+        "docs/evidence/119-disponibilidad-cantidad-movil.jpg"
       ],
-      "remaining": "Buscar disponibilidad admite fechas/horas/categoría/personas, pero no cantidad solicitada de habitaciones ni respuesta de cupo para esa cantidad. La cotización grupal sí controla el conjunto; completar la consulta desde Page/API y su aceptación sin crear reservas."
+      "remaining": ""
     },
     {
       "id": "S06-02",
@@ -3270,15 +3283,19 @@
       "line": 234,
       "kind": "enumerated",
       "requirement": "- Define intervalos como [inicio, fin), con el margen de limpieza aparte cuando corresponda, y prueba sus límites exactos.",
-      "status": "I",
+      "status": "V",
       "implementation": [
-        "hospitality_suite/availability.py"
+        "hospitality_suite/availability.py",
+        "hospitality_suite/availability_search.py",
+        "hospitality_suite/tests/test_availability_search.py"
       ],
       "evidence": [
-        "docs/AUDITORIA_FLUJOS_TRANSACCIONES.md",
-        "docs/evidence/accounting-native-tests.xml::test_category_last_unit_roomless_then_assign"
+        "docs/DISPONIBILIDAD_POR_CANTIDAD.md",
+        "docs/evidence/availability-feature.json",
+        "docs/evidence/availability-native-tests.xml::test_half_open_cleaning_buffer_edges_use_the_shared_capacity_engine",
+        "docs/evidence/availability-native-tests.xml::test_category_capacity_does_not_promise_a_fixed_room_for_the_whole_interval"
       ],
-      "remaining": "El motor usa [inicio, fin), libera antes de ocupar en el barrido y separa buffer_minutes. Falta una prueba explícita de extremos exactos de ocupación y colchón de limpieza, incluidos un instante anterior y el extremo permitido; las pruebas de tolerancia tarifaria no sustituyen esa prueba de cupo."
+      "remaining": ""
     },
     {
       "id": "S16-04",
