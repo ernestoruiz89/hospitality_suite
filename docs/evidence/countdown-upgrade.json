@@ -1,0 +1,16 @@
+{
+  "previous_columns_preserved": true,
+  "default_policy_preserves_existing_stays": true,
+  "sites": {
+    "hospitality.localhost": {
+      "tables": 72,
+      "rows": 1191,
+      "private_files": 2
+    },
+    "hospitality-acceptance.localhost": {
+      "tables": 72,
+      "rows": 195,
+      "private_files": 0
+    }
+  }
+}

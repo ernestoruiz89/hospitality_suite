@@ -1,6 +1,6 @@
 # Manual diario por rol
 
-Aplicación 0.6.8, Frappe 16.52 / ERPNext 16.51. Los recorridos acreditados y las verificaciones pendientes están en REQUISITOS.md.
+Aplicación 0.6.9, Frappe 16.52 / ERPNext 16.51. Los recorridos acreditados y las verificaciones pendientes están en REQUISITOS.md.
 
 Los formularios extensos están organizados en pestañas por tarea. Puede cambiar de sección sin perder lo escrito y guardar desde cualquiera. Los datos adicionales del huésped y las opciones de reserva tienen su propia sección. La acción de guardar o revisar permanece visible; si falta un dato obligatorio, el formulario abre su sección. Al cerrar una revisión de precio o cobro, vuelve al borrador sin registrarlo. Véase UX_FORMULARIOS.md.
 
@@ -21,7 +21,7 @@ En Reservas → **Buscar disponibilidad**, seleccione categoría, cantidad de ha
 
 Estancias dispone de Alojados, Llegadas, Salidas y Cuentas abiertas, con conteos y páginas de 25 filas. Consultar pendientes hasta usa la fecha calendario local y conserva también las llegadas/salidas atrasadas. No cambia la fecha operativa. Alojados y Cuentas abiertas muestran el estado actual. En un grupo, Llegadas muestra una fila por habitación pendiente; Gestionar llegada abre la reserva y permite elegir su solicitud numerada. Las cuentas compartidas aparecen una vez y cada saldo conserva su moneda. Ver cuenta también está disponible si el saldo es cero.
 
-Recepción muestra las fechas de la estancia activa y la próxima llegada pendiente. Ver reserva abre la existente; una reserva futura sigue Sin ocupación hasta registrar la entrada. En móvil, cabecera y fichas se compactan y las acciones del tablero ocupan el ancho de su ficha. Véase ESTANCIAS_Y_LLEGADAS.md.
+Recepción muestra las fechas de la estancia activa y la próxima llegada pendiente. El contador es orientativo: conserva la salida prevista al recargar y no depende del reloj calendario del equipo; revise los cargos antes de confirmar una operación. CONTADOR_Y_RELOJ.md conserva la comprobación de recarga y desfase. Ver reserva abre la existente; una reserva futura sigue Sin ocupación hasta registrar la entrada. En móvil, cabecera y fichas se compactan y las acciones del tablero ocupan el ancho de su ficha. Véase ESTANCIAS_Y_LLEGADAS.md.
 
 El rol HS Receptionist registra la operación. Para cobrar con ese mismo usuario, administración puede añadir HS Cashier. Una salida a crédito requiere autorización de usuario y pagador, límite vigente y motivo; el saldo continúa como cuenta por cobrar.
 

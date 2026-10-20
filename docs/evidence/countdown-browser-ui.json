@@ -1,0 +1,95 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "role": "HS Receptionist",
+  "origin": "http://localhost:8087",
+  "clock_emulator": "Loopback-only proxy to acceptance:8089; JavaScript Date skew +24h / -24h; OS/server clocks unchanged",
+  "before": {
+    "clock": "PRUEBA LOCAL · Reloj del dispositivo +24 h · 2026-10-21T19:52:54.048Z\nAlternar reloj de prueba",
+    "room": {
+      "counter": "Tiempo restante: 2 h 54 min",
+      "deadline": "2026-10-20 16:47:51",
+      "text": "HABITACIÓN\nM101\nEstándar · Piso 1\nAlojado\nLimpia\nEntrada prevista\n20/10/2026 13:47\nSalida prevista\n20/10/2026 16:47\nTiempo restante: 2 h 54 min\nSaldo:\nC$ 450.00\nVer estancia"
+    },
+    "server_reference": "Hora de referencia del servidor: 2026-10-20 13:52:54.818643 · NIO"
+  },
+  "after_clock_jump": {
+    "clock": "PRUEBA LOCAL · Reloj del dispositivo −24 h · 2026-10-19T19:53:02.050Z\nAlternar reloj de prueba",
+    "room": {
+      "counter": "Tiempo restante: 2 h 53 min",
+      "deadline": "2026-10-20 16:47:51",
+      "text": "HABITACIÓN\nM101\nEstándar · Piso 1\nAlojado\nLimpia\nEntrada prevista\n20/10/2026 13:47\nSalida prevista\n20/10/2026 16:47\nTiempo restante: 2 h 53 min\nSaldo:\nC$ 450.00\nVer estancia"
+    },
+    "server_reference": "Hora de referencia del servidor: 2026-10-20 13:52:54.818643 · NIO"
+  },
+  "after_reload": {
+    "clock": "PRUEBA LOCAL · Reloj del dispositivo +24 h · 2026-10-21T19:54:37.347Z\nAlternar reloj de prueba",
+    "room": {
+      "counter": "Tiempo restante: 2 h 53 min",
+      "deadline": "2026-10-20 16:47:51",
+      "text": "HABITACIÓN\nM101\nEstándar · Piso 1\nAlojado\nLimpia\nEntrada prevista\n20/10/2026 13:47\nSalida prevista\n20/10/2026 16:47\nTiempo restante: 2 h 53 min\nSaldo:\nC$ 450.00\nVer estancia"
+    },
+    "server_reference": "Hora de referencia del servidor: 2026-10-20 13:54:38.019851 · NIO"
+  },
+  "final_style": {
+    "clock": "PRUEBA LOCAL · Reloj del dispositivo +24 h · 2026-10-21T19:56:18.099Z\nAlternar reloj de prueba",
+    "room": {
+      "counter": "Tiempo restante: 2 h 51 min",
+      "deadline": "2026-10-20 16:47:51",
+      "text": "HABITACIÓN\nM101\nEstándar · Piso 1\nAlojado\nLimpia\nEntrada prevista\n20/10/2026 13:47\nSalida prevista\n20/10/2026 16:47\nTiempo restante: 2 h 51 min\nSaldo:\nC$ 450.00\nVer estancia"
+    },
+    "server_reference": "Hora de referencia del servidor: 2026-10-20 13:56:18.706560 · NIO"
+  },
+  "bootstrap_requests_before_jump": 12,
+  "bootstrap_requests_after_jump": 12,
+  "no_resync_during_jump": true,
+  "same_deadline_and_visible_balance": true,
+  "countdown_advanced_and_survived_reload": true,
+  "css_legibility_checked_after_clock_scenarios": true,
+  "mobile": {
+    "action": {
+      "bottom": 641.671875,
+      "height": 42,
+      "left": 27,
+      "right": 172,
+      "top": 599.671875,
+      "width": 145
+    },
+    "card": {
+      "bottom": 652.671875,
+      "height": 407.671875,
+      "left": 14,
+      "right": 185,
+      "top": 245,
+      "width": 171
+    },
+    "counter": {
+      "bottom": 531.6875,
+      "height": 36,
+      "left": 28,
+      "right": 171,
+      "top": 495.6875,
+      "width": 143
+    },
+    "counterFontSize": "12px",
+    "documentWidth": 390,
+    "testOverlayTop": 756,
+    "viewport": {
+      "height": 844,
+      "width": 390
+    }
+  },
+  "desktop": {
+    "documentWidth": 1280,
+    "viewport": {
+      "height": 720,
+      "width": 1280
+    }
+  },
+  "captures": [
+    148,
+    149,
+    150,
+    151,
+    152
+  ]
+}

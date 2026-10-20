@@ -11,7 +11,7 @@ import frappe
 
 bench=Path('/home/frappe/benches/hospitality-bench')
 parser=argparse.ArgumentParser()
-parser.add_argument('--phase',choices=['financial','service','pos','refund','guarantee','credits','mixed','accounting','integration','forms','periodic','billing','board','availability','drafts','tariffs','account-summary','guest-profiles','background-jobs'],default='financial')
+parser.add_argument('--phase',choices=['financial','service','pos','refund','guarantee','credits','mixed','accounting','integration','forms','periodic','billing','board','availability','drafts','tariffs','account-summary','guest-profiles','background-jobs','countdown'],default='financial')
 args=parser.parse_args()
 root=Path(__file__).resolve().parents[1]
 os.chdir(bench/'sites')
@@ -47,7 +47,7 @@ for site,database in [('hospitality-acceptance.localhost','hospitality_acceptanc
                 rows=frappe.db.sql('SELECT * FROM `tab'+dt+'` ORDER BY name',as_dict=True)
                 raw=json.dumps(rows,default=str,sort_keys=True,ensure_ascii=False,separators=(',',':')).encode()
                 actual=dict(rows=len(rows),sha256=hashlib.sha256(raw).hexdigest())
-                if args.phase in ('accounting','integration','forms','periodic','billing','board','availability','drafts','tariffs','account-summary','guest-profiles','background-jobs') and dt=='Company' and actual!=expected:
+                if args.phase in ('accounting','integration','forms','periodic','billing','board','availability','drafts','tariffs','account-summary','guest-profiles','background-jobs','countdown') and dt=='Company' and actual!=expected:
                     cache=json.loads((bench/'.hospitality-accounting-company-cache.json').read_text())
                     assert cache['source_company_sha256']==expected['sha256'] and cache['current_company_sha256']==actual['sha256']
                     assert cache['changed_fields']==['modified','sales_monthly_history','transactions_annual_history']
@@ -65,6 +65,9 @@ for site,database in [('hospitality-acceptance.localhost','hospitality_acceptanc
 listeners=subprocess.check_output(['ss','-ltnp'],text=True)
 proof['ports']={str(p):(':'+str(p)+' ') in listeners for p in (8086,8089,9001,11001,13001)}
 assert proof['ports']=={'8086':True,'8089':False,'9001':True,'11001':True,'13001':True}
+if args.phase=='countdown':
+    proof['ports']['8087']=':8087 ' in listeners
+    assert not proof['ports']['8087'],'Retire el emulador de reloj después del recorrido'
 with urllib.request.urlopen('http://localhost:8086/login') as response:
     assert response.status==200
 proof['main_http']=200

@@ -1762,11 +1762,12 @@
       "line": 112,
       "kind": "enumerated",
       "requirement": "- El servidor es la autoridad del tiempo y del importe. El contador de la pantalla es informativo y debe sobrevivir a recargas.",
-      "status": "I",
+      "status": "V",
       "implementation": [
         "hospitality_suite/public/js/hospitality.js",
         "hospitality_suite/operations.py",
-        "hospitality_suite/timing.py"
+        "hospitality_suite/timing.py",
+        "hospitality_suite/public/hospitality.bundle.css"
       ],
       "evidence": [
         "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
@@ -1774,9 +1775,18 @@
         "docs/evidence/reservations-native-tests.xml::test_idempotent_booking_and_changed_payload",
         "docs/evidence/reservations-native-tests.xml::test_changed_charge_requires_a_new_review_before_settling_scheduled_nights",
         "docs/evidence/reservations-native-tests.xml::test_motel_midnight_grace_overtime_and_prepare_retry",
-        "docs/evidence/countdown.json"
+        "docs/evidence/countdown.json",
+        "docs/CONTADOR_Y_RELOJ.md",
+        "tools/test_countdown_ui.cjs",
+        "docs/evidence/countdown-js-tests.log",
+        "docs/evidence/countdown-browser-ui.json",
+        "docs/evidence/countdown-items-ui.json",
+        "docs/evidence/countdown-proxy.json",
+        "docs/evidence/countdown-upgrade.json",
+        "docs/evidence/countdown-ux-restored.json",
+        "docs/evidence/countdown-final-state.json"
       ],
-      "remaining": "Servidor y aceptación del importe acreditados; el contador se deriva de fin/hora del servidor y la evidencia existente muestra su avance. Falta prueba explícita de recarga y reloj cliente desfasado que conserve el mismo vencimiento sin alterar importe/estado."
+      "remaining": ""
     },
     {
       "id": "S07-11",

@@ -53,6 +53,8 @@ window.hospitality_suite = window.hospitality_suite || {};
       }
       window.addEventListener("online",()=>this.action_reload());
       window.addEventListener("offline",()=>this.connection());
+      window.addEventListener("focus",()=>this.resumeClock());
+      document.addEventListener("visibilitychange",()=>this.resumeClock(true));
       $(wrapper).on("show",()=>this.scheduleRefresh());
       this.timer=setInterval(()=>{if($(wrapper).is(":visible")) this.updateTimers();},30000);
     }
@@ -64,14 +66,16 @@ window.hospitality_suite = window.hospitality_suite || {};
       try {
         this.root.attr("aria-busy","true");
         if(!this.data) this.root.html(`<div class="hs-loading" role="status">${frappe.utils.escape_html(__("Cargando la operación…"))}</div>`);
-        let data=await this.call("bootstrap",{property_name:selected || undefined});
+        const initial=!this.data;
+        let data=await this.call("bootstrap",{property_name:initial?undefined:selected || undefined});
         if(sequence!==this.loadSequence)return;
         if(selected && !data.properties.some(p=>p.name===selected)) selected="";
         if(!selected && data.properties.length) {selected=data.properties[0].name;data=await this.call("bootstrap",{property_name:selected});}
+        else if(initial && selected)data=await this.call("bootstrap",{property_name:selected});
         if(sequence!==this.loadSequence)return;
         this.property=selected;
         this.data=data;
-        this.clockOffset=moment.tz(data.server_time,data.system_timezone).valueOf()-Date.now();
+        this.syncClock(data.server_time,data.system_timezone);
         this.prop=data.properties.find(p=>p.name===this.property);
         localStorage.setItem("hs-property",this.property);
         this.render();
@@ -123,7 +127,7 @@ window.hospitality_suite = window.hospitality_suite || {};
     }
     render_reception(el) {
       const filter=localStorage.getItem(`hs-clean-${this.property}`)||"";
-      el.html(`<div class="hs-toolbar"><div><label for="hs-search" class="sr-only">${frappe.utils.escape_html(__("Buscar habitación, piso o categoría"))}</label><input id="hs-search" class="form-control" placeholder="${frappe.utils.escape_html(__("Buscar habitación, piso o categoría…"))}" value="${esc(this.query)}"></div><select id="hs-clean-filter" class="form-control" aria-label="${frappe.utils.escape_html(__("Filtrar por limpieza"))}"><option value="">${frappe.utils.escape_html(__("Todos los estados"))}</option>${["Clean","Dirty","Cleaning","Inspection"].map(s=>`<option value="${s}" ${filter===s?"selected":""}>${esc(title(s))}</option>`).join("")}</select>${this.allowed("reserve")?this.button("reserve",__("Reservar"),"","primary")+this.button("walk_in",__("Registrar entrada inmediata")):""}</div><div class="hs-room-grid">${this.data.rooms.map(room=>{
+      el.html(`<div class="hs-toolbar"><div><label for="hs-search" class="sr-only">${frappe.utils.escape_html(__("Buscar habitación, piso o categoría"))}</label><input id="hs-search" class="form-control" placeholder="${frappe.utils.escape_html(__("Buscar habitación, piso o categoría…"))}" value="${esc(this.query)}"></div><select id="hs-clean-filter" class="form-control" aria-label="${frappe.utils.escape_html(__("Filtrar por limpieza"))}"><option value="">${frappe.utils.escape_html(__("Todos los estados"))}</option>${["Clean","Dirty","Cleaning","Inspection"].map(s=>`<option value="${s}" ${filter===s?"selected":""}>${esc(title(s))}</option>`).join("")}</select>${this.allowed("reserve")?this.button("reserve",__("Reservar"),"","primary")+this.button("walk_in",__("Registrar entrada inmediata")):""}</div>${this.data.occupied.length?`<p class="text-muted hs-countdown-help">${esc(__("Los contadores son orientativos; revise los cargos antes de confirmar."))}</p>`:""}<div class="hs-room-grid">${this.data.rooms.map(room=>{
         const stay=this.data.occupied.find(s=>s.room===room.name), block=this.data.blocks.find(b=>b.room===room.name && b.starts_at<=this.data.server_time && b.ends_at>this.data.server_time);
         const cat=this.data.categories.find(c=>c.name===room.category)?.category_name || "";
         const arrival=(this.data.room_arrivals||[]).find(row=>row.room===room.name);
@@ -132,7 +136,20 @@ window.hospitality_suite = window.hospitality_suite || {};
       this.filterRooms();
     }
     filterRooms() {let shown=0;const clean=this.root.find("#hs-clean-filter").val()||"";this.root.find(".hs-room").each((_,node)=>{const show=(!this.query||node.dataset.search.includes(this.query))&&(!clean||node.dataset.clean===clean);$(node).toggle(show);if(show)shown++;});this.root.find(".hs-filter-empty").prop("hidden",shown>0);}
-    updateTimers() {const now=Date.now()+(this.clockOffset||0);this.root.find("[data-countdown]").each((_,node)=>{const min=Math.round((moment.tz(node.dataset.countdown,this.data.system_timezone).valueOf()-now)/60000);node.textContent=min>=0?__("Tiempo restante: {0} h {1} min",[Math.floor(min/60),min%60]):__("Tiempo excedido: {0} min",[Math.abs(min)]);});}
+    syncClock(serverTime,timeZone) {this.clockAnchor={epoch:moment.tz(serverTime,timeZone).valueOf(),monotonic:performance.now()};}
+    serverNow() {return this.clockAnchor?this.clockAnchor.epoch+Math.max(0,performance.now()-this.clockAnchor.monotonic):NaN;}
+    resumeClock(force=false) {if(navigator.onLine&&!document.hidden&&$(this.wrapper).is(":visible")&&(force||!this.clockAnchor||performance.now()-this.clockAnchor.monotonic>60000))this.scheduleRefresh();}
+    updateTimers() {
+      const now=this.serverNow();
+      this.root.find("[data-countdown]").each((_,node)=>{
+        const delta=moment.tz(node.dataset.countdown,this.data.system_timezone).valueOf()-now;
+        if(!Number.isFinite(delta)){node.textContent=__("Tiempo por actualizar");return;}
+        const minutes=Math.floor(Math.abs(delta)/60000);
+        node.textContent=delta===0?__("Hora prevista de salida alcanzada"):delta>0?
+          minutes?__("Tiempo restante: {0} h {1} min",[Math.floor(minutes/60),minutes%60]):__("Tiempo restante: menos de 1 min"):
+          minutes?__("Tiempo excedido: {0} min",[minutes]):__("Tiempo excedido: menos de 1 min");
+      });
+    }
     table(headers,rows){return rows.length?`<div class="hs-table-wrap"><table class="hs-table"><thead><tr>${headers.map(h=>`<th scope="col">${esc(__(h))}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map((v,i)=>`<td data-label="${esc(__(headers[i]))}">${v}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`:this.empty();}
     render_reservations(el) {
       const bookings=(this.data.bookings||[]).filter(b=>b.status!=="Draft"&&(this.bookingHistory||!["Cancelled","No Show","Completed"].includes(b.status)));

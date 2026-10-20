@@ -8,7 +8,7 @@ function fixture(){
   const timers=new Map();let timer=0;
   const hospitality_suite={};
   const context={window:{hospitality_suite},hospitality_suite,__:(value,args)=>typeof value==="string"&&args?value.replace(/\{(\d+)\}/g,(m,n)=>args[n]??m):value,frappe:{utils:{escape_html:String,get_random:()=>"fallback"},show_alert(){}},
-    moment:{tz:()=>({valueOf:()=>0})},localStorage:{setItem(){}},$:()=>({is:()=>true}),
+    moment:{tz:()=>({valueOf:()=>0})},performance:{now:()=>0},localStorage:{setItem(){}},$:()=>({is:()=>true}),
     setTimeout:fn=>{timers.set(++timer,fn);return timer;},clearTimeout:id=>timers.delete(id)};
   vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../hospitality_suite/public/js/hospitality.js'),'utf8'),context);
   const desk=Object.create(hospitality_suite.Desk.prototype);

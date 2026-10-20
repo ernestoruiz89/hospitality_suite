@@ -1,0 +1,10 @@
+{
+  "html_shims": 9,
+  "bootstrap_requests": 21,
+  "blocked_app_writes": 0,
+  "loopback_only": true,
+  "target": "hospitality-acceptance.localhost:8089",
+  "device_clock_only": true,
+  "business_responses_unmodified": true,
+  "credentials_or_request_bodies_recorded": false
+}

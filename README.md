@@ -2,7 +2,7 @@
 
 PMS nativo para modalidades Hotel, Por tiempo y Hotel y por tiempo. Recepción, caja, limpieza y gerencia trabajan desde once Pages de Desk en español; la contabilidad y el inventario permanecen en ERPNext.
 
-Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. App 0.6.8. Otras versiones no están acreditadas.
+Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. App 0.6.9. Otras versiones no están acreditadas.
 
 El desarrollo continúa: [matriz de requisitos](docs/REQUISITOS.md), [auditoría punto por punto](docs/AUDITORIA_ESPECIFICACION.md), [registro de avance](docs/AVANCE.md) y [arquitectura](docs/ARQUITECTURA.md). No se declara listo para producción mientras existan pendientes obligatorios.
 
@@ -53,6 +53,8 @@ El usuario necesita roles HS y un registro HS Access por establecimiento/compañ
 
 La [gestión de huéspedes](docs/GESTION_HUESPEDES.md) permite corregir la misma ficha con motivo, prioriza la identificación según la política y conserva los documentos estándar y referencias existentes.
 
+El [contador de recepción](docs/CONTADOR_Y_RELOJ.md) conserva el vencimiento al recargar y al cambiar el reloj del equipo; es orientativo y no modifica los cargos.
+
 La [caducidad de retenciones](docs/TRABAJOS_Y_REINTENTOS.md) limita los reintentos transitorios del worker, conserva el rollback y registra los fallos con recuperación estándar.
 
 El [PDF de cuenta resumido](docs/CUENTA_RESUMIDA.md) presenta cargos, movimientos y saldo, omitiendo fórmulas y secciones vacías; el cálculo histórico se consulta en pantalla.
@@ -91,14 +93,14 @@ bench --site hotel.localhost run-tests --app hospitality_suite
 
 `before_tests` exige Redis disponible y un sitio designado sin operaciones; después carga la demostración explícita. Cada caso revierte sus movimientos. Conserve un respaldo inicial para recuperar una ejecución interrumpida. Última batería conjunta: **286 aprobadas** en hospitality-acceptance.localhost, 272 de integración y 14 puras, sobre 0.6.8. Seis escenarios adicionales con el worker real acreditan reintentos, agotamiento, rollback, logs y recuperación de reserva/portal en TRABAJOS_Y_REINTENTOS.md.
 
-Las 71 regresiones JavaScript y la aceptación de huéspedes en escritorio/móvil corresponden a 0.6.7; esos archivos de interfaz no cambiaron en 0.6.8. La matriz registra 135 V, 15 I, 0 P y 68 R; cada entrada conserva su evidencia y límites. El sitio limpio anterior mantiene respaldo de diagnóstico, y la demostración principal conserva operaciones UX: ninguno sustituye el sitio de aceptación. Los dos casos de concurrencia usan conexiones y commits reales; se ejecutan aparte sobre aceptación con respaldo y restauración posterior:
+La fase 0.6.9 modifica la interfaz: **79 regresiones JavaScript aprobadas**, con ocho casos nuevos de reloj/recarga/reanudación/selección obsoleta y aceptación de recepción en escritorio/móvil bajo reloj emulado. La lógica Python de negocio conserva la batería anterior de 286 casos de 0.6.8. La matriz registra 136 V, 14 I, 0 P y 68 R; cada entrada conserva su evidencia y límites. El sitio limpio anterior mantiene respaldo de diagnóstico, y la demostración principal conserva operaciones UX: ninguno sustituye el sitio de aceptación. Los dos casos de concurrencia usan conexiones y commits reales; se ejecutan aparte sobre aceptación con respaldo y restauración posterior:
 
 ```sh
 bench --site hospitality-acceptance.localhost execute hospitality_suite.tests.concurrency.verify
 bench --site hospitality-acceptance.localhost execute hospitality_suite.tests.concurrency.verify_category
 ```
 
-Las pruebas JS sin servidor cubren transporte, edición numérica, catálogo, traducción/presentación, políticas, cierre, servicios, POS, devoluciones, notas de crédito, formularios y portal: **69 de Desk y dos del portal**. Ejecute las 71 con:
+Las pruebas JS sin servidor cubren transporte, edición numérica, catálogo, traducción/presentación, políticas, cierre, servicios, POS, devoluciones, notas de crédito, formularios y portal: **77 de Desk y dos del portal**. Ejecute las 79 con:
 
 ```sh
 node tools/run_ui_tests.cjs

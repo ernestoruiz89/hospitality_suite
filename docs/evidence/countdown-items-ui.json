@@ -1,0 +1,20 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "synthetic": true,
+  "fixture_source": "Explicit API walk_in before Page inspection",
+  "stay": "EST-2026-00001",
+  "room_number": "M101",
+  "starts_at": "2026-10-20 13:47:51",
+  "ends_at": "2026-10-20 16:47:51",
+  "server_time": "2026-10-20 14:13:55.335779",
+  "system_timezone": "America/Managua",
+  "currency": "NIO",
+  "amount": "450.0",
+  "stay_status": "Active",
+  "charge_status": "Pending",
+  "all_fixture_tables_unchanged": true,
+  "tables_compared": 72,
+  "charges": 1,
+  "payments": 0,
+  "invoices": 0
+}
