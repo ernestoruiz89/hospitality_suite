@@ -54,13 +54,25 @@ def validate_signature(secret, raw_body, timestamp, signature, now=None):
     return hmac.compare_digest(expected,signature)
 
 
-def sanitized(value):
-    forbidden={"card_number","pan","cvv","cvc","password","secret","access_token","refresh_token"}
-    if isinstance(value,dict):
-        return {k:("[redacted]" if k.lower() in forbidden else sanitized(v)) for k,v in value.items()}
-    if isinstance(value,list):
-        return [sanitized(v) for v in value]
-    return value
+def receipt_metadata(raw_body, *, source="webhook"):
+    """Persist a receipt fingerprint, never an arbitrary provider body.
+
+    Future adapters must normalize the verified body in memory, then submit
+    explicit business commands. Provider status alone cannot post a payment.
+    """
+    if source not in ("webhook", "legacy_payload"):
+        raise ValueError("Unknown integration receipt source")
+    return dict(schema="receipt-v1", source=source, body_bytes=len(raw_body),
+                body_sha256=hashlib.sha256(raw_body).hexdigest())
+
+
+def is_receipt_metadata(value):
+    """Strict allowlist also makes the legacy-payload migration repeatable."""
+    return (isinstance(value, dict) and set(value)=={"schema","source","body_bytes","body_sha256"}
+            and value["schema"]=="receipt-v1" and value["source"] in ("webhook","legacy_payload")
+            and type(value["body_bytes"]) is int and value["body_bytes"]>=0
+            and isinstance(value["body_sha256"],str) and len(value["body_sha256"])==64
+            and all(c in "0123456789abcdef" for c in value["body_sha256"]))
 
 
 @frappe.whitelist(allow_guest=True,methods=["POST"])
@@ -78,18 +90,25 @@ def webhook(provider):
         valid=False
     if not valid:
         frappe.throw(frappe._("Firma inválida o evento vencido"),frappe.PermissionError)
-    values=json.loads(raw)
-    if not values.get("id") or len(str(values["id"]))>200:
+    try:
+        values=json.loads(raw)
+    except (ValueError,UnicodeError):
+        frappe.throw(frappe._("El evento debe ser un objeto JSON válido"))
+    identity_value=values.get("id") if isinstance(values,dict) else None
+    if (type(identity_value) not in (str,int) or not str(identity_value).strip()
+            or len(str(identity_value))>200):
         frappe.throw(frappe._("El proveedor debe enviar un identificador estable"))
+    identity=hashlib.sha256((provider+"|"+str(identity_value)).encode()).hexdigest()
+    receipt=canonical(receipt_metadata(raw))
+    del raw,values,identity_value
     prop=frappe.get_doc("HS Property",config["property"])
     frappe.db.sql("SELECT name FROM `tabHS Property` WHERE name=%s FOR UPDATE",(prop.name,))
-    identity=hashlib.sha256((provider+"|"+str(values["id"])).encode()).hexdigest()
     with operation():
         existing=current_all("HS Integration Event",filters={"event_id":identity},fields=["name","status"])
         if existing:
             return existing[0]
         record=frappe.get_doc(dict(doctype="HS Integration Event",property=prop.name,company=prop.company,
-                                   provider=provider,event_id=identity,status="Received",attempts=0,payload=canonical(sanitized(values))))
+                                   provider=provider,event_id=identity,status="Received",attempts=0,payload=receipt))
         record.insert(ignore_permissions=True)  # verified provider, fixed event schema; no accounting side effects
         audit(prop,"Verified integration event",record)
     return dict(name=record.name,status=record.status)

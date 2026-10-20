@@ -2,7 +2,7 @@ import hashlib
 import hmac
 import unittest
 
-from hospitality_suite.integrations import validate_signature, sanitized, PaymentGateway
+from hospitality_suite.integrations import validate_signature, receipt_metadata, is_receipt_metadata, PaymentGateway
 
 
 class SimulatedPaymentGateway(PaymentGateway):
@@ -22,8 +22,20 @@ class TestIntegrationContracts(unittest.TestCase):
         self.assertFalse(validate_signature("test-secret",raw,1000,signature,now=1400))
         self.assertFalse(validate_signature("wrong",raw,1000,signature,now=1001))
 
-    def test_sensitive_fields_redacted(self):
-        self.assertEqual(sanitized(dict(nested=dict(cvv="123",card_number="1234"))),dict(nested=dict(cvv="[redacted]",card_number="[redacted]")))
+    def test_receipt_drops_all_provider_content_including_unknown_fields(self):
+        import json
+        value=dict(id="fictional-event",status="paid",nested=dict(card=dict(number="FICTIONAL-PAN"),cvv="FICTIONAL-CVV"),
+                   arbitrary=[dict(token="FICTIONAL-SECRET"),"FICTIONAL-FREETEXT"])
+        raw=json.dumps(value).encode()
+        receipt=receipt_metadata(raw)
+        self.assertTrue(is_receipt_metadata(receipt))
+        self.assertEqual(receipt['body_sha256'],hashlib.sha256(raw).hexdigest())
+        self.assertEqual(receipt['body_bytes'],len(raw))
+        self.assertFalse(any(marker in json.dumps(receipt) for marker in ('FICTIONAL','fictional-event','paid')))
+        self.assertFalse(is_receipt_metadata(dict(receipt,number='FICTIONAL-PAN')))
+        self.assertFalse(is_receipt_metadata(dict(receipt,body_sha256='g'*64)))
+        self.assertFalse(is_receipt_metadata(dict(receipt,body_bytes=True)))
+        self.assertEqual(receipt_metadata(raw,source='legacy_payload')['source'],'legacy_payload')
 
     def test_simulated_intent_is_never_paid(self):
         response=SimulatedPaymentGateway().create_intent(origin="test",amount="10",currency="NIO",idempotency_key="one")

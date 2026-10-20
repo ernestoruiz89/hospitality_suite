@@ -2426,17 +2426,18 @@
       "line": 214,
       "kind": "enumerated",
       "requirement": "- Validar firmas y evitar duplicados en webhooks; no almacenar datos completos de tarjetas ni secretos en el repositorio.",
-      "status": "P",
+      "status": "V",
       "implementation": [
-        "hospitality_suite/integrations.py"
+        "hospitality_suite/integrations.py",
+        "hospitality_suite/patches/v0_5/minimal_integration_receipts.py"
       ],
       "evidence": [
-        "docs/evidence/flow-audit.json",
-        "docs/evidence/accounting-native-tests.xml::test_signature_and_expiration",
-        "docs/evidence/accounting-native-tests.xml::test_sensitive_fields_redacted",
-        "docs/evidence/accounting-native-tests.xml::test_signed_duplicate_is_recorded_once_without_financial_effects"
+        "docs/AUDITORIA_RECEPTOR.md",
+        "docs/evidence/integration-native-tests.xml::TestWebhook",
+        "docs/evidence/integration-native-tests.xml::test_receipt_drops_all_provider_content_including_unknown_fields",
+        "docs/evidence/integration-upgrade.json"
       ],
-      "remaining": "Firma, caducidad y deduplicación probadas. El payload se persiste tras una lista de nombres prohibidos y conserva card.number no reconocido. Limitar los datos persistidos a un contrato permitido y probar estructuras alternativas; no conservar cuerpos arbitrarios con datos de tarjeta/secretos."
+      "remaining": ""
     },
     {
       "id": "S15-01",

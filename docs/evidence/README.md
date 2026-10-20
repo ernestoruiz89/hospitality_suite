@@ -1,8 +1,8 @@
 # Evidencia de pruebas
 
-Índice acumulado de evidencia histórica y actual. Versión de aplicación vigente: 0.5.0; Frappe 16.52.0 y ERPNext 16.51.1, en un bench separado de WSL Ubuntu 24.04. Sitios ficticios: hospitality.localhost, hospitality-clean.localhost, hospitality-restore.localhost y hospitality-acceptance.localhost. No hay datos ni operaciones de producción.
+Índice acumulado de evidencia histórica y actual. Versión de aplicación vigente: 0.5.1; Frappe 16.52.0 y ERPNext 16.51.1, en un bench separado de WSL Ubuntu 24.04. Sitios ficticios: hospitality.localhost, hospitality-clean.localhost, hospitality-restore.localhost y hospitality-acceptance.localhost. No hay datos ni operaciones de producción.
 
-La batería vigente está en accounting-native-tests.log/xml: **193 aprobadas** (179 integración y catorce puras), y accounting-js-tests.log: **30 regresiones JavaScript** (veintiocho Desk y dos portal). Los resultados menores que siguen pertenecen a fases anteriores. El contraste de 38 requisitos sobre esa evidencia está en ../AUDITORIA_FLUJOS_TRANSACCIONES.md y flow-audit.json; no representa otra ejecución de pruebas ni recorridos adicionales.
+La batería vigente está en integration-native-tests.log/xml: **196 aprobadas** (182 integración y catorce puras), y integration-js-tests.log: **30 regresiones JavaScript** (veintiocho Desk y dos portal). Los resultados menores que siguen pertenecen a fases anteriores. El contraste de 38 requisitos sobre esa evidencia está en ../AUDITORIA_FLUJOS_TRANSACCIONES.md y flow-audit.json; no representa otra ejecución de pruebas ni recorridos adicionales.
 
 ## Automatizadas
 
@@ -216,3 +216,9 @@ La interrupción de WSL y las ejecuciones fallidas se describen en AVANCE.md y A
 `flow-audit.json` relaciona 38 entradas con casos aprobados del JUnit vigente y conserva su huella. Comprueba ambas carreras reales y ausencia de llamadas commit en los módulos de ejecución. Su evaluación pura del sanitizador, con marcadores ficticios, demuestra que `nested.card.number` permanece; no ingresa una petición ni escribe una base. Junto con la revisión de cierre/hooks, confirma dos diferencias: cargos periódicos aún ausentes y datos arbitrarios conservados por el webhook. Las tres entradas P representan esas dos diferencias.
 
 No se ejecutó una batería ni un recorrido nuevo y no se cambió código de aplicación. El inventario actual queda en **79 V, ocho I, tres P y 128 R**; 28 V, siete I y tres P provienen de este contraste. Véase ../AUDITORIA_FLUJOS_TRANSACCIONES.md. Continúan traducciones, verificaciones y recuperación final; objetivo activo.
+
+## Recibos mínimos del receptor, 0.5.1
+
+integration-native-tests.log/xml acredita 196 aprobadas (182 integración y catorce puras); integration-js-tests.log conserva treinta regresiones. integration-upgrade.json compara 72 tablas con Version/1191 filas y dos archivos privados en demostración, 195 filas en aceptación, después de respaldos con archivos y migrate. Los recibos legacy y su Version se ejercitan en tests revertidos: esos sitios tenían cero eventos de proveedor. integration-final-state.json confirma guardia de fixtures, aceptación sin operaciones, HTTP/puertos y núcleo nativo preservado con la caché Company acreditada. AUDITORIA_RECEPTOR.md delimita resultados.
+
+No se implementa ni activa sincronización con Airbnb/Booking/otros canales, pendiente por indicación del usuario. S14-08 pasa a V: 80 V, ocho I, dos P y 128 R. La prioridad siguiente incluye claridad y longitud de formularios en escritorio/móvil, junto con el alcance operativo pendiente.
