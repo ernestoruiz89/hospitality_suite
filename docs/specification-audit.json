@@ -1485,7 +1485,7 @@
       "line": 139,
       "kind": "enumerated",
       "requirement": "- Crear notas de crédito y devoluciones con documentos estándar; no modificar importes contabilizados directamente.",
-      "status": "I",
+      "status": "V",
       "implementation": [
         "hospitality_suite/accounting.py",
         "hospitality_suite/refunds.py",
@@ -1517,9 +1517,19 @@
         "docs/evidence/86-pos-credit-shift-pdf.png",
         "docs/evidence/credits-items-ui.json",
         "docs/evidence/credits-pdf-check.json",
-        "docs/evidence/credits-ux-restored.json"
+        "docs/evidence/credits-ux-restored.json",
+        "docs/AUDITORIA_RECIBOS_POS.md",
+        "docs/evidence/mixed-native-tests.xml::TestPosCreditNotes / TestGuaranteeRefunds / TestAppliedRefunds / TestFinance",
+        "docs/evidence/mixed-js-tests.log",
+        "docs/evidence/87-mixed-credit-readable-review.png",
+        "docs/evidence/88-mixed-credit-pending-confirmed.png",
+        "docs/evidence/89-mixed-additional-refund-review.png",
+        "docs/evidence/90-mixed-closed-cashier.png",
+        "docs/evidence/91-mixed-native-operational-receipts.png",
+        "docs/evidence/mixed-items-ui.json",
+        "docs/evidence/mixed-ux-restored.json"
       ],
-      "remaining": "Notas y devoluciones ordinarias, anticipos/garantías y POS simples/parciales probados. Completar las notas POS con cobros adicionales de otros documentos, devolviendo cada origen y conservando el crédito restante; actualmente se rechazan sin escrituras para no convertir esos fondos en diferencia de cambio."
+      "remaining": ""
     },
     {
       "id": "S09-09",

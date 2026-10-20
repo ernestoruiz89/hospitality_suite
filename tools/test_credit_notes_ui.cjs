@@ -39,3 +39,16 @@ test('partial return sends selected source lines, requotes changed quantities an
   await review.submit({},review);assert.equal(desk.writes[0].values.acceptance,'partial-proof');
   assert.equal(desk.writes[0].values.items[0].invoice_item,'opaque-line');assert.equal(desk.writes[0].key,'one-intention-key');assert.equal(selection.hidden,true);
 });
+
+test('additional receipts show remaining credit, dates and native documents without opaque source keys',async()=>{
+  const {desk,messages}=fixture();
+  const pos={remaining_credit:'30.00',party_currency:'NIO',additional_sources:[{source:'opaque-source',kind:'Payment',creation:'19/10 14:00',amount:'30.00',currency:'NIO',original:'REC<01>'}]};
+  const html=desk.creditRemaining(pos);
+  assert.match(html,/Crédito pendiente de devolver:.*30.00 NIO/);
+  assert.match(html,/Cobrar.*Devolución/);assert.match(html,/Cobro\|19\/10 14:00\|30.00 NIO\|REC&lt;01&gt;/);
+  assert.doesNotMatch(html,/opaque-source|REC<01>/);assert.equal(desk.creditRemaining({remaining_credit:'0'}),'');
+  desk.mutate=async()=>({credit_note:'CREDIT-1',pos});
+  const source=await desk.action_credit();await source.submit({invoice:'INV-1',reason:'Motivo'},source);
+  await desk.dialogs[1].submit({},desk.dialogs[1]);
+  assert.match(messages[0].message,/Crédito pendiente de devolver/);assert.match(messages[0].message,/REC&lt;01&gt;/);
+});

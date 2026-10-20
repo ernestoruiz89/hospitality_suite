@@ -245,20 +245,88 @@ class TestPosCreditNotes(IntegrationTestCase):
         self.assertEqual(frappe.db.get_value('Sales Invoice',original.name,'outstanding_amount'),0)
         self.assertEqual(expected(frappe.get_doc('HS Shift',self.shift))['NIO'],'100.00')
 
-    def test_additional_native_receipt_cannot_be_written_off_as_a_pos_exchange_difference(self):
-        original=self.invoice(payments=[(self.method,30)])
+    def receipt(self,allocations,method=None,amount=None,conversion=1):
+        method=method or self.method
+        total=sum(value for _,value in allocations)
+        invoice=allocations[0][0]
         entry=frappe.get_doc(dict(doctype='Payment Entry',company=self.prop.company,hs_property=self.prop.name,hs_shift=self.shift,
-            payment_type='Receive',posting_date=original.posting_date,party_type='Customer',party=self.guest.customer,
-            paid_from=self.prop.receivable_account,paid_to=self.method.account,paid_amount=30,received_amount=30,
-            source_exchange_rate=1,target_exchange_rate=1,mode_of_payment=self.method.mode_of_payment,
-            reference_no='Otro recibo nativo sintético',reference_date=original.posting_date,cost_center=self.prop.cost_center))
-        entry.append('references',dict(reference_doctype='Sales Invoice',reference_name=original.name,allocated_amount=30))
+            payment_type='Receive',posting_date=invoice.posting_date,party_type='Customer',party=self.guest.customer,
+            paid_from=self.prop.receivable_account,paid_to=method.account,paid_amount=total,received_amount=amount or total,
+            source_exchange_rate=1,target_exchange_rate=conversion,mode_of_payment=method.mode_of_payment,
+            reference_no='Otro recibo nativo sintético',reference_date=invoice.posting_date,cost_center=self.prop.cost_center))
+        for inv,value in allocations:
+            entry.append('references',dict(reference_doctype='Sales Invoice',reference_name=inv.name,allocated_amount=value))
         entry.insert().submit()
+        source=frappe.get_doc('HS Payment',{'payment_entry':entry.name})
+        return entry,source
+
+    def refund(self,source,credit,amount,method=None,key=None,**extra):
+        values=dict(kind='Refund',source_payment=source.name,credit_note=credit,amount=amount,method=(method or self.method).name,
+                    shift=self.shift,reason='Devuelve el recibo adicional de origen',**extra)
+        quote=api.preview(self.prop.name,values,'payment')
+        self.last_refund=dict(values,fx_acceptance=quote['acceptance'])
+        return self.call('payment',self.last_refund,key)
+
+    def test_additional_native_receipt_returns_its_own_funds_without_fake_exchange_income(self):
+        original=self.invoice(payments=[(self.method,30)])
+        entry,source=self.receipt([(original,30)])
+        before=entry.as_dict()
         self.assertEqual(frappe.db.get_value('Sales Invoice',original.name,'outstanding_amount'),0)
-        with self.assertRaises(frappe.ValidationError):self.credit(self.values(original))
-        self.assertEqual(frappe.db.count('Sales Invoice'),1)
+        returned=self.credit(self.values(original))
+        self.assertEqual((returned['pos']['party_amount'],returned['pos']['remaining_credit'],returned['pos']['exchange_difference']),('30.00','30.00','0.00'))
+        self.assertEqual(returned['pos']['additional_sources'][0]['source'],source.name)
+        self.assertEqual(frappe.db.get_value('Sales Invoice',returned['credit_note'],'outstanding_amount'),-30)
+        key=uuid.uuid4().hex
+        one=self.refund(source,returned['credit_note'],30,key=key)
+        # The stored intention retries without requiring a now-spent quote.
+        self.assertEqual(one,self.call('payment',self.last_refund,key))
+        self.assertEqual(frappe.db.get_value('Sales Invoice',returned['credit_note'],'outstanding_amount'),0)
+        self.assertEqual(expected(frappe.get_doc('HS Shift',self.shift))['NIO'],'100.00')
+        entry.reload()
+        self.assertEqual((entry.paid_amount,entry.received_amount,entry.hs_shift,entry.docstatus),(before.paid_amount,before.received_amount,before.hs_shift,1))
+        self.assertEqual([(r.reference_name,r.allocated_amount) for r in entry.references],[(original.name,30)])
+        loss=frappe.db.get_value('Company',self.prop.company,'exchange_gain_loss_account')
+        self.assertFalse(frappe.db.exists('GL Entry',{'voucher_type':'Journal Entry','voucher_no':returned['refund_journal'],'account':loss,'is_cancelled':0}))
+        with self.assertRaises(frappe.ValidationError):self.refund(source,returned['credit_note'],1)
+
+    def test_repeated_partial_returns_keep_additional_receipts_out_of_pos_cash_budget(self):
+        original=self.invoice(payments=[(self.method,30)])
+        entry,source=self.receipt([(original,30)])
+        values=self.values(original,items=[dict(invoice_item=original.items[0].name,quantity=1)])
+        for _ in range(2):
+            returned=self.credit(values)
+            self.assertEqual((returned['pos']['payments'][0]['amount'],returned['pos']['remaining_credit']),('15.00','15.00'))
+            self.refund(source,returned['credit_note'],15)
+            self.assertEqual(frappe.db.get_value('Sales Invoice',returned['credit_note'],'outstanding_amount'),0)
+        self.assertEqual(expected(frappe.get_doc('HS Shift',self.shift))['NIO'],'100.00')
+        self.assertEqual(frappe.db.count('HS Payment',{'source_payment':source.name,'status':'Posted'}),2)
+
+    def test_pos_funded_only_by_another_receipt_creates_no_empty_journal(self):
+        original=self.invoice(payments=[(self.method,0)])
+        entry,source=self.receipt([(original,60)])
+        returned=self.credit(self.values(original))
+        self.assertIsNone(returned['refund_journal'])
+        self.assertEqual((returned['pos']['party_amount'],returned['pos']['remaining_credit']),('0.00','60.00'))
+        self.refund(source,returned['credit_note'],60)
         self.assertEqual(frappe.db.count('Journal Entry'),0)
-        self.assertEqual(frappe.db.get_value('Payment Entry',entry.name,'docstatus'),1)
+        self.assertEqual(frappe.db.get_value('Sales Invoice',returned['credit_note'],'outstanding_amount'),0)
+        self.assertEqual(expected(frappe.get_doc('HS Shift',self.shift))['NIO'],'100.00')
+
+    def test_foreign_receipt_shared_between_invoices_settles_exact_book_limits(self):
+        original=self.invoice(quantity=1,rate=130,payments=[(self.method,30)])
+        other=self.invoice(quantity=1,rate=266.24,payments=[(self.method,0)],is_pos=0)
+        usd=self.method_for(currency='USD',cash=True)
+        entry,source=self.receipt([(original,100),(other,266.24)],usd,10,36.624)
+        first=self.credit(self.values(original))
+        self.assertEqual(first['pos']['remaining_credit'],'100.00')
+        with patch('hospitality_suite.accounting.exchange',side_effect=lambda currency,*args:Decimal('36.624') if currency=='USD' else Decimal(1)):
+            one=self.refund(source,first['credit_note'],2.73,usd)
+            self.assertEqual(frappe.db.get_value('Payment Entry',one['payment_entry'],'received_amount'),100)
+            second=self.credit(self.values(other))
+            two=self.refund(source,second['credit_note'],7.27,usd)
+            self.assertEqual(frappe.db.get_value('Payment Entry',two['payment_entry'],'received_amount'),266.24)
+        self.assertTrue(all(frappe.db.get_value('Sales Invoice',row['credit_note'],'outstanding_amount')==0 for row in (first,second)))
+        self.assertEqual(expected(frappe.get_doc('HS Shift',self.shift)),{'NIO':'100.00','USD':'0.00'})
 
     def test_inconsistent_native_foreign_change_rolls_back_and_legacy_receipt_is_not_refunded(self):
         self.invoice(payments=[(self.method,60)])

@@ -2,12 +2,18 @@
 (() => {
   const Desk=window.hospitality_suite.Desk,e=value=>frappe.utils.escape_html(String(value??""));
   const f=(fieldname,label,fieldtype="Data",extra={})=>({fieldname,label:__(label),fieldtype,...extra});
+  Desk.prototype.creditRemaining=function(pos){
+    if(!Number(pos?.remaining_credit))return "";
+    const labels={Payment:__("Cobro"),Advance:__("Anticipo"),"Guarantee Applied":__("Garantía aplicada")};
+    const sources=(pos.additional_sources||[]).map(row=>[e(labels[row.kind]||__("Recibo")),e(this.date(row.creation)),e(this.amount(row.amount,row.currency)),e(row.original)]);
+    return `<h4>${e(__("Crédito pendiente de devolver:"))} ${e(this.amount(pos.remaining_credit,pos.party_currency))}</h4><p>${e(__("Los otros recibos se devuelven por separado. En Cobrar, seleccione Devolución, el movimiento original y esta nota de crédito. Revise el importe disponible de cada recibo."))}</p>${sources.length?this.table([__("Origen"),__("Fecha"),__("Disponible del recibo"),__("Documento ERPNext")],sources):""}`;
+  };
   Desk.prototype.creditSummary=function(quote){
     const rows=quote.items.map(row=>[e(row.item_name),e(row.quantity),e(this.amount(row.amount,quote.currency))]);
     const payments=(quote.pos?.payments||[]).map(row=>[e(row.mode_of_payment),e(row.is_cash?__("Efectivo"):__("Medio no efectivo")),e(Number(row.amount)<0?__("Recibir"):__("Devolver")),e(this.amount(Math.abs(Number(row.amount)),row.currency))]);
     const rounding=Number(quote.rounding_adjustment||0)?`<p>${e(__("Redondeo de la nota:"))} ${e(this.amount(quote.rounding_adjustment,quote.currency))}</p>`:"";
     const financial=rounding+(quote.pos?`<p>${e(__("Valor liquidado en la cuenta del cliente:"))} ${e(this.amount(quote.pos.party_amount,quote.pos.party_currency))} · ${e(__("Saldo de la factura que se compensa:"))} ${e(this.amount(quote.pos.offset,quote.pos.party_currency))}</p><p>${e(__("Reversión del ajuste original en moneda base:"))} ${e(this.amount(quote.pos.write_off_base,quote.pos.base_currency))} · ${e(__("Diferencia de cambio y redondeo en moneda base:"))} ${e(this.amount(quote.pos.exchange_difference,quote.pos.base_currency))}</p>`:"");
-    return `<h3>${e(__("Nota de crédito:"))} ${e(this.amount(quote.total,quote.currency))}</h3><p>${e(quote.is_pos?__("Esta nota también registra la devolución por los medios originales, neta del vuelto. Revise el dinero antes de confirmar."):__("Esta nota corrige la factura. Las facturas de estancia se devuelven desde Cobrar; para otros orígenes use su flujo de devolución correspondiente."))}</p><p>${e(quote.update_stock?__("ERPNext devolverá las existencias de esta factura."):__("Los consumos entregados conservan su devolución de inventario por separado."))}</p>${this.table([__("Artículo o servicio"),__("Cantidad"),__("Importe")],rows)}${payments.length?this.table([__("Medio"),__("Tipo"),__("Acción"),__("Importe")],payments):""}${financial}`;
+    return `<h3>${e(__("Nota de crédito:"))} ${e(this.amount(quote.total,quote.currency))}</h3><p>${e(quote.is_pos?__("Esta nota también registra la devolución por los medios originales, neta del vuelto. Revise el dinero antes de confirmar."):__("Esta nota corrige la factura. Las facturas de estancia se devuelven desde Cobrar; para otros orígenes use su flujo de devolución correspondiente."))}</p><p>${e(quote.update_stock?__("ERPNext devolverá las existencias de esta factura."):__("Los consumos entregados conservan su devolución de inventario por separado."))}</p>${this.table([__("Artículo o servicio"),__("Cantidad"),__("Importe")],rows)}${payments.length?`<h4>${e(__("Dinero que se devuelve ahora"))}</h4>`+this.table([__("Medio"),__("Tipo"),__("Acción"),__("Importe")],payments):""}${this.creditRemaining(quote.pos)}${financial}`;
   };
   Desk.prototype.action_credit=async function(){
     const key=frappe.utils.get_random(24);
@@ -18,7 +24,7 @@
       const result=await this.mutate("credit_note",{...values,acceptance:quote.acceptance},key);
       confirmation.hide();selection?.hide();source.hide();
       const journal=result.refund_journal?`<br><a target="_blank" rel="noopener" href="/printview?doctype=Journal%20Entry&name=${encodeURIComponent(result.refund_journal)}&format=Standard">${e(result.refund_journal)}</a>`:"";
-      frappe.msgprint({title:__("Nota de crédito registrada"),message:this.invoiceLink(result.credit_note)+journal});
+      frappe.msgprint({title:__("Nota de crédito registrada"),message:this.invoiceLink(result.credit_note)+journal+this.creditRemaining(result.pos)});
     },__("Confirmar nota de crédito"));
     return this.dialog(__("Nota de crédito"),fields,async(values,source)=>{
       const {partial,...data}=values;

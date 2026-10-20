@@ -1,0 +1,38 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "synthetic": true,
+  "fixture_origin": "ERPNext Sales Invoice / Payment Entry controllers and application shift API",
+  "credits_from_page": true,
+  "refund_from_page": true,
+  "closed_from_page": true,
+  "actors": [
+    {
+      "action": "Refund",
+      "actor": "manager@hospitality.example.invalid"
+    },
+    {
+      "action": "Credit note",
+      "actor": "manager@hospitality.example.invalid"
+    }
+  ],
+  "invoice": "ACC-SINV-2026-00001",
+  "credit_note": "ACC-SINV-2026-00002",
+  "original_receipt": "ACC-PAY-2026-00001",
+  "refund_journal": "ACC-JV-2026-00001",
+  "refund_entry": "ACC-PAY-2026-00002",
+  "pos_refund": "30.00",
+  "remaining_credit_at_review": "30.00",
+  "additional_refund": "30.00",
+  "original_closed_expected": "160.00",
+  "opening": "160.00",
+  "final_expected": "100.00",
+  "final_credit": "0.00",
+  "exchange_difference": "0.00",
+  "original_documents_preserved": true,
+  "stock_net": "0",
+  "operational_payments": 2,
+  "payment_entries": 2,
+  "native_pos_collections": "30.00",
+  "native_pos_refunds": "30.00",
+  "native_pos_does_not_repeat_operational_refund": true
+}

@@ -64,6 +64,28 @@ class TestGuaranteeRefunds(IntegrationTestCase):
         entries=frappe.get_all('GL Entry',filters={'account':self.prop.guarantee_account,'is_cancelled':0},fields=['debit','credit'])
         self.assertEqual(sum(Decimal(str(row.debit))-Decimal(str(row.credit)) for row in entries),0)
 
+    def test_pos_credit_returns_cash_and_applied_guarantee_from_separate_origins(self):
+        stay=frappe.get_doc('HS Stay',self.stay['stay'])
+        invoice=frappe.get_doc(dict(doctype='Sales Invoice',company=self.prop.company,hs_property=self.prop.name,
+            hs_stay=stay.name,hs_folio=self.stay['folio'],hs_shift=self.shift,customer=stay.customer,currency='NIO',
+            debit_to=self.prop.receivable_account,cost_center=self.prop.cost_center,is_pos=1,update_stock=1,disable_rounded_total=1))
+        invoice.append('items',dict(item_code='HS-DEMO-WATER',qty=2,rate=30,cost_center=self.prop.cost_center,warehouse=self.prop.warehouse))
+        invoice.append('payments',dict(mode_of_payment=self.method.mode_of_payment,account=self.method.account,amount=30))
+        invoice.set_missing_values();invoice.insert().submit()
+        received=self.pay(30)
+        applied=self.apply(received,30)
+        values=dict(invoice=invoice.name,shift=self.shift,reason='Devuelve cobro POS y garantía aplicada')
+        quote=api.preview(self.prop.name,values,'credit_note')
+        self.assertEqual(quote['pos']['additional_sources'][0]['kind'],'Guarantee Applied')
+        returned=self.call('credit_note',dict(values,acceptance=quote['acceptance']))
+        self.assertEqual((returned['pos']['refund'],returned['pos']['remaining_credit']),('30.00','30.00'))
+        self.refund(applied,30,returned['credit_note'])
+        self.assertEqual(frappe.db.get_value('Sales Invoice',returned['credit_note'],'outstanding_amount'),0)
+        self.assertEqual(expected(frappe.get_doc('HS Shift',self.shift))['NIO'],'0.00')
+        entries=frappe.get_all('GL Entry',filters={'account':self.prop.guarantee_account,'is_cancelled':0},fields=['debit','credit'])
+        self.assertEqual(sum(Decimal(str(row.debit))-Decimal(str(row.credit)) for row in entries),0)
+        self.assertFalse(frappe.db.exists('HS Payment',{'kind':'Guarantee Refund'}))
+
     def test_partial_unallocated_return_then_invoice_uses_only_remaining_native_credit(self):
         received=self.pay(300)
         applied=self.apply(received,300)

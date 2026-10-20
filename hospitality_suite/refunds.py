@@ -34,9 +34,9 @@ def original_funds(prop,source):
                         unallocated=sum((row['amount'] for row in available),decimal(0)),available_rows=available)
 
 
-def plan(prop,source,amount,method,credit_note=None):
+def balance(prop,source):
     require(prop.name,'approve')
-    if source.kind not in ('Advance','Payment','Guarantee Applied') or source.status!='Posted' or source.currency!=method.currency:
+    if source.kind not in ('Advance','Payment','Guarantee Applied') or source.status!='Posted' or source.property!=prop.name:
         frappe.throw(frappe._('Origen de devolución inválido'))
     funds=original_funds(prop,source)
     original,currency=funds.doc,funds.currency
@@ -57,9 +57,21 @@ def plan(prop,source,amount,method,credit_note=None):
         else:
             returned_party+=sum(decimal(line.debit_in_account_currency)-decimal(line.credit_in_account_currency) for line in native.accounts if line.account==funds.account and line.party_type=='Customer' and line.party==source.customer)
     remaining=money(decimal(source.amount)-refunded,currency=source.currency)
+    return frappe._dict(funds=funds,remaining=remaining,remaining_party=money(funds.total-returned_party,currency=currency),by_invoice=by_invoice)
+
+
+def invoice_available(values,invoice):
+    return money(sum((row['amount'] for row in values.funds.references if row['invoice']==invoice),decimal(0))-values.by_invoice.get(invoice,decimal(0)),currency=values.funds.currency)
+
+
+def plan(prop,source,amount,method,credit_note=None):
+    if source.currency!=method.currency:
+        frappe.throw(frappe._('Origen de devolución inválido'))
+    values=balance(prop,source)
+    funds=values.funds
+    original,currency,remaining,remaining_party=funds.doc,funds.currency,values.remaining,values.remaining_party
     if amount<=0 or amount>remaining:
         frappe.throw(frappe._('La devolución supera el importe disponible'))
-    remaining_party=money(funds.total-returned_party,currency=currency)
     # The last refund absorbs currency rounding, without leaving book-value dust.
     party_amount=remaining_party if amount==remaining else money(funds.total*amount/decimal(source.amount),currency=currency)
     if party_amount<=0 or party_amount>remaining_party:
@@ -69,8 +81,12 @@ def plan(prop,source,amount,method,credit_note=None):
         credit=locked_doc('Sales Invoice',credit_note)
         if credit.docstatus!=1 or not credit.is_return or credit.company!=prop.company or credit.hs_property!=prop.name or credit.customer!=source.customer or credit.debit_to!=funds.account:
             frappe.throw(frappe._('La nota de crédito no corresponde al pagador, cuenta y establecimiento originales'))
-        allocated=sum((row['amount'] for row in funds.references if row['invoice']==credit.return_against),decimal(0))
-        available=money(allocated-by_invoice.get(credit.return_against,decimal(0)),currency=currency)
+        available=invoice_available(values,credit.return_against)
+        bound=min(available,remaining_party,abs(min(decimal(0),decimal(credit.outstanding_amount))))
+        # Settle the exact book-value limit when its cash equivalent rounds to
+        # the requested amount, including a source allocated to several bills.
+        if bound>0 and amount==money(decimal(source.amount)*bound/funds.total,currency=source.currency):
+            party_amount=bound
         if party_amount>available:
             frappe.throw(frappe._('La devolución supera lo aplicado por este movimiento a la factura de origen'))
         if party_amount>abs(min(decimal(0),decimal(credit.outstanding_amount))):

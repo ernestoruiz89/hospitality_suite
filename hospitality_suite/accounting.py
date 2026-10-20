@@ -431,7 +431,7 @@ def payment(prop, data):
     if stay and booking and stay.booking!=booking.name:
         frappe.throw(frappe._("La estancia y la reserva no tienen el mismo origen"))
     folio = document("HS Folio", data["folio"], "finance") if data.get("folio") else None
-    if not stay and not booking:
+    if not stay and not booking and not (source and kind=='Refund'):
         frappe.throw(frappe._("El pago debe tener una estancia o reserva de origen"))
     if folio:
         matches=(stay and folio.stay==stay.name) if folio.stay else folio.booking==(booking.name if booking else stay.booking if stay else None)

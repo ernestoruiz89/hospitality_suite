@@ -52,6 +52,35 @@ def validate_valuation(invoice,funds):
             frappe.throw(frappe._('La valoración del cobro POS no conserva su moneda. Revise el documento en ERPNext; para nuevos cobros con vuelto en moneda extranjera utilice Venta directa'))
 
 
+def other_funds(prop,invoice):
+    from hospitality_suite.refunds import balance,invoice_available
+    received=current_all('Payment Entry Reference',filters={'reference_doctype':'Sales Invoice','reference_name':invoice.name,'docstatus':1},pluck='parent')
+    applied=current_all('Journal Entry Account',filters={'reference_type':'Sales Invoice','reference_name':invoice.name,'docstatus':1,'credit_in_account_currency':['>',0]},pluck='parent')
+    sources=[]
+    if received:
+        sources+=current_all('HS Payment',filters={'property':prop.name,'customer':invoice.customer,'status':'Posted','kind':['in',['Advance','Payment']],'payment_entry':['in',received]},fields=['*'])
+    if applied:
+        sources+=current_all('HS Payment',filters={'property':prop.name,'customer':invoice.customer,'status':'Posted','kind':'Guarantee Applied','journal_entry':['in',applied]},fields=['*'])
+    result=[]
+    seen=set()
+    for row in sorted(sources,key=lambda row:row.name):
+        source=frappe._dict(row)
+        values=balance(prop,source)
+        key=(values.funds.doc.doctype,values.funds.doc.name)
+        if key in seen:
+            frappe.throw(frappe._('Conciliación pendiente: varios movimientos representan el mismo recibo'))
+        seen.add(key)
+        available=max(decimal(0),min(invoice_available(values,invoice.name),values.remaining_party))
+        if available>0:
+            cash=money(decimal(source.amount)*available/values.funds.total,currency=source.currency)
+            result.append(dict(source=source.name,kind=source.kind,original=values.funds.doc.name,doctype=values.funds.doc.doctype,
+                               creation=str(source.creation),
+                               original_modified=str(values.funds.doc.modified),source_modified=str(source.modified),
+                               amount=str(cash),currency=source.currency,party_available=str(available),party_currency=values.funds.currency,
+                               remaining=str(values.remaining),remaining_party=str(values.remaining_party)))
+    return result
+
+
 def configure(prop, invoice, credit, data, returns):
     from hospitality_suite.accounting import exchange
     from erpnext.accounts.doctype.sales_invoice.sales_invoice import get_total_in_party_account_currency
@@ -76,10 +105,16 @@ def configure(prop, invoice, credit, data, returns):
         accounts.add(invoice.account_for_change_amount)
     original=ledger([invoice.name],accounts)
     validate_valuation(invoice,original)
+    additional=other_funds(prop,invoice)
     previous=ledger([row.name for row in returns],accounts)
     linked=linked_vouchers(prop.name,[row.name for row in returns])
     for dt,names in linked.items():
-        for key,values in ledger(names,accounts,dt).items():
+        field='payment_entry' if dt=='Payment Entry' else 'journal_entry'
+        # Those refunds consume their explicit HS source, not the native POS
+        # receipt. Their credit/party effects remain visible in ERPNext.
+        other=current_all('HS Payment',filters={'property':prop.name,'kind':'Refund','status':'Posted',field:['in',names],'source_payment':['is','set']},pluck=field) if names else []
+        own=[name for name in names if name not in other]
+        for key,values in ledger(own,accounts,dt).items():
             previous[key]['amount']+=values['amount']
             previous[key]['base']+=values['base']
     methods=current_all('HS Payment Method',filters={'property':prop.name},fields=['name','account','currency','mode_of_payment','is_cash','reference_required','modified'])
@@ -117,6 +152,7 @@ def configure(prop, invoice, credit, data, returns):
     original_party=ledger([invoice.name],{invoice.debit_to})[(invoice.debit_to,party_currency)]['amount']
     offset=money(min(max(decimal(0),decimal(invoice.outstanding_amount)),max(decimal(0),original_party)*(1 if last else ratio)),currency=party_currency)
     book=money(-decimal(get_total_in_party_account_currency(credit)),currency=party_currency)
+    credit_total=book
     write_off=money(decimal(invoice.write_off_amount)*ratio,currency=invoice.currency)
     write_off_base=money(write_off*decimal(invoice.conversion_rate),currency=company_currency)
     base_out=sum((decimal(row['base_amount']) for row in payments),decimal(0))
@@ -127,11 +163,19 @@ def configure(prop, invoice, credit, data, returns):
         historical_out+=decimal(row['amount'])*funds['base']/funds['amount']
     expected_fx=money(historical_out-base_out,currency=company_currency)
     tolerance=decimal(10)**-currency_precision(company_currency)*(len(returns)+len(credit.items)+len(payments)+1)
+    known=money(offset+(historical_out+write_off_base)/party_rate,currency=party_currency)
+    if additional and (book-known)*party_rate>tolerance:
+        available=sum((decimal(row['party_available']) for row in additional),decimal(0))
+        if (book-known-available)*party_rate>tolerance:
+            frappe.throw(frappe._('El crédito restante supera los recibos identificados; concilie los otros orígenes antes de devolver'))
+        book=min(book,known)
+        difference=money((book-offset)*party_rate-base_out-write_off_base,currency=company_currency)
     if abs(difference-expected_fx)>tolerance:
         frappe.throw(frappe._('La nota incluye fondos o ajustes de otros movimientos; concilie sus orígenes antes de devolver. No se registró la devolución'))
     return dict(shift=shift.name,shift_modified=str(shift.modified),payments=payments,
                 refund=str(money(base_out/decimal(invoice.conversion_rate),currency=invoice.currency)),
                 party_account=invoice.debit_to,party_currency=party_currency,party_rate=str(party_rate),party_amount=str(book),offset=str(offset),
+                remaining_credit=str(money(credit_total-book,currency=party_currency)),additional_sources=additional,
                 write_off_account=invoice.write_off_account,write_off_base=str(write_off_base),exchange_difference=str(difference),base_currency=company_currency,
                 source_receipts=[dict(account=key[0],currency=key[1],amount=str(value['amount']),base=str(value['base'])) for key,value in sorted(original.items())],
                 previous_receipts=[dict(account=key[0],currency=key[1],amount=str(value['amount']),base=str(value['base'])) for key,value in sorted(previous.items())],
@@ -140,6 +184,8 @@ def configure(prop, invoice, credit, data, returns):
 
 def post(prop,invoice,credit,review,data):
     from hospitality_suite.accounting import post_standard,balance_exchange
+    if not decimal(review['party_amount']) and not review['payments'] and not decimal(review['write_off_base']):
+        return None
     journal=frappe.new_doc('Journal Entry')
     journal.update(dict(company=prop.company,posting_date=nowdate(),voucher_type='Journal Entry',multi_currency=1,
                         hs_property=prop.name,hs_shift=review['shift'],hs_stay=invoice.hs_stay,hs_booking=invoice.hs_booking,hs_folio=invoice.hs_folio,
