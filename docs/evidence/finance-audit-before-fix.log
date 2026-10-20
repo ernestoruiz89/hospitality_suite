@@ -1,0 +1,147 @@
+Starting test run with parameters: site=hospitality-acceptance.localhost, module=hospitality_suite.tests.test_financial_audit, verbose=False, tests=(), force=False, profile=False, junit_xml_output=/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/.local/finance-audit/target-before.xml, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/frappe/benches/hospitality-bench/logs/frappe.testing.log
+
+Running 7 integration tests for hospitality_suite
+
+Running tests...
+----------------------------------------------------------------------
+.E.FEFE
+======================================================================
+ERROR [0.437s]: test_closed_shift_rejects_new_money_and_preserves_original_count_after_authorized_reversal (hospitality_suite.tests.test_financial_audit.TestFinancialAudit.test_closed_shift_rejects_new_money_and_preserves_original_count_after_authorized_reversal)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/tests/test_financial_audit.py", line 195, in test_closed_shift_rejects_new_money_and_preserves_original_count_after_authorized_reversal
+    native.cancel()
+    ~~~~~~~~~~~~~^^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/utils/typing_validations.py", line 36, in wrapper
+    return func(*args, **kwargs)
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/model/document.py", line 1357, in cancel
+    return self._cancel()
+           ~~~~~~~~~~~~^^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/model/document.py", line 1338, in _cancel
+    return self.save()
+           ~~~~~~~~~^^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/model/document.py", line 558, in save
+    return self._save(*args, **kwargs)
+           ~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/model/document.py", line 589, in _save
+    self.check_if_latest()
+    ~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/model/document.py", line 1111, in check_if_latest
+    frappe.msgprint(
+    ~~~~~~~~~~~~~~~^
+    	_(f"Error: {self.name} ({self.doctype}) has been modified after you have opened it")
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+    	raise_exception=frappe.TimestampMismatchError,
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/utils/messages.py", line 118, in msgprint
+    _raise_exception()
+    ~~~~~~~~~~~~~~~~^^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/utils/messages.py", line 59, in _raise_exception
+    raise exc
+frappe.exceptions.TimestampMismatchError: Error: ACC-PAY-2026-00001 (Payment Entry) has been modified after you have opened it (2026-10-20 14:33:32.294555, 2026-10-20 14:33:32.438165). Por favor, actualice para obtener el último documento.
+
+======================================================================
+ERROR [0.655s]: test_shared_group_documents_are_complete_for_each_stay_and_export_has_a_readable_filter (hospitality_suite.tests.test_financial_audit.TestFinancialAudit.test_shared_group_documents_are_complete_for_each_stay_and_export_has_a_readable_filter)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/tests/test_financial_audit.py", line 105, in test_shared_group_documents_are_complete_for_each_stay_and_export_has_a_readable_filter
+    a,b=self.report(stay=first['stay']),self.report(stay=second['stay'])
+        ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/tests/test_financial_audit.py", line 53, in report
+    return api.report(self.prop.name,'Conciliación',filters)
+           ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/utils/typing_validations.py", line 36, in wrapper
+    return func(*args, **kwargs)
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/api.py", line 290, in report
+    batch=rows(prop,report_name,filters)
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/reports.py", line 39, in rows
+    return projected_rows(prop,report,filters or {})
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/report_queries.py", line 306, in projected_rows
+    mode, bounds = validate(filters, meta)
+                   ~~~~~~~~^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/report_queries.py", line 101, in validate
+    frappe.throw(frappe._("Filtro no aplicable a este reporte: ") + key)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/utils/messages.py", line 159, in throw
+    msgprint(
+    ~~~~~~~~^
+    	msg,
+     ^^^^
+    ...<7 lines>...
+    	allow_dangerous_html=allow_dangerous_html,
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/utils/messages.py", line 118, in msgprint
+    _raise_exception()
+    ~~~~~~~~~~~~~~~~^^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/utils/messages.py", line 59, in _raise_exception
+    raise exc
+frappe.exceptions.ValidationError: Filtro no aplicable a este reporte: stay
+
+======================================================================
+ERROR [1.056s]: test_visit_reconciliation_includes_advances_guarantees_credit_and_refunds_without_other_visits (hospitality_suite.tests.test_financial_audit.TestFinancialAudit.test_visit_reconciliation_includes_advances_guarantees_credit_and_refunds_without_other_visits)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/tests/test_financial_audit.py", line 66, in test_visit_reconciliation_includes_advances_guarantees_credit_and_refunds_without_other_visits
+    rows=self.report(stay=own['stay'])
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/tests/test_financial_audit.py", line 53, in report
+    return api.report(self.prop.name,'Conciliación',filters)
+           ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/utils/typing_validations.py", line 36, in wrapper
+    return func(*args, **kwargs)
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/api.py", line 290, in report
+    batch=rows(prop,report_name,filters)
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/reports.py", line 39, in rows
+    return projected_rows(prop,report,filters or {})
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/report_queries.py", line 306, in projected_rows
+    mode, bounds = validate(filters, meta)
+                   ~~~~~~~~^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/report_queries.py", line 101, in validate
+    frappe.throw(frappe._("Filtro no aplicable a este reporte: ") + key)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/utils/messages.py", line 159, in throw
+    msgprint(
+    ~~~~~~~~^
+    	msg,
+     ^^^^
+    ...<7 lines>...
+    	allow_dangerous_html=allow_dangerous_html,
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/utils/messages.py", line 118, in msgprint
+    _raise_exception()
+    ~~~~~~~~~~~~~~~~^^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/utils/messages.py", line 59, in _raise_exception
+    raise exc
+frappe.exceptions.ValidationError: Filtro no aplicable a este reporte: stay
+
+======================================================================
+FAIL [0.477s]: test_reconciliation_options_and_filters_are_scoped_and_company_selection_narrows_to_the_visit (hospitality_suite.tests.test_financial_audit.TestFinancialAudit.test_reconciliation_options_and_filters_are_scoped_and_company_selection_narrows_to_the_visit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/tests/test_financial_audit.py", line 129, in test_reconciliation_options_and_filters_are_scoped_and_company_selection_narrows_to_the_visit
+    self.assertIn('stay',options['filters'])
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'stay' not found in ['shift', 'status', 'detail_level']
+
+======================================================================
+FAIL [0.480s]: test_shift_reconciliation_includes_invoices_referenced_by_its_payments (hospitality_suite.tests.test_financial_audit.TestFinancialAudit.test_shift_reconciliation_includes_invoices_referenced_by_its_payments)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/tests/test_financial_audit.py", line 83, in test_shift_reconciliation_includes_invoices_referenced_by_its_payments
+    self.assertIn(invoice,{row['erp_document'] for row in rows if row['type']=='Charge'})
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'ACC-SINV-2026-00001' not found in set()
+
+----------------------------------------------------------------------
+Ran 7 tests in 5.921s
+
+FAILED (failures=2, errors=3)
+
+Generating XML reports...

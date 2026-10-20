@@ -1,8 +1,12 @@
 # Siguiente fase del objetivo activo
 
-Actualizado el 20/10/2026. El alcance obligatorio sigue abierto: **136 V, catorce I, cero P y 68 R**, de las mismas 218 entradas y huella. R significa contraste individual pendiente y no función ausente. Los recuentos no son un porcentaje de programación ni una fecha de terminación.
+Actualizado el 20/10/2026. El alcance obligatorio sigue abierto: **150 V, catorce I, cero P y 54 R**, de las mismas 218 entradas y huella. R significa contraste individual pendiente y no función ausente. Los recuentos no son un porcentaje de programación ni una fecha de terminación.
 
-## Última fase comprobada — 0.6.9
+## Última fase comprobada — 0.7.0
+
+AUDITORIA_CAJA_CONTABILIDAD.md contrasta las catorce entradas R de S09 y las acredita como V: conciliación por estancia/turno, documentos grupales completos, anticipos sin ingreso, medios combinados, referencias, moneda, comisiones, controladores nativos y correcciones trazables. Se corrigieron filtro ausente y facturas omitidas por turno, y se compactaron los filtros. Pasaron 294 pruebas nativas y 80 JS, con consulta desde Contabilidad en escritorio/móvil. Las 72 tablas/319 filas del fixture quedaron idénticas tras lecturas; aceptación restaurada 71/185 y 72/195, principal 72/1191/dos archivos/fecha 19/10 conservados, núcleos limpios/servicios activos/8089 apagado/PDF conciso instalado. No cambia esquema ni activa OTA. Matriz **150 V, 14 I, 0 P y 54 R**: quedan 68 entradas sin cierre; F26 y la aceptación integral por roles siguen pendientes.
+
+## Fase anterior comprobada — 0.6.9
 
 CONTADOR_Y_RELOJ.md acredita S07-10: contador basado en referencia del servidor y tiempo monotónico, mismo vencimiento tras recarga y cambios del reloj del cliente. Se conservó C$450 y la salida de M101 ante +24/−24 horas, sin resincronización durante el salto; escritorio/móvil, texto de 12 px sin desborde. Se resolvió también el establecimiento guardado inaccesible al iniciar la Page. Pasaron 79 JS, ocho nuevas; Python de negocio conserva los 286 casos anteriores de 0.6.8, sin otra ejecución nativa. Todas las 72 tablas del fixture siguen idénticas después de consultas. Aceptación restaurada con archivos, datos/archivos principales conservados, assets construidos/servicios activos y emulador/8089 apagados. Matriz **136 V, 14 I, 0 P, 68 R**: quedan 82 sin cierre. OTA aplazada.
 

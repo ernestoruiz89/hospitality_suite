@@ -2115,10 +2115,17 @@
       "line": 132,
       "kind": "enumerated",
       "requirement": "- Turnos de caja con apertura, fondo inicial, responsable, movimientos, retiros, entrega, arqueo por denominaciones y cierre.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/cashier.py",
+        "hospitality_suite/accounting.py",
+        "docs/CONTABILIDAD.md"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_CAJA_CONTABILIDAD.md",
+        "docs/evidence/finance-audit-native-tests.xml::TestFinance.test_withdrawal_posts_transfer_once_and_reduces_expected_cash / test_cash_change_and_fractional_count / test_close_difference_needs_supervisor_and_blocks_new_payment"
+      ],
+      "remaining": ""
     },
     {
       "id": "S09-02",
@@ -2127,10 +2134,16 @@
       "line": 133,
       "kind": "enumerated",
       "requirement": "- Medios de pago: efectivo, tarjeta, transferencia y otros configurables. Permitir pagos parciales, combinados y monedas admitidas.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/accounting.py",
+        "docs/CONTABILIDAD.md"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_CAJA_CONTABILIDAD.md",
+        "docs/evidence/finance-audit-native-tests.xml::TestFinancialAudit.test_configured_bank_methods_require_reference_and_combine_with_partial_cash; TestFinance.test_multicurrency_advance_preserves_exchange"
+      ],
+      "remaining": ""
     },
     {
       "id": "S09-03",
@@ -2139,10 +2152,16 @@
       "line": 134,
       "kind": "enumerated",
       "requirement": "- Referencia obligatoria para medios bancarios según configuración; tipo de cambio almacenado en la transacción y control del vuelto.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/accounting.py",
+        "docs/CONTABILIDAD.md"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_CAJA_CONTABILIDAD.md",
+        "docs/evidence/finance-audit-native-tests.xml::TestFinancialAudit.test_configured_bank_methods_require_reference_and_combine_with_partial_cash; TestFinance.test_cash_change_and_fractional_count / test_multicurrency_advance_preserves_exchange / test_native_currency_precision_three_and_zero"
+      ],
+      "remaining": ""
     },
     {
       "id": "S09-04",
@@ -2151,10 +2170,17 @@
       "line": 135,
       "kind": "enumerated",
       "requirement": "- Separar ingresos cobrados, ingresos facturados, cuentas por cobrar, anticipos y garantías. Cobrar un anticipo no debe generar automáticamente ingreso por alojamiento.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/close_financials.py",
+        "hospitality_suite/accounting.py",
+        "docs/CONTABILIDAD.md"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_CAJA_CONTABILIDAD.md",
+        "docs/evidence/finance-audit-native-tests.xml::TestFinancialAudit.test_advance_does_not_post_income_and_never_pays_another_visit_of_the_same_customer; TestCloseFinancials.test_separate_billing_cash_balances_returns_and_original_currencies; TestFinance.test_guarantee_is_liability_then_refund"
+      ],
+      "remaining": ""
     },
     {
       "id": "S09-05",
@@ -2163,10 +2189,16 @@
       "line": 136,
       "kind": "enumerated",
       "requirement": "- Integrar facturación mediante Sales Invoice y cobros mediante Payment Entry o el mecanismo estándar apropiado para la versión objetivo.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/accounting.py",
+        "docs/CONTABILIDAD.md"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_CAJA_CONTABILIDAD.md",
+        "docs/evidence/finance-audit-native-tests.xml::TestFinance.test_double_payment_is_one_posting / test_invoice_and_payment_created_outside_pms_sync_and_reverse; TestInvoicePage"
+      ],
+      "remaining": ""
     },
     {
       "id": "S09-06",
@@ -2175,10 +2207,16 @@
       "line": 137,
       "kind": "enumerated",
       "requirement": "- Aplicar anticipos y conciliaciones mediante los mecanismos reales de ERPNext, respetando cliente, compañía, moneda y cuentas.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/accounting.py",
+        "docs/CONTABILIDAD.md"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_CAJA_CONTABILIDAD.md",
+        "docs/evidence/finance-audit-native-tests.xml::TestFinancialAudit.test_advance_does_not_post_income_and_never_pays_another_visit_of_the_same_customer; TestFinance.test_advance_after_invoice_from_closed_shift_reconciles_without_cash_change; TestCloseFinancials.test_foreign_invoice_balance_uses_receivable_account_currency"
+      ],
+      "remaining": ""
     },
     {
       "id": "S09-07",
@@ -2187,10 +2225,19 @@
       "line": 138,
       "kind": "enumerated",
       "requirement": "- Permitir facturación individual, por habitación, por grupo o a empresa, conservando la trazabilidad de cada cargo.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/accounting.py",
+        "docs/CONTABILIDAD.md"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_CAJA_CONTABILIDAD.md",
+        "docs/evidence/finance-audit-native-tests.xml::TestLifecycle.test_group_split_folios_has_no_duplicate_charges / test_group_single_invoice_single_balance_and_checkout; TestFinancialAudit.test_shared_group_documents_are_complete_for_each_stay_and_export_has_a_readable_filter",
+        "docs/evidence/29-grupo-saldos-cero.png",
+        "tools/verify_group.py"
+      ],
+      "remaining": ""
     },
     {
       "id": "S09-08",
@@ -2283,10 +2330,17 @@
       "line": 141,
       "kind": "enumerated",
       "requirement": "- Manejar comisiones de tarjeta, retenciones y liquidaciones a través de configuración y documentos estándar cuando apliquen, sin confundir cobro bruto y depósito neto.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/treasury.py",
+        "hospitality_suite/accounting.py",
+        "docs/CONTABILIDAD.md"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_CAJA_CONTABILIDAD.md",
+        "docs/evidence/finance-audit-native-tests.xml::TestTreasury.test_partial_card_settlement_preserves_gross_policy_and_all_native_ledgers / test_final_partial_settlement_absorbs_rounding_and_cannot_over_settle / test_usd_settlement_clears_historical_base_and_posts_exchange_gain / test_card_refund_settlement_is_outgoing_without_duplicating_receipts"
+      ],
+      "remaining": ""
     },
     {
       "id": "S09-11",
@@ -2295,10 +2349,17 @@
       "line": 142,
       "kind": "enumerated",
       "requirement": "- Definir y documentar cuándo un cargo operativo se convierte en factura o reconocimiento contable. Si implementas devengo diario, usa documentos estándar y evita volver a reconocer ese ingreso al facturar.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/periodic.py",
+        "hospitality_suite/accounting.py",
+        "docs/CONTABILIDAD.md"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_CAJA_CONTABILIDAD.md",
+        "docs/evidence/finance-audit-native-tests.xml::TestPeriodic.test_nights_keep_accepted_prices_and_unique_origins_across_fresh_requests; TestPeriodic / TestInvoicePage"
+      ],
+      "remaining": ""
     },
     {
       "id": "S09-12",
@@ -2307,10 +2368,17 @@
       "line": 143,
       "kind": "enumerated",
       "requirement": "- La facturación o pagos realizados desde ERPNext también deben reflejarse en la estancia; no dependas únicamente de las acciones de tus páginas.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/hooks.py",
+        "hospitality_suite/accounting.py",
+        "docs/CONTABILIDAD.md"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_CAJA_CONTABILIDAD.md",
+        "docs/evidence/finance-audit-native-tests.xml::TestFinance.test_invoice_and_payment_created_outside_pms_sync_and_reverse / test_standard_payment_cancellation_updates_folio / test_external_invoice_requires_all_adjustments_and_syncs_every_source / test_external_invoice_rejects_reversed_charge"
+      ],
+      "remaining": ""
     },
     {
       "id": "S09-13",
@@ -2319,10 +2387,30 @@
       "line": 144,
       "kind": "enumerated",
       "requirement": "- Conciliación por estancia y turno contra facturas, pagos, anticipos, garantías y devoluciones.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/reconciliation.py",
+        "hospitality_suite/accounting.py",
+        "docs/CONTABILIDAD.md",
+        "hospitality_suite/report_queries.py",
+        "hospitality_suite/api.py",
+        "hospitality_suite/report_presentation.py",
+        "hospitality_suite/public/js/hospitality_reporting.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_CAJA_CONTABILIDAD.md",
+        "docs/evidence/finance-audit-native-tests.xml::TestFinancialAudit",
+        "docs/evidence/finance-audit-js-tests.log",
+        "docs/evidence/153-conciliacion-filtro-estancia.jpg",
+        "docs/evidence/154-conciliacion-estancia-movimientos.jpg",
+        "docs/evidence/155-conciliacion-compania-estancia.jpg",
+        "docs/evidence/156-conciliacion-filtro-movil.jpg",
+        "docs/evidence/157-conciliacion-estancia-movil.jpg",
+        "docs/evidence/finance-audit-browser.json",
+        "docs/evidence/finance-audit-items-ui.json",
+        "docs/evidence/finance-audit-ux-restored.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S09-14",
@@ -2360,10 +2448,17 @@
       "line": 146,
       "kind": "enumerated",
       "requirement": "- Mantener saldos por moneda y tratamiento de conversiones explícito. Un pago debe pertenecer a un único turno y tener referencia inequívoca a su origen.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/close_financials.py",
+        "hospitality_suite/accounting.py",
+        "docs/CONTABILIDAD.md"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_CAJA_CONTABILIDAD.md",
+        "docs/evidence/finance-audit-native-tests.xml::TestFinance.test_multicurrency_advance_preserves_exchange / test_usd_guarantee_refund_preserves_liability_and_posts_exchange_difference; TestCloseFinancials.test_separate_billing_cash_balances_returns_and_original_currencies; TestFinancialAudit"
+      ],
+      "remaining": ""
     },
     {
       "id": "S09-16",
@@ -2372,10 +2467,17 @@
       "line": 147,
       "kind": "enumerated",
       "requirement": "- Bloquear movimientos ordinarios en turnos cerrados; correcciones mediante proceso autorizado y trazable.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/security.py",
+        "hospitality_suite/accounting.py",
+        "docs/CONTABILIDAD.md"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_CAJA_CONTABILIDAD.md",
+        "docs/evidence/finance-audit-native-tests.xml::TestFinancialAudit.test_closed_shift_rejects_new_money_and_preserves_original_count_after_authorized_reversal; TestFinance.test_close_difference_needs_supervisor_and_blocks_new_payment / test_advance_after_invoice_from_closed_shift_reconciles_without_cash_change"
+      ],
+      "remaining": ""
     },
     {
       "id": "S09-17",
@@ -2384,10 +2486,18 @@
       "line": 148,
       "kind": "enumerated",
       "requirement": "- No escribir directamente en GL Entry, Payment Ledger Entry ni Stock Ledger Entry. Usa los controladores y documentos estándar.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/accounting.py",
+        "docs/CONTABILIDAD.md"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_CAJA_CONTABILIDAD.md",
+        "docs/evidence/finance-audit-native-tests.xml::TestFinance / TestTreasury / TestServiceAccounting / TestPeriodic",
+        "docs/evidence/finance-audit-source-review.json",
+        "docs/evidence/finance-audit-upgrade.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S10-01",

@@ -68,6 +68,30 @@ test('an older success cannot overwrite a newer property response',async()=>{
   fresh.resolve(snapshot('new','motel'));await second;old.resolve(snapshot('old'));await first;
   assert.equal(desk.rendered,'new');assert.equal(desk.property,'motel');
 });
+
+test('reconciliation submits opaque visit keys with readable labels and clears them on scope changes',async()=>{
+  const {desk,context}=fixture();
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../hospitality_suite/public/js/hospitality_reporting.js'),'utf8'),context);
+  const metadata=key=>({base:'Conciliación',filters:['stay','shift','status','detail_level'],companies:['Company'],properties:[{name:'hotel',property_name:'Hotel',company:'Company'}],
+    date_fields:[{value:'source_date',label:'Fecha de origen'}],date_field:'source_date',note:'Cuentas completas',statuses:['OK'],shifts:[],
+    stays:[{name:key,label:'Habitación H101 · Visitante · 20/10/2026 14:00 · Alojado'}]});
+  desk.data={};let controls,values,submit,captured;
+  desk.dialog=async(title,fields,callback)=>{
+    submit=callback;controls=Object.fromEntries(fields.map(df=>[df.fieldname,{df}]));values=Object.fromEntries(fields.map(df=>[df.fieldname,df.default||'']));
+    return {fields_dict:controls,get_value:key=>values[key],async set_value(key,value){values[key]=value;},
+      set_df_property(key,property,value){controls[key].df[property]=value;},get_primary_btn:()=>({prop(){}})};
+  };
+  desk.call=async()=>metadata('opaque-visit');
+  await desk.action_report('Conciliación');
+  assert.equal(controls.stay.df.label,'Estancia');
+  assert.equal(controls.stay.df.options[1].value,'opaque-visit');
+  assert.match(controls.stay.df.options[1].label,/Habitación H101/);
+  assert.doesNotMatch(controls.stay.df.options[1].label,/opaque-visit/);
+  values.stay='opaque-visit';desk.show_paged=async(title,method,args)=>{captured=JSON.parse(args.filters);};
+  await submit(values,{hide(){}});assert.equal(captured.stay,'opaque-visit');
+  desk.call=async()=>metadata('another-visit');await controls.property_name.df.onchange();
+  assert.equal(values.stay,'');assert.equal(controls.stay.df.options[1].value,'another-visit');
+});
 test('an old failure cannot clear busy or replace a newer result with an error',async()=>{
   const {desk}=fixture(),old=deferred(),fresh=deferred();let count=0;
   desk.call=()=>++count===1?old.promise:fresh.promise;

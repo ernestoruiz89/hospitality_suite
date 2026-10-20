@@ -110,7 +110,7 @@ class Descriptions:
     def room(self,name):
         return ", ".join(self.rooms[n].room_number if n in self.rooms else frappe._("Sin habitación") for n in str(name or "").split(", ") if n)
 
-    def stay(self,name):
+    def stay(self,name,include_time=False):
         row=self.stays.get(name)
         if not row:
             return frappe._("Estancia") if name else ""
@@ -119,7 +119,7 @@ class Descriptions:
         if guest:
             parts.append(guest.full_name)
         if row.actual_check_in:
-            parts.append(local(row.actual_check_in,self.props[row.property]).strftime("%d/%m/%Y"))
+            parts.append(local(row.actual_check_in,self.props[row.property]).strftime("%d/%m/%Y %H:%M" if include_time else "%d/%m/%Y"))
         return " · ".join(parts)
 
     def booking(self,name):
@@ -222,6 +222,9 @@ def prepare(report,records,props,level="operational"):
                 source_type={"Charge":"HS Charge","Payment":"HS Payment","Closed shift":"HS Shift"}.get(row.get("type"))
                 if source_type:
                     hints["source"]="; ".join(data.origin(source_type,n) for n in row.get("source","").split(", "))
+                if row.get("type")=="Payment" and row.get("kind"):
+                    from hospitality_suite.printing import hs_label
+                    hints["type"]=hs_label(row.kind)
             if base=="Producción" and row.get("source_type"):
                 if row.source_type in {"Nota de crédito","Devolución de venta directa"}:
                     hints["item"]=frappe._("Devolución")+" · "+hints.get("item","")

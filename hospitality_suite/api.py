@@ -282,9 +282,13 @@ def availability_search(property_name, starts_at, ends_at, category, people=1, q
 @frappe.whitelist()
 def report(property_name, report_name, filters=None):
     from hospitality_suite.reports import rows
-    from hospitality_suite.report_queries import scopes
+    from hospitality_suite.report_queries import scopes,metadata,validate,reconciliation_scopes
     filters=payload(filters or {})
     selected=scopes(property_name,filters.get("company"))
+    meta=metadata(report_name)
+    validate(filters,meta)
+    if meta["base"]=="Conciliación":
+        selected=reconciliation_scopes(selected,filters)
     records=[]
     for prop in selected:
         batch=rows(prop,report_name,filters)
@@ -307,7 +311,7 @@ def report_options(property_name,report_name,company=None):
     meta["statuses"]=(frappe.get_meta(base_dt).get_field("status").options or "").splitlines() if base_dt and frappe.get_meta(base_dt).has_field("status") else ["OK","Difference"] if meta["base"]=="Conciliación" else []
     meta["kinds"]=(frappe.get_meta(base_dt).get_field("kind").options or "").splitlines() if base_dt and frappe.get_meta(base_dt).has_field("kind") else []
     props=frappe.get_all("HS Property",filters={"name":["in",allowed_properties()]},fields=["name","property_name","company"])
-    result=dict(meta,properties=props,companies=sorted({p.company for p in props}),rooms=[],categories=[],shifts=[],methods=[],warehouses=[],users=[],channels=[])
+    result=dict(meta,properties=props,companies=sorted({p.company for p in props}),rooms=[],categories=[],shifts=[],stays=[],methods=[],warehouses=[],users=[],channels=[])
     users=set()
     for prop in selected:
         for key,dt,fields in (("rooms","HS Room",["name","room_number","category"]),("categories","HS Category",["name","category_name"]),
@@ -319,6 +323,14 @@ def report_options(property_name,report_name,company=None):
                 if key=="shifts":
                     row["label"]=f"{row.cashier} · {local_report_time(row.opened_at,prop)} · {row.name}"
                 result[key].append(row)
+        if "stay" in meta["filters"]:
+            from hospitality_suite.report_presentation import Descriptions
+            descriptions=Descriptions([prop])
+            from hospitality_suite.printing import hs_label
+            for row in project("HS Stay",prop,["name","actual_check_in","status"]):
+                row["label"]=f"{descriptions.stay(row.name,include_time=True)} · {hs_label(row.status)}"
+                row["property_label"]=prop.property_name
+                result["stays"].append(row)
         if "warehouse" in meta["filters"]:
             from hospitality_suite.procurement import warehouses
             result["warehouses"] += [dict(name=n,warehouse_name=n,property_label=prop.property_name) for n in warehouses(prop)]

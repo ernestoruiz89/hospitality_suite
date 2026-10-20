@@ -1,0 +1,21 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "role": "HS Accountant",
+  "tables_unchanged": 72,
+  "rows": 319,
+  "selected_room": "H101",
+  "selected_rows": 8,
+  "all_selected_statuses_ok": true,
+  "other_visit_excluded": true,
+  "selected_types": [
+    "Anticipo",
+    "Aplicación de garantía",
+    "Charge",
+    "Cobro",
+    "Devolución",
+    "Devolución de garantía",
+    "Garantía"
+  ],
+  "global_shift_retains_all_visits_and_count": true,
+  "mutations_from_page": false
+}

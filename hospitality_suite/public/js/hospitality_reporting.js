@@ -43,11 +43,11 @@
     const translate=v=>this.data.report_values?.[v]||v;
     const emptyLabel=key=>key==="detail_level"?__("Vista operativa"):key==="group_by"?__("Detalle por documento"):__("Todos");
     const select=(key,label,values)=>field(key,label,"Select",{_hsDataOptions:true,options:[{value:"",label:emptyLabel(key)},...values]});
-    const labels={category:__("Categoría"),room:__("Habitación"),channel:__("Canal"),user:__("Registrado por"),assigned_to:__("Responsable"),shift:__("Turno"),method:__("Medio de pago"),status:__("Estado"),kind:__("Concepto"),item:__("Artículo"),warehouse:__("Almacén"),purpose:__("Uso operativo"),adjustment_type:__("Tipo de ajuste"),group_by:__("Agrupar producción"),detail_level:__("Presentación")};
+    const labels={category:__("Categoría"),room:__("Habitación"),stay:__("Estancia"),channel:__("Canal"),user:__("Registrado por"),assigned_to:__("Responsable"),shift:__("Turno"),method:__("Medio de pago"),status:__("Estado"),kind:__("Concepto"),item:__("Artículo"),warehouse:__("Almacén"),purpose:__("Uso operativo"),adjustment_type:__("Tipo de ajuste"),group_by:__("Agrupar producción"),detail_level:__("Presentación")};
     const values=key=>{
       if(key==="group_by")return [{value:"room",label:__("Por habitación")},{value:"category",label:__("Por categoría")},{value:"item",label:__("Por servicio o artículo")},{value:"channel",label:__("Por canal")},{value:"property",label:__("Por establecimiento")}];
       if(key==="detail_level")return [{value:"technical",label:__("Documentos y referencias técnicas")}];
-      const mapping={category:["categories","category_name"],room:["rooms","room_number"],user:["users","full_name"],assigned_to:["users","full_name"],shift:["shifts","label"],method:["methods","mode_of_payment"],warehouse:["warehouses","warehouse_name"]};
+      const mapping={category:["categories","category_name"],room:["rooms","room_number"],stay:["stays","label"],user:["users","full_name"],assigned_to:["users","full_name"],shift:["shifts","label"],method:["methods","mode_of_payment"],warehouse:["warehouses","warehouse_name"]};
       if(mapping[key]){const [source,label]=mapping[key];return options[source].filter(row=>key!=="room"||!dialog?.get_value("category")||row.category===dialog.get_value("category")).map(row=>({value:row.name,label:`${row[label]||row.name}${["user","assigned_to"].includes(key)&&row[label]!==row.name?` · ${row.name}`:""}${row.currency?` · ${row.currency}`:""}${!dialog?.get_value("property_name")&&row.property_label?` · ${row.property_label}`:""}`}));}
       const list=key==="channel"?options.channels:key==="status"?options.statuses:key==="kind"?options.kinds:key==="adjustment_type"?["Discount","Courtesy","Surcharge"]:["Purchase","Transfer","Cleaning","Waste","Linen Replacement","Maintenance","Laundry","Sale","Adjustment","Stock"];
       return list.map(v=>({value:v,label:key==="channel"?v:translate(v)}));
@@ -74,7 +74,8 @@
     const dates=options.base==="Disponibilidad"?[
       field("starts_at",__("Inicio (hora local de cada establecimiento)"),"Datetime",{default:this.data.property_now?.slice(0,19),reqd:1}),
       field("ends_at",__("Fin (hora local de cada establecimiento)"),"Datetime",{reqd:1})
-    ]:[field("date_field",__("Consultar por"),"Select",{options:options.date_fields,default:options.date_field,reqd:1}),field("from_date",__("Desde"),"Date"),field("to_date",__("Hasta"),"Date")];
+    ]:[field("date_field",__("Consultar por"),"Select",{options:options.date_fields,default:options.date_field,reqd:1}),
+      field("date_range_section","","Section Break"),field("from_date",__("Desde"),"Date"),field("date_range_columns","","Column Break"),field("to_date",__("Hasta"),"Date")];
     dialog=await this.dialog(__("Filtros · {0}",[__(report)]),[
       field("company",__("Compañía"),"Select",{_hsDataOptions:true,options:options.companies,default:company,reqd:1,onchange:async()=>{
         if(!dialog||!ready||dialog.get_value("company")===selectedCompany)return;
@@ -84,7 +85,7 @@
         await dialog.set_value("property_name","");
         if(!previous)await refresh();
       }}),
-      field("property_name",__("Establecimiento"),"Select",{_hsDataOptions:true,options:properties(company),default:this.property,onchange:refresh}),
+      field("scope_columns","","Column Break"),field("property_name",__("Establecimiento"),"Select",{_hsDataOptions:true,options:properties(company),default:this.property,onchange:refresh}),
       field("period_section",__("Período"),"Section Break"),...dates,
       field("filter_section",__("Filtros opcionales"),"Section Break"),...filters.slice(0,Math.ceil(filters.length/2)),field("filter_columns","","Column Break"),...filters.slice(Math.ceil(filters.length/2)),
       field("criterion_section","","Section Break"),field("explanation",__("Criterio del reporte"),"HTML",{options:`<p class="text-muted">${e(options.note)}</p>`})

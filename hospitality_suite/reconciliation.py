@@ -46,34 +46,72 @@ def unmatched_cash(prop,shift=None):
     return result
 
 
+def visit_selector(prop,name):
+    """A shared folio belongs to every visit in its booking; never split it."""
+    if not name:
+        return lambda row: True
+    if not frappe.db.exists("HS Stay",{"name":name,"property":prop.name}):
+        frappe.throw(frappe._("La estancia no pertenece al establecimiento"),frappe.PermissionError)
+    from hospitality_suite.accounting import folios_for_stay
+    stay=locked_doc("HS Stay",name)
+    folios={row.name for row in folios_for_stay(stay)}
+    def selected(row):
+        source_stay=row.get("stay") or row.get("hs_stay")
+        folio=row.get("folio") or row.get("hs_folio")
+        booking=row.get("booking") or row.get("hs_booking")
+        return source_stay==name or folio in folios or bool(stay.booking and booking==stay.booking and not source_stay and not folio)
+    return selected
+
+
+def shift_invoices(prop,shift):
+    """Native allocations relate an invoice to a shift even without hs_shift.
+
+    Cancelled vouchers retain the historical association, while money rows below
+    still require submitted documents. Read only documents of this property.
+    """
+    if not shift:
+        return None
+    names=set(current_all("Sales Invoice",filters={"hs_property":prop.name,"hs_shift":shift},pluck="name"))
+    for dt in ("Payment Entry","Journal Entry"):
+        for name in current_all(dt,filters={"hs_property":prop.name,"hs_shift":shift,"docstatus":["in",[1,2]]},pluck="name"):
+            native=locked_doc(dt,name)
+            for row in native.references if dt=="Payment Entry" else native.accounts:
+                if (row.reference_doctype if dt=="Payment Entry" else row.reference_type)=="Sales Invoice":
+                    names.add(row.reference_name)
+    return set(current_all("Sales Invoice",filters={"name":["in",list(names)],"hs_property":prop.name,"company":prop.company},pluck="name")) if names else set()
+
+
 def rows(prop,filters=None,limit=1000):
     require(prop.name,"report")
     filters=filters or {}
+    visit_matches=visit_selector(prop,filters.get("stay"))
+    invoices=shift_invoices(prop,filters.get("shift"))
     result=[]
-    def record(kind,name,origin,expected,actual,currency,detail):
+    def record(kind,name,origin,expected,actual,currency,detail,*,payment_kind=None):
         difference=money(decimal(actual)-decimal(expected))
         result.append(dict(type=kind,source=name,erp_document=origin or "—",expected=str(money(expected)),actual=str(money(actual)),
-                           difference=str(difference),currency=currency,status="Difference" if difference else "OK",detail=detail))
-    def selected(row,date_field="creation"):
+                           difference=str(difference),currency=currency,status="Difference" if difference else "OK",detail=detail,kind=payment_kind))
+    def selected(row,date_field="creation",*,invoice=None):
         from hospitality_suite.time import local
         value=row.get(date_field)
         date=str(local(value,prop).date()) if value and date_field=="creation" else str(value or "")[:10]
         shift=row.get("shift") or row.get("hs_shift") or (row.name if row.get("doctype")=="HS Shift" or row.get("cashier") else None)
-        return (not filters.get("from_date") or date>=filters["from_date"]) and (not filters.get("to_date") or date<=filters["to_date"]) and (not filters.get("shift") or shift==filters["shift"])
+        shift_matches=invoice in invoices if invoice and invoices is not None else not filters.get("shift") or shift==filters["shift"]
+        return (not filters.get("from_date") or date>=filters["from_date"]) and (not filters.get("to_date") or date<=filters["to_date"]) and shift_matches and visit_matches(row)
     charges=current_all("HS Charge",filters={"property":prop.name,"status":"Invoiced"},fields=["*"])
     seen=set()
     for charge in charges:
-        if not selected(charge,"business_date"):
-            continue
         key=(charge.sales_invoice,charge.invoice_item)
         if key in seen:
             continue
-        seen.add(key)
         peers=[r for r in charges if (r.sales_invoice,r.invoice_item)==key]
+        if not any(selected(peer,"business_date",invoice=peer.sales_invoice) for peer in peers):
+            continue
+        seen.add(key)
         expected=sum(decimal(r.amount) for r in peers)
         inv=locked_doc("Sales Invoice",charge.sales_invoice) if charge.sales_invoice and frappe.db.exists("Sales Invoice",charge.sales_invoice) else None
         item=next((i for i in inv.items if i.name==charge.invoice_item and i.hs_charge in [r.name for r in peers]),None) if inv else None
-        actual=decimal(item.amount) if item and inv.docstatus==1 and inv.hs_property==prop.name and inv.currency==charge.currency else decimal(0)
+        actual=decimal(item.amount) if item and inv.docstatus==1 and inv.hs_property==prop.name and inv.company==prop.company and inv.currency==charge.currency else decimal(0)
         record("Charge",", ".join(r.name for r in peers),charge.sales_invoice,expected,actual,charge.currency,"Verificación de línea y ajustes de factura")
     for payment in current_all("HS Payment",filters={"property":prop.name,"status":"Posted"},fields=["*"]):
         if not selected(payment):
@@ -95,7 +133,7 @@ def rows(prop,filters=None,limit=1000):
             else:
                 account=frappe.db.get_value("HS Payment Method",payment.method,"account")
                 actual=abs(sum(decimal(r.debit_in_account_currency)-decimal(r.credit_in_account_currency) for r in native.accounts if r.account==account))
-        record("Payment",payment.name,name,payment.amount,actual,payment.currency,"Verificación de importe, documento y turno")
+        record("Payment",payment.name,name,payment.amount,actual,payment.currency,"Verificación de importe, documento y turno",payment_kind=payment.kind)
         if payment.kind=="Settlement":
             policy=frappe.parse_json(payment.fee_snapshot or "{}")
             base_currency=frappe.db.get_value("Company",prop.company,"default_currency")
@@ -110,18 +148,22 @@ def rows(prop,filters=None,limit=1000):
             record("Settlement withholding",payment.name,name,money(decimal(payment.withholding_amount)*decimal(payment.exchange_rate),currency=base_currency),posted(policy.get("withholding_account"),base=True),base_currency,"Retención contabilizada como activo")
             record("Settlement clearing",payment.name,name,payment.clearing_base_amount,posted(frappe.db.get_value("HS Payment Method",payment.method,"account"),base=True,credit=not outgoing),base_currency,"Liquidación de la valoración histórica del movimiento")
     for native in unmatched_cash(prop,filters.get("shift")):
-        if selected(native):
+        source=frappe._dict(native)
+        if filters.get("stay"):
+            voucher=locked_doc(native["doctype"],native["name"])
+            source.update(stay=voucher.hs_stay,folio=voucher.hs_folio,booking=voucher.hs_booking)
+        if selected(source):
             record("Untracked payment",native["name"],native["name"],0,native["amount"],native["currency"],"Movimiento nativo sin registro operativo: "+native["account"])
     for name in current_all("Sales Invoice",filters={"hs_property":prop.name,"hs_folio":["is","set"],"docstatus":1},pluck="name"):
         native=locked_doc("Sales Invoice",name)
-        if not selected(native,"posting_date"):
+        if not selected(native,"posting_date",invoice=native.name):
             continue
         for item in native.items:
             mapped=[r for r in charges if r.sales_invoice==name and r.invoice_item==item.name]
             if not mapped:
                 record("Untracked charge",item.name,name,0,item.amount,native.currency,"Línea de factura de cuenta sin cargo operativo")
     for shift in current_all("HS Shift",filters={"property":prop.name,"status":"Closed"},fields=["*"]):
-        if not selected(shift) or (filters.get("shift") and shift.name!=filters["shift"]):
+        if filters.get("stay") or not selected(shift) or (filters.get("shift") and shift.name!=filters["shift"]):
             continue
         from hospitality_suite.cashier import expected
         frozen=frappe.parse_json(shift.denominations or "{}").get("expected",{})

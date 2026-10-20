@@ -48,6 +48,8 @@ def metadata(report):
         keys += ["channel"]
     if base in SHIFTED:
         keys += ["shift"]
+    if base == "Conciliación":
+        keys += ["stay"]
     if base in {"Cobros", "Liquidaciones", "Egresos"}:
         keys += ["method", "kind"]
     if base == "Movimientos de inventario":
@@ -71,6 +73,7 @@ def metadata(report):
                       "La fecha de cancelación/no presentación procede de auditoría. Penalización aceptada sin impuestos; consulte su factura y estado contable." if report == "Cancelaciones y no presentaciones" else
                       "Cupo simultáneo por categoría; las habitaciones candidatas son alternativas y no se suman al cupo. Limpieza actual se muestra por separado." if base == "Disponibilidad" else
                       "Ingreso neto facturado: importe sin impuestos. Las devoluciones se restan y los cargos pendientes se muestran sin ingreso facturado." if base == "Producción" else
+                      "Por estancia se incluyen sus cuentas y las compartidas del grupo, con documentos completos. El arqueo total del turno se muestra solo sin filtrar estancia." if base == "Conciliación" else
                       "Los filtros seleccionan documentos completos; no prorratean facturas ni cuentas grupales."))
     result["note"]=frappe._(result["note"])
     return result
@@ -118,6 +121,19 @@ def validate(filters, meta):
     return mode, bounds
 
 
+def reconciliation_scopes(props, filters):
+    """Resolve selectors inside the authorized scope before narrowing a company."""
+    names=[prop.name for prop in props]
+    owners=[]
+    for key,dt in (("stay","HS Stay"),("shift","HS Shift")):
+        if filters.get(key):
+            owner=frappe.db.get_value(dt,{"name":filters[key],"property":["in",names]},"property")
+            if not owner:
+                frappe.throw(frappe._("La estancia o el turno no pertenece al ámbito autorizado"),frappe.PermissionError)
+            owners.append(owner)
+    return [prop for prop in props if all(owner==prop.name for owner in owners)]
+
+
 def in_period(record, mode, bounds, prop):
     if not any(bounds):
         return True
@@ -145,6 +161,9 @@ def describe_filters(props, report, filters):
         if key in {"room","category"}:
             dt,field=("HS Room","room_number") if key=="room" else ("HS Category","category_name")
             value=frappe.db.get_value(dt,{"name":value,"property":["in",[p.name for p in props]]},field) or value
+        if key=="stay":
+            from hospitality_suite.report_presentation import Descriptions
+            value=Descriptions(props).stay(value)
         if key=="group_by":
             value=label(value)
         if key=="detail_level":

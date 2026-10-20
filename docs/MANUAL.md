@@ -1,6 +1,6 @@
 # Manual diario por rol
 
-Aplicación 0.6.9, Frappe 16.52 / ERPNext 16.51. Los recorridos acreditados y las verificaciones pendientes están en REQUISITOS.md.
+Aplicación 0.7.0, Frappe 16.52 / ERPNext 16.51. Los recorridos acreditados y las verificaciones pendientes están en REQUISITOS.md.
 
 Los formularios extensos están organizados en pestañas por tarea. Puede cambiar de sección sin perder lo escrito y guardar desde cualquiera. Los datos adicionales del huésped y las opciones de reserva tienen su propia sección. La acción de guardar o revisar permanece visible; si falta un dato obligatorio, el formulario abre su sección. Al cerrar una revisión de precio o cobro, vuelve al borrador sin registrarlo. Véase UX_FORMULARIOS.md.
 
@@ -69,6 +69,8 @@ En una tarifa puede configurar artículos incluidos una vez por estancia o por n
 ## Gerencia y contabilidad
 
 Consulte producción, facturas, cobros, anticipos, garantías y pendientes por separado. Conciliación lleva cada diferencia al documento de origen. Exporte solo con rol autorizado. Los importes del XLSX son numéricos y mantienen su moneda; no sume monedas diferentes sin conversión explícita.
+
+En Conciliación, elija opcionalmente Estancia y Turno. La estancia se identifica por habitación y entrada; al consultar toda una compañía, también se indica el establecimiento. Sus cuentas compartidas se muestran completas, sin repartir importes por habitación. Anticipos, garantías y devoluciones aparecen con su concepto y comprobante. Para ver el arqueo global, deje Estancia en Todos. Cambiar compañía/establecimiento limpia las selecciones anteriores; compruébelas antes de Consultar. Véase AUDITORIA_CAJA_CONTABILIDAD.md.
 
 Los medios utilizados conservan cuenta, moneda y clasificación para que los arqueos históricos no cambien. Cree otro medio si necesita cambiarlas. Una factura externa debe incluir el cargo y todos sus ajustes una vez; no admite cargos revertidos. Un movimiento nativo de caja sin registro operativo aparece en conciliación y bloquea el cierre del turno. Los usuarios con roles HS usan los saldos de sus cuentas de estancia y reportes; una consulta global de cuenta contable podría agregar otros establecimientos y se restringe.
 

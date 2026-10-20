@@ -1,0 +1,52 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "role": "HS Accountant",
+  "desktop": {
+    "width": 1280,
+    "height": 720,
+    "stay_selector_bottom": 575,
+    "company_scope_resets_selectors": true,
+    "company_scope_rows": 8,
+    "company_scope_contains_property": true,
+    "other_receipt_not_visible": true
+  },
+  "mobile_filters": {
+    "actions": [
+      {
+        "bottom": 0,
+        "height": 0,
+        "text": "Consultar"
+      },
+      {
+        "bottom": 820,
+        "height": 44,
+        "text": "Consultar"
+      }
+    ],
+    "documentWidth": 390,
+    "height": 844,
+    "width": 390
+  },
+  "mobile_results": {
+    "documentWidth": 390,
+    "tables": [
+      {
+        "overflow": "visible",
+        "parentScrollWidth": 334,
+        "parentWidth": 334,
+        "rows": 9,
+        "width": 334
+      }
+    ],
+    "width": 390
+  },
+  "screenshots": [
+    "153-conciliacion-filtro-estancia.jpg",
+    "154-conciliacion-estancia-movimientos.jpg",
+    "155-conciliacion-compania-estancia.jpg",
+    "156-conciliacion-filtro-movil.jpg",
+    "157-conciliacion-estancia-movil.jpg"
+  ],
+  "mutations_from_page": false,
+  "exports_from_page": false
+}
