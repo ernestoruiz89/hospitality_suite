@@ -1,0 +1,282 @@
+{
+  "app_version": "0.7.7",
+  "site": "hospitality-acceptance.localhost:8089",
+  "user_role": "HS Receptionist",
+  "synthetic_api_fixture": true,
+  "synthetic_overdue_timestamps": true,
+  "current_cards": [
+    {
+      "room": "H101",
+      "text": "HABITACIÓN\nH101\nEstándar · Piso 1\nAlojado\nLimpia\nEntrada prevista\n20/10/2026 20:59\nSalida prevista\n20/10/2026 21:59\nSalida próxima · Tiempo restante: 0 h 26 min\nSaldo:\nC$ 1,500.00\nVer estancia"
+    },
+    {
+      "room": "H102",
+      "text": "HABITACIÓN\nH102\nEstándar · Piso 1\nSin ocupación\nLimpia\nLlegada pendiente · hora prevista superada\n20/10/2026 20:59\nReserva · aún sin entrada\nVer reserva"
+    },
+    {
+      "room": "H103",
+      "text": "HABITACIÓN\nH103\nEstándar · Piso 1\nFuera de servicio\nLimpia\n\nHasta reapertura autorizada\n\nReapertura pendiente"
+    },
+    {
+      "room": "H104",
+      "text": "HABITACIÓN\nH104\nEstándar · Piso 1\nInactiva\nLimpia\nConsulte la disponibilidad para el período deseado.\nHabitación desactivada"
+    },
+    {
+      "room": "H105",
+      "text": "HABITACIÓN\nH105\nEstándar · Piso 1\nSin ocupación\nSucia\nConsulte la disponibilidad para el período deseado.\nReservar"
+    },
+    {
+      "room": "H106",
+      "text": "HABITACIÓN\nH106\nEstándar · Piso 2\nSin ocupación\nEn limpieza\nConsulte la disponibilidad para el período deseado.\nReservar"
+    },
+    {
+      "room": "H107",
+      "text": "HABITACIÓN\nH107\nEstándar · Piso 2\nSin ocupación\nPendiente de inspección\nConsulte la disponibilidad para el período deseado.\nReservar"
+    },
+    {
+      "room": "H108",
+      "text": "HABITACIÓN\nH108\nEstándar · Piso 2\nSin ocupación\nLimpia\nConsulte la disponibilidad para el período deseado.\nReservar"
+    },
+    {
+      "room": "H109",
+      "text": "HABITACIÓN\nH109\nEstándar · Piso 2\nSin ocupación\nLimpia\nConsulte la disponibilidad para el período deseado.\nReservar"
+    },
+    {
+      "room": "H110",
+      "text": "HABITACIÓN\nH110\nEstándar · Piso 2\nAlojado\nLimpia\nEntrada prevista\n20/10/2026 20:59\nSalida prevista\n20/10/2026 21:24\nTiempo excedido: 8 min\nSaldo:\nC$ 1,500.00\nVer estancia"
+    }
+  ],
+  "initial_interval": {
+    "fields": [
+      {
+        "label": "Categoría",
+        "value": "qmcbb8qlvg"
+      },
+      {
+        "label": "Cantidad de habitaciones",
+        "value": "1"
+      },
+      {
+        "label": "Personas por habitación",
+        "value": "1"
+      },
+      {
+        "label": "Entrada (America/Managua)",
+        "value": "2026-10-20T21:32:55"
+      },
+      {
+        "label": "Salida prevista",
+        "value": "2026-10-21T21:32:55"
+      }
+    ],
+    "rows": [
+      "H101\nOcupada en el intervalo\nLimpieza actual: Limpia",
+      "H102\nReservada para el intervalo\nLimpieza actual: Limpia",
+      "H103\nFuera de servicio en el intervalo\nLimpieza actual: Limpia",
+      "H104\nHabitación inactiva\nLimpieza actual: Limpia",
+      "H105\nDisponible en el intervalo\nLimpieza actual: Sucia",
+      "H106\nDisponible en el intervalo\nLimpieza actual: En limpieza",
+      "H107\nDisponible en el intervalo\nLimpieza actual: Pendiente de inspección",
+      "H108\nDisponible en el intervalo\nLimpieza actual: Limpia",
+      "H109\nDisponible en el intervalo\nLimpieza actual: Limpia",
+      "H110\nOcupada en el intervalo\nLimpieza actual: Limpia"
+    ],
+    "summary": "Hay cupo para 1 habitación\n\nEstándar · Personas por habitación: 1\n\n20/10/2026 21:32 → 21/10/2026 21:32\n\nCupo disponible: 5 · Habitaciones solicitadas: 1\n\nVer opciones de habitación (5)\nEstado de las habitaciones en estas fechas (10)\n\nEl estado corresponde al intervalo consultado. La limpieza se muestra como está ahora; debe verificarse antes de la entrada.\n\nH101\nOcupada en el intervalo\nLimpieza actual: Limpia\nH102\nReservada para el intervalo\nLimpieza actual: Limpia\nH103\nFuera de servicio en el intervalo\nLimpieza actual: Limpia\nH104\nHabitación inactiva\nLimpieza actual: Limpia\nH105\nDisponible en el intervalo\nLimpieza actual: Sucia\nH106\nDisponible en el intervalo\nLimpieza actual: En limpieza\nH107\nDisponible en el intervalo\nLimpieza actual: Pendiente de inspección\nH108\nDisponible en el intervalo\nLimpieza actual: Limpia\nH109\nDisponible en el intervalo\nLimpieza actual: Limpia\nH110\nOcupada en el intervalo\nLimpieza actual: Limpia\nEsta consulta no reserva habitaciones. El cupo se vuelve a comprobar al confirmar una reserva."
+  },
+  "future_interval": {
+    "rows": [
+      "H101\nDisponible en el intervalo\nLimpieza actual: Limpia",
+      "H102\nDisponible en el intervalo\nLimpieza actual: Limpia",
+      "H103\nFuera de servicio en el intervalo\nLimpieza actual: Limpia",
+      "H104\nHabitación inactiva\nLimpieza actual: Limpia",
+      "H105\nDisponible en el intervalo\nLimpieza actual: Sucia",
+      "H106\nDisponible en el intervalo\nLimpieza actual: En limpieza",
+      "H107\nDisponible en el intervalo\nLimpieza actual: Pendiente de inspección",
+      "H108\nDisponible en el intervalo\nLimpieza actual: Limpia",
+      "H109\nDisponible en el intervalo\nLimpieza actual: Limpia",
+      "H110\nOcupada en el intervalo\nLimpieza actual: Limpia"
+    ],
+    "text": "Hay cupo para 1 habitación\n\nEstándar · Personas por habitación: 1\n\n25/10/2026 21:32 → 26/10/2026 21:32\n\nCupo disponible: 7 · Habitaciones solicitadas: 1\n\nVer opciones de habitación (7)\nEstado de las habitaciones en estas fechas (10)\n\nEl estado corresponde al intervalo consultado. La limpieza se muestra como está ahora; debe verificarse antes de la entrada.\n\nH101\nDisponible en el intervalo\nLimpieza actual: Limpia\nH102\nDisponible en el intervalo\nLimpieza actual: Limpia\nH103\nFuera de servicio en el intervalo\nLimpieza actual: Limpia\nH104\nHabitación inactiva\nLimpieza actual: Limpia\nH105\nDisponible en el intervalo\nLimpieza actual: Sucia\nH106\nDisponible en el intervalo\nLimpieza actual: En limpieza\nH107\nDisponible en el intervalo\nLimpieza actual: Pendiente de inspección\nH108\nDisponible en el intervalo\nLimpieza actual: Limpia\nH109\nDisponible en el intervalo\nLimpieza actual: Limpia\nH110\nOcupada en el intervalo\nLimpieza actual: Limpia\nEsta consulta no reserva habitaciones. El cupo se vuelve a comprobar al confirmar una reserva."
+  },
+  "mobile": {
+    "dialogs": [
+      {
+        "scrollWidth": 374,
+        "width": 374
+      }
+    ],
+    "gridWidth": 304,
+    "rows": [
+      {
+        "room": "H101",
+        "text": "H101\nDisponible en el intervalo\nLimpieza actual: Limpia",
+        "width": 147
+      },
+      {
+        "room": "H102",
+        "text": "H102\nDisponible en el intervalo\nLimpieza actual: Limpia",
+        "width": 147
+      },
+      {
+        "room": "H103",
+        "text": "H103\nFuera de servicio en el intervalo\nLimpieza actual: Limpia",
+        "width": 147
+      },
+      {
+        "room": "H104",
+        "text": "H104\nHabitación inactiva\nLimpieza actual: Limpia",
+        "width": 147
+      },
+      {
+        "room": "H105",
+        "text": "H105\nDisponible en el intervalo\nLimpieza actual: Sucia",
+        "width": 147
+      },
+      {
+        "room": "H106",
+        "text": "H106\nDisponible en el intervalo\nLimpieza actual: En limpieza",
+        "width": 147
+      },
+      {
+        "room": "H107",
+        "text": "H107\nDisponible en el intervalo\nLimpieza actual: Pendiente de inspección",
+        "width": 147
+      },
+      {
+        "room": "H108",
+        "text": "H108\nDisponible en el intervalo\nLimpieza actual: Limpia",
+        "width": 147
+      },
+      {
+        "room": "H109",
+        "text": "H109\nDisponible en el intervalo\nLimpieza actual: Limpia",
+        "width": 147
+      },
+      {
+        "room": "H110",
+        "text": "H110\nOcupada en el intervalo\nLimpieza actual: Limpia",
+        "width": 147
+      }
+    ],
+    "scrollWidth": 390,
+    "summaryHeight": 66,
+    "width": 390
+  },
+  "calendar_empty": {
+    "date": "",
+    "invalid": "true",
+    "text": "Seleccione una fecha válida para el calendario."
+  },
+  "calendar_last_date": {
+    "busy": "false",
+    "date": "2026-10-24",
+    "headers": [
+      "Habitación",
+      "Sat 24/10",
+      "Sun 25/10",
+      "Mon 26/10",
+      "Tue 27/10",
+      "Wed 28/10",
+      "Thu 29/10",
+      "Fri 30/10"
+    ],
+    "invalid": "false"
+  },
+  "calendar_other_property": {
+    "headers": [
+      "Habitación",
+      "00:00",
+      "02:00",
+      "04:00",
+      "06:00",
+      "08:00",
+      "10:00",
+      "12:00",
+      "14:00",
+      "16:00",
+      "18:00",
+      "20:00",
+      "22:00"
+    ],
+    "property": "Motel Luna Demo",
+    "rows": [
+      "M101",
+      "M102",
+      "M103",
+      "M104",
+      "M105",
+      "M106",
+      "M107",
+      "M108",
+      "M109",
+      "M110",
+      "Por asignar"
+    ]
+  },
+  "calendar_returned_property": {
+    "property": "Hotel Jardín Demo",
+    "rows": [
+      "H101",
+      "H102",
+      "H103",
+      "H104",
+      "H105",
+      "H106",
+      "H107",
+      "H108",
+      "H109",
+      "H110",
+      "Por asignar"
+    ]
+  },
+  "ui_business_commands": 0,
+  "viewport_reset": true,
+  "transport": "Socket.IO fallback; no realtime transport claim",
+  "browser_errors": [
+    {
+      "level": "error",
+      "message": "Error connecting to socket.io: Unauthorized: TypeError: fetch failed"
+    },
+    {
+      "level": "error",
+      "message": "Error connecting to socket.io: Unauthorized: TypeError: fetch failed"
+    },
+    {
+      "level": "error",
+      "message": "Error connecting to socket.io: Unauthorized: TypeError: fetch failed"
+    },
+    {
+      "level": "error",
+      "message": "Error connecting to socket.io: Unauthorized: TypeError: fetch failed"
+    }
+  ],
+  "screenshots": [
+    "206",
+    "207",
+    "208",
+    "209",
+    "210",
+    "211",
+    "212",
+    "213",
+    "214",
+    "215",
+    "216"
+  ],
+  "logout_sessions": 2,
+  "final_calendar_locale": {
+    "date": "2026-10-24",
+    "headers": [
+      "Habitación",
+      "sáb 24/10",
+      "dom 25/10",
+      "lun 26/10",
+      "mar 27/10",
+      "mié 28/10",
+      "jue 29/10",
+      "vie 30/10"
+    ],
+    "no_booking_rows": true
+  },
+  "final_locale_checked_after_fixture_restore": true
+}

@@ -70,3 +70,12 @@ test('query failures and wrong response context never appear as zero capacity',a
   desk.call=async()=>{throw Error('offline');};await dialog.submit(values,dialog);assert.match(wrapper.htmlValue,/No se pudo consultar/);assert(!wrapper.htmlValue.includes('No alcanza'));
   desk.call=async()=>({...answer(),property:'foreign'});await dialog.submit(values,dialog);assert.match(wrapper.htmlValue,/No se pudo consultar/);assert(!wrapper.htmlValue.includes('H101'));
 });
+test('interval contrast keeps dates and current cleaning distinct, hides internal names and escapes labels even at zero capacity',()=>{
+  const {desk}=fixture();const html=desk.availability_result({...answer(),available:0,room_states:[
+    {name:'INTERNAL-ID',room_number:'<H101>',label:'Reservada para el intervalo',cleaning_status:'Clean'},
+    {name:'secret-key',room_number:'H102',label:'<Ocupada>',cleaning_status:'Inspection'},
+    {name:'other-key',room_number:'H103',label:'Sin cupo por categoría',cleaning_status:'Dirty'}]});
+  assert.match(html,/Estado de las habitaciones en estas fechas \(3\)/);assert.match(html,/Limpieza actual: Limpia/);assert.match(html,/Pendiente de inspección/);
+  assert.match(html,/Reservada para el intervalo/);assert.match(html,/&lt;Ocupada&gt;/);assert.doesNotMatch(html,/INTERNAL-ID|secret-key|other-key|<H101>/);
+  assert.doesNotMatch(html,/data-availability-room/);assert.match(html,/Sin cupo por categoría/);assert.match(html,/debe verificarse antes de la entrada/);
+});

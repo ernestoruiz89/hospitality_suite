@@ -1,0 +1,27 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "synthetic_api_fixture": true,
+  "overdue_timestamps_are_fixture": true,
+  "ui_operations_read_only": true,
+  "unchanged_tables": 72,
+  "states": {
+    "H101": "Occupied",
+    "H102": "Reserved",
+    "H103": "Blocked",
+    "H104": "Inactive",
+    "H105": "Available",
+    "H106": "Available",
+    "H107": "Available",
+    "H108": "Available",
+    "H109": "Available",
+    "H110": "Occupied"
+  },
+  "physical_available": 5,
+  "cleaning_states": [
+    "Dirty",
+    "Cleaning",
+    "Inspection"
+  ],
+  "all_native_tables_unchanged": true,
+  "business_date_unchanged": true
+}

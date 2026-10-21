@@ -145,16 +145,22 @@ window.hospitality_suite = window.hospitality_suite || {};
     syncClock(serverTime,timeZone) {this.clockAnchor={epoch:moment.tz(serverTime,timeZone).valueOf(),monotonic:performance.now()};}
     serverNow() {return this.clockAnchor?this.clockAnchor.epoch+Math.max(0,performance.now()-this.clockAnchor.monotonic):NaN;}
     resumeClock(force=false) {if(navigator.onLine&&!document.hidden&&$(this.wrapper).is(":visible")&&(force||!this.clockAnchor||performance.now()-this.clockAnchor.monotonic>60000))this.scheduleRefresh();}
+    arrivalState(value) {
+      const delta=moment.tz(value,this.data.system_timezone).valueOf()-this.serverNow();
+      return !Number.isFinite(delta)?__("Llegada por actualizar"):delta<=0?__("Llegada pendiente · hora prevista superada"):
+        delta<=3600000?__("Llegada próxima · sin entrada registrada"):__("Próxima llegada pendiente");
+    }
     updateTimers() {
       const now=this.serverNow();
       this.root.find("[data-countdown]").each((_,node)=>{
         const delta=moment.tz(node.dataset.countdown,this.data.system_timezone).valueOf()-now;
         if(!Number.isFinite(delta)){node.textContent=__("Tiempo por actualizar");return;}
         const minutes=Math.floor(Math.abs(delta)/60000);
-        node.textContent=delta===0?__("Hora prevista de salida alcanzada"):delta>0?
+        node.textContent=(delta>0&&delta<=3600000?__("Salida próxima · "):"")+(delta===0?__("Hora prevista de salida alcanzada"):delta>0?
           minutes?__("Tiempo restante: {0} h {1} min",[Math.floor(minutes/60),minutes%60]):__("Tiempo restante: menos de 1 min"):
-          minutes?__("Tiempo excedido: {0} min",[minutes]):__("Tiempo excedido: menos de 1 min");
+          minutes?__("Tiempo excedido: {0} min",[minutes]):__("Tiempo excedido: menos de 1 min"));
       });
+      if(this.route==="hospitality-reception")this.root.find("[data-room-arrival]").each((_,node)=>{node.textContent=this.arrivalState(node.dataset.roomArrival);});
     }
     table(headers,rows){return rows.length?`<div class="hs-table-wrap"><table class="hs-table"><thead><tr>${headers.map(h=>`<th scope="col">${esc(__(h))}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map((v,i)=>`<td data-label="${esc(__(headers[i]))}">${v}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`:this.empty();}
     render_reservations(el) {

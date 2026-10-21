@@ -34,11 +34,27 @@ test('a fresh page reconstructs the same deadline from a new server reference ra
 });
 test('countdown uses the system timezone of stored server timestamps and preserves precise deadline boundaries',()=>{
   const f=fixture();f.desk.syncClock('2026-10-20 14:59:59','Etc/UTC');f.desk.updateTimers();
-  assert.equal(f.nodes[0].textContent,'Tiempo restante: menos de 1 min');
+  assert.equal(f.nodes[0].textContent,'Salida próxima · Tiempo restante: menos de 1 min');
   f.advance(1000);f.desk.updateTimers();assert.equal(f.nodes[0].textContent,'Hora prevista de salida alcanzada');
   f.advance(1000);f.desk.updateTimers();assert.equal(f.nodes[0].textContent,'Tiempo excedido: menos de 1 min');
   f.advance(59000);f.desk.updateTimers();assert.equal(f.nodes[0].textContent,'Tiempo excedido: 1 min');
   assert(f.zones.every(zone=>zone==='Etc/UTC'));
+});
+test('near departure is text, begins exactly one hour before the server deadline and becomes exceeded without changing money',()=>{
+  const f=fixture(),before=JSON.stringify(f.desk.data);f.desk.syncClock('2026-10-20 13:59:59','Etc/UTC');f.desk.updateTimers();
+  assert.equal(f.nodes[0].textContent,'Tiempo restante: 1 h 0 min');
+  f.advance(1000);f.wall(epoch+86400000);f.desk.updateTimers();assert.equal(f.nodes[0].textContent,'Salida próxima · Tiempo restante: 1 h 0 min');
+  f.advance(3601000);f.desk.updateTimers();assert.equal(f.nodes[0].textContent,'Tiempo excedido: menos de 1 min');assert.equal(JSON.stringify(f.desk.data),before);
+});
+test('arrival labels use the server clock, distinguish imminent and overdue reservations, and update without a mutation',()=>{
+  const f=fixture();f.desk.syncClock('2026-10-20 12:00:00','Etc/UTC');
+  assert.equal(f.desk.arrivalState('2026-10-20 13:00:01'),'Próxima llegada pendiente');
+  assert.equal(f.desk.arrivalState('2026-10-20 13:00:00'),'Llegada próxima · sin entrada registrada');
+  assert.equal(f.desk.arrivalState('2026-10-20 12:00:00'),'Llegada pendiente · hora prevista superada');
+  assert.equal(f.desk.arrivalState('invalid'),'Llegada por actualizar');
+  const node={dataset:{roomArrival:'2026-10-20 12:00:01'}};f.desk.route='hospitality-reception';
+  f.desk.root={find(selector){return {each(callback){if(selector==='[data-room-arrival]')callback(0,node);}};}};
+  f.desk.updateTimers();assert.equal(node.textContent,'Llegada próxima · sin entrada registrada');f.advance(2000);f.wall(epoch-86400000);f.desk.updateTimers();assert.equal(node.textContent,'Llegada pendiente · hora prevista superada');
 });
 test('missing or invalid references display an update state rather than a false amount of time',()=>{
   const f=fixture();f.desk.updateTimers();assert.equal(f.nodes[0].textContent,'Tiempo por actualizar');

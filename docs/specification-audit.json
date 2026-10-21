@@ -117,7 +117,9 @@
         "docs/evidence/localization-wire-invariants.json",
         "docs/evidence/localization-native-tests.xml",
         "docs/evidence/localization-js-tests.log",
-        "hospitality_suite/tests/test_localization.py"
+        "hospitality_suite/tests/test_localization.py",
+        "docs/ESTADOS_POR_INTERVALO.md",
+        "docs/evidence/216-calendario-espanol.jpg"
       ],
       "remaining": "Preparación ampliada y extracción nativa de mensajes acreditadas; permanece I hasta revisar cada literal dinámico de Pages y mensajes secundarios. No se entrega un paquete completo de otro idioma."
     },
@@ -1065,9 +1067,13 @@
         "docs/evidence/19-respuesta-perdida.png",
         "docs/evidence/pages-rooms-audit.json",
         "docs/ESTANCIAS_Y_LLEGADAS.md",
-        "docs/evidence/board-js-tests.log"
+        "docs/evidence/board-js-tests.log",
+        "docs/ESTADOS_POR_INTERVALO.md",
+        "tools/test_calendar_ui.cjs",
+        "docs/evidence/214-calendario-fecha-requerida.jpg",
+        "docs/evidence/215-calendario-ultima-fecha.jpg"
       ],
-      "remaining": "El tablero nuevo cubre carga/error/vacío, respuestas obsoletas y contexto en pruebas JS y recorrido. Completar validación junto al campo y estados secundarios de otras vistas, incluido calendario al cambiar de fecha rápidamente. Simplificar campos por acción y área de motivo de la gestión de reservas; continúa aceptación de formularios secundarios."
+      "remaining": "Tablero, consulta de disponibilidad y calendario tienen carga/error/vacío, contexto y respuestas obsoletas acreditados; el calendario valida su fecha junto al campo en 0.7.7. Completar el contraste de validación junto al campo, carga/error/éxito y doble envío del conjunto de formularios y vistas secundarios. La gestión de reserva por acción y motivo breve está acreditada en 0.6.4; ampliar la aceptación al resto de tareas."
     },
     {
       "id": "S04-17",
@@ -1214,20 +1220,36 @@
       "line": 82,
       "kind": "enumerated",
       "requirement": "- Estados visibles sugeridos: disponible, reservada para el intervalo consultado, ocupada, salida próxima, tiempo excedido, sucia, en limpieza, pendiente de inspección y fuera de servicio.",
-      "status": "I",
+      "status": "V",
       "implementation": [
+        "hospitality_suite/availability_search.py",
+        "hospitality_suite/availability.py",
+        "hospitality_suite/public/js/hospitality_availability.js",
         "hospitality_suite/public/js/hospitality.js",
-        "hospitality_suite/public/js/hospitality_extras.js",
-        "hospitality_suite/api.py"
+        "hospitality_suite/public/js/hospitality_board.js"
       ],
       "evidence": [
         "docs/AUDITORIA_PAGES_HABITACIONES.md",
         "docs/evidence/countdown.json",
         "docs/evidence/report-dimensions.json",
         "docs/evidence/12-hotel-housekeeping-mobile.png",
-        "docs/evidence/pages-rooms-audit.json"
+        "docs/evidence/pages-rooms-audit.json",
+        "docs/ESTADOS_POR_INTERVALO.md",
+        "docs/evidence/room-states-native-tests.xml",
+        "docs/evidence/room-states-native-target.xml",
+        "docs/evidence/room-states-js-tests.log",
+        "docs/evidence/room-states-browser.json",
+        "docs/evidence/room-states-items-ui.json",
+        "docs/evidence/room-states-upgrade.json",
+        "docs/evidence/room-states-ux-restored.json",
+        "docs/evidence/room-states-final-state.json",
+        "docs/evidence/207-habitacion-tiempo-excedido.jpg",
+        "docs/evidence/208-llegada-hora-superada.jpg",
+        "docs/evidence/210-contraste-estados-habitaciones.jpg",
+        "docs/evidence/211-estados-intervalo-futuro.jpg",
+        "docs/evidence/213-contraste-estados-movil.jpg"
       ],
-      "remaining": "Limpieza/inspección, ocupación, bloqueo y tiempo restante/excedido se expresan con texto. Completar contraste del estado reservado para intervalo consultado y llegada/salida próxima, vinculado a S05-01; los nombres sugeridos no se convierten en un único estado persistido."
+      "remaining": ""
     },
     {
       "id": "S05-04",

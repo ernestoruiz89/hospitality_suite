@@ -24,21 +24,30 @@
     if(portal.length)el.append(`<section class="hs-section"><h2>${frappe.utils.escape_html(__("Solicitudes del portal"))}</h2>${this.table([__("Solicitante"),__("Fechas"),__("Importe"),__("Acción")],portal.map(r=>[e(r.full_name),`${e(this.date(r.starts_at))}<br>${e(this.date(r.ends_at))}`,this.amount(r.amount,r.currency),this.button("portal_convert",__("Revisar solicitud"),r.name)]))}</section>`);
   };
   Desk.prototype.drawCalendar=async function(el,date){
-    const hourly=this.prop.mode==="Motel",start=moment(date),end=start.clone().add(hourly?1:7,"days");
+    const sequence=this.calendarSequence=(this.calendarSequence||0)+1,property=this.property,zone=this.prop.time_zone;
+    const target=el.find(".hs-calendar"),hourly=this.prop.mode==="Motel",start=moment.tz(date,"YYYY-MM-DD",zone),end=start.clone().add(hourly?1:7,"days");
+    const rooms=[...this.data.rooms,{name:"",room_number:__("Por asignar")}],current=()=>this.calendarSequence===sequence&&this.property===property;
+    if(!start.isValid()||start.format("YYYY-MM-DD")!==date){el.find("#hs-calendar-date").attr("aria-invalid","true");target.attr("aria-busy","false").html(`<p role="alert">${e(__("Seleccione una fecha válida para el calendario."))}</p>`);return;}
+    el.find("#hs-calendar-date").attr("aria-invalid","false");target.attr("aria-busy","true").html(`<p role="status">${e(__("Cargando calendario…"))}</p>`);
     try{
-      const rows=await this.call("calendar",{property_name:this.property,starts_at:start.format("YYYY-MM-DD HH:mm:ss"),ends_at:end.format("YYYY-MM-DD HH:mm:ss")});
+      const rows=await this.call("calendar",{property_name:property,starts_at:start.format("YYYY-MM-DDTHH:mm:ssZ"),ends_at:end.format("YYYY-MM-DDTHH:mm:ssZ")});
+      if(!current())return;
+      if(!Array.isArray(rows))throw Error("Unexpected calendar data");
       const count=hourly?12:7,minutes=hourly?120:1440;
-      const heads=Array.from({length:count},(_,i)=>start.clone().add(i*minutes,"minutes").format(hourly?"HH:mm":"ddd DD/MM"));
-      const rooms=[...this.data.rooms,{name:"",room_number:"Por asignar"}];
+      let weekday;
+      try{weekday=new Intl.DateTimeFormat((frappe.boot?.lang||"es").replaceAll("_","-"),{weekday:"short",timeZone:zone});}
+      catch{weekday=new Intl.DateTimeFormat("es",{weekday:"short",timeZone:zone});}
+      const heads=Array.from({length:count},(_,i)=>{const column=start.clone().add(i*minutes,"minutes");return hourly?column.format("HH:mm"):`${weekday.format(column.valueOf())} ${column.format("DD/MM")}`;});
       const html=this.table([__("Habitación"),...heads],rooms.map(room=>[e(room.room_number),...heads.map((_,i)=>{
         const a=start.clone().add(i*minutes,"minutes"),b=a.clone().add(minutes,"minutes");
         return rows.filter(r=>(r.room||"")===room.name&&moment(r.starts_at).isBefore(b)&&moment(r.ends_at).isAfter(a)).map(r=>{
           const action=r.stay?"detail":r.booking?"booking":"";
-          const text=r.kind==="Stay"?"Estancia":r.kind==="Maintenance"?"Mantenimiento":"Reserva";
+          const text=r.kind==="Stay"?__("Estancia"):r.kind==="Maintenance"?__("Mantenimiento"):__("Reserva");
           return action?this.button(action,text,r.stay||r.booking):`<span class="hs-badge">${text}</span>`;
-        }).join("")||`<span class='hs-calendar-free'>${frappe.utils.escape_html(__("Libre"))}</span>`;
+        }).join("")||`<span class='hs-calendar-free'>${frappe.utils.escape_html(__("Sin asignación"))}</span>`;
       })]));el.find(".hs-calendar").html(html);
-    }catch(error){el.find(".hs-calendar").text(__("No se pudo cargar el calendario. Actualice la página."));}
+    }catch(error){if(current())target.html(`<p role="alert">${e(__("No se pudo cargar el calendario. Cambie la fecha o pulse Actualizar para reintentar."))}</p>`);}
+    finally{if(current())target.attr("aria-busy","false");}
   };
   Desk.prototype.action_booking=async function(id){
     const property=this.property,info=await this.call("booking_detail",{name:id}),b=info.booking,key=frappe.utils.get_random(24);

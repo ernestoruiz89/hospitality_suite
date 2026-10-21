@@ -7,7 +7,7 @@
   const empty={hosted:__("No hay huéspedes alojados."),arrivals:__("No hay llegadas pendientes hasta esa fecha."),departures:__("No hay salidas pendientes hasta esa fecha."),accounts:__("No hay cuentas abiertas.")};
   Desk.prototype.roomTiming=function(stay,arrival){
     const current=stay?`<span>${e(__("Entrada prevista"))}</span><strong>${e(this.date(stay.starts_at))}</strong><span>${e(__("Salida prevista"))}</span><strong>${e(this.date(stay.ends_at))}</strong><small data-countdown="${e(stay.ends_at)}"></small>`:"";
-    const next=arrival?`<div class="hs-next-arrival"><span>${e(__("Próxima llegada pendiente"))}</span><strong>${e(this.date(arrival.starts_at))}</strong><small>${e(arrival.status==="Hold"?__("Retención temporal · aún sin entrada"):__("Reserva · aún sin entrada"))}</small></div>`:"";
+    const next=arrival?`<div class="hs-next-arrival"><span data-room-arrival="${e(arrival.starts_at)}">${e(this.arrivalState?this.arrivalState(arrival.starts_at):__("Próxima llegada pendiente"))}</span><strong>${e(this.date(arrival.starts_at))}</strong><small>${e(arrival.status==="Hold"?__("Retención temporal · aún sin entrada"):__("Reserva · aún sin entrada"))}</small></div>`:"";
     return current+next||`<span>${e(__("Consulte la disponibilidad para el período deseado."))}</span>`;
   };
   Desk.prototype.boardRows=function(data){

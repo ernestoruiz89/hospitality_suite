@@ -1,0 +1,14 @@
+Starting test run with parameters: site=hospitality-acceptance.localhost, app=hospitality_suite, module=hospitality_suite.tests.test_availability_search, verbose=False, tests=(), force=False, profile=False, junit_xml_output=/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/.local/room-states/native-target-final.xml, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/frappe/benches/hospitality-bench/logs/frappe.testing.log
+
+Running 14 integration tests for hospitality_suite
+
+Running tests...
+----------------------------------------------------------------------
+..............
+----------------------------------------------------------------------
+Ran 14 tests in 2.361s
+
+OK
+
+Generating XML reports...
