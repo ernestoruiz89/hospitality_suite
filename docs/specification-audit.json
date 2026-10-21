@@ -20,9 +20,11 @@
         "docs/REVISION_FASES_Y_ACCIONES.md",
         "docs/evidence/phase-review-native-artifacts.json",
         "docs/evidence/phase-review-crosswalk.json",
-        "docs/evidence/provider-contracts-native-tests.xml"
+        "docs/evidence/provider-contracts-native-tests.xml",
+        "docs/INSTALACION_LIMPIA.md",
+        "docs/evidence/release-install-native-tests.xml"
       ],
-      "remaining": "Completar las tareas/estados transversales S00-02/S04-14/S04-16/S04-20 y el paquete/instalación/actualización/reversión final S18-01/S19-02/S19-07/S19-08 antes de declarar íntegro el alcance."
+      "remaining": "Paquete e instalación limpia S18-01/S19-02 acreditados en INSTALACION_LIMPIA.md. Completar las tareas/estados transversales S00-02/S04-14/S04-16/S04-20 y la aceptación/recuperación coordinada final F26 de S19-07/S19-08 antes de declarar íntegro el alcance."
     },
     {
       "id": "S00-02",
@@ -318,9 +320,11 @@
         "docs/REVISION_FASES_Y_ACCIONES.md",
         "docs/evidence/phase-review-native-artifacts.json",
         "docs/evidence/phase-review-crosswalk.json",
-        "docs/evidence/provider-contracts-native-tests.xml"
+        "docs/evidence/provider-contracts-native-tests.xml",
+        "docs/INSTALACION_LIMPIA.md",
+        "docs/evidence/release-install-native-tests.xml"
       ],
-      "remaining": "Completar las tareas/estados transversales S00-02/S04-14/S04-16/S04-20 y el paquete/instalación/actualización/reversión final S18-01/S19-02/S19-07/S19-08 antes de declarar íntegro el alcance."
+      "remaining": "Paquete e instalación limpia S18-01/S19-02 acreditados en INSTALACION_LIMPIA.md. Completar las tareas/estados transversales S00-02/S04-14/S04-16/S04-20 y la aceptación/recuperación coordinada final F26 de S19-07/S19-08 antes de declarar íntegro el alcance."
     },
     {
       "id": "S01-13",
@@ -4633,20 +4637,30 @@
       "line": 271,
       "kind": "enumerated",
       "requirement": "- Repositorio de la app con código completo, estructura nativa, dependencias declaradas y archivos de construcción.",
-      "status": "I",
+      "status": "V",
       "implementation": [
         "README.md",
         "pyproject.toml",
         "hospitality_suite/install.py",
-        "hospitality_suite/public/hospitality.bundle.js"
+        "hospitality_suite/public/hospitality.bundle.js",
+        "LICENSE",
+        "tools/build_release.py",
+        "tools/release_install.py"
       ],
       "evidence": [
         "docs/REVISION_FASES_Y_ACCIONES.md",
         "docs/evidence/phase-review-native-artifacts.json",
         "docs/evidence/phase-review-crosswalk.json",
-        "docs/evidence/provider-contracts-native-tests.xml"
+        "docs/evidence/provider-contracts-native-tests.xml",
+        "docs/INSTALACION_LIMPIA.md",
+        "docs/evidence/release-install-clean.json",
+        "docs/evidence/release-install-package-final.json",
+        "docs/evidence/release-install-environment.json",
+        "docs/evidence/release-install-native-tests.xml",
+        "docs/evidence/release-install-concurrency-room.json",
+        "docs/evidence/release-install-concurrency-category.json"
       ],
-      "remaining": "Comprobar paquete distribuible, dependencias/construcción e instalación limpia de la versión final; el código y los metadatos existentes no sustituyen ese ensayo."
+      "remaining": ""
     },
     {
       "id": "S18-02",
@@ -4978,7 +4992,7 @@
       "line": 287,
       "kind": "phase",
       "requirement": "Fase 2: app instalable, configuración, habitaciones, tarifas y disponibilidad protegida contra concurrencia.",
-      "status": "I",
+      "status": "V",
       "implementation": [
         "hospitality_suite/install.py",
         "hospitality_suite/setup.py",
@@ -4992,9 +5006,16 @@
         "docs/REVISION_FASES_Y_ACCIONES.md",
         "docs/evidence/phase-review-crosswalk.json",
         "docs/evidence/provider-contracts-native-tests.xml",
-        "docs/evidence/provider-contracts-js-tests.log"
+        "docs/evidence/provider-contracts-js-tests.log",
+        "docs/INSTALACION_LIMPIA.md",
+        "docs/evidence/release-install-clean.json",
+        "docs/evidence/release-install-package-final.json",
+        "docs/evidence/release-install-environment.json",
+        "docs/evidence/release-install-native-tests.xml",
+        "docs/evidence/release-install-concurrency-room.json",
+        "docs/evidence/release-install-concurrency-category.json"
       ],
-      "remaining": "Ejecutar instalación limpia de la versión final y comprobar su paquete, dependencias, metadatos, permisos y primer arranque. No sustituirla con migrate de los dos sitios existentes."
+      "remaining": ""
     },
     {
       "id": "S19-03",
@@ -5131,9 +5152,11 @@
         "docs/evidence/provider-contracts-native-tests.xml",
         "docs/evidence/provider-contracts-js-tests.log",
         "docs/REVISION_FASES_Y_ACCIONES.md",
-        "docs/evidence/phase-review-crosswalk.json"
+        "docs/evidence/phase-review-crosswalk.json",
+        "docs/INSTALACION_LIMPIA.md",
+        "docs/evidence/release-install-native-tests.xml"
       ],
-      "remaining": "Completar S00-02/S04-14/S04-16/S04-20, empaquetado/instalación limpia S18-01/S19-02 y ensayo final F26 de actualización y recuperación coordinada de código, base y archivos en un destino aislado."
+      "remaining": "Completar S00-02/S04-14/S04-16/S04-20 y el ensayo final F26 de actualización y recuperación coordinada de código, base y archivos en un destino aislado. Paquete/instalación limpia S18-01/S19-02 acreditados en INSTALACION_LIMPIA.md, con 404 nativas/215 JS y dos carreras reales. Restaurar el estado vacío y actualizar helpers de pruebas no sustituyen ese ensayo final."
     },
     {
       "id": "S19-08",
@@ -5153,7 +5176,9 @@
         "docs/REVISION_FASES_Y_ACCIONES.md",
         "docs/evidence/phase-review-crosswalk.json",
         "docs/evidence/provider-contracts-native-tests.xml",
-        "docs/evidence/provider-contracts-js-tests.log"
+        "docs/evidence/provider-contracts-js-tests.log",
+        "docs/INSTALACION_LIMPIA.md",
+        "docs/evidence/release-install-native-tests.xml"
       ],
       "remaining": "Cerrar la aceptación global de tareas/estados y la fase 7/F26. Mantener el registro y comprobar resultados de las acciones; la presencia de manejador no acredita por sí sola una tarea completada."
     },

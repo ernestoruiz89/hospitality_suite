@@ -1,0 +1,8 @@
+{
+  "step": "backup-clean",
+  "exit_code": 0,
+  "native_log_sha256": "648005ba59da5a69ce207cb7c0bdc515c8cda4e3aefae4fd066467d30917aa8d",
+  "bench": "/home/frappe/.hospitality-release-install/benches/hospitality-release-bench",
+  "site": "hospitality-release.localhost",
+  "main_bench_changed": false
+}

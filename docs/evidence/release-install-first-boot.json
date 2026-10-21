@@ -1,0 +1,26 @@
+{
+  "scripts": [
+    "http://hospitality-release.localhost:8091/assets/frappe/dist/js/file_uploader.bundle.CWYS3P3B.js",
+    "http://hospitality-release.localhost:8091/assets/erpnext/js/setup_wizard.js?v=1792622896163",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "http://hospitality-release.localhost:8091/assets/frappe/dist/js/libs.bundle.LDNONUAV.js",
+    "http://hospitality-release.localhost:8091/assets/frappe/dist/js/billing.bundle.H53FAIQO.js",
+    "http://hospitality-release.localhost:8091/assets/frappe/dist/js/desk.bundle.OZIYCHX6.js",
+    "http://hospitality-release.localhost:8091/assets/frappe/dist/js/list.bundle.XGQU6WYV.js",
+    "http://hospitality-release.localhost:8091/assets/frappe/dist/js/form.bundle.VHFYPNXR.js",
+    "http://hospitality-release.localhost:8091/assets/frappe/dist/js/controls.bundle.V3YRJ7AD.js",
+    "http://hospitality-release.localhost:8091/assets/frappe/dist/js/report.bundle.QMQT4IDK.js",
+    "http://hospitality-release.localhost:8091/assets/frappe/dist/js/telemetry.bundle.RXBBNH3H.js",
+    "http://hospitality-release.localhost:8091/assets/erpnext/dist/js/erpnext.bundle.X77VRNOA.js",
+    "http://hospitality-release.localhost:8091/assets/hospitality_suite/dist/js/hospitality.bundle.DWFPEU45.js"
+  ],
+  "text": "안녕하세요\n\nLet's give your business a home.\n\nGet Started",
+  "url": "http://hospitality-release.localhost:8091/desk/build/setup-wizard/0"
+}

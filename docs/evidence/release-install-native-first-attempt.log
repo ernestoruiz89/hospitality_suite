@@ -1,0 +1,110 @@
+Starting test run with parameters: site=hospitality-release.localhost, app=hospitality_suite, verbose=False, tests=(), force=False, profile=False, junit_xml_output=/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/.local/release-install/native-full-1.raw.xml, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/frappe/.hospitality-release-install/benches/hospitality-release-bench/logs/frappe.testing.log
+
+Running 372 integration tests for hospitality_suite
+
+Running tests...
+----------------------------------------------------------------------
+.........................................................................................................................................................................FFFFFF.................................................................F...................................................................................................................................
+======================================================================
+FAIL [0.001s]: test_all_nine_installed_formats_render_for_the_operational_role_without_business_writes (hospitality_suite.tests.test_print_delivery.TestPrintDelivery.test_all_nine_installed_formats_render_for_the_operational_role_without_business_writes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/frappe/.hospitality-release-install/benches/hospitality-release-bench/apps/hospitality_suite/hospitality_suite/tests/test_print_delivery.py", line 84, in setUp
+    self.scenario = make_scenario()
+                    ~~~~~~~~~~~~~^^
+  File "/home/frappe/.hospitality-release-install/benches/hospitality-release-bench/apps/hospitality_suite/hospitality_suite/tests/test_print_delivery.py", line 34, in make_scenario
+    assert frappe.local.site == 'hospitality-acceptance.localhost'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+======================================================================
+FAIL [0.001s]: test_configured_formats_are_projected_and_user_owned_format_is_preserved_by_sync (hospitality_suite.tests.test_print_delivery.TestPrintDelivery.test_configured_formats_are_projected_and_user_owned_format_is_preserved_by_sync)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/frappe/.hospitality-release-install/benches/hospitality-release-bench/apps/hospitality_suite/hospitality_suite/tests/test_print_delivery.py", line 84, in setUp
+    self.scenario = make_scenario()
+                    ~~~~~~~~~~~~~^^
+  File "/home/frappe/.hospitality-release-install/benches/hospitality-release-bench/apps/hospitality_suite/hospitality_suite/tests/test_print_delivery.py", line 34, in make_scenario
+    assert frappe.local.site == 'hospitality-acceptance.localhost'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+======================================================================
+FAIL [0.001s]: test_customer_labels_are_escaped_and_compact_account_has_no_historical_calculation (hospitality_suite.tests.test_print_delivery.TestPrintDelivery.test_customer_labels_are_escaped_and_compact_account_has_no_historical_calculation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/frappe/.hospitality-release-install/benches/hospitality-release-bench/apps/hospitality_suite/hospitality_suite/tests/test_print_delivery.py", line 84, in setUp
+    self.scenario = make_scenario()
+                    ~~~~~~~~~~~~~^^
+  File "/home/frappe/.hospitality-release-install/benches/hospitality-release-bench/apps/hospitality_suite/hospitality_suite/tests/test_print_delivery.py", line 34, in make_scenario
+    assert frappe.local.site == 'hospitality-acceptance.localhost'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+======================================================================
+FAIL [0.001s]: test_guest_and_wrong_operational_role_cannot_print_financial_or_guest_documents (hospitality_suite.tests.test_print_delivery.TestPrintDelivery.test_guest_and_wrong_operational_role_cannot_print_financial_or_guest_documents)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/frappe/.hospitality-release-install/benches/hospitality-release-bench/apps/hospitality_suite/hospitality_suite/tests/test_print_delivery.py", line 84, in setUp
+    self.scenario = make_scenario()
+                    ~~~~~~~~~~~~~^^
+  File "/home/frappe/.hospitality-release-install/benches/hospitality-release-bench/apps/hospitality_suite/hospitality_suite/tests/test_print_delivery.py", line 34, in make_scenario
+    assert frappe.local.site == 'hospitality-acceptance.localhost'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+======================================================================
+FAIL [0.001s]: test_invoice_presentation_uses_native_payable_rounding_pos_and_party_currency_fields (hospitality_suite.tests.test_print_delivery.TestPrintDelivery.test_invoice_presentation_uses_native_payable_rounding_pos_and_party_currency_fields)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/frappe/.hospitality-release-install/benches/hospitality-release-bench/apps/hospitality_suite/hospitality_suite/tests/test_print_delivery.py", line 84, in setUp
+    self.scenario = make_scenario()
+                    ~~~~~~~~~~~~~^^
+  File "/home/frappe/.hospitality-release-install/benches/hospitality-release-bench/apps/hospitality_suite/hospitality_suite/tests/test_print_delivery.py", line 34, in make_scenario
+    assert frappe.local.site == 'hospitality-acceptance.localhost'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+======================================================================
+FAIL [0.001s]: test_registration_lists_only_companions_and_explains_an_empty_list (hospitality_suite.tests.test_print_delivery.TestPrintDelivery.test_registration_lists_only_companions_and_explains_an_empty_list)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/frappe/.hospitality-release-install/benches/hospitality-release-bench/apps/hospitality_suite/hospitality_suite/tests/test_print_delivery.py", line 84, in setUp
+    self.scenario = make_scenario()
+                    ~~~~~~~~~~~~~^^
+  File "/home/frappe/.hospitality-release-install/benches/hospitality-release-bench/apps/hospitality_suite/hospitality_suite/tests/test_print_delivery.py", line 34, in make_scenario
+    assert frappe.local.site == 'hospitality-acceptance.localhost'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+======================================================================
+FAIL [0.054s]: test_legacy_shared_article_shows_quote_components_as_reference_for_each_recorded_part (hospitality_suite.tests.test_tariff_explanations.TestTariffExplanations.test_legacy_shared_article_shows_quote_components_as_reference_for_each_recorded_part)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/frappe/.hospitality-release-install/benches/hospitality-release-bench/apps/hospitality_suite/hospitality_suite/tests/test_tariff_explanations.py", line 142, in test_legacy_shared_article_shows_quote_components_as_reference_for_each_recorded_part
+    self.assertEqual(self.prop.lodging_item,self.prop.extra_hour_item)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'HS-DEMO-LODGING' != 'HS-DEMO-EXTRA-HOUR'
+- HS-DEMO-LODGING
++ HS-DEMO-EXTRA-HOUR
+
+
+----------------------------------------------------------------------
+Ran 372 tests in 99.510s
+
+FAILED (failures=7)
+
+Generating XML reports...
+
+Running 32 unspecified-category tests for hospitality_suite
+
+Running tests...
+----------------------------------------------------------------------
+................................
+----------------------------------------------------------------------
+Ran 32 tests in 0.108s
+
+OK
+
+Generating XML reports...

@@ -1,0 +1,8 @@
+{
+  "step": "init",
+  "exit_code": 1,
+  "native_log_sha256": "d400a3d4ec68c642fb8a3ff6f5453330ff7e1a458f2e8b86a6f7188870218f8f",
+  "bench": "/home/frappe/benches/hospitality-release-bench",
+  "site": "hospitality-release.localhost",
+  "main_bench_changed": false
+}

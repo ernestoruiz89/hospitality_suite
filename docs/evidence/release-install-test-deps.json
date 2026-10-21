@@ -1,0 +1,8 @@
+{
+  "step": "test-deps",
+  "exit_code": 0,
+  "native_log_sha256": "ac1eaaebc31f12911e7ab44142fe56eef5901bbe5f7109e709913a0424ed291a",
+  "bench": "/home/frappe/.hospitality-release-install/benches/hospitality-release-bench",
+  "site": "hospitality-release.localhost",
+  "main_bench_changed": false
+}

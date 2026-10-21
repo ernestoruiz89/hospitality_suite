@@ -1,0 +1,8 @@
+{
+  "step": "sync-portable-fixtures-checkout",
+  "exit_code": 0,
+  "native_log_sha256": "a051e1083a1642b3509559a664205a62dbe98619078e90de30ed9aeeb07a4624",
+  "bench": "/home/frappe/.hospitality-release-install/benches/hospitality-release-bench",
+  "site": "hospitality-release.localhost",
+  "main_bench_changed": false
+}

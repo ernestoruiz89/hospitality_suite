@@ -1,5 +1,7 @@
 # Matriz de alcance obligatorio
 
+[INSTALACION_LIMPIA.md](INSTALACION_LIMPIA.md) acredita S18-01/S19-02 mediante paquetes comparados con 332 fuentes, instalación vacía en bench independiente y primer establecimiento desde la Page. **404 nativas y 215 JS aprobadas**, más dos carreras con un ganador cada una; fallos iniciales y correcciones de preparación conservados. **210 V, ocho I, cero P y cero R**, sobre las mismas 218 entradas/huella. Continúan aceptación transversal y recuperación final F26; OTA aplazada.
+
 [VALIDACION_NUMERICA.md](VALIDACION_NUMERICA.md) añade evidencia a S04-16: capacidad decimal y cantidades de filas se rechazan antes de convertirlas; corregir y guardar/retomar funciona. **215 JS aprobadas**, dos roles revisados; las 404 nativas de `fb8c022` mantienen alcance histórico del backend sin cambios. **208 V/diez I**, sin cierre de la aceptación general ni de F26. La consulta principal confirma tarjetas verde/rojo sin «en el intervalo» repetido. OTA aplazada.
 
 [REVISION_FASES_Y_ACCIONES.md](REVISION_FASES_Y_ACCIONES.md) contrasta las doce R generales/de fases: seis V y seis I con verificaciones concretas. **208 V, diez I, cero P y cero R: diez entradas abiertas**. El código sigue siendo 0.8.8/`fb8c022`; se reutiliza su ejecución de 404 nativas/210 JS, sin atribuir una batería o aceptación visual nueva a este contraste. Entorno, metadatos, enlaces de acciones y conservación de datos sí se revisan ahora. Siguen pendientes tareas/estados transversales y paquete/instalación/recuperación final F26; OTA aplazada.

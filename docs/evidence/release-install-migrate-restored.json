@@ -1,0 +1,8 @@
+{
+  "step": "migrate-restored",
+  "exit_code": 0,
+  "native_log_sha256": "0356164857a44a91a84720793c35582d01db73a215455f527a05651f563dd54d",
+  "bench": "/home/frappe/.hospitality-release-install/benches/hospitality-release-bench",
+  "site": "hospitality-release.localhost",
+  "main_bench_changed": false
+}

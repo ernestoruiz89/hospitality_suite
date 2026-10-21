@@ -1,5 +1,9 @@
 # Registro de implementación
 
+## Paquete e instalación limpia — 0.8.8
+
+[INSTALACION_LIMPIA.md](INSTALACION_LIMPIA.md) acredita S18-01/S19-02: 332 archivos de app en sdist/wheel, instalación realmente vacía en un bench nuevo, metadatos/permisos y primer establecimiento desde la Page. **404 nativas y 215 JS aprobadas**, dos carreras reales y protección del principal. Se corrigen siete supuestos de preparación de pruebas sin quitar verificaciones; intentos fallidos conservados. Principal 72/1246/dos archivos y aceptación 72/250 sin cambios. **210 V y ocho I**, sin cierre general de tareas/estados ni del ensayo final F26; OTA aplazada.
+
 ## Validación numérica en las Pages — 0.8.8
 
 [VALIDACION_NUMERICA.md](VALIDACION_NUMERICA.md) reproduce y corrige capacidad 1.5 guardada como 1, y amplía la comprobación previa al parseo a tipos numéricos sin límites explícitos y filas opcionales/expandidas. Aviso junto al campo o identificado por fila, borrador original recuperable y guardado corregido comprobados con Gerencia/Recepción. **215 JS aprobadas**; backend sin cambios, 404 nativas de `fb8c022` conservan su alcance histórico. Aceptación restaurada, consulta principal de disponibilidad sin texto redundante repetida. **208 V/diez I**, sin nuevos cierres generales; OTA aplazada y F26 pendiente.

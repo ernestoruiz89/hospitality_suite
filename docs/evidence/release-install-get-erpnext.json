@@ -1,0 +1,8 @@
+{
+  "step": "get-erpnext",
+  "exit_code": 0,
+  "native_log_sha256": "aa7426b10a65e048f4941d7a434feb389187a678f68e35d7d37b071219b53bf4",
+  "bench": "/home/frappe/.hospitality-release-install/benches/hospitality-release-bench",
+  "site": "hospitality-release.localhost",
+  "main_bench_changed": false
+}

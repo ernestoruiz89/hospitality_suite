@@ -1,0 +1,8 @@
+{
+  "step": "init-isolated-parent",
+  "exit_code": 0,
+  "native_log_sha256": "19fd3d7e11b7d5ca81dde453416257e797533b89029594e43ba2e080a1e0d14d",
+  "bench": "/home/frappe/.hospitality-release-install/benches/hospitality-release-bench",
+  "site": "hospitality-release.localhost",
+  "main_bench_changed": false
+}

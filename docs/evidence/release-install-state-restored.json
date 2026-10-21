@@ -1,0 +1,26 @@
+{
+  "observed_at_utc": "2026-10-21T23:01:19.074607+00:00",
+  "site": "hospitality-release.localhost",
+  "stage": "restored",
+  "counts": {
+    "Company": 0,
+    "HS Property": 0,
+    "HS Category": 0,
+    "HS Room": 0,
+    "HS Rate": 0,
+    "HS Booking": 0,
+    "HS Stay": 0,
+    "HS Charge": 0,
+    "HS Payment": 0,
+    "HS Shift": 0,
+    "HS Daily Close": 0,
+    "Sales Invoice": 0,
+    "Payment Entry": 0,
+    "Journal Entry": 0,
+    "GL Entry": 0,
+    "Stock Entry": 0
+  },
+  "scheduler_paused": true,
+  "database_mutations": false,
+  "app_revision": "93b4e0706eda4d910d29760205edf8e1d189d239"
+}

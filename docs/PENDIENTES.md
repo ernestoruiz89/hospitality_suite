@@ -1,5 +1,9 @@
 # Siguiente fase del objetivo activo
 
+## Después de la instalación independiente
+
+[INSTALACION_LIMPIA.md](INSTALACION_LIMPIA.md) cierra S18-01/S19-02 con paquete, instalación, primer arranque, 404 nativas/215 JS y dos carreras reales. **210 V y ocho I**: S00-01/S00-02/S01-12/S04-14/S04-16/S04-20/S19-07/S19-08. Continuar la aceptación de tareas/estados por rol y secuencias de diálogos; después, F26 con recuperación coordinada de código, base y archivos de una versión previa. Se conserva el bench independiente para ese ensayo. OTA aplazada; objetivo activo.
+
 ## Validación numérica revisada
 
 [VALIDACION_NUMERICA.md](VALIDACION_NUMERICA.md) corrige conversiones silenciosas antes del parseo, incluidos borradores de filas; 215 JS y recorrido de Gerencia/Recepción aprobados. Se conserva la evidencia histórica de 404 nativas porque el backend no cambia. **208 V/diez I**: continuar con las demás reglas/estados de tareas secundarias y secuencias rápidas de diálogos, después paquete/instalación y recuperación final F26. Esta corrección no cierra la aceptación transversal. OTA aplazada.

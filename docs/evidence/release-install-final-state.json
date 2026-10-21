@@ -1,0 +1,18 @@
+{
+  "checked_at_utc": "2026-10-21T23:27:24.882029+00:00",
+  "ports": {
+    "8086": true,
+    "9001": true,
+    "11001": true,
+    "13001": true,
+    "8089": false,
+    "8091": false,
+    "9003": false,
+    "11003": false,
+    "13003": false
+  },
+  "main_http": 200,
+  "main_authenticated_browser_checked": true,
+  "temporary_release_processes_stopped": true,
+  "read_only": true
+}

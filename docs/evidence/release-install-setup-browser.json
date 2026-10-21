@@ -1,0 +1,24 @@
+{
+  "site": "hospitality-release.localhost:8091",
+  "role": "Administrator",
+  "explicit_native_setup": true,
+  "setup_demo": false,
+  "events": [
+    {
+      "bundles": [
+        "http://hospitality-release.localhost:8091/assets/hospitality_suite/dist/js/hospitality.bundle.DWFPEU45.js"
+      ],
+      "label": "pms-empty-after-explicit-erpnext-wizard",
+      "text": "Inicio\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nAdministrator\nConfiguración inicial\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nInicio\n\nFecha operativa: Pendiente de configurar\n\nEstablecimiento\nActualizar\nCerrar sesión\nPrepare su primer establecimiento\n\nConfigure compañía, habitaciones y políticas antes de operar.\n\nCrear establecimiento\nHora de referencia del servidor: 2026-10-21 16:54:10.663778 ·",
+      "url": "http://hospitality-release.localhost:8091/desk/hospitality-suite/hospitality-home"
+    },
+    {
+      "bundles": [
+        "http://hospitality-release.localhost:8091/assets/hospitality_suite/dist/js/hospitality.bundle.DWFPEU45.js"
+      ],
+      "label": "first-property-created-in-page",
+      "text": "Inicio\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nAdministrator\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nInicio\n\nFecha operativa: 2026-10-21\n\nEstablecimiento\nHotel de instalación\nActualizar\nCerrar sesión\nSu jornada de un vistazo\n\nRevise los pendientes y elija la siguiente tarea.\n\nReservar\nPor atender\n\nPendientes hasta 21/10/2026 · America/Managua\n\nLlegadas pendientes\n0\nVer llegadas\nSalidas pendientes\n0\nVer salidas\n\nIncluye pendientes de días anteriores y retenciones vigentes. Las llegadas se cuentan por habitación, también las que faltan por asignar.\n\nActualizar pendientes\nHabitaciones ocupadas\n0\nEstancias activas\nAbrir vista →\nLimpias sin ocupación ni bloqueo\n0\nRevise fechas antes de asignar\nAbrir vista →\nLimpieza pendiente\n0\nHabitaciones por preparar\nAbrir vista →\nMantenimiento pendiente\n0\nÓrdenes por completar\nAbrir vista →\nAccesos para su jornada\nRecepción\nVer operación →\nReservas\nVer operación →\nEstancias\nVer operación →\nCaja\nVer operación →\nLimpieza\nVer operación →\nMantenimiento\nVer operación →\nConsumos e inventario\nVer operación →\nClientes y huéspedes\nVer operación →\nGerencia\nVer operación →\nConfiguración\nVer operación →\nHora de referencia del servidor: 2026-10-21 16:55:39.039786 · NIO",
+      "url": "http://hospitality-release.localhost:8091/desk/hospitality-suite/hospitality-home"
+    }
+  ]
+}

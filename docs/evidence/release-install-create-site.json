@@ -1,0 +1,8 @@
+{
+  "step": "create-site",
+  "exit_code": 0,
+  "native_log_sha256": "ba3ef1e6185edde3e77bbd5e69fff4ebdbe5a2a3b2cbccdebae0c33d219e6b99",
+  "bench": "/home/frappe/.hospitality-release-install/benches/hospitality-release-bench",
+  "site": "hospitality-release.localhost",
+  "main_bench_changed": false
+}

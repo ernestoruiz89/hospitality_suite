@@ -1,0 +1,36 @@
+{
+  "observed_at_utc": "2026-10-21T23:10:21.896374+00:00",
+  "site": "hospitality-release.localhost",
+  "stage": "after-concurrency",
+  "counts": {
+    "Company": 1,
+    "HS Property": 2,
+    "HS Category": 2,
+    "HS Room": 20,
+    "HS Rate": 2,
+    "HS Booking": 3,
+    "HS Stay": 0,
+    "HS Charge": 0,
+    "HS Payment": 0,
+    "HS Shift": 0,
+    "HS Daily Close": 0,
+    "Sales Invoice": 0,
+    "Payment Entry": 0,
+    "Journal Entry": 0,
+    "GL Entry": 2,
+    "Stock Entry": 1
+  },
+  "scheduler_paused": true,
+  "database_mutations": false,
+  "explicit_fixture_opening_stock": [
+    {
+      "voucher": "MAT-STE-2026-00001",
+      "company": "Alojamiento Demostración",
+      "item": "HS-DEMO-WATER",
+      "quantity": 100.0,
+      "native_ledger_entries": 2,
+      "balanced_in_company_currency": true
+    }
+  ],
+  "app_revision": "be67c92d3b22b70f9a4a17d0841eb829a8e38f02"
+}

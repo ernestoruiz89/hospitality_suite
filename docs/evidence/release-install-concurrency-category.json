@@ -1,0 +1,22 @@
+{
+  "passed": true,
+  "case": "category",
+  "sessions": [
+    {
+      "session": 1,
+      "result": "confirmed",
+      "booking": "RES-2026-00003"
+    },
+    {
+      "session": 2,
+      "result": "rejected"
+    }
+  ],
+  "isolation": "REPEATABLE-READ",
+  "audited_cleanup_committed": true,
+  "active_reservations": 0,
+  "database_mutations": true,
+  "observed_at_utc": "2026-10-21T23:10:18.007484+00:00",
+  "site": "hospitality-release.localhost",
+  "source_sha256": "897f3c5499ee93c1876911f15184c3270154d4d440b71a1bd7b22fd193ada20a"
+}

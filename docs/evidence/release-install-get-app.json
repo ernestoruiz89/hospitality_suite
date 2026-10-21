@@ -1,0 +1,8 @@
+{
+  "step": "get-app",
+  "exit_code": 0,
+  "native_log_sha256": "865150f3498a0ab474e0ec16c2f2714e30de0d0d450ab29d3ac656bbbba7828d",
+  "bench": "/home/frappe/.hospitality-release-install/benches/hospitality-release-bench",
+  "site": "hospitality-release.localhost",
+  "main_bench_changed": false
+}

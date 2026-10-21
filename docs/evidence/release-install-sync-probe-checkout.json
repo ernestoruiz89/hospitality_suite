@@ -1,0 +1,8 @@
+{
+  "step": "sync-probe-checkout",
+  "exit_code": 0,
+  "native_log_sha256": "a83578e9f76192248d8fa089f2a210308d9e9313723ee875a91dc29a8ddc0365",
+  "bench": "/home/frappe/.hospitality-release-install/benches/hospitality-release-bench",
+  "site": "hospitality-release.localhost",
+  "main_bench_changed": false
+}

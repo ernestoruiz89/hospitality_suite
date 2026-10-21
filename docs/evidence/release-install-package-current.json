@@ -1,0 +1,38 @@
+{
+  "revision": "93b4e0706eda4d910d29760205edf8e1d189d239",
+  "app_version": "0.8.8",
+  "build_versions": {
+    "build": "1.6.1",
+    "flit_core": "3.12.0"
+  },
+  "application_files": 332,
+  "sdist_files": 1451,
+  "wheel_files": 336,
+  "application_bytes_identical": true,
+  "native_assets_included": true,
+  "docs_and_test_tools_in_sdist": true,
+  "bench_dependencies": {
+    "frappe": ">=16.52.0,<17.0.0",
+    "erpnext": ">=16.51.1,<17.0.0"
+  },
+  "python_requires": ">=3.14",
+  "files": {
+    "hospitality-suite-repository.tar.gz": {
+      "bytes": 15920520,
+      "sha256": "2232af9db9c9b8b076b60d49092afedfa1404c17bdf3bd683156a66b373dcf83"
+    },
+    "hospitality_suite-0.8.8.tar.gz": {
+      "bytes": 15982798,
+      "sha256": "bcd0127cfbedead31688c276ec439e9b01f3cd517e255ccbf0211c19808db1c2"
+    },
+    "hospitality_suite-0.8.8-py3-none-any.whl": {
+      "bytes": 617555,
+      "sha256": "af09d8d2152bd77f3d2145516f3a85ac140e26b3879b4941a0d56be52834c733"
+    },
+    "build.log": {
+      "bytes": 247,
+      "sha256": "24a8e7be03eb5374feb70109bd52739c321050e295dccd5754dda049b9f95ddf"
+    }
+  },
+  "output": "output/releases/93b4e0706eda"
+}

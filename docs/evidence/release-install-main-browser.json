@@ -1,0 +1,8 @@
+{
+  "connection": "● Tiempo real conectado",
+  "property": "Hotel Jardín Demo",
+  "read_only": true,
+  "title": "Reservas",
+  "url": "http://hospitality.localhost:8086/desk/hospitality-suite/hospitality-reservations",
+  "visible_text": "Reservas\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nreceptionist@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nReservas\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nReservas vigentes\n\nReservas individuales y grupales; las retenciones liberan cupo al vencer.\n\n Mostrar historial\nReservar\nBuscar disponibilidad\nReserva\tLlegada / salida\tCanal\tEstado\tImporte\tAcciones\nHuésped ficticio H1 · 23/10/2026 14:00\t23/10/2026 14:00\n24/10/2026 12:00\tWeb\tConfirmada\tC$ 1,500.00\tVer reserva\nHuésped ficticio H1 · 20/10/2026 10:00\t20/10/2026 10:00\n21/10/2026 10:00\tRecepción\tConfirmada\tC$ 1,500.00\tVer reserva\nHuésped ficticio H3 · 19/10/2026 09:30\t19/10/2026 09:30\n20/10/2026 09:30\tRecepción\tEntrada registrada\tC$ 1,600.00\tVer reserva\nCalendario por habitación\nFecha del calendario\nHabitación\tmié 21/10\tjue 22/10\tvie 23/10\tsáb 24/10\tdom 25/10\tlun 26/10\tmar 27/10\nH101\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH102\tSin asignación\tSin asignación\tSin asignaci"
+}

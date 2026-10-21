@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "main_site_rejected": true,
+  "database_mutations": false,
+  "observed_at_utc": "2026-10-21T23:02:58.659211+00:00",
+  "site": "hospitality.localhost",
+  "source_sha256": "d3e317d725a836b2e0a1ed3b392ee00a3ba6c4ad4ff79918cbf76edafb58b152"
+}
