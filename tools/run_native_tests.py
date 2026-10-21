@@ -14,18 +14,30 @@ SITE='hospitality-acceptance.localhost'
 parser=argparse.ArgumentParser()
 parser.add_argument('--phase',required=True)
 parser.add_argument('--label',default='native-full-1')
+parser.add_argument('--target', choices=['acceptance', 'release'], default='acceptance')
 args=parser.parse_args()
+if args.target == 'release':
+    BENCH=Path('/home/frappe/.hospitality-release-install/benches/hospitality-release-bench')
+    SITE='hospitality-release.localhost'
 assert all(re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*',value) for value in [args.phase,args.label])
 config=json.loads((BENCH/'sites'/SITE/'site_config.json').read_text())
-assert config['db_name']=='hospitality_acceptance' and config.get('allow_tests') and config.get('hospitality_integration_test_site') and config.get('pause_scheduler')
-assert (BENCH/f'.hospitality-{args.phase}-upgrade.json').is_file() and (BENCH/f'.hospitality-{args.phase}-ux-baseline.json').is_file()
+assert config['db_name']==('hospitality_release' if args.target=='release' else 'hospitality_acceptance') and config.get('allow_tests') and config.get('hospitality_integration_test_site') and config.get('pause_scheduler')
+if args.target=='release':
+    assert args.phase=='release-install'
+    backup=json.loads(Path('/home/frappe/.hospitality-release-install/clean-backup.json').read_text())
+    assert backup['site']==SITE and all(hashlib.sha256((BENCH/'sites'/SITE/'private/backups'/name).read_bytes()).hexdigest()==digest for name,digest in backup['files'].items())
+    assert json.loads((ROOT/'docs/evidence/release-install-clean.json').read_text())['no_implicit_demo']
+else:
+    assert (BENCH/f'.hospitality-{args.phase}-upgrade.json').is_file() and (BENCH/f'.hospitality-{args.phase}-ux-baseline.json').is_file()
 output=ROOT/'.local'/args.phase;output.mkdir(exist_ok=True,parents=True)
 log=output/(args.label+'.log');raw_xml=output/(args.label+'.raw.xml')
 assert not log.exists() and not raw_xml.exists(),'Preserve the preceding run; choose another explicit label'
 command=['/home/frappe/.local/bin/bench','--site',SITE,'run-tests','--app','hospitality_suite','--junit-xml-output',str(raw_xml)]
 environment=dict(os.environ)
-environment['PATH']=str(BENCH/'.runtime/wkhtmltox/usr/local/bin')+os.pathsep+environment.get('PATH','')
-print('Native regression running on protected acceptance; raw logs retained under .local/'+args.phase,flush=True)
+pdf_runtime=(Path('/home/frappe/benches/hospitality-bench/.runtime/wkhtmltox/usr/local/bin') if args.target=='release' else BENCH/'.runtime/wkhtmltox/usr/local/bin')
+assert args.target!='release' or (pdf_runtime/'wkhtmltopdf').is_file()
+environment['PATH']=str(pdf_runtime)+os.pathsep+environment.get('PATH','')
+print('Native regression running on protected '+args.target+'; raw logs retained under .local/'+args.phase,flush=True)
 with log.open('w') as stream:
     result=subprocess.run(command,cwd=BENCH,env=environment,stdout=stream,stderr=subprocess.STDOUT)
 if result.returncode:

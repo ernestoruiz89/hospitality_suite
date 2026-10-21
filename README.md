@@ -50,6 +50,8 @@ El desarrollo continúa: [matriz de requisitos](docs/REQUISITOS.md), [auditoría
 
 ERPNext debe estar instalado antes. La instalación normal no crea compañías, cuentas, impuestos, habitaciones ni datos de demostración. HRMS es opcional.
 
+En un sitio nuevo, complete primero el asistente inicial de ERPNext con su idioma, zona horaria y compañía, sin activar datos de demostración. Después abra `/desk/hospitality-suite/hospitality-home`: el PMS muestra «Prepare su primer establecimiento» y permite crearlo desde su propio diálogo. Configure categorías, habitaciones, tarifas y contabilidad antes de operar. La instalación y este primer arranque se han probado en un bench independiente; el contenido de demostración/pruebas se carga explícitamente después.
+
 ```sh
 cd /ruta/al/bench
 bench get-app hospitality_suite /ruta/al/repositorio/Hotel
@@ -133,14 +135,15 @@ La batería requiere un sitio desechable identificado como pruebas y `allow_test
 ```sh
 bench --site hospitality-acceptance.localhost set-config allow_tests true
 bench --site hospitality-acceptance.localhost set-config hospitality_integration_test_site true
+bench --site hospitality-acceptance.localhost set-config pause_scheduler true
 bench --site hospitality-acceptance.localhost run-tests --app hospitality_suite
 ```
 
 Para conservar JUnit, sustituya la última línea por `bench --site hospitality-acceptance.localhost run-tests --app hospitality_suite --junit-xml-output /ruta/absoluta/pruebas.xml`. En la versión probada Frappe añade un documento XML por cohorte; conserve la salida original y genere un archivo único para CI con `python3 tools/normalize_junit.py /ruta/pruebas.xml /ruta/pruebas-normalizadas.xml` desde el repositorio. El normalizador cuenta los casos, errores y fallos sin cambiar sus resultados. Un final de proceso correcto no sustituye revisar esos resultados.
 
-`before_tests` exige Redis disponible y un sitio designado sin operaciones; después carga solo la base de prueba. Cada caso revierte sus movimientos. El ejemplo usa el sitio de aceptación instalado en WSL; en otro entorno cree e instale primero un sitio desechable equivalente. Conserve un respaldo inicial para recuperar una ejecución interrumpida. Última batería conjunta: **380 aprobadas** en hospitality-acceptance.localhost, 366 de integración y 14 puras, sobre 0.8.2. Las seis de idioma cubren alias, metadatos, contextos y extracción; IDIOMA_Y_ETIQUETAS.md delimita aquella revisión. TECLADO_Y_FOCO.md conserva su recorrido real y la restauración final; el caso añadido verifica etiquetas de mantenimiento y valores históricos intactos. Las ocho de 0.8.0 y ACEPTACION_Y_DEMOSTRACION.md conservan su aceptación operativa anterior. Los seis escenarios con el worker real de TRABAJOS_Y_REINTENTOS.md son evidencia de esa fase.
+`before_tests` exige Redis disponible y un sitio designado sin operaciones; después carga explícitamente dos establecimientos, veinte habitaciones y una apertura de stock ficticia. Cada caso revierte sus movimientos. El ejemplo usa el sitio de aceptación instalado en WSL; en otro entorno cree e instale primero un sitio desechable equivalente y pause su scheduler. Conserve un respaldo inicial para recuperar una ejecución interrumpida. Última batería conjunta: **404 aprobadas**, 372 de integración y 32 puras, en el bench independiente `hospitality-release.localhost`, sobre 0.8.8. Se conservan el primer intento de siete fallos de preparación y la repetición completa corregida en `docs/evidence/release-install-native-tests.xml` y su salida. La ejecución previa de `fb8c022` y los recorridos históricos mantienen su alcance. Los seis escenarios con el worker real de TRABAJOS_Y_REINTENTOS.md son evidencia de aquella fase.
 
-La fase histórica 0.7.1 acredita **307 pruebas nativas y 85 JS**, con trece casos nuevos de limpieza, bloqueos y contexto de establecimiento. La matriz registra 157 V, 14 I, 0 P y 47 R; cada entrada conserva su evidencia y límites. Las auditorías anteriores mantienen los recorridos históricos. El sitio limpio anterior conserva respaldo de diagnóstico, y la demostración principal conserva operaciones UX: ninguno sustituye el sitio de aceptación. Los dos casos de concurrencia usan conexiones y commits reales; se ejecutan aparte sobre aceptación con respaldo y restauración posterior:
+La fase histórica 0.7.1 acredita **307 pruebas nativas y 85 JS**, con trece casos nuevos de limpieza, bloqueos y contexto de establecimiento. La matriz de aquella fase registraba 157 V, 14 I, 0 P y 47 R. Los sitios históricos conservan su alcance; la demostración principal contiene operaciones y rechaza los helpers de integración. Los dos casos de concurrencia usan conexiones y commits reales, requieren un sitio designado sin operaciones y scheduler pausado, cancelan sus reservas con auditoría y se ejecutan aparte con respaldo/restauración:
 
 ```sh
 bench --site hospitality-acceptance.localhost execute hospitality_suite.tests.concurrency.verify
