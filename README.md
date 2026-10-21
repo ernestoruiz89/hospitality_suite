@@ -2,7 +2,7 @@
 
 PMS nativo para modalidades Hotel, Por tiempo y Hotel y por tiempo. Recepción, caja, limpieza y gerencia trabajan desde once Pages de Desk en español; la contabilidad y el inventario permanecen en ERPNext.
 
-Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. App 0.7.7. Otras versiones no están acreditadas.
+Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. App 0.7.8. Otras versiones no están acreditadas.
 
 El desarrollo continúa: [matriz de requisitos](docs/REQUISITOS.md), [auditoría punto por punto](docs/AUDITORIA_ESPECIFICACION.md), [registro de avance](docs/AVANCE.md) y [arquitectura](docs/ARQUITECTURA.md). No se declara listo para producción mientras existan pendientes obligatorios.
 
@@ -16,7 +16,9 @@ El desarrollo continúa: [matriz de requisitos](docs/REQUISITOS.md), [auditoría
 
 [Inventario y servicios](docs/AUDITORIA_INVENTARIO_SERVICIOS.md): entregas/devoluciones conciliadas, consultas por ubicación y acciones claras por estado. **337 nativas y 101 JS aprobadas**. Estado de esa fase: **179 V, 14 I y 25 R; 39 entradas sin cierre**.
 
-[Estados por intervalo](docs/ESTADOS_POR_INTERVALO.md): contraste plegado de habitaciones para sus fechas, limpieza actual y llegadas/salidas con texto; calendario con contexto, validación e idioma. **352 nativas y 126 JS aprobadas**, con catorce nativas dirigidas finales. Recepción comprueba escritorio/móvil y dos intervalos. Estado actual: **184 V, 11 I y 23 R; 34 entradas sin cierre**.
+[Historial de habitaciones](docs/HISTORIAL_HABITACIONES.md): operaciones, cambios de datos y períodos por rango; valores plegados, paginación y permisos por establecimiento. **365 nativas y 136 JS aprobadas**. Recepción comprueba cancelación, limpieza, cambio de habitación, bloqueos, tres páginas y móvil. Estado actual: **185 V, 10 I y 23 R; 33 entradas sin cierre**.
+
+[Estados por intervalo](docs/ESTADOS_POR_INTERVALO.md) conserva la fase 0.7.7: contraste plegado de habitaciones para sus fechas, limpieza actual y llegadas/salidas con texto; calendario con contexto, validación e idioma. **352 nativas y 126 JS aprobadas** en esa fase, con catorce nativas dirigidas finales.
 
 [Inicio y filtros de Recepción](docs/INICIO_Y_FILTROS.md) conserva la fase 0.7.6: llegadas/salidas accionables y preferencias por usuario/establecimiento, con 117 JS y nueve nativas dirigidas de esa fase.
 

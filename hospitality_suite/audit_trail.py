@@ -7,7 +7,10 @@ from hospitality_suite.security import require,property_document
 
 FIELDS={
     'HS Rate':('title','category','mode','currency','amount','block_hours','extra_hour_rate','grace_minutes','rounding_minutes','included_people','additional_person_rate','extra_bed_rate','priority','valid_from','valid_to','weekdays','night_start','night_end','active','customer'),
-    'HS Booking':('status','starts_at','ends_at','amount','currency','fee_amount','fee_invoice'),
+    'HS Booking':('status','starts_at','ends_at','amount','currency','fee_amount','fee_invoice','rooms'),
+    'HS Room':('room_number','category','floor','zone','beds','parking','active','cleaning_status'),
+    'HS Cleaning Task':('room','kind','priority','status','assigned_to','started_at','completed_at','notes'),
+    'HS Maintenance Order':('room','title','equipment','starts_at','ends_at','until_reopened','blocks_room','kind','status','assigned_to','notes'),
     'HS Stay':('status','room','starts_at','ends_at','amount','currency','actual_check_out'),
     'HS Charge':('status','quantity','rate','amount','currency','adjustment_type','applies_to_charge','folio'),
     'HS Payment':('kind','status','amount','currency','base_amount','exchange_rate','method','shift','payment_entry','journal_entry','source_payment','fee_amount','withholding_amount','net_amount'),
@@ -22,6 +25,11 @@ FIELDS={
 def values(doc):
     if not doc or doc.doctype not in FIELDS:return None
     result={field:doc.get(field) for field in FIELDS[doc.doctype]}
+    if doc.doctype in ('HS Room','HS Booking','HS Stay','HS Cleaning Task','HS Maintenance Order'):
+        result.update(property=doc.property,company=doc.company)
+    if doc.doctype=='HS Booking':
+        result['rooms']=[dict(room=row.room,category=row.category,
+            room_number=frappe.db.get_value('HS Room',{'name':row.room,'property':doc.property,'company':doc.company},'room_number') if row.room else None) for row in doc.rooms]
     if doc.doctype=='HS Rate':
         result['included_services']=[{key:row.get(key) for key in ('item','quantity','basis')} for row in doc.included_services]
     if doc.doctype=='HS Shift':
@@ -41,6 +49,8 @@ def enrich(doc,details,before=None):
     after=values(doc)
     if after is not None:
         old=before if before is not None else values(doc.get_doc_before_save())
+        if old and old.get('property') and after.get('property') and (old.get('property'),old.get('company'))!=(after.get('property'),after.get('company')):
+            old=None;result['_scope_boundary']=True
         result['_values']=dict(version=1,doctype=doc.doctype,name=doc.name,before=old,after=after)
     return result
 
@@ -55,8 +65,22 @@ def rate_changed(doc):
               doc.change_reason or frappe._('Registro inicial de tarifa'),before=old)
 
 
+def room_changed(doc):
+    """Keep raw identities and before/after values even when a native Version is skipped."""
+    if any(frappe.flags.get(key) for key in ('in_install','in_migrate','in_patch','in_import')):return
+    previous=doc.get_doc_before_save()
+    if not previous:return
+    old,new=values(previous),values(doc)
+    if old==new:return
+    from hospitality_suite.service import operation,audit
+    prop=require(doc.property)
+    with operation(prop):audit(prop,'Room changed',doc,frappe._('Cambio de datos de habitación'),before=old)
+
+
 EXTRAS={'HS Rate':('included_services',),'HS Shift':('denominations',),'HS Daily Close':('financial_totals',)}
-LABELS={'included_services':'Servicios incluidos','denominations':'Arqueo por moneda','financial_totals':'Resumen financiero conservado',
+LABELS={'rooms':'Habitaciones registradas','room_number':'Número de habitación','floor':'Piso','zone':'Zona','beds':'Camas','parking':'Estacionamiento','cleaning_status':'Estado de limpieza',
+    'equipment':'Equipo','until_reopened':'Hasta reapertura autorizada','blocks_room':'Bloquea habitación','assigned_to':'Responsable','started_at':'Inicio registrado','completed_at':'Finalización registrada','notes':'Observaciones',
+    'included_services':'Servicios incluidos','denominations':'Arqueo por moneda','financial_totals':'Resumen financiero conservado',
     'title':'Nombre de tarifa','category':'Categoría','mode':'Modalidad','currency':'Moneda','amount':'Importe','block_hours':'Horas del bloque',
     'extra_hour_rate':'Precio de hora adicional','grace_minutes':'Tolerancia (minutos)','rounding_minutes':'Fracción de cobro (minutos)',
     'included_people':'Personas incluidas','additional_person_rate':'Precio de persona adicional','extra_bed_rate':'Precio de cama adicional',
@@ -77,6 +101,12 @@ LABELS={'included_services':'Servicios incluidos','denominations':'Arqueo por mo
 def display_value(prop,dt,field,value,df,state,context):
     if value is None or value=='':return frappe._('Sin dato')
     from hospitality_suite.printing import hs_label
+    if field=='rooms':
+        if not isinstance(value,list):return frappe._('Habitaciones registradas sin desglose recuperable')
+        return '; '.join((row.get('room_number') if isinstance(row.get('room_number'),str) else None) or (context.master('HS Room',row.get('room'),'room_number') if isinstance(row.get('room'),str) and row['room'] else frappe._('Por asignar')) for row in value if isinstance(row,dict)) or frappe._('Sin habitaciones asignadas')
+    if field=='cleaning_status' and isinstance(value,str):
+        from hospitality_suite.display_labels import cleaning_label
+        return cleaning_label(value)
     if field=='included_services':
         return '; '.join(f"{context.master('Item',row.get('item'),'item_name')} × {row.get('quantity')} · {frappe._('Por noche') if row.get('basis')=='Night' else frappe._('Por estancia')}" for row in value) or frappe._('Sin servicios incluidos')
     if field=='denominations':

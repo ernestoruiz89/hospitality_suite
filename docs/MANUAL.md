@@ -1,6 +1,12 @@
 # Manual diario por rol
 
-Aplicación 0.7.7, Frappe 16.52 / ERPNext 16.51. Los recorridos acreditados y las verificaciones pendientes están en REQUISITOS.md.
+Aplicación 0.7.8, Frappe 16.52 / ERPNext 16.51. Los recorridos acreditados y las verificaciones pendientes están en REQUISITOS.md.
+
+## Historial de una habitación
+
+En Recepción, pulse **Historial** en la tarjeta. Elija Desde, Hasta (sin incluir) y Qué desea ver; luego pulse **Consultar historial**. Actividad muestra operaciones y períodos; Cambios de datos muestra versiones; Estancias y bloqueos muestra intervalos. Todo el historial reúne las fuentes. Las reservas aún sin habitación se consultan en Reservas.
+
+Abra **Ver valores registrados** cuando necesite comparar antes/después. Los períodos que cruzan el rango conservan sus extremos reales: una reserva liberada no significa ocupación actual y un bloqueo sin fecha final espera reapertura. Anterior/Siguiente recorren grupos de 25 conservando los filtros. Una fecha invertida se corrige en la misma ventana; una consulta vacía permite ampliar fechas o cambiar vista. Los datos anteriores que no puedan reconstruirse lo indican expresamente. Véase HISTORIAL_HABITACIONES.md.
 
 Los formularios extensos están organizados en pestañas por tarea. Puede cambiar de sección sin perder lo escrito y guardar desde cualquiera. Los datos adicionales del huésped y las opciones de reserva tienen su propia sección. La acción de guardar o revisar permanece visible; si falta un dato obligatorio, el formulario abre su sección. Al cerrar una revisión de precio o cobro, vuelve al borrador sin registrarlo. Véase UX_FORMULARIOS.md.
 

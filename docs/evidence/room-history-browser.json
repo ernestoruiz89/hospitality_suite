@@ -1,0 +1,125 @@
+{
+  "app_version": "0.7.8",
+  "site": "hospitality-acceptance.localhost:8089",
+  "role": "HS Receptionist",
+  "fixture_created_via_native_commands": true,
+  "cleaning": [
+    "Operación\n20/10/2026 22:44\nLimpieza: Completada\nRegistrado por: Administrator\n\nHabitación revisada para el historial de ejemplo\n\nVer valores registrados (2)\nDato\tAntes\tDespués\nEstado\tPendiente de inspección\tCompletada\nFinalización registrada\t20/10/2026 22:44:14\t20/10/2026 22:44:14",
+    "Operación\n20/10/2026 22:44\nDatos de habitación actualizados\nRegistrado por: Administrator\n\nCambio de datos de habitación\n\nVer valores registrados (1)",
+    "Operación\n20/10/2026 22:44\nLimpieza: Pendiente de inspección\nRegistrado por: Administrator\n\nHabitación revisada para el historial de ejemplo\n\nVer valores registrados (2)",
+    "Operación\n20/10/2026 22:44\nDatos de habitación actualizados\nRegistrado por: Administrator\n\nCambio de datos de habitación\n\nVer valores registrados (1)",
+    "Operación\n20/10/2026 22:44\nLimpieza: En proceso\nRegistrado por: Administrator\n\nHabitación revisada para el historial de ejemplo\n\nVer valores registrados (4)",
+    "Operación\n20/10/2026 22:44\nDatos de habitación actualizados\nRegistrado por: Administrator\n\nCambio de datos de habitación\n\nVer valores registrados (1)",
+    "Operación\n20/10/2026 22:44\nCambio de habitación\nRegistrado por: Administrator\n\nCambio de H103 a H104 solicitado por el huésped\n\nVer valores registrados (1)",
+    "Operación\n20/10/2026 22:44\nDatos de habitación actualizados\nRegistrado por: Administrator\n\nCambio de datos de habitación\n\nVer valores registrados (1)",
+    "Operación\n20/10/2026 22:44\nEntrada registrada\nRegistrado por: Administrator",
+    "Período\n20/10/2026 22:44 → 20/10/2026 22:44\nEstancia registrada",
+    "Operación\n20/10/2026 22:44\nReserva creada\nRegistrado por: Administrator\nVer valores registrados (4)"
+  ],
+  "cancelled": [
+    "Operación\n20/10/2026 22:44\nReserva cancelada\nRegistrado por: Administrator\n\nCancelación de ejemplo para revisar el historial\n\nVer valores registrados (1)",
+    "Operación\n20/10/2026 22:44\nReserva modificada\nRegistrado por: Administrator\n\nCambio solicitado a habitación H102\n\nVer valores registrados (1)",
+    "Período\n20/10/2026 22:44 → 22/10/2026 22:44\nReserva liberada\n\nFechas reservadas. Una asignación liberada no representa ocupación actual."
+  ],
+  "invalid_range_inline": [
+    "Historial · habitación H102\nDesde (America/Managua)\nstarts_at\nHasta (sin incluir)\nends_at\nQué desea ver\nActividad\nCambios de datos\nEstancias y bloqueos\nTodo el historial\nview\n\nIndique fechas válidas. La fecha final debe ser posterior a la inicial.\n\nConsultar historial"
+  ],
+  "empty_range": [
+    "Historial · habitación H102\nDesde (America/Managua)\nstarts_at\nHasta (sin incluir)\nends_at\nQué desea ver\nActividad\nCambios de datos\nEstancias y bloqueos\nTodo el historial\nview\n\n25/10/2026 00:00 → 26/10/2026 00:00 · America/Managua\n\nNo hay movimientos para esta habitación en estas fechas.\n\nPuede ampliar el rango o elegir otra vista.\n\nMostrando 0–0 de 0 registros\nConsultar historial"
+  ],
+  "closed_block": [
+    "Historial · habitación H105\nDesde (America/Managua)\nstarts_at\nHasta (sin incluir)\nends_at\nQué desea ver\nActividad\nCambios de datos\nEstancias y bloqueos\nTodo el historial\nview\n\n13/10/2026 00:00 → 21/10/2026 00:00 · America/Managua\n\nPeríodo\n20/10/2026 20:44 → 20/10/2026 22:44\nBloqueo finalizado\nMostrando 1–1 de 1 registros\nConsultar historial"
+  ],
+  "open_block": [
+    "Historial · habitación H106\nDesde (America/Managua)\nstarts_at\nHasta (sin incluir)\nends_at\nQué desea ver\nActividad\nCambios de datos\nEstancias y bloqueos\nTodo el historial\nview\n\n13/10/2026 00:00 → 21/10/2026 00:00 · America/Managua\n\nPeríodo\n20/10/2026 21:44 → Sin fecha final registrada\nBloqueo de mantenimiento\nMostrando 1–1 de 1 registros\nConsultar historial"
+  ],
+  "pagination": [
+    [
+      "Mostrando 1–25 de 59 registros\nSiguiente"
+    ],
+    [
+      "Anterior\nMostrando 26–50 de 59 registros\nSiguiente"
+    ],
+    [
+      "Anterior\nMostrando 51–59 de 59 registros"
+    ],
+    [
+      "Anterior\nMostrando 26–50 de 59 registros\nSiguiente"
+    ],
+    [
+      "Mostrando 1–25 de 59 registros\nSiguiente"
+    ]
+  ],
+  "mobile": {
+    "body": {
+      "bottom": 760,
+      "height": 692,
+      "top": 68,
+      "width": 372
+    },
+    "dialog": {
+      "bottom": 836,
+      "height": 828,
+      "top": 8,
+      "width": 374
+    },
+    "document_width": 390,
+    "inputs": [
+      {
+        "bottom": 165,
+        "height": 44,
+        "label": "Desde (America/Managua)",
+        "top": 121,
+        "width": 319
+      },
+      {
+        "bottom": 252,
+        "height": 44,
+        "label": "Hasta (sin incluir)",
+        "top": 208,
+        "width": 334
+      },
+      {
+        "bottom": 382,
+        "height": 44,
+        "label": "Qué desea ver",
+        "top": 338,
+        "width": 334
+      }
+    ],
+    "primary": {
+      "bottom": 820,
+      "height": 44,
+      "top": 776,
+      "width": 342
+    },
+    "summary": {
+      "bottom": 619.78125,
+      "height": 44,
+      "top": 575.78125,
+      "width": 304
+    },
+    "viewport": {
+      "height": 844,
+      "width": 390
+    }
+  },
+  "mobile_keyboard": {
+    "detail_open": true,
+    "detail_text": "Ver valores registrados (2)\nDato\tAntes\tDespués\nEstado\nPendiente de inspección\nCompletada\nFinalización registrada\n20/10/2026 22:44:14\n20/10/2026 22:44:14",
+    "dialog_scroll_width": 374,
+    "document_width": 390,
+    "focused_tag": "SUMMARY",
+    "focused_text": "Ver valores registrados (2)",
+    "table_width": 304
+  },
+  "other_property": [
+    "Historial · habitación M101\nDesde (America/Managua)\nstarts_at\nHasta (sin incluir)\nends_at\nQué desea ver\nActividad\nCambios de datos\nEstancias y bloqueos\nTodo el historial\nview\n\n13/10/2026 00:00 → 21/10/2026 00:00 · America/Managua\n\nNo hay movimientos para esta habitación en estas fechas.\n\nPuede ampliar el rango o elegir otra vista.\n\nMostrando 0–0 de 0 registros\nConsultar historial"
+  ],
+  "room_change": [
+    "Operación\n20/10/2026 22:44\nCambio de habitación\nRegistrado por: Administrator\n\nCambio de H103 a H104 solicitado por el huésped\n\nVer valores registrados (1)\nDato\tAntes\tDespués\nHabitación\tH103\tH104"
+  ],
+  "session_closed_at_login": true,
+  "viewport_reset": true,
+  "scope": "Lectura desde Pages; preparaciones mediante comandos nativos del sitio de aceptación. Los casos controlados de respuesta fuera de orden se prueban en JS."
+}

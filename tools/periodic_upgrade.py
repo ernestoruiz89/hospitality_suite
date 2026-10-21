@@ -11,7 +11,7 @@ from hospitality_suite.schema import SCHEMA
 
 BENCH=Path('/home/frappe/benches/hospitality-bench')
 ROOT=Path(__file__).resolve().parents[1]
-parser=argparse.ArgumentParser();parser.add_argument('action',choices=['before','verify']);parser.add_argument('--phase',choices=['periodic','billing-ui','board','availability','drafts','tariffs','account-summary','guest-profiles','background-jobs','countdown','finance-audit','housekeeping-audit','permissions-audit','audit-history','inventory-audit','closing-checks','navigation','room-states'],default='periodic');args=parser.parse_args()
+parser=argparse.ArgumentParser();parser.add_argument('action',choices=['before','verify']);parser.add_argument('--phase',choices=['periodic','billing-ui','board','availability','drafts','tariffs','account-summary','guest-profiles','background-jobs','countdown','finance-audit','housekeeping-audit','permissions-audit','audit-history','inventory-audit','closing-checks','navigation','room-states','room-history'],default='periodic');args=parser.parse_args()
 BASE=BENCH/f'.hospitality-{args.phase}-upgrade.json'
 assert args.action!='before' or not BASE.exists(),'Conserve la línea de base original'
 old=json.loads(BASE.read_text()) if args.action=='verify' else None

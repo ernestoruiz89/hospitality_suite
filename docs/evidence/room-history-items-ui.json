@@ -1,0 +1,20 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "real_native_command_fixture": true,
+  "ui_operations_read_only": true,
+  "unchanged_tables": 72,
+  "all_native_tables_unchanged": true,
+  "business_date_unchanged": true,
+  "history_counts": {
+    "H101": 5,
+    "H102": 5,
+    "H103": 24,
+    "H104": 3,
+    "H105": 5,
+    "H106": 3,
+    "H107": 0,
+    "H108": 0,
+    "H109": 58,
+    "H110": 0
+  }
+}

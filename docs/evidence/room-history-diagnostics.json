@@ -1,0 +1,56 @@
+{
+  "initial_native_target": {
+    "tests": 10,
+    "failures": 2,
+    "causes": [
+      "Contextual room cleaning labels were missing; generic Cleaning meant inventory consumption.",
+      "Frappe 16 suppresses Version in tests unless explicitly enabled."
+    ]
+  },
+  "intermediate_native_target": {
+    "tests": 12,
+    "errors": 1,
+    "cause": "The malformed-payload test looked up booking in a walk-in result; corrected by reading the stay booking."
+  },
+  "intermediate_full_suites": [
+    {
+      "tests": 362,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "tests": 364,
+      "failures": 0,
+      "errors": 0
+    }
+  ],
+  "final_native": {
+    "tests": 365,
+    "integration": 351,
+    "pure": 14,
+    "failures": 0,
+    "errors": 0,
+    "directed": 13
+  },
+  "final_javascript": {
+    "tests": 136,
+    "desk": 134,
+    "portal": 2,
+    "failures": 0
+  },
+  "ui_corrections": [
+    "Inverted dates are validated inline before requesting the server.",
+    "Date/select controls increased from 28 to 44 pixels."
+  ],
+  "browser_tool_limits": [
+    "Some DOM locator actions timed out; fresh accessibility state and native controls completed the action.",
+    "A new dialog was requested during dismissal; after observing the closed state it opened normally."
+  ],
+  "final_identity_review": "A native Link title matching another room internal ID stays ambiguous; raw operational snapshots remain exact.",
+  "local_diagnostic_sha256": {
+    "native-target-1.log": "b6c91622e3dbc2dcf0ecd297ff9907ab4ad015f1c7b9a934e815594b8b9d0396",
+    "native-target-3.log": "ab8e770af8fc48f5194674383b202f81ccce5fbf60af7dcbc1ce46879432d337",
+    "native-full-1.log": "a9f4a13fdd38fb2313fc0acce7cd9f87ade1f3166fbf922b100220eb06029258",
+    "native-full-2.log": "a75e506807d977f513b6196c54a2763dcd451098b41182a3b13680f0b0e379c3"
+  }
+}

@@ -1,8 +1,12 @@
 # Siguiente fase del objetivo activo
 
-Actualizado el 20/10/2026. El alcance obligatorio sigue abierto: **184 V, once I, cero P y 23 R**, de las mismas 218 entradas y huella. R significa contraste individual pendiente y no función ausente. Los recuentos no son un porcentaje de programación ni una fecha de terminación.
+Actualizado el 20/10/2026. El alcance obligatorio sigue abierto: **185 V, diez I, cero P y 23 R**, de las mismas 218 entradas y huella. R significa contraste individual pendiente y no función ausente. Los recuentos no son un porcentaje de programación ni una fecha de terminación.
 
-## Última fase comprobada — 0.7.7
+## Última fase comprobada — 0.7.8
+
+Fase 0.7.8: HISTORIAL_HABITACIONES.md acredita S05-04: historial por habitación y rango de momentos/períodos, operaciones, Version y asignaciones, con reservas canceladas, limpieza, cambios de habitación y bloqueos abiertos/finalizados. Conserva valores operativos antes/después y protege fronteras de establecimiento/títulos ambiguos. **365 nativas (351 integración/catorce puras), trece dirigidas finales y 136 JS** aprobadas. Recepción consulta dos propiedades, tres páginas, validación/vacío y escritorio/móvil con controles de 44 px y detalle con teclado. Las 72 tablas del fixture quedan idénticas. Aceptación restaurada 71/185 y 72/195; principal 72/1191, dos archivos privados y fecha 19/10 conservados. Núcleos/servicios/HTTP/PDF conciso conservados, 8089 apagado. Matriz **185 V, 10 I, 0 P y 23 R: 33 sin cierre**. OTA aplazada y F26 activo.
+
+## Fase anterior — 0.7.7
 
 Fase 0.7.7: ESTADOS_POR_INTERVALO.md acredita S05-03: el resultado plegado contrasta disponibles/reservadas/ocupadas/bloqueadas para las fechas, con limpieza actual separada, cupo por categoría y colchón. Salida próxima, tiempo excedido y llegadas próximas/atrasadas usan referencia del servidor. Calendario descarta respuestas antiguas y valida fecha; sus encabezados respetan idioma. **352 nativas (338 integración/catorce puras), catorce dirigidas finales y 126 JS** aprobadas, con alcance y orden documentados. Recepción consulta dos intervalos en escritorio/móvil y el calendario en dos propiedades; lectura final de idioma sobre aceptación ya restaurada. Las 72 tablas del fixture quedan idénticas. Aceptación conserva 71/185 y 72/195; principal 72/1191, dos archivos privados y fecha 19/10. Núcleos/servicios/HTTP/PDF conciso conservados, 8089 apagado. Matriz **184 V, 11 I, 0 P y 23 R: 34 sin cierre**. OTA aplazada y F26 activo.
 

@@ -567,6 +567,12 @@ def room_balances(property_name):
 
 
 @frappe.whitelist()
+def room_history(property_name,room,starts_at,ends_at,view='activity',offset=0,page_length=25):
+    from hospitality_suite.room_history import history
+    return history(property_name,room,starts_at,ends_at,view,offset,page_length)
+
+
+@frappe.whitelist()
 def inventory_status(property_name,warehouse_name=None):
     prop=require(property_name)
     if not any(may(a) for a in ("service","report","inventory","clean","maintain")):

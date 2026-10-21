@@ -220,6 +220,9 @@ class ScopedDocument(Document):
         if self.doctype=='HS Rate':
             from hospitality_suite.audit_trail import rate_changed
             rate_changed(self)
+        if self.doctype=='HS Room':
+            from hospitality_suite.audit_trail import room_changed
+            room_changed(self)
 
     def on_trash(self):
         if self.doctype=="HS Payment Method":
