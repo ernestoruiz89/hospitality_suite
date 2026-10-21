@@ -6,6 +6,7 @@ build-backend = "flit_core.buildapi"
 name = "hospitality_suite"
 authors = [{name = "Hospitality Suite Contributors"}]
 description = "Operación de hoteles y moteles sobre Frappe y ERPNext"
+license = {file = "LICENSE"}
 readme = "README.md"
 requires-python = ">=3.14"
 dynamic = ["version"]
@@ -17,6 +18,9 @@ test = ["unittest-xml-reporting==4.0.0"]
 [tool.bench.frappe-dependencies]
 frappe = ">=16.52.0,<17.0.0"
 erpnext = ">=16.51.1,<17.0.0"
+
+[tool.flit.sdist]
+include = ["docs/", "tools/", "LICENSE"]
 
 [tool.ruff]
 line-length = 110
