@@ -11,6 +11,7 @@ import importlib.metadata
 import io
 import json
 from pathlib import Path
+import re
 import subprocess
 import sys
 import tarfile
@@ -21,10 +22,15 @@ ROOT = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser()
 parser.add_argument('--revision', default='HEAD')
 parser.add_argument('--verify-existing', action='store_true', help='Verify retained artifacts without replacing their build output')
+parser.add_argument('--receipt', default='release-install-package.json', help='New evidence receipt filename; never replace an earlier build')
+parser.add_argument('--work-dir', type=Path, help='Optional native filesystem cache for source extraction')
 args = parser.parse_args()
+assert re.fullmatch('[a-z0-9-]+\\.json', args.receipt)
+receipt = ROOT / 'docs/evidence' / args.receipt
+assert not receipt.exists(), 'Preserve the preceding build receipt'
 revision = subprocess.check_output(['git', 'rev-parse', '--verify', args.revision + '^{commit}'], cwd=ROOT, text=True).strip()
 destination = ROOT / 'output/releases' / revision[:12]
-source = ROOT / '.local/release-build' / revision[:12] / 'source'
+source = (args.work_dir or ROOT / '.local/release-build') / revision[:12] / 'source'
 repository = destination / 'hospitality-suite-repository.tar.gz'
 log = destination / 'build.log'
 if args.verify_existing:
@@ -78,5 +84,5 @@ proof = dict(revision=revision, app_version=headers['Version'],
     files={path.name: dict(bytes=path.stat().st_size, sha256=hashlib.sha256(path.read_bytes()).hexdigest())
         for path in (repository, sdist, wheel, log)}, output=destination.relative_to(ROOT).as_posix())
 (destination / 'manifest.json').write_text(json.dumps(proof, ensure_ascii=False, indent=2) + '\n')
-(ROOT / 'docs/evidence/release-install-package.json').write_text(json.dumps(proof, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
+receipt.write_text(json.dumps(proof, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
 print(json.dumps(proof, ensure_ascii=False))
