@@ -34,7 +34,9 @@ test('cards prioritize urgent work, escape notes, show type and hide another cle
     {name:'urgent',kind:'Deep',priority:'Urgent',status:'In Progress',room:'room',assigned_to:'someone-else',assigned_label:'Otra persona'}];
   let cards='';const target={html(){return this;},append(){return this;},find(selector){return{append(){},html(value){if(selector==='.hs-task-grid')cards=value;}};}};
   f.desk.render_housekeeping(target);assert.ok(cards.indexOf('Profunda')<cards.indexOf('Durante estancia'));assert.match(cards,/Asignada a otra persona/);
-  assert.match(cards,/&lt;script&gt;/);assert.doesNotMatch(cards,/<script>/);assert.doesNotMatch(cards,/data-id="urgent"/);
+  assert.match(cards,/&lt;script&gt;/);assert.doesNotMatch(cards,/<script>/);
+  assert.doesNotMatch(cards,/data-act="cleaning" data-id="urgent"/);
+  assert.match(cards,/data-act="print_cleaning" data-id="urgent"/,'the visible task can be printed without granting its update action');
 });
 test('open ended maintenance hides deadline, clears a stale date and fits two task tabs',async()=>{
   const f=fixture();f.desk.data.maintenance=[];await f.desk.action_maintenance('');

@@ -1,4 +1,6 @@
 import frappe
+from html import unescape
+from markupsafe import escape
 
 from hospitality_suite.security import document,require
 from hospitality_suite.service import current_all
@@ -6,6 +8,11 @@ from hospitality_suite.service import current_all
 
 def hs_json(value):
     return frappe.parse_json(value)
+
+
+def hs_print_text(value):
+    """Display native Data entities once, returning escaped text, never raw HTML."""
+    return escape(unescape(str(value if value is not None else "")))
 
 
 def hs_close_groups():

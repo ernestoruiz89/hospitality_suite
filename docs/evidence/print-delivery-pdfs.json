@@ -1,0 +1,103 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "version": "0.8.7",
+  "synthetic_native_scenario": true,
+  "provider_simulation": false,
+  "render_asset_origin": "http://127.0.0.1:8089",
+  "persisted_host_configuration_changed": false,
+  "configured_format": "App-owned defaults; custom format selection covered separately by tests.",
+  "documents_committed": false,
+  "business_tables_equal_after_rollback": true,
+  "files": [
+    {
+      "file": "output/pdf/print-delivery/reservation.pdf",
+      "source_doctype": "HS Booking",
+      "source": "RES-2026-00001",
+      "format": "HS Confirmación de reserva",
+      "actor": "receptionist",
+      "bytes": 9290,
+      "sha256": "e0b898a2ec471896c4748326c4bf4410f921de918be32b53090bdf6941d7045f",
+      "html_sha256": "53a279e6e4adb1ea0e7f042b9f0f7d38758bd8f852d769d1118dcb27e4dea7bc"
+    },
+    {
+      "file": "output/pdf/print-delivery/registration.pdf",
+      "source_doctype": "HS Stay",
+      "source": "EST-2026-00001",
+      "format": "HS Registro de huésped",
+      "actor": "receptionist",
+      "bytes": 8326,
+      "sha256": "f707c79b1dd5291f3914f5d6ec059745663b04199db302a44f15f596c5ad5210",
+      "html_sha256": "8e40b75d47c44858f4b44165becff19e832b7f8dd57ab37662d0121501d7579b"
+    },
+    {
+      "file": "output/pdf/print-delivery/folio.pdf",
+      "source_doctype": "HS Stay",
+      "source": "EST-2026-00001",
+      "format": "HS Cuenta de estancia",
+      "actor": "receptionist",
+      "bytes": 9275,
+      "sha256": "076b3c49141c4f2039b0c73107b5b3cba0e4e935e3b4d81a12267b55b596b37d",
+      "html_sha256": "cde5f83ff270f59d6258c23fa2f2fffe8015d5b67f2914d334e3528030e36389"
+    },
+    {
+      "file": "output/pdf/print-delivery/invoice.pdf",
+      "source_doctype": "Sales Invoice",
+      "source": "ACC-SINV-2026-00001",
+      "format": "HS Factura",
+      "actor": "cashier",
+      "bytes": 12073,
+      "sha256": "ae1f87d206be75ef76b201f761f19c69fa71a3635724fc73beb4a24343e34350",
+      "html_sha256": "3f3909dd437aa8836eb7e23bb2178242d1e889645692e5b5bc538a44d04ddf60"
+    },
+    {
+      "file": "output/pdf/print-delivery/receipt.pdf",
+      "source_doctype": "HS Payment",
+      "source": "PAG-2026-00001",
+      "format": "HS Recibo",
+      "actor": "cashier",
+      "bytes": 8892,
+      "sha256": "c1be8d7e6ee5a65e81c8c7b01aed662d40266f8500b5c70ca626b3a888eca7f3",
+      "html_sha256": "d41190e519b5c3ce3dbd086a53215a089496d2130f53976003e7fe9fe7e98eca"
+    },
+    {
+      "file": "output/pdf/print-delivery/shift.pdf",
+      "source_doctype": "HS Shift",
+      "source": "TUR-2026-00001",
+      "format": "HS Arqueo",
+      "actor": "cashier",
+      "bytes": 8794,
+      "sha256": "f131fae9091b6f683b7bdd33302848617dbc915b2989a210d3fa6859f305136e",
+      "html_sha256": "a35bde4204f8391b053850262c8af4117307158b08999968cb11e8a4b9cbceaa"
+    },
+    {
+      "file": "output/pdf/print-delivery/cleaning.pdf",
+      "source_doctype": "HS Cleaning Task",
+      "source": "LIM-2026-00001",
+      "format": "HS Orden de limpieza",
+      "actor": "housekeeping",
+      "bytes": 8322,
+      "sha256": "9e71e459087edbee4aaa04f99b8529499619a6bf490f208270b1e8d4009e16fd",
+      "html_sha256": "a6288929c73511e0945291663bf0e8855cb76bd5ee666b5614237dbcface3d8d"
+    },
+    {
+      "file": "output/pdf/print-delivery/maintenance.pdf",
+      "source_doctype": "HS Maintenance Order",
+      "source": "MAN-2026-00001",
+      "format": "HS Orden de mantenimiento",
+      "actor": "maintenance",
+      "bytes": 7907,
+      "sha256": "031beb7138e601654dda88d42c4f69c78fe12e2102ff463eaf636898c95ab87f",
+      "html_sha256": "3ec7e25273d12ed13830ec204f6676bf2ba6c9fd194a4ee893ac5b034ca7319c"
+    },
+    {
+      "file": "output/pdf/print-delivery/daily_close.pdf",
+      "source_doctype": "HS Daily Close",
+      "source": "CIE-2026-00001",
+      "format": "HS Cierre diario",
+      "actor": "manager",
+      "bytes": 13653,
+      "sha256": "e7ec43a043e7ed6494410d8cdd3e970b11a258e487cba5577cd595d43e3ce7c8",
+      "html_sha256": "41e1de2ec3c3a649e3f263786e1fe1089232ced313598d53f32ea3eb84b0a91e"
+    }
+  ]
+}

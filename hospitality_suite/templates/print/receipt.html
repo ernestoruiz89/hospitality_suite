@@ -1,6 +1,6 @@
 <div class="hs-print"><p class="eyebrow">{{ _("RECIBO DE MOVIMIENTO") | e }}</p>
 <h1>{{ frappe.db.get_value("HS Property",doc.property,"property_name") | e }}</h1><p>{{ _("Referencia") | e }} {{ doc.name | e }}</p>
-<table>{% for label, value in [(_("Concepto"),hs_label(doc.kind)),(_("Cliente / proveedor"),doc.customer or doc.supplier or "—"),(_("Estancia / reserva"),doc.stay or doc.booking or "—"),(_("Turno"),doc.shift),(_("Moneda"),doc.currency),(_("Bruto") if doc.kind=="Settlement" else _("Importe"),doc.get_formatted("amount")),(_("Tipo de cambio"),doc.exchange_rate),(_("Documento ERPNext"),doc.payment_entry or doc.journal_entry),(_("Referencia"),doc.reference or "—"),(_("Estado"),hs_label(doc.status))] %}<tr><th>{{ _(label) | e }}</th><td>{{ value | e }}</td></tr>{% endfor %}
+<table>{% for label, value in [(_("Concepto"),hs_label(doc.kind)),(_("Cliente / proveedor"),hs_print_text(frappe.db.get_value("Customer",doc.customer,"customer_name")) if doc.customer else (hs_print_text(frappe.db.get_value("Supplier",doc.supplier,"supplier_name")) if doc.supplier else "—")),(_("Estancia / reserva"),doc.stay or doc.booking or "—"),(_("Turno"),doc.shift),(_("Moneda"),doc.currency),(_("Bruto") if doc.kind=="Settlement" else _("Importe"),doc.get_formatted("amount")),(_("Tipo de cambio"),doc.exchange_rate),(_("Documento ERPNext"),doc.payment_entry or doc.journal_entry),(_("Referencia"),doc.reference or "—"),(_("Estado"),hs_label(doc.status))] %}<tr><th>{{ _(label) | e }}</th><td>{{ value | e }}</td></tr>{% endfor %}
 {% if doc.kind=="Settlement" %}
 <tr><th>{{ _("Dirección bancaria") | e }}</th><td>{{ hs_label(doc.settlement_direction) | e }}</td></tr>
 <tr><th>{{ _("Comisión") | e }}</th><td>{{ hs_money(doc.fee_amount,doc.currency) }}</td></tr>
@@ -11,4 +11,4 @@
 <tr><th>{{ _("Recibido / entregado") | e }}</th><td>{{ doc.get_formatted("tendered") if doc.tendered else doc.get_formatted("amount") }}</td></tr>
 <tr><th>{{ _("Vuelto") | e }}</th><td>{{ doc.get_formatted("change_amount") }}</td></tr>
 {% endif %}</table><p>{{ (doc.reason or "") | e }}</p>
-<p class="muted">{{ _("Este comprobante conserva el vínculo con el documento estándar de ERPNext. Las liquidaciones bancarias no representan un segundo cobro al cliente ni efectivo físico.") | e }}</p></div>
+<p class="muted">{{ (_("La liquidación bancaria conserva su documento de origen; no es otro cobro al cliente ni efectivo físico.") if doc.kind=="Settlement" else _("Comprobante vinculado al documento estándar de ERPNext.")) | e }}</p></div>

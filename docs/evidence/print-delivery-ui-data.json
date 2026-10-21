@@ -1,0 +1,51 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "fixture_origin": "Native API fixture; role Page test covers print access, not UI creation of these records.",
+  "print_access_only": true,
+  "operations_created_by_ui": false,
+  "business_documents_unchanged_by_print_review": true,
+  "operation_counts": {
+    "HS Booking": 1,
+    "HS Stay": 1,
+    "HS Charge": 1,
+    "HS Payment": 1,
+    "HS Shift": 1,
+    "HS Cleaning Task": 1,
+    "HS Maintenance Order": 1,
+    "HS Daily Close": 1,
+    "Sales Invoice": 1,
+    "Payment Entry": 1,
+    "Journal Entry": 0
+  },
+  "sources": {
+    "property": "qmbjb0i1qc",
+    "customer": "Cliente ficticio H3",
+    "folio_name": "CTA-2026-00001",
+    "reservation": "RES-2026-00001",
+    "registration": "EST-2026-00001",
+    "folio": "EST-2026-00001",
+    "invoice": "ACC-SINV-2026-00001",
+    "receipt": "PAG-2026-00001",
+    "shift": "TUR-2026-00001",
+    "cleaning": "LIM-2026-00001",
+    "maintenance": "MAN-2026-00001",
+    "daily_close": "CIE-2026-00001"
+  },
+  "business_fingerprints": {
+    "HS Booking": "f53f3204e3dbdbf9bb46c282416e729bb7f433e82ae6313d2195608ea5d4eabe",
+    "HS Stay": "f17a1547388c33f955fe1c430569484bed7f8ac939559c2d3c79fe18952bd1a5",
+    "HS Folio": "a1de70bb4eb8621f9ccd926fb4c53daa909a37addb12de9553669a657b48663f",
+    "HS Charge": "c267faeab8ce5152b6e47b7a816fbf7ead1364d727f59830f38ea82ef1656d7c",
+    "HS Payment": "02993fb21de4235b429526c130be4f374e892370e2d37935f09a8946bbfde2d6",
+    "HS Shift": "8b3bd89ab4bbb91fa70f274460569cfb346ec13cbdf10bdf8f3d4cc169d16a1f",
+    "HS Cleaning Task": "0ea2ac29563a1a1d7935a2e07275ff1ab8a095a7d2a417e3810eb406a8d3a26d",
+    "HS Maintenance Order": "a56ceb641b722beb5f7e32a16265308dc35aaf8b6cc89328c7e7a9e0681ea39b",
+    "HS Daily Close": "82559a3cc9b5d9fe3e52e9d51ac94aab6da1852e643951eeb5f895afd7c0fc20",
+    "Sales Invoice": "43c0c7e01776ed17659fb692741369edf215241f60cff2633f5050df27b70634",
+    "Payment Entry": "945abd2f9ab07ea5194aedf12816a8bbd833a894bf3347e50d9352b51faa5f14",
+    "Journal Entry": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "GL Entry": "795c8a921cc57a2a07d1c6a38c1ca1a77ebcaf0f8afe904ba2c867a471fcaa9c",
+    "Payment Ledger Entry": "49a3683b8bfc879db392a926d22c4b679684c2eb31b832d1ff52446a22acde93",
+    "Stock Ledger Entry": "26dfeaa846874fc22f4e3094a5eb3abae2214a9e50afc5574993b1f568254b10"
+  }
+}

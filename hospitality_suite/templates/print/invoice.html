@@ -1,6 +1,7 @@
 <div class="hs-print">
 <p class="eyebrow">{{ (_('NOTA DE CRÉDITO') if doc.is_return else _('FACTURA')) | e }}</p>
 <h1>{{ doc.company | e }}</h1>
+{% if doc.hs_property %}<p>{{ frappe.db.get_value('HS Property',doc.hs_property,'property_name') | e }}</p>{% endif %}
 {% set company_tax_id=frappe.db.get_value('Company',doc.company,'tax_id') %}
 {% if company_tax_id %}<p>{{ _("Identificación tributaria:") | e }} {{ company_tax_id | e }}</p>{% endif %}
 <p><strong>{{ doc.name | e }}</strong> {{ _("· Fecha") | e }} {{ doc.posting_date }} {{ _("· Vencimiento") | e }} {{ doc.due_date }}</p>
@@ -12,9 +13,14 @@
 </tbody></table>
 <table><tr><th>{{ _("Total sin impuestos") | e }}</th><td>{{ hs_money(doc.net_total,doc.currency) }}</td></tr>
 {% for tax in doc.taxes %}<tr><th>{{ tax.description | e }}</th><td>{{ hs_money(tax.tax_amount,doc.currency) }}</td></tr>{% endfor %}
-<tr><th>{{ _("Total") | e }}</th><td><strong>{{ hs_money(doc.grand_total,doc.currency) }}</strong></td></tr>
+{% set payable=doc.rounded_total or doc.grand_total %}
+{% if payable != doc.grand_total %}<tr><th>{{ _("Total antes del redondeo") | e }}</th><td>{{ hs_money(doc.grand_total,doc.currency) }}</td></tr>
+<tr><th>{{ _("Redondeo") | e }}</th><td>{{ hs_money(payable-doc.grand_total,doc.currency) }}</td></tr>{% endif %}
+<tr><th>{{ _("Total") | e }}</th><td><strong>{{ hs_money(payable,doc.currency) }}</strong></td></tr>
 {% if doc.total_advance %}<tr><th>{{ _("Anticipos aplicados") | e }}</th><td>{{ hs_money(doc.total_advance,doc.currency) }}</td></tr>{% endif %}
-<tr><th>{{ _("Saldo pendiente en ERPNext") | e }}</th><td>{{ hs_money(doc.outstanding_amount,doc.currency) }}</td></tr></table>
+{% if doc.paid_amount %}<tr><th>{{ _("Cobrado en esta factura") | e }}</th><td>{{ hs_money(doc.paid_amount,doc.currency) }}</td></tr>{% endif %}
+{% if doc.write_off_amount %}<tr><th>{{ _("Ajuste autorizado") | e }}</th><td>{{ hs_money(doc.write_off_amount,doc.currency) }}</td></tr>{% endif %}
+<tr><th>{{ _("Saldo pendiente en ERPNext") | e }}</th><td>{{ hs_money(doc.outstanding_amount,doc.party_account_currency or doc.currency) }}</td></tr></table>
 {% if doc.remarks %}<p>{{ doc.remarks | e }}</p>{% endif %}
 {% if doc.terms %}<div>{{ doc.terms }}</div>{% endif %}
 </div>

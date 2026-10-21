@@ -51,6 +51,49 @@ test('double activation of an asynchronous detail opens once and a pending inval
   desk.load=()=>refreshes++;[...timers.values()].at(-1)();assert.equal(refreshes,1);
 });
 
+test('buttons created inside a native dialog while an action is pending unlock when that action finishes and follow offline recovery',async()=>{
+  const {desk,context}=activityFixture(),request=deferred(),nodes=[];let createdDisabled;
+  context.document={querySelectorAll:selector=>nodes.filter(node=>selector.includes('"'+node.owner+'"'))};
+  desk.action_booking=async()=>{
+    await request.promise;
+    const html=desk.button('detail','Ver estancia y cuenta','stay-key');
+    createdDisabled=/ disabled>/.test(html);
+    nodes.push({owner:html.match(/data-hs-owner="([^"]+)"/)[1],disabled:createdDisabled});
+  };
+  const pending=desk.run_action('booking','booking-key');request.resolve();await pending;
+  assert.equal(createdDisabled,true,'the button was generated during the original pending action');
+  assert.equal(nodes[0].disabled,false,'completion must release the dialog outside the Page root');
+  context.navigator.onLine=false;desk.connection();assert.equal(nodes[0].disabled,true);
+  context.navigator.onLine=true;desk.connection();assert.equal(nodes[0].disabled,false);
+});
+
+test('a Page activity update affects its own dialog actions and does not unlock another Page or native dialog controls',()=>{
+  const {desk,context}=activityFixture(),nodes=[];
+  const other=Object.create(Object.getPrototypeOf(desk));
+  desk.button('detail','Cuenta','one');other.button('detail','Otra cuenta','two');
+  assert.notEqual(desk.actionOwner,other.actionOwner);
+  nodes.push({owner:desk.actionOwner,disabled:false},{owner:other.actionOwner,disabled:true},{owner:null,disabled:true});
+  context.document={querySelectorAll:selector=>nodes.filter(node=>node.owner&&selector.includes('"'+node.owner+'"'))};
+  desk.actionPending=true;desk.connection();assert.equal(nodes[0].disabled,true);
+  desk.actionPending=false;desk.connection();assert.equal(nodes[0].disabled,false);
+  assert.equal(nodes[1].disabled,true);assert.equal(nodes[2].disabled,true);
+});
+
+test('native HTML reinsertion after action completion uses current activity rather than the stale disabled markup',async()=>{
+  const {desk,context}=activityFixture(),request=deferred();let observe;
+  const body={};context.document={body,querySelectorAll:()=>[]};
+  context.MutationObserver=class{constructor(callback){observe=callback;}observe(node,options){assert.equal(node,body);assert.equal(options.childList,true);assert.equal(options.subtree,true);}};
+  let html;desk.action_booking=async()=>{await request.promise;html=desk.button('detail','Ver estancia y cuenta','stay');};
+  const pending=desk.run_action('booking');request.resolve();await pending;
+  assert.match(html,/ disabled>/,'native HTML options captured the pending state');
+  const button={nodeType:1,disabled:true,matches:()=>true,querySelectorAll:()=>[],getAttribute:()=>desk.actionOwner};
+  const container={nodeType:1,matches:()=>false,querySelectorAll:()=>[button]};
+  observe([{addedNodes:[container]}]);assert.equal(button.disabled,false,'late insertion must release the completed action');
+  desk.actionPending=true;button.disabled=false;observe([{addedNodes:[button]}]);assert.equal(button.disabled,true);
+  desk.actionPending=false;context.navigator.onLine=false;button.disabled=false;observe([{addedNodes:[container]}]);assert.equal(button.disabled,true);
+  context.navigator.onLine=true;observe([{addedNodes:[container]}]);assert.equal(button.disabled,false);
+});
+
 test('action preparation is announced next to the clicked control and its local status is removed on completion or failure',async()=>{
   const {desk,context}=activityFixture();let status;
   context.document={createElement:()=>({setAttribute(key,value){this[key]=value;},remove(){this.removed=true;}})};

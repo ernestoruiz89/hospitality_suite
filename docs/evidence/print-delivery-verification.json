@@ -1,0 +1,271 @@
+{
+  "assembled_at_utc": "2026-10-21T20:37:20.010170+00:00",
+  "version": "0.8.7",
+  "requirements": [
+    "S18-02",
+    "S18-03"
+  ],
+  "evidence_assembly_only": true,
+  "database_mutations": false,
+  "ui_replay": false,
+  "scope": "Installed native artifacts and operational print access; not full acceptance of all tasks or final deployment.",
+  "javascript": {
+    "tests": 210,
+    "desk": 207,
+    "portal": 3,
+    "new_cases": 7,
+    "failures": 0,
+    "skipped": 0
+  },
+  "native": {
+    "tests": 386,
+    "integration": 372,
+    "pure": 14,
+    "new_cases": 6,
+    "rerun_in_this_phase": true
+  },
+  "ui": {
+    "events": 22,
+    "roles": 5,
+    "print_families": 9,
+    "fixture_created_by": "Native APIs",
+    "scope": "Print access only",
+    "final_bundle": "hospitality.bundle.TFVL2SJI.js",
+    "intermediate_defects_preserved": true,
+    "mobile_width": 390
+  },
+  "pdfs": {
+    "files": 9,
+    "pages": 10,
+    "manual_render_review": true,
+    "account_pages": 1,
+    "close_pages": 2
+  },
+  "native_versions": [
+    {
+      "site": "main",
+      "version": "0.8.7",
+      "listing_sha256": "fd91d216897198f25ed7d426e1e46fb079407622f41c7d31da0af5d74e04beeb",
+      "migration_sha256": "fe421dade987dc37e1641916a1f52bf57d32c116e8ae852bc15e65081665c1ea"
+    },
+    {
+      "site": "acceptance",
+      "version": "0.8.7",
+      "listing_sha256": "fd91d216897198f25ed7d426e1e46fb079407622f41c7d31da0af5d74e04beeb",
+      "migration_sha256": "0210cb0e628800592f988d7a95ac14d28ecaceed863cf06dce19474cdec34149"
+    }
+  ],
+  "core": {
+    "frappe": {
+      "commit": "4515014c87ece6cb20ee91d2cfb121c5cbd1ff4a",
+      "clean": true
+    },
+    "erpnext": {
+      "commit": "5af6561f5aa48104559692fb4fd82f2580e8d338",
+      "clean": true
+    }
+  },
+  "statuses": {
+    "R": 12,
+    "I": 6,
+    "V": 200
+  },
+  "open_requirements": 18,
+  "all_requirements_completed": false,
+  "protected_sites": {
+    "hospitality.localhost": {
+      "tables": 72,
+      "rows": 1246,
+      "private_files": 2
+    },
+    "hospitality-acceptance.localhost": {
+      "tables": 72,
+      "rows": 250,
+      "private_files": 0
+    }
+  },
+  "final_services": {
+    "8086": true,
+    "8089": false,
+    "9001": true,
+    "11001": true,
+    "13001": true
+  },
+  "source_sha256": {
+    "hospitality_suite/__init__.py": "b2a382cdb520a88180589730b94ba95dda2cca26947e03df9069c4d1a9cf3a49",
+    "hospitality_suite/printing.py": "f2873bde14896def615cf1a36e90dd1fcf181cdce3120b07876cf7d347914d85",
+    "hospitality_suite/public/js/hospitality.js": "6b4cd8319dcb732427c550a08f860f0ddd8ece7b1cf69806d47852c941de9fd3",
+    "hospitality_suite/public/js/hospitality_workflows.js": "e1d6be22916fcf98731a72ed8b411abf736588ae820322418922c1caad4a660f",
+    "hospitality_suite/public/js/hospitality_housekeeping.js": "c5d781e7de93da1eec4e4cd58c6b766377f9745c3284dd11d4db5e9eb5c3c585",
+    "hospitality_suite/tests/test_print_delivery.py": "e5ed0e57d4b053739c489d41f78dfc1631c9c3227f46aeedafeee6fbf556d42e",
+    "tools/test_print_delivery_ui.cjs": "75805b03b33ef05d8ce8cf49628c55291a2e2c50b04d6c897e24c9447605334b",
+    "tools/test_desk_transport.cjs": "8586faec42de2e7b9aa17ac593f9a9dd7080b1adc577ec86c866dd78bc2ec12b",
+    "tools/test_housekeeping_ui.cjs": "694841da10bb758ae58dfdbdc37db55bfbf5b776df2780b1b3730ab7ed7abdca",
+    "tools/verify_print_delivery.py": "e2cb4c4fc806276c7b847aaa289d72593e47034f88c8f9dddea9da6fff3e522d",
+    "tools/verify_native_artifacts.py": "d4f610fcaf5ab09550507a087784ac133560fe723f24e285ddd0c21a624ed771",
+    "tools/verify_delivery_status.py": "a95169b5c2e8148eba5f5395052e829d11265cf51431b84985d07a22e55836f4",
+    "tools/print_delivery_fixture.py": "18224a09a68449365853109598413be6dbc1d259e6428d3a397d3e1e427c92d5",
+    "tools/print_delivery_qa.py": "1bd3d7d84c50cd44e46ec6be6efb90e46cdb2967e4102eaf25259b593e7d6697",
+    "tools/print_delivery_server.py": "2f051ae48031908fabc0735e1d7ad627941b8e75ac0dd1e4ad5ee7e0ce3589fe",
+    "docs/IMPRESIONES_OPERATIVAS.md": "cff3a31398ba0f8d5e407570d265c267d41826e16a32c428b97f11e1ac2a952f",
+    "docs/ESTADO_Y_EVIDENCIAS_ENTREGA.md": "041e0ee556be745d514c622a4c3e352214ea818724c1fd2514ef584b1879faa9",
+    "docs/specification-audit.json": "1e0a36dc5b81f7a617c79965c660dd6c22a571a659a86990a243fc9a34e511cf"
+  },
+  "references": {
+    "print-delivery-browser.json": "c6cd665942dd03d3f422fbd32ef0344e14e312cf3e7806fbca26fd717127d4d0",
+    "print-delivery-ui-data.json": "afa5c46b4ff2aea728bd03f65300c905d8412302fc5661482080b07104ae09d9",
+    "print-delivery-native-tests.xml": "33d21d05aa7372f394db91a813ef3daed5c346dedc31b2108f9d77a0f6980b56",
+    "print-delivery-native-tests.log": "9acb3bf662412a27d1c2cc7ed821a05c53a6adeac656083658338be217937335",
+    "print-delivery-js-tests.log": "4846b45fe87457f92cdb5a1a47b07eec29f0ac3d6707e3e60801317e769a17b3",
+    "print-delivery-build.log": "2ae3b8dfccbf8c383ce153844cb402e8bc3fb5232d96249c840608de982dcbc9",
+    "print-delivery-pdfs.json": "b3a8caa04051f3b0a869712a6cbd56ea8da1c8e374c6ac86d432e733982ceb5c",
+    "print-delivery-pdf-structure.json": "293f3554c194038ebdee40612f2d5f4fde1cfc4db1bf178beb504c8278f8d669",
+    "print-delivery-native-artifacts.json": "fa52a5ed5ee63e2de751d9db345edce3af9469bb0ab03b1df31404b759cc1edb",
+    "print-delivery-wire-invariants.json": "51f69a8f1951038acac4795412222aa9f165e031a0461bd55b21c9ac7df9ec32",
+    "print-delivery-ux-restored.json": "d64122ce2f087e8c83c8bab5973d424f985f228ef11f9dd44506d25ef5e0f633",
+    "print-delivery-upgrade.json": "a2403d24a3f4a341b864767ccbeee143bba60f1df4afa7c60427dddac8ee36b5",
+    "print-delivery-final-state.json": "176401532521962c267204c1b6c21d175d378d6273101dec8fd962c92075efc4",
+    "print-delivery-language-installed.json": "5a74b377e9d2d5da96ddd7a35f795fd78ea8112bd80bf3914704184c934bbf38"
+  },
+  "screenshots": [
+    {
+      "path": "docs/evidence/320-confirmacion-reserva-pdf.png",
+      "sha256": "45b5c9b4f3d58fdc6940511e3232c7bc044c0a2b207426d10f4640b2fe2de044",
+      "scope": "Native PDF render",
+      "bytes_unchanged": true
+    },
+    {
+      "path": "docs/evidence/321-registro-huesped-pdf.png",
+      "sha256": "745e06a528ad02e54807f7d2a7066a5ff33244797d70291f764e2298c22190dd",
+      "scope": "Native PDF render",
+      "bytes_unchanged": true
+    },
+    {
+      "path": "docs/evidence/322-cuenta-concisa-pdf.png",
+      "sha256": "9650fc2b4cb91b479c1ce2c64f42ee39c2c54b0e83e04c9ef2f24fc8ea9914ec",
+      "scope": "Native PDF render",
+      "bytes_unchanged": true
+    },
+    {
+      "path": "docs/evidence/323-factura-pdf.png",
+      "sha256": "09d23dd28a0021d728c44f1e5303ef10ab52ddd22130c5c5e55c07309169b909",
+      "scope": "Native PDF render",
+      "bytes_unchanged": true
+    },
+    {
+      "path": "docs/evidence/324-recibo-pdf.png",
+      "sha256": "7cc3904a8d1585f5fabb5ec702d29266316084dc5d28e572e2839b43c0462830",
+      "scope": "Native PDF render",
+      "bytes_unchanged": true
+    },
+    {
+      "path": "docs/evidence/325-arqueo-pdf.png",
+      "sha256": "daabaecfc07e741b118e8ef03ab2a318e55f0b9abc6fa8bddc273e06c3e6745c",
+      "scope": "Native PDF render",
+      "bytes_unchanged": true
+    },
+    {
+      "path": "docs/evidence/326-limpieza-pdf.png",
+      "sha256": "5c95f4fea6c869286800cb1f67b1932176e7ae3d7b75549491fa0ba0870d443b",
+      "scope": "Native PDF render",
+      "bytes_unchanged": true
+    },
+    {
+      "path": "docs/evidence/327-mantenimiento-pdf.png",
+      "sha256": "4e2893cc8e592a8d70f087acaa3426b9ef947def74e38c50d63b2ed23cbab255",
+      "scope": "Native PDF render",
+      "bytes_unchanged": true
+    },
+    {
+      "path": "docs/evidence/328-cierre-diario-pagina-1.png",
+      "sha256": "052302b84cbdacb2c780d6e6d94ae2912fca21535e1f0e9f223688f898ca0e89",
+      "scope": "Native PDF render",
+      "bytes_unchanged": true
+    },
+    {
+      "path": "docs/evidence/329-cierre-diario-pagina-2.png",
+      "sha256": "bc10dd67a351372c95eed61f3e8e3b9ba2f5835acff200d2ec6324c10d76a371",
+      "scope": "Native PDF render",
+      "bytes_unchanged": true
+    },
+    {
+      "path": "docs/evidence/330-confirmacion-reserva-desde-page.jpg",
+      "sha256": "2e7700da31d0337322799e5c303f9b239f879a2a76b8960b3579b9fb516a8356",
+      "scope": "Initial L7TWF4HE Page",
+      "bytes_unchanged": true
+    },
+    {
+      "path": "docs/evidence/331-boton-cuenta-deshabilitado-defecto.jpg",
+      "sha256": "030d3ae8e83ca34a5afb5224ce20e933dca28dc4c6180d0c71722b0a8ba8bf4f",
+      "scope": "Observed defect",
+      "bytes_unchanged": true
+    },
+    {
+      "path": "docs/evidence/332-boton-recreado-defecto.jpg",
+      "sha256": "2e7700da31d0337322799e5c303f9b239f879a2a76b8960b3579b9fb516a8356",
+      "scope": "Observed defect",
+      "bytes_unchanged": true
+    },
+    {
+      "path": "docs/evidence/333-impresiones-recepcion-desde-cuenta.jpg",
+      "sha256": "eaed8cdc26e285a049e3efa92fca87cf3b44a9d79b8beddeb2de31cd2cbb4b1b",
+      "scope": "Final TFVL2SJI Page",
+      "bytes_unchanged": true
+    },
+    {
+      "path": "docs/evidence/334-recibo-desde-caja.jpg",
+      "sha256": "9904931167a2aae385e606d501c12749b2f430aeb9b6c36d81bb42879ccf16cb",
+      "scope": "Final TFVL2SJI Page",
+      "bytes_unchanged": true
+    },
+    {
+      "path": "docs/evidence/335-factura-desde-estancia-caja.jpg",
+      "sha256": "4033a87ac8967b105ffb2bcf30787c759ddd78d6e7c15a8bfef7b2a0ee65eb4d",
+      "scope": "Final TFVL2SJI Page",
+      "bytes_unchanged": true
+    },
+    {
+      "path": "docs/evidence/336-imprimir-limpieza-escritorio.jpg",
+      "sha256": "a7c48a9f0e336649eedaafc68eea997dd1bf84eefd42324da247b023cd89f338",
+      "scope": "Final TFVL2SJI Page",
+      "bytes_unchanged": true
+    },
+    {
+      "path": "docs/evidence/337-imprimir-limpieza-movil-390.jpg",
+      "sha256": "3b42bee56fd1ea57abd99b3ea802eb0c25428c5e2f805992fcc37aa215fd5e11",
+      "scope": "Final TFVL2SJI Page",
+      "bytes_unchanged": true
+    },
+    {
+      "path": "docs/evidence/338-imprimir-mantenimiento-desde-page.jpg",
+      "sha256": "206bdfec9aaf823dd6bfa9f7f1019ed114080a01f3168f3c6af566e3886e9a09",
+      "scope": "Final TFVL2SJI Page",
+      "bytes_unchanged": true
+    },
+    {
+      "path": "docs/evidence/339-imprimir-cierre-desde-gerencia.jpg",
+      "sha256": "fbddb407f94e684b95e32402c292a205c63dd347127e4accd8c7a6970ca68640",
+      "scope": "Final TFVL2SJI Page",
+      "bytes_unchanged": true
+    }
+  ],
+  "raw_command_outputs": {
+    "native-targeted.log": "73d600840cc9ab563d9e2081f7a3a852f4f711e83cc4cbc713ab9b9d8253376e",
+    "native-full.log": "288daac59b52bd7ad279f2994611c53f00c50831b453ba9c8680f7d228483d0f",
+    "native-complete.log": "609c63af777d35700fe8509b50605062a04d8127b1c1d79157b8924aa4aefe91",
+    "js.log": "9fc826a96ff3130c617ce66744f9dcae360dacf17f38b74ec79afbd339a11187",
+    "js-history.log": "47e35b91684daeccb17cd9a203d7a72e51745315fbab9fcd6e0437c76e995546",
+    "js-owned-actions.log": "e57c44de1e968d0ef88cd4868441e323b6c221a5590d3113a6faf582300807ba",
+    "js-reinserted-actions.log": "4846b45fe87457f92cdb5a1a47b07eec29f0ac3d6707e3e60801317e769a17b3",
+    "build-final.log": "464be9c97cd24e10c034f0ca5553ce256a3b077136a93a67b311907855946848",
+    "build-owned-actions.log": "7db81117a6847f0607f4be14136da66685b32e1a50ba4e9bfee6f0ec1c92aa64",
+    "build-reinserted-actions.log": "864593876807bca27e817cf0e737c860679386851c1cecf78bc86dcfcea09a97"
+  },
+  "compiled_javascript": {
+    "name": "hospitality.bundle.TFVL2SJI.js",
+    "sha256": "4b5d56729bc25ec2bae43bde9fb5e242dfb7fc96171991748d590674ed49db87"
+  },
+  "external_providers_activated": false,
+  "ota_sync_deferred_by_user": true,
+  "final_deployment_rollback_proven": false
+}

@@ -11,7 +11,7 @@ import frappe
 
 bench=Path('/home/frappe/benches/hospitality-bench')
 parser=argparse.ArgumentParser()
-parser.add_argument('--phase',choices=['financial','service','pos','refund','guarantee','credits','mixed','accounting','integration','forms','periodic','billing','board','availability','drafts','tariffs','account-summary','guest-profiles','background-jobs','countdown','finance-audit','housekeeping-audit','permissions-audit','audit-history','inventory-audit','closing-checks','navigation','room-states','room-history','role-acceptance','language-review','keyboard-review','secondary-forms','action-context','page-activity','friendly-links'],default='financial')
+parser.add_argument('--phase',choices=['financial','service','pos','refund','guarantee','credits','mixed','accounting','integration','forms','periodic','billing','board','availability','drafts','tariffs','account-summary','guest-profiles','background-jobs','countdown','finance-audit','housekeeping-audit','permissions-audit','audit-history','inventory-audit','closing-checks','navigation','room-states','room-history','role-acceptance','language-review','keyboard-review','secondary-forms','action-context','page-activity','friendly-links','print-delivery'],default='financial')
 args=parser.parse_args()
 root=Path(__file__).resolve().parents[1]
 os.chdir(bench/'sites')
@@ -47,7 +47,7 @@ for site,database in [('hospitality-acceptance.localhost','hospitality_acceptanc
                 rows=frappe.db.sql('SELECT * FROM `tab'+dt+'` ORDER BY name',as_dict=True)
                 raw=json.dumps(rows,default=str,sort_keys=True,ensure_ascii=False,separators=(',',':')).encode()
                 actual=dict(rows=len(rows),sha256=hashlib.sha256(raw).hexdigest())
-                if args.phase in ('accounting','integration','forms','periodic','billing','board','availability','drafts','tariffs','account-summary','guest-profiles','background-jobs','countdown','finance-audit','housekeeping-audit','permissions-audit','audit-history','inventory-audit','closing-checks','navigation','room-states','room-history','role-acceptance','language-review','keyboard-review','secondary-forms','action-context','page-activity','friendly-links') and dt=='Company' and actual!=expected:
+                if args.phase in ('accounting','integration','forms','periodic','billing','board','availability','drafts','tariffs','account-summary','guest-profiles','background-jobs','countdown','finance-audit','housekeeping-audit','permissions-audit','audit-history','inventory-audit','closing-checks','navigation','room-states','room-history','role-acceptance','language-review','keyboard-review','secondary-forms','action-context','page-activity','friendly-links','print-delivery') and dt=='Company' and actual!=expected:
                     cache_candidates=[]
                     for candidate in ('accounting','language-review'):
                         path=bench/f'.hospitality-{candidate}-company-cache.json'

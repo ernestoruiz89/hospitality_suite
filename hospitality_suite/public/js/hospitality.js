@@ -62,6 +62,23 @@ window.hospitality_suite = window.hospitality_suite || {};
     return label?{...(typeof option==="object"?option:{}),value:code,label}:option;
   });
   window.hospitality_suite.mode_options=modeOptions;
+  const actionOwners=new Map();let ownerSequence=0,actionObserver;
+  const actionOwner=desk=>{
+    if(!desk.actionOwner){desk.actionOwner=`hs-page-${++ownerSequence}`;actionOwners.set(desk.actionOwner,desk);}
+    if(!actionObserver&&typeof MutationObserver!=="undefined"&&typeof document!=="undefined"&&document.body){
+      // Frappe can recreate an HTML field after the action's finally block.
+      // Newly inserted dialog buttons must use the owner's current state.
+      actionObserver=new MutationObserver(records=>{
+        for(const record of records)for(const node of record.addedNodes){
+          if(node.nodeType!==1)continue;
+          const buttons=[...(node.matches('button[data-hs-owner]')?[node]:[]),...node.querySelectorAll('button[data-hs-owner]')];
+          for(const button of buttons){const owner=actionOwners.get(button.getAttribute('data-hs-owner'));if(owner)button.disabled=!navigator.onLine||owner.page_busy();}
+        }
+      });
+      actionObserver.observe(document.body,{childList:true,subtree:true});
+    }
+    return desk.actionOwner;
+  };
   class Desk {
     constructor(wrapper, route) {
       this.wrapper = wrapper;
@@ -116,7 +133,8 @@ window.hospitality_suite = window.hospitality_suite || {};
     page_busy(){return Boolean(this.busy||this.loading||this.actionPending);}
     scheduleRefresh() {this.refreshPending=true;clearTimeout(this.refreshTimer);this.refreshTimer=setTimeout(()=>{if(!this.page_busy() && $(this.wrapper).is(":visible"))this.load();},500);}
     allowed(action){return this.data.actions.includes(action);}
-    button(action,label,id="",kind="secondary") {return `<button type="button" class="btn btn-${kind} hs-action" data-act="${esc(action)}" data-id="${esc(id)}"${this.page_busy()?" disabled":""}>${esc(__(label))}</button>`;}
+    action_owner(){return actionOwner(this);}
+    button(action,label,id="",kind="secondary") {return `<button type="button" class="btn btn-${kind} hs-action" data-act="${esc(action)}" data-id="${esc(id)}" data-hs-owner="${this.action_owner()}"${this.page_busy()?" disabled":""}>${esc(__(label))}</button>`;}
     badge(status) {return `<span class="hs-badge hs-${esc(status.toLowerCase().replaceAll(" ","-"))}">${esc(title(status))}</span>`;}
     roomName(name) {return this.data.rooms.find(r=>r.name===name)?.room_number || name;}
     guestName(name) {return this.prop.discreet_mode ? __("Huésped registrado") : (this.data.guests || []).find(g=>g.name===name)?.full_name || __("Huésped registrado");}
@@ -145,6 +163,9 @@ window.hospitality_suite = window.hospitality_suite || {};
       banner.text(navigator.onLine&&progress?progress:message).attr("data-state",progress?"busy":"ready");
       this.root.attr("aria-busy",String(this.page_busy()));
       this.root.find("[data-act],#hs-property").prop("disabled",!navigator.onLine || this.page_busy());
+      // Native dialogs are attached outside the Page root. Release their
+      // generated action buttons with the Page that owns them, too.
+      if(this.actionOwner&&typeof document!=="undefined")for(const button of document.querySelectorAll(`[data-hs-owner="${this.actionOwner}"]`))button.disabled=!navigator.onLine||this.page_busy();
     }
     async run_action(action,id="",trigger=null) {
       if(this.page_busy() || !navigator.onLine || typeof this[`action_${action}`]!=="function")return;
@@ -216,7 +237,7 @@ window.hospitality_suite = window.hospitality_suite || {};
     render_stays(el) {el.html(`<div class="hs-toolbar"><h2>${frappe.utils.escape_html(__("Huéspedes alojados y cuentas"))}</h2>${this.button("walk_in",__("Registrar entrada inmediata"),"","primary")}</div>${this.table([__("Habitación"),__("Huésped"),__("Salida prevista"),__("Estado"),__("Acciones")],(this.data.stays||[]).map(s=>[esc(this.roomName(s.room)),esc(this.guestName(s.guest)),esc(this.date(s.ends_at)),this.badge(s.status),this.button("detail",__("Ver cuenta"),s.name)]))}`);}
     render_cashier(el) {
       const payments=this.data.payments||[];
-      const recent=payments.length||!(this.data.native_pos||[]).length?`<h2 class="hs-section-title">${frappe.utils.escape_html(__("Movimientos recientes"))}</h2>${this.table([__("Origen"),__("Concepto"),__("Importe"),__("Estado"),__("Comprobante")],payments.map(p=>[esc(p.stay?__("Habitación")+" "+this.roomName((this.data.stays||[]).find(t=>t.name===p.stay)?.room):p.booking?this.bookingLabel(p.booking):__("Venta / caja")),esc(title(p.kind)),this.amount(p.amount,p.currency),this.badge(p.status),esc(p.payment_entry||p.journal_entry||"—")]))}`:"";
+      const recent=payments.length||!(this.data.native_pos||[]).length?`<h2 class="hs-section-title">${frappe.utils.escape_html(__("Movimientos recientes"))}</h2>${this.table([__("Origen"),__("Concepto"),__("Importe"),__("Estado"),__("Comprobante")],payments.map(p=>[esc(p.stay?__("Habitación")+" "+this.roomName((this.data.stays||[]).find(t=>t.name===p.stay)?.room):p.booking?this.bookingLabel(p.booking):__("Venta / caja")),esc(title(p.kind)),this.amount(p.amount,p.currency),this.badge(p.status),esc(p.payment_entry||p.journal_entry||"—")+(this.receiptLink?"<br>"+this.receiptLink(p.name):"")]))}`:"";
       el.html(`<div class="hs-toolbar"><div><h2>${frappe.utils.escape_html(__("Turnos y cobros"))}</h2><p>${frappe.utils.escape_html(__("Anticipos, ingresos y garantías conservan su origen contable."))}</p></div>${this.button("open_shift",__("Abrir turno"),"","primary")}${this.button("payment",__("Cobrar"))}</div>${this.table([__("Responsable"),__("Apertura"),__("Moneda"),__("Efectivo esperado"),__("Estado"),__("Acciones")],(this.data.shifts||[]).map(s=>[esc(s.cashier),esc(this.date(s.opened_at)),esc(s.currency),Object.entries(s.expected_by_currency).map(([c,v])=>this.amount(v,c)).join("<br>"),this.badge(s.status),s.status!=="Closed"?this.button("close_shift",__("Arqueo y cierre"),s.name):this.button("print_shift",__("Imprimir"),s.name)]))}${recent}`);
     }
     render_housekeeping(el) {const tasks=this.data.cleaning.filter(t=>t.status!=="Completed");el.html(`<div class="hs-toolbar"><div><h2>${frappe.utils.escape_html(__("Preparar habitaciones"))}</h2><p>${frappe.utils.escape_html(__("Inicie la tarea, complete la revisión y solicite inspección."))}</p></div><span>${tasks.length} ${frappe.utils.escape_html(__("pendientes"))}</span></div><div class="hs-task-grid">${tasks.map(t=>`<article class="hs-task"><div class="hs-task-top"><strong>${frappe.utils.escape_html(__("Habitación"))} ${esc(this.roomName(t.room))}</strong>${this.badge(t.priority)}</div><p>${this.badge(t.status)}</p><p>${esc(t.assigned_to || __("Sin responsable"))}</p><p>${esc(t.notes || __("Limpieza y revisión de habitación"))}</p>${this.button("cleaning",t.status==="Pending"?__("Iniciar limpieza"):t.status==="Inspection"?__("Inspeccionar"):__("Marcar limpia"),t.name,"primary")}</article>`).join("") || this.empty(__("Las habitaciones están al día"))}</div>`);}

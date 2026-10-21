@@ -1,0 +1,47 @@
+[
+  {
+    "file": "cleaning.pdf",
+    "pages": 1,
+    "characters": 313
+  },
+  {
+    "file": "daily_close.pdf",
+    "pages": 2,
+    "characters": 2172
+  },
+  {
+    "file": "folio.pdf",
+    "pages": 1,
+    "characters": 683
+  },
+  {
+    "file": "invoice.pdf",
+    "pages": 1,
+    "characters": 331
+  },
+  {
+    "file": "maintenance.pdf",
+    "pages": 1,
+    "characters": 297
+  },
+  {
+    "file": "receipt.pdf",
+    "pages": 1,
+    "characters": 394
+  },
+  {
+    "file": "registration.pdf",
+    "pages": 1,
+    "characters": 287
+  },
+  {
+    "file": "reservation.pdf",
+    "pages": 1,
+    "characters": 529
+  },
+  {
+    "file": "shift.pdf",
+    "pages": 1,
+    "characters": 451
+  }
+]

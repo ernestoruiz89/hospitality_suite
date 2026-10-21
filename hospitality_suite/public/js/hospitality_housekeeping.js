@@ -14,7 +14,7 @@
       const label=task.status==='Pending'?__('Iniciar limpieza'):task.status==='Inspection'?__('Inspeccionar y liberar'):this.prop.inspection_required?__('Solicitar inspección'):__('Finalizar limpieza');
       const action=owned?this.button('cleaning',label,task.name,'primary'):`<p class="hs-note">${e(__('Asignada a otra persona'))}</p>`;
       const rework=task.status==='Inspection'&&this.allowed('inspect')?this.button('rework_cleaning',__('Solicitar corrección'),task.name):'';
-      return `<article class="hs-task"><div class="hs-task-top"><strong>${e(__('Habitación'))} ${e(this.roomName(task.room))}</strong>${this.badge(task.priority)}</div><p>${e(__(kinds[task.kind]||task.kind))} · ${this.badge(task.status)}</p><p>${e(task.assigned_label||task.assigned_to||__('Sin responsable'))}</p>${task.started_at?`<p class="hs-note">${e(__('Inicio'))}: ${e(this.date(task.started_at))}</p>`:''}<p>${e(task.notes||__('Limpieza y revisión de habitación'))}</p><div class="hs-dialog-actions">${action}${rework}</div></article>`;
+      return `<article class="hs-task"><div class="hs-task-top"><strong>${e(__('Habitación'))} ${e(this.roomName(task.room))}</strong>${this.badge(task.priority)}</div><p>${e(__(kinds[task.kind]||task.kind))} · ${this.badge(task.status)}</p><p>${e(task.assigned_label||task.assigned_to||__('Sin responsable'))}</p>${task.started_at?`<p class="hs-note">${e(__('Inicio'))}: ${e(this.date(task.started_at))}</p>`:''}<p>${e(task.notes||__('Limpieza y revisión de habitación'))}</p><div class="hs-dialog-actions">${action}${rework}${this.button("print_cleaning",__("Imprimir orden"),task.name)}</div></article>`;
     }).join('')||this.empty(__('Las habitaciones están al día')));
   };
   Desk.prototype.action_cleaning=async function(id){

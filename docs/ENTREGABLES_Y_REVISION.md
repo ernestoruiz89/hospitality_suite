@@ -42,4 +42,4 @@ La ayuda nativa acredita los comandos del procedimiento y los diagnósticos ejec
 
 ## Revisión restante
 
-Los otros entregables de S18 y las fases de S19 deben contrastarse individualmente. S18-01/S00-01 y las declaraciones globales de completitud requieren terminar las verificaciones abiertas; S19-07 y F26 requieren la recuperación y reversión de la versión final. Ninguna restauración histórica o del fixture se presenta como ese ensayo final.
+S18-02 y S18-03 se contrastan posteriormente en [IMPRESIONES_OPERATIVAS.md](IMPRESIONES_OPERATIVAS.md), 0.8.7: inventario instalado en ambos sitios, nueve impresiones, regresión nativa completa y acceso por rol. S18-11/S18-12 se mantienen en la lista de [estado y evidencias](ESTADO_Y_EVIDENCIAS_ENTREGA.md). Las fases de S19, S18-01/S00-01 y las declaraciones globales de completitud requieren terminar las verificaciones abiertas; S19-07 y F26 requieren la recuperación y reversión de la versión final. Ninguna restauración histórica o del fixture se presenta como ese ensayo final.
