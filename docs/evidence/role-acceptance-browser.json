@@ -1,0 +1,77 @@
+{
+  "app_version": "0.8.0",
+  "site": "hospitality-acceptance.localhost:8089",
+  "preparation": "Dos escenarios ficticios por comando; H101 se opera desde Pages.",
+  "sessions": [
+    {
+      "role": "HS Receptionist + HS Cashier",
+      "logged_out": true
+    },
+    {
+      "role": "HS Housekeeping",
+      "logged_out": true
+    },
+    {
+      "role": "HS Supervisor",
+      "logged_out": true
+    },
+    {
+      "role": "HS Accountant",
+      "logged_out": true,
+      "native_invoice_and_payment_access": true
+    },
+    {
+      "role": "HS Manager",
+      "logged_out": true
+    }
+  ],
+  "original_dates": [
+    {
+      "label": "Entrada (America/Managua)",
+      "value": "2026-10-20T23:15:16"
+    },
+    {
+      "label": "Salida prevista",
+      "value": "2026-10-21T23:15:16"
+    }
+  ],
+  "entered_card": "HABITACIÓN\nH101\nEstándar · Piso 1\nAlojado\nLimpia\nEntrada prevista\n20/10/2026 23:15\nSalida prevista\n21/10/2026 23:15\nTiempo restante: 23 h 59 min\nSaldo:\nC$ 1,500.00\nVer estancia\nHistorial",
+  "delivered": "Estancia\tArtículo\tCantidad\tImporte\tEstado\tAcción\nHabitación H101\tAgua minibar (demostración)\t1\tC$ 30.00\tEntregado\t—\nHabitación H107\tAgua minibar (demostración)\t1\tC$ 30.00\tEntregado\t—",
+  "extended_end": "2026-10-22T23:15:16",
+  "paid_card": "HABITACIÓN\nH101\nEstándar · Piso 1\nAlojado\nLimpia\nEntrada prevista\n20/10/2026 23:15\nSalida prevista\n22/10/2026 23:15\nTiempo restante: 47 h 57 min\nSaldo:\nC$ 0.00\nVer estancia\nHistorial",
+  "closed_shift": "Responsable\tApertura\tMoneda\tEfectivo esperado\tEstado\tAcciones\nreception-cashier-demo@hospitality.example.invalid\t20/10/2026 23:17\tNIO\tC$ 3,030.00\tCerrado\tImprimir",
+  "cleaning_mobile": {
+    "document_width": 390,
+    "height": 844,
+    "task": "Habitación H101\nAlta\n\nDe salida · En proceso\n\nHousekeeping\n\nInicio: 20/10/2026 23:20\n\nLimpieza y revisión de habitación\n\nSolicitar inspección",
+    "visible_dialog": [
+      "Solicitar inspección · Habitación H101\nBaño revisado\n\nbath\nCama y ropa revisadas\n\nbed\nMinibar revisado\n\nminibar\nSuperficies y equipo revisados\n\nsurfaces\nObservaciones\nnotes\nSolicitar inspección"
+    ],
+    "width": 390
+  },
+  "cleaning_requested": "Habitación H101\nAlta\n\nDe salida · Pendiente de inspección\n\nHousekeeping\n\nInicio: 20/10/2026 23:20\n\nHabitación H101 revisada; lista completa para supervisión",
+  "clean_room": "HABITACIÓN\nH101\nEstándar · Piso 1\nSin ocupación\nLimpia\nConsulte la disponibilidad para el período deseado.\nReservar\nHistorial",
+  "accounting_reconciliation": "Tipo\tOrigen\tDocumento ERPNext\tEsperado\tSegún ERPNext\tDiferencia\tMoneda\tEstado\tDetalle\nCargo\tAlojamiento (demostración) · 1500.00 NIO · 20/10/2026 23:16\tACC-SINV-2026-00001\tC$ 1,500.00\tC$ 1,500.00\tC$ 0.00\tNIO\tOK\tVerificación de línea y ajustes de factura\nCargo\tAgua minibar (demostración) · 30.00 NIO · 20/10/2026 23:16\tACC-SINV-2026-00001\tC$ 30.00\tC$ 30.00\tC$ 0.00\tNIO\tOK\tVerificación de línea y ajustes de factura\nCargo\tAlojamiento (demostración) · 1500.00 NIO · 20/10/2026 23:17\tACC-SINV-2026-00001\tC$ 1,500.00\tC$ 1,500.00\tC$ 0.00\tNIO\tOK\tVerificación de línea y ajustes de factura\nCobro\tCobro · 3030.00 NIO · 20/10/2026 23:17\tACC-PAY-2026-00001\tC$ 3,030.00\tC$ 3,030.00\tC$ 0.00\tNIO\tOK\tVerificación de importe, documento y turno",
+  "native_invoice": {
+    "scope": [
+      "Hs Stay\nEST-2026-00003\nhs_stay",
+      "Hs Booking\nRES-2026-00005\nhs_booking",
+      "Total (NIO)\nC$ 3,030.00\ngrand_total",
+      "Monto pendiente (NIO)\nC$ 0.00\noutstanding_amount"
+    ],
+    "title": "Cliente ficticio H1 - ACC-SINV-2026-00001"
+  },
+  "native_payment": {
+    "scope": [
+      "Hs Property\nHotel Jardín Demo\nhs_property",
+      "Cantidad Pagada (NIO)\nC$ 3,030.00\npaid_amount",
+      "references\nReferencias del Pago\nNº\nTipo\nNombre\nFecha límite\nTotal (NIO)\nExcepcional (NIO)\nNumerado (NIO)\n1\nFactura de Venta\nACC-SINV-2026-00001\n2026-10-20\nC$ 3,030.00\nC$ 0.00\nC$ 3,030.00"
+    ],
+    "title": "Cliente ficticio H1 - ACC-PAY-2026-00001"
+  },
+  "management_production": "Habitación\tMoneda\tImporte\tIngreso neto facturado\tImporte sin facturar\tRegistros de origen\nH101\tNIO\tC$ 3,030.00\tC$ 3,030.00\tC$ 0.00\t3",
+  "departure_pending_refresh_snapshot": "HABITACIÓNH101Estándar · Piso 1AlojadoLimpiaEntrada prevista20/10/2026 23:15Salida prevista22/10/2026 23:15Tiempo restante: 47 h 56 minSaldo: C$ 0.00Ver estanciaHistorial",
+  "departure_pending_refresh_note": "Lectura transitoria anterior a la actualización del tablero; no acredita el estado de salida. La tarea de limpieza y la habitación liberada se verifican después, además de los documentos persistidos.",
+  "viewport_reset": true,
+  "all_sessions_closed": true
+}

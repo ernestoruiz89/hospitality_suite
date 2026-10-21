@@ -1,0 +1,688 @@
+{
+  "source_review_only": true,
+  "not_proof_of_all_runtime_paths": true,
+  "sources": {
+    "hospitality_suite/__init__.py": "e24045584ee8ce18b42bf6e1b5569c35d0ae6b7627842ec08611e10a92312d5a",
+    "hospitality_suite/accounting.py": "3fe5fa22b16c24e85cc432276bf9fcdbce84afd855862be8dc2947356da0129b",
+    "hospitality_suite/api.py": "5403990a23900406e916a8b8be93510c8865f304bae7d573c874fad3ecda8e03",
+    "hospitality_suite/audit_trail.py": "f66ec0e9c8ec0cf48502d9a2713511dddb742cd874d4f06a27fb465f2f10f6c9",
+    "hospitality_suite/availability.py": "54689474e326494c080235dd2057170505c50da8ecca650e1e0a3fbf68afc62a",
+    "hospitality_suite/availability_search.py": "81f57f98927b4fe24f1f4493aa1dd54d5dfc4c68779a9d441bc1479c604cd3b6",
+    "hospitality_suite/booking_drafts.py": "4c36f912cdcf00a9c5b330f0865eb608f75c4033f1a9a7f37663ee13caba4b08",
+    "hospitality_suite/booking_presentation.py": "a28369d56ac737ddc2eaa034e34c29ad8e6d68ace083e795ca565de34031226e",
+    "hospitality_suite/cashier.py": "9b4d5f31841dc4d0673684efb9263c8612a0dbf8dd9a8c335a4992399456ef1e",
+    "hospitality_suite/catalog.py": "06b90f0ba63deeddf34be4e5336234d39426d0f5d4362ab4c20aef298dfe8413",
+    "hospitality_suite/close_checks.py": "cf0fafa2c4b39d5308f4dba5992a2974bc2702f2f1365b14e2f6a808a2cae1e7",
+    "hospitality_suite/close_financials.py": "990b26901d4897a2586b7a840dafec137eb6b8a5a1a9d42a9ebcc50f0b51551b",
+    "hospitality_suite/closing.py": "bc6d27b11fe7e76e6e7ac9c0d7f6afc676bbc146650399a71d9194312d1fe804",
+    "hospitality_suite/controllers.py": "d38c5238f505233ef637a948222371e044aaf21ddb0e24241a8b418d47a9f784",
+    "hospitality_suite/demo.py": "92b6b5811b0d7586e9839347c1ff3c52113a2c646dbc669308054ca1a3395f35",
+    "hospitality_suite/demo_scenario.py": "6d6268d7787bff5050df75733e0b5e972e7fe5848db8aca696d19278fb1eddc7",
+    "hospitality_suite/desk_board.py": "25717b9e3f8ef618b0a1535cb03c7e8aa4579bd109239ab9d78e23b78819a168",
+    "hospitality_suite/direct_sales.py": "9772796ecf9083e3905964766b3e751cd1340e1501b66e862f09ab3b9b15b509",
+    "hospitality_suite/display_labels.py": "e7b48a6a69450bedcc26412007c75b552119526d9bb73f0ad29c6ac018ac3c14",
+    "hospitality_suite/document_naming.py": "2290d736f1ee00568b6d5db7b29b0c7e48a12305b3dd36077a519ce63f79ebb0",
+    "hospitality_suite/equipment.py": "df17379a23fa5e78eb0d810142788b18458c500ae6b5779ce9c396fd6c1b3029",
+    "hospitality_suite/guest_profiles.py": "52757e488475693208afc9b1c18e81003c448177036221c0455d96618b141d1e",
+    "hospitality_suite/hooks.py": "bd4d82bc2d2e87c29da9ea2668c5a16ba28111dc711f92139399c2e89fef9d47",
+    "hospitality_suite/hospitality_suite/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_access/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_access/hs_access.py": "18b6699c40ad89aece9a7981ef792435b1895ada3aac4719cb6e218406a73182",
+    "hospitality_suite/hospitality_suite/doctype/hs_allocation/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_allocation/hs_allocation.py": "b9a3a2a12375d8aae4fb8d73ed0ac4b1e93f2eac714cb35cacfe8bfee6c6533a",
+    "hospitality_suite/hospitality_suite/doctype/hs_audit_event/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_audit_event/hs_audit_event.py": "3ae4780755a527c3245006ffcfe335f7b5e3167c1255ffc68f88494f0139944a",
+    "hospitality_suite/hospitality_suite/doctype/hs_billing_party/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_billing_party/hs_billing_party.py": "0339996805e47adac40ad05a3753a81dbe8a865bd51c848789da20ad37e282c6",
+    "hospitality_suite/hospitality_suite/doctype/hs_booking/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_booking/hs_booking.py": "e42d4b42783add8d4bcffb3ff37a89ae220c85c17db614340c804a4bdb828db0",
+    "hospitality_suite/hospitality_suite/doctype/hs_booking_room/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_booking_room/hs_booking_room.py": "72cd8d340142e5a6a6ab96b45019130a07f4cbf9dfcb3df9535fe27c1ca40fb8",
+    "hospitality_suite/hospitality_suite/doctype/hs_category/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_category/hs_category.py": "f6cbf39f155a7354859d531cd52b9be6d5b72ee42eea716ccfae8b2bce69bf4b",
+    "hospitality_suite/hospitality_suite/doctype/hs_charge/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_charge/hs_charge.py": "8482b733c8e888c82546cfdce0245424b50ff58b8f5da948e399b4e3205a66ed",
+    "hospitality_suite/hospitality_suite/doctype/hs_cleaning_task/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_cleaning_task/hs_cleaning_task.py": "ac638f9affc3c7759390ea43e3f84e27188aafe6178bb11dbec7ceaffe2a572d",
+    "hospitality_suite/hospitality_suite/doctype/hs_daily_close/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_daily_close/hs_daily_close.py": "3bd74de156acb564a5d9af0ed11068c8cf0faaa6131f708f3c9cff2597d87143",
+    "hospitality_suite/hospitality_suite/doctype/hs_equipment/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_equipment/hs_equipment.py": "e9c60a3595200227330b6f341e5b5b500bbdb8b86fcd78a13a71a3376466f9b3",
+    "hospitality_suite/hospitality_suite/doctype/hs_expense_category/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_expense_category/hs_expense_category.py": "c89bff57d76584df8eb1524e44bca509eaea8dbffea02374fa27c63bae218555",
+    "hospitality_suite/hospitality_suite/doctype/hs_folio/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_folio/hs_folio.py": "af382d89c1847fe605760dc3821493887fa2063670244adaf81a2b82a44a7a81",
+    "hospitality_suite/hospitality_suite/doctype/hs_guest/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_guest/hs_guest.py": "e492d7202a1ef4a47ee772872bbefe301b520fa1a657922055f2ac774ae80861",
+    "hospitality_suite/hospitality_suite/doctype/hs_incident/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_incident/hs_incident.py": "1ed8b5979e5c883e04afca6de7f40928f899622a7f1f29800adab2fab06bcc84",
+    "hospitality_suite/hospitality_suite/doctype/hs_integration_event/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_integration_event/hs_integration_event.py": "8bbbed3aeb187d759a68a0c43d17c4919c280beb6b4daafd8a5346a1e70dc179",
+    "hospitality_suite/hospitality_suite/doctype/hs_maintenance_order/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_maintenance_order/hs_maintenance_order.py": "a7c2c804713c5a468ebc9cec2dceca15228630085b8b13fe10a046e4c2df0795",
+    "hospitality_suite/hospitality_suite/doctype/hs_maintenance_part/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_maintenance_part/hs_maintenance_part.py": "741d05da2f383df64100d68f88066af58263b3150719923cac2ec1a9dc0c53fd",
+    "hospitality_suite/hospitality_suite/doctype/hs_payment/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_payment/hs_payment.py": "506b4f7ba480b6ae9ab3b9a265657bd0fe4655fb5e5b01bd1a1cd0d7132ad125",
+    "hospitality_suite/hospitality_suite/doctype/hs_payment_method/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_payment_method/hs_payment_method.py": "1d687dc1fb38cba151b2e34e98ae16b509d8f9feb92a3e89e531aaf2db0cba5c",
+    "hospitality_suite/hospitality_suite/doctype/hs_portal_request/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_portal_request/hs_portal_request.py": "6764c4dfef28e69fb47b6c9005a6ec9f763125842f2b024221c3cd045cee11fc",
+    "hospitality_suite/hospitality_suite/doctype/hs_property/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_property/hs_property.py": "c75645c33c912ef54730c552d6f3a93f1ef050b178e00202af8d75e37f81133e",
+    "hospitality_suite/hospitality_suite/doctype/hs_rate/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_rate/hs_rate.py": "c44b5a0706d2f811650b3bc9886e0a175e8f39a7e972448ae35cf7b3b5234875",
+    "hospitality_suite/hospitality_suite/doctype/hs_rate_service/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_rate_service/hs_rate_service.py": "b335c904a6073d09ddbd90d259d4d585bf1683a553730206e0739febc698662c",
+    "hospitality_suite/hospitality_suite/doctype/hs_request/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_request/hs_request.py": "8918a0ad285471e6292fcd2d0138b4410fc6b20f64fb45a9590b8cf38adc03f3",
+    "hospitality_suite/hospitality_suite/doctype/hs_retention_file/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_retention_file/hs_retention_file.py": "53956e56728e2a5ce8334289fd76df3d52a383b34437e323bd37468133868dfc",
+    "hospitality_suite/hospitality_suite/doctype/hs_retention_run/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_retention_run/hs_retention_run.py": "b615f9a553c0a55dd1c9cc038a9d0f3fd57b8a731d0e9e8b3da0a3fbf06258f4",
+    "hospitality_suite/hospitality_suite/doctype/hs_room/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_room/hs_room.py": "7024713079f185fcae2e6ed67342630ca2ef05717b72ff79d72a78ea8d1d9c31",
+    "hospitality_suite/hospitality_suite/doctype/hs_service_account/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_service_account/hs_service_account.py": "f2b0fbb2affd85c73bcccc32464982d886519d80badded0ab0811b7aeec752dc",
+    "hospitality_suite/hospitality_suite/doctype/hs_service_request/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_service_request/hs_service_request.py": "6fffc7a6c41c5a6653023cf1eb4bb3663974110343fb749cbf41346d049a6b9e",
+    "hospitality_suite/hospitality_suite/doctype/hs_shift/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_shift/hs_shift.py": "ee540bee041caccd209a714c56c0be567e204443dff4f7c515b852997797c66b",
+    "hospitality_suite/hospitality_suite/doctype/hs_stay/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_stay/hs_stay.py": "de20523c5b48d347b6f321f1fcabed22fcec9bbca173b4ebf746404ffdffb945",
+    "hospitality_suite/hospitality_suite/doctype/hs_stay_guest/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_stay_guest/hs_stay_guest.py": "21e660363597882e112df728e4241e3b19228405367419bcf6b59b28705cda73",
+    "hospitality_suite/hospitality_suite/doctype/hs_stock_policy/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_stock_policy/hs_stock_policy.py": "8fc578379a4b05f9a57570dbe014964e3255c871ef837b99f7138626a120781d",
+    "hospitality_suite/hospitality_suite/doctype/hs_supplier/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/doctype/hs_supplier/hs_supplier.py": "294f75194ed17240a6f7f5da3fd4bd0d5d4c42b9ddd7c80dad38fb6d2665c350",
+    "hospitality_suite/hospitality_suite/page/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/page/hospitality_cashier/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/page/hospitality_guests/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/page/hospitality_home/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/page/hospitality_housekeeping/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/page/hospitality_maintenance/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/page/hospitality_management/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/page/hospitality_reception/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/page/hospitality_reservations/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/page/hospitality_services/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/page/hospitality_setup/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/hospitality_suite/page/hospitality_stays/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/housekeeping.py": "7cdf050ba18fe8d22b0086c4f5e5ef16dfd2a913ff90b6f518b931fc3ff5cd48",
+    "hospitality_suite/i18n.py": "8784554070e34d99a8df80edfe9134940e3e0ec6428680f7ba678726fea4400f",
+    "hospitality_suite/inputs.py": "92a8b6bb77a139577ba890123cd2ea5ee51990e595469fec1ef7c45e3f8ce8ba",
+    "hospitality_suite/install.py": "8bad18804fc7e90343a80845eec48813bfaf13b0b355987edfd47350d81a7484",
+    "hospitality_suite/integrations.py": "a5d0d48c7e6d72ad1cecd8a5de990121d69d833d527740f02f656de17cb8d195",
+    "hospitality_suite/inventory.py": "05970cedbe8fbac53659edc33fde87f4bd5a9678aaceccf00da7ca8bc4abd5c1",
+    "hospitality_suite/item_configuration.py": "52db5b9dcbd520a446321a72e46ae2ecc81b1c62e62a0f9961f8e51ee3cb449a",
+    "hospitality_suite/jobs.py": "0549ddb56ccc473986d7a288ba95fbc16f2d52dc69ebb7fb80e2c275de0fcdaa",
+    "hospitality_suite/linen.py": "4c0736ac9f28e57f30b8231327714012cc53dbe48b8ce750fde6f89c6ab8345c",
+    "hospitality_suite/native_pos.py": "1b9011c339bcc7ec27d9c2de88237f79bf12ed755d28db891e14fe7976088c4d",
+    "hospitality_suite/operations.py": "de88eea65a4c34819d5f37bc8feb99f2694691ed8cd9863b35d8953b5df8f7d3",
+    "hospitality_suite/paging.py": "914b893607bb411e09bd91971bac2cc094587e940d16689c15877f426e0eee0d",
+    "hospitality_suite/patches/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/patches/v0_1/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/patches/v0_1/backfill_allocation_rates.py": "a8c0cb077031a9c4b0299f122fc4a29cbe9c21b48148d277d30a2247c248ad32",
+    "hospitality_suite/patches/v0_1/backfill_booking_lines.py": "ea09fac945595ae95a921da2367db14b450fab8e0b9c30b53f5e588db3e0f360",
+    "hospitality_suite/patches/v0_3/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/patches/v0_3/default_payment_policies.py": "c369cc521b9d0cc66649560a542ae940c078c2750ab8c8c2a101cb218c2173ba",
+    "hospitality_suite/patches/v0_3/payment_business_dates.py": "b9fdd0399ab37480300e8433ce876f5645018b99d55760dc30cb659dca80604b",
+    "hospitality_suite/patches/v0_4/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/patches/v0_4/default_extra_hour_item.py": "a5a343852179401780b312076dc3a32ea4d2a035b2b95e776ba109ab269bd5d1",
+    "hospitality_suite/patches/v0_5/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hospitality_suite/patches/v0_5/minimal_integration_receipts.py": "f3ec2e45baa956ebbb37d36f169bcfe08466a6d0db931a65cffdcba398e8e4a3",
+    "hospitality_suite/payment_policies.py": "c3bd32195eeff93d3da902cc37f935062abcbbdb882e00474580d367d3d719e7",
+    "hospitality_suite/periodic.py": "bbb58360c5b9396b1e02d0b4728ae32a391cbb3bfd4558b31080e796d2c4ca15",
+    "hospitality_suite/portal.py": "39d99d8bfe0cb8a56655bbada135f3694ea147d25a72a1e3b8366b1a7ed53799",
+    "hospitality_suite/pos_returns.py": "5dbe0c32b781118f04c8dd5ee5c1f0763170d5260066230bb8310026d83f59a4",
+    "hospitality_suite/pricing.py": "e14aeca381b106bb3c4450ddacdd718e20c6732df6c45b17abe1869682d9cec4",
+    "hospitality_suite/printing.py": "00fca11928efc5ec08fdd734f4ac777c4860d5b4c4d1f4b65c58c205b9e60c78",
+    "hospitality_suite/privacy.py": "864a6b0b72dede82c2fbd0c44045b4b54ff2c756c452f73ad53a61c38fc29265",
+    "hospitality_suite/procurement.py": "5681b26bfcd61118634874cb64b487c0e42da66e085676a95c2902c65545bf09",
+    "hospitality_suite/reconciliation.py": "df4834441a90d510b629a01d40d14c67be1c0477a6e44aeaf164396c6451f65d",
+    "hospitality_suite/refunds.py": "c22c9aa00d861bd52f0c35398a061902abb653cdc146cb7d7f4833e4b62e50b1",
+    "hospitality_suite/report_formatting.py": "440164be9a86054232f4384412336c41c89cbc68b6a3f609093369ef6fecb407",
+    "hospitality_suite/report_presentation.py": "57e25c2bfbf6c4fe37a7d292d4804c086d3926e4069cee031cbfca4692d8ed10",
+    "hospitality_suite/report_queries.py": "346eeea0c91c14888f6b54a78950137e8ce686a48abbe78c72cbb131f0b02c21",
+    "hospitality_suite/reports.py": "5d30742c3d09de0ce27f0fa1a2c104fc41a08ee372b51f04e5b8d3542d639a40",
+    "hospitality_suite/room_history.py": "fc0a415928e9ece280dc12392937e3d6962f10871b9de1b230500b1ddfb9fa81",
+    "hospitality_suite/schema.py": "58e70107f27efe7d22a48d218b1ea5302f367ff76448a1570429a0c74731beb0",
+    "hospitality_suite/security.py": "cdfb44bacf86da383976fe02616e12d8e8b960d454ce714a0e002dc8305b5062",
+    "hospitality_suite/service.py": "c4f5a45021fd5a9e75d68f9d8da4fe9351cd09bab7e45a950d97246819d45654",
+    "hospitality_suite/service_accounting.py": "f851ef6caeeff0cc9fdcd9139dcfe3e04f537baff2da035b058151c5303d60e1",
+    "hospitality_suite/setup.py": "695f06e880ea809437264368cee8093f1b42220d016c5fc3b8890b414fa36e1f",
+    "hospitality_suite/tariff_explanations.py": "922c0cff334e3b8d098858698e9c8a0efc6d5b589689a510ac0fe9b85a83bb3a",
+    "hospitality_suite/time.py": "2285aee0b6c670dc5754d9e778e87c804fde950c60a17ab1ac8cdc1d9ed9c9af",
+    "hospitality_suite/timing.py": "4e5bfda379176c4416f2f195fb0fd990df4a496279ddb37696feb4eae64a5fc4",
+    "hospitality_suite/translation_messages.py": "5f77d0b96b42052f266375e550dcbc8aec678551f0bd027c6b0819a6f30fceef",
+    "hospitality_suite/treasury.py": "8611d8f765526d503e9b8c7c41d42ec3a8a583db67cad641a878dad4eb02f1dc",
+    "hospitality_suite/www/hospitality.py": "39931a06768e92f16817ed063c42116caf4d1087685fe3171b77c67f37b38a8d",
+    "hospitality_suite/www/hospitality_confirmation.py": "a1e506f9b7a695c4ff7ea04ea0e4e016c4d2d4b8e32603a05db16defbe00f272"
+  },
+  "endpoints": [
+    {
+      "path": "hospitality_suite/api.py",
+      "function": "execute",
+      "line": 57,
+      "allow_guest": false,
+      "methods": [
+        "POST"
+      ],
+      "rate_limit": null
+    },
+    {
+      "path": "hospitality_suite/api.py",
+      "function": "preview",
+      "line": 67,
+      "allow_guest": false,
+      "methods": null,
+      "rate_limit": null
+    },
+    {
+      "path": "hospitality_suite/api.py",
+      "function": "service_configuration",
+      "line": 121,
+      "allow_guest": false,
+      "methods": null,
+      "rate_limit": null
+    },
+    {
+      "path": "hospitality_suite/api.py",
+      "function": "service_accounting_configuration",
+      "line": 127,
+      "allow_guest": false,
+      "methods": null,
+      "rate_limit": null
+    },
+    {
+      "path": "hospitality_suite/api.py",
+      "function": "stay_board",
+      "line": 136,
+      "allow_guest": false,
+      "methods": null,
+      "rate_limit": null
+    },
+    {
+      "path": "hospitality_suite/api.py",
+      "function": "bootstrap",
+      "line": 147,
+      "allow_guest": false,
+      "methods": null,
+      "rate_limit": null
+    },
+    {
+      "path": "hospitality_suite/api.py",
+      "function": "catalog_search",
+      "line": 241,
+      "allow_guest": false,
+      "methods": null,
+      "rate_limit": null
+    },
+    {
+      "path": "hospitality_suite/api.py",
+      "function": "retention_candidates",
+      "line": 252,
+      "allow_guest": false,
+      "methods": null,
+      "rate_limit": null
+    },
+    {
+      "path": "hospitality_suite/api.py",
+      "function": "stay_detail",
+      "line": 257,
+      "allow_guest": false,
+      "methods": null,
+      "rate_limit": null
+    },
+    {
+      "path": "hospitality_suite/api.py",
+      "function": "availability_search",
+      "line": 274,
+      "allow_guest": false,
+      "methods": null,
+      "rate_limit": null
+    },
+    {
+      "path": "hospitality_suite/api.py",
+      "function": "report",
+      "line": 280,
+      "allow_guest": false,
+      "methods": null,
+      "rate_limit": null
+    },
+    {
+      "path": "hospitality_suite/api.py",
+      "function": "report_options",
+      "line": 301,
+      "allow_guest": false,
+      "methods": null,
+      "rate_limit": null
+    },
+    {
+      "path": "hospitality_suite/api.py",
+      "function": "report_page",
+      "line": 366,
+      "allow_guest": false,
+      "methods": null,
+      "rate_limit": null
+    },
+    {
+      "path": "hospitality_suite/api.py",
+      "function": "guest_history",
+      "line": 378,
+      "allow_guest": false,
+      "methods": null,
+      "rate_limit": null
+    },
+    {
+      "path": "hospitality_suite/api.py",
+      "function": "export_report",
+      "line": 396,
+      "allow_guest": false,
+      "methods": null,
+      "rate_limit": null
+    },
+    {
+      "path": "hospitality_suite/api.py",
+      "function": "save_setup",
+      "line": 422,
+      "allow_guest": false,
+      "methods": [
+        "POST"
+      ],
+      "rate_limit": null
+    },
+    {
+      "path": "hospitality_suite/api.py",
+      "function": "audit_detail",
+      "line": 462,
+      "allow_guest": false,
+      "methods": null,
+      "rate_limit": null
+    },
+    {
+      "path": "hospitality_suite/api.py",
+      "function": "create_guest",
+      "line": 468,
+      "allow_guest": false,
+      "methods": [
+        "POST"
+      ],
+      "rate_limit": null
+    },
+    {
+      "path": "hospitality_suite/api.py",
+      "function": "guest_detail",
+      "line": 475,
+      "allow_guest": false,
+      "methods": null,
+      "rate_limit": null
+    },
+    {
+      "path": "hospitality_suite/api.py",
+      "function": "update_guest",
+      "line": 481,
+      "allow_guest": false,
+      "methods": [
+        "POST"
+      ],
+      "rate_limit": null
+    },
+    {
+      "path": "hospitality_suite/api.py",
+      "function": "create_property",
+      "line": 489,
+      "allow_guest": false,
+      "methods": [
+        "POST"
+      ],
+      "rate_limit": null
+    },
+    {
+      "path": "hospitality_suite/api.py",
+      "function": "configuration",
+      "line": 494,
+      "allow_guest": false,
+      "methods": null,
+      "rate_limit": null
+    },
+    {
+      "path": "hospitality_suite/api.py",
+      "function": "setup_options",
+      "line": 499,
+      "allow_guest": false,
+      "methods": null,
+      "rate_limit": null
+    },
+    {
+      "path": "hospitality_suite/api.py",
+      "function": "booking_detail",
+      "line": 504,
+      "allow_guest": false,
+      "methods": null,
+      "rate_limit": null
+    },
+    {
+      "path": "hospitality_suite/api.py",
+      "function": "calendar",
+      "line": 513,
+      "allow_guest": false,
+      "methods": null,
+      "rate_limit": null
+    },
+    {
+      "path": "hospitality_suite/api.py",
+      "function": "room_balances",
+      "line": 553,
+      "allow_guest": false,
+      "methods": null,
+      "rate_limit": null
+    },
+    {
+      "path": "hospitality_suite/api.py",
+      "function": "room_history",
+      "line": 570,
+      "allow_guest": false,
+      "methods": null,
+      "rate_limit": null
+    },
+    {
+      "path": "hospitality_suite/api.py",
+      "function": "inventory_status",
+      "line": 576,
+      "allow_guest": false,
+      "methods": null,
+      "rate_limit": null
+    },
+    {
+      "path": "hospitality_suite/integrations.py",
+      "function": "webhook",
+      "line": 80,
+      "allow_guest": true,
+      "methods": [
+        "POST"
+      ],
+      "rate_limit": {
+        "limit": 30,
+        "seconds": 60
+      }
+    },
+    {
+      "path": "hospitality_suite/portal.py",
+      "function": "catalog",
+      "line": 53,
+      "allow_guest": true,
+      "methods": null,
+      "rate_limit": {
+        "limit": 30,
+        "seconds": 60
+      }
+    },
+    {
+      "path": "hospitality_suite/portal.py",
+      "function": "quote",
+      "line": 87,
+      "allow_guest": true,
+      "methods": null,
+      "rate_limit": {
+        "limit": 30,
+        "seconds": 60
+      }
+    },
+    {
+      "path": "hospitality_suite/portal.py",
+      "function": "request",
+      "line": 94,
+      "allow_guest": true,
+      "methods": [
+        "POST"
+      ],
+      "rate_limit": {
+        "limit": 5,
+        "seconds": 60
+      }
+    },
+    {
+      "path": "hospitality_suite/security.py",
+      "function": "run_scoped_report",
+      "line": 447,
+      "allow_guest": false,
+      "methods": null,
+      "rate_limit": null
+    },
+    {
+      "path": "hospitality_suite/security.py",
+      "function": "export_scoped_report",
+      "line": 454,
+      "allow_guest": false,
+      "methods": null,
+      "rate_limit": null
+    },
+    {
+      "path": "hospitality_suite/security.py",
+      "function": "scoped_account_balance",
+      "line": 558,
+      "allow_guest": false,
+      "methods": null,
+      "rate_limit": null
+    },
+    {
+      "path": "hospitality_suite/security.py",
+      "function": "scoped_stock_balance",
+      "line": 566,
+      "allow_guest": false,
+      "methods": null,
+      "rate_limit": null
+    }
+  ],
+  "explicit_permission_delegations": [
+    {
+      "path": "hospitality_suite/accounting.py",
+      "line": 36,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/accounting.py",
+      "line": 88,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/accounting.py",
+      "line": 212,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/accounting.py",
+      "line": 365,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/accounting.py",
+      "line": 673,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/accounting.py",
+      "line": 679,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/accounting.py",
+      "line": 668,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/availability.py",
+      "line": 102,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/availability.py",
+      "line": 109,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/availability.py",
+      "line": 119,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/direct_sales.py",
+      "line": 25,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/direct_sales.py",
+      "line": 112,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/equipment.py",
+      "line": 50,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/guest_profiles.py",
+      "line": 125,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/guest_profiles.py",
+      "line": 127,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/guest_profiles.py",
+      "line": 119,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/guest_profiles.py",
+      "line": 153,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/guest_profiles.py",
+      "line": 156,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/guest_profiles.py",
+      "line": 165,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/guest_profiles.py",
+      "line": 167,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/housekeeping.py",
+      "line": 177,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/housekeeping.py",
+      "line": 200,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/integrations.py",
+      "line": 112,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/inventory.py",
+      "line": 89,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/operations.py",
+      "line": 234,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/operations.py",
+      "line": 334,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/operations.py",
+      "line": 397,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/portal.py",
+      "line": 125,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/privacy.py",
+      "line": 215,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/privacy.py",
+      "line": 130,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/privacy.py",
+      "line": 160,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/privacy.py",
+      "line": 164,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/privacy.py",
+      "line": 166,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/procurement.py",
+      "line": 147,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/procurement.py",
+      "line": 182,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/procurement.py",
+      "line": 38,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/procurement.py",
+      "line": 85,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/procurement.py",
+      "line": 66,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/service.py",
+      "line": 45,
+      "expression": "True"
+    },
+    {
+      "path": "hospitality_suite/service.py",
+      "line": 56,
+      "expression": "dt in ('HS Request', 'HS Audit Event', 'HS Allocation')"
+    },
+    {
+      "path": "hospitality_suite/timing.py",
+      "line": 96,
+      "expression": "True"
+    }
+  ],
+  "public_endpoint_count": 4,
+  "external_provider_activation": false
+}

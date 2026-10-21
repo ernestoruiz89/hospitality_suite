@@ -1,6 +1,12 @@
 # Manual diario por rol
 
-Aplicación 0.7.8, Frappe 16.52 / ERPNext 16.51. Los recorridos acreditados y las verificaciones pendientes están en REQUISITOS.md.
+Aplicación 0.8.0, Frappe 16.52 / ERPNext 16.51. Los recorridos acreditados y las verificaciones pendientes están en REQUISITOS.md.
+
+## Recepción y caja con el mismo usuario
+
+Administración puede conceder a un usuario **HS Receptionist y HS Cashier** explícitamente desde Configuración. Recepción por sí sola conserva sus permisos habituales y solicita el cobro a Caja. El usuario con ambos roles puede reservar, registrar entrada, agregar y entregar un consumo desde Consumos, aceptar una extensión cotizada, abrir turno, cobrar desde la cuenta y registrar salida cuando el servidor confirme saldo liquidado. El importe de efectivo contado se registra al cerrar el turno; una diferencia exige su flujo de autorización.
+
+La salida crea la tarea de Limpieza. Si la política exige inspección, Limpieza inicia y completa su lista, solicita inspección y Supervisión libera desde la misma Page. Contabilidad consulta Conciliación por estancia y rastrea los documentos ERPNext resultantes; Gerencia puede agrupar Producción por habitación para contrastar los importes. ACEPTACION_Y_DEMOSTRACION.md conserva este recorrido completo con roles separados y C$ 3,030.00 de ejemplo.
 
 ## Historial de una habitación
 

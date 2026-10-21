@@ -39,7 +39,7 @@
         "docs/evidence/107-factura-cero-revision-movil.png",
         "docs/evidence/110-factura-emitida-estancia-activa.png"
       ],
-      "remaining": "Completar el contraste y la aceptación de todas las tareas habituales de cada rol desde Pages, incluido recorrido con un usuario combinado de recepción/caja y sesión contable. La facturación explícita sin cobro/salida, incluido cero, queda acreditada en 0.6.1."
+      "remaining": "La aceptación S17-18 queda acreditada en 0.8.0 con recepción+caja, limpieza/supervisión, contabilidad y gerencia. Completar el contraste del conjunto de tareas habituales y secundarias de todos los roles/Pages; este recorrido de aceptación no acredita por sí solo todos los casos y formularios."
     },
     {
       "id": "S01-01",
@@ -121,7 +121,7 @@
         "docs/ESTADOS_POR_INTERVALO.md",
         "docs/evidence/216-calendario-espanol.jpg"
       ],
-      "remaining": "Preparación ampliada y extracción nativa de mensajes acreditadas; permanece I hasta revisar cada literal dinámico de Pages y mensajes secundarios. No se entrega un paquete completo de otro idioma."
+      "remaining": "Preparación y extracción nativa acreditadas. Falta revisión completa de literales dinámicos/secundarios; el recorrido 0.8.0 conserva, por ejemplo, el nombre antiguo del artículo demostrativo de hora adicional y etiquetas HS en documentos contables estándar. No se entrega un paquete completo de otro idioma."
     },
     {
       "id": "S01-05",
@@ -1011,7 +1011,7 @@
         "docs/FACTURACION_DESDE_PAGES.md",
         "docs/evidence/pages-rooms-audit.json"
       ],
-      "remaining": "Paneles y formularios operativos localizados y recorridos financieros/stock/limpieza ejecutados. Completar el contraste de todas las tareas habituales de cada rol; S00-02 y S17-18 siguen abiertos."
+      "remaining": "La aceptación S17-18 queda acreditada en 0.8.0 con recepción+caja, limpieza/supervisión, contabilidad y gerencia. Completar el contraste del conjunto de tareas habituales y secundarias de todos los roles/Pages; este recorrido de aceptación no acredita por sí solo todos los casos y formularios."
     },
     {
       "id": "S04-15",
@@ -1161,7 +1161,7 @@
         "docs/FACTURACION_DESDE_PAGES.md",
         "docs/evidence/pages-rooms-audit.json"
       ],
-      "remaining": "Existen recorridos reales de hotel/motel, caja, grupos, inventario, mantenimiento, limpieza y portal. Completar aceptación del conjunto por rol, usuario combinado y sesión contable S17-18; no equivale a una batería backend aprobada."
+      "remaining": "La aceptación S17-18 queda acreditada en 0.8.0 con recepción+caja, limpieza/supervisión, contabilidad y gerencia. Completar el contraste del conjunto de tareas habituales y secundarias de todos los roles/Pages; este recorrido de aceptación no acredita por sí solo todos los casos y formularios."
     },
     {
       "id": "S05-01",
@@ -4383,16 +4383,25 @@
       "line": 263,
       "kind": "clause",
       "requirement": "Usa datos ficticios reproducibles: dos establecimientos, uno hotel y otro motel, con al menos diez habitaciones cada uno, tarifas distintas, reservas, consumos y usuarios por rol. La carga de demostración será explícita y separada de la instalación normal.",
-      "status": "I",
+      "status": "V",
       "implementation": [
         "hospitality_suite/demo.py",
-        "hospitality_suite/tests/test_operations.py"
+        "hospitality_suite/demo_scenario.py",
+        "hospitality_suite/tests/setup.py",
+        "tools/run_ui_tests.cjs"
       ],
       "evidence": [
-        "docs/evidence/README.md",
-        "docs/evidence/accounting-native-tests.xml::test_01_hotel_advance_consumption_checkout_cleaning"
+        "docs/ACEPTACION_Y_DEMOSTRACION.md",
+        "docs/evidence/role-acceptance-native-tests.xml",
+        "docs/evidence/role-acceptance-js-tests.log",
+        "docs/evidence/role-acceptance-items-ui.json",
+        "docs/evidence/role-acceptance-upgrade.json",
+        "docs/evidence/role-acceptance-ux-restored.json",
+        "docs/evidence/role-acceptance-final-state.json",
+        "hospitality_suite/tests/test_demo_scenario.py",
+        "README.md"
       ],
-      "remaining": "Seed explícito prepara hotel/motel con diez habitaciones, tarifas y nueve usuarios por rol; los escenarios de pruebas crean reservas/consumos y se revierten. Contrastar y entregar un recorrido demostrativo completo reproducible, separado de instalación y batería, que deje reservas y consumos identificados sin duplicarlos al repetir."
+      "remaining": ""
     },
     {
       "id": "S17-18",
@@ -4401,17 +4410,33 @@
       "line": 265,
       "kind": "clause",
       "requirement": "Aceptación funcional: un recepcionista debe poder reservar, registrar entrada, agregar un consumo, extender, cobrar y registrar salida desde las Pages. Limpieza debe liberar la habitación desde su página. Contabilidad debe rastrear los documentos resultantes y gerencia consultar reportes conciliables.",
-      "status": "I",
+      "status": "V",
       "implementation": [
-        "hospitality_suite/public/js/hospitality.js",
-        "hospitality_suite/security.py",
-        "hospitality_suite/setup.py"
+        "hospitality_suite/public/js/hospitality_drafts.js",
+        "hospitality_suite/public/js/hospitality_extras.js",
+        "hospitality_suite/public/js/hospitality_housekeeping.js",
+        "hospitality_suite/public/js/hospitality_reporting.js",
+        "hospitality_suite/api.py",
+        "hospitality_suite/security.py"
       ],
       "evidence": [
-        "docs/evidence/README.md",
-        "docs/evidence/accounting-native-tests.xml::test_reception_cashier_cleaning_supervisor_end_to_end"
+        "docs/ACEPTACION_Y_DEMOSTRACION.md",
+        "docs/evidence/role-acceptance-native-tests.xml",
+        "docs/evidence/role-acceptance-js-tests.log",
+        "docs/evidence/role-acceptance-items-ui.json",
+        "docs/evidence/role-acceptance-upgrade.json",
+        "docs/evidence/role-acceptance-ux-restored.json",
+        "docs/evidence/role-acceptance-final-state.json",
+        "hospitality_suite/tests/test_role_acceptance.py",
+        "docs/evidence/role-acceptance-browser.json",
+        "docs/evidence/233-aceptacion-cobro-confirmado.jpg",
+        "docs/evidence/238-aceptacion-habitacion-liberada.jpg",
+        "docs/evidence/239-aceptacion-contabilidad-conciliacion.jpg",
+        "docs/evidence/240-aceptacion-factura-nativa.jpg",
+        "docs/evidence/241-aceptacion-pago-nativo.jpg",
+        "docs/evidence/242-aceptacion-gerencia-produccion.jpg"
       ],
-      "remaining": "Recorridos Pages de recepción, cajero separado, limpieza y gerencia acreditados. Completar aceptación con un usuario autorizado de recepción+caja en el mismo recorrido y una sesión de contabilidad rastreando los documentos/reportes; no ampliar por defecto los permisos del rol de recepción."
+      "remaining": ""
     },
     {
       "id": "S17-19",
@@ -4547,10 +4572,25 @@
       "line": 280,
       "kind": "enumerated",
       "requirement": "- Generador de datos de demostración y pruebas automatizadas reproducibles.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/demo.py",
+        "hospitality_suite/demo_scenario.py",
+        "hospitality_suite/tests/setup.py",
+        "tools/run_ui_tests.cjs"
+      ],
+      "evidence": [
+        "docs/ACEPTACION_Y_DEMOSTRACION.md",
+        "docs/evidence/role-acceptance-native-tests.xml",
+        "docs/evidence/role-acceptance-js-tests.log",
+        "docs/evidence/role-acceptance-items-ui.json",
+        "docs/evidence/role-acceptance-upgrade.json",
+        "docs/evidence/role-acceptance-ux-restored.json",
+        "docs/evidence/role-acceptance-final-state.json",
+        "hospitality_suite/tests/test_demo_scenario.py",
+        "README.md"
+      ],
+      "remaining": ""
     },
     {
       "id": "S18-11",

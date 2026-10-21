@@ -1,0 +1,30 @@
+{
+  "initial_demo_tests": {
+    "tests": 7,
+    "errors": 1,
+    "cause": "The test queried a nonexistent HS Charge.service_request; corrected to follow HS Service Request.charge."
+  },
+  "initial_demo_log_sha256": "4edbc51dbcfc39b130ca18991c1df251e50cdf9a34afd25af18944055c9112a1",
+  "final_native": {
+    "tests": 373,
+    "integration": 359,
+    "pure": 14,
+    "new_demo_cases": 7,
+    "new_role_case": 1
+  },
+  "final_js": {
+    "tests": 136,
+    "desk": 134,
+    "portal": 2,
+    "new_cases": 0
+  },
+  "ui_notes": [
+    "Native selection changes the primary action label; subsequent actions use the observed label.",
+    "Some locator/native-target operations timed out or had stale targets. The visible state was inspected before continuing.",
+    "The departure snapshot/capture 234 precedes the refreshed board; it is explicitly not completion evidence. The later task, clean-room state and persisted Checked Out document prove completion."
+  ],
+  "activation": {
+    "external_sync": false,
+    "default_receptionist_finance_grants_changed": false
+  }
+}

@@ -2,7 +2,7 @@
 
 PMS nativo para modalidades Hotel, Por tiempo y Hotel y por tiempo. Recepción, caja, limpieza y gerencia trabajan desde once Pages de Desk en español; la contabilidad y el inventario permanecen en ERPNext.
 
-Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. App 0.7.8. Otras versiones no están acreditadas.
+Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. App 0.8.0. Otras versiones no están acreditadas.
 
 El desarrollo continúa: [matriz de requisitos](docs/REQUISITOS.md), [auditoría punto por punto](docs/AUDITORIA_ESPECIFICACION.md), [registro de avance](docs/AVANCE.md) y [arquitectura](docs/ARQUITECTURA.md). No se declara listo para producción mientras existan pendientes obligatorios.
 
@@ -16,7 +16,9 @@ El desarrollo continúa: [matriz de requisitos](docs/REQUISITOS.md), [auditoría
 
 [Inventario y servicios](docs/AUDITORIA_INVENTARIO_SERVICIOS.md): entregas/devoluciones conciliadas, consultas por ubicación y acciones claras por estado. **337 nativas y 101 JS aprobadas**. Estado de esa fase: **179 V, 14 I y 25 R; 39 entradas sin cierre**.
 
-[Historial de habitaciones](docs/HISTORIAL_HABITACIONES.md): operaciones, cambios de datos y períodos por rango; valores plegados, paginación y permisos por establecimiento. **365 nativas y 136 JS aprobadas**. Recepción comprueba cancelación, limpieza, cambio de habitación, bloqueos, tres páginas y móvil. Estado actual: **185 V, 10 I y 23 R; 33 entradas sin cierre**.
+[Aceptación y demostración](docs/ACEPTACION_Y_DEMOSTRACION.md): un usuario con roles explícitos de recepción/caja reserva, ingresa, entrega un consumo, extiende, cobra y registra salida desde Pages. Limpieza/Supervisión liberan; Contabilidad rastrea factura/pago y Gerencia contrasta C$ 3,030.00. Generador operativo repetible, con reservas y consumos ficticios en dos establecimientos. **373 nativas y 136 JS aprobadas**. Estado actual: **188 V, 8 I y 22 R; 30 entradas sin cierre**.
+
+[Historial de habitaciones](docs/HISTORIAL_HABITACIONES.md) conserva la fase 0.7.8: operaciones, cambios de datos y períodos por rango; valores plegados, paginación y permisos por establecimiento. **365 nativas y 136 JS aprobadas** en esa fase. Recepción comprueba cancelación, limpieza, cambio de habitación, bloqueos, tres páginas y móvil.
 
 [Estados por intervalo](docs/ESTADOS_POR_INTERVALO.md) conserva la fase 0.7.7: contraste plegado de habitaciones para sus fechas, limpieza actual y llegadas/salidas con texto; calendario con contexto, validación e idioma. **352 nativas y 126 JS aprobadas** en esa fase, con catorce nativas dirigidas finales.
 
@@ -84,11 +86,13 @@ Consulte el [manual por rol](docs/MANUAL.md), [tratamiento contable](docs/CONTAB
 Solo en un sitio de pruebas, habilite `hospitality_allow_demo` y ejecute:
 
 ```sh
+bench --site hotel.localhost set-config allow_tests true
 bench --site hotel.localhost set-config hospitality_allow_demo true
 bench --site hotel.localhost execute hospitality_suite.demo.seed
+bench --site hotel.localhost execute hospitality_suite.demo_scenario.build
 ```
 
-Crea datos ficticios: Hotel y Por tiempo con diez habitaciones cada uno, huéspedes, precios, existencias de muestra y usuarios por rol. Las contraseñas aleatorias quedan en `sites/<sitio>/private/hospitality-demo-users.json`, modo 600. La carga es repetible y está separada de la instalación normal.
+Crea datos ficticios: Hotel y Por tiempo con diez habitaciones cada uno, huéspedes, precios, existencias de muestra y usuarios por rol. El escenario operativo deja una reserva futura, una estancia y un consumo entregado por establecimiento; usa movimientos nativos de stock y no hace cobros. Repetir conserva las referencias y el trabajo posterior. Requiere los establecimientos ficticios originales y rechaza reservas, estancias, cargos, caja o consumos ajenos al primer recorrido. Las contraseñas aleatorias quedan en `sites/<sitio>/private/hospitality-demo-users.json`, modo 600. Ambas cargas son explícitas y están separadas de la instalación normal. Use un sitio distinto y vacío para la batería; vea [aceptación y límites](docs/ACEPTACION_Y_DEMOSTRACION.md).
 
 ## Construcción, migración y pruebas
 
@@ -104,12 +108,12 @@ bench build --app hospitality_suite
 La batería requiere un sitio desechable identificado como pruebas y `allow_tests`. Para generar JUnit, instale la dependencia opcional con `bench pip install -e "apps/hospitality_suite[test]"`:
 
 ```sh
-bench --site hotel.localhost set-config allow_tests true
-bench --site hotel.localhost set-config hospitality_integration_test_site true
-bench --site hotel.localhost run-tests --app hospitality_suite
+bench --site hospitality-acceptance.localhost set-config allow_tests true
+bench --site hospitality-acceptance.localhost set-config hospitality_integration_test_site true
+bench --site hospitality-acceptance.localhost run-tests --app hospitality_suite
 ```
 
-`before_tests` exige Redis disponible y un sitio designado sin operaciones; después carga la demostración explícita. Cada caso revierte sus movimientos. Conserve un respaldo inicial para recuperar una ejecución interrumpida. Última batería conjunta: **352 aprobadas** en hospitality-acceptance.localhost, 338 de integración y 14 puras, sobre 0.7.7. Las catorce dirigidas de disponibilidad se repiten después del ajuste de extracción de sus etiquetas; ESTADOS_POR_INTERVALO.md delimita ambos alcances. Seis escenarios adicionales con el worker real acreditan reintentos, agotamiento, rollback, logs y recuperación de reserva/portal en TRABAJOS_Y_REINTENTOS.md.
+`before_tests` exige Redis disponible y un sitio designado sin operaciones; después carga solo la base de prueba. Cada caso revierte sus movimientos. El ejemplo usa el sitio de aceptación instalado en WSL; en otro entorno cree e instale primero un sitio desechable equivalente. Conserve un respaldo inicial para recuperar una ejecución interrumpida. Última batería conjunta: **373 aprobadas** en hospitality-acceptance.localhost, 359 de integración y 14 puras, sobre 0.8.0. Ocho nuevas cubren el generador operativo y los roles combinados/separados; ACEPTACION_Y_DEMOSTRACION.md delimita el recorrido real de Pages. Se conservan los seis escenarios adicionales con el worker real de TRABAJOS_Y_REINTENTOS.md como evidencia de esa fase.
 
 La fase histórica 0.7.1 acredita **307 pruebas nativas y 85 JS**, con trece casos nuevos de limpieza, bloqueos y contexto de establecimiento. La matriz registra 157 V, 14 I, 0 P y 47 R; cada entrada conserva su evidencia y límites. Las auditorías anteriores mantienen los recorridos históricos. El sitio limpio anterior conserva respaldo de diagnóstico, y la demostración principal conserva operaciones UX: ninguno sustituye el sitio de aceptación. Los dos casos de concurrencia usan conexiones y commits reales; se ejecutan aparte sobre aceptación con respaldo y restauración posterior:
 
@@ -118,7 +122,7 @@ bench --site hospitality-acceptance.localhost execute hospitality_suite.tests.co
 bench --site hospitality-acceptance.localhost execute hospitality_suite.tests.concurrency.verify_category
 ```
 
-Las pruebas JS sin servidor cubren transporte, edición numérica, catálogo, traducción/presentación, políticas, cierre, servicios, POS, devoluciones, notas de crédito, formularios y portal: **104 de Desk y dos del portal**. Ejecute las 106 con:
+Las pruebas JS sin servidor cubren transporte, edición numérica, catálogo, traducción/presentación, políticas, cierre, servicios, POS, devoluciones, notas de crédito, formularios, historial y portal: **134 de Desk y dos del portal**. Ejecute las 136 con:
 
 ```sh
 node tools/run_ui_tests.cjs

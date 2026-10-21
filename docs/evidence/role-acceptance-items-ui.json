@@ -1,0 +1,31 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "roles": [
+    "HS Receptionist + HS Cashier",
+    "HS Housekeeping",
+    "HS Supervisor",
+    "HS Accountant",
+    "HS Manager"
+  ],
+  "preparation": "Two fictional property scenarios and one explicitly combined operator; H101 operations are performed from Pages.",
+  "demo_repeat_before_and_after_pages_unchanged": true,
+  "booking": "RES-2026-00005",
+  "stay": "EST-2026-00003",
+  "invoice": "ACC-SINV-2026-00001",
+  "payment_entry": "ACC-PAY-2026-00001",
+  "total": 3030,
+  "outstanding": 0,
+  "shift_difference": 0,
+  "cleaning_completed_and_inspected": true,
+  "room_clean": true,
+  "reconciliation_all_ok": true,
+  "receptionist_role_not_expanded": true,
+  "business_date_unchanged": true,
+  "native_counts": {
+    "Sales Invoice": 1,
+    "Payment Entry": 1,
+    "Stock Entry": 4,
+    "GL Entry": 12,
+    "Stock Ledger Entry": 4
+  }
+}

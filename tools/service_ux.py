@@ -16,7 +16,7 @@ SITE='hospitality-acceptance.localhost'
 TARGET=BENCH/'sites'/SITE
 parser=argparse.ArgumentParser()
 parser.add_argument('action',choices=['before','prepare','inspect','restore','verify'])
-parser.add_argument('--phase',choices=['service','pos','refund','guarantee','credits','mixed','accounting','forms','periodic','billing','board','availability','drafts','tariffs','account-summary','guest-profiles','background-jobs','countdown','finance-audit','housekeeping-audit','permissions-audit','audit-history','inventory-audit','closing-checks','navigation','room-states','room-history'],default='service')
+parser.add_argument('--phase',choices=['service','pos','refund','guarantee','credits','mixed','accounting','forms','periodic','billing','board','availability','drafts','tariffs','account-summary','guest-profiles','background-jobs','countdown','finance-audit','housekeeping-audit','permissions-audit','audit-history','inventory-audit','closing-checks','navigation','room-states','room-history','role-acceptance'],default='service')
 parser.add_argument('--stage',choices=['partial','confirmed','discarded'],default='discarded')
 args=parser.parse_args()
 BASE=BENCH/f'.hospitality-{args.phase}-ux-baseline.json'
@@ -79,7 +79,7 @@ try:
         raw=json.dumps(rows,default=str,sort_keys=True,ensure_ascii=False,separators=(',',':')).encode()
         tables[dt]=dict(rows=len(rows),sha256=hashlib.sha256(raw).hexdigest())
     if args.action=='before':
-        if args.phase in ('forms','periodic','billing','board','availability','drafts','tariffs','account-summary','guest-profiles','background-jobs','countdown','finance-audit','housekeeping-audit','permissions-audit','audit-history','inventory-audit','closing-checks','navigation','room-states','room-history'):assert not BASE.exists(),'Conserve el respaldo previo al recorrido de interfaz'
+        if args.phase in ('forms','periodic','billing','board','availability','drafts','tariffs','account-summary','guest-profiles','background-jobs','countdown','finance-audit','housekeeping-audit','permissions-audit','audit-history','inventory-audit','closing-checks','navigation','room-states','room-history','role-acceptance'):assert not BASE.exists(),'Conserve el respaldo previo al recorrido de interfaz'
         assert all(tables[dt]['rows']==0 for dt in ('HS Stay','HS Booking','HS Charge','HS Payment','HS Shift','Sales Invoice','Payment Entry','Journal Entry'))
         frappe.db.rollback()
         with (BENCH/f'.hospitality-{args.phase}-ux-backup.log').open('w') as output:

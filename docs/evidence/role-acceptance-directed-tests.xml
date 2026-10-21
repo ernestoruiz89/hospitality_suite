@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+	<testsuite name="hospitality_suite.tests.test_role_acceptance.TestRoleAcceptance-20261020231036" tests="1" file="hospitality_suite/tests/test_role_acceptance.py" time="3.053" timestamp="2026-10-20T23:10:40" failures="0" errors="0" skipped="0">
+		<testcase classname="hospitality_suite.tests.test_role_acceptance.TestRoleAcceptance" name="test_combined_operator_completes_visit_then_cleaning_and_accounting_follow_the_same_documents" time="3.053" timestamp="2026-10-20T23:10:40" file="/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/tests/test_role_acceptance.py" line="22"/>
+	</testsuite>
+</testsuites>
