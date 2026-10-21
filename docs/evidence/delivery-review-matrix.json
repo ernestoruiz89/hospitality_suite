@@ -1,0 +1,24 @@
+{
+  "review_date": "2026-10-21",
+  "requirements": [
+    "S18-05"
+  ],
+  "source": "Prompt_Codex_Hoteles_Moteles_Frappe_ERPNext.txt",
+  "source_sha256": "876632e08057a1ea0386bd9e01fde6f477c62380a9414bed23e2a852765fb651",
+  "audit_sha256": "5ac9ab2ce9ffb2cb467a4c3743dcbedc63f6eb3c821a067784fc5ae31106c836",
+  "verifier": "tools/specification_audit.py --verify-source <original attachment>",
+  "exit_code": 0,
+  "output": "Audit: 218 items; V=191, I=7, P=0, R=20",
+  "items": 218,
+  "statuses": {
+    "R": 20,
+    "I": 7,
+    "V": 191
+  },
+  "ids_lines_and_requirement_text_match_source": true,
+  "referenced_files_checked": 508,
+  "verified_entries_have_implementation_and_evidence": true,
+  "open_entries_have_explicit_remaining": true,
+  "scope": "Delivery and consistency of the matrix; does not independently prove implementation of every listed requirement.",
+  "database_mutations": false
+}

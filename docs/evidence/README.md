@@ -1,8 +1,8 @@
 # Evidencia de pruebas
 
-Índice acumulado de evidencia histórica y actual. Versión de aplicación vigente: 0.7.5; Frappe 16.52.0 y ERPNext 16.51.1, en un bench separado de WSL Ubuntu 24.04. Sitios ficticios: hospitality.localhost, hospitality-clean.localhost, hospitality-restore.localhost y hospitality-acceptance.localhost. No hay datos ni operaciones de producción.
+Índice acumulado de evidencia histórica y actual. Última fase cerrada: 0.8.1; revisión 0.8.2 en curso. Frappe 16.52.0 y ERPNext 16.51.1, en un bench separado de WSL Ubuntu 24.04. Sitios ficticios: hospitality.localhost, hospitality-clean.localhost, hospitality-restore.localhost y hospitality-acceptance.localhost. No hay datos ni operaciones de producción.
 
-La batería vigente está en board-native-tests.log/xml: **229 aprobadas** (215 integración y catorce puras), y board-js-tests.log: **45 regresiones JavaScript** (43 Desk y dos portal). ESTANCIAS_Y_LLEGADAS.md delimita el nuevo recorrido con recepcionista y sus fixtures. Los resultados menores que siguen pertenecen a fases anteriores; no representan otra ejecución ni recorridos adicionales.
+La última fase cerrada conserva `language-review-native-tests.log/xml`: **379 aprobadas** (365 integración y catorce puras), y `language-review-js-tests.log`: **142 regresiones JavaScript**. IDIOMA_Y_ETIQUETAS.md delimita la evidencia de esa fase. La revisión actual tiene **379 nativas y 162 JS** en `keyboard-review-native-tests.log/xml` y `keyboard-review-js-tests.log`; TECLADO_Y_FOCO.md identifica su orden, alcance y aceptación visual pendiente. Los resultados menores que siguen pertenecen a fases anteriores; no representan otra ejecución ni recorridos adicionales.
 
 ## Automatizadas
 

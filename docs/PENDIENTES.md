@@ -1,6 +1,10 @@
 # Siguiente fase del objetivo activo
 
-Actualizado el 21/10/2026. El alcance obligatorio sigue abierto: **189 V, siete I, cero P y 22 R**, de las mismas 218 entradas y huella. R significa contraste individual pendiente y no función ausente. Los recuentos no son un porcentaje de programación ni una fecha de terminación.
+Actualizado el 21/10/2026. El alcance obligatorio sigue abierto: **191 V, siete I, cero P y 20 R**, de las mismas 218 entradas y huella: **27 sin cierre**. R significa contraste individual pendiente y no función ausente. Los recuentos no son un porcentaje de programación ni una fecha de terminación.
+
+## Revisión en curso — 0.8.2
+
+TECLADO_Y_FOCO.md conserva los cambios de foco/pestañas/tablas y 379 nativas/162 JS aprobadas. S04-17 sigue I: falta repetir la aceptación real por roles con la compilación actual; el navegador rechazó adquirir la pestaña que quedó en página de error después del reinicio de WSL. Los servidores 8086/8089 se levantaron y se solicitó abrir la URL HTTP de aceptación en el navegador integrado. La restauración final de esta fase sigue pendiente. ENTREGABLES_Y_REVISION.md acredita por separado S18-04/S18-05: ocho diagramas con 35 DocTypes, relaciones contrastadas y matriz verificada contra el adjunto original. OTA sigue aplazada y F26 activo.
 
 ## Última fase comprobada — 0.8.1
 

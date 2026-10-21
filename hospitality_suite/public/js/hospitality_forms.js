@@ -83,11 +83,12 @@
     const field=Object.values(dialog.fields_dict).find(control=>{
       if(!control.get_value||control.df.hidden||control.df.hidden_due_to_dependency)return false;
       const value=control.get_value();
-      return control.df.invalid||(control.df.reqd&&(value==null||value===""||(Array.isArray(value)&&!value.length)));
+      return control.df.invalid||(control.df.reqd&&(value==null||value===""||(Array.isArray(value)&&!value.length)||(control.df.fieldtype==='Check'&&!value)));
     });
     field?.tab?.tab_link.find(".nav-link").trigger("click");
     dialog._hsSyncFormTabs?.();
     field?.$wrapper?.[0]?.scrollIntoView({block:"nearest"});
+    this.focus_form_error?.(dialog,field);
   };
   Desk.prototype.configure_form_dialog=function(dialog,layout){
     const parent=(frappe.ui.open_dialogs||[]).filter(open=>open!==dialog).at(-1);
@@ -104,7 +105,7 @@
     }
     if(!layout)return;
     dialog.$wrapper.attr("data-hs-form",layout.kind);
-    dialog._hsSyncFormTabs=()=>{for(const tab of dialog.tabs||[])tab.tab_link.find(".nav-link").attr("aria-selected",String(tab.is_active()&&!tab.hidden));};
+    dialog._hsSyncFormTabs=()=>{for(const tab of dialog.tabs||[])tab.tab_link.find(".nav-link").attr("aria-selected",String(tab.is_active()&&!tab.hidden));window.hospitality_suite.keyboard?.syncTabs(dialog.$wrapper?.[0]);};
     for(const tab of dialog.tabs||[])tab.tab_link.find(".nav-link").on("click.hsFormSelection",dialog._hsSyncFormTabs);
     dialog._hsSyncFormTabs();
     if(layout.kind==="rate"){

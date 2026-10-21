@@ -1,0 +1,58 @@
+{
+  "stage": "Keyboard walkthrough incomplete; acceptance not restored.",
+  "mutations": false,
+  "sites": {
+    "hospitality.localhost": {
+      "tables_checked": 72,
+      "rows": 1246,
+      "changed_tables": {},
+      "unchanged_native_business_tables": 36,
+      "private_files_preserved": 2,
+      "business_date": "2026-10-19",
+      "operation_counts": {
+        "HS Booking": 23,
+        "HS Stay": 5,
+        "HS Shift": 5,
+        "Sales Invoice": 7,
+        "Payment Entry": 9,
+        "Journal Entry": 2
+      }
+    },
+    "hospitality-acceptance.localhost": {
+      "tables_checked": 72,
+      "rows": 253,
+      "changed_tables": {
+        "HS Audit Event": {
+          "before": 0,
+          "after": 1
+        },
+        "HS Category": {
+          "before": 2,
+          "after": 3
+        },
+        "HS Request": {
+          "before": 0,
+          "after": 1
+        }
+      },
+      "unchanged_native_business_tables": 36,
+      "private_files_preserved": 0,
+      "business_date": "2026-10-19",
+      "operation_counts": {
+        "HS Booking": 0,
+        "HS Stay": 0,
+        "HS Shift": 0,
+        "Sales Invoice": 0,
+        "Payment Entry": 0,
+        "Journal Entry": 0
+      }
+    }
+  },
+  "ports": {
+    "8086": true,
+    "8089": true,
+    "9001": true,
+    "11001": true,
+    "13001": true
+  }
+}

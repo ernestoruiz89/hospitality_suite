@@ -2,7 +2,7 @@
 
 PMS nativo para modalidades Hotel, Por tiempo y Hotel y por tiempo. Recepción, caja, limpieza y gerencia trabajan desde once Pages de Desk en español; la contabilidad y el inventario permanecen en ERPNext.
 
-Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. App 0.8.1. Otras versiones no están acreditadas.
+Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. App 0.8.2 en validación; última fase cerrada 0.8.1. Otras versiones no están acreditadas.
 
 El desarrollo continúa: [matriz de requisitos](docs/REQUISITOS.md), [auditoría punto por punto](docs/AUDITORIA_ESPECIFICACION.md), [registro de avance](docs/AVANCE.md) y [arquitectura](docs/ARQUITECTURA.md). No se declara listo para producción mientras existan pendientes obligatorios.
 
@@ -18,7 +18,9 @@ El desarrollo continúa: [matriz de requisitos](docs/REQUISITOS.md), [auditoría
 
 [Aceptación y demostración](docs/ACEPTACION_Y_DEMOSTRACION.md): un usuario con roles explícitos de recepción/caja reserva, ingresa, entrega un consumo, extiende, cobra y registra salida desde Pages. Limpieza/Supervisión liberan; Contabilidad rastrea factura/pago y Gerencia contrasta C$ 3,030.00. Generador operativo repetible, con reservas y consumos ficticios en dos establecimientos. **373 nativas y 136 JS aprobadas** en esa fase. Estado de esa fase: **188 V, 8 I y 22 R; 30 entradas sin cierre**.
 
-[Idioma y etiquetas](docs/IDIOMA_Y_ETIQUETAS.md): campos y enlaces en español, estados por contexto y catálogo con nombres claros. **379 nativas y 142 JS aprobadas** en 0.8.1. Estado actual: **189 V, 7 I y 22 R; 29 entradas sin cierre**. Datos originales conservados, con Version de metadatos y caché nativa documentadas.
+[Idioma y etiquetas](docs/IDIOMA_Y_ETIQUETAS.md): campos y enlaces en español, estados por contexto y catálogo con nombres claros. **379 nativas y 142 JS aprobadas** en 0.8.1. Estado al cerrar esa fase: **189 V, 7 I y 22 R; 29 entradas sin cierre**. Datos originales conservados, con Version de metadatos y caché nativa documentadas.
+
+[Teclado y foco](docs/TECLADO_Y_FOCO.md) conserva la revisión en curso: **379 nativas y 162 JS aprobadas**, con aceptación visual actual pendiente. La [revisión de entregables](docs/ENTREGABLES_Y_REVISION.md) acredita los [diagramas completos](docs/MODELO_ESTADOS_Y_FLUJOS.md) y la matriz original: **191 V, 7 I y 20 R; 27 entradas sin cierre**. S04-17 permanece I.
 
 [Historial de habitaciones](docs/HISTORIAL_HABITACIONES.md) conserva la fase 0.7.8: operaciones, cambios de datos y períodos por rango; valores plegados, paginación y permisos por establecimiento. **365 nativas y 136 JS aprobadas** en esa fase. Recepción comprueba cancelación, limpieza, cambio de habitación, bloqueos, tres páginas y móvil.
 
@@ -115,7 +117,7 @@ bench --site hospitality-acceptance.localhost set-config hospitality_integration
 bench --site hospitality-acceptance.localhost run-tests --app hospitality_suite
 ```
 
-`before_tests` exige Redis disponible y un sitio designado sin operaciones; después carga solo la base de prueba. Cada caso revierte sus movimientos. El ejemplo usa el sitio de aceptación instalado en WSL; en otro entorno cree e instale primero un sitio desechable equivalente. Conserve un respaldo inicial para recuperar una ejecución interrumpida. Última batería conjunta: **379 aprobadas** en hospitality-acceptance.localhost, 365 de integración y 14 puras, sobre 0.8.1. Seis nuevas cubren alias, metadatos, contextos y extracción; IDIOMA_Y_ETIQUETAS.md delimita la revisión de idioma. Las ocho de 0.8.0 y ACEPTACION_Y_DEMOSTRACION.md conservan la aceptación operativa de Pages. Se conservan los seis escenarios adicionales con el worker real de TRABAJOS_Y_REINTENTOS.md como evidencia de esa fase.
+`before_tests` exige Redis disponible y un sitio designado sin operaciones; después carga solo la base de prueba. Cada caso revierte sus movimientos. El ejemplo usa el sitio de aceptación instalado en WSL; en otro entorno cree e instale primero un sitio desechable equivalente. Conserve un respaldo inicial para recuperar una ejecución interrumpida. Última batería conjunta: **379 aprobadas** en hospitality-acceptance.localhost, 365 de integración y 14 puras, sobre 0.8.2. Las seis de idioma cubren alias, metadatos, contextos y extracción; IDIOMA_Y_ETIQUETAS.md delimita aquella revisión. TECLADO_Y_FOCO.md conserva el orden de ejecución de esta fase y su aceptación pendiente. Las ocho de 0.8.0 y ACEPTACION_Y_DEMOSTRACION.md conservan la aceptación operativa de Pages. Se conservan los seis escenarios adicionales con el worker real de TRABAJOS_Y_REINTENTOS.md como evidencia de esa fase.
 
 La fase histórica 0.7.1 acredita **307 pruebas nativas y 85 JS**, con trece casos nuevos de limpieza, bloqueos y contexto de establecimiento. La matriz registra 157 V, 14 I, 0 P y 47 R; cada entrada conserva su evidencia y límites. Las auditorías anteriores mantienen los recorridos históricos. El sitio limpio anterior conserva respaldo de diagnóstico, y la demostración principal conserva operaciones UX: ninguno sustituye el sitio de aceptación. Los dos casos de concurrencia usan conexiones y commits reales; se ejecutan aparte sobre aceptación con respaldo y restauración posterior:
 
@@ -124,7 +126,7 @@ bench --site hospitality-acceptance.localhost execute hospitality_suite.tests.co
 bench --site hospitality-acceptance.localhost execute hospitality_suite.tests.concurrency.verify_category
 ```
 
-Las pruebas JS sin servidor cubren transporte, edición numérica, catálogo, traducción/presentación, políticas, cierre, servicios, POS, devoluciones, notas de crédito, formularios, historial y portal: **140 de Desk y dos del portal**. Ejecute las 142 con:
+Las pruebas JS sin servidor cubren transporte, edición numérica, catálogo, traducción/presentación, políticas, cierre, servicios, POS, devoluciones, notas de crédito, formularios, foco/teclado, historial y portal: **160 de Desk y dos del portal**. Ejecute las 162 con:
 
 ```sh
 node tools/run_ui_tests.cjs

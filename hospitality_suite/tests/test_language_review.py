@@ -82,7 +82,8 @@ class TestLanguageReview(IntegrationTestCase):
         from frappe.translate import get_server_messages
         messages={row[1] for row in get_server_messages('hospitality_suite')}
         required={'Baño revisado','Cama y ropa revisadas','Superficies y equipo revisados','Administrador de Hospitality','Devolver {0}',
-                  'Extracto bancario','Factura','Vuelto','Hora adicional por tiempo','Confirmación de alojamiento','Solicitar una reserva','Reapertura autorizada por'}
+                  'Extracto bancario','Factura','Vuelto','Hora adicional por tiempo','Confirmación de alojamiento','Solicitar una reserva','Reapertura autorizada por',
+                  'Tabla de resultados','Seleccionar todas las filas','Seleccionar fila {0}','Editar {0}, fila {1}. Valor: {2}','Editar fila {0}'}
         self.assertFalse(required-messages,required-messages)
         self.translate('Confirmación de alojamiento','Confirmation de séjour');self.translate('Solicitar una reserva','Demander une réservation');frappe.local.lang='fr'
         from hospitality_suite.www import hospitality,hospitality_confirmation

@@ -1,5 +1,7 @@
 # Decisiones y modelo
 
+El [modelo completo, los estados y los flujos principales](MODELO_ESTADOS_Y_FLUJOS.md) reúnen los 35 DocTypes propios, reserva/estancia, servicios, caja, limpieza, mantenimiento y cierre, con sus condiciones y fuentes. Los diagramas de este documento se conservan como vista general.
+
 HS Service Account es una tabla hija de HS Property para clasificar cada Item por ingreso, gasto y centro de costo. Se aplican valores de la sede y después los nativos; no se modifican Item Default compartidos. La validación de documentos estándar aplica la clasificación antes de contabilizar, conserva cuentas de inventario en compras y omite devoluciones/documentos ya presentados para preservar la historia. Configuración y permiso contable se validan en el servidor. Véase AUDITORIA_CONTABILIDAD_SERVICIOS.md.
 
 Objetivo instalado: Frappe 16.52.0 (`4515014`) y ERPNext 16.51.1 (`5af6561`). Frontend: Page API, controles y diálogos nativos de Frappe, JavaScript y CSS propios sin framework adicional; facilita mantenimiento y compilación en el bench existente. No se modifica el núcleo.

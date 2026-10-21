@@ -1,0 +1,11 @@
+{
+  "base": "282ce6b",
+  "site": "hospitality-acceptance.localhost",
+  "role": "HS Manager",
+  "observations": [
+    "ArrowRight on first maintenance tab leaves the first tab selected.",
+    "Tab from the final primary button moves focus to BODY outside the open modal.",
+    "Escape closes the modal and leaves focus on BODY."
+  ],
+  "business_actions_submitted": 0
+}

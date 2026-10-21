@@ -26,6 +26,8 @@ function wires(source){
 const files=fs.readdirSync(path.join(root,'hospitality_suite/public/js')).filter(n=>n.endsWith('.js')).map(n=>'hospitality_suite/public/js/'+n).concat('hospitality_suite/www/hospitality.js');
 const proof=[];
 for(const file of files){
+  const present=execFileSync('git',['-c','safe.directory='+root,'ls-tree','--name-only',base,'--',file],{cwd:root,encoding:'utf8'}).trim();
+  if(!present){proof.push({file,new_source:true,existing_wire_literals:0,preservation_checked:false,sha256:crypto.createHash('sha256').update(fs.readFileSync(path.join(root,file))).digest('hex')});continue;}
   const previous=execFileSync('git',['-c','safe.directory='+root,'show',base+':'+file],{cwd:root,encoding:'utf8'});
   const before=wires(previous),after=wires(fs.readFileSync(path.join(root,file),'utf8'));
   // New security helpers introduce their own implementation literals; all old

@@ -1,4 +1,5 @@
 """Read-only language metadata/extraction proof on the two isolated installed sites."""
+import argparse
 import ast
 import hashlib
 import json
@@ -10,6 +11,7 @@ from hospitality_suite.schema import SCHEMA,STANDARD_SCOPED
 from hospitality_suite.schema_labels import FIELD_LABELS
 
 BENCH=Path('/home/frappe/benches/hospitality-bench');ROOT=Path(__file__).resolve().parents[1]
+parser=argparse.ArgumentParser();parser.add_argument('--output',default='docs/evidence/language-review-installed.json');args=parser.parse_args()
 sources={}
 for path in sorted((ROOT/'hospitality_suite').rglob('*.py')):
     if 'tests' in path.parts:continue
@@ -17,10 +19,10 @@ for path in sorted((ROOT/'hospitality_suite').rglob('*.py')):
 surfaces=[*sorted((ROOT/'hospitality_suite/public/js').glob('*.js')),ROOT/'hospitality_suite/www/hospitality.js',
           *sorted((ROOT/'hospitality_suite/templates/print').glob('*.html')),*sorted((ROOT/'hospitality_suite/www').glob('*.html'))]
 proof=dict(python_sources=len(sources),source_sha256={**sources,**{p.relative_to(ROOT).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in surfaces}},
-           desk_modules=27,portal_modules=1,templates=11,field_names=len(FIELD_LABELS),sites={},
+           desk_modules=len(list((ROOT/'hospitality_suite/public/js').glob('*.js'))),portal_modules=1,templates=11,field_names=len(FIELD_LABELS),sites={},
            review='Manual classification of secondary captions versus stored/API values; source inventory complements tests, it does not prove every UI flow.',
            full_other_language_pack=False)
-assert len(surfaces)==39
+assert len(surfaces)==proof['desk_modules']+proof['portal_modules']+proof['templates']
 expected={'hs_property':'Establecimiento de alojamiento','hs_stay':'Estancia de alojamiento','hs_shift':'Turno de caja',
           'hs_folio':'Cuenta de estancia','hs_booking':'Reserva de alojamiento'}
 targets={'hs_property':'HS Property','hs_stay':'HS Stay','hs_shift':'HS Shift','hs_folio':'HS Folio','hs_booking':'HS Booking'}
@@ -54,5 +56,5 @@ for site,database in [('hospitality.localhost','hospitality_dev'),('hospitality-
                                  stored_select_options_preserved=True,demo_alias_fixture_present=raw_name is not None,
                                  raw_item_preservation_evidence='language-review-upgrade.json',mutations=False)
     finally:frappe.db.rollback();frappe.destroy()
-(ROOT/'docs/evidence/language-review-installed.json').write_text(json.dumps(proof,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
+(ROOT/args.output).write_text(json.dumps(proof,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
 print(json.dumps({k:v for k,v in proof.items() if k!='source_sha256'},ensure_ascii=False))

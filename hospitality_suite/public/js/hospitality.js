@@ -244,7 +244,7 @@ window.hospitality_suite = window.hospitality_suite || {};
         }catch(error){if(!serverMessage(error))frappe.msgprint({title:__("Sin confirmación del servidor"),message:__("Mantenga esta ventana y reintente con los mismos datos. La solicitud conserva su referencia para evitar duplicados."),indicator:"orange"});}
         finally{d._hsBusy=false;d.get_primary_btn().prop("disabled",Boolean(d._hsCatalogBlocked));}
       };d.get_primary_btn().off("click").on("click",()=>d._hsSubmit());
-      for(const df of fields.filter(f=>f._hsDateTime||f._hsTime||f._hsDate)){const c=d.fields_dict[df.fieldname];c.$input.attr({type:df._hsTime?"time":df._hsDate?"date":"datetime-local",step:"1"});if(df.default)c.set_value(df._hsTime?String(df.default).replace(/^(\d):/,"0$1:"):String(df.default).replace(" ","T"));} d.show();this.configure_form_dialog?.(d,layout);return d;
+      for(const df of fields.filter(f=>f._hsDateTime||f._hsTime||f._hsDate)){const c=d.fields_dict[df.fieldname];c.$input.attr({type:df._hsTime?"time":df._hsDate?"date":"datetime-local",step:"1"});if(df.default)c.set_value(df._hsTime?String(df.default).replace(/^(\d):/,"0$1:"):String(df.default).replace(" ","T"));} this.prepare_keyboard_dialog?.(d);d.show();this.configure_form_dialog?.(d,layout);return d;
     }
     async mutate(action,data,key) {
       this.busy=true;this.connection();

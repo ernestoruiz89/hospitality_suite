@@ -1111,15 +1111,19 @@
       "implementation": [
         "hospitality_suite/public/js/hospitality.js",
         "hospitality_suite/public/js/hospitality_forms.js",
-        "hospitality_suite/public/hospitality.bundle.css"
+        "hospitality_suite/public/hospitality.bundle.css",
+        "hospitality_suite/public/js/hospitality_keyboard.js"
       ],
       "evidence": [
         "docs/AUDITORIA_PAGES_HABITACIONES.md",
         "docs/UX_FORMULARIOS.md",
         "docs/evidence/billing-js-tests.log",
-        "docs/evidence/pages-rooms-audit.json"
+        "docs/evidence/pages-rooms-audit.json",
+        "docs/TECLADO_Y_FOCO.md",
+        "docs/evidence/keyboard-review-native-tests.xml",
+        "docs/evidence/keyboard-review-js-tests.log"
       ],
-      "remaining": "Controles nativos, etiquetas/ARIA, foco visible, selección de pestaña y estados con texto localizados. Falta recorrido completo solo con teclado y comprobación de foco al abrir/cerrar paneles y revisiones por rol."
+      "remaining": "La revisión 0.8.2 añade foco, ciclo de diálogo, pestañas, validación y edición de tablas, con 379 nativas y 162 JS aprobadas. Falta repetir y exportar el recorrido completo por roles con la compilación actual, comprobar tablas/portal/vistas secundarias y móvil, y restaurar/verificar aceptación; TECLADO_Y_FOCO.md delimita la comprobación visual pendiente."
     },
     {
       "id": "S04-18",
@@ -4525,10 +4529,18 @@
       "line": 274,
       "kind": "enumerated",
       "requirement": "- Diagrama del modelo de datos, estados y principales flujos.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "docs/MODELO_ESTADOS_Y_FLUJOS.md",
+        "docs/ARQUITECTURA.md",
+        "hospitality_suite/schema.py"
+      ],
+      "evidence": [
+        "docs/ENTREGABLES_Y_REVISION.md",
+        "docs/evidence/delivery-review-diagrams.json",
+        "docs/evidence/keyboard-review-native-tests.xml"
+      ],
+      "remaining": ""
     },
     {
       "id": "S18-05",
@@ -4537,10 +4549,18 @@
       "line": 275,
       "kind": "enumerated",
       "requirement": "- Matriz requisito → implementación → prueba → estado, con pendientes explícitos.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "docs/specification-audit.json",
+        "docs/AUDITORIA_ESPECIFICACION.md",
+        "docs/REQUISITOS.md",
+        "tools/specification_audit.py"
+      ],
+      "evidence": [
+        "docs/ENTREGABLES_Y_REVISION.md",
+        "docs/evidence/delivery-review-matrix.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S18-06",

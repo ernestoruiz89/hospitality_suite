@@ -60,6 +60,13 @@ test('missing required controls reveal their tab while zero and hidden values do
   assert.equal(activated,1);assert.equal(scrolled,1);
   desk.reveal_form_error({fields_dict:{zero:field(0)}});assert.equal(activated,1);
 });
+
+test('a mandatory unchecked checklist is the first error while a numeric zero is still valid',()=>{
+  const desk=fixture();let selected;
+  desk.focus_form_error=(_,field)=>selected=field;
+  const numeric={df:{reqd:1,fieldtype:'Float'},get_value:()=>0},check={df:{reqd:1,fieldtype:'Check'},get_value:()=>0};
+  desk.reveal_form_error({fields_dict:{numeric,check}});assert.equal(selected,check);
+});
 test('payment headings and review actions distinguish receiving cash from returning it',()=>{
   const desk=fixture();let kind='Payment',change;const state={},dialog={
     $wrapper:{attr(key,value){state[key]=value;}},get_value(){return kind;},set_title(value){state.title=value;},

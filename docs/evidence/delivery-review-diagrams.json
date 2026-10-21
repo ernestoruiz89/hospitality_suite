@@ -1,0 +1,542 @@
+{
+  "review_date": "2026-10-21",
+  "requirements": [
+    "S18-04"
+  ],
+  "mutations_to_app_or_database": false,
+  "diagram_source": "docs\\MODELO_ESTADOS_Y_FLUJOS.md",
+  "diagrams": 8,
+  "own_doctypes_covered": [
+    "HS Access",
+    "HS Allocation",
+    "HS Audit Event",
+    "HS Billing Party",
+    "HS Booking",
+    "HS Booking Room",
+    "HS Category",
+    "HS Charge",
+    "HS Cleaning Task",
+    "HS Daily Close",
+    "HS Equipment",
+    "HS Expense Category",
+    "HS Folio",
+    "HS Guest",
+    "HS Incident",
+    "HS Integration Event",
+    "HS Maintenance Order",
+    "HS Maintenance Part",
+    "HS Payment",
+    "HS Payment Method",
+    "HS Portal Request",
+    "HS Property",
+    "HS Rate",
+    "HS Rate Service",
+    "HS Request",
+    "HS Retention File",
+    "HS Retention Run",
+    "HS Room",
+    "HS Service Account",
+    "HS Service Request",
+    "HS Shift",
+    "HS Stay",
+    "HS Stay Guest",
+    "HS Stock Policy",
+    "HS Supplier"
+  ],
+  "relationships_checked": [
+    {
+      "doctype": "HS Property",
+      "field": "company",
+      "target": "Company",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Category",
+      "field": "property",
+      "target": "HS Property",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Room",
+      "field": "property",
+      "target": "HS Property",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Room",
+      "field": "category",
+      "target": "HS Category",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Rate",
+      "field": "category",
+      "target": "HS Category",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Rate",
+      "field": "included_services",
+      "target": "HS Rate Service",
+      "type": "Table"
+    },
+    {
+      "doctype": "HS Rate Service",
+      "field": "item",
+      "target": "Item",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Guest",
+      "field": "customer",
+      "target": "Customer",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Guest",
+      "field": "contact",
+      "target": "Contact",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Guest",
+      "field": "address",
+      "target": "Address",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Booking",
+      "field": "guest",
+      "target": "HS Guest",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Booking",
+      "field": "customer",
+      "target": "Customer",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Booking",
+      "field": "rooms",
+      "target": "HS Booking Room",
+      "type": "Table"
+    },
+    {
+      "doctype": "HS Booking Room",
+      "field": "category",
+      "target": "HS Category",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Booking Room",
+      "field": "room",
+      "target": "HS Room",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Booking Room",
+      "field": "rate",
+      "target": "HS Rate",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Stay",
+      "field": "booking",
+      "target": "HS Booking",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Stay",
+      "field": "guest",
+      "target": "HS Guest",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Stay",
+      "field": "room",
+      "target": "HS Room",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Stay",
+      "field": "guests",
+      "target": "HS Stay Guest",
+      "type": "Table"
+    },
+    {
+      "doctype": "HS Stay Guest",
+      "field": "guest",
+      "target": "HS Guest",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Allocation",
+      "field": "booking",
+      "target": "HS Booking",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Allocation",
+      "field": "stay",
+      "target": "HS Stay",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Allocation",
+      "field": "room",
+      "target": "HS Room",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Allocation",
+      "field": "category",
+      "target": "HS Category",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Folio",
+      "field": "stay",
+      "target": "HS Stay",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Folio",
+      "field": "booking",
+      "target": "HS Booking",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Folio",
+      "field": "customer",
+      "target": "Customer",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Charge",
+      "field": "folio",
+      "target": "HS Folio",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Charge",
+      "field": "stay",
+      "target": "HS Stay",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Charge",
+      "field": "sales_invoice",
+      "target": "Sales Invoice",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Property",
+      "field": "service_accounts",
+      "target": "HS Service Account",
+      "type": "Table"
+    },
+    {
+      "doctype": "HS Service Account",
+      "field": "item",
+      "target": "Item",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Service Account",
+      "field": "income_account",
+      "target": "Account",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Service Account",
+      "field": "expense_account",
+      "target": "Account",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Service Account",
+      "field": "cost_center",
+      "target": "Cost Center",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Service Request",
+      "field": "stay",
+      "target": "HS Stay",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Service Request",
+      "field": "folio",
+      "target": "HS Folio",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Service Request",
+      "field": "charge",
+      "target": "HS Charge",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Service Request",
+      "field": "stock_entry",
+      "target": "Stock Entry",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Stock Policy",
+      "field": "item",
+      "target": "Item",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Stock Policy",
+      "field": "warehouse",
+      "target": "Warehouse",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Payment",
+      "field": "shift",
+      "target": "HS Shift",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Payment",
+      "field": "method",
+      "target": "HS Payment Method",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Payment Method",
+      "field": "mode_of_payment",
+      "target": "Mode of Payment",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Payment Method",
+      "field": "account",
+      "target": "Account",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Payment",
+      "field": "payment_entry",
+      "target": "Payment Entry",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Payment",
+      "field": "journal_entry",
+      "target": "Journal Entry",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Payment",
+      "field": "sales_invoice",
+      "target": "Sales Invoice",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Payment",
+      "field": "expense_category",
+      "target": "HS Expense Category",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Expense Category",
+      "field": "account",
+      "target": "Account",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Payment",
+      "field": "purchase_invoice",
+      "target": "Purchase Invoice",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Supplier",
+      "field": "supplier",
+      "target": "Supplier",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Billing Party",
+      "field": "customer",
+      "target": "Customer",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Cleaning Task",
+      "field": "room",
+      "target": "HS Room",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Cleaning Task",
+      "field": "stay",
+      "target": "HS Stay",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Equipment",
+      "field": "room",
+      "target": "HS Room",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Equipment",
+      "field": "asset",
+      "target": "Asset",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Maintenance Order",
+      "field": "equipment",
+      "target": "HS Equipment",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Maintenance Order",
+      "field": "room",
+      "target": "HS Room",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Maintenance Order",
+      "field": "parts",
+      "target": "HS Maintenance Part",
+      "type": "Table"
+    },
+    {
+      "doctype": "HS Maintenance Part",
+      "field": "item",
+      "target": "Item",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Maintenance Part",
+      "field": "stock_entry",
+      "target": "Stock Entry",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Allocation",
+      "field": "maintenance",
+      "target": "HS Maintenance Order",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Incident",
+      "field": "room",
+      "target": "HS Room",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Incident",
+      "field": "stock_entry",
+      "target": "Stock Entry",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Access",
+      "field": "user",
+      "target": "User",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Access",
+      "field": "property",
+      "target": "HS Property",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Request",
+      "field": "property",
+      "target": "HS Property",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Audit Event",
+      "field": "property",
+      "target": "HS Property",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Audit Event",
+      "field": "actor",
+      "target": "User",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Daily Close",
+      "field": "property",
+      "target": "HS Property",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Integration Event",
+      "field": "property",
+      "target": "HS Property",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Portal Request",
+      "field": "property",
+      "target": "HS Property",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Portal Request",
+      "field": "booking",
+      "target": "HS Booking",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Allocation",
+      "field": "portal_request",
+      "target": "HS Portal Request",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Retention Run",
+      "field": "property",
+      "target": "HS Property",
+      "type": "Link"
+    },
+    {
+      "doctype": "HS Retention Run",
+      "field": "files",
+      "target": "HS Retention File",
+      "type": "Table"
+    }
+  ],
+  "source_sha256": {
+    "docs\\MODELO_ESTADOS_Y_FLUJOS.md": "24e69491d3aed087303f57ccbdfd6f4bcb22992071aa0a5eeb14b28cda5d5da2",
+    "hospitality_suite/schema.py": "fb02ba3531d56b053739bd3c93e2ad827d9a5f11cd0eb49962633108f84b21b2",
+    "hospitality_suite/booking_drafts.py": "4c36f912cdcf00a9c5b330f0865eb608f75c4033f1a9a7f37663ee13caba4b08",
+    "hospitality_suite/operations.py": "de88eea65a4c34819d5f37bc8feb99f2694691ed8cd9863b35d8953b5df8f7d3",
+    "hospitality_suite/availability.py": "54689474e326494c080235dd2057170505c50da8ecca650e1e0a3fbf68afc62a",
+    "hospitality_suite/housekeeping.py": "7cdf050ba18fe8d22b0086c4f5e5ef16dfd2a913ff90b6f518b931fc3ff5cd48",
+    "hospitality_suite/inventory.py": "05970cedbe8fbac53659edc33fde87f4bd5a9678aaceccf00da7ca8bc4abd5c1",
+    "hospitality_suite/cashier.py": "9b4d5f31841dc4d0673684efb9263c8612a0dbf8dd9a8c335a4992399456ef1e",
+    "hospitality_suite/periodic.py": "bbb58360c5b9396b1e02d0b4728ae32a391cbb3bfd4558b31080e796d2c4ca15",
+    "hospitality_suite/accounting.py": "3fe5fa22b16c24e85cc432276bf9fcdbce84afd855862be8dc2947356da0129b",
+    "hospitality_suite/procurement.py": "5681b26bfcd61118634874cb64b487c0e42da66e085676a95c2902c65545bf09",
+    "hospitality_suite/closing.py": "bc6d27b11fe7e76e6e7ac9c0d7f6afc676bbc146650399a71d9194312d1fe804",
+    "hospitality_suite/service.py": "c4f5a45021fd5a9e75d68f9d8da4fe9351cd09bab7e45a950d97246819d45654"
+  },
+  "condition_review": "Manual source comparison documented in MODELO_ESTADOS_Y_FLUJOS.md; structural check validates Link/Table names and coverage only.",
+  "native_test_evidence": "keyboard-review-native-tests.xml",
+  "approved_cases_in_referenced_classes": {
+    "TestBookingDrafts": 12,
+    "TestLifecycle": 9,
+    "TestHousekeepingAudit": 13,
+    "TestProcurement": 5,
+    "TestPeriodic": 15
+  },
+  "mermaid_renderer_executed": false,
+  "browser_acceptance_claimed": false
+}
