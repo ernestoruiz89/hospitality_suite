@@ -19,8 +19,14 @@ def verify_category():
 
 
 def verify(case="room"):
-    if frappe.local.site != "hospitality.localhost" or not frappe.conf.allow_tests:
-        frappe.throw("Esta prueba con commits solo se permite en hospitality.localhost con allow_tests")
+    if (frappe.local.site not in ("hospitality-acceptance.localhost", "hospitality-release.localhost")
+            or not frappe.conf.allow_tests or not frappe.conf.get("hospitality_integration_test_site")
+            or not frappe.conf.get("pause_scheduler")):
+        frappe.throw("Esta prueba con commits requiere un sitio de integración aislado y designado, con scheduler pausado")
+    if any(frappe.db.count(dt) for dt in ("HS Stay", "HS Charge", "HS Payment", "HS Shift", "HS Daily Close")):
+        frappe.throw("La prueba de concurrencia requiere un sitio sin operaciones")
+    if any(row.channel != "Prueba de concurrencia" for row in frappe.get_all("HS Booking", fields=["channel"])):
+        frappe.throw("El sitio contiene reservas ajenas al ensayo de concurrencia")
     site, sites = frappe.local.site, frappe.local.sites_path
     prop = frappe.get_doc("HS Property", {"property_name":"Hotel Jardín Demo"})
     for name in frappe.get_all("HS Booking", filters={"property": prop.name,"channel":"Prueba de concurrencia","status":"Confirmed"}, pluck="name"):
