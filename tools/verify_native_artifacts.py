@@ -1,5 +1,6 @@
 """Read-only installed inventory for S18-02; not proof of overall completion."""
 from datetime import datetime, timezone
+import argparse
 import hashlib
 import inspect
 import json
@@ -14,12 +15,17 @@ from hospitality_suite.controllers import ScopedDocument
 from hospitality_suite.schema import SCHEMA, PAGES
 
 ROOT = Path(__file__).resolve().parents[1]
+parser=argparse.ArgumentParser()
+parser.add_argument('--phase',choices=['print-delivery','provider-contracts'],default='print-delivery')
+args=parser.parse_args()
 BENCH = Path('/home/frappe/benches/hospitality-bench')
 META = ROOT / 'hospitality_suite/hospitality_suite'
 sha = lambda path: hashlib.sha256(path.read_bytes()).hexdigest()
 sources = [ROOT/'hospitality_suite/hooks.py', ROOT/'hospitality_suite/install.py', ROOT/'hospitality_suite/api.py',
            ROOT/'hospitality_suite/schema.py', ROOT/'hospitality_suite/controllers.py', ROOT/'hospitality_suite/printing.py', ROOT/'hospitality_suite/demo.py',
            ROOT/'hospitality_suite/tests/setup.py', ROOT/'hospitality_suite/patches.txt']
+if args.phase=='provider-contracts':
+    sources += [ROOT/'hospitality_suite/provider_adapters.py',ROOT/'hospitality_suite/tests/test_provider_adapters.py']
 formats = []
 for path in sorted((META/'print_format').glob('*/*.json')):
     source = json.loads(path.read_text())
@@ -94,5 +100,5 @@ for site, database in [('hospitality.localhost', 'hospitality_dev'), ('hospitali
         frappe.db.rollback()
         frappe.destroy()
 proof['source_sha256'] = {path.relative_to(ROOT).as_posix(): sha(path) for path in sorted(set(sources))}
-(ROOT/'docs/evidence/print-delivery-native-artifacts.json').write_text(json.dumps(proof, ensure_ascii=False, indent=2)+'\n', encoding='utf-8', newline='\n')
+(ROOT/f'docs/evidence/{args.phase}-native-artifacts.json').write_text(json.dumps(proof, ensure_ascii=False, indent=2)+'\n', encoding='utf-8', newline='\n')
 print(json.dumps(dict(doctypes=len(SCHEMA), pages=len(PAGES), formats=9, patches=6, api_methods=len(whitelisted), sites=2)))

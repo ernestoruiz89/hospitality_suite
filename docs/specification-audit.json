@@ -3637,15 +3637,25 @@
       "line": 211,
       "kind": "enumerated",
       "requirement": "- Preparar APIs documentadas y adaptadores para pasarelas, correo, WhatsApp, canales de reserva y cerraduras.",
-      "status": "I",
+      "status": "V",
       "implementation": [
-        "hospitality_suite/integrations.py"
+        "hospitality_suite/integrations.py",
+        "hospitality_suite/provider_adapters.py"
       ],
       "evidence": [
         "docs/API.md",
-        "docs/evidence/accounting-native-tests.xml::test_simulated_intent_is_never_paid"
+        "docs/evidence/accounting-native-tests.xml::test_simulated_intent_is_never_paid",
+        "docs/CONTRATOS_PROVEEDORES.md",
+        "hospitality_suite/tests/test_provider_adapters.py",
+        "docs/evidence/provider-contracts-focused-tests.log",
+        "docs/evidence/provider-contracts-native-tests.xml",
+        "docs/evidence/provider-contracts-native-run.json",
+        "docs/evidence/provider-contracts-boundaries.json",
+        "docs/evidence/provider-contracts-native-artifacts.json",
+        "docs/evidence/provider-contracts-upgrade.json",
+        "docs/evidence/provider-contracts-ux-restored.json"
       ],
-      "remaining": "Hay contratos abstractos de pago, canales, mensajes y cerraduras y receptor documentado. Contrastar cada contrato y acreditar adaptadores/simulaciones de canales, correo/WhatsApp y cerraduras, además del doble de pago ya probado. No exige activar proveedores reales."
+      "remaining": ""
     },
     {
       "id": "S14-06",
@@ -3673,17 +3683,27 @@
       "line": 213,
       "kind": "enumerated",
       "requirement": "- Cuando falte acceso externo, entrega contratos/adaptadores y pruebas simuladas claramente identificadas. No presentes una integración simulada como operativa.",
-      "status": "I",
+      "status": "V",
       "implementation": [
         "hospitality_suite/integrations.py",
-        "hospitality_suite/tests/test_integrations.py"
+        "hospitality_suite/tests/test_integrations.py",
+        "hospitality_suite/provider_adapters.py"
       ],
       "evidence": [
         "docs/API.md",
         "docs/evidence/accounting-native-tests.xml::test_simulated_intent_is_never_paid",
-        "docs/evidence/accounting-native-tests.xml::test_signed_duplicate_is_recorded_once_without_financial_effects"
+        "docs/evidence/accounting-native-tests.xml::test_signed_duplicate_is_recorded_once_without_financial_effects",
+        "docs/CONTRATOS_PROVEEDORES.md",
+        "hospitality_suite/tests/test_provider_adapters.py",
+        "docs/evidence/provider-contracts-focused-tests.log",
+        "docs/evidence/provider-contracts-native-tests.xml",
+        "docs/evidence/provider-contracts-native-run.json",
+        "docs/evidence/provider-contracts-boundaries.json",
+        "docs/evidence/provider-contracts-native-artifacts.json",
+        "docs/evidence/provider-contracts-upgrade.json",
+        "docs/evidence/provider-contracts-ux-restored.json"
       ],
-      "remaining": "La simulación de pago y el webhook sintético están identificados y nunca liquidan dinero. Falta acreditar el conjunto de contratos/adaptadores de las otras familias; véase S14-05."
+      "remaining": ""
     },
     {
       "id": "S14-08",

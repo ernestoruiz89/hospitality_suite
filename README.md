@@ -2,7 +2,9 @@
 
 PMS nativo para modalidades Hotel, Por tiempo y Hotel y por tiempo. Recepción, caja, limpieza y gerencia trabajan desde once Pages de Desk en español; la contabilidad y el inventario permanecen en ERPNext.
 
-Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. App 0.8.7 con impresiones accesibles por rol, cuenta concisa y acciones de modal recuperadas; el objetivo completo sigue activo. Otras versiones no están acreditadas.
+Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. App 0.8.8 con contratos externos de referencia y pruebas simuladas, desactivados por defecto; el objetivo completo sigue activo. Otras versiones no están acreditadas.
+
+[Contratos de proveedores](docs/CONTRATOS_PROVEEDORES.md), 0.8.8: adaptadores de referencia para pagos, correo/WhatsApp y cerraduras, más normalización entrante de canales sin publicar disponibilidad. **404 nativas (372 integración/32 unitarias) y 210 JS aprobadas**; dieciocho casos nuevos de contrato con red prohibida. No son conectores comerciales ni se activa ningún proveedor. S14-05/S14-07 quedan V para preparación/simulación; **202 V, cuatro I y doce R: dieciséis sin cierre**. Airbnb/Booking continúa aplazado. Datos/archivos conservados y ambos sitios actualizados; F26 pendiente.
 
 [Impresiones y artefactos nativos](docs/IMPRESIONES_OPERATIVAS.md), 0.8.7: nueve formatos desde Pages, cinco roles y limpieza móvil. Se verifican 35 DocTypes, 11 Pages, 28 APIs, permisos, hooks, seis patches y formatos instalados en ambos sitios. **386 nativas y 210 JS aprobadas**. Se corrigen nombres, redondeo presentado y botones de modal que quedaban deshabilitados. S18-02/S18-03 pasan a V; **200 V, seis I y doce R: dieciocho sin cierre**. OTA aplazada y F26 pendiente.
 

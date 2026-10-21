@@ -1,0 +1,31 @@
+{
+  "versions": {
+    "frappe": "16.52.0",
+    "erpnext": "16.51.1",
+    "hospitality_suite": "0.8.8"
+  },
+  "concrete_reference_classes": [
+    "ReferencePaymentAdapter",
+    "ReferenceMessagingAdapter",
+    "ReferenceLockAdapter",
+    "ReferenceChannelNormalizer"
+  ],
+  "adapter_rpc_methods": 0,
+  "scheduled_or_business_hook_activation": false,
+  "disabled_transport_rejects_send": true,
+  "channel_publication_deferred": true,
+  "provider_network_requests": 0,
+  "registered_api_methods": 28,
+  "sites": {
+    "hospitality.localhost": {
+      "enabled_providers": 0,
+      "credentials_disclosed": false
+    },
+    "hospitality-acceptance.localhost": {
+      "enabled_providers": 0,
+      "credentials_disclosed": false
+    }
+  },
+  "database_mutations": false,
+  "real_vendor_connector_claimed": false
+}

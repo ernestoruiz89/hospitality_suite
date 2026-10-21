@@ -1,0 +1,85 @@
+{
+  "verified_at_utc": "2026-10-21T21:35:46.321209+00:00",
+  "version": "0.8.8",
+  "requirements": [
+    "S14-05",
+    "S14-07"
+  ],
+  "scope": "Prepared reference contract/adapters and clearly simulated tests; no operational vendor integration. Channel outbound synchronization explicitly deferred.",
+  "specification_sha256": "876632e08057a1ea0386bd9e01fde6f477c62380a9414bed23e2a852765fb651",
+  "entries": 218,
+  "statuses": {
+    "R": 12,
+    "I": 4,
+    "V": 202
+  },
+  "open_entries": 16,
+  "native": {
+    "tests": 404,
+    "integration": 372,
+    "unit": 32,
+    "new_adapter_cases": 18
+  },
+  "javascript": {
+    "tests": 210,
+    "desk": 207,
+    "portal": 3
+  },
+  "native_interfaces": {
+    "doctypes": 35,
+    "pages": 11,
+    "print_formats": 9,
+    "patches": 6,
+    "rpc": 28,
+    "new_adapter_rpc": 0
+  },
+  "source_and_evidence_sha256": {
+    "README.md": "a340b04bab88813c4b722bb9358531011d5dbb37f236be9d2b97cbaf6a42baf9",
+    "docs/API.md": "2fd2f51f29eec1434cebc2a6025a3f09c8f529669091ec2eb33afd2e604a4974",
+    "docs/AUDITORIA_ESPECIFICACION.md": "064c2ee4ca353e01e3fc5dedf8417b7e005cc6645451d4a8731e21977347be14",
+    "docs/AVANCE.md": "a959d2943f67b85fbf88c711253d9efc9fbdcce138483976a0bbb7b6f794d36f",
+    "docs/CONTRATOS_PROVEEDORES.md": "1c5c65a95290ef7831422adab40fa711aada7c39879fbac20dadb27f98c71499",
+    "docs/ESTADO_Y_EVIDENCIAS_ENTREGA.md": "b8d7fc2ad292ec284b26d3d87704172d40090cc3fc078754dccc70a25d98c5b7",
+    "docs/PENDIENTES.md": "2cd44e32b5b7580822c0e5b78a6ac3df3e546ef5afbdf6d5a617db399942a122",
+    "docs/REQUISITOS.md": "44a8b3b4876c5ce4576c1fae84c090f9fdef0c4273ca9d2229e4424cc6e03787",
+    "docs/evidence/provider-contracts-acceptance-migrate.json": "52be7c673be6f611a1ebf1b834e83589d753b0fddebd71f4afbf18af3ea663f2",
+    "docs/evidence/provider-contracts-boundaries.json": "088aae68b31303d48576b3ee075e3594edb51c0d63959ded10c037d3b22e4a38",
+    "docs/evidence/provider-contracts-final-state.json": "176401532521962c267204c1b6c21d175d378d6273101dec8fd962c92075efc4",
+    "docs/evidence/provider-contracts-focused-tests.log": "54624529040cf6d87d714ff3f41d7fca1cd06de819a424e91a765457e70a1af8",
+    "docs/evidence/provider-contracts-js-tests.log": "69c7db48821c2f4e8a40b5e327f5e863e6813063347a92eea9dcf56190c1b18f",
+    "docs/evidence/provider-contracts-main-migrate.json": "8cc3aac722ad5f3e23eba4562498d4b51b8d2b8377efa3788ea3f7b1a6a9a515",
+    "docs/evidence/provider-contracts-native-artifacts.json": "984d76d34ed87c3e8d27ab60b5026de58dccc8e3bc8b2905df7c8e2812382aac",
+    "docs/evidence/provider-contracts-native-run.json": "82b6862fe308d223e60dce10d91fd39b11eb420af9ca9803d096b9e65c7eb19d",
+    "docs/evidence/provider-contracts-native-tests.log": "29c2f8e91e96dce702968b0ea2b4db67b462c6b5d6b85791e1ae87a0f73373e4",
+    "docs/evidence/provider-contracts-native-tests.xml": "7935ec0233de5a7f15bfecafdcc57536173039c464347d43c4fe9a533aeef606",
+    "docs/evidence/provider-contracts-upgrade.json": "a2403d24a3f4a341b864767ccbeee143bba60f1df4afa7c60427dddac8ee36b5",
+    "docs/evidence/provider-contracts-ux-restored.json": "d64122ce2f087e8c83c8bab5973d424f985f228ef11f9dd44506d25ef5e0f633",
+    "docs/specification-audit.json": "7eda42bd1c909a4a5f99faf3e943b8dd9d5fa36de1a6220f8f35cf2ca6a4e519",
+    "hospitality_suite/__init__.py": "148fb1457eb991bb1e1e64543ef2471a6544c9c6ff743f9a392388c487d99bab",
+    "hospitality_suite/integrations.py": "a5d0d48c7e6d72ad1cecd8a5de990121d69d833d527740f02f656de17cb8d195",
+    "hospitality_suite/provider_adapters.py": "34cf233107585c33cdb9b4137dd51042d20331e0328365b7d15b43dbacafda84",
+    "hospitality_suite/tests/test_provider_adapters.py": "003cc643864f7980ea0ad3a746450a99232472e10feec93d81eb1f19a79ff6e6",
+    "tools/migrate_isolated_site.py": "80f4f7564f59b63062f3ed23628c34c154afd322093596f5d7ebaf90494c1060",
+    "tools/periodic_upgrade.py": "28531b00225d3eb23e17b5feb7216e04a72c24bf9b99dc5554f94b246558c2f5",
+    "tools/run_native_tests.py": "4d9a486088a14d440e7558c3a00cb75b89282155d3ab2b8b450df043932a4c23",
+    "tools/service_ux.py": "54783a54306e59240da8209a509ab61ba55ccc825afb2aacb44b8e9d876c3471",
+    "tools/verify_acceptance_site.py": "f6d19bde3f0037d0119d1b6b208df150f4110a6dee480820c55b5a7e080d36b3",
+    "tools/verify_delivery_status.py": "09a494fe0dac0899caebf8be1c2a5ba5c1b2d841f4699ae0eeec2e7aff66d16f",
+    "tools/verify_native_artifacts.py": "d8a0b60676eb984049d97896aaa181a5bbabdd80cb64c632564f8d0b58220096",
+    "tools/verify_provider_boundaries.py": "80c398966cdf54378b15aa70c0711832232505694f2c1cf2f9f221d4dcb695b8",
+    "tools/verify_provider_contracts.py": "72985ca3db95b472276c45c7ad0952c735d0ef7d0a98ebe2b852882ffd71d16e"
+  },
+  "clean_core_commits": {
+    "frappe": "4515014c87ece6cb20ee91d2cfb121c5cbd1ff4a",
+    "erpnext": "5af6561f5aa48104559692fb4fd82f2580e8d338"
+  },
+  "main_data_preserved": true,
+  "acceptance_restored": true,
+  "real_vendor_connector_claimed": false,
+  "external_providers_activated": false,
+  "ui_replay": false,
+  "new_visual_acceptance": false,
+  "new_pdf_generated": false,
+  "ota_sync_deferred_by_user": true,
+  "all_requirements_completed": false
+}

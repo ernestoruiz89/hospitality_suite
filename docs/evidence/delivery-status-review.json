@@ -1,5 +1,5 @@
 {
-  "reviewed_at_utc": "2026-10-21T20:37:20.148493+00:00",
+  "reviewed_at_utc": "2026-10-21T21:35:46.468725+00:00",
   "requirements": [
     "S18-02",
     "S18-03",
@@ -8,11 +8,11 @@
   ],
   "scope": "Native artifacts, operational prints, delivered evidence and differentiated status list; not proof of overall app completion.",
   "source_sha256": "876632e08057a1ea0386bd9e01fde6f477c62380a9414bed23e2a852765fb651",
-  "audit_sha256": "1e0a36dc5b81f7a617c79965c660dd6c22a571a659a86990a243fc9a34e511cf",
+  "audit_sha256": "7eda42bd1c909a4a5f99faf3e943b8dd9d5fa36de1a6220f8f35cf2ca6a4e519",
   "statuses": {
     "R": 12,
-    "I": 6,
-    "V": 200
+    "I": 4,
+    "V": 202
   },
   "verified_ids": [
     "S01-01",
@@ -163,7 +163,9 @@
     "S14-02",
     "S14-03",
     "S14-04",
+    "S14-05",
     "S14-06",
+    "S14-07",
     "S14-08",
     "S15-01",
     "S15-02",
@@ -248,16 +250,6 @@
       "remaining": "La aceptación S17-18 queda acreditada en 0.8.0 con recepción+caja, limpieza/supervisión, contabilidad y gerencia. Completar el contraste del conjunto de tareas habituales y secundarias de todos los roles/Pages; este recorrido de aceptación no acredita por sí solo todos los casos y formularios. En 0.8.3 se observa salida de sesión sin confirmación después de arqueo hasta recargar; falta reproducir y resolver ese contexto de acciones, sin atribuirlo aún a una causa. En 0.8.4 dos arqueos completan salida sin recarga; permanecen observaciones del clic durante refresco y confirmación por nombre accesible tras varios diálogos, documentadas en DISPONIBILIDAD_VISUAL_Y_LIMITES.md. 0.8.7 acredita accesos a nueve impresiones desde cinco roles y limpieza móvil; sus documentos se preparan mediante API y no se atribuye su creación a la UI. La acción de reserva a cuenta antes deshabilitada se corrige y repite; el contraste global permanece abierto."
     },
     {
-      "id": "S14-05",
-      "status": "I",
-      "remaining": "Hay contratos abstractos de pago, canales, mensajes y cerraduras y receptor documentado. Contrastar cada contrato y acreditar adaptadores/simulaciones de canales, correo/WhatsApp y cerraduras, además del doble de pago ya probado. No exige activar proveedores reales."
-    },
-    {
-      "id": "S14-07",
-      "status": "I",
-      "remaining": "La simulación de pago y el webhook sintético están identificados y nunca liquidan dinero. Falta acreditar el conjunto de contratos/adaptadores de las otras familias; véase S14-05."
-    },
-    {
       "id": "S18-01",
       "status": "R",
       "remaining": "Contraste individual con código y evidencia pendiente."
@@ -312,16 +304,16 @@
     "tests": 210,
     "desk": 207,
     "portal": 3,
-    "phase": "0.8.7",
-    "executed_log_sha256": "4846b45fe87457f92cdb5a1a47b07eec29f0ac3d6707e3e60801317e769a17b3"
+    "phase": "0.8.8",
+    "executed_log_sha256": "69c7db48821c2f4e8a40b5e327f5e863e6813063347a92eea9dcf56190c1b18f"
   },
   "current_native": {
-    "tests": 386,
+    "tests": 404,
     "integration": 372,
-    "pure": 14,
-    "phase": "0.8.7",
-    "junit_sha256": "33d21d05aa7372f394db91a813ef3daed5c346dedc31b2108f9d77a0f6980b56",
-    "raw_output_sha256": "9acb3bf662412a27d1c2cc7ed821a05c53a6adeac656083658338be217937335"
+    "pure": 32,
+    "phase": "0.8.8",
+    "junit_sha256": "7935ec0233de5a7f15bfecafdcc57536173039c464347d43c4fe9a533aeef606",
+    "raw_output_sha256": "29c2f8e91e96dce702968b0ea2b4db67b462c6b5d6b85791e1ae87a0f73373e4"
   },
   "historical_native": {
     "tests": 380,
@@ -330,12 +322,13 @@
     "superseded_by_current_full_regression": true,
     "junit_sha256": "699836cd8af70e29367d6f893f76893dd915d1d3fe1a29dc03b80c497d9c156d"
   },
-  "current_ui": {
+  "last_print_ui": {
+    "phase": "0.8.7",
     "events": 22,
     "roles": 5,
     "print_families": 9,
     "fixture_created_by": "Native APIs",
-    "ui_scope": "Print access only",
+    "ui_scope": "Print access only; not a new visual pass in 0.8.8",
     "intermediate_bundles": [
       "L7TWF4HE",
       "VBL4AU4J"
@@ -345,8 +338,8 @@
     "limitations_preserved": true
   },
   "references_sha256": {
-    "docs/ESTADO_Y_EVIDENCIAS_ENTREGA.md": "041e0ee556be745d514c622a4c3e352214ea818724c1fd2514ef584b1879faa9",
-    "docs/AUDITORIA_ESPECIFICACION.md": "6c511fd46651aafc495b2ffa2145626cb5af499bd70f729fc27e7762ff0a9f06",
+    "docs/ESTADO_Y_EVIDENCIAS_ENTREGA.md": "b8d7fc2ad292ec284b26d3d87704172d40090cc3fc078754dccc70a25d98c5b7",
+    "docs/AUDITORIA_ESPECIFICACION.md": "064c2ee4ca353e01e3fc5dedf8417b7e005cc6645451d4a8731e21977347be14",
     "docs/DISPONIBILIDAD_POR_CANTIDAD.md": "e76226a821cfd7e00108f3cc566572a29d85f915ceeecc4e6c846d9dc10ea534",
     "docs/BORRADORES_DE_RESERVA.md": "2faf6f5f80a63db0f64d746c4b45fd441704f00a3ba157934d50869082e32134",
     "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md": "28ae1e61084e23e47e17b7cb139a05a33db29bd4b92eefa75959bb778100eff0",
@@ -368,14 +361,20 @@
     "docs/DISPONIBILIDAD_VISUAL_Y_LIMITES.md": "b729b491c2d3b78d05d3e226a7a6374ac66c86c874c672a700eea3b0ca29c970",
     "docs/SELECTORES_Y_RESERVA_MANUAL.md": "c655b18546ee1b0da0efbebaa949eb896af45d37563153db71cdcea23251e63e",
     "docs/ACEPTACION_Y_DEMOSTRACION.md": "13da6f66c1f9f15f79458cf2578110abdff7367dbc48b692255f1daf0da90a8e",
-    "docs/API.md": "cb31df9551615fdba910598fbcee9c6aad07bcc1da0b73f8216053048b727061",
+    "docs/API.md": "2fd2f51f29eec1434cebc2a6025a3f09c8f529669091ec2eb33afd2e604a4974",
     "docs/ENTREGABLES_Y_REVISION.md": "77aae010a6779c5974b09eaad51e41e2befef2adef44199749a30526b61ed710",
     "docs/IMPRESIONES_OPERATIVAS.md": "cff3a31398ba0f8d5e407570d265c267d41826e16a32c428b97f11e1ac2a952f",
-    "docs/REQUISITOS.md": "2fac85688db0e6e785aefda80bed45ce7223393f41ea271b3fb03538cce60d01",
-    "docs/PENDIENTES.md": "3aa50e5029eee1996e68a94ab9c68e337ba68e4c30b74348380a7f78d709a034",
+    "docs/CONTRATOS_PROVEEDORES.md": "1c5c65a95290ef7831422adab40fa711aada7c39879fbac20dadb27f98c71499",
+    "docs/REQUISITOS.md": "44a8b3b4876c5ce4576c1fae84c090f9fdef0c4273ca9d2229e4424cc6e03787",
+    "docs/PENDIENTES.md": "2cd44e32b5b7580822c0e5b78a6ac3df3e546ef5afbdf6d5a617db399942a122",
     "docs/VALIDACION_FORMULARIOS.md": "eb6a8a866f2dcc2037fa9808654ad62a76355c8a4632eed2ab04a2205babd7e4",
     "docs/ACTIVIDAD_Y_RECUPERACION_PAGES.md": "75de66165b82ce9ba32215d7fafb0563b2310bf92036223ddabe5573d8492821",
-    "docs/OPERACION.md": "a31cdb595406f0e93266d2d5bbc164d112b4776551a2e98d7c6a954a5a139a20",
+    "docs/OPERACION.md": "5e6a6a96ea96fa191871a2fb741473f47eaf9f61cea99a408c7b50a394b1162c",
+    "docs/evidence/provider-contracts-native-tests.xml": "7935ec0233de5a7f15bfecafdcc57536173039c464347d43c4fe9a533aeef606",
+    "docs/evidence/provider-contracts-native-tests.log": "29c2f8e91e96dce702968b0ea2b4db67b462c6b5d6b85791e1ae87a0f73373e4",
+    "docs/evidence/provider-contracts-js-tests.log": "69c7db48821c2f4e8a40b5e327f5e863e6813063347a92eea9dcf56190c1b18f",
+    "docs/evidence/provider-contracts-boundaries.json": "088aae68b31303d48576b3ee075e3594edb51c0d63959ded10c037d3b22e4a38",
+    "docs/evidence/provider-contracts-native-artifacts.json": "984d76d34ed87c3e8d27ab60b5026de58dccc8e3bc8b2905df7c8e2812382aac",
     "docs/evidence/print-delivery-native-tests.xml": "33d21d05aa7372f394db91a813ef3daed5c346dedc31b2108f9d77a0f6980b56",
     "docs/evidence/print-delivery-native-tests.log": "9acb3bf662412a27d1c2cc7ed821a05c53a6adeac656083658338be217937335",
     "docs/evidence/print-delivery-js-tests.log": "4846b45fe87457f92cdb5a1a47b07eec29f0ac3d6707e3e60801317e769a17b3",
@@ -452,7 +451,15 @@
     "docs/evidence/333-impresiones-recepcion-desde-cuenta.jpg": "eaed8cdc26e285a049e3efa92fca87cf3b44a9d79b8beddeb2de31cd2cbb4b1b",
     "docs/evidence/334-recibo-desde-caja.jpg": "9904931167a2aae385e606d501c12749b2f430aeb9b6c36d81bb42879ccf16cb",
     "docs/evidence/335-factura-desde-estancia-caja.jpg": "4033a87ac8967b105ffb2bcf30787c759ddd78d6e7c15a8bfef7b2a0ee65eb4d",
-    "docs/evidence/print-delivery-verification.json": "bfd8281afb4ee94f068ad8b61ed8809707606e3593df723b6f46ccfc8fa4413c"
+    "docs/evidence/print-delivery-verification.json": "bfd8281afb4ee94f068ad8b61ed8809707606e3593df723b6f46ccfc8fa4413c",
+    "docs/evidence/provider-contracts-focused-tests.log": "54624529040cf6d87d714ff3f41d7fca1cd06de819a424e91a765457e70a1af8",
+    "docs/evidence/provider-contracts-native-run.json": "82b6862fe308d223e60dce10d91fd39b11eb420af9ca9803d096b9e65c7eb19d",
+    "docs/evidence/provider-contracts-ux-restored.json": "d64122ce2f087e8c83c8bab5973d424f985f228ef11f9dd44506d25ef5e0f633",
+    "docs/evidence/provider-contracts-upgrade.json": "a2403d24a3f4a341b864767ccbeee143bba60f1df4afa7c60427dddac8ee36b5",
+    "docs/evidence/provider-contracts-acceptance-migrate.json": "52be7c673be6f611a1ebf1b834e83589d753b0fddebd71f4afbf18af3ea663f2",
+    "docs/evidence/provider-contracts-main-migrate.json": "8cc3aac722ad5f3e23eba4562498d4b51b8d2b8377efa3788ea3f7b1a6a9a515",
+    "docs/evidence/provider-contracts-final-state.json": "176401532521962c267204c1b6c21d175d378d6273101dec8fd962c92075efc4",
+    "docs/evidence/provider-contracts-verification.json": "4688de58b6a249abc3ac40b898bf6ac07c48e26ec1ddbb017c3c689927f91eec"
   },
   "database_mutations": false,
   "ui_replay": false,

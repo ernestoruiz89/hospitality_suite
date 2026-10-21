@@ -1,5 +1,9 @@
 # Siguiente fase del objetivo activo
 
+## Ampliación comprobada — 0.8.8
+
+[CONTRATOS_PROVEEDORES.md](CONTRATOS_PROVEEDORES.md) acredita S14-05/S14-07: preparación de adaptadores de referencia y dieciocho casos simulados, sin red ni proveedores reales. Canal solo normaliza una solicitud entrante; publicar disponibilidad continúa rechazado. **404 nativas y 210 JS aprobadas**, actualización y conservación verificadas. Quedan **cuatro I** del conjunto de tareas/Pages y reglas/estados secundarios, y **doce R** de completitud/entregables/fases: **dieciséis entradas abiertas**. Siguiente trabajo: contraste de tareas por rol y de fases, con instalación limpia/actualización/reversión final F26 todavía pendiente. OTA aplazada; objetivo activo.
+
 [TIEMPO_REAL_SITIOS_LOCALES.md](TIEMPO_REAL_SITIOS_LOCALES.md) resuelve el fallo de autenticación por nombres que WSL no resolvía. Transporte, aislamiento y recuperación explícita tras un corte largo comprobados; S04-18 conserva V. Continúan las **dieciocho entradas abiertas** del inventario: tareas/estados secundarios, contratos abstractos, fases/entrega y ensayo final F26. OTA aplazada.
 
 ## Ampliación comprobada - 0.8.7
@@ -7,7 +11,7 @@
 [IMPRESIONES_OPERATIVAS.md](IMPRESIONES_OPERATIVAS.md): nueve formatos operativos desde las Pages y dos entregables contrastados. **386 nativas (372 integración/catorce puras) y 210 JS aprobadas**, cinco roles, limpieza móvil, diez páginas PDF reales revisadas y veintidós eventos de navegador. Se conserva la cuenta concisa y se corrigen nombres, redondeo mostrado, acompañantes y acciones de modal/reinserción tardía. Los documentos de la prueba de impresión se preparan por API; no se atribuye su creación a la UI. S18-02/S18-03 quedan V; **200 V, seis I, cero P y doce R: dieciocho sin cierre**. Datos/archivos restaurados, ambos sitios 0.8.7. Continúan las tareas/estados secundarios, contratos y fases/entrega final. OTA aplazada y F26 pendiente.
 
 
-Actualizado el 21/10/2026. El alcance obligatorio sigue abierto: **200 V, seis I, cero P y doce R**, de las mismas 218 entradas y huella: **dieciocho sin cierre**. R significa contraste individual pendiente y no función ausente. Los recuentos no son un porcentaje de programación ni una fecha de terminación.
+Actualizado el 21/10/2026. El alcance obligatorio sigue abierto: **202 V, cuatro I, cero P y doce R**, de las mismas 218 entradas y huella: **dieciséis sin cierre**. R significa contraste individual pendiente y no función ausente. Los recuentos no son un porcentaje de programación ni una fecha de terminación.
 
 ## Ampliación comprobada — 0.8.6
 

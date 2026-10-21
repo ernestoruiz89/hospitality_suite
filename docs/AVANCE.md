@@ -1,5 +1,11 @@
 # Registro de implementación
 
+## Ampliación comprobada — 0.8.8
+
+[CONTRATOS_PROVEEDORES.md](CONTRATOS_PROVEEDORES.md): contratos y adaptadores ejecutables para el protocolo propio de referencia de pagos, correo/WhatsApp y cerraduras; normalización entrante de canales sin publicación. Transporte HTTPS desactivado por defecto, ámbito y respuestas validados, claves/huellas de idempotencia, errores sin cuerpo/secretos, firmas y vigencias explícitas. Sin RPC/jobs/hooks que los activen, proveedores comerciales ni movimientos externos. Se corrige el cierre de HTTPError detectado en el primer pase.
+
+**404 nativas (372 integración/32 unitarias) y 210 JS aprobadas**. Dieciocho casos nuevos usan un servicio ficticio y prohíben red; no se les atribuye operación de un proveedor real. S14-05/S14-07 quedan V para preparación/simulación; la sincronización OTA sigue aplazada por instrucción del usuario. **202 V, cuatro I, cero P y doce R: dieciséis sin cierre**. Aceptación restaurada 71/185 y 72/250; principal 72/1246/dos archivos/fecha 19/10 conservados. Ambos sitios migrados a 0.8.8, metadatos instalados contrastados, web recargada, 8089 detenido y núcleos limpios. No cambia frontend ni se genera PDF; el recorrido visual previo conserva su alcance histórico. Siguen tareas/estados secundarios y contraste/ensayo final de entrega.
+
 [TIEMPO_REAL_SITIOS_LOCALES.md](TIEMPO_REAL_SITIOS_LOCALES.md): corregida resolución WSL de ambos nombres usados por la autenticación nativa. Cinco casos del helper, cinco conexiones autenticadas con aislamiento/commit/rollback y recuperación de cambios; Recepción/Caja se actualizan por aviso y recuperan un corte largo mediante Actualizar. Herramientas y configuración local, sin cambios de reglas/esquema ni nueva batería general. Matriz sin nuevos cierres: 200 V, seis I y doce R. OTA aplazada; objetivo activo.
 
 [DISPONIBILIDAD_VISIBLE.md](DISPONIBILIDAD_VISIBLE.md): estados verde/rojo desplegados al consultar y tarjetas sin «en el intervalo» ni repetición de «Disponible». Diez pruebas dirigidas aprobadas y revisión real en escritorio/móvil sobre la compilación PEHNOLTE. La matriz mantiene 200 V, seis I y doce R; no se declara terminada la revisión general.
