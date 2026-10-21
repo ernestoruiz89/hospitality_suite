@@ -32,7 +32,7 @@
   };
   const oldButton=Desk.prototype.button;
   const originalRender=Desk.prototype.render;
-  Desk.prototype.render=function(){originalRender.call(this);this.root.find(".hs-sidebar-foot").prepend(`<div>${e(frappe.session.user)}</div>`);this.root.find(".hs-header-actions").append(this.button("logout",__("Cerrar sesión")));};
+  Desk.prototype.render=function(){originalRender.call(this);this.root.find(".hs-sidebar-foot").prepend(`<div>${e(frappe.session.user)}</div>`);this.root.find(".hs-header-actions").append(this.button("logout",__("Cerrar sesión")));this.connection();};
   Desk.prototype.action_logout=function(){frappe.app.logout();};
   Desk.prototype.invoiceLink=function(name){return name?`<a target="_blank" rel="noopener" href="/printview?doctype=Sales%20Invoice&name=${encodeURIComponent(name)}&format=${encodeURIComponent(this.data.print_formats?.invoice||"HS Factura")}">${e(name)}</a>`:"—";};
   Desk.prototype.button=function(action,...args){const permission={direct_sale:"finance",return_direct_sale:"approve",schedule_cleaning:"inspect",companions:"guest",portal_settings:"setup"}[action];if(action==="cleaning"&&this.data.cleaning.find(t=>t.name===args[1])?.status==="Inspection"&&!this.allowed("inspect"))return "";return permission&&!this.allowed(permission)?"":oldButton.call(this,action,...args);};

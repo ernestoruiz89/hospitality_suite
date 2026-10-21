@@ -1,0 +1,192 @@
+{
+  "assembled_at_utc": "2026-10-21T18:44:19.954575+00:00",
+  "version": "0.8.5",
+  "evidence_assembly_only": true,
+  "database_mutations": false,
+  "ui_replay": false,
+  "scope": "Shared page activity, one-shot transport failure/latency and contextual mobile status. Does not accept all secondary tasks.",
+  "javascript": {
+    "initial": 195,
+    "final": 196,
+    "desk": 193,
+    "portal": 3,
+    "new_cases": 5,
+    "failures": 0,
+    "skipped": 0
+  },
+  "native": {
+    "tests": 380,
+    "rerun_in_this_phase": false,
+    "revision": "beac44d",
+    "junit_sha256": "699836cd8af70e29367d6f893f76893dd915d1d3fe1a29dc03b80c497d9c156d"
+  },
+  "native_python_behavior_unchanged": true,
+  "native_versions": [
+    {
+      "site": "main",
+      "version": "0.8.5",
+      "listing_sha256": "9b93d7af9c8082856cbcc6d75e9ab47d55776099d7768e69233e4864438af4d9",
+      "migration_sha256": "37c6c30a7286e986e4f7487ecd4938d2e53065809aa62968ac51af486efee9d1"
+    },
+    {
+      "site": "acceptance",
+      "version": "0.8.5",
+      "listing_sha256": "9b93d7af9c8082856cbcc6d75e9ab47d55776099d7768e69233e4864438af4d9",
+      "migration_sha256": "1df001bc6a3999ef00651bbcbec571757f2d369c4b1d64b7471a7817c9c00cb9"
+    }
+  ],
+  "core": {
+    "frappe": {
+      "commit": "4515014c87ece6cb20ee91d2cfb121c5cbd1ff4a",
+      "clean": true
+    },
+    "erpnext": {
+      "commit": "5af6561f5aa48104559692fb4fd82f2580e8d338",
+      "clean": true
+    }
+  },
+  "statuses": {
+    "R": 14,
+    "I": 6,
+    "V": 198
+  },
+  "open_requirements": 20,
+  "all_requirements_completed": false,
+  "known_open_observations": [
+    "Clics enviados durante el cierre visual de diálogos no siempre abren la siguiente acción; esperar a que desaparezca la capa nativa permite continuar. No se acredita una causa completa de la incidencia histórica.",
+    "La reserva manual aún expone códigos y filtros técnicos en el autocompletado de categoría/habitación. Captura 298 es evidencia de limitación, no aceptación.",
+    "El mensaje genérico No hay pendientes aparece debajo de un borrador por completar; ajustar texto del estado vacío de reservas confirmadas."
+  ],
+  "protected_sites": {
+    "hospitality.localhost": {
+      "tables": 72,
+      "rows": 1246,
+      "private_files": 2
+    },
+    "hospitality-acceptance.localhost": {
+      "tables": 72,
+      "rows": 250,
+      "private_files": 0
+    }
+  },
+  "final_services": {
+    "8086": true,
+    "8089": false,
+    "9001": true,
+    "11001": true,
+    "13001": true
+  },
+  "source_sha256": {
+    "hospitality_suite/public/js/hospitality.js": "af5885121b07662f3483679571dcd84a8fdd4724b1e101bb753d6a6751b39998",
+    "hospitality_suite/public/js/hospitality_workflows.js": "bfa901711416bf89a85d1326bbfc8d6d4f32eea5b32666ebf69a7b2b977e1ac4",
+    "hospitality_suite/public/hospitality.bundle.css": "7be85f14f7f1be9e1bba31149c48cd7cdfd6c8259887c11bf2d3909c35020364",
+    "hospitality_suite/__init__.py": "9d7fc0f2926af5dc67957a7d1f6fe6f0235159d5bb4baf4579b9077012bd5712",
+    "tools/test_desk_transport.cjs": "f48a4fcd3052df2c79b9185f14251c2b56017d1bb6b6405f50cd9f0e9012540d",
+    "tools/test_countdown_ui.cjs": "13abb4c919638954b266c90c671d77bb96fc134dd34fc696a9ab9f7eb3b7c9d1",
+    "docs/ACTIVIDAD_Y_RECUPERACION_PAGES.md": "75de66165b82ce9ba32215d7fafb0563b2310bf92036223ddabe5573d8492821",
+    "docs/ESTADO_Y_EVIDENCIAS_ENTREGA.md": "32895300fac696c539ce7d1d7bb6026d76e97cb7b3ef8006d1698b461b68639a"
+  },
+  "references": {
+    "page-activity-browser.json": "cf251ab36a27f075e39dafc12a02b346792b293b0cbcb59ba2a6be7c6a45956c",
+    "page-activity-final-browser.json": "d3038de17df288a3fc1d95ae7f15fe667628554a0ee6a739d5aab6b319cdbc86",
+    "page-activity-items-ui.json": "5a5b90e82e52e7839526887067e8e34d221d44ed04f1083d1bc0d58a3feca608",
+    "page-activity-final-items-ui.json": "8f74617356319994e18cd9b28f7d17c359f763d39da8e1a2edf0acf884b069d8",
+    "page-activity-native-title-before.json": "955cf66ef82a113b45faff44a8e677a31448e5b14176522100d1b5c65caed4d4",
+    "page-activity-first-ux-restored.json": "d64122ce2f087e8c83c8bab5973d424f985f228ef11f9dd44506d25ef5e0f633",
+    "page-activity-ux-restored.json": "d64122ce2f087e8c83c8bab5973d424f985f228ef11f9dd44506d25ef5e0f633",
+    "page-activity-upgrade.json": "a2403d24a3f4a341b864767ccbeee143bba60f1df4afa7c60427dddac8ee36b5",
+    "page-activity-final-state.json": "176401532521962c267204c1b6c21d175d378d6273101dec8fd962c92075efc4",
+    "page-activity-initial-js-tests.log": "c58079529a1f25e610e9e3fe702072254c369b2aaad95153dc314986ff4b6942",
+    "page-activity-js-tests.log": "c23e0e05b7e6c9fcfe2fb8e55570c50a38505fba0be789e39ccd62b007f720bd",
+    "page-activity-initial-build.log": "f34ef5a512ba6c4c02a828ada9c8b0d6478023182b8643d5d23ed328b47af001",
+    "page-activity-build.log": "54c84f299b8e3960c9e3391fc4f590925f046f017d5ac6eddc3d06198a98f4cc",
+    "page-activity-wire-invariants.json": "822a023cc7c57284da8fdd56843a19adcd733e20bec98b02be7b471bdd814a1e",
+    "page-activity-language-installed.json": "e86980d66b8ea08a24d6afc4acad1f3321549230ddfda972910ef442a1b046f1"
+  },
+  "screenshots": [
+    {
+      "path": "docs/evidence/294-actualizacion-en-proceso.jpg",
+      "sha256": "477ccbce8e4f69077213c5edf65f4bf33ed235417253878628d1636d3ec9c59c",
+      "captured_bytes_unchanged": true,
+      "scope": "Initial YN2QKLHG batch"
+    },
+    {
+      "path": "docs/evidence/295-arqueo-procesando.jpg",
+      "sha256": "9e2659a05858fd944de2c4012ab2331a48a7b0bd77c02786acbbb4dc5ff567e0",
+      "captured_bytes_unchanged": true,
+      "scope": "Initial YN2QKLHG batch"
+    },
+    {
+      "path": "docs/evidence/296-arqueo-cerrado-acciones-disponibles.jpg",
+      "sha256": "85c65a8e87e21b96b62240c848fcc59d3f5576542df1e218f9fae9c1d34fdd6a",
+      "captured_bytes_unchanged": true,
+      "scope": "Initial YN2QKLHG batch"
+    },
+    {
+      "path": "docs/evidence/297-salida-despues-del-cierre.jpg",
+      "sha256": "8efbe677675860c85dd3f1c1a06c0b0fb68fba54a5a586668d7141e813c8120b",
+      "captured_bytes_unchanged": true,
+      "scope": "Initial YN2QKLHG batch"
+    },
+    {
+      "path": "docs/evidence/298-autocompletado-categoria-limitacion.jpg",
+      "sha256": "cfe0b2c86c971b22b9c7305c2a513f8f90c34d7d7e0f707af22c0ee8393a8032",
+      "captured_bytes_unchanged": true,
+      "scope": "Known open selector issue"
+    },
+    {
+      "path": "docs/evidence/299-reserva-procesando-movil.jpg",
+      "sha256": "d96277756ed5ec45e7eb5f1c793bf8d2f36f8cd28db8d240389beab719c19ec1",
+      "captured_bytes_unchanged": true,
+      "scope": "Initial YN2QKLHG batch"
+    },
+    {
+      "path": "docs/evidence/300-reserva-guardada-acciones-movil.jpg",
+      "sha256": "1f16e046a47d7cc69baa6cbd816aee8798be006661c43973c22693ce0480ff50",
+      "captured_bytes_unchanged": true,
+      "scope": "Initial YN2QKLHG batch"
+    },
+    {
+      "path": "docs/evidence/301-detalle-preparando-movil.jpg",
+      "sha256": "23cd5ca7f561fb77a0f6da4c88ac1fa854a38314bdf8cbc19f4d5856bb59c6bc",
+      "captured_bytes_unchanged": true,
+      "scope": "Intermediate mobile status outside viewport; corrected in 305"
+    },
+    {
+      "path": "docs/evidence/302-detalle-reserva-preparado.jpg",
+      "sha256": "7ec556061d7bc94609d3dbb55630fc159ffdfabd963981e47dd28fe5de68ad89",
+      "captured_bytes_unchanged": true,
+      "scope": "Initial YN2QKLHG batch"
+    },
+    {
+      "path": "docs/evidence/303-actualizacion-error-recuperable.jpg",
+      "sha256": "9fbfdc8bbc65e1fc5ed8f1a95bdb52408598dfd71f4838a0919a46c02c8c262e",
+      "captured_bytes_unchanged": true,
+      "scope": "Initial YN2QKLHG batch"
+    },
+    {
+      "path": "docs/evidence/304-actualizacion-recuperada.jpg",
+      "sha256": "28a47b0ad8b69dd417a8a51842b1c0fb987a33f0bb1b74cdc68eec41d54e05bd",
+      "captured_bytes_unchanged": true,
+      "scope": "Initial YN2QKLHG batch"
+    },
+    {
+      "path": "docs/evidence/305-preparacion-junto-al-boton-movil.jpg",
+      "sha256": "7b5cf41a8d6828363ff1923a6fbbe281d3ab38553f9bf8b348a92015d506b542",
+      "captured_bytes_unchanged": true,
+      "scope": "Final ITJVEKQP regression"
+    },
+    {
+      "path": "docs/evidence/306-borrador-retomado-movil.jpg",
+      "sha256": "c8ed07272141556481128bc8594626d7157574d0aadc24444ffd9f6c6037455a",
+      "captured_bytes_unchanged": true,
+      "scope": "Final ITJVEKQP regression"
+    }
+  ],
+  "compiled_javascript": {
+    "name": "hospitality.bundle.ITJVEKQP.js",
+    "sha256": "31ae5aec3084c96a89544920debc8867dea3be63f4a1d9a0305b8be25b16ee04"
+  },
+  "external_providers_activated": false,
+  "final_deployment_rollback_proven": false
+}

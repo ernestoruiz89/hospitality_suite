@@ -1085,7 +1085,8 @@
         "hospitality_suite/public/js/hospitality_catalog.js",
         "hospitality_suite/public/js/hospitality_board.js",
         "hospitality_suite/public/js/hospitality_availability.js",
-        "hospitality_suite/public/hospitality.bundle.css"
+        "hospitality_suite/public/hospitality.bundle.css",
+        "hospitality_suite/public/js/hospitality_workflows.js"
       ],
       "evidence": [
         "docs/AUDITORIA_PAGES_HABITACIONES.md",
@@ -1107,9 +1108,13 @@
         "docs/DISPONIBILIDAD_VISUAL_Y_LIMITES.md",
         "docs/evidence/action-context-js-tests.log",
         "docs/evidence/action-context-browser.json",
-        "docs/evidence/action-context-items-ui.json"
+        "docs/evidence/action-context-items-ui.json",
+        "docs/ACTIVIDAD_Y_RECUPERACION_PAGES.md",
+        "docs/evidence/page-activity-browser.json",
+        "docs/evidence/page-activity-final-browser.json",
+        "docs/evidence/page-activity-js-tests.log"
       ],
-      "remaining": "0.8.3 acredita validación local compartida, foco/ARIA y debounce; 0.8.4 añade límites explícitos de cantidad/personas antes del parseo, texto conservado y checkpoint sin consultas inválidas. Contrastar las demás reglas específicas y estados vacío/carga/error/éxito/doble envío de las vistas secundarias. Dos arqueos y salidas completados no resuelven por sí solos la incidencia histórica; se conservan clic durante refresco y nombre accesible de confirmación tras varios diálogos en DISPONIBILIDAD_VISUAL_Y_LIMITES.md."
+      "remaining": "0.8.3/0.8.4 acreditan validación compartida y cantidad/personas; 0.8.5 acredita actividad/carga/guardado/preparación, reintento y aviso contextual móvil, con condiciones sintéticas explícitas. Completar demás reglas por campo/estados de vistas secundarias, sustituir el autocompletado técnico de categoría/habitación y precisar el vacío de reservas confirmadas junto a borradores. Los clics durante cierre visual nativo conservan observación; no se afirma una causa completa. ACTIVIDAD_Y_RECUPERACION_PAGES.md delimita los dos escenarios y la regresión final."
     },
     {
       "id": "S04-17",
@@ -4702,10 +4707,21 @@
       "line": 281,
       "kind": "enumerated",
       "requirement": "- Evidencias de las pruebas realmente ejecutadas y capturas de las páginas cuando el entorno lo permita.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "docs/ESTADO_Y_EVIDENCIAS_ENTREGA.md",
+        "tools/verify_delivery_status.py"
+      ],
+      "evidence": [
+        "docs/ACTIVIDAD_Y_RECUPERACION_PAGES.md",
+        "docs/evidence/page-activity-js-tests.log",
+        "docs/evidence/page-activity-browser.json",
+        "docs/evidence/page-activity-final-browser.json",
+        "docs/evidence/keyboard-review-native-tests.xml",
+        "docs/evidence/keyboard-review-native-tests.log",
+        "docs/evidence/305-preparacion-junto-al-boton-movil.jpg"
+      ],
+      "remaining": ""
     },
     {
       "id": "S18-12",
@@ -4714,10 +4730,21 @@
       "line": 282,
       "kind": "enumerated",
       "requirement": "- Lista diferenciada de funciones completadas, limitaciones verificadas e integraciones externas pendientes de credenciales.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "docs/ESTADO_Y_EVIDENCIAS_ENTREGA.md",
+        "tools/verify_delivery_status.py"
+      ],
+      "evidence": [
+        "docs/ACTIVIDAD_Y_RECUPERACION_PAGES.md",
+        "docs/evidence/page-activity-js-tests.log",
+        "docs/evidence/page-activity-browser.json",
+        "docs/evidence/page-activity-final-browser.json",
+        "docs/evidence/keyboard-review-native-tests.xml",
+        "docs/evidence/keyboard-review-native-tests.log",
+        "docs/evidence/305-preparacion-junto-al-boton-movil.jpg"
+      ],
+      "remaining": ""
     },
     {
       "id": "S19-01",

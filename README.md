@@ -2,9 +2,11 @@
 
 PMS nativo para modalidades Hotel, Por tiempo y Hotel y por tiempo. Recepción, caja, limpieza y gerencia trabajan desde once Pages de Desk en español; la contabilidad y el inventario permanecen en ERPNext.
 
-Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. App 0.8.4 con disponibilidad verde/roja y límites locales de consulta; el objetivo completo sigue activo. Otras versiones no están acreditadas.
+Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. App 0.8.5 con estados de actividad, recuperación y disponibilidad visual; el objetivo completo sigue activo. Otras versiones no están acreditadas.
 
 El desarrollo continúa: [matriz de requisitos](docs/REQUISITOS.md), [auditoría punto por punto](docs/AUDITORIA_ESPECIFICACION.md), [registro de avance](docs/AVANCE.md) y [arquitectura](docs/ARQUITECTURA.md). No se declara listo para producción mientras existan pendientes obligatorios.
+
+[Actividad y recuperación](docs/ACTIVIDAD_Y_RECUPERACION_PAGES.md), 0.8.5: aviso de preparación junto al botón en móvil, estados de actualización/guardado y controles bloqueados hasta terminar. Error sintético recuperado sin repetir reserva. **196 JS aprobadas**, 21 eventos iniciales y tres de regresión final tras restaurar; los 380 casos nativos de 0.8.2 siguen como antecedente. [Estado de entrega](docs/ESTADO_Y_EVIDENCIAS_ENTREGA.md) acredita evidencias/lista S18-11/S18-12: **198 V, 6 I y 14 R; veinte entradas sin cierre**. Selector manual con códigos, precisión del vacío de reservas, tareas secundarias y ensayo final siguen pendientes. OTA aplazada.
 
 [Disponibilidad visual y límites](docs/DISPONIBILIDAD_VISUAL_Y_LIMITES.md), 0.8.4: tarjetas verdes disponibles y rojas sin disponibilidad, con estado escrito y motivo. Pulsar una disponible conserva habitación/fechas; prueba con una reserva real ficticia y móvil sin desbordamiento. Cantidad/personas inválidas se explican junto al campo antes del parseo y la consulta. **191 JS aprobadas**; la batería nativa de 380 casos de 0.8.2 se conserva como antecedente. S04-16 mantiene revisión del conjunto y dos observaciones de contexto de acciones. **22 entradas sin cierre**, OTA aplazada y F26 pendiente.
 

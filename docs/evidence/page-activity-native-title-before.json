@@ -1,0 +1,20 @@
+{
+  "version": "0.8.4",
+  "site": "hospitality.localhost:8086",
+  "scope": "Read-only DOM observation: native confirmation already has one valid visible title reference. No product naming fix is asserted.",
+  "dialogs": [
+    {
+      "labelledby": "hs-dialog-title-2",
+      "matchingIds": [
+        {
+          "tag": "H4",
+          "text": "Confirmar",
+          "visible": true
+        }
+      ],
+      "title": "Confirmar",
+      "titleId": "hs-dialog-title-2",
+      "visible": true
+    }
+  ]
+}

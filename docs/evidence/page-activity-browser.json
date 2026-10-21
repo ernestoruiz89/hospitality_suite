@@ -1,0 +1,991 @@
+{
+  "version": "0.8.5",
+  "site": "hospitality-acceptance.localhost:8089",
+  "roles": [
+    "HS Cashier",
+    "HS Receptionist"
+  ],
+  "synthetic_transport": {
+    "delay_seconds": 8,
+    "one_shot_modes": [
+      "slow-bootstrap",
+      "slow-booking",
+      "failed-bootstrap"
+    ],
+    "production_core_modified": false
+  },
+  "viewport_override_reset": true,
+  "scope": "Shared page activity through load/mutation/action preparation and recovery; not acceptance of all secondary tasks. This is the initial batch; contextual mobile feedback is verified in page-activity-final-browser.json after a verified restore.",
+  "known_open_observations": [
+    "Clics enviados durante el cierre visual de diálogos no siempre abren la siguiente acción; esperar a que desaparezca la capa nativa permite continuar. No se acredita una causa completa de la incidencia histórica.",
+    "La reserva manual aún expone códigos y filtros técnicos en el autocompletado de categoría/habitación. Captura 298 es evidencia de limitación, no aceptación."
+  ],
+  "events": [
+    {
+      "step": "Caja cargada con la nueva compilación antes de probar latencia.",
+      "snapshot": "- generic: Hospitality Suite\n- button \"Sidebar Menu\":\n- generic \"Buscar\":\n  - generic: Buscar\n- generic \"Notificación\":\n  - generic: Notificación\n- link \"Inicio\":\n  - /url: /desk/hospitality-suite/hospitality-home\n  - generic: Inicio\n- link \"Recepción\":\n  - /url: /desk/hospitality-suite/hospitality-reception\n  - generic: Recepción\n- link \"Reservas\":\n  - /url: /desk/hospitality-suite/hospitality-reservations\n  - generic: Reservas\n- link \"Estancias\":\n  - /url: /desk/hospitality-suite/hospitality-stays\n  - generic: Estancias\n- link \"Caja\":\n  - /url: /desk/hospitality-suite/hospitality-cashier\n  - generic: Caja\n- link \"Limpieza\":\n  - /url: /desk/hospitality-suite/hospitality-housekeeping\n  - generic: Limpieza\n- link \"Mantenimiento\":\n  - /url: /desk/hospitality-suite/hospitality-maintenance\n  - generic: Mantenimiento\n- link \"Consumos e inventario\":\n  - /url: /desk/hospitality-suite/hospitality-services\n  - generic: Consumos e inventario\n- link \"Clientes y huéspedes\":\n  - /url: /desk/hospitality-suite/hospitality-guests\n  - generic: Clientes y huéspedes\n- generic \"Menú de usuario\":\n  - generic \"Cashier\":\n    - generic \"Cashier\": C\n- button \"Menú de navegación\":\n- navigation \"Breadcrumb\":\n  - list:\n    - generic \"Caja\":\n      - generic: Caja\n- button \"Buscar\":\n- complementary \"Navegación de alojamiento\":\n  - generic: H\n  - strong: Hospitality\n  - navigation:\n    - link \"Inicio\":\n      - /url: /app/hospitality-home\n    - link \"Recepción\":\n      - /url: /app/hospitality-reception\n    - link \"Reservas\":\n      - /url: /app/hospitality-reservations\n    - link \"Estancias\":\n      - /url: /app/hospitality-stays\n    - link \"Caja\":\n      - /url: /app/hospitality-cashier\n    - link \"Limpieza\":\n      - /url: /app/hospitality-housekeeping\n    - link \"Mantenimiento\":\n      - /url: /app/hospitality-maintenance\n    - link \"Consumos e inventario\":\n      - /url: /app/hospitality-services\n    - link \"Clientes y huéspedes\":\n      - /url: /app/hospitality-guests\n- main:\n  - heading \"Caja\" [level=1]\n  - paragraph:\n    - text: \"Fecha operativa:\"\n    - strong: 2026-10-19\n  - generic: Establecimiento\n  - combobox \"Establecimiento\":\n    - option \"Motel Luna Demo\"\n    - option \"Hotel Jardín Demo\" [selected]\n  - button \"Actualizar\"\n  - status: Sin tiempo real · pulse Actualizar\n  - button \"Cerrar sesión\"\n  - heading \"Turnos y cobros\" [level=2]\n  - paragraph: Anticipos, ingresos y garantías conservan su origen contable.\n  - button \"Abrir turno\"\n  - button \"Cobrar\"\n  - button \"Retirar / entregar efectivo\"\n  - button \"Registrar egreso\"\n  - button \"Pagar proveedor\"\n  - button \"Registrar liquidación\"\n  - text: ✓\n  - heading \"No hay pendientes en esta vista.\" [level=3]\n  - paragraph: La información se actualiza al registrar movimientos.\n  - heading \"Movimientos recientes\" [level=2]\n  - text: ✓\n  - heading \"No hay pendientes en esta vista.\" [level=3]\n  - paragraph: La información se actualiza al registrar movimientos.\n  - generic: \"Hora de referencia del servidor: 2026-10-21 12:22:16.399109 · NIO\"\n- contentinfo",
+      "observed": {
+        "actions": [
+          {
+            "action": "reload",
+            "disabled": false,
+            "text": "Actualizar"
+          },
+          {
+            "action": "logout",
+            "disabled": false,
+            "text": "Cerrar sesión"
+          },
+          {
+            "action": "open_shift",
+            "disabled": false,
+            "text": "Abrir turno"
+          },
+          {
+            "action": "payment",
+            "disabled": false,
+            "text": "Cobrar"
+          },
+          {
+            "action": "withdrawal",
+            "disabled": false,
+            "text": "Retirar / entregar efectivo"
+          },
+          {
+            "action": "cash_expense",
+            "disabled": false,
+            "text": "Registrar egreso"
+          },
+          {
+            "action": "supplier_payment",
+            "disabled": false,
+            "text": "Pagar proveedor"
+          },
+          {
+            "action": "settlement",
+            "disabled": false,
+            "text": "Registrar liquidación"
+          }
+        ],
+        "bundle": "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.YN2QKLHG.js",
+        "dialogs": [],
+        "heading": "Caja",
+        "pageBusy": "false",
+        "propertyDisabled": false,
+        "status": "Sin tiempo real · pulse Actualizar",
+        "statusKind": "ready"
+      }
+    },
+    {
+      "step": "Actualización lenta sintética: estado visible y todas las acciones deshabilitadas.",
+      "snapshot": "- generic: Hospitality Suite\n- button \"Sidebar Menu\":\n- generic \"Buscar\":\n  - generic: Buscar\n- generic \"Notificación\":\n  - generic: Notificación\n- link \"Inicio\":\n  - /url: /desk/hospitality-suite/hospitality-home\n  - generic: Inicio\n- link \"Recepción\":\n  - /url: /desk/hospitality-suite/hospitality-reception\n  - generic: Recepción\n- link \"Reservas\":\n  - /url: /desk/hospitality-suite/hospitality-reservations\n  - generic: Reservas\n- link \"Estancias\":\n  - /url: /desk/hospitality-suite/hospitality-stays\n  - generic: Estancias\n- link \"Caja\":\n  - /url: /desk/hospitality-suite/hospitality-cashier\n  - generic: Caja\n- link \"Limpieza\":\n  - /url: /desk/hospitality-suite/hospitality-housekeeping\n  - generic: Limpieza\n- link \"Mantenimiento\":\n  - /url: /desk/hospitality-suite/hospitality-maintenance\n  - generic: Mantenimiento\n- link \"Consumos e inventario\":\n  - /url: /desk/hospitality-suite/hospitality-services\n  - generic: Consumos e inventario\n- link \"Clientes y huéspedes\":\n  - /url: /desk/hospitality-suite/hospitality-guests\n  - generic: Clientes y huéspedes\n- generic \"Menú de usuario\":\n  - generic \"Cashier\":\n    - generic \"Cashier\": C\n- button \"Menú de navegación\":\n- navigation \"Breadcrumb\":\n  - list:\n    - generic \"Caja\":\n      - generic: Caja\n- button \"Buscar\":\n- complementary \"Navegación de alojamiento\":\n  - generic: H\n  - strong: Hospitality\n  - navigation:\n    - link \"Inicio\":\n      - /url: /app/hospitality-home\n    - link \"Recepción\":\n      - /url: /app/hospitality-reception\n    - link \"Reservas\":\n      - /url: /app/hospitality-reservations\n    - link \"Estancias\":\n      - /url: /app/hospitality-stays\n    - link \"Caja\":\n      - /url: /app/hospitality-cashier\n    - link \"Limpieza\":\n      - /url: /app/hospitality-housekeeping\n    - link \"Mantenimiento\":\n      - /url: /app/hospitality-maintenance\n    - link \"Consumos e inventario\":\n      - /url: /app/hospitality-services\n    - link \"Clientes y huéspedes\":\n      - /url: /app/hospitality-guests\n- main:\n  - heading \"Caja\" [level=1]\n  - paragraph:\n    - text: \"Fecha operativa:\"\n    - strong: 2026-10-19\n  - generic: Establecimiento\n  - combobox \"Establecimiento\" [disabled]:\n    - option \"Motel Luna Demo\"\n    - option \"Hotel Jardín Demo\" [selected]\n  - button \"Actualizar\" [disabled]\n  - status: Actualizando información… Espere un momento.\n  - button \"Cerrar sesión\" [disabled]\n  - heading \"Turnos y cobros\" [level=2]\n  - paragraph: Anticipos, ingresos y garantías conservan su origen contable.\n  - button \"Abrir turno\" [disabled]\n  - button \"Cobrar\" [disabled]\n  - button \"Retirar / entregar efectivo\" [disabled]\n  - button \"Registrar egreso\" [disabled]\n  - button \"Pagar proveedor\" [disabled]\n  - button \"Registrar liquidación\" [disabled]\n  - text: ✓\n  - heading \"No hay pendientes en esta vista.\" [level=3]\n  - paragraph: La información se actualiza al registrar movimientos.\n  - heading \"Movimientos recientes\" [level=2]\n  - text: ✓\n  - heading \"No hay pendientes en esta vista.\" [level=3]\n  - paragraph: La información se actualiza al registrar movimientos.\n  - generic: \"Hora de referencia del servidor: 2026-10-21 12:22:16.399109 · NIO\"\n- contentinfo",
+      "observed": {
+        "actions": [
+          {
+            "action": "reload",
+            "disabled": true,
+            "text": "Actualizar"
+          },
+          {
+            "action": "logout",
+            "disabled": true,
+            "text": "Cerrar sesión"
+          },
+          {
+            "action": "open_shift",
+            "disabled": true,
+            "text": "Abrir turno"
+          },
+          {
+            "action": "payment",
+            "disabled": true,
+            "text": "Cobrar"
+          },
+          {
+            "action": "withdrawal",
+            "disabled": true,
+            "text": "Retirar / entregar efectivo"
+          },
+          {
+            "action": "cash_expense",
+            "disabled": true,
+            "text": "Registrar egreso"
+          },
+          {
+            "action": "supplier_payment",
+            "disabled": true,
+            "text": "Pagar proveedor"
+          },
+          {
+            "action": "settlement",
+            "disabled": true,
+            "text": "Registrar liquidación"
+          }
+        ],
+        "bundle": "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.YN2QKLHG.js",
+        "dialogs": [],
+        "heading": "Caja",
+        "pageBusy": "true",
+        "propertyDisabled": true,
+        "status": "Actualizando información… Espere un momento.",
+        "statusKind": "busy"
+      },
+      "screenshot": "294-actualizacion-en-proceso.jpg"
+    },
+    {
+      "step": "La actualización termina y las acciones quedan habilitadas sin recargar la página.",
+      "snapshot": "- generic: Hospitality Suite\n- button \"Sidebar Menu\":\n- generic \"Buscar\":\n  - generic: Buscar\n- generic \"Notificación\":\n  - generic: Notificación\n- link \"Inicio\":\n  - /url: /desk/hospitality-suite/hospitality-home\n  - generic: Inicio\n- link \"Recepción\":\n  - /url: /desk/hospitality-suite/hospitality-reception\n  - generic: Recepción\n- link \"Reservas\":\n  - /url: /desk/hospitality-suite/hospitality-reservations\n  - generic: Reservas\n- link \"Estancias\":\n  - /url: /desk/hospitality-suite/hospitality-stays\n  - generic: Estancias\n- link \"Caja\":\n  - /url: /desk/hospitality-suite/hospitality-cashier\n  - generic: Caja\n- link \"Limpieza\":\n  - /url: /desk/hospitality-suite/hospitality-housekeeping\n  - generic: Limpieza\n- link \"Mantenimiento\":\n  - /url: /desk/hospitality-suite/hospitality-maintenance\n  - generic: Mantenimiento\n- link \"Consumos e inventario\":\n  - /url: /desk/hospitality-suite/hospitality-services\n  - generic: Consumos e inventario\n- link \"Clientes y huéspedes\":\n  - /url: /desk/hospitality-suite/hospitality-guests\n  - generic: Clientes y huéspedes\n- generic \"Menú de usuario\":\n  - generic \"Cashier\":\n    - generic \"Cashier\": C\n- button \"Menú de navegación\":\n- navigation \"Breadcrumb\":\n  - list:\n    - generic \"Caja\":\n      - generic: Caja\n- button \"Buscar\":\n- complementary \"Navegación de alojamiento\":\n  - generic: H\n  - strong: Hospitality\n  - navigation:\n    - link \"Inicio\":\n      - /url: /app/hospitality-home\n    - link \"Recepción\":\n      - /url: /app/hospitality-reception\n    - link \"Reservas\":\n      - /url: /app/hospitality-reservations\n    - link \"Estancias\":\n      - /url: /app/hospitality-stays\n    - link \"Caja\":\n      - /url: /app/hospitality-cashier\n    - link \"Limpieza\":\n      - /url: /app/hospitality-housekeeping\n    - link \"Mantenimiento\":\n      - /url: /app/hospitality-maintenance\n    - link \"Consumos e inventario\":\n      - /url: /app/hospitality-services\n    - link \"Clientes y huéspedes\":\n      - /url: /app/hospitality-guests\n- main:\n  - heading \"Caja\" [level=1]\n  - paragraph:\n    - text: \"Fecha operativa:\"\n    - strong: 2026-10-19\n  - generic: Establecimiento\n  - combobox \"Establecimiento\":\n    - option \"Motel Luna Demo\"\n    - option \"Hotel Jardín Demo\" [selected]\n  - button \"Actualizar\"\n  - status: Sin tiempo real · pulse Actualizar\n  - button \"Cerrar sesión\"\n  - heading \"Turnos y cobros\" [level=2]\n  - paragraph: Anticipos, ingresos y garantías conservan su origen contable.\n  - button \"Abrir turno\"\n  - button \"Cobrar\"\n  - button \"Retirar / entregar efectivo\"\n  - button \"Registrar egreso\"\n  - button \"Pagar proveedor\"\n  - button \"Registrar liquidación\"\n  - text: ✓\n  - heading \"No hay pendientes en esta vista.\" [level=3]\n  - paragraph: La información se actualiza al registrar movimientos.\n  - heading \"Movimientos recientes\" [level=2]\n  - text: ✓\n  - heading \"No hay pendientes en esta vista.\" [level=3]\n  - paragraph: La información se actualiza al registrar movimientos.\n  - generic: \"Hora de referencia del servidor: 2026-10-21 12:22:38.898005 · NIO\"\n- contentinfo",
+      "observed": {
+        "actions": [
+          {
+            "action": "reload",
+            "disabled": false,
+            "text": "Actualizar"
+          },
+          {
+            "action": "logout",
+            "disabled": false,
+            "text": "Cerrar sesión"
+          },
+          {
+            "action": "open_shift",
+            "disabled": false,
+            "text": "Abrir turno"
+          },
+          {
+            "action": "payment",
+            "disabled": false,
+            "text": "Cobrar"
+          },
+          {
+            "action": "withdrawal",
+            "disabled": false,
+            "text": "Retirar / entregar efectivo"
+          },
+          {
+            "action": "cash_expense",
+            "disabled": false,
+            "text": "Registrar egreso"
+          },
+          {
+            "action": "supplier_payment",
+            "disabled": false,
+            "text": "Pagar proveedor"
+          },
+          {
+            "action": "settlement",
+            "disabled": false,
+            "text": "Registrar liquidación"
+          }
+        ],
+        "bundle": "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.YN2QKLHG.js",
+        "dialogs": [],
+        "heading": "Caja",
+        "pageBusy": "false",
+        "propertyDisabled": false,
+        "status": "Sin tiempo real · pulse Actualizar",
+        "statusKind": "ready"
+      }
+    },
+    {
+      "step": "Arqueo enviado: la operación y su actualización mantienen los controles deshabilitados.",
+      "snapshot": "- generic: Hospitality Suite\n- button \"Sidebar Menu\":\n- generic \"Buscar\":\n  - generic: Buscar\n- generic \"Notificación\":\n  - generic: Notificación\n- link \"Inicio\":\n  - /url: /desk/hospitality-suite/hospitality-home\n  - generic: Inicio\n- link \"Recepción\":\n  - /url: /desk/hospitality-suite/hospitality-reception\n  - generic: Recepción\n- link \"Reservas\":\n  - /url: /desk/hospitality-suite/hospitality-reservations\n  - generic: Reservas\n- link \"Estancias\":\n  - /url: /desk/hospitality-suite/hospitality-stays\n  - generic: Estancias\n- link \"Caja\":\n  - /url: /desk/hospitality-suite/hospitality-cashier\n  - generic: Caja\n- link \"Limpieza\":\n  - /url: /desk/hospitality-suite/hospitality-housekeeping\n  - generic: Limpieza\n- link \"Mantenimiento\":\n  - /url: /desk/hospitality-suite/hospitality-maintenance\n  - generic: Mantenimiento\n- link \"Consumos e inventario\":\n  - /url: /desk/hospitality-suite/hospitality-services\n  - generic: Consumos e inventario\n- link \"Clientes y huéspedes\":\n  - /url: /desk/hospitality-suite/hospitality-guests\n  - generic: Clientes y huéspedes\n- generic \"Menú de usuario\":\n  - generic \"Cashier\":\n    - generic \"Cashier\": C\n- button \"Menú de navegación\":\n- navigation \"Breadcrumb\":\n  - list:\n    - generic \"Caja\":\n      - generic: Caja\n- button \"Buscar\":\n- complementary \"Navegación de alojamiento\":\n  - generic: H\n  - strong: Hospitality\n  - navigation:\n    - link \"Inicio\":\n      - /url: /app/hospitality-home\n    - link \"Recepción\":\n      - /url: /app/hospitality-reception\n    - link \"Reservas\":\n      - /url: /app/hospitality-reservations\n    - link \"Estancias\":\n      - /url: /app/hospitality-stays\n    - link \"Caja\":\n      - /url: /app/hospitality-cashier\n    - link \"Limpieza\":\n      - /url: /app/hospitality-housekeeping\n    - link \"Mantenimiento\":\n      - /url: /app/hospitality-maintenance\n    - link \"Consumos e inventario\":\n      - /url: /app/hospitality-services\n    - link \"Clientes y huéspedes\":\n      - /url: /app/hospitality-guests\n- main:\n  - heading \"Caja\" [level=1]\n  - paragraph:\n    - text: \"Fecha operativa:\"\n    - strong: 2026-10-19\n  - generic: Establecimiento\n  - combobox \"Establecimiento\" [disabled]:\n    - option \"Motel Luna Demo\"\n    - option \"Hotel Jardín Demo\" [selected]\n  - button \"Actualizar\" [disabled]\n  - status: Guardando operación… Espere la confirmación.\n  - button \"Cerrar sesión\" [disabled]\n  - heading \"Turnos y cobros\" [level=2]\n  - paragraph: Anticipos, ingresos y garantías conservan su origen contable.\n  - button \"Abrir turno\" [disabled]\n  - button \"Cobrar\" [disabled]\n  - button \"Retirar / entregar efectivo\" [disabled]\n  - button \"Registrar egreso\" [disabled]\n  - button \"Pagar proveedor\" [disabled]\n  - button \"Registrar liquidación\" [disabled]\n  - table:\n    - rowgroup:\n      - row \"Responsable Apertura Moneda Efectivo esperado Estado Acciones\":\n        - columnheader \"Responsable\"\n        - columnheader \"Apertura\"\n        - columnheader \"Moneda\"\n        - columnheader \"Efectivo esperado\"\n        - columnheader \"Estado\"\n        - columnheader \"Acciones\"\n    - rowgroup:\n      - row \"cashier@hospitality.example.invalid 21/10/2026 12:22 NIO C$ 0.00 Abierto Arqueo y cierre\":\n        - cell \"cashier@hospitality.example.invalid\"\n        - cell \"21/10/2026 12:22\"\n        - cell \"NIO\"\n        - cell \"C$ 0.00\"\n        - cell \"Abierto\":\n          - generic: Abierto\n        - cell \"Arqueo y cierre\":\n          - button \"Arqueo y cierre\" [disabled]\n  - heading \"Movimientos recientes\" [level=2]\n  - text: ✓\n  - heading \"No hay pendientes en esta vista.\" [level=3]\n  - paragraph: La información se actualiza al registrar movimientos.\n  - generic: \"Hora de referencia del servidor: 2026-10-21 12:22:57.238947 · NIO\"\n- contentinfo\n- text: \"* *\"\n- status:\n  - generic: Operación confirmada\n  - button \"Cerrar\":\n- dialog \"Arqueo por denominaciones\":\n  - heading \"Arqueo por denominaciones\" [level=4]\n  - button \"Cerrar formulario\":\n  - status: Procesando… Espere la respuesta antes de volver a confirmar.\n  - generic: currency_0\n  - generic: Arqueo NIO · esperado 0.00\n  - checkbox \"Seleccionar todas las filas\"\n  - generic \"Denominación\":\n    - generic: Denominación *\n  - generic \"Cantidad\":\n    - generic: Cantidad *\n  - checkbox \"Seleccionar fila 1\"\n  - 'button \"Editar Denominación, fila 1. Valor: 1\"':\n    - generic: \"1\"\n  - 'button \"Editar Cantidad, fila 1. Valor: 0\"':\n    - generic: \"0\"\n  - button \"Añadir fila\":\n    - generic: Añadir fila\n  - generic: Motivo de diferencias\n  - textbox \"Motivo de diferencias\":\n    - /placeholder: \"\"\n  - generic: reason\n  - checkbox \"Aprobar diferencias (supervisión)\"\n  - generic: Aprobar diferencias (supervisión)\n  - paragraph\n  - generic: approve\n  - button \"Cerrar turno\" [disabled]:\n    - generic: Cerrar turno",
+      "observed": {
+        "actions": [
+          {
+            "action": "reload",
+            "disabled": true,
+            "text": "Actualizar"
+          },
+          {
+            "action": "logout",
+            "disabled": true,
+            "text": "Cerrar sesión"
+          },
+          {
+            "action": "open_shift",
+            "disabled": true,
+            "text": "Abrir turno"
+          },
+          {
+            "action": "payment",
+            "disabled": true,
+            "text": "Cobrar"
+          },
+          {
+            "action": "withdrawal",
+            "disabled": true,
+            "text": "Retirar / entregar efectivo"
+          },
+          {
+            "action": "cash_expense",
+            "disabled": true,
+            "text": "Registrar egreso"
+          },
+          {
+            "action": "supplier_payment",
+            "disabled": true,
+            "text": "Pagar proveedor"
+          },
+          {
+            "action": "settlement",
+            "disabled": true,
+            "text": "Registrar liquidación"
+          },
+          {
+            "action": "close_shift",
+            "disabled": true,
+            "text": "Arqueo y cierre"
+          }
+        ],
+        "bundle": "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.YN2QKLHG.js",
+        "dialogs": [
+          {
+            "labelledby": "hs-dialog-title-2",
+            "title": "Arqueo por denominaciones",
+            "titleId": "hs-dialog-title-2"
+          }
+        ],
+        "heading": "Caja",
+        "pageBusy": "true",
+        "propertyDisabled": true,
+        "status": "Guardando operación… Espere la confirmación.",
+        "statusKind": "busy"
+      },
+      "screenshot": "295-arqueo-procesando.jpg"
+    },
+    {
+      "step": "Estado visible del formulario mientras espera la confirmación y la actualización.",
+      "observed": [
+        {
+          "busy": "true",
+          "primaryDisabled": true,
+          "status": "Procesando… Espere la respuesta antes de volver a confirmar.",
+          "title": "Arqueo por denominaciones"
+        }
+      ]
+    },
+    {
+      "step": "Arqueo termina: turno cerrado y acciones recuperadas; no se recarga el navegador.",
+      "snapshot": "- generic: Hospitality Suite\n- button \"Sidebar Menu\":\n- generic \"Buscar\":\n  - generic: Buscar\n- generic \"Notificación\":\n  - generic: Notificación\n- link \"Inicio\":\n  - /url: /desk/hospitality-suite/hospitality-home\n  - generic: Inicio\n- link \"Recepción\":\n  - /url: /desk/hospitality-suite/hospitality-reception\n  - generic: Recepción\n- link \"Reservas\":\n  - /url: /desk/hospitality-suite/hospitality-reservations\n  - generic: Reservas\n- link \"Estancias\":\n  - /url: /desk/hospitality-suite/hospitality-stays\n  - generic: Estancias\n- link \"Caja\":\n  - /url: /desk/hospitality-suite/hospitality-cashier\n  - generic: Caja\n- link \"Limpieza\":\n  - /url: /desk/hospitality-suite/hospitality-housekeeping\n  - generic: Limpieza\n- link \"Mantenimiento\":\n  - /url: /desk/hospitality-suite/hospitality-maintenance\n  - generic: Mantenimiento\n- link \"Consumos e inventario\":\n  - /url: /desk/hospitality-suite/hospitality-services\n  - generic: Consumos e inventario\n- link \"Clientes y huéspedes\":\n  - /url: /desk/hospitality-suite/hospitality-guests\n  - generic: Clientes y huéspedes\n- generic \"Menú de usuario\":\n  - generic \"Cashier\":\n    - generic \"Cashier\": C\n- button \"Menú de navegación\":\n- navigation \"Breadcrumb\":\n  - list:\n    - generic \"Caja\":\n      - generic: Caja\n- button \"Buscar\":\n- complementary \"Navegación de alojamiento\":\n  - generic: H\n  - strong: Hospitality\n  - navigation:\n    - link \"Inicio\":\n      - /url: /app/hospitality-home\n    - link \"Recepción\":\n      - /url: /app/hospitality-reception\n    - link \"Reservas\":\n      - /url: /app/hospitality-reservations\n    - link \"Estancias\":\n      - /url: /app/hospitality-stays\n    - link \"Caja\":\n      - /url: /app/hospitality-cashier\n    - link \"Limpieza\":\n      - /url: /app/hospitality-housekeeping\n    - link \"Mantenimiento\":\n      - /url: /app/hospitality-maintenance\n    - link \"Consumos e inventario\":\n      - /url: /app/hospitality-services\n    - link \"Clientes y huéspedes\":\n      - /url: /app/hospitality-guests\n- main:\n  - heading \"Caja\" [level=1]\n  - paragraph:\n    - text: \"Fecha operativa:\"\n    - strong: 2026-10-19\n  - generic: Establecimiento\n  - combobox \"Establecimiento\":\n    - option \"Motel Luna Demo\"\n    - option \"Hotel Jardín Demo\" [selected]\n  - button \"Actualizar\"\n  - status: Sin tiempo real · pulse Actualizar\n  - button \"Cerrar sesión\"\n  - heading \"Turnos y cobros\" [level=2]\n  - paragraph: Anticipos, ingresos y garantías conservan su origen contable.\n  - button \"Abrir turno\"\n  - button \"Cobrar\"\n  - button \"Retirar / entregar efectivo\"\n  - button \"Registrar egreso\"\n  - button \"Pagar proveedor\"\n  - button \"Registrar liquidación\"\n  - table:\n    - rowgroup:\n      - row \"Responsable Apertura Moneda Efectivo esperado Estado Acciones\":\n        - columnheader \"Responsable\"\n        - columnheader \"Apertura\"\n        - columnheader \"Moneda\"\n        - columnheader \"Efectivo esperado\"\n        - columnheader \"Estado\"\n        - columnheader \"Acciones\"\n    - rowgroup:\n      - row \"cashier@hospitality.example.invalid 21/10/2026 12:22 NIO C$ 0.00 Cerrado Imprimir\":\n        - cell \"cashier@hospitality.example.invalid\"\n        - cell \"21/10/2026 12:22\"\n        - cell \"NIO\"\n        - cell \"C$ 0.00\"\n        - cell \"Cerrado\":\n          - generic: Cerrado\n        - cell \"Imprimir\":\n          - button \"Imprimir\"\n  - heading \"Movimientos recientes\" [level=2]\n  - text: ✓\n  - heading \"No hay pendientes en esta vista.\" [level=3]\n  - paragraph: La información se actualiza al registrar movimientos.\n  - generic: \"Hora de referencia del servidor: 2026-10-21 12:23:27.378553 · NIO\"\n- contentinfo\n- text: \"* *\"\n- dialog \"Arqueo por denominaciones\":\n  - heading \"Arqueo por denominaciones\" [level=4]\n  - button \"Cerrar formulario\":\n  - generic: currency_0\n  - generic: Arqueo NIO · esperado 0.00\n  - checkbox \"Seleccionar todas las filas\"\n  - generic \"Denominación\":\n    - generic: Denominación *\n  - generic \"Cantidad\":\n    - generic: Cantidad *\n  - checkbox \"Seleccionar fila 1\"\n  - 'button \"Editar Denominación, fila 1. Valor: 1\"':\n    - generic: \"1\"\n  - 'button \"Editar Cantidad, fila 1. Valor: 0\"':\n    - generic: \"0\"\n  - button \"Añadir fila\":\n    - generic: Añadir fila\n  - generic: Motivo de diferencias\n  - textbox \"Motivo de diferencias\":\n    - /placeholder: \"\"\n  - generic: reason\n  - checkbox \"Aprobar diferencias (supervisión)\"\n  - generic: Aprobar diferencias (supervisión)\n  - paragraph\n  - generic: approve\n  - button \"Cerrar turno\":\n    - generic: Cerrar turno",
+      "observed": {
+        "actions": [
+          {
+            "action": "reload",
+            "disabled": false,
+            "text": "Actualizar"
+          },
+          {
+            "action": "logout",
+            "disabled": false,
+            "text": "Cerrar sesión"
+          },
+          {
+            "action": "open_shift",
+            "disabled": false,
+            "text": "Abrir turno"
+          },
+          {
+            "action": "payment",
+            "disabled": false,
+            "text": "Cobrar"
+          },
+          {
+            "action": "withdrawal",
+            "disabled": false,
+            "text": "Retirar / entregar efectivo"
+          },
+          {
+            "action": "cash_expense",
+            "disabled": false,
+            "text": "Registrar egreso"
+          },
+          {
+            "action": "supplier_payment",
+            "disabled": false,
+            "text": "Pagar proveedor"
+          },
+          {
+            "action": "settlement",
+            "disabled": false,
+            "text": "Registrar liquidación"
+          },
+          {
+            "action": "print_shift",
+            "disabled": false,
+            "text": "Imprimir"
+          }
+        ],
+        "bundle": "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.YN2QKLHG.js",
+        "dialogs": [],
+        "heading": "Caja",
+        "pageBusy": "false",
+        "propertyDisabled": false,
+        "status": "Sin tiempo real · pulse Actualizar",
+        "statusKind": "ready"
+      },
+      "screenshot": "296-arqueo-cerrado-acciones-disponibles.jpg"
+    },
+    {
+      "step": "Primer intento inmediato de salida tras el cierre no abrió diálogo; sin capa visible al inspeccionar después. No se afirma resuelta esa observación.",
+      "snapshot": "- generic: Hospitality Suite\n- button \"Sidebar Menu\":\n- generic \"Buscar\":\n  - generic: Buscar\n- generic \"Notificación\":\n  - generic: Notificación\n- link \"Inicio\":\n  - /url: /desk/hospitality-suite/hospitality-home\n  - generic: Inicio\n- link \"Recepción\":\n  - /url: /desk/hospitality-suite/hospitality-reception\n  - generic: Recepción\n- link \"Reservas\":\n  - /url: /desk/hospitality-suite/hospitality-reservations\n  - generic: Reservas\n- link \"Estancias\":\n  - /url: /desk/hospitality-suite/hospitality-stays\n  - generic: Estancias\n- link \"Caja\":\n  - /url: /desk/hospitality-suite/hospitality-cashier\n  - generic: Caja\n- link \"Limpieza\":\n  - /url: /desk/hospitality-suite/hospitality-housekeeping\n  - generic: Limpieza\n- link \"Mantenimiento\":\n  - /url: /desk/hospitality-suite/hospitality-maintenance\n  - generic: Mantenimiento\n- link \"Consumos e inventario\":\n  - /url: /desk/hospitality-suite/hospitality-services\n  - generic: Consumos e inventario\n- link \"Clientes y huéspedes\":\n  - /url: /desk/hospitality-suite/hospitality-guests\n  - generic: Clientes y huéspedes\n- generic \"Menú de usuario\":\n  - generic \"Cashier\":\n    - generic \"Cashier\": C\n- button \"Menú de navegación\":\n- navigation \"Breadcrumb\":\n  - list:\n    - generic \"Caja\":\n      - generic: Caja\n- button \"Buscar\":\n- complementary \"Navegación de alojamiento\":\n  - generic: H\n  - strong: Hospitality\n  - navigation:\n    - link \"Inicio\":\n      - /url: /app/hospitality-home\n    - link \"Recepción\":\n      - /url: /app/hospitality-reception\n    - link \"Reservas\":\n      - /url: /app/hospitality-reservations\n    - link \"Estancias\":\n      - /url: /app/hospitality-stays\n    - link \"Caja\":\n      - /url: /app/hospitality-cashier\n    - link \"Limpieza\":\n      - /url: /app/hospitality-housekeeping\n    - link \"Mantenimiento\":\n      - /url: /app/hospitality-maintenance\n    - link \"Consumos e inventario\":\n      - /url: /app/hospitality-services\n    - link \"Clientes y huéspedes\":\n      - /url: /app/hospitality-guests\n- main:\n  - heading \"Caja\" [active] [level=1]\n  - paragraph:\n    - text: \"Fecha operativa:\"\n    - strong: 2026-10-19\n  - generic: Establecimiento\n  - combobox \"Establecimiento\":\n    - option \"Motel Luna Demo\"\n    - option \"Hotel Jardín Demo\" [selected]\n  - button \"Actualizar\"\n  - status: Sin tiempo real · pulse Actualizar\n  - button \"Cerrar sesión\"\n  - heading \"Turnos y cobros\" [level=2]\n  - paragraph: Anticipos, ingresos y garantías conservan su origen contable.\n  - button \"Abrir turno\"\n  - button \"Cobrar\"\n  - button \"Retirar / entregar efectivo\"\n  - button \"Registrar egreso\"\n  - button \"Pagar proveedor\"\n  - button \"Registrar liquidación\"\n  - table:\n    - rowgroup:\n      - row \"Responsable Apertura Moneda Efectivo esperado Estado Acciones\":\n        - columnheader \"Responsable\"\n        - columnheader \"Apertura\"\n        - columnheader \"Moneda\"\n        - columnheader \"Efectivo esperado\"\n        - columnheader \"Estado\"\n        - columnheader \"Acciones\"\n    - rowgroup:\n      - row \"cashier@hospitality.example.invalid 21/10/2026 12:22 NIO C$ 0.00 Cerrado Imprimir\":\n        - cell \"cashier@hospitality.example.invalid\"\n        - cell \"21/10/2026 12:22\"\n        - cell \"NIO\"\n        - cell \"C$ 0.00\"\n        - cell \"Cerrado\":\n          - generic: Cerrado\n        - cell \"Imprimir\":\n          - button \"Imprimir\"\n  - heading \"Movimientos recientes\" [level=2]\n  - text: ✓\n  - heading \"No hay pendientes en esta vista.\" [level=3]\n  - paragraph: La información se actualiza al registrar movimientos.\n  - generic: \"Hora de referencia del servidor: 2026-10-21 12:23:27.378553 · NIO\"\n- contentinfo\n- text: \"* *\"\n- text: \"* *\"",
+      "observed": {
+        "actions": [
+          {
+            "action": "reload",
+            "disabled": false,
+            "text": "Actualizar"
+          },
+          {
+            "action": "logout",
+            "disabled": false,
+            "text": "Cerrar sesión"
+          },
+          {
+            "action": "open_shift",
+            "disabled": false,
+            "text": "Abrir turno"
+          },
+          {
+            "action": "payment",
+            "disabled": false,
+            "text": "Cobrar"
+          },
+          {
+            "action": "withdrawal",
+            "disabled": false,
+            "text": "Retirar / entregar efectivo"
+          },
+          {
+            "action": "cash_expense",
+            "disabled": false,
+            "text": "Registrar egreso"
+          },
+          {
+            "action": "supplier_payment",
+            "disabled": false,
+            "text": "Pagar proveedor"
+          },
+          {
+            "action": "settlement",
+            "disabled": false,
+            "text": "Registrar liquidación"
+          },
+          {
+            "action": "print_shift",
+            "disabled": false,
+            "text": "Imprimir"
+          }
+        ],
+        "bundle": "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.YN2QKLHG.js",
+        "dialogs": [],
+        "heading": "Caja",
+        "pageBusy": "false",
+        "propertyDisabled": false,
+        "status": "Sin tiempo real · pulse Actualizar",
+        "statusKind": "ready"
+      }
+    },
+    {
+      "step": "Salida repetida tras estabilizar la vista.",
+      "snapshot": "- generic: Hospitality Suite\n- button \"Sidebar Menu\":\n- generic \"Buscar\":\n  - generic: Buscar\n- generic \"Notificación\":\n  - generic: Notificación\n- link \"Inicio\":\n  - /url: /desk/hospitality-suite/hospitality-home\n  - generic: Inicio\n- link \"Recepción\":\n  - /url: /desk/hospitality-suite/hospitality-reception\n  - generic: Recepción\n- link \"Reservas\":\n  - /url: /desk/hospitality-suite/hospitality-reservations\n  - generic: Reservas\n- link \"Estancias\":\n  - /url: /desk/hospitality-suite/hospitality-stays\n  - generic: Estancias\n- link \"Caja\":\n  - /url: /desk/hospitality-suite/hospitality-cashier\n  - generic: Caja\n- link \"Limpieza\":\n  - /url: /desk/hospitality-suite/hospitality-housekeeping\n  - generic: Limpieza\n- link \"Mantenimiento\":\n  - /url: /desk/hospitality-suite/hospitality-maintenance\n  - generic: Mantenimiento\n- link \"Consumos e inventario\":\n  - /url: /desk/hospitality-suite/hospitality-services\n  - generic: Consumos e inventario\n- link \"Clientes y huéspedes\":\n  - /url: /desk/hospitality-suite/hospitality-guests\n  - generic: Clientes y huéspedes\n- generic \"Menú de usuario\":\n  - generic \"Cashier\":\n    - generic \"Cashier\": C\n- button \"Menú de navegación\":\n- navigation \"Breadcrumb\":\n  - list:\n    - generic \"Caja\":\n      - generic: Caja\n- button \"Buscar\":\n- complementary \"Navegación de alojamiento\":\n  - generic: H\n  - strong: Hospitality\n  - navigation:\n    - link \"Inicio\":\n      - /url: /app/hospitality-home\n    - link \"Recepción\":\n      - /url: /app/hospitality-reception\n    - link \"Reservas\":\n      - /url: /app/hospitality-reservations\n    - link \"Estancias\":\n      - /url: /app/hospitality-stays\n    - link \"Caja\":\n      - /url: /app/hospitality-cashier\n    - link \"Limpieza\":\n      - /url: /app/hospitality-housekeeping\n    - link \"Mantenimiento\":\n      - /url: /app/hospitality-maintenance\n    - link \"Consumos e inventario\":\n      - /url: /app/hospitality-services\n    - link \"Clientes y huéspedes\":\n      - /url: /app/hospitality-guests\n- main:\n  - heading \"Caja\" [level=1]\n  - paragraph:\n    - text: \"Fecha operativa:\"\n    - strong: 2026-10-19\n  - generic: Establecimiento\n  - combobox \"Establecimiento\":\n    - option \"Motel Luna Demo\"\n    - option \"Hotel Jardín Demo\" [selected]\n  - button \"Actualizar\"\n  - status: Sin tiempo real · pulse Actualizar\n  - button \"Cerrar sesión\" [active]\n  - heading \"Turnos y cobros\" [level=2]\n  - paragraph: Anticipos, ingresos y garantías conservan su origen contable.\n  - button \"Abrir turno\"\n  - button \"Cobrar\"\n  - button \"Retirar / entregar efectivo\"\n  - button \"Registrar egreso\"\n  - button \"Pagar proveedor\"\n  - button \"Registrar liquidación\"\n  - table:\n    - rowgroup:\n      - row \"Responsable Apertura Moneda Efectivo esperado Estado Acciones\":\n        - columnheader \"Responsable\"\n        - columnheader \"Apertura\"\n        - columnheader \"Moneda\"\n        - columnheader \"Efectivo esperado\"\n        - columnheader \"Estado\"\n        - columnheader \"Acciones\"\n    - rowgroup:\n      - row \"cashier@hospitality.example.invalid 21/10/2026 12:22 NIO C$ 0.00 Cerrado Imprimir\":\n        - cell \"cashier@hospitality.example.invalid\"\n        - cell \"21/10/2026 12:22\"\n        - cell \"NIO\"\n        - cell \"C$ 0.00\"\n        - cell \"Cerrado\":\n          - generic: Cerrado\n        - cell \"Imprimir\":\n          - button \"Imprimir\"\n  - heading \"Movimientos recientes\" [level=2]\n  - text: ✓\n  - heading \"No hay pendientes en esta vista.\" [level=3]\n  - paragraph: La información se actualiza al registrar movimientos.\n  - generic: \"Hora de referencia del servidor: 2026-10-21 12:23:27.378553 · NIO\"\n- contentinfo\n- text: \"* *\"\n- text: \"* *\"\n- dialog:\n  - heading \"Confirmar\" [level=4]\n  - button \"Cerrar\":\n  - paragraph: ¿Seguro que quieres cerrar sesión?\n  - button \"No\":\n    - generic: \"No\"\n  - button \"Si\":\n    - generic: Si",
+      "observed": {
+        "actions": [
+          {
+            "action": "reload",
+            "disabled": false,
+            "text": "Actualizar"
+          },
+          {
+            "action": "logout",
+            "disabled": false,
+            "text": "Cerrar sesión"
+          },
+          {
+            "action": "open_shift",
+            "disabled": false,
+            "text": "Abrir turno"
+          },
+          {
+            "action": "payment",
+            "disabled": false,
+            "text": "Cobrar"
+          },
+          {
+            "action": "withdrawal",
+            "disabled": false,
+            "text": "Retirar / entregar efectivo"
+          },
+          {
+            "action": "cash_expense",
+            "disabled": false,
+            "text": "Registrar egreso"
+          },
+          {
+            "action": "supplier_payment",
+            "disabled": false,
+            "text": "Pagar proveedor"
+          },
+          {
+            "action": "settlement",
+            "disabled": false,
+            "text": "Registrar liquidación"
+          },
+          {
+            "action": "print_shift",
+            "disabled": false,
+            "text": "Imprimir"
+          }
+        ],
+        "bundle": "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.YN2QKLHG.js",
+        "dialogs": [
+          {
+            "labelledby": null,
+            "title": "Confirmar",
+            "titleId": ""
+          }
+        ],
+        "heading": "Caja",
+        "pageBusy": "false",
+        "propertyDisabled": false,
+        "status": "Sin tiempo real · pulse Actualizar",
+        "statusKind": "ready"
+      },
+      "screenshot": "297-salida-despues-del-cierre.jpg"
+    },
+    {
+      "step": "Enter en No cancela la salida y conserva el turno cerrado.",
+      "snapshot": "- generic: Hospitality Suite\n- button \"Sidebar Menu\":\n- generic \"Buscar\":\n  - generic: Buscar\n- generic \"Notificación\":\n  - generic: Notificación\n- link \"Inicio\":\n  - /url: /desk/hospitality-suite/hospitality-home\n  - generic: Inicio\n- link \"Recepción\":\n  - /url: /desk/hospitality-suite/hospitality-reception\n  - generic: Recepción\n- link \"Reservas\":\n  - /url: /desk/hospitality-suite/hospitality-reservations\n  - generic: Reservas\n- link \"Estancias\":\n  - /url: /desk/hospitality-suite/hospitality-stays\n  - generic: Estancias\n- link \"Caja\":\n  - /url: /desk/hospitality-suite/hospitality-cashier\n  - generic: Caja\n- link \"Limpieza\":\n  - /url: /desk/hospitality-suite/hospitality-housekeeping\n  - generic: Limpieza\n- link \"Mantenimiento\":\n  - /url: /desk/hospitality-suite/hospitality-maintenance\n  - generic: Mantenimiento\n- link \"Consumos e inventario\":\n  - /url: /desk/hospitality-suite/hospitality-services\n  - generic: Consumos e inventario\n- link \"Clientes y huéspedes\":\n  - /url: /desk/hospitality-suite/hospitality-guests\n  - generic: Clientes y huéspedes\n- generic \"Menú de usuario\":\n  - generic \"Cashier\":\n    - generic \"Cashier\": C\n- button \"Menú de navegación\":\n- navigation \"Breadcrumb\":\n  - list:\n    - generic \"Caja\":\n      - generic: Caja\n- button \"Buscar\":\n- complementary \"Navegación de alojamiento\":\n  - generic: H\n  - strong: Hospitality\n  - navigation:\n    - link \"Inicio\":\n      - /url: /app/hospitality-home\n    - link \"Recepción\":\n      - /url: /app/hospitality-reception\n    - link \"Reservas\":\n      - /url: /app/hospitality-reservations\n    - link \"Estancias\":\n      - /url: /app/hospitality-stays\n    - link \"Caja\":\n      - /url: /app/hospitality-cashier\n    - link \"Limpieza\":\n      - /url: /app/hospitality-housekeeping\n    - link \"Mantenimiento\":\n      - /url: /app/hospitality-maintenance\n    - link \"Consumos e inventario\":\n      - /url: /app/hospitality-services\n    - link \"Clientes y huéspedes\":\n      - /url: /app/hospitality-guests\n- main:\n  - heading \"Caja\" [level=1]\n  - paragraph:\n    - text: \"Fecha operativa:\"\n    - strong: 2026-10-19\n  - generic: Establecimiento\n  - combobox \"Establecimiento\":\n    - option \"Motel Luna Demo\"\n    - option \"Hotel Jardín Demo\" [selected]\n  - button \"Actualizar\"\n  - status: Sin tiempo real · pulse Actualizar\n  - button \"Cerrar sesión\"\n  - heading \"Turnos y cobros\" [level=2]\n  - paragraph: Anticipos, ingresos y garantías conservan su origen contable.\n  - button \"Abrir turno\"\n  - button \"Cobrar\"\n  - button \"Retirar / entregar efectivo\"\n  - button \"Registrar egreso\"\n  - button \"Pagar proveedor\"\n  - button \"Registrar liquidación\"\n  - table:\n    - rowgroup:\n      - row \"Responsable Apertura Moneda Efectivo esperado Estado Acciones\":\n        - columnheader \"Responsable\"\n        - columnheader \"Apertura\"\n        - columnheader \"Moneda\"\n        - columnheader \"Efectivo esperado\"\n        - columnheader \"Estado\"\n        - columnheader \"Acciones\"\n    - rowgroup:\n      - row \"cashier@hospitality.example.invalid 21/10/2026 12:22 NIO C$ 0.00 Cerrado Imprimir\":\n        - cell \"cashier@hospitality.example.invalid\"\n        - cell \"21/10/2026 12:22\"\n        - cell \"NIO\"\n        - cell \"C$ 0.00\"\n        - cell \"Cerrado\":\n          - generic: Cerrado\n        - cell \"Imprimir\":\n          - button \"Imprimir\"\n  - heading \"Movimientos recientes\" [level=2]\n  - text: ✓\n  - heading \"No hay pendientes en esta vista.\" [level=3]\n  - paragraph: La información se actualiza al registrar movimientos.\n  - generic: \"Hora de referencia del servidor: 2026-10-21 12:23:27.378553 · NIO\"\n- contentinfo\n- text: \"* *\"\n- text: \"* *\"\n- dialog \"Confirmar\":\n  - heading \"Confirmar\" [level=4]\n  - button \"Cerrar\":\n  - paragraph: ¿Seguro que quieres cerrar sesión?\n  - button \"No\" [active]:\n    - generic: \"No\"\n  - button \"Si\":\n    - generic: Si",
+      "observed": {
+        "actions": [
+          {
+            "action": "reload",
+            "disabled": false,
+            "text": "Actualizar"
+          },
+          {
+            "action": "logout",
+            "disabled": false,
+            "text": "Cerrar sesión"
+          },
+          {
+            "action": "open_shift",
+            "disabled": false,
+            "text": "Abrir turno"
+          },
+          {
+            "action": "payment",
+            "disabled": false,
+            "text": "Cobrar"
+          },
+          {
+            "action": "withdrawal",
+            "disabled": false,
+            "text": "Retirar / entregar efectivo"
+          },
+          {
+            "action": "cash_expense",
+            "disabled": false,
+            "text": "Registrar egreso"
+          },
+          {
+            "action": "supplier_payment",
+            "disabled": false,
+            "text": "Pagar proveedor"
+          },
+          {
+            "action": "settlement",
+            "disabled": false,
+            "text": "Registrar liquidación"
+          },
+          {
+            "action": "print_shift",
+            "disabled": false,
+            "text": "Imprimir"
+          }
+        ],
+        "bundle": "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.YN2QKLHG.js",
+        "dialogs": [
+          {
+            "labelledby": "hs-dialog-title-3",
+            "title": "Confirmar",
+            "titleId": "hs-dialog-title-3"
+          }
+        ],
+        "heading": "Caja",
+        "pageBusy": "false",
+        "propertyDisabled": false,
+        "status": "Sin tiempo real · pulse Actualizar",
+        "statusKind": "ready"
+      }
+    },
+    {
+      "step": "Esperando el cierre de la capa nativa, la salida abre su confirmación.",
+      "snapshot": "- generic: Hospitality Suite\n- button \"Sidebar Menu\":\n- generic \"Buscar\":\n  - generic: Buscar\n- generic \"Notificación\":\n  - generic: Notificación\n- link \"Inicio\":\n  - /url: /desk/hospitality-suite/hospitality-home\n  - generic: Inicio\n- link \"Recepción\":\n  - /url: /desk/hospitality-suite/hospitality-reception\n  - generic: Recepción\n- link \"Reservas\":\n  - /url: /desk/hospitality-suite/hospitality-reservations\n  - generic: Reservas\n- link \"Estancias\":\n  - /url: /desk/hospitality-suite/hospitality-stays\n  - generic: Estancias\n- link \"Caja\":\n  - /url: /desk/hospitality-suite/hospitality-cashier\n  - generic: Caja\n- link \"Limpieza\":\n  - /url: /desk/hospitality-suite/hospitality-housekeeping\n  - generic: Limpieza\n- link \"Mantenimiento\":\n  - /url: /desk/hospitality-suite/hospitality-maintenance\n  - generic: Mantenimiento\n- link \"Consumos e inventario\":\n  - /url: /desk/hospitality-suite/hospitality-services\n  - generic: Consumos e inventario\n- link \"Clientes y huéspedes\":\n  - /url: /desk/hospitality-suite/hospitality-guests\n  - generic: Clientes y huéspedes\n- generic \"Menú de usuario\":\n  - generic \"Cashier\":\n    - generic \"Cashier\": C\n- button \"Menú de navegación\":\n- navigation \"Breadcrumb\":\n  - list:\n    - generic \"Caja\":\n      - generic: Caja\n- button \"Buscar\":\n- complementary \"Navegación de alojamiento\":\n  - generic: H\n  - strong: Hospitality\n  - navigation:\n    - link \"Inicio\":\n      - /url: /app/hospitality-home\n    - link \"Recepción\":\n      - /url: /app/hospitality-reception\n    - link \"Reservas\":\n      - /url: /app/hospitality-reservations\n    - link \"Estancias\":\n      - /url: /app/hospitality-stays\n    - link \"Caja\":\n      - /url: /app/hospitality-cashier\n    - link \"Limpieza\":\n      - /url: /app/hospitality-housekeeping\n    - link \"Mantenimiento\":\n      - /url: /app/hospitality-maintenance\n    - link \"Consumos e inventario\":\n      - /url: /app/hospitality-services\n    - link \"Clientes y huéspedes\":\n      - /url: /app/hospitality-guests\n- main:\n  - heading \"Caja\" [level=1]\n  - paragraph:\n    - text: \"Fecha operativa:\"\n    - strong: 2026-10-19\n  - generic: Establecimiento\n  - combobox \"Establecimiento\":\n    - option \"Motel Luna Demo\"\n    - option \"Hotel Jardín Demo\" [selected]\n  - button \"Actualizar\"\n  - status: Sin tiempo real · pulse Actualizar\n  - button \"Cerrar sesión\" [active]\n  - heading \"Turnos y cobros\" [level=2]\n  - paragraph: Anticipos, ingresos y garantías conservan su origen contable.\n  - button \"Abrir turno\"\n  - button \"Cobrar\"\n  - button \"Retirar / entregar efectivo\"\n  - button \"Registrar egreso\"\n  - button \"Pagar proveedor\"\n  - button \"Registrar liquidación\"\n  - table:\n    - rowgroup:\n      - row \"Responsable Apertura Moneda Efectivo esperado Estado Acciones\":\n        - columnheader \"Responsable\"\n        - columnheader \"Apertura\"\n        - columnheader \"Moneda\"\n        - columnheader \"Efectivo esperado\"\n        - columnheader \"Estado\"\n        - columnheader \"Acciones\"\n    - rowgroup:\n      - row \"cashier@hospitality.example.invalid 21/10/2026 12:22 NIO C$ 0.00 Cerrado Imprimir\":\n        - cell \"cashier@hospitality.example.invalid\"\n        - cell \"21/10/2026 12:22\"\n        - cell \"NIO\"\n        - cell \"C$ 0.00\"\n        - cell \"Cerrado\":\n          - generic: Cerrado\n        - cell \"Imprimir\":\n          - button \"Imprimir\"\n  - heading \"Movimientos recientes\" [level=2]\n  - text: ✓\n  - heading \"No hay pendientes en esta vista.\" [level=3]\n  - paragraph: La información se actualiza al registrar movimientos.\n  - generic: \"Hora de referencia del servidor: 2026-10-21 12:23:27.378553 · NIO\"\n- contentinfo\n- text: \"* *\"\n- text: \"* *\"\n- dialog:\n  - heading \"Confirmar\" [level=4]\n  - button \"Cerrar\":\n  - paragraph: ¿Seguro que quieres cerrar sesión?\n  - button \"No\":\n    - generic: \"No\"\n  - button \"Si\":\n    - generic: Si",
+      "observed": {
+        "actions": [
+          {
+            "action": "reload",
+            "disabled": false,
+            "text": "Actualizar"
+          },
+          {
+            "action": "logout",
+            "disabled": false,
+            "text": "Cerrar sesión"
+          },
+          {
+            "action": "open_shift",
+            "disabled": false,
+            "text": "Abrir turno"
+          },
+          {
+            "action": "payment",
+            "disabled": false,
+            "text": "Cobrar"
+          },
+          {
+            "action": "withdrawal",
+            "disabled": false,
+            "text": "Retirar / entregar efectivo"
+          },
+          {
+            "action": "cash_expense",
+            "disabled": false,
+            "text": "Registrar egreso"
+          },
+          {
+            "action": "supplier_payment",
+            "disabled": false,
+            "text": "Pagar proveedor"
+          },
+          {
+            "action": "settlement",
+            "disabled": false,
+            "text": "Registrar liquidación"
+          },
+          {
+            "action": "print_shift",
+            "disabled": false,
+            "text": "Imprimir"
+          }
+        ],
+        "bundle": "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.YN2QKLHG.js",
+        "dialogs": [
+          {
+            "labelledby": "hs-dialog-title-4",
+            "title": "Confirmar",
+            "titleId": "hs-dialog-title-4"
+          }
+        ],
+        "heading": "Caja",
+        "pageBusy": "false",
+        "propertyDisabled": false,
+        "status": "Sin tiempo real · pulse Actualizar",
+        "statusKind": "ready"
+      }
+    },
+    {
+      "step": "Caja termina en Login tras Enter en Sí; no se registra un segundo turno.",
+      "snapshot": "- main:\n  - heading \"Iniciar Sesión\" [level=4]\n  - paragraph: ¡Bienvenido! Por favor, inicia sesión para continuar.\n  - form:\n    - generic: Correo electrónico\n    - textbox \"Correo electrónico\" [active]:\n      - /placeholder: juan@example.com\n    - generic: Contraseña\n    - textbox \"Contraseña\":\n      - /placeholder: ••••••••\n    - paragraph:\n      - link \"¿Olvidaste la contraseña?\":\n        - /url: \"#forgot\"\n    - button \"Continuar\"\n    - link \"Iniciar sesión con enlace de correo\":\n      - /url: \"#login-with-email-link\""
+    },
+    {
+      "step": "Limitación observada: el autocompletado nativo de categoría muestra código y filtro técnico en la reserva manual. Se conserva para corregir en la revisión secundaria.",
+      "snapshot": "- generic: Hospitality Suite\n- button \"Sidebar Menu\":\n- generic \"Buscar\":\n  - generic: Buscar\n- generic \"Notificación\":\n  - generic: Notificación\n- link \"Inicio\":\n  - /url: /desk/hospitality-suite/hospitality-home\n  - generic: Inicio\n- link \"Recepción\":\n  - /url: /desk/hospitality-suite/hospitality-reception\n  - generic: Recepción\n- link \"Reservas\":\n  - /url: /desk/hospitality-suite/hospitality-reservations\n  - generic: Reservas\n- link \"Estancias\":\n  - /url: /desk/hospitality-suite/hospitality-stays\n  - generic: Estancias\n- link \"Limpieza\":\n  - /url: /desk/hospitality-suite/hospitality-housekeeping\n  - generic: Limpieza\n- link \"Mantenimiento\":\n  - /url: /desk/hospitality-suite/hospitality-maintenance\n  - generic: Mantenimiento\n- link \"Consumos e inventario\":\n  - /url: /desk/hospitality-suite/hospitality-services\n  - generic: Consumos e inventario\n- link \"Clientes y huéspedes\":\n  - /url: /desk/hospitality-suite/hospitality-guests\n  - generic: Clientes y huéspedes\n- generic \"Menú de usuario\":\n  - generic \"Receptionist\":\n    - generic \"Receptionist\": R\n- button \"Menú de navegación\":\n- navigation \"Breadcrumb\":\n  - list:\n    - generic \"Reservas\":\n      - generic: Reservas\n- button \"Buscar\":\n- complementary \"Navegación de alojamiento\":\n  - generic: H\n  - strong: Hospitality\n  - navigation:\n    - link \"Inicio\":\n      - /url: /app/hospitality-home\n    - link \"Recepción\":\n      - /url: /app/hospitality-reception\n    - link \"Reservas\":\n      - /url: /app/hospitality-reservations\n    - link \"Estancias\":\n      - /url: /app/hospitality-stays\n    - link \"Limpieza\":\n      - /url: /app/hospitality-housekeeping\n    - link \"Mantenimiento\":\n      - /url: /app/hospitality-maintenance\n    - link \"Consumos e inventario\":\n      - /url: /app/hospitality-services\n    - link \"Clientes y huéspedes\":\n      - /url: /app/hospitality-guests\n- main:\n  - heading \"Reservas\" [level=1]\n  - paragraph:\n    - text: \"Fecha operativa:\"\n    - strong: 2026-10-19\n  - generic: Establecimiento\n  - combobox \"Establecimiento\":\n    - option \"Motel Luna Demo\"\n    - option \"Hotel Jardín Demo\" [selected]\n  - button \"Actualizar\"\n  - status: Sin tiempo real · pulse Actualizar\n  - button \"Cerrar sesión\"\n  - heading \"Reservas vigentes\" [level=2]\n  - paragraph: Reservas individuales y grupales; las retenciones liberan cupo al vencer.\n  - checkbox \"Mostrar historial\"\n  - text: Mostrar historial\n  - button \"Reservar\"\n  - button \"Buscar disponibilidad\"\n  - text: ✓\n  - heading \"No hay pendientes en esta vista.\" [level=3]\n  - paragraph: La información se actualiza al registrar movimientos.\n  - heading \"Calendario por habitación\" [level=2]\n  - generic: Fecha del calendario\n  - textbox \"Fecha del calendario\": 2026-10-21\n  - status:\n    - table:\n      - rowgroup:\n        - row \"Habitación mié 21/10 jue 22/10 vie 23/10 sáb 24/10 dom 25/10 lun 26/10 mar 27/10\":\n          - columnheader \"Habitación\"\n          - columnheader \"mié 21/10\"\n          - columnheader \"jue 22/10\"\n          - columnheader \"vie 23/10\"\n          - columnheader \"sáb 24/10\"\n          - columnheader \"dom 25/10\"\n          - columnheader \"lun 26/10\"\n          - columnheader \"mar 27/10\"\n      - rowgroup:\n        - row \"H101 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n          - cell \"H101\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n        - row \"H102 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n          - cell \"H102\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n        - row \"H103 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n          - cell \"H103\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n        - row \"H104 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n          - cell \"H104\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n        - row \"H105 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n          - cell \"H105\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n        - row \"H106 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n          - cell \"H106\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n        - row \"H107 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n          - cell \"H107\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n        - row \"H108 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n          - cell \"H108\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n        - row \"H109 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n          - cell \"H109\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n        - row \"H110 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n          - cell \"H110\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n        - row \"Por asignar Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n          - cell \"Por asignar\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n  - generic: \"Hora de referencia del servidor: 2026-10-21 12:25:37.839817 · NIO\"\n- contentinfo\n- dialog \"Nueva reserva\":\n  - heading \"Nueva reserva\" [level=4]\n  - button \"Cerrar formulario\":\n  - tablist:\n    - tab \"Fechas y pagador\"\n    - tab \"Habitaciones\" [selected]\n    - tab \"Opciones\"\n  - text: \"* * * *\"\n  - tabpanel \"Habitaciones\":\n    - generic: rooms\n    - generic: Habitaciones solicitadas\n    - checkbox \"Seleccionar todas las filas\"\n    - generic \"Categoría\":\n      - generic: Categoría *\n    - generic \"Habitación (opcional)\":\n      - generic: Habitación (opcional)\n    - generic \"Personas\":\n      - generic: Personas *\n    - checkbox \"Seleccionar fila 1\"\n    - combobox \"Categoría\" [expanded] [active]:\n      - text: Estándar\n      - listbox:\n        - option \"Estándar qmcbb8qlvg\" [selected]:\n          - paragraph:\n            - strong: Estándar\n            - text: qmcbb8qlvg\n        - 'option \"Filtrado por: Establecimiento es igual a \\\"qmbjb0i1qc\\\".\"':\n          - paragraph:\n            - generic: \"Filtrado por: Establecimiento es igual a \\\"qmbjb0i1qc\\\".\"\n        - 'option \"Crear: HS Category\"':\n          - paragraph:\n            - text: \"Crear: HS Category\"\n        - option \"Búsqueda Avanzada\":\n          - paragraph:\n            - text: Búsqueda Avanzada\n    - status: 4 resultados encontrados\n    - generic: category\n    - combobox \"Habitación (opcional)\"\n    - status: Empieza a escribir para ver resultados.\n    - generic: room\n    - textbox \"Personas\": \"1\"\n    - generic: people\n    - button \"Añadir fila\":\n      - generic: Añadir fila\n  - button \"Guardar borrador\":\n    - generic: Guardar borrador\n  - button \"Revisar precio\":\n    - generic: Revisar precio",
+      "observed": {
+        "actions": [
+          {
+            "action": "reload",
+            "disabled": false,
+            "text": "Actualizar"
+          },
+          {
+            "action": "logout",
+            "disabled": false,
+            "text": "Cerrar sesión"
+          },
+          {
+            "action": "reserve",
+            "disabled": false,
+            "text": "Reservar"
+          },
+          {
+            "action": "availability",
+            "disabled": false,
+            "text": "Buscar disponibilidad"
+          }
+        ],
+        "bundle": "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.YN2QKLHG.js",
+        "dialogs": [
+          {
+            "labelledby": "hs-dialog-title-1",
+            "title": "Nueva reserva",
+            "titleId": "hs-dialog-title-1"
+          }
+        ],
+        "heading": "Reservas",
+        "pageBusy": "false",
+        "propertyDisabled": false,
+        "status": "Sin tiempo real · pulse Actualizar",
+        "statusKind": "ready"
+      },
+      "screenshot": "298-autocompletado-categoria-limitacion.jpg"
+    },
+    {
+      "step": "Confirmación de reserva en móvil con actualización lenta: una operación pendiente y controles bloqueados.",
+      "snapshot": "- generic: Hospitality Suite\n- button \"Sidebar Menu\":\n- generic \"Buscar\":\n  - generic: Buscar\n- generic \"Notificación\":\n  - generic: Notificación\n- link \"Inicio\":\n  - /url: /desk/hospitality-suite/hospitality-home\n  - generic: Inicio\n- link \"Recepción\":\n  - /url: /desk/hospitality-suite/hospitality-reception\n  - generic: Recepción\n- link \"Reservas\":\n  - /url: /desk/hospitality-suite/hospitality-reservations\n  - generic: Reservas\n- link \"Estancias\":\n  - /url: /desk/hospitality-suite/hospitality-stays\n  - generic: Estancias\n- link \"Limpieza\":\n  - /url: /desk/hospitality-suite/hospitality-housekeeping\n  - generic: Limpieza\n- link \"Mantenimiento\":\n  - /url: /desk/hospitality-suite/hospitality-maintenance\n  - generic: Mantenimiento\n- link \"Consumos e inventario\":\n  - /url: /desk/hospitality-suite/hospitality-services\n  - generic: Consumos e inventario\n- link \"Clientes y huéspedes\":\n  - /url: /desk/hospitality-suite/hospitality-guests\n  - generic: Clientes y huéspedes\n- generic \"Menú de usuario\":\n  - generic \"Receptionist\":\n    - generic \"Receptionist\": R\n- button \"Menú de navegación\":\n- navigation \"Breadcrumb\":\n  - list:\n    - generic \"Reservas\":\n      - generic: Reservas\n- button \"Buscar\":\n- complementary \"Navegación de alojamiento\":\n  - generic: H\n  - strong: Hospitality\n  - navigation:\n    - link \"Inicio\":\n      - /url: /app/hospitality-home\n    - link \"Recepción\":\n      - /url: /app/hospitality-reception\n    - link \"Reservas\":\n      - /url: /app/hospitality-reservations\n    - link \"Estancias\":\n      - /url: /app/hospitality-stays\n    - link \"Limpieza\":\n      - /url: /app/hospitality-housekeeping\n    - link \"Mantenimiento\":\n      - /url: /app/hospitality-maintenance\n    - link \"Consumos e inventario\":\n      - /url: /app/hospitality-services\n    - link \"Clientes y huéspedes\":\n      - /url: /app/hospitality-guests\n- main:\n  - heading \"Reservas\" [level=1]\n  - paragraph:\n    - text: \"Fecha operativa:\"\n    - strong: 2026-10-19\n  - generic: Establecimiento\n  - combobox \"Establecimiento\" [disabled]:\n    - option \"Motel Luna Demo\"\n    - option \"Hotel Jardín Demo\" [selected]\n  - button \"Actualizar\" [disabled]\n  - status: Guardando operación… Espere la confirmación.\n  - button \"Cerrar sesión\" [disabled]\n  - heading \"Reservas vigentes\" [level=2]\n  - paragraph: Reservas individuales y grupales; las retenciones liberan cupo al vencer.\n  - checkbox \"Mostrar historial\"\n  - text: Mostrar historial\n  - button \"Reservar\" [disabled]\n  - button \"Buscar disponibilidad\" [disabled]\n  - text: ✓\n  - heading \"No hay pendientes en esta vista.\" [level=3]\n  - paragraph: La información se actualiza al registrar movimientos.\n  - heading \"Calendario por habitación\" [level=2]\n  - generic: Fecha del calendario\n  - textbox \"Fecha del calendario\": 2026-10-21\n  - status:\n    - table:\n      - rowgroup:\n        - row \"Habitación mié 21/10 jue 22/10 vie 23/10 sáb 24/10 dom 25/10 lun 26/10 mar 27/10\":\n          - columnheader \"Habitación\"\n          - columnheader \"mié 21/10\"\n          - columnheader \"jue 22/10\"\n          - columnheader \"vie 23/10\"\n          - columnheader \"sáb 24/10\"\n          - columnheader \"dom 25/10\"\n          - columnheader \"lun 26/10\"\n          - columnheader \"mar 27/10\"\n      - rowgroup:\n        - row \"H101 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n          - cell \"H101\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n        - row \"H102 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n          - cell \"H102\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n        - row \"H103 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n          - cell \"H103\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n        - row \"H104 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n          - cell \"H104\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n        - row \"H105 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n          - cell \"H105\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n        - row \"H106 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n          - cell \"H106\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n        - row \"H107 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n          - cell \"H107\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n        - row \"H108 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n          - cell \"H108\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n        - row \"H109 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n          - cell \"H109\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n        - row \"H110 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n          - cell \"H110\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n        - row \"Por asignar Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n          - cell \"Por asignar\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n  - generic: \"Hora de referencia del servidor: 2026-10-21 12:25:37.839817 · NIO\"\n- contentinfo\n- dialog \"Revisar cotización\":\n  - heading \"Revisar cotización\" [level=4]\n  - button \"Cerrar formulario\":\n  - status: Procesando… Espere la respuesta antes de volver a confirmar.\n  - paragraph: Al aceptar se confirmará la reserva.\n  - heading \"C$ 1,500.00\" [level=2]\n  - list:\n    - listitem: \"2026-10-25: 1500.00 (Noche estándar)\"\n  - paragraph: Impuestos y saldo se calculan al facturar.\n  - button \"Confirmar reserva\" [disabled]:\n    - generic: Confirmar reserva",
+      "observed": {
+        "actions": [
+          {
+            "action": "reload",
+            "disabled": true,
+            "text": "Actualizar"
+          },
+          {
+            "action": "logout",
+            "disabled": true,
+            "text": "Cerrar sesión"
+          },
+          {
+            "action": "reserve",
+            "disabled": true,
+            "text": "Reservar"
+          },
+          {
+            "action": "availability",
+            "disabled": true,
+            "text": "Buscar disponibilidad"
+          }
+        ],
+        "bundle": "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.YN2QKLHG.js",
+        "dialogs": [
+          {
+            "labelledby": "hs-dialog-title-1",
+            "title": "Nueva reserva",
+            "titleId": "hs-dialog-title-1"
+          },
+          {
+            "labelledby": "hs-dialog-title-2",
+            "title": "Revisar cotización",
+            "titleId": "hs-dialog-title-2"
+          }
+        ],
+        "heading": "Reservas",
+        "pageBusy": "true",
+        "propertyDisabled": true,
+        "status": "Guardando operación… Espere la confirmación.",
+        "statusKind": "busy"
+      },
+      "screenshot": "299-reserva-procesando-movil.jpg"
+    },
+    {
+      "step": "Medidas y estados del envío móvil antes de terminar la espera.",
+      "observed": {
+        "modal": [
+          {
+            "busy": "false",
+            "primaryDisabled": false,
+            "status": "",
+            "title": "Nueva reserva"
+          },
+          {
+            "busy": "true",
+            "primaryDisabled": true,
+            "status": "Procesando… Espere la respuesta antes de volver a confirmar.",
+            "title": "Revisar cotización"
+          }
+        ],
+        "scrollWidth": 390,
+        "width": 390
+      }
+    },
+    {
+      "step": "Reserva confirmada una vez; al terminar quedan disponibles los botones en móvil.",
+      "snapshot": "- generic: Hospitality Suite\n- button \"Sidebar Menu\":\n- generic \"Buscar\":\n  - generic: Buscar\n- generic \"Notificación\":\n  - generic: Notificación\n- link \"Inicio\":\n  - /url: /desk/hospitality-suite/hospitality-home\n  - generic: Inicio\n- link \"Recepción\":\n  - /url: /desk/hospitality-suite/hospitality-reception\n  - generic: Recepción\n- link \"Reservas\":\n  - /url: /desk/hospitality-suite/hospitality-reservations\n  - generic: Reservas\n- link \"Estancias\":\n  - /url: /desk/hospitality-suite/hospitality-stays\n  - generic: Estancias\n- link \"Limpieza\":\n  - /url: /desk/hospitality-suite/hospitality-housekeeping\n  - generic: Limpieza\n- link \"Mantenimiento\":\n  - /url: /desk/hospitality-suite/hospitality-maintenance\n  - generic: Mantenimiento\n- link \"Consumos e inventario\":\n  - /url: /desk/hospitality-suite/hospitality-services\n  - generic: Consumos e inventario\n- link \"Clientes y huéspedes\":\n  - /url: /desk/hospitality-suite/hospitality-guests\n  - generic: Clientes y huéspedes\n- generic \"Menú de usuario\":\n  - generic \"Receptionist\":\n    - generic \"Receptionist\": R\n- button \"Menú de navegación\":\n- navigation \"Breadcrumb\":\n  - list:\n    - generic \"Reservas\":\n      - generic: Reservas\n- button \"Buscar\":\n- complementary \"Navegación de alojamiento\":\n  - generic: H\n  - strong: Hospitality\n  - navigation:\n    - link \"Inicio\":\n      - /url: /app/hospitality-home\n    - link \"Recepción\":\n      - /url: /app/hospitality-reception\n    - link \"Reservas\":\n      - /url: /app/hospitality-reservations\n    - link \"Estancias\":\n      - /url: /app/hospitality-stays\n    - link \"Limpieza\":\n      - /url: /app/hospitality-housekeeping\n    - link \"Mantenimiento\":\n      - /url: /app/hospitality-maintenance\n    - link \"Consumos e inventario\":\n      - /url: /app/hospitality-services\n    - link \"Clientes y huéspedes\":\n      - /url: /app/hospitality-guests\n- main:\n  - heading \"Reservas\" [level=1]\n  - paragraph:\n    - text: \"Fecha operativa:\"\n    - strong: 2026-10-19\n  - generic: Establecimiento\n  - combobox \"Establecimiento\":\n    - option \"Motel Luna Demo\"\n    - option \"Hotel Jardín Demo\" [selected]\n  - button \"Actualizar\"\n  - status: Sin tiempo real · pulse Actualizar\n  - button \"Cerrar sesión\"\n  - heading \"Reservas vigentes\" [level=2]\n  - paragraph: Reservas individuales y grupales; las retenciones liberan cupo al vencer.\n  - checkbox \"Mostrar historial\"\n  - text: Mostrar historial\n  - button \"Reservar\" [active]\n  - button \"Buscar disponibilidad\"\n  - table:\n    - rowgroup:\n      - row \"Reserva Llegada / salida Canal Estado Importe Acciones\":\n        - columnheader \"Reserva\"\n        - columnheader \"Llegada / salida\"\n        - columnheader \"Canal\"\n        - columnheader \"Estado\"\n        - columnheader \"Importe\"\n        - columnheader \"Acciones\"\n    - rowgroup:\n      - row \"Reserva Cliente ficticio H1 · 25/10/2026 14:00 Llegada / salida 25/10/2026 14:00 26/10/2026 12:00 Canal Recepción Estado Confirmada Importe C$ 1,500.00 Acciones Ver reserva\":\n        - cell \"Reserva Cliente ficticio H1 · 25/10/2026 14:00\"\n        - cell \"Llegada / salida 25/10/2026 14:00 26/10/2026 12:00\":\n          - text: Llegada / salida 25/10/2026 14:00\n          - text: 26/10/2026 12:00\n        - cell \"Canal Recepción\"\n        - cell \"Estado Confirmada\":\n          - text: Estado\n          - generic: Confirmada\n        - cell \"Importe C$ 1,500.00\"\n        - cell \"Acciones Ver reserva\":\n          - text: Acciones\n          - button \"Ver reserva\"\n  - heading \"Calendario por habitación\" [level=2]\n  - generic: Fecha del calendario\n  - textbox \"Fecha del calendario\": 2026-10-21\n  - status:\n    - region \"Tabla de resultados\":\n      - table:\n        - rowgroup:\n          - row \"Habitación mié 21/10 jue 22/10 vie 23/10 sáb 24/10 dom 25/10 lun 26/10 mar 27/10\":\n            - columnheader \"Habitación\"\n            - columnheader \"mié 21/10\"\n            - columnheader \"jue 22/10\"\n            - columnheader \"vie 23/10\"\n            - columnheader \"sáb 24/10\"\n            - columnheader \"dom 25/10\"\n            - columnheader \"lun 26/10\"\n            - columnheader \"mar 27/10\"\n        - rowgroup:\n          - row \"H101 Sin asignación Sin asignación Sin asignación Sin asignación Reserva Reserva Sin asignación\":\n            - cell \"H101\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Reserva\":\n              - button \"Reserva\"\n            - cell \"Reserva\":\n              - button \"Reserva\"\n            - cell \"Sin asignación\"\n          - row \"H102 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H102\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"H103 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H103\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"H104 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H104\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"H105 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H105\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"H106 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H106\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"H107 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H107\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"H108 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H108\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"H109 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H109\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"H110 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H110\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"Por asignar Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"Por asignar\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n  - generic: \"Hora de referencia del servidor: 2026-10-21 12:27:52.275505 · NIO\"\n- contentinfo\n- text: \"* * * * * *\"",
+      "observed": {
+        "actions": [
+          {
+            "action": "reload",
+            "disabled": false,
+            "text": "Actualizar"
+          },
+          {
+            "action": "logout",
+            "disabled": false,
+            "text": "Cerrar sesión"
+          },
+          {
+            "action": "reserve",
+            "disabled": false,
+            "text": "Reservar"
+          },
+          {
+            "action": "availability",
+            "disabled": false,
+            "text": "Buscar disponibilidad"
+          },
+          {
+            "action": "booking",
+            "disabled": false,
+            "text": "Ver reserva"
+          },
+          {
+            "action": "booking",
+            "disabled": false,
+            "text": "Reserva"
+          },
+          {
+            "action": "booking",
+            "disabled": false,
+            "text": "Reserva"
+          }
+        ],
+        "bundle": "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.YN2QKLHG.js",
+        "dialogs": [],
+        "heading": "Reservas",
+        "pageBusy": "false",
+        "propertyDisabled": false,
+        "status": "Sin tiempo real · pulse Actualizar",
+        "statusKind": "ready"
+      },
+      "screenshot": "300-reserva-guardada-acciones-movil.jpg"
+    },
+    {
+      "step": "Preparación lenta del detalle: estado escrito y todos los accesos deshabilitados hasta abrir la reserva.",
+      "snapshot": "- generic: Hospitality Suite\n- button \"Sidebar Menu\":\n- generic \"Buscar\":\n  - generic: Buscar\n- generic \"Notificación\":\n  - generic: Notificación\n- link \"Inicio\":\n  - /url: /desk/hospitality-suite/hospitality-home\n  - generic: Inicio\n- link \"Recepción\":\n  - /url: /desk/hospitality-suite/hospitality-reception\n  - generic: Recepción\n- link \"Reservas\":\n  - /url: /desk/hospitality-suite/hospitality-reservations\n  - generic: Reservas\n- link \"Estancias\":\n  - /url: /desk/hospitality-suite/hospitality-stays\n  - generic: Estancias\n- link \"Limpieza\":\n  - /url: /desk/hospitality-suite/hospitality-housekeeping\n  - generic: Limpieza\n- link \"Mantenimiento\":\n  - /url: /desk/hospitality-suite/hospitality-maintenance\n  - generic: Mantenimiento\n- link \"Consumos e inventario\":\n  - /url: /desk/hospitality-suite/hospitality-services\n  - generic: Consumos e inventario\n- link \"Clientes y huéspedes\":\n  - /url: /desk/hospitality-suite/hospitality-guests\n  - generic: Clientes y huéspedes\n- generic \"Menú de usuario\":\n  - generic \"Receptionist\":\n    - generic \"Receptionist\": R\n- button \"Menú de navegación\":\n- navigation \"Breadcrumb\":\n  - list:\n    - generic \"Reservas\":\n      - generic: Reservas\n- button \"Buscar\":\n- complementary \"Navegación de alojamiento\":\n  - generic: H\n  - strong: Hospitality\n  - navigation:\n    - link \"Inicio\":\n      - /url: /app/hospitality-home\n    - link \"Recepción\":\n      - /url: /app/hospitality-reception\n    - link \"Reservas\":\n      - /url: /app/hospitality-reservations\n    - link \"Estancias\":\n      - /url: /app/hospitality-stays\n    - link \"Limpieza\":\n      - /url: /app/hospitality-housekeeping\n    - link \"Mantenimiento\":\n      - /url: /app/hospitality-maintenance\n    - link \"Consumos e inventario\":\n      - /url: /app/hospitality-services\n    - link \"Clientes y huéspedes\":\n      - /url: /app/hospitality-guests\n- main:\n  - heading \"Reservas\" [level=1]\n  - paragraph:\n    - text: \"Fecha operativa:\"\n    - strong: 2026-10-19\n  - generic: Establecimiento\n  - combobox \"Establecimiento\" [disabled]:\n    - option \"Motel Luna Demo\"\n    - option \"Hotel Jardín Demo\" [selected]\n  - button \"Actualizar\" [disabled]\n  - status: Preparando acción… Espere un momento.\n  - button \"Cerrar sesión\" [disabled]\n  - heading \"Reservas vigentes\" [level=2]\n  - paragraph: Reservas individuales y grupales; las retenciones liberan cupo al vencer.\n  - checkbox \"Mostrar historial\"\n  - text: Mostrar historial\n  - button \"Reservar\" [disabled]\n  - button \"Buscar disponibilidad\" [disabled]\n  - table:\n    - rowgroup:\n      - row \"Reserva Llegada / salida Canal Estado Importe Acciones\":\n        - columnheader \"Reserva\"\n        - columnheader \"Llegada / salida\"\n        - columnheader \"Canal\"\n        - columnheader \"Estado\"\n        - columnheader \"Importe\"\n        - columnheader \"Acciones\"\n    - rowgroup:\n      - row \"Reserva Cliente ficticio H1 · 25/10/2026 14:00 Llegada / salida 25/10/2026 14:00 26/10/2026 12:00 Canal Recepción Estado Confirmada Importe C$ 1,500.00 Acciones Ver reserva\":\n        - cell \"Reserva Cliente ficticio H1 · 25/10/2026 14:00\"\n        - cell \"Llegada / salida 25/10/2026 14:00 26/10/2026 12:00\":\n          - text: Llegada / salida 25/10/2026 14:00\n          - text: 26/10/2026 12:00\n        - cell \"Canal Recepción\"\n        - cell \"Estado Confirmada\":\n          - text: Estado\n          - generic: Confirmada\n        - cell \"Importe C$ 1,500.00\"\n        - cell \"Acciones Ver reserva\":\n          - text: Acciones\n          - button \"Ver reserva\" [disabled]\n  - heading \"Calendario por habitación\" [level=2]\n  - generic: Fecha del calendario\n  - textbox \"Fecha del calendario\": 2026-10-21\n  - status:\n    - region \"Tabla de resultados\":\n      - table:\n        - rowgroup:\n          - row \"Habitación mié 21/10 jue 22/10 vie 23/10 sáb 24/10 dom 25/10 lun 26/10 mar 27/10\":\n            - columnheader \"Habitación\"\n            - columnheader \"mié 21/10\"\n            - columnheader \"jue 22/10\"\n            - columnheader \"vie 23/10\"\n            - columnheader \"sáb 24/10\"\n            - columnheader \"dom 25/10\"\n            - columnheader \"lun 26/10\"\n            - columnheader \"mar 27/10\"\n        - rowgroup:\n          - row \"H101 Sin asignación Sin asignación Sin asignación Sin asignación Reserva Reserva Sin asignación\":\n            - cell \"H101\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Reserva\":\n              - button \"Reserva\" [disabled]\n            - cell \"Reserva\":\n              - button \"Reserva\" [disabled]\n            - cell \"Sin asignación\"\n          - row \"H102 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H102\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"H103 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H103\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"H104 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H104\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"H105 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H105\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"H106 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H106\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"H107 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H107\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"H108 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H108\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"H109 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H109\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"H110 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H110\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"Por asignar Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"Por asignar\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n  - generic: \"Hora de referencia del servidor: 2026-10-21 12:27:52.275505 · NIO\"\n- contentinfo\n- text: \"* * * * * *\"",
+      "observed": {
+        "actions": [
+          {
+            "action": "reload",
+            "disabled": true,
+            "text": "Actualizar"
+          },
+          {
+            "action": "logout",
+            "disabled": true,
+            "text": "Cerrar sesión"
+          },
+          {
+            "action": "reserve",
+            "disabled": true,
+            "text": "Reservar"
+          },
+          {
+            "action": "availability",
+            "disabled": true,
+            "text": "Buscar disponibilidad"
+          },
+          {
+            "action": "booking",
+            "disabled": true,
+            "text": "Ver reserva"
+          },
+          {
+            "action": "booking",
+            "disabled": true,
+            "text": "Reserva"
+          },
+          {
+            "action": "booking",
+            "disabled": true,
+            "text": "Reserva"
+          }
+        ],
+        "bundle": "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.YN2QKLHG.js",
+        "dialogs": [],
+        "heading": "Reservas",
+        "pageBusy": "true",
+        "propertyDisabled": true,
+        "status": "Preparando acción… Espere un momento.",
+        "statusKind": "busy"
+      },
+      "screenshot": "301-detalle-preparando-movil.jpg"
+    },
+    {
+      "step": "Detalle preparado una vez con información de reserva y acciones recuperadas.",
+      "snapshot": "- generic: Hospitality Suite\n- button \"Sidebar Menu\":\n- generic \"Buscar\":\n  - generic: Buscar\n- generic \"Notificación\":\n  - generic: Notificación\n- link \"Inicio\":\n  - /url: /desk/hospitality-suite/hospitality-home\n  - generic: Inicio\n- link \"Recepción\":\n  - /url: /desk/hospitality-suite/hospitality-reception\n  - generic: Recepción\n- link \"Reservas\":\n  - /url: /desk/hospitality-suite/hospitality-reservations\n  - generic: Reservas\n- link \"Estancias\":\n  - /url: /desk/hospitality-suite/hospitality-stays\n  - generic: Estancias\n- link \"Limpieza\":\n  - /url: /desk/hospitality-suite/hospitality-housekeeping\n  - generic: Limpieza\n- link \"Mantenimiento\":\n  - /url: /desk/hospitality-suite/hospitality-maintenance\n  - generic: Mantenimiento\n- link \"Consumos e inventario\":\n  - /url: /desk/hospitality-suite/hospitality-services\n  - generic: Consumos e inventario\n- link \"Clientes y huéspedes\":\n  - /url: /desk/hospitality-suite/hospitality-guests\n  - generic: Clientes y huéspedes\n- generic \"Menú de usuario\":\n  - generic \"Receptionist\":\n    - generic \"Receptionist\": R\n- button \"Menú de navegación\":\n- navigation \"Breadcrumb\":\n  - list:\n    - generic \"Reservas\":\n      - generic: Reservas\n- button \"Buscar\":\n- complementary \"Navegación de alojamiento\":\n  - generic: H\n  - strong: Hospitality\n  - navigation:\n    - link \"Inicio\":\n      - /url: /app/hospitality-home\n    - link \"Recepción\":\n      - /url: /app/hospitality-reception\n    - link \"Reservas\":\n      - /url: /app/hospitality-reservations\n    - link \"Estancias\":\n      - /url: /app/hospitality-stays\n    - link \"Limpieza\":\n      - /url: /app/hospitality-housekeeping\n    - link \"Mantenimiento\":\n      - /url: /app/hospitality-maintenance\n    - link \"Consumos e inventario\":\n      - /url: /app/hospitality-services\n    - link \"Clientes y huéspedes\":\n      - /url: /app/hospitality-guests\n- main:\n  - heading \"Reservas\" [level=1]\n  - paragraph:\n    - text: \"Fecha operativa:\"\n    - strong: 2026-10-19\n  - generic: Establecimiento\n  - combobox \"Establecimiento\":\n    - option \"Motel Luna Demo\"\n    - option \"Hotel Jardín Demo\" [selected]\n  - button \"Actualizar\"\n  - status: Sin tiempo real · pulse Actualizar\n  - button \"Cerrar sesión\"\n  - heading \"Reservas vigentes\" [level=2]\n  - paragraph: Reservas individuales y grupales; las retenciones liberan cupo al vencer.\n  - checkbox \"Mostrar historial\"\n  - text: Mostrar historial\n  - button \"Reservar\"\n  - button \"Buscar disponibilidad\"\n  - table:\n    - rowgroup:\n      - row \"Reserva Llegada / salida Canal Estado Importe Acciones\":\n        - columnheader \"Reserva\"\n        - columnheader \"Llegada / salida\"\n        - columnheader \"Canal\"\n        - columnheader \"Estado\"\n        - columnheader \"Importe\"\n        - columnheader \"Acciones\"\n    - rowgroup:\n      - row \"Reserva Cliente ficticio H1 · 25/10/2026 14:00 Llegada / salida 25/10/2026 14:00 26/10/2026 12:00 Canal Recepción Estado Confirmada Importe C$ 1,500.00 Acciones Ver reserva\":\n        - cell \"Reserva Cliente ficticio H1 · 25/10/2026 14:00\"\n        - cell \"Llegada / salida 25/10/2026 14:00 26/10/2026 12:00\":\n          - text: Llegada / salida 25/10/2026 14:00\n          - text: 26/10/2026 12:00\n        - cell \"Canal Recepción\"\n        - cell \"Estado Confirmada\":\n          - text: Estado\n          - generic: Confirmada\n        - cell \"Importe C$ 1,500.00\"\n        - cell \"Acciones Ver reserva\":\n          - text: Acciones\n          - button \"Ver reserva\"\n  - heading \"Calendario por habitación\" [level=2]\n  - generic: Fecha del calendario\n  - textbox \"Fecha del calendario\": 2026-10-21\n  - status:\n    - region \"Tabla de resultados\":\n      - table:\n        - rowgroup:\n          - row \"Habitación mié 21/10 jue 22/10 vie 23/10 sáb 24/10 dom 25/10 lun 26/10 mar 27/10\":\n            - columnheader \"Habitación\"\n            - columnheader \"mié 21/10\"\n            - columnheader \"jue 22/10\"\n            - columnheader \"vie 23/10\"\n            - columnheader \"sáb 24/10\"\n            - columnheader \"dom 25/10\"\n            - columnheader \"lun 26/10\"\n            - columnheader \"mar 27/10\"\n        - rowgroup:\n          - row \"H101 Sin asignación Sin asignación Sin asignación Sin asignación Reserva Reserva Sin asignación\":\n            - cell \"H101\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Reserva\":\n              - button \"Reserva\"\n            - cell \"Reserva\":\n              - button \"Reserva\"\n            - cell \"Sin asignación\"\n          - row \"H102 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H102\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"H103 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H103\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"H104 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H104\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"H105 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H105\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"H106 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H106\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"H107 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H107\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"H108 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H108\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"H109 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H109\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"H110 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H110\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"Por asignar Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"Por asignar\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n  - generic: \"Hora de referencia del servidor: 2026-10-21 12:27:52.275505 · NIO\"\n- contentinfo\n- text: \"* * * * * *\"\n- dialog \"Gestionar reserva\":\n  - heading \"Gestionar reserva\" [level=4]\n  - button \"Cerrar formulario\":\n  - heading \"Resumen de la reserva\" [level=3]\n  - generic: Confirmada\n  - term: Número de reserva\n  - definition: RES-2026-00001\n  - term: Huésped principal\n  - definition: Por registrar\n  - term: Cliente que paga\n  - definition: Cliente ficticio H1\n  - term: Entrada reservada\n  - definition: 25/10/2026 14:00\n  - term: Salida reservada\n  - definition: 26/10/2026 12:00\n  - term: Modalidad\n  - definition: Hotel\n  - term: Canal\n  - definition: Recepción\n  - term: Importe de la reserva\n  - definition: C$ 1,500.00\n  - paragraph: Este importe corresponde al alojamiento reservado. Consulte la cuenta para ver consumos, ajustes, impuestos, pagos y saldo actual.\n  - article:\n    - heading \"Habitación solicitada 1 · H101\" [level=4]\n    - paragraph: \"Estándar · Personas: 2 · Camas adicionales: 0\"\n  - generic: Acciones disponibles\n  - generic: Acción *\n  - combobox \"Acción\" [active]:\n    - option \"Registrar entrada\"\n    - option \"Modificar reserva\"\n    - option \"Cancelar reserva\"\n    - option \"No presentada\"\n  - generic: status\n  - link \"Imprimir confirmación\":\n    - /url: /printview?doctype=HS%20Booking&name=RES-2026-00001&format=HS%20Confirmaci%C3%B3n%20de%20reserva\n  - button \"Continuar\"",
+      "observed": {
+        "actions": [
+          {
+            "action": "reload",
+            "disabled": false,
+            "text": "Actualizar"
+          },
+          {
+            "action": "logout",
+            "disabled": false,
+            "text": "Cerrar sesión"
+          },
+          {
+            "action": "reserve",
+            "disabled": false,
+            "text": "Reservar"
+          },
+          {
+            "action": "availability",
+            "disabled": false,
+            "text": "Buscar disponibilidad"
+          },
+          {
+            "action": "booking",
+            "disabled": false,
+            "text": "Ver reserva"
+          },
+          {
+            "action": "booking",
+            "disabled": false,
+            "text": "Reserva"
+          },
+          {
+            "action": "booking",
+            "disabled": false,
+            "text": "Reserva"
+          }
+        ],
+        "bundle": "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.YN2QKLHG.js",
+        "dialogs": [
+          {
+            "labelledby": "hs-dialog-title-3",
+            "title": "Gestionar reserva",
+            "titleId": "hs-dialog-title-3"
+          }
+        ],
+        "heading": "Reservas",
+        "pageBusy": "false",
+        "propertyDisabled": false,
+        "status": "Sin tiempo real · pulse Actualizar",
+        "statusKind": "ready"
+      },
+      "screenshot": "302-detalle-reserva-preparado.jpg"
+    },
+    {
+      "step": "Interrupción sintética 503 de la actualización: la página muestra error recuperable.",
+      "snapshot": "- generic: Hospitality Suite\n- button \"Sidebar Menu\":\n- generic \"Buscar\":\n  - generic: Buscar\n- generic \"Notificación\":\n  - generic: Notificación\n- link \"Inicio\":\n  - /url: /desk/hospitality-suite/hospitality-home\n  - generic: Inicio\n- link \"Recepción\":\n  - /url: /desk/hospitality-suite/hospitality-reception\n  - generic: Recepción\n- link \"Reservas\":\n  - /url: /desk/hospitality-suite/hospitality-reservations\n  - generic: Reservas\n- link \"Estancias\":\n  - /url: /desk/hospitality-suite/hospitality-stays\n  - generic: Estancias\n- link \"Limpieza\":\n  - /url: /desk/hospitality-suite/hospitality-housekeeping\n  - generic: Limpieza\n- link \"Mantenimiento\":\n  - /url: /desk/hospitality-suite/hospitality-maintenance\n  - generic: Mantenimiento\n- link \"Consumos e inventario\":\n  - /url: /desk/hospitality-suite/hospitality-services\n  - generic: Consumos e inventario\n- link \"Clientes y huéspedes\":\n  - /url: /desk/hospitality-suite/hospitality-guests\n  - generic: Clientes y huéspedes\n- generic \"Menú de usuario\":\n  - generic \"Receptionist\":\n    - generic \"Receptionist\": R\n- button \"Menú de navegación\":\n- navigation \"Breadcrumb\":\n  - list:\n    - generic \"Reservas\":\n      - generic: Reservas\n- button \"Buscar\":\n- alert:\n  - heading \"No se pudo actualizar la operación\" [level=2]\n  - paragraph: Compruebe su conexión e intente nuevamente. Los movimientos requieren confirmación del servidor.\n  - button \"Reintentar\"\n- contentinfo\n- text: \"* * * * * *\"\n- text: \"*\"",
+      "observed": {
+        "actions": [
+          {
+            "action": "reload",
+            "disabled": false,
+            "text": "Reintentar"
+          }
+        ],
+        "bundle": "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.YN2QKLHG.js",
+        "dialogs": [],
+        "pageBusy": "false"
+      },
+      "screenshot": "303-actualizacion-error-recuperable.jpg"
+    },
+    {
+      "step": "Reintentar recupera la reserva existente sin repetir el guardado ni recargar el navegador.",
+      "snapshot": "- generic: Hospitality Suite\n- button \"Sidebar Menu\":\n- generic \"Buscar\":\n  - generic: Buscar\n- generic \"Notificación\":\n  - generic: Notificación\n- link \"Inicio\":\n  - /url: /desk/hospitality-suite/hospitality-home\n  - generic: Inicio\n- link \"Recepción\":\n  - /url: /desk/hospitality-suite/hospitality-reception\n  - generic: Recepción\n- link \"Reservas\":\n  - /url: /desk/hospitality-suite/hospitality-reservations\n  - generic: Reservas\n- link \"Estancias\":\n  - /url: /desk/hospitality-suite/hospitality-stays\n  - generic: Estancias\n- link \"Limpieza\":\n  - /url: /desk/hospitality-suite/hospitality-housekeeping\n  - generic: Limpieza\n- link \"Mantenimiento\":\n  - /url: /desk/hospitality-suite/hospitality-maintenance\n  - generic: Mantenimiento\n- link \"Consumos e inventario\":\n  - /url: /desk/hospitality-suite/hospitality-services\n  - generic: Consumos e inventario\n- link \"Clientes y huéspedes\":\n  - /url: /desk/hospitality-suite/hospitality-guests\n  - generic: Clientes y huéspedes\n- generic \"Menú de usuario\":\n  - generic \"Receptionist\":\n    - generic \"Receptionist\": R\n- button \"Menú de navegación\":\n- navigation \"Breadcrumb\":\n  - list:\n    - generic \"Reservas\":\n      - generic: Reservas\n- button \"Buscar\":\n- complementary \"Navegación de alojamiento\":\n  - generic: H\n  - strong: Hospitality\n  - navigation:\n    - link \"Inicio\":\n      - /url: /app/hospitality-home\n    - link \"Recepción\":\n      - /url: /app/hospitality-reception\n    - link \"Reservas\":\n      - /url: /app/hospitality-reservations\n    - link \"Estancias\":\n      - /url: /app/hospitality-stays\n    - link \"Limpieza\":\n      - /url: /app/hospitality-housekeeping\n    - link \"Mantenimiento\":\n      - /url: /app/hospitality-maintenance\n    - link \"Consumos e inventario\":\n      - /url: /app/hospitality-services\n    - link \"Clientes y huéspedes\":\n      - /url: /app/hospitality-guests\n- main:\n  - heading \"Reservas\" [level=1]\n  - paragraph:\n    - text: \"Fecha operativa:\"\n    - strong: 2026-10-19\n  - generic: Establecimiento\n  - combobox \"Establecimiento\":\n    - option \"Motel Luna Demo\"\n    - option \"Hotel Jardín Demo\" [selected]\n  - button \"Actualizar\"\n  - status: Sin tiempo real · pulse Actualizar\n  - button \"Cerrar sesión\"\n  - heading \"Reservas vigentes\" [level=2]\n  - paragraph: Reservas individuales y grupales; las retenciones liberan cupo al vencer.\n  - checkbox \"Mostrar historial\"\n  - text: Mostrar historial\n  - button \"Reservar\"\n  - button \"Buscar disponibilidad\"\n  - table:\n    - rowgroup:\n      - row \"Reserva Llegada / salida Canal Estado Importe Acciones\":\n        - columnheader \"Reserva\"\n        - columnheader \"Llegada / salida\"\n        - columnheader \"Canal\"\n        - columnheader \"Estado\"\n        - columnheader \"Importe\"\n        - columnheader \"Acciones\"\n    - rowgroup:\n      - row \"Cliente ficticio H1 · 25/10/2026 14:00 25/10/2026 14:00 26/10/2026 12:00 Recepción Confirmada C$ 1,500.00 Ver reserva\":\n        - cell \"Cliente ficticio H1 · 25/10/2026 14:00\"\n        - cell \"25/10/2026 14:00 26/10/2026 12:00\":\n          - text: 25/10/2026 14:00\n          - text: 26/10/2026 12:00\n        - cell \"Recepción\"\n        - cell \"Confirmada\":\n          - generic: Confirmada\n        - cell \"C$ 1,500.00\"\n        - cell \"Ver reserva\":\n          - button \"Ver reserva\"\n  - heading \"Calendario por habitación\" [level=2]\n  - generic: Fecha del calendario\n  - textbox \"Fecha del calendario\": 2026-10-21\n  - status:\n    - table:\n      - rowgroup:\n        - row \"Habitación mié 21/10 jue 22/10 vie 23/10 sáb 24/10 dom 25/10 lun 26/10 mar 27/10\":\n          - columnheader \"Habitación\"\n          - columnheader \"mié 21/10\"\n          - columnheader \"jue 22/10\"\n          - columnheader \"vie 23/10\"\n          - columnheader \"sáb 24/10\"\n          - columnheader \"dom 25/10\"\n          - columnheader \"lun 26/10\"\n          - columnheader \"mar 27/10\"\n      - rowgroup:\n        - row \"H101 Sin asignación Sin asignación Sin asignación Sin asignación Reserva Reserva Sin asignación\":\n          - cell \"H101\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Reserva\":\n            - button \"Reserva\"\n          - cell \"Reserva\":\n            - button \"Reserva\"\n          - cell \"Sin asignación\"\n        - row \"H102 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n          - cell \"H102\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n        - row \"H103 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n          - cell \"H103\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n        - row \"H104 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n          - cell \"H104\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n        - row \"H105 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n          - cell \"H105\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n        - row \"H106 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n          - cell \"H106\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n        - row \"H107 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n          - cell \"H107\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n        - row \"H108 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n          - cell \"H108\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n        - row \"H109 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n          - cell \"H109\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n        - row \"H110 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n          - cell \"H110\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n        - row \"Por asignar Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n          - cell \"Por asignar\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n          - cell \"Sin asignación\"\n  - generic: \"Hora de referencia del servidor: 2026-10-21 12:29:11.392150 · NIO\"\n- contentinfo\n- text: \"* * * * * *\"\n- text: \"*\"",
+      "observed": {
+        "actions": [
+          {
+            "action": "reload",
+            "disabled": false,
+            "text": "Actualizar"
+          },
+          {
+            "action": "logout",
+            "disabled": false,
+            "text": "Cerrar sesión"
+          },
+          {
+            "action": "reserve",
+            "disabled": false,
+            "text": "Reservar"
+          },
+          {
+            "action": "availability",
+            "disabled": false,
+            "text": "Buscar disponibilidad"
+          },
+          {
+            "action": "booking",
+            "disabled": false,
+            "text": "Ver reserva"
+          },
+          {
+            "action": "booking",
+            "disabled": false,
+            "text": "Reserva"
+          },
+          {
+            "action": "booking",
+            "disabled": false,
+            "text": "Reserva"
+          }
+        ],
+        "bundle": "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.YN2QKLHG.js",
+        "dialogs": [],
+        "heading": "Reservas",
+        "pageBusy": "false",
+        "propertyDisabled": false,
+        "status": "Sin tiempo real · pulse Actualizar",
+        "statusKind": "ready"
+      },
+      "screenshot": "304-actualizacion-recuperada.jpg"
+    },
+    {
+      "step": "Recepción abre la confirmación de salida después de recuperar la página.",
+      "snapshot": "- generic: Hospitality Suite\n- button \"Sidebar Menu\":\n- generic \"Buscar\":\n  - generic: Buscar\n- generic \"Notificación\":\n  - generic: Notificación\n- link \"Inicio\":\n  - /url: /desk/hospitality-suite/hospitality-home\n  - generic: Inicio\n- link \"Recepción\":\n  - /url: /desk/hospitality-suite/hospitality-reception\n  - generic: Recepción\n- link \"Reservas\":\n  - /url: /desk/hospitality-suite/hospitality-reservations\n  - generic: Reservas\n- link \"Estancias\":\n  - /url: /desk/hospitality-suite/hospitality-stays\n  - generic: Estancias\n- link \"Limpieza\":\n  - /url: /desk/hospitality-suite/hospitality-housekeeping\n  - generic: Limpieza\n- link \"Mantenimiento\":\n  - /url: /desk/hospitality-suite/hospitality-maintenance\n  - generic: Mantenimiento\n- link \"Consumos e inventario\":\n  - /url: /desk/hospitality-suite/hospitality-services\n  - generic: Consumos e inventario\n- link \"Clientes y huéspedes\":\n  - /url: /desk/hospitality-suite/hospitality-guests\n  - generic: Clientes y huéspedes\n- generic \"Menú de usuario\":\n  - generic \"Receptionist\":\n    - generic \"Receptionist\": R\n- button \"Menú de navegación\":\n- navigation \"Breadcrumb\":\n  - list:\n    - generic \"Reservas\":\n      - generic: Reservas\n- button \"Buscar\":\n- complementary \"Navegación de alojamiento\":\n  - generic: H\n  - strong: Hospitality\n  - navigation:\n    - link \"Inicio\":\n      - /url: /app/hospitality-home\n    - link \"Recepción\":\n      - /url: /app/hospitality-reception\n    - link \"Reservas\":\n      - /url: /app/hospitality-reservations\n    - link \"Estancias\":\n      - /url: /app/hospitality-stays\n    - link \"Limpieza\":\n      - /url: /app/hospitality-housekeeping\n    - link \"Mantenimiento\":\n      - /url: /app/hospitality-maintenance\n    - link \"Consumos e inventario\":\n      - /url: /app/hospitality-services\n    - link \"Clientes y huéspedes\":\n      - /url: /app/hospitality-guests\n- main:\n  - heading \"Reservas\" [level=1]\n  - paragraph:\n    - text: \"Fecha operativa:\"\n    - strong: 2026-10-19\n  - generic: Establecimiento\n  - combobox \"Establecimiento\":\n    - option \"Motel Luna Demo\"\n    - option \"Hotel Jardín Demo\" [selected]\n  - button \"Actualizar\"\n  - status: Sin tiempo real · pulse Actualizar\n  - button \"Cerrar sesión\" [active]\n  - heading \"Reservas vigentes\" [level=2]\n  - paragraph: Reservas individuales y grupales; las retenciones liberan cupo al vencer.\n  - checkbox \"Mostrar historial\"\n  - text: Mostrar historial\n  - button \"Reservar\"\n  - button \"Buscar disponibilidad\"\n  - table:\n    - rowgroup:\n      - row \"Reserva Llegada / salida Canal Estado Importe Acciones\":\n        - columnheader \"Reserva\"\n        - columnheader \"Llegada / salida\"\n        - columnheader \"Canal\"\n        - columnheader \"Estado\"\n        - columnheader \"Importe\"\n        - columnheader \"Acciones\"\n    - rowgroup:\n      - row \"Cliente ficticio H1 · 25/10/2026 14:00 25/10/2026 14:00 26/10/2026 12:00 Recepción Confirmada C$ 1,500.00 Ver reserva\":\n        - cell \"Cliente ficticio H1 · 25/10/2026 14:00\"\n        - cell \"25/10/2026 14:00 26/10/2026 12:00\":\n          - text: 25/10/2026 14:00\n          - text: 26/10/2026 12:00\n        - cell \"Recepción\"\n        - cell \"Confirmada\":\n          - generic: Confirmada\n        - cell \"C$ 1,500.00\"\n        - cell \"Ver reserva\":\n          - button \"Ver reserva\"\n  - heading \"Calendario por habitación\" [level=2]\n  - generic: Fecha del calendario\n  - textbox \"Fecha del calendario\": 2026-10-21\n  - status:\n    - region \"Tabla de resultados\":\n      - table:\n        - rowgroup:\n          - row \"Habitación mié 21/10 jue 22/10 vie 23/10 sáb 24/10 dom 25/10 lun 26/10 mar 27/10\":\n            - columnheader \"Habitación\"\n            - columnheader \"mié 21/10\"\n            - columnheader \"jue 22/10\"\n            - columnheader \"vie 23/10\"\n            - columnheader \"sáb 24/10\"\n            - columnheader \"dom 25/10\"\n            - columnheader \"lun 26/10\"\n            - columnheader \"mar 27/10\"\n        - rowgroup:\n          - row \"H101 Sin asignación Sin asignación Sin asignación Sin asignación Reserva Reserva Sin asignación\":\n            - cell \"H101\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Reserva\":\n              - button \"Reserva\"\n            - cell \"Reserva\":\n              - button \"Reserva\"\n            - cell \"Sin asignación\"\n          - row \"H102 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H102\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"H103 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H103\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"H104 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H104\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"H105 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H105\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"H106 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H106\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"H107 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H107\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"H108 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H108\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"H109 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H109\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"H110 Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"H110\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n          - row \"Por asignar Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación Sin asignación\":\n            - cell \"Por asignar\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n            - cell \"Sin asignación\"\n  - generic: \"Hora de referencia del servidor: 2026-10-21 12:29:11.392150 · NIO\"\n- contentinfo\n- text: \"* * * * * *\"\n- text: \"*\"\n- dialog:\n  - heading \"Confirmar\" [level=4]\n  - button \"Cerrar\":\n  - paragraph: ¿Seguro que quieres cerrar sesión?\n  - button \"No\":\n    - generic: \"No\"\n  - button \"Si\":\n    - generic: Si",
+      "observed": {
+        "actions": [
+          {
+            "action": "reload",
+            "disabled": false,
+            "text": "Actualizar"
+          },
+          {
+            "action": "logout",
+            "disabled": false,
+            "text": "Cerrar sesión"
+          },
+          {
+            "action": "reserve",
+            "disabled": false,
+            "text": "Reservar"
+          },
+          {
+            "action": "availability",
+            "disabled": false,
+            "text": "Buscar disponibilidad"
+          },
+          {
+            "action": "booking",
+            "disabled": false,
+            "text": "Ver reserva"
+          },
+          {
+            "action": "booking",
+            "disabled": false,
+            "text": "Reserva"
+          },
+          {
+            "action": "booking",
+            "disabled": false,
+            "text": "Reserva"
+          }
+        ],
+        "bundle": "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.YN2QKLHG.js",
+        "dialogs": [
+          {
+            "labelledby": "hs-dialog-title-4",
+            "title": "Confirmar",
+            "titleId": "hs-dialog-title-4"
+          }
+        ],
+        "heading": "Reservas",
+        "pageBusy": "false",
+        "propertyDisabled": false,
+        "status": "Sin tiempo real · pulse Actualizar",
+        "statusKind": "ready"
+      }
+    },
+    {
+      "step": "Recepción termina en Login; no hay ninguna nueva operación al reintentar.",
+      "snapshot": "- main:\n  - heading \"Iniciar Sesión\" [level=4]\n  - paragraph: ¡Bienvenido! Por favor, inicia sesión para continuar.\n  - form:\n    - generic: Correo electrónico\n    - textbox \"Correo electrónico\" [active]:\n      - /placeholder: juan@example.com\n    - generic: Contraseña\n    - textbox \"Contraseña\":\n      - /placeholder: ••••••••\n    - paragraph:\n      - link \"¿Olvidaste la contraseña?\":\n        - /url: \"#forgot\"\n    - button \"Continuar\"\n    - link \"Iniciar sesión con enlace de correo\":\n      - /url: \"#login-with-email-link\""
+    }
+  ],
+  "batch_bundle": "hospitality.bundle.YN2QKLHG.js"
+}

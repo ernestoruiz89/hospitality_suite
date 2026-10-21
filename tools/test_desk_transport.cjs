@@ -8,7 +8,7 @@ function fixture(){
   const timers=new Map();let timer=0;
   const hospitality_suite={};
   const context={window:{hospitality_suite},hospitality_suite,__:(value,args)=>typeof value==="string"&&args?value.replace(/\{(\d+)\}/g,(m,n)=>args[n]??m):value,frappe:{utils:{escape_html:String,get_random:()=>"fallback"},show_alert(){}},
-    moment:{tz:()=>({valueOf:()=>0})},performance:{now:()=>0},localStorage:{setItem(){}},$:()=>({is:()=>true}),
+    moment:{tz:()=>({valueOf:()=>0})},performance:{now:()=>0},localStorage:{setItem(){}},navigator:{onLine:true},$:()=>({is:()=>true}),
     setTimeout:fn=>{timers.set(++timer,fn);return timer;},clearTimeout:id=>timers.delete(id)};
   vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../hospitality_suite/public/js/hospitality.js'),'utf8'),context);
   const desk=Object.create(hospitality_suite.Desk.prototype);
@@ -18,6 +18,69 @@ function fixture(){
 }
 function deferred(){let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return{promise,resolve,reject};}
 const snapshot=(tag,property='hotel')=>({tag,server_time:'2026-10-19 10:00:00',system_timezone:'America/Managua',properties:[{name:property}]});
+
+function activityFixture(){
+  const f=fixture(),state={disabled:false,message:'',attributes:{}},banner={length:1,text(value){state.message=value;return this;},attr(key,value){state.attributes[key]=value;return this;}};
+  f.context.frappe.realtime={socket:{connected:true}};
+  f.desk.root.find=selector=>selector==='.hs-connection-banner'?banner:selector==='#hs-connection'?{text(){}}:{prop(key,value){if(key==='disabled')state.disabled=value;}};
+  f.desk.connection=Object.getPrototypeOf(f.desk).connection;
+  return{...f,state};
+}
+
+test('page activity covers a committed operation through its refresh, including actions appended after render',async()=>{
+  const {desk,state}=activityFixture(),execute=deferred(),refresh=deferred(),refreshStarted=deferred();let calls=0,opened=0;
+  desk.call=method=>{calls++;if(method==='execute')return execute.promise;refreshStarted.resolve();return refresh.promise;};desk.action_reserve=async()=>opened++;
+  const pending=desk.mutate('reserve',{},'stable-request');
+  assert.equal(state.disabled,true);assert.match(state.message,/Guardando operación/);assert.equal(desk.aria,'true');
+  execute.resolve({booking:'confirmed'});await refreshStarted.promise;
+  assert.equal(desk.loading,true);assert.match(desk.button('logout','Cerrar sesión'),/ disabled>/);
+  await desk.run_action('reserve');assert.equal(opened,0,'an action during the confirmed-operation refresh cannot silently create a second booking');
+  refresh.resolve(snapshot('updated'));assert.deepEqual(await pending,{booking:'confirmed'});
+  assert.equal(calls,2);assert.equal(state.disabled,false);assert.equal(state.attributes['data-state'],'ready');assert.equal(desk.aria,'false');
+  assert.doesNotMatch(desk.button('logout','Cerrar sesión'),/ disabled>/);await desk.run_action('reserve');assert.equal(opened,1);
+});
+
+test('double activation of an asynchronous detail opens once and a pending invalidation runs after the action ends',async()=>{
+  const {desk,state,timers}=activityFixture(),request=deferred();let opened=0,reads=0,refreshes=0;
+  desk.action_detail=async id=>{reads++;assert.equal(id,'opaque-stay');await request.promise;opened++;};
+  const first=desk.run_action('detail','opaque-stay');
+  assert.match(state.message,/Preparando acción/);assert.equal(state.disabled,true);
+  await desk.run_action('detail','opaque-stay');await desk.run_action('detail','other-stay');assert.equal(reads,1);
+  desk.scheduleRefresh();[...timers.values()].at(-1)();assert.equal(desk.refreshPending,true);
+  request.resolve();await first;assert.equal(opened,1);assert.equal(state.disabled,false);
+  desk.load=()=>refreshes++;[...timers.values()].at(-1)();assert.equal(refreshes,1);
+});
+
+test('action preparation is announced next to the clicked control and its local status is removed on completion or failure',async()=>{
+  const {desk,context}=activityFixture();let status;
+  context.document={createElement:()=>({setAttribute(key,value){this[key]=value;},remove(){this.removed=true;}})};
+  const trigger={isConnected:true,insertAdjacentElement(position,node){assert.equal(position,'afterend');status=node;}};
+  const request=deferred();desk.action_booking=()=>request.promise;
+  const pending=desk.run_action('booking','booking-key',trigger);
+  assert.equal(status.role,'status');assert.equal(status.className,'hs-action-status');assert.match(status.textContent,/Preparando acción/);assert.equal(status.removed,undefined);
+  request.resolve();await pending;assert.equal(status.removed,true);
+  context.frappe.msgprint=()=>{};desk.action_booking=async()=>{throw Error('read failed');};await desk.run_action('booking','booking-key',trigger);assert.equal(status.removed,true);
+});
+
+test('an action failure restores enabled controls, keeps one native error and permits a deliberate retry',async()=>{
+  const {desk,state,context}=activityFixture();let notices=0,attempts=0;
+  context.frappe.msgprint=()=>notices++;
+  desk.action_detail=async()=>{attempts++;if(attempts===1)throw Error('unhandled transport failure');};
+  await desk.run_action('detail');assert.equal(notices,1);assert.equal(state.disabled,false);assert.equal(desk.page_busy(),false);
+  await desk.run_action('detail');assert.equal(attempts,2);assert.equal(notices,1);
+  desk.action_detail=async()=>{throw {_server_messages:'already presented'};};await desk.run_action('detail');assert.equal(notices,1);
+  context.navigator.onLine=false;await desk.run_action('detail');desk.connection();assert.equal(notices,1);assert.equal(state.disabled,true);assert.match(state.message,/Sin conexión/);
+});
+
+test('only the latest load releases the page and invalidations arriving during a load are not lost',async()=>{
+  const {desk,state,timers}=activityFixture(),old=deferred(),current=deferred();let calls=0,refreshes=0;
+  desk.call=()=>++calls===1?old.promise:current.promise;
+  const first=desk.load(),second=desk.load();assert.match(state.message,/Actualizando información/);assert.equal(state.disabled,true);
+  old.reject(Error('obsolete failure'));await first;assert.equal(desk.loading,true);assert.equal(state.disabled,true);
+  desk.scheduleRefresh();[...timers.values()].at(-1)();assert.equal(desk.refreshPending,true);
+  current.resolve(snapshot('current'));await second;assert.equal(desk.loading,false);assert.equal(state.disabled,false);assert.equal(desk.rendered,'current');
+  desk.load=()=>refreshes++;[...timers.values()].at(-1)();assert.equal(refreshes,1);
+});
 
 test('booking descriptions use people and dates while respecting discreet mode and preserving keys',()=>{
   const {desk}=fixture();

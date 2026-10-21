@@ -1,6 +1,10 @@
 # Siguiente fase del objetivo activo
 
-Actualizado el 21/10/2026. El alcance obligatorio sigue abierto: **196 V, seis I, cero P y 16 R**, de las mismas 218 entradas y huella: **22 sin cierre**. R significa contraste individual pendiente y no función ausente. Los recuentos no son un porcentaje de programación ni una fecha de terminación.
+Actualizado el 21/10/2026. El alcance obligatorio sigue abierto: **198 V, seis I, cero P y catorce R**, de las mismas 218 entradas y huella: **veinte sin cierre**. R significa contraste individual pendiente y no función ausente. Los recuentos no son un porcentaje de programación ni una fecha de terminación.
+
+## Ampliación comprobada — 0.8.5
+
+[ACTIVIDAD_Y_RECUPERACION_PAGES.md](ACTIVIDAD_Y_RECUPERACION_PAGES.md) acredita 196 JS aprobadas y dos escenarios reales delimitados por una restauración: estados/controles/reintento, y corrección del aviso móvil junto al botón. S18-11/S18-12 se acreditan en [ESTADO_Y_EVIDENCIAS_ENTREGA.md](ESTADO_Y_EVIDENCIAS_ENTREGA.md); quedan veinte entradas abiertas. Prioridad: selector manual de categoría/habitación sin códigos/filtros técnicos y precisión del estado vacío junto a borradores; completar las demás reglas/estados y tareas por rol. La secuencia rápida durante el cierre visual de diálogos conserva observación, sin causa completa acreditada. Contratos abstractos, entregables/fases y ensayo final F26 siguen pendientes. OTA aplazada.
 
 ## Ampliación comprobada — 0.8.4
 

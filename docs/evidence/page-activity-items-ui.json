@@ -1,0 +1,90 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "synthetic_transport": true,
+  "native_application": true,
+  "core_files_modified": false,
+  "mutations_by_inspector": false,
+  "fixture_origin": "Pages UI only",
+  "shifts": [
+    {
+      "name": "TUR-2026-00001",
+      "status": "Closed",
+      "cashier": "cashier@hospitality.example.invalid",
+      "opening_amount": 0.0,
+      "counted_amount": 0.0,
+      "difference": 0.0
+    }
+  ],
+  "operation_counts": {
+    "HS Booking": 1,
+    "HS Stay": 0,
+    "HS Charge": 0,
+    "HS Payment": 0,
+    "Sales Invoice": 0,
+    "Payment Entry": 0,
+    "Journal Entry": 0
+  },
+  "booking": {
+    "name": "RES-2026-00001",
+    "status": "Confirmed",
+    "room": "H101",
+    "amount": 1500
+  },
+  "transport_events": [
+    {
+      "mode": "slow-bootstrap",
+      "path": "/api/method/hospitality_suite.api.bootstrap",
+      "delay_seconds": 8
+    },
+    {
+      "mode": "slow-bootstrap",
+      "path": "/api/method/hospitality_suite.api.bootstrap",
+      "delay_seconds": 8
+    },
+    {
+      "mode": "slow-bootstrap",
+      "path": "/api/method/hospitality_suite.api.bootstrap",
+      "delay_seconds": 8
+    },
+    {
+      "mode": "slow-booking",
+      "path": "/api/method/hospitality_suite.api.booking_detail",
+      "delay_seconds": 8
+    },
+    {
+      "mode": "failed-bootstrap",
+      "path": "/api/method/hospitality_suite.api.bootstrap",
+      "delay_seconds": 0
+    }
+  ],
+  "http_statuses": {
+    "hospitality_suite.api.execute": [
+      "200",
+      "200",
+      "200"
+    ],
+    "hospitality_suite.api.booking_detail": [
+      "200"
+    ],
+    "hospitality_suite.api.bootstrap": [
+      "200",
+      "200",
+      "200",
+      "200",
+      "200",
+      "200",
+      "200",
+      "200",
+      "200",
+      "200",
+      "503",
+      "200"
+    ],
+    "logout": [
+      "200",
+      "200"
+    ]
+  },
+  "http_500": 0,
+  "business_date": "2026-10-19"
+}

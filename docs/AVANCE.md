@@ -2,6 +2,12 @@
 
 Actualización: 2026-10-21. Objetivo activo; el alcance obligatorio aún tiene verificaciones y componentes pendientes en REQUISITOS.md. No se declara aptitud para producción.
 
+## Ampliación comprobada — 0.8.5
+
+[ACTIVIDAD_Y_RECUPERACION_PAGES.md](ACTIVIDAD_Y_RECUPERACION_PAGES.md): estado compartido de carga/guardado/preparación, botones bloqueados, doble activación controlada y notificaciones pendientes recuperadas. Caja/Recepción con demoras sintéticas y un 503 recuperable; 21 eventos iniciales. La revisión visual detecta aviso fuera de pantalla móvil: la compilación final lo coloca junto al botón y comprueba tres eventos adicionales con un borrador después de restaurar. **196 JS aprobadas**; 380 nativas de 0.8.2 conservadas como antecedente.
+
+[ESTADO_Y_EVIDENCIAS_ENTREGA.md](ESTADO_Y_EVIDENCIAS_ENTREGA.md) acredita S18-11/S18-12 con evidencias versionadas y lista diferenciada: **198 V, 6 I, 0 P y 14 R; veinte sin cierre**. Continúan reglas/vistas/tareas secundarias, selector manual con códigos y texto vacío junto a borradores, además del contraste final de fases/entregables. Dos restauraciones conservan aceptación; principal, dos archivos privados y fecha 19/10 intactos. Ambos sitios 0.8.5, OTA aplazada y F26 pendiente.
+
 ## Ampliación comprobada — 0.8.4
 
 [DISPONIBILIDAD_VISUAL_Y_LIMITES.md](DISPONIBILIDAD_VISUAL_Y_LIMITES.md): tarjetas verdes/rojas con texto y motivo, estado desconocido neutral y limpieza independiente. Recepción confirma una reserva ficticia desde la tarjeta y consulta H101 roja/nueve verdes en escritorio y móvil. Cantidad/personas inválidas se rechazan antes del parseo Int, conservan el texto y reciben mensaje/foco; el checkpoint registra cero consultas antes de corregir. **191 JS aprobadas**; los 380 casos nativos de 0.8.2 siguen como antecedente.

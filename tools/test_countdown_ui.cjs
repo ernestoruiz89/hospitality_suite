@@ -13,6 +13,7 @@ function fixture(){
   desk.property='hotel';desk.data={system_timezone:'Etc/UTC',property_now:'2026-10-20T06:00:00-06:00',occupied:[{name:'stay',ends_at:nodes[0].dataset.countdown}],charges:[{amount:1500,status:'Pending'}]};
   desk.root={find(selector){assert.equal(selector,'[data-countdown]');return {each(callback){nodes.forEach((node,index)=>callback(index,node));}};}};
   desk.scheduleRefresh=()=>{refreshes++;};
+  desk.connection=()=>{}; // This fixture isolates the monotonic clock, not page controls.
   return{desk,context,nodes,zones,advance(ms){monotonic+=ms;},wall(value){wall=value;},visible(value){visible=value;},refreshes:()=>refreshes};
 }
 

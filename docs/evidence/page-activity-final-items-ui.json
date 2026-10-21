@@ -1,0 +1,56 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "stage": "Final bundle: local progress regression after first restore",
+  "mutations_by_inspector": false,
+  "fixture_origin": "Pages UI only",
+  "operation_counts": {
+    "HS Shift": 0,
+    "HS Booking": 1,
+    "HS Stay": 0,
+    "HS Charge": 0,
+    "HS Payment": 0,
+    "Sales Invoice": 0,
+    "Payment Entry": 0,
+    "Journal Entry": 0,
+    "HS Allocation": 0
+  },
+  "booking": {
+    "name": "RES-2026-00001",
+    "status": "Draft",
+    "amount": 0
+  },
+  "transport_events": [
+    {
+      "mode": "slow-bootstrap",
+      "path": "/api/method/hospitality_suite.api.bootstrap",
+      "delay_seconds": 8
+    },
+    {
+      "mode": "slow-bootstrap",
+      "path": "/api/method/hospitality_suite.api.bootstrap",
+      "delay_seconds": 8
+    },
+    {
+      "mode": "slow-bootstrap",
+      "path": "/api/method/hospitality_suite.api.bootstrap",
+      "delay_seconds": 8
+    },
+    {
+      "mode": "slow-booking",
+      "path": "/api/method/hospitality_suite.api.booking_detail",
+      "delay_seconds": 8
+    },
+    {
+      "mode": "failed-bootstrap",
+      "path": "/api/method/hospitality_suite.api.bootstrap",
+      "delay_seconds": 0
+    },
+    {
+      "mode": "slow-booking",
+      "path": "/api/method/hospitality_suite.api.booking_detail",
+      "delay_seconds": 8
+    }
+  ],
+  "first_items_receipt": "page-activity-items-ui.json",
+  "first_restore_receipt": "page-activity-first-ux-restored.json"
+}

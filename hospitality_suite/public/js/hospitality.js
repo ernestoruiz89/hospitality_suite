@@ -89,8 +89,10 @@ window.hospitality_suite = window.hospitality_suite || {};
       const sequence=this.loadSequence=(this.loadSequence||0)+1;
       let selected=this.property;
       this.refreshPending=false;
+      this.loading=true;
       try {
         this.root.attr("aria-busy","true");
+        this.connection();
         if(!this.data) this.root.html(`<div class="hs-loading" role="status">${frappe.utils.escape_html(__("Cargando la operación…"))}</div>`);
         const initial=!this.data;
         let data=await this.call("bootstrap",{property_name:initial?undefined:selected || undefined});
@@ -109,11 +111,12 @@ window.hospitality_suite = window.hospitality_suite || {};
         if(sequence!==this.loadSequence)return;
         this.root.html(`<div class="hs-empty" role="alert"><h2>${frappe.utils.escape_html(__("No se pudo actualizar la operación"))}</h2><p>${frappe.utils.escape_html(__("Compruebe su conexión e intente nuevamente. Los movimientos requieren confirmación del servidor."))}</p><button class="btn btn-primary" data-act="reload">${frappe.utils.escape_html(__("Reintentar"))}</button></div>`);
         this.bind();
-      } finally {if(sequence===this.loadSequence)this.root.attr("aria-busy","false");}
+      } finally {if(sequence===this.loadSequence){this.loading=false;this.root.attr("aria-busy",String(this.page_busy()));this.connection();if(this.refreshPending&&!this.page_busy())this.scheduleRefresh();}}
     }
-    scheduleRefresh() {this.refreshPending=true;clearTimeout(this.refreshTimer);this.refreshTimer=setTimeout(()=>{if(!this.busy && $(this.wrapper).is(":visible"))this.load();},500);}
+    page_busy(){return Boolean(this.busy||this.loading||this.actionPending);}
+    scheduleRefresh() {this.refreshPending=true;clearTimeout(this.refreshTimer);this.refreshTimer=setTimeout(()=>{if(!this.page_busy() && $(this.wrapper).is(":visible"))this.load();},500);}
     allowed(action){return this.data.actions.includes(action);}
-    button(action,label,id="",kind="secondary") {return `<button type="button" class="btn btn-${kind} hs-action" data-act="${esc(action)}" data-id="${esc(id)}">${esc(__(label))}</button>`;}
+    button(action,label,id="",kind="secondary") {return `<button type="button" class="btn btn-${kind} hs-action" data-act="${esc(action)}" data-id="${esc(id)}"${this.page_busy()?" disabled":""}>${esc(__(label))}</button>`;}
     badge(status) {return `<span class="hs-badge hs-${esc(status.toLowerCase().replaceAll(" ","-"))}">${esc(title(status))}</span>`;}
     roomName(name) {return this.data.rooms.find(r=>r.name===name)?.room_number || name;}
     guestName(name) {return this.prop.discreet_mode ? __("Huésped registrado") : (this.data.guests || []).find(g=>g.name===name)?.full_name || __("Huésped registrado");}
@@ -134,13 +137,31 @@ window.hospitality_suite = window.hospitality_suite || {};
       }
       this.bind();this.connection();this.updateTimers();
     }
-    connection() {const message=!navigator.onLine?__("Sin conexión · operación pausada"):frappe.realtime.socket?.connected?__("● Tiempo real conectado"):__("Sin tiempo real · pulse Actualizar");this.root.find("#hs-connection").text(message);let banner=this.root.find(".hs-connection-banner");if(!banner.length)banner=$('<span class="hs-connection-banner" role="status"></span>').appendTo(this.root.find(".hs-header-actions"));banner.text(message);this.root.find(".hs-action,#hs-property").prop("disabled",!navigator.onLine || this.busy);}
+    connection() {
+      const message=!navigator.onLine?__("Sin conexión · operación pausada"):frappe.realtime.socket?.connected?__("● Tiempo real conectado"):__("Sin tiempo real · pulse Actualizar");
+      const progress=this.busy?__("Guardando operación… Espere la confirmación."):this.loading?__("Actualizando información… Espere un momento."):this.actionPending?__("Preparando acción… Espere un momento."):"";
+      this.root.find("#hs-connection").text(message);
+      let banner=this.root.find(".hs-connection-banner");if(!banner.length)banner=$('<span class="hs-connection-banner" role="status"></span>').appendTo(this.root.find(".hs-header-actions"));
+      banner.text(navigator.onLine&&progress?progress:message).attr("data-state",progress?"busy":"ready");
+      this.root.attr("aria-busy",String(this.page_busy()));
+      this.root.find("[data-act],#hs-property").prop("disabled",!navigator.onLine || this.page_busy());
+    }
+    async run_action(action,id="",trigger=null) {
+      if(this.page_busy() || !navigator.onLine || typeof this[`action_${action}`]!=="function")return;
+      let status;
+      if(typeof document!=="undefined"&&trigger?.isConnected){
+        status=document.createElement("span");status.className="hs-action-status";status.setAttribute("role","status");status.textContent=__("Preparando acción… Espere un momento.");
+        trigger.insertAdjacentElement("afterend",status);
+      }
+      this.actionPending=true;this.connection();
+      try{return await this[`action_${action}`](id);}
+      catch(error){if(!serverMessage(error))frappe.msgprint({title:__("No se completó la acción"),message:__("Revise los datos y vuelva a intentarlo. No confirme el movimiento hasta recibir respuesta del servidor."),indicator:"red"});}
+      finally{status?.remove();this.actionPending=false;this.connection();if(this.refreshPending)this.scheduleRefresh();}
+    }
     bind() {
       this.root.off("click").on("click","[data-act]",async(event)=>{
         const button=$(event.currentTarget); const action=button.data("act"), id=String(button.data("id") || "");
-        if(this.busy || !navigator.onLine)return;
-        try {if(this[`action_${action}`])await this[`action_${action}`](id);}
-        catch(error) {if(!serverMessage(error))frappe.msgprint({title:__("No se completó la acción"),message:__("Revise los datos y vuelva a intentarlo. No confirme el movimiento hasta recibir respuesta del servidor."),indicator:"red"});}
+        await this.run_action(action,id,event.currentTarget);
       });
       this.root.find("#hs-property").on("change",e=>{this.property=e.target.value;this.data=null;this.load();});
       this.root.find("#hs-search").on("input",e=>{if(this.update_room_filter)this.update_room_filter("query",e.target.value);else{this.query=e.target.value.toLowerCase();this.filterRooms();}});
