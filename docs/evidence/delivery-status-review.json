@@ -1,5 +1,5 @@
 {
-  "reviewed_at_utc": "2026-10-21T22:01:50.005149+00:00",
+  "reviewed_at_utc": "2026-10-21T22:31:11.625697+00:00",
   "requirements": [
     "S18-02",
     "S18-03",
@@ -8,7 +8,7 @@
   ],
   "scope": "Native artifacts, operational prints, delivered evidence and differentiated status list; not proof of overall app completion.",
   "source_sha256": "876632e08057a1ea0386bd9e01fde6f477c62380a9414bed23e2a852765fb651",
-  "audit_sha256": "caba2c5ddcde68c36fd5608a0ebfb293f01235e1f15c6f5326f7c485ff67002c",
+  "audit_sha256": "27a8407015c5c00147585b21b3ba8bc049124a1ada14cf80fdf8cde56b6e455e",
   "statuses": {
     "I": 10,
     "V": 208
@@ -247,7 +247,7 @@
     {
       "id": "S04-16",
       "status": "I",
-      "remaining": "0.8.3–0.8.5 acreditan validación compartida, límites de cantidad/personas y actividad/reintento. 0.8.6 resuelve selectores técnicos, vacío junto a borradores y acceso/etiquetas/conservación numérica del editor expandido, con defectos originales y repetición final. Completar las demás reglas específicas por campo y estados de búsquedas/vistas secundarias, incluida su carga/vacío y doble envío. Los clics durante cierre visual nativo conservan observación histórica; no se afirma una causa completa. SELECTORES_Y_RESERVA_MANUAL.md delimita esta fase. 0.8.7 corrige la deshabilitación persistente de acciones en modales y su reinserción tardía, con defectos intermedios y repetición real conservados. Esto no acredita todas las reglas/estados ni todos los clics durante el cierre visual nativo."
+      "remaining": "0.8.3–0.8.5 acreditan validación compartida, límites de cantidad/personas y actividad/reintento. 0.8.6 resuelve selectores técnicos, vacío junto a borradores y acceso/etiquetas/conservación numérica del editor expandido, con defectos originales y repetición final. Completar las demás reglas específicas por campo y estados de búsquedas/vistas secundarias, incluida su carga/vacío y doble envío. Los clics durante cierre visual nativo conservan observación histórica; no se afirma una causa completa. SELECTORES_Y_RESERVA_MANUAL.md delimita esta fase. 0.8.7 corrige la deshabilitación persistente de acciones en modales y su reinserción tardía, con defectos intermedios y repetición real conservados. Esto no acredita todas las reglas/estados ni todos los clics durante el cierre visual nativo. Revisión numérica sobre 0.8.8: corregidas fracciones enteras y valores malformados antes del parseo, incluidas filas opcionales y guardado parcial; 215 JS y Gerencia/Recepción reales. VALIDACION_NUMERICA.md delimita la cobertura y conserva pendientes las demás reglas y estados."
     },
     {
       "id": "S04-20",
@@ -276,11 +276,11 @@
     }
   ],
   "current_javascript": {
-    "tests": 210,
-    "desk": 207,
+    "tests": 215,
+    "desk": 212,
     "portal": 3,
-    "phase": "0.8.8",
-    "executed_log_sha256": "69c7db48821c2f4e8a40b5e327f5e863e6813063347a92eea9dcf56190c1b18f"
+    "phase": "numeric-review",
+    "executed_log_sha256": "c4930629c6f984376d6d31b9de8a518d13938196d166f52734948e28240e4804"
   },
   "current_native": {
     "tests": 404,
@@ -288,9 +288,19 @@
     "pure": 32,
     "phase": "0.8.8",
     "execution_revision": "fb8c022",
-    "reused_by_unchanged_code_review": true,
+    "rerun": false,
+    "reused_by_unchanged_backend_review": true,
+    "source_comparison_sha256": "eda5b4d17f77493b5eca67688c52ad626a7f58d5131114a910ea824768338eb0",
     "junit_sha256": "7935ec0233de5a7f15bfecafdcc57536173039c464347d43c4fe9a533aeef606",
     "raw_output_sha256": "29c2f8e91e96dce702968b0ea2b4db67b462c6b5d6b85791e1ae87a0f73373e4"
+  },
+  "latest_ui": {
+    "phase": "numeric-review",
+    "events": 10,
+    "roles": 2,
+    "installed_bundle": "OTTQHYJ4",
+    "acceptance_restored": true,
+    "scope": "Numeric validation and corrected saves only; main availability read-only. Not complete role acceptance."
   },
   "historical_native": {
     "tests": 380,
@@ -315,8 +325,9 @@
     "limitations_preserved": true
   },
   "references_sha256": {
-    "docs/ESTADO_Y_EVIDENCIAS_ENTREGA.md": "56b8e85e98e8e937a412f4666bc67e421124421f58fbc4d49fe6a9a75e80981d",
-    "docs/AUDITORIA_ESPECIFICACION.md": "700a7e9829e8e063dcf9b52cd515f2e5a05e9041785f21be01cf5cef3e76b2ee",
+    "docs/ESTADO_Y_EVIDENCIAS_ENTREGA.md": "5a40e72b316cfa77dd74abf9b95b9b0de0697767495a10c254df4ed95ffb05c1",
+    "docs/VALIDACION_NUMERICA.md": "9497a72b325712d8a2ed3aa6cde52b0dc6b4b161aad03b0c9d80b0ec49f9e51f",
+    "docs/AUDITORIA_ESPECIFICACION.md": "50caf73ef07c9630fbbafd3d1bfef0dca06dfda3a09173ac14285505c6b7dd8d",
     "docs/REVISION_FASES_Y_ACCIONES.md": "fa348b3fbbe3ab1b0e10b4c04e356c6960a597933348f509e2b3fb41cc4f006a",
     "docs/DISPONIBILIDAD_POR_CANTIDAD.md": "e76226a821cfd7e00108f3cc566572a29d85f915ceeecc4e6c846d9dc10ea534",
     "docs/BORRADORES_DE_RESERVA.md": "2faf6f5f80a63db0f64d746c4b45fd441704f00a3ba157934d50869082e32134",
@@ -343,8 +354,8 @@
     "docs/ENTREGABLES_Y_REVISION.md": "77aae010a6779c5974b09eaad51e41e2befef2adef44199749a30526b61ed710",
     "docs/IMPRESIONES_OPERATIVAS.md": "cff3a31398ba0f8d5e407570d265c267d41826e16a32c428b97f11e1ac2a952f",
     "docs/CONTRATOS_PROVEEDORES.md": "1c5c65a95290ef7831422adab40fa711aada7c39879fbac20dadb27f98c71499",
-    "docs/REQUISITOS.md": "0e08b81ae9d397cbf668e10d9e1a8eed1a90f2793a2b6f0e36f86aa112badbdd",
-    "docs/PENDIENTES.md": "9e0e4066dd4829af3955500c123f65cfc0f8b1960dae18b715fbb80f06d8a462",
+    "docs/REQUISITOS.md": "35156e4dbde908f8e83b1c3b018ec7d2b8314d1f279f36c5a6749cbe1473de79",
+    "docs/PENDIENTES.md": "d59c3b23e561d39a7d5fe66ee25f2cc148cd6b66de380ab930a1f16d5a465fd6",
     "docs/VALIDACION_FORMULARIOS.md": "eb6a8a866f2dcc2037fa9808654ad62a76355c8a4632eed2ab04a2205babd7e4",
     "docs/ACTIVIDAD_Y_RECUPERACION_PAGES.md": "75de66165b82ce9ba32215d7fafb0563b2310bf92036223ddabe5573d8492821",
     "docs/OPERACION.md": "5e6a6a96ea96fa191871a2fb741473f47eaf9f61cea99a408c7b50a394b1162c",
@@ -443,7 +454,24 @@
     "docs/evidence/phase-review-actions.json": "3b6fb506990b5d0ea5c5787c9c4eaac374cd00e6ffc5cf789b5e0ccf3a7f3cec",
     "docs/evidence/phase-review-preservation.json": "7dd6cb9366807f7a978cb6a1e92e82c7a15f338a075113ffd7adc2c5799422b2",
     "docs/evidence/phase-review-crosswalk.json": "04457234f49e75ff451bdef8078f3094a6c304c0c284f941c7f5119b66f0cc80",
-    "docs/evidence/phase-review-verification.json": "e70caf7f5d02b0b3713e70995b7a971607b00ffc5109b20668985dea1fa57cd7"
+    "docs/evidence/phase-review-verification.json": "e70caf7f5d02b0b3713e70995b7a971607b00ffc5109b20668985dea1fa57cd7",
+    "docs/evidence/numeric-review-js-tests.log": "c4930629c6f984376d6d31b9de8a518d13938196d166f52734948e28240e4804",
+    "docs/evidence/numeric-review-red-tests.log": "64a3f9d72136b51a4867c078e6ea504cb9735a4a6fab680cae444b1619bd36c6",
+    "docs/evidence/numeric-review-wire-invariants.json": "4fc5fab3927fc1bddd9ef611984c70074e92fcf33fd470d9387f47cede109fb8",
+    "docs/evidence/numeric-review-browser.json": "cbdbbe31c409686792b8b6ccd6fcc847834b875178fdaa00a9af70a738b9bd01",
+    "docs/evidence/352-capacidad-entera-validacion.png": "7417699c2d532c31038a2842c07e48272ba7e21a4541753bae13cdb2c32d059c",
+    "docs/evidence/numeric-review-scalar-database.json": "74abd66ab2b7bd7687ee96f64f2cad9d916bb82690c76dcc10f84e91f55fca80",
+    "docs/evidence/353-fila-personas-validacion.png": "b85c7dc11feb57dfe5110963e15497dba2ed7b78c815fba7e0ba7dcac80658bb",
+    "docs/evidence/numeric-review-grid-blocked-database.json": "25a5e242a593cf0816ce826ac36ce1ce64ae8d84c3969d1b56f88b32159a20dd",
+    "docs/evidence/354-borrador-cantidades-corregidas.png": "ca967d09c5d268036fafc72691b097708838ac4697ca421a99148bf22612d8e3",
+    "docs/evidence/numeric-review-grid-saved-database.json": "a50b95bb56507d319e6900c0253e03a9e62b9e892d6adece0b5f4f680dca8348",
+    "docs/evidence/355-disponibilidad-sin-repeticion.png": "49a0562dbe89e364655f0826bad03c347a56147bb67514c58e97fbb190160e82",
+    "docs/evidence/numeric-review-availability.json": "47ca1b8a2de7ceee6d194d206638f36a1e975fe2a0c3b8eb0788ebb285aa73cb",
+    "docs/evidence/numeric-review-acceptance-restored.json": "748222fe7630b7dc56705c5e08da8c9f75f486dc78bfd80719c5b21c5de847ec",
+    "docs/evidence/numeric-review-ux-restored.json": "d64122ce2f087e8c83c8bab5973d424f985f228ef11f9dd44506d25ef5e0f633",
+    "docs/evidence/numeric-review-upgrade.json": "a2403d24a3f4a341b864767ccbeee143bba60f1df4afa7c60427dddac8ee36b5",
+    "docs/evidence/numeric-review-final-state.json": "176401532521962c267204c1b6c21d175d378d6273101dec8fd962c92075efc4",
+    "docs/evidence/numeric-review-verification.json": "eda5b4d17f77493b5eca67688c52ad626a7f58d5131114a910ea824768338eb0"
   },
   "database_mutations": false,
   "ui_replay": false,

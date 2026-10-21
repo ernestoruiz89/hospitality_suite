@@ -211,3 +211,52 @@ test('an explicit maximum and a nonnegative decimal bound keep zero and optional
   field.set(101);assert.equal(f.desk.validate_form_dialog(f.dialog),false);assert.match(f.dialog._hsFormErrors[0].message,/máximo permitido es 100/);
   field.set(-0.5);assert.equal(f.desk.validate_form_dialog(f.dialog),false);assert.match(f.dialog._hsFormErrors[0].message,/número de 0 o más/);
 });
+
+test('all editable numeric controls reject malformed drafts and integer fractions without needing domain bounds',()=>{
+  for(const type of ['Int','Long Int','Float','Currency','Percent']){
+    const f=validationFixture(),field=f.add('number',2,{fieldtype:type});
+    for(const raw of ['2abc','NaN','Infinity']){
+      assert.equal(f.desk.validate_form_dialog(f.dialog,{onlyNumeric:true,pending:[{control:field,raw}]}),false,type+': '+raw);
+      assert.equal(field.$input[0].value,raw);assert.equal(field.get_value(),2);
+    }
+    field.set(-2);assert.equal(f.desk.validate_form_dialog(f.dialog),true,type+' retains signed values');
+    field.set(0);assert.equal(f.desk.validate_form_dialog(f.dialog),true,type+' retains zero');
+    field.set(1.5);assert.equal(f.desk.validate_form_dialog(f.dialog),!['Int','Long Int'].includes(type),type+' fractional input');
+  }
+});
+
+test('numeric row preflight inspects optional columns and the saved expanded draft before native parsing',()=>{
+  const f=validationFixture(),row={name:'one',people:1},table=f.add('rooms',[row],{fieldtype:'Table',fields:[input('people',{fieldtype:'Int',label:'Personas'})]});
+  delete table.$input;
+  const editor=f.add('temporary',1,{fieldtype:'Int',label:'Personas'});delete f.dialog.fields_dict.temporary;editor.df.fieldname='people';
+  editor.$input.is=()=>true;editor.$input[0].value='1';
+  table.grid={docfields:table.df.fields,grid_rows:[{doc:row,grid_form:{fields_dict:{people:editor}}}]};
+  const pending=[{table,doc:row,control:editor,raw:'1.5'}];
+  assert.equal(f.desk.validate_form_dialog(f.dialog,{onlyNumeric:true,pending}),false);
+  assert.equal(f.dialog._hsFormErrors.length,1);assert.match(f.focused().message,/Fila 1.*Personas.*entero/);
+  assert.equal(editor.$input[0].value,'1.5');assert.equal(row.people,'1.5','invalid local draft survives a row refresh');
+  assert.equal(editor.$input[0].getAttribute('aria-invalid'),'true');assert.equal(f.focused().focus.$input[0],editor.$input[0]);
+  pending[0].raw='2';row.people=2;assert.equal(f.desk.validate_form_dialog(f.dialog,{onlyNumeric:true,pending}),true);
+  assert.equal(f.desk.validate_form_dialog(f.dialog),true);assert.equal(editor.$input[0].getAttribute('aria-invalid'),null);
+});
+
+test('row validation keeps separate tables and collapsed row drafts independent',()=>{
+  const f=validationFixture(),rows=[{name:'same',amount:0},{name:'same',amount:0}],pending=[];
+  for(let i=0;i<2;i++){
+    const table=f.add('table'+i,[rows[i]],{fieldtype:'Table',fields:[input('amount',{fieldtype:'Currency',label:'Importe'})]});delete table.$input;
+    const editor={df:{fieldname:'amount',fieldtype:'Currency'},get_value:()=>rows[i].amount,$input:{0:{value:'0'},is:()=>false}};
+    table.grid={docfields:table.df.fields,grid_rows:[{doc:rows[i],on_grid_fields_dict:{amount:editor}}]};
+    pending.push({table,doc:rows[i],control:editor,raw:i?'2abc':'0'});
+  }
+  assert.equal(f.desk.validate_form_dialog(f.dialog,{onlyNumeric:true,pending}),false);
+  assert.equal(f.dialog._hsFormErrors.length,1);assert.equal(f.focused().field,f.dialog.fields_dict.table1);
+  assert.equal(rows[0].amount,0);assert.equal(rows[1].amount,'2abc');
+  assert.equal(f.focused().focus.$input[0],f.dialog.fields_dict.table1.$wrapper[0].querySelector('.hs-field-error'));
+});
+
+test('partial draft type preflight still rejects lossy integer input but leaves domain minimums for confirmation',()=>{
+  const f=validationFixture(),field=f.add('people',0,{fieldtype:'Int',_hsBounds:{min:1,integer:true}});
+  const options=raw=>({onlyNumeric:true,typesOnly:true,pending:[{control:field,raw}]});
+  for(const raw of ['', '0','-1'])assert.equal(f.desk.validate_form_dialog(f.dialog,options(raw)),true,raw);
+  for(const raw of ['1.5','2abc'])assert.equal(f.desk.validate_form_dialog(f.dialog,options(raw)),false,raw);
+});

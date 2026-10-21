@@ -1,5 +1,9 @@
 # Registro de implementación
 
+## Validación numérica en las Pages — 0.8.8
+
+[VALIDACION_NUMERICA.md](VALIDACION_NUMERICA.md) reproduce y corrige capacidad 1.5 guardada como 1, y amplía la comprobación previa al parseo a tipos numéricos sin límites explícitos y filas opcionales/expandidas. Aviso junto al campo o identificado por fila, borrador original recuperable y guardado corregido comprobados con Gerencia/Recepción. **215 JS aprobadas**; backend sin cambios, 404 nativas de `fb8c022` conservan su alcance histórico. Aceptación restaurada, consulta principal de disponibilidad sin texto redundante repetida. **208 V/diez I**, sin nuevos cierres generales; OTA aplazada y F26 pendiente.
+
 ## Contraste de fases sobre 0.8.8
 
 [REVISION_FASES_Y_ACCIONES.md](REVISION_FASES_Y_ACCIONES.md) contrasta las doce R generales/de fases. S19-01/S19-03/S19-04/S19-05/S19-06/S19-09 pasan a V, con fuentes, módulos/casos y evidencia real anterior delimitada; las otras seis pasan a I con paquete/instalación, aceptación y recuperación final explícitamente pendientes. No se convierte el inventario de botones en aceptación de todas las tareas. **208 V, diez I, cero P y cero R: diez sin cierre** de las mismas 218 entradas/huella.

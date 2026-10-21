@@ -269,7 +269,7 @@ window.hospitality_suite = window.hospitality_suite || {};
         const control=d.fields_dict[df.fieldname];df.options=options;control.df.options=options;control.last_options=null;control.set_options=safeSelectOptions;control.set_options();
         if(df.default!==undefined)await control.set_value(df.default);
       }
-      const numeric=["Int","Float","Currency","Percent","Check"],edits=new Map(),rowEdits=new Map(),rowEditors=new Map();
+      const numeric=["Int","Long Int","LongInt","Float","Currency","Percent","Check"],edits=new Map(),rowEdits=new Map(),rowEditors=new Map();
       const rowControls=row=>[...new Set([...Object.values(row.on_grid_fields_dict||{}),...Object.values(row.grid_form?.fields_dict||{})])];
       // Grid editors are reused/refreshed when focus moves or another row is
       // added. Keep the user's numeric input before those native refreshes.
@@ -284,7 +284,7 @@ window.hospitality_suite = window.hospitality_suite || {};
             const raw=control.get_input_value();
             rowEdits.get(key).set(control.df.fieldname,raw);
             rowEditors.get(key).set(control.df.fieldname,control);
-            row.doc[control.df.fieldname]=control.get_parsed_value(raw);
+            row.doc[control.df.fieldname]=this.form_numeric_error?.(control,raw,{typesOnly:true})?raw:control.get_parsed_value(raw);
           }
         }
       });
@@ -292,9 +292,9 @@ window.hospitality_suite = window.hospitality_suite || {};
         if(d._hsBusy)return;d._hsBusy=true;d.get_primary_btn().prop("disabled",true);
         try{
           const pending=[];
-          const capture=(control,saved,doc)=>{
+          const capture=(control,saved,doc,table)=>{
             if(!control.$input||control.df.read_only||!numeric.includes(control.df.fieldtype))return;
-            if(saved?.has(control.df.fieldname)||control.$input.is(":visible"))pending.push({control,doc,raw:saved?.has(control.df.fieldname)?saved.get(control.df.fieldname):control.get_input_value()});
+            if(saved?.has(control.df.fieldname)||control.$input.is(":visible"))pending.push({control,doc,table,raw:saved?.has(control.df.fieldname)?saved.get(control.df.fieldname):control.get_input_value()});
           };
           for(const field of Object.values(d.fields_dict)){
             capture(field,edits);
@@ -303,15 +303,15 @@ window.hospitality_suite = window.hospitality_suite || {};
               for(const name of new Set(controls.map(control=>control.df.fieldname))){
                 const candidates=controls.filter(control=>control.df.fieldname===name),last=rowEditors.get(key)?.get(name);
                 const control=candidates.find(control=>control.$input?.is(":visible"))||(candidates.includes(last)?last:candidates[0]);
-                capture(control,rowEdits.get(key),row.doc);
+                capture(control,rowEdits.get(key),row.doc,field);
               }
             }
           }
           // Snapshot everything before awaiting: a control refresh must not
           // overwrite a later control's freshly typed value or an inactive row.
-          // Explicit numeric bounds must see the raw draft before native Int
-          // parsing truncates a fraction or turns a malformed value into zero.
-          if(validate&&this.validate_form_dialog&&!this.validate_form_dialog(d,{onlyNumeric:true,pending}))return;
+          // Every numeric type must see the raw draft before native parsing.
+          // Partial saves omit required/domain checks, but never truncate input.
+          if(this.validate_form_dialog&&!this.validate_form_dialog(d,{onlyNumeric:true,typesOnly:!validate,pending}))return;
           for(const value of pending)if(value.doc)value.doc[value.control.df.fieldname]=value.control.get_parsed_value(value.raw);
           for(const {control,raw} of pending)await control.parse_validate_and_set_in_model(raw);
           if(validate&&this.validate_form_dialog&&!this.validate_form_dialog(d))return;

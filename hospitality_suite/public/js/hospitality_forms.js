@@ -8,37 +8,47 @@
   const missing=(value,type)=>value==null||typeof value==='string'&&!value.trim()||Array.isArray(value)&&!value.length||type==='Check'&&!value;
   const emptyTypes=new Set(['HTML','Button','Tab Break','Section Break','Column Break']);
   let errorSequence=0;
-  const numericError=(field,raw)=>{
-    const bounds=field.df._hsBounds;if(!bounds||raw==null||typeof raw==='string'&&!raw.trim())return null;
+  const numericTypes=new Set(['Int','Long Int','LongInt','Float','Currency','Percent']);
+  const numericError=(field,raw,{typesOnly=false}={})=>{
+    if(!numericTypes.has(field.df.fieldtype)||raw==null||typeof raw==='string'&&!raw.trim())return null;
+    const bounds=typesOnly?{}:field.df._hsBounds||{};
+    const integer=bounds.integer||['Int','Long Int','LongInt'].includes(field.df.fieldtype);
     let value;
     try{value=Number(field.eval_expression?field.eval_expression(raw):raw);}catch{value=NaN;}
-    if(!Number.isFinite(value)||bounds.integer&&!Number.isInteger(value)||bounds.min!==undefined&&value<bounds.min){
-      if(bounds.min!==undefined)return bounds.integer?__('Indique un número entero de {0} o más.',[bounds.min]):__('Indique un número de {0} o más.',[bounds.min]);
-      return bounds.integer?__('Indique un número entero.'):__('Indique un número válido.');
+    if(!Number.isFinite(value)||integer&&!Number.isInteger(value)||bounds.min!==undefined&&value<bounds.min){
+      if(bounds.min!==undefined)return integer?__('Indique un número entero de {0} o más.',[bounds.min]):__('Indique un número de {0} o más.',[bounds.min]);
+      return integer?__('Indique un número entero.'):__('Indique un número válido.');
     }
     return bounds.max!==undefined&&value>bounds.max?__('El valor máximo permitido es {0}.',[bounds.max]):null;
   };
+  Desk.prototype.form_numeric_error=numericError;
   // Keep native controls, values and business rules. These messages explain
   // local mistakes beside the field before opening any server confirmation.
-  Desk.prototype.form_error_entries=function(dialog,{onlyNumeric=false,pending=[]}={}){
+  Desk.prototype.form_error_entries=function(dialog,{onlyNumeric=false,typesOnly=false,pending=[]}={}){
     const errors=[],fields=Object.values(dialog.fields_dict||{}),add=(field,message)=>errors.push({field,message});
     for(const field of fields){
       if(!editable(field)||emptyTypes.has(field.df.fieldtype))continue;
       const value=field.get_value(),input=field.$input?.[0],label=__(field.df.label||'Dato');
       const draft=pending.find(edit=>edit.control===field&&!edit.doc);
-      const numeric=numericError(field,draft?draft.raw:field.get_input_value?.()??value);
+      const numeric=numericError(field,draft?draft.raw:field.get_input_value?.()??value,{typesOnly});
       if(numeric)errors.push({field,message:numeric,...(draft?{raw:draft.raw}:{})});
-      if(onlyNumeric)continue;
-      if(field.df.reqd&&missing(value,field.df.fieldtype))add(field,field.df.fieldtype==='Check'?__('Marque esta casilla para continuar.'):__('Complete {0}.',[label]));
-      else if(!numeric&&(field.df.invalid||input?.validity?.valid===false))add(field,__('Revise el valor de {0}.',[label]));
+      if(!onlyNumeric){
+        if(field.df.reqd&&missing(value,field.df.fieldtype))add(field,field.df.fieldtype==='Check'?__('Marque esta casilla para continuar.'):__('Complete {0}.',[label]));
+        else if(!numeric&&(field.df.invalid||input?.validity?.valid===false))add(field,__('Revise el valor de {0}.',[label]));
+      }
       if(field.df.fieldtype!=='Table'||!Array.isArray(value))continue;
       const columns=field.grid?.docfields||field.df.fields||[];
       value.forEach((row,index)=>{
         for(const column of columns){
-          if(!column.reqd||column.hidden||column.read_only||emptyTypes.has(column.fieldtype))continue;
-          const editor=field.grid?.grid_rows?.find(gridRow=>gridRow.doc===row||gridRow.doc?.name&&gridRow.doc.name===row.name)?.on_grid_fields_dict?.[column.fieldname];
+          if(column.hidden||column.read_only||emptyTypes.has(column.fieldtype))continue;
+          const gridRow=field.grid?.grid_rows?.find(gridRow=>gridRow.doc===row||gridRow.doc?.name&&gridRow.doc.name===row.name);
+          const draft=pending.find(edit=>edit.doc===row&&(!edit.table||edit.table===field)&&edit.control.df.fieldname===column.fieldname);
+          const candidates=[gridRow?.on_grid_fields_dict?.[column.fieldname],gridRow?.grid_form?.fields_dict?.[column.fieldname]].filter(Boolean);
+          const editor=draft?.control||candidates.find(control=>control.$input?.is?.(':visible'))||candidates[0];
           if(editor&&!editable(editor))continue;
-          if(missing(row[column.fieldname],column.fieldtype)||editor?.df.invalid)add(field,__('Fila {0}: revise {1}.',[index+1,__(column.label||column.fieldname)]));
+          const raw=draft?draft.raw:row[column.fieldname],numeric=numericError(editor||{df:column},raw,{typesOnly});
+          if(numeric)errors.push({field,editor,message:__('Fila {0}, {1}: {2}',[index+1,__(column.label||column.fieldname),numeric]),...(draft?{raw,doc:row,column:column.fieldname}:{})});
+          else if(!onlyNumeric&&((column.reqd&&missing(raw,column.fieldtype))||editor?.df.invalid))add(field,__('Fila {0}: revise {1}.',[index+1,__(column.label||column.fieldname)]));
         }
       });
     }
@@ -68,21 +78,27 @@
     node.textContent=message;node.hidden=!message;node.setAttribute('data-state',kind);
     root.setAttribute('aria-busy',String(kind==='busy'));
   };
-  Desk.prototype.validate_form_dialog=function(dialog,{focus=true,onlyNumeric=false,pending=[]}={}){
-    const errors=this.form_error_entries(dialog,{onlyNumeric,pending});
+  Desk.prototype.validate_form_dialog=function(dialog,{focus=true,onlyNumeric=false,typesOnly=false,pending=[]}={}){
+    const errors=this.form_error_entries(dialog,{onlyNumeric,typesOnly,pending});
     if(onlyNumeric&&!errors.length)return true;
     dialog._hsFormErrors=errors;dialog._hsValidationAttempted=true;
-    for(const error of errors)if(error.raw!==undefined&&error.field.$input?.[0])error.field.$input[0].value=String(error.raw);
+    for(const error of errors)if(error.raw!==undefined){
+      const input=(error.editor||error.field).$input?.[0];if(input)input.value=String(error.raw);
+      if(error.doc)error.doc[error.column]=error.raw; // Local draft only; never send a lossy native conversion.
+    }
     clearInline(dialog);
     const grouped=new Map();
-    for(const error of errors){if(!grouped.has(error.field))grouped.set(error.field,[]);grouped.get(error.field).push(error.message);}
-    if(typeof document!=='undefined')for(const [field,messages] of grouped){
+    for(const error of errors){
+      const anchor=error.editor?.$input?.is?.(':visible')?error.editor:error.field;
+      if(!grouped.has(anchor))grouped.set(anchor,[]);grouped.get(anchor).push(error);
+    }
+    if(typeof document!=='undefined')for(const [field,entries] of grouped){
       const wrapper=field.$wrapper?.[0];if(!wrapper)continue;
-      const node=document.createElement('p');node.className='hs-field-error';node.id='hs-field-error-'+(++errorSequence);node.tabIndex=-1;node.textContent=messages.join(' ');wrapper.append(node);
+      const node=document.createElement('p');node.className='hs-field-error';node.id='hs-field-error-'+(++errorSequence);node.tabIndex=-1;node.textContent=entries.map(error=>error.message).join(' ');wrapper.append(node);
       const target=field.$input?.[0]||field.grid?.wrapper?.[0];
       if(target){const invalid=target.getAttribute('aria-invalid');target.setAttribute('aria-invalid','true');target.setAttribute('aria-describedby',[(target.getAttribute('aria-describedby')||''),node.id].filter(Boolean).join(' '));dialog._hsInlineFields.push({node,target,invalid});}
       else dialog._hsInlineFields.push({node});
-      for(const error of errors.filter(row=>row.field===field))error.focus={...field,$input:[field.$input?.[0]||node]};
+      for(const error of entries)error.focus={...field,$input:[field.$input?.[0]||node]};
     }
     if(errors.length){
       this.set_form_status(dialog,'invalid',__('Revise los campos indicados antes de continuar.'));
@@ -178,7 +194,7 @@
     });
     field?.tab?.tab_link.find(".nav-link").trigger("click");
     dialog._hsSyncFormTabs?.();
-    field?.$wrapper?.[0]?.scrollIntoView({block:"nearest"});
+    (first?.focus||field)?.$wrapper?.[0]?.scrollIntoView({block:"nearest"});
     this.focus_form_error?.(dialog,first?.focus||field);
   };
   Desk.prototype.configure_form_dialog=function(dialog,layout){

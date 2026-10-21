@@ -1166,9 +1166,10 @@
         "docs/evidence/print-delivery-pdfs.json",
         "docs/evidence/print-delivery-ui-data.json",
         "docs/REVISION_FASES_Y_ACCIONES.md",
-        "docs/evidence/phase-review-actions.json"
+        "docs/evidence/phase-review-actions.json",
+        "docs/VALIDACION_NUMERICA.md"
       ],
-      "remaining": "0.8.3–0.8.5 acreditan validación compartida, límites de cantidad/personas y actividad/reintento. 0.8.6 resuelve selectores técnicos, vacío junto a borradores y acceso/etiquetas/conservación numérica del editor expandido, con defectos originales y repetición final. Completar las demás reglas específicas por campo y estados de búsquedas/vistas secundarias, incluida su carga/vacío y doble envío. Los clics durante cierre visual nativo conservan observación histórica; no se afirma una causa completa. SELECTORES_Y_RESERVA_MANUAL.md delimita esta fase. 0.8.7 corrige la deshabilitación persistente de acciones en modales y su reinserción tardía, con defectos intermedios y repetición real conservados. Esto no acredita todas las reglas/estados ni todos los clics durante el cierre visual nativo."
+      "remaining": "0.8.3–0.8.5 acreditan validación compartida, límites de cantidad/personas y actividad/reintento. 0.8.6 resuelve selectores técnicos, vacío junto a borradores y acceso/etiquetas/conservación numérica del editor expandido, con defectos originales y repetición final. Completar las demás reglas específicas por campo y estados de búsquedas/vistas secundarias, incluida su carga/vacío y doble envío. Los clics durante cierre visual nativo conservan observación histórica; no se afirma una causa completa. SELECTORES_Y_RESERVA_MANUAL.md delimita esta fase. 0.8.7 corrige la deshabilitación persistente de acciones en modales y su reinserción tardía, con defectos intermedios y repetición real conservados. Esto no acredita todas las reglas/estados ni todos los clics durante el cierre visual nativo. Revisión numérica sobre 0.8.8: corregidas fracciones enteras y valores malformados antes del parseo, incluidas filas opcionales y guardado parcial; 215 JS y Gerencia/Recepción reales. VALIDACION_NUMERICA.md delimita la cobertura y conserva pendientes las demás reglas y estados."
     },
     {
       "id": "S04-17",

@@ -1,0 +1,80 @@
+{
+  "read_only_query": true,
+  "bundle": [
+    "http://hospitality.localhost:8086/assets/hospitality_suite/dist/js/hospitality.bundle.OTTQHYJ4.js"
+  ],
+  "cards": [
+    {
+      "background": "rgb(234, 246, 237)",
+      "border": "rgb(75, 152, 101)",
+      "classes": "hs-room-state is-available",
+      "text": "H101\n✓ Disponible\nLimpieza actual: Limpia"
+    },
+    {
+      "background": "rgb(234, 246, 237)",
+      "border": "rgb(75, 152, 101)",
+      "classes": "hs-room-state is-available",
+      "text": "H102\n✓ Disponible\nLimpieza actual: Sucia"
+    },
+    {
+      "background": "rgb(234, 246, 237)",
+      "border": "rgb(75, 152, 101)",
+      "classes": "hs-room-state is-available",
+      "text": "H103\n✓ Disponible\nLimpieza actual: Sucia"
+    },
+    {
+      "background": "rgb(234, 246, 237)",
+      "border": "rgb(75, 152, 101)",
+      "classes": "hs-room-state is-available",
+      "text": "H104\n✓ Disponible\nLimpieza actual: Sucia"
+    },
+    {
+      "background": "rgb(252, 236, 238)",
+      "border": "rgb(196, 106, 115)",
+      "classes": "hs-room-state is-unavailable",
+      "text": "H105\n× No disponible\nOcupada\nLimpieza actual: Limpia"
+    },
+    {
+      "background": "rgb(234, 246, 237)",
+      "border": "rgb(75, 152, 101)",
+      "classes": "hs-room-state is-available",
+      "text": "H106\n✓ Disponible\nLimpieza actual: Limpia"
+    },
+    {
+      "background": "rgb(234, 246, 237)",
+      "border": "rgb(75, 152, 101)",
+      "classes": "hs-room-state is-available",
+      "text": "H107\n✓ Disponible\nLimpieza actual: Limpia"
+    },
+    {
+      "background": "rgb(234, 246, 237)",
+      "border": "rgb(75, 152, 101)",
+      "classes": "hs-room-state is-available",
+      "text": "H108\n✓ Disponible\nLimpieza actual: Limpia"
+    },
+    {
+      "background": "rgb(234, 246, 237)",
+      "border": "rgb(75, 152, 101)",
+      "classes": "hs-room-state is-available",
+      "text": "H109\n✓ Disponible\nLimpieza actual: Limpia"
+    },
+    {
+      "background": "rgb(234, 246, 237)",
+      "border": "rgb(75, 152, 101)",
+      "classes": "hs-room-state is-available",
+      "text": "H110\n✓ Disponible\nLimpieza actual: Limpia"
+    }
+  ],
+  "dates": [
+    {
+      "name": "starts_at",
+      "value": "2026-10-21T14:00"
+    },
+    {
+      "name": "ends_at",
+      "value": "2026-10-22T12:00"
+    }
+  ],
+  "summary": "Ver opciones de habitación (9)Puede elegir entre estas habitaciones, hasta el cupo disponible. La limpieza se verifica antes del ingreso.H101✓ DisponibleH102✓ DisponibleH103✓ DisponibleH104✓ DisponibleH106✓ DisponibleH107✓ DisponibleH108✓ DisponibleH109✓ DisponibleH110✓ Disponible",
+  "url": "http://hospitality.localhost:8086/desk/hospitality-suite/hospitality-reservations"
+}

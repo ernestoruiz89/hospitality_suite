@@ -296,6 +296,25 @@ test('expanded row edits survive native refresh and collapse without a stale inl
   inlineVisible=true;inlineRaw='3';capture({target:inlineInput});await dialog._hsSubmit();assert.equal(payload.rooms[0].people,3);assert.equal(inlineWrites,1);assert.equal(expandedWrites,1);
 });
 
+test('row integer drafts survive collapse and cannot be truncated by confirmation or a partial save',async()=>{
+  const {desk,context}=fixture();vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../hospitality_suite/public/js/hospitality_forms.js'),'utf8'),context);
+  const doc={name:'row-1',people:1};let capture,raw='1.5',visible=true,parsed=0,sent=0,payload;
+  const input={value:raw},control={df:{fieldname:'people',fieldtype:'Int',label:'Personas'},$input:{0:input,is:()=>visible},get_value:()=>doc.people,get_input_value:()=>raw,
+    get_parsed_value:value=>Math.trunc(Number(value)),async parse_validate_and_set_in_model(value){parsed++;doc.people=this.get_parsed_value(value);}};
+  const table={df:{fieldname:'rooms',fieldtype:'Table',fields:[control.df]},get_value:()=>[doc],grid:{docfields:[control.df],grid_rows:[{doc,grid_form:{fields_dict:{people:control}}}]}};
+  context.frappe.ui={Dialog:class{
+    constructor(){this.fields_dict={rooms:table};this.$wrapper={addClass(){},on(events,selector,callback){if(events.includes('hsNumeric'))capture=callback;}};}
+    get_close_btn(){return{attr(){}};}get_primary_btn(){return{off(){return this;},on(){return this;},prop(){return this;}};}show(){}get_values(){return{rooms:[{people:doc.people}]};}
+  }};
+  const dialog=await desk.dialog('Reserva',[],async values=>{sent++;payload=values;});
+  capture({target:input});assert.equal(doc.people,'1.5');visible=false;raw='1';input.value='1'; // native editor refresh
+  for(const validate of [true,false]){
+    await dialog._hsSubmit({validate});assert.equal(parsed,0);assert.equal(sent,0);assert.equal(input.value,'1.5');assert.equal(doc.people,'1.5');
+    assert.match(dialog._hsFormErrors[0].message,/Fila 1.*Personas.*entero/);
+  }
+  raw='2';visible=true;capture({target:input});await dialog._hsSubmit();assert.equal(parsed,1);assert.equal(sent,1);assert.equal(payload.rooms[0].people,2);
+});
+
 test('dependency reads keep a just-typed required price and its caret before native blur, including zero',async()=>{
   const {desk,context}=fixture();
   const input={value:'900',type:'text',isConnected:true,selectionStart:1,selectionEnd:2,getClientRects:()=>[{}],setSelectionRange(start,end){this.selectionStart=start;this.selectionEnd=end;}};

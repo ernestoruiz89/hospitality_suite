@@ -1,0 +1,12 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "command": [
+    "/home/frappe/.local/bin/bench",
+    "--site",
+    "hospitality-acceptance.localhost",
+    "migrate"
+  ],
+  "exit_code": 0,
+  "raw_log_sha256": "6f7df1ef7e78def4646271c6f6ca1866b56091390ef9b8addd4ce670745804c5",
+  "log_relative_to_workspace": ".local/numeric-review/acceptance-restored.log"
+}

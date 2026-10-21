@@ -1,0 +1,22 @@
+{
+  "stage": "scalar",
+  "observed_at": "2026-10-21T22:20:16.469243+00:00",
+  "site": "hospitality-acceptance.localhost",
+  "categories": [
+    {
+      "category_name": "Capacidad corregida temporal",
+      "capacity": 2
+    },
+    {
+      "category_name": "Revisión numérica temporal",
+      "capacity": 1
+    }
+  ],
+  "bookings": [],
+  "rooms": [],
+  "method": "Read-only database observation; not a network request trace",
+  "sources": {
+    "hospitality_suite/public/js/hospitality.js": "ac3b56aec458c11e3e0eca4710d9b376b5e7b332441affd9d5f31c6a22a62be3",
+    "hospitality_suite/public/js/hospitality_forms.js": "d8bc03ff9a7932bf545e4b96ffbc3e60a305227ac6eab7a8dde1e9bec6f38a47"
+  }
+}

@@ -12,7 +12,7 @@ BENCH = Path('/home/frappe/benches/hospitality-bench')
 SITE = 'hospitality-acceptance.localhost'
 parser = argparse.ArgumentParser()
 parser.add_argument('action', choices=['start', 'stop'])
-parser.add_argument('--phase', choices=['print-delivery', 'realtime-origins'], default='print-delivery')
+parser.add_argument('--phase', choices=['print-delivery', 'realtime-origins', 'numeric-review'], default='print-delivery')
 args = parser.parse_args()
 config = json.loads((BENCH / 'sites' / SITE / 'site_config.json').read_text())
 assert config['db_name'] == 'hospitality_acceptance' and config.get('allow_tests') and config.get('pause_scheduler')

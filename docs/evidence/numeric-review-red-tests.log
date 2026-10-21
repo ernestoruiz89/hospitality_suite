@@ -1,0 +1,95 @@
+✔ tabbed forms preserve every original control, callback, required flag and future extension once (2.6925ms)
+✔ hotel rates keep people charges while block/hour options are reserved for motel mode (0.7972ms)
+✔ cash and refund controls follow the selected intent without changing wire values or hiding the amount (0.8134ms)
+✔ missing required controls reveal their tab while zero and hidden values do not become false errors (0.7216ms)
+✔ a mandatory unchecked checklist is the first error while a numeric zero is still valid (0.626ms)
+✔ payment headings and review actions distinguish receiving cash from returning it (1.3866ms)
+✔ tab selection has an explicit accessible state after navigation and required-field recovery (1.0537ms)
+✔ a review hides and makes its parent inert, then restores its unchanged draft on cancellation (0.6692ms)
+✔ inline required messages retain zero amounts and skip hidden, dependent or read-only fields (1.3558ms)
+✔ table errors identify the row and column without changing row identity, values or optional fields (0.8711ms)
+✔ native invalid flags and incomplete browser dates cannot pass as complete optional values (0.6683ms)
+✔ stay intervals require a later end while report and rate date ranges include the same final day (1.288ms)
+✔ inline errors preserve native descriptions and invalid markers, use text, and do not accumulate on retry (0.7159ms)
+✔ editing clears corrected messages after the first attempt without moving focus or validating a busy draft (0.7513ms)
+✔ each dialog owns its accessible messages and processing state without declaring server success (1.1855ms)
+✔ explicit positive integer bounds reject zero, fractions, negatives and malformed drafts without affecting valid zero amounts (0.7877ms)
+✔ bounds inspect the saved raw draft before native integer truncation and keep that mistake visible without writing the model (0.701ms)
+✔ bounds use the control native expression/locale evaluator and leave optional blanks, read-only fields and unrelated integers alone (0.6642ms)
+✔ an explicit maximum and a nonnegative decimal bound keep zero and optional blank values valid (0.694ms)
+✖ all editable numeric controls reject malformed drafts and integer fractions without needing domain bounds (2.9042ms)
+✖ numeric row preflight inspects optional columns and the saved expanded draft before native parsing (0.6895ms)
+✖ partial draft type preflight still rejects lossy integer input but leaves domain minimums for confirmation (0.7033ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 19
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 84.9601
+
+✖ failing tests:
+
+test at tools\test_forms_ui.cjs:215:1
+✖ all editable numeric controls reject malformed drafts and integer fractions without needing domain bounds (2.9042ms)
+  AssertionError [ERR_ASSERTION]: Int: 2abc
+
+  true !== false
+
+      at TestContext.<anonymous> (C:\Users\Ernesto\Documents\ChatGPT\Hotel\tools\test_forms_ui.cjs:219:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tools\test_forms_ui.cjs:228:1
+✖ numeric row preflight inspects optional columns and the saved expanded draft before native parsing (0.6895ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  true !== false
+
+      at TestContext.<anonymous> (C:\Users\Ernesto\Documents\ChatGPT\Hotel\tools\test_forms_ui.cjs:235:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tools\test_forms_ui.cjs:243:1
+✖ partial draft type preflight still rejects lossy integer input but leaves domain minimums for confirmation (0.7033ms)
+  AssertionError [ERR_ASSERTION]: 0
+
+  false !== true
+
+      at TestContext.<anonymous> (C:\Users\Ernesto\Documents\ChatGPT\Hotel\tools\test_forms_ui.cjs:246:42)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

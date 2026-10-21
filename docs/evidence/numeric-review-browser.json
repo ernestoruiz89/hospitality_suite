@@ -1,0 +1,407 @@
+{
+  "site": "hospitality-acceptance.localhost:8089",
+  "roles": [
+    "HS Manager",
+    "HS Receptionist"
+  ],
+  "events": [
+    {
+      "label": "manager-capacity-fraction-blocked",
+      "active": {
+        "label": "Capacidad",
+        "name": "capacity",
+        "value": "1.5"
+      },
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.OTTQHYJ4.js"
+      ],
+      "inputs": [
+        {
+          "description": null,
+          "invalid": null,
+          "label": "Categoría",
+          "name": "category_name",
+          "value": "Capacidad corregida temporal"
+        },
+        {
+          "description": "hs-field-error-1",
+          "invalid": "true",
+          "label": "Capacidad",
+          "name": "capacity",
+          "value": "1.5"
+        },
+        {
+          "description": null,
+          "invalid": null,
+          "label": "Camas extra admitidas",
+          "name": "max_extra_beds",
+          "value": "0"
+        }
+      ],
+      "text": "Configuración\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nConfiguración\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nConfigure la operación paso a paso\n\nLas cuentas e impuestos se seleccionan explícitamente de ERPNext.\n\n1. Políticas y contabilidad →\n2. Categorías →\n3. Habitaciones →\n4. Tarifas →\n5. Medios de pago →\n6. Empresas, agencias y crédito\n7. Horarios y penalizaciones\n8. Denominaciones de caja\n9. Series y formatos\n11. Categorías de gasto\n12. Clasificación y mínimos\n13. Equipos y activos\n14. Retención de datos\n15. Portal de reservas\n16. Anticipos y garantías\n17. Artículos y servicios\n18. Contabilidad por servicio\nConfiguración actual\n\n10 habitaciones · 2 categorías · 1 tarifas\n\nHora de referencia del servidor: 2026-10-21 16:19:22.275171 · NIO\nConfiguración\n\nRevise los campos indicados antes de continuar.\n\nCategoría\ncategory_name\nCapacidad\ncapacity\n\nIndique un número entero.\n\nComodidades\namenities\nCamas extra admitidas\nmax_extra_beds\nGuardar",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-setup"
+    },
+    {
+      "label": "manager-capacity-corrected-saved",
+      "active": {
+        "label": null,
+        "name": null,
+        "value": ""
+      },
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.OTTQHYJ4.js"
+      ],
+      "inputs": [],
+      "text": "Configuración\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nConfiguración\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nConfigure la operación paso a paso\n\nLas cuentas e impuestos se seleccionan explícitamente de ERPNext.\n\n1. Políticas y contabilidad →\n2. Categorías →\n3. Habitaciones →\n4. Tarifas →\n5. Medios de pago →\n6. Empresas, agencias y crédito\n7. Horarios y penalizaciones\n8. Denominaciones de caja\n9. Series y formatos\n11. Categorías de gasto\n12. Clasificación y mínimos\n13. Equipos y activos\n14. Retención de datos\n15. Portal de reservas\n16. Anticipos y garantías\n17. Artículos y servicios\n18. Contabilidad por servicio\nConfiguración actual\n\n10 habitaciones · 3 categorías · 1 tarifas\n\nHora de referencia del servidor: 2026-10-21 16:19:53.517141 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-setup"
+    },
+    {
+      "label": "reception-grid-first-attempt",
+      "active": {
+        "label": null,
+        "name": null,
+        "value": ""
+      },
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.OTTQHYJ4.js"
+      ],
+      "inputs": [
+        {
+          "description": null,
+          "invalid": null,
+          "label": "Seleccionar todas las filas",
+          "name": null,
+          "value": "on"
+        },
+        {
+          "description": null,
+          "invalid": null,
+          "label": "Categoría",
+          "name": "category",
+          "value": ""
+        },
+        {
+          "description": null,
+          "invalid": null,
+          "label": "Habitación (opcional)",
+          "name": "room",
+          "value": ""
+        },
+        {
+          "description": null,
+          "invalid": null,
+          "label": "Personas",
+          "name": "people",
+          "value": "1.5"
+        },
+        {
+          "description": null,
+          "invalid": null,
+          "label": "Camas adicionales",
+          "name": "extra_beds",
+          "value": ""
+        },
+        {
+          "description": null,
+          "invalid": null,
+          "label": "Tarifa preferida (opcional)",
+          "name": "rate",
+          "value": ""
+        }
+      ],
+      "text": "Reservas\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nreceptionist@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nReservas\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nReservas vigentes\n\nReservas individuales y grupales; las retenciones liberan cupo al vencer.\n\n Mostrar historial\nReservar\nBuscar disponibilidad\n✓\nNo hay reservas confirmadas ni retenciones vigentes.\n\nLa información se actualiza al registrar movimientos.\n\nCalendario por habitación\nFecha del calendario\nHabitación\tmié 21/10\tjue 22/10\tvie 23/10\tsáb 24/10\tdom 25/10\tlun 26/10\tmar 27/10\nH101\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH102\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH103\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH104\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH105\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH106\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH107\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH108\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH109\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH110\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nPor asignar\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nHora de referencia del servidor: 2026-10-21 16:20:42.984424 · NIO\n\nNueva reserva\nFechas y pagador\nHabitaciones\nOpciones\nrooms\nHabitaciones solicitadas\nCategoría\nHabitación (opcional)\nPersonas\nEditando fila #1\nEliminar\nCategoría\ncategory\nHabitación (opcional)\nEmpieza a escribir para ver resultados.\nroom\nPersonas\npeople\nCamas adicionales\nextra_beds\nTarifa preferida (opcional)\nEmpieza a escribir para ver resultados.\nrate\nAñadir fila\nGuardar borrador\n \nRevisar precio",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-reservations"
+    },
+    {
+      "label": "reception-collapsed-row-partial-save-blocked",
+      "active": {
+        "label": null,
+        "name": null,
+        "value": ""
+      },
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.OTTQHYJ4.js"
+      ],
+      "inputs": [
+        {
+          "description": null,
+          "invalid": null,
+          "label": "Seleccionar todas las filas",
+          "name": null,
+          "value": "on"
+        },
+        {
+          "description": null,
+          "invalid": null,
+          "label": "Seleccionar fila 1",
+          "name": null,
+          "value": "on"
+        }
+      ],
+      "text": "Reservas\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nreceptionist@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nReservas\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nReservas vigentes\n\nReservas individuales y grupales; las retenciones liberan cupo al vencer.\n\n Mostrar historial\nReservar\nBuscar disponibilidad\n✓\nNo hay reservas confirmadas ni retenciones vigentes.\n\nLa información se actualiza al registrar movimientos.\n\nCalendario por habitación\nFecha del calendario\nHabitación\tmié 21/10\tjue 22/10\tvie 23/10\tsáb 24/10\tdom 25/10\tlun 26/10\tmar 27/10\nH101\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH102\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH103\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH104\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH105\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH106\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH107\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH108\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH109\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH110\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nPor asignar\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nHora de referencia del servidor: 2026-10-21 16:20:42.984424 · NIO\nNueva reserva\n\nRevise los campos indicados antes de continuar.\n\nFechas y pagador\nHabitaciones\nOpciones\nrooms\nHabitaciones solicitadas\nCategoría\nHabitación (opcional)\nPersonas\nEstándar\n1\nAñadir fila\n\nFila 1, Personas: Indique un número entero.\n\nGuardar borrador\n \nRevisar precio",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-reservations"
+    },
+    {
+      "label": "reception-collapsed-row-review-blocked",
+      "active": {
+        "label": null,
+        "name": null,
+        "value": ""
+      },
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.OTTQHYJ4.js"
+      ],
+      "inputs": [
+        {
+          "description": null,
+          "invalid": null,
+          "label": "Seleccionar todas las filas",
+          "name": null,
+          "value": "on"
+        },
+        {
+          "description": null,
+          "invalid": null,
+          "label": "Seleccionar fila 1",
+          "name": null,
+          "value": "on"
+        }
+      ],
+      "text": "Reservas\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nreceptionist@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nReservas\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nReservas vigentes\n\nReservas individuales y grupales; las retenciones liberan cupo al vencer.\n\n Mostrar historial\nReservar\nBuscar disponibilidad\n✓\nNo hay reservas confirmadas ni retenciones vigentes.\n\nLa información se actualiza al registrar movimientos.\n\nCalendario por habitación\nFecha del calendario\nHabitación\tmié 21/10\tjue 22/10\tvie 23/10\tsáb 24/10\tdom 25/10\tlun 26/10\tmar 27/10\nH101\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH102\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH103\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH104\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH105\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH106\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH107\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH108\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH109\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH110\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nPor asignar\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nHora de referencia del servidor: 2026-10-21 16:20:42.984424 · NIO\nNueva reserva\n\nRevise los campos indicados antes de continuar.\n\nFechas y pagador\nHabitaciones\nOpciones\nrooms\nHabitaciones solicitadas\nCategoría\nHabitación (opcional)\nPersonas\nEstándar\n1\nAñadir fila\n\nFila 1, Personas: Indique un número entero.\n\nGuardar borrador\n \nRevisar precio",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-reservations"
+    },
+    {
+      "label": "reception-reopened-row-retains-fraction",
+      "active": {
+        "label": "Categoría",
+        "name": "category",
+        "value": "Estándar"
+      },
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.OTTQHYJ4.js"
+      ],
+      "inputs": [
+        {
+          "description": null,
+          "invalid": null,
+          "label": "Seleccionar todas las filas",
+          "name": null,
+          "value": "on"
+        },
+        {
+          "description": null,
+          "invalid": null,
+          "label": "Categoría",
+          "name": "category",
+          "value": "Estándar"
+        },
+        {
+          "description": null,
+          "invalid": null,
+          "label": "Habitación (opcional)",
+          "name": "room",
+          "value": ""
+        },
+        {
+          "description": null,
+          "invalid": null,
+          "label": "Personas",
+          "name": "people",
+          "value": "1.5"
+        },
+        {
+          "description": null,
+          "invalid": null,
+          "label": "Camas adicionales",
+          "name": "extra_beds",
+          "value": ""
+        },
+        {
+          "description": null,
+          "invalid": null,
+          "label": "Tarifa preferida (opcional)",
+          "name": "rate",
+          "value": ""
+        }
+      ],
+      "text": "Reservas\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nreceptionist@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nReservas\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nReservas vigentes\n\nReservas individuales y grupales; las retenciones liberan cupo al vencer.\n\n Mostrar historial\nReservar\nBuscar disponibilidad\n✓\nNo hay reservas confirmadas ni retenciones vigentes.\n\nLa información se actualiza al registrar movimientos.\n\nCalendario por habitación\nFecha del calendario\nHabitación\tmié 21/10\tjue 22/10\tvie 23/10\tsáb 24/10\tdom 25/10\tlun 26/10\tmar 27/10\nH101\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH102\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH103\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH104\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH105\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH106\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH107\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH108\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH109\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH110\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nPor asignar\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nHora de referencia del servidor: 2026-10-21 16:20:42.984424 · NIO\n\nNueva reserva\n\nRevise los campos indicados antes de continuar.\n\nFechas y pagador\nHabitaciones\nOpciones\nrooms\nHabitaciones solicitadas\nCategoría\nHabitación (opcional)\nPersonas\nEditando fila #1\nEliminar\nCategoría\nEmpieza a escribir para ver resultados.\ncategory\nHabitación (opcional)\nEmpieza a escribir para ver resultados.\nroom\nPersonas\npeople\nCamas adicionales\nextra_beds\nTarifa preferida (opcional)\nEmpieza a escribir para ver resultados.\nrate\nAñadir fila\n\nFila 1, Personas: Indique un número entero.\n\nGuardar borrador\n \nRevisar precio",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-reservations"
+    },
+    {
+      "label": "reception-optional-beds-malformed-blocked",
+      "active": {
+        "label": null,
+        "name": null,
+        "value": ""
+      },
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.OTTQHYJ4.js"
+      ],
+      "inputs": [
+        {
+          "description": null,
+          "invalid": null,
+          "label": "Seleccionar todas las filas",
+          "name": null,
+          "value": "on"
+        },
+        {
+          "description": null,
+          "invalid": null,
+          "label": "Seleccionar fila 1",
+          "name": null,
+          "value": "on"
+        }
+      ],
+      "text": "Reservas\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nreceptionist@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nReservas\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nReservas vigentes\n\nReservas individuales y grupales; las retenciones liberan cupo al vencer.\n\n Mostrar historial\nReservar\nBuscar disponibilidad\n✓\nNo hay reservas confirmadas ni retenciones vigentes.\n\nLa información se actualiza al registrar movimientos.\n\nCalendario por habitación\nFecha del calendario\nHabitación\tmié 21/10\tjue 22/10\tvie 23/10\tsáb 24/10\tdom 25/10\tlun 26/10\tmar 27/10\nH101\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH102\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH103\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH104\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH105\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH106\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH107\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH108\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH109\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH110\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nPor asignar\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nHora de referencia del servidor: 2026-10-21 16:20:42.984424 · NIO\nNueva reserva\n\nRevise los campos indicados antes de continuar.\n\nFechas y pagador\nHabitaciones\nOpciones\nrooms\nHabitaciones solicitadas\nCategoría\nHabitación (opcional)\nPersonas\nEstándar\n2\nAñadir fila\n\nFila 1, Camas adicionales: Indique un número entero.\n\nGuardar borrador\n \nRevisar precio",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-reservations"
+    },
+    {
+      "label": "reception-reopened-row-retains-malformed-beds",
+      "active": {
+        "label": "Categoría",
+        "name": "category",
+        "value": "Estándar"
+      },
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.OTTQHYJ4.js"
+      ],
+      "inputs": [
+        {
+          "description": null,
+          "invalid": null,
+          "label": "Seleccionar todas las filas",
+          "name": null,
+          "value": "on"
+        },
+        {
+          "description": null,
+          "invalid": null,
+          "label": "Categoría",
+          "name": "category",
+          "value": "Estándar"
+        },
+        {
+          "description": null,
+          "invalid": null,
+          "label": "Habitación (opcional)",
+          "name": "room",
+          "value": ""
+        },
+        {
+          "description": null,
+          "invalid": null,
+          "label": "Personas",
+          "name": "people",
+          "value": "2"
+        },
+        {
+          "description": null,
+          "invalid": null,
+          "label": "Camas adicionales",
+          "name": "extra_beds",
+          "value": "2abc"
+        },
+        {
+          "description": null,
+          "invalid": null,
+          "label": "Tarifa preferida (opcional)",
+          "name": "rate",
+          "value": ""
+        }
+      ],
+      "text": "Reservas\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nreceptionist@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nReservas\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nReservas vigentes\n\nReservas individuales y grupales; las retenciones liberan cupo al vencer.\n\n Mostrar historial\nReservar\nBuscar disponibilidad\n✓\nNo hay reservas confirmadas ni retenciones vigentes.\n\nLa información se actualiza al registrar movimientos.\n\nCalendario por habitación\nFecha del calendario\nHabitación\tmié 21/10\tjue 22/10\tvie 23/10\tsáb 24/10\tdom 25/10\tlun 26/10\tmar 27/10\nH101\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH102\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH103\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH104\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH105\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH106\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH107\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH108\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH109\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH110\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nPor asignar\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nHora de referencia del servidor: 2026-10-21 16:20:42.984424 · NIO\n\nNueva reserva\n\nRevise los campos indicados antes de continuar.\n\nFechas y pagador\nHabitaciones\nOpciones\nrooms\nHabitaciones solicitadas\nCategoría\nHabitación (opcional)\nPersonas\nEditando fila #1\nEliminar\nCategoría\nEmpieza a escribir para ver resultados.\ncategory\nHabitación (opcional)\nEmpieza a escribir para ver resultados.\nroom\nPersonas\npeople\nCamas adicionales\nextra_beds\nTarifa preferida (opcional)\nEmpieza a escribir para ver resultados.\nrate\nAñadir fila\n\nFila 1, Camas adicionales: Indique un número entero.\n\nGuardar borrador\n \nRevisar precio",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-reservations"
+    },
+    {
+      "label": "reception-corrected-draft-saved",
+      "active": {
+        "label": null,
+        "name": null,
+        "value": ""
+      },
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.OTTQHYJ4.js"
+      ],
+      "inputs": [
+        {
+          "description": null,
+          "invalid": null,
+          "label": "Seleccionar todas las filas",
+          "name": null,
+          "value": "on"
+        },
+        {
+          "description": null,
+          "invalid": null,
+          "label": "Seleccionar fila 1",
+          "name": null,
+          "value": "on"
+        }
+      ],
+      "text": "Reservas\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nreceptionist@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nReservas\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nReservas vigentes\n\nReservas individuales y grupales; las retenciones liberan cupo al vencer.\n\n Mostrar historial\nReservar\nBuscar disponibilidad\nBorradores por completar (1)\n\nNo ocupan cupo ni fijan precio. Retome uno para completar datos y revisar la cotización.\n\nSolicitante\tEntrada prevista\tPrecio\tAcciones\nPor definir\t21/10/2026 16:20\tSin cotizar\tRetomar borrador\n✓\nNo hay reservas confirmadas ni retenciones vigentes.\n\nLa información se actualiza al registrar movimientos.\n\nCalendario por habitación\nFecha del calendario\nHabitación\tmié 21/10\tjue 22/10\tvie 23/10\tsáb 24/10\tdom 25/10\tlun 26/10\tmar 27/10\nH101\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH102\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH103\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH104\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH105\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH106\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH107\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH108\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH109\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH110\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nPor asignar\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nHora de referencia del servidor: 2026-10-21 16:22:51.477728 · NIO\nRetomar borrador\nFechas y pagador\nHabitaciones\nOpciones\nrooms\nHabitaciones solicitadas\nCategoría\nHabitación (opcional)\nPersonas\nEstándar\n2\nAñadir fila\nGuardar borrador\n \nRevisar precio",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-reservations"
+    },
+    {
+      "label": "reception-saved-draft-reopened-values",
+      "active": {
+        "label": null,
+        "name": null,
+        "value": ""
+      },
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.OTTQHYJ4.js"
+      ],
+      "inputs": [
+        {
+          "description": null,
+          "invalid": null,
+          "label": "Seleccionar todas las filas",
+          "name": null,
+          "value": "on"
+        },
+        {
+          "description": null,
+          "invalid": null,
+          "label": "Categoría",
+          "name": "category",
+          "value": "Estándar"
+        },
+        {
+          "description": null,
+          "invalid": null,
+          "label": "Habitación (opcional)",
+          "name": "room",
+          "value": ""
+        },
+        {
+          "description": null,
+          "invalid": null,
+          "label": "Personas",
+          "name": "people",
+          "value": "2"
+        },
+        {
+          "description": null,
+          "invalid": null,
+          "label": "Camas adicionales",
+          "name": "extra_beds",
+          "value": ""
+        },
+        {
+          "description": null,
+          "invalid": null,
+          "label": "Tarifa preferida (opcional)",
+          "name": "rate",
+          "value": ""
+        }
+      ],
+      "text": "Reservas\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nreceptionist@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nReservas\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nReservas vigentes\n\nReservas individuales y grupales; las retenciones liberan cupo al vencer.\n\n Mostrar historial\nReservar\nBuscar disponibilidad\nBorradores por completar (1)\n\nNo ocupan cupo ni fijan precio. Retome uno para completar datos y revisar la cotización.\n\nSolicitante\tEntrada prevista\tPrecio\tAcciones\nPor definir\t21/10/2026 16:20\tSin cotizar\tRetomar borrador\n✓\nNo hay reservas confirmadas ni retenciones vigentes.\n\nLa información se actualiza al registrar movimientos.\n\nCalendario por habitación\nFecha del calendario\nHabitación\tmié 21/10\tjue 22/10\tvie 23/10\tsáb 24/10\tdom 25/10\tlun 26/10\tmar 27/10\nH101\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH102\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH103\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH104\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH105\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH106\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH107\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH108\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH109\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH110\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nPor asignar\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nHora de referencia del servidor: 2026-10-21 16:22:51.477728 · NIO\n\nRetomar borrador\nFechas y pagador\nHabitaciones\nOpciones\nrooms\nHabitaciones solicitadas\nCategoría\nHabitación (opcional)\nPersonas\nEditando fila #1\nEliminar\nCategoría\nEmpieza a escribir para ver resultados.\ncategory\nHabitación (opcional)\nEmpieza a escribir para ver resultados.\nroom\nPersonas\npeople\nCamas adicionales\nextra_beds\nTarifa preferida (opcional)\nEmpieza a escribir para ver resultados.\nrate\nAñadir fila\nDescartar borrador\nGuardar borrador\n \nRevisar precio",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-reservations"
+    }
+  ],
+  "limitations": [
+    "Expanded native row editor overlays the footer; first attempts there did not submit. Accepted category using keyboard, returned to table before actual validation.",
+    "No cashier, mobile, print or complete role acceptance replay in this phase."
+  ]
+}

@@ -1,5 +1,9 @@
 # Siguiente fase del objetivo activo
 
+## Validación numérica revisada
+
+[VALIDACION_NUMERICA.md](VALIDACION_NUMERICA.md) corrige conversiones silenciosas antes del parseo, incluidos borradores de filas; 215 JS y recorrido de Gerencia/Recepción aprobados. Se conserva la evidencia histórica de 404 nativas porque el backend no cambia. **208 V/diez I**: continuar con las demás reglas/estados de tareas secundarias y secuencias rápidas de diálogos, después paquete/instalación y recuperación final F26. Esta corrección no cierra la aceptación transversal. OTA aplazada.
+
 ## Contraste individual de fases — código 0.8.8 sin cambios
 
 [REVISION_FASES_Y_ACCIONES.md](REVISION_FASES_Y_ACCIONES.md) cierra seis R de fases y concreta las otras seis como I; **208 V y diez I: diez entradas sin cierre**. No se han reejecutado la batería completa ni las Pages en este contraste. Los diez pendientes se agrupan en aceptación de tareas/estados por rol (incluidos límites numéricos y secuencias rápidas de diálogos), paquete e instalación limpia, y recuperación/entrega final F26. El inventario de 84 manejadores ayuda a terminar esa colección; no es su aceptación. La sincronización OTA permanece aplazada.
