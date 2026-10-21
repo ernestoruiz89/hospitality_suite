@@ -7,11 +7,11 @@ from pathlib import Path
 import subprocess
 
 import frappe
-from hospitality_suite.schema import SCHEMA
+from hospitality_suite.schema import SCHEMA,STANDARD_SCOPED
 
 BENCH=Path('/home/frappe/benches/hospitality-bench')
 ROOT=Path(__file__).resolve().parents[1]
-parser=argparse.ArgumentParser();parser.add_argument('action',choices=['before','verify']);parser.add_argument('--phase',choices=['periodic','billing-ui','board','availability','drafts','tariffs','account-summary','guest-profiles','background-jobs','countdown','finance-audit','housekeeping-audit','permissions-audit','audit-history','inventory-audit','closing-checks','navigation','room-states','room-history','role-acceptance'],default='periodic');args=parser.parse_args()
+parser=argparse.ArgumentParser();parser.add_argument('action',choices=['before','verify']);parser.add_argument('--phase',choices=['periodic','billing-ui','board','availability','drafts','tariffs','account-summary','guest-profiles','background-jobs','countdown','finance-audit','housekeeping-audit','permissions-audit','audit-history','inventory-audit','closing-checks','navigation','room-states','room-history','role-acceptance','language-review'],default='periodic');args=parser.parse_args()
 BASE=BENCH/f'.hospitality-{args.phase}-upgrade.json'
 assert args.action!='before' or not BASE.exists(),'Conserve la línea de base original'
 old=json.loads(BASE.read_text()) if args.action=='verify' else None
@@ -19,6 +19,7 @@ native=json.loads((BENCH/'.hospitality-financial-upgrade.json').read_text())['ta
 names=sorted(set(SCHEMA)|set(native)|{'Version'})
 os.chdir(BENCH/'sites')
 result={}
+metadata_history={};cache_refresh={}
 for site,database in {'hospitality.localhost':'hospitality_dev','hospitality-acceptance.localhost':'hospitality_acceptance'}.items():
     frappe.init(site=site,sites_path=str(BENCH/'sites'));frappe.connect()
     try:
@@ -26,11 +27,12 @@ for site,database in {'hospitality.localhost':'hospitality_dev','hospitality-acc
         if site=='hospitality-acceptance.localhost':
             assert frappe.conf.pause_scheduler and frappe.conf.allow_tests and frappe.conf.hospitality_integration_test_site
             assert not any(frappe.db.count(dt) for dt in ('HS Stay','HS Charge','HS Payment','Sales Invoice','Payment Entry'))
-        tables={}
+        tables={};version_rows=[]
         for dt in names:
             columns=old[site]['tables'][dt]['columns'] if old else sorted(frappe.db.get_table_columns(dt))
             assert all(column.replace('_','').isalnum() for column in columns)
             rows=frappe.db.sql('SELECT '+','.join('`'+column+'`' for column in columns)+' FROM `tab'+dt+'` ORDER BY name',as_dict=True)
+            if dt=='Version':version_rows=rows
             raw=json.dumps(rows,default=str,sort_keys=True,ensure_ascii=False,separators=(',',':')).encode()
             tables[dt]=dict(columns=columns,rows=len(rows),sha256=hashlib.sha256(raw).hexdigest())
         private={}
@@ -39,7 +41,29 @@ for site,database in {'hospitality.localhost':'hospitality_dev','hospitality-acc
             assert path.is_relative_to(Path(frappe.get_site_path('private','files')).resolve())
             private[name]=hashlib.sha256(path.read_bytes()).hexdigest()
         if old:
-            assert tables==old[site]['tables'] and private==old[site]['private_files']
+            comparable=dict(tables)
+            if args.phase=='language-review':
+                labels={'hs_property':'Establecimiento de alojamiento','hs_stay':'Estancia de alojamiento','hs_shift':'Turno de caja',
+                        'hs_folio':'Cuenta de estancia','hs_booking':'Reserva de alojamiento'}
+                expected_versions={dt+'-'+key:dict(added=[],changed=[['label',key.replace('_',' ').title(),label]],data_import=None,removed=[],row_changed=[],updater_reference=None)
+                                   for dt in STANDARD_SCOPED for key,label in labels.items()}
+                appended=[row for row in version_rows if row.ref_doctype=='Custom Field' and row.docname in expected_versions
+                          and json.loads(row.data)==expected_versions[row.docname]]
+                assert len(appended)==55 and len({row.docname for row in appended})==55,(site,len(appended))
+                assert all(row.owner=='Administrator' for row in appended)
+                original_versions=[row for row in version_rows if row not in appended]
+                raw=json.dumps(original_versions,default=str,sort_keys=True,ensure_ascii=False,separators=(',',':')).encode()
+                comparable['Version']=dict(columns=tables['Version']['columns'],rows=len(original_versions),sha256=hashlib.sha256(raw).hexdigest())
+                metadata_history[site]=dict(appended=55,only_custom_field_label_changes=True,all_preexisting_version_rows_preserved=True)
+                if site=='hospitality.localhost' and tables['Company']!=old[site]['tables']['Company']:
+                    cache=json.loads((BENCH/'.hospitality-language-review-company-cache.json').read_text())
+                    assert cache['phase_company_sha256']==old[site]['tables']['Company']['sha256']
+                    assert cache['current_company_sha256']==tables['Company']['sha256']
+                    assert cache['noncache_fields_match_pre_phase_backup'] and cache['cached_histories_match_native_read_functions']
+                    assert set(cache['phase_cache_changed_fields']).issubset({'modified','sales_monthly_history','transactions_annual_history'})
+                    comparable['Company']=old[site]['tables']['Company']
+                    cache_refresh[site]='language-review-company-cache.json'
+            assert comparable==old[site]['tables'] and private==old[site]['private_files']
             if args.phase=='drafts':
                 assert 'draft_data' in frappe.db.get_table_columns('HS Booking')
                 assert not frappe.db.count('HS Booking',{'draft_data':['is','set']})
@@ -72,5 +96,6 @@ if args.action=='before':
 else:
     proof=dict(previous_columns_preserved=True,default_policy_preserves_existing_stays=True,
                sites={site:dict(tables=len(value['tables']),rows=sum(row['rows'] for row in value['tables'].values()),private_files=len(value['private_files'])) for site,value in result.items()})
+    if metadata_history:proof.update(metadata_history=metadata_history,native_company_cache_refresh=cache_refresh)
     (ROOT/f'docs/evidence/{args.phase}-upgrade.json').write_text(json.dumps(proof,indent=2)+'\n',encoding='utf-8',newline='\n')
     print(json.dumps(proof))

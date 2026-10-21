@@ -18,7 +18,7 @@
     };
     const audit=reportName==='Auditoría';
     const html=()=>`<p role="status">${result.total?`${result.offset+1}–${Math.min(result.offset+result.rows.length,result.total)}`:"0"} ${frappe.utils.escape_html(__("de"))} ${result.total} ${frappe.utils.escape_html(__("registros"))}</p>${result.rows.length?this.table([...result.columns.map(key=>this.data.report_labels?.[key]||key),...(audit?[__('Detalle')]:[])],result.rows.map(row=>[...result.columns.map(key=>value(key,row[key],row)),...(audit?[`<button type="button" class="btn btn-secondary" data-hs-audit="${e(row.name)}">${e(__('Ver cambio'))}</button>`]:[])])):this.empty(__("No hay registros para estos filtros."))}<div class="hs-dialog-actions"><button type="button" class="btn btn-secondary" data-hs-page="previous" ${result.offset===0?"disabled":""}>${frappe.utils.escape_html(__("Anterior"))}</button><button type="button" class="btn btn-secondary" data-hs-page="next" ${!result.has_more?"disabled":""}>${frappe.utils.escape_html(__("Siguiente"))}</button>${allowedExport?`<button type="button" class="btn btn-secondary" data-hs-export="xlsx">${frappe.utils.escape_html(__("Exportar XLSX completo"))}</button><button type="button" class="btn btn-secondary" data-hs-export="pdf">${frappe.utils.escape_html(__("Exportar PDF completo"))}</button>`:""}</div>`;
-    const dialog=await this.dialog(title,[field("records",__("Registros"),"HTML",{options:html()})],async(_,d)=>d.hide(),"Cerrar","extra-large");
+    const dialog=await this.dialog(title,[field("records",__("Registros"),"HTML",{options:html()})],async(_,d)=>d.hide(),__("Cerrar"),"extra-large");
     if(audit)dialog.$wrapper.on('click','[data-hs-audit]',event=>this.action_view_audit(event.currentTarget.dataset.hsAudit));
     dialog.$wrapper.on("click","[data-hs-page]",async event=>{
       const direction=event.currentTarget.dataset.hsPage;
@@ -39,7 +39,7 @@
     return dialog;
   };
 
-  Desk.prototype.action_guest_history=function(name){return this.show_paged("Historial de estancias","guest_history",{name});};
+  Desk.prototype.action_guest_history=function(name){return this.show_paged(__("Historial de estancias"),"guest_history",{name});};
   Desk.prototype.action_report=async function(report){
     let options=await this.call("report_options",{property_name:this.property,report_name:report}),dialog,revision=0,pending=false,valid=true,ready=false;
     const translate=v=>this.data.report_values?.[v]||v;
@@ -96,7 +96,7 @@
       const selected={company:form.company};
       for(const key of [...options.filters,"date_field","from_date","to_date","starts_at","ends_at"]){if(form[key]!==undefined&&form[key]!=="")selected[key]=form[key];}
       await this.show_paged(report,"report_page",{property_name:form.property_name||"",report_name:report,filters:JSON.stringify(selected)},report);d.hide();
-    },"Consultar");
+    },__("Consultar"));
     await dialog.set_value("company",company);
     await dialog.set_value("property_name",this.property);
     for(const key of ["from_date","to_date"])dialog.fields_dict[key]?.$input?.attr({type:"date"});

@@ -314,6 +314,12 @@
             "name"
           ]
         },
+        "modified": {
+          "unique": false,
+          "columns": [
+            "modified"
+          ]
+        },
         "parent": {
           "unique": false,
           "columns": [
@@ -466,6 +472,12 @@
           "unique": true,
           "columns": [
             "name"
+          ]
+        },
+        "modified": {
+          "unique": false,
+          "columns": [
+            "modified"
           ]
         },
         "parent": {
@@ -912,6 +924,12 @@
             "name"
           ]
         },
+        "modified": {
+          "unique": false,
+          "columns": [
+            "modified"
+          ]
+        },
         "parent": {
           "unique": false,
           "columns": [
@@ -1261,6 +1279,12 @@
             "name"
           ]
         },
+        "modified": {
+          "unique": false,
+          "columns": [
+            "modified"
+          ]
+        },
         "parent": {
           "unique": false,
           "columns": [
@@ -1455,13 +1479,13 @@
   "assets": [
     {
       "name": "hospitality.bundle.js",
-      "bytes": 223359,
-      "sha256": "e775c4d4a623bf5294f49bd1fb27ef88336b83af55569fee68ef350f638a25ed"
+      "bytes": 224244,
+      "sha256": "16461c99dc20a1e3218fb431bbd9b1b0f4a701693c2ddd2f045166178b993bbd"
     },
     {
       "name": "hospitality.bundle.css",
       "bytes": 21725,
-      "sha256": "5383a548ef3ac0f77f0c158c6339b11a480b1263b551a633c2980c3baf3e7129"
+      "sha256": "111e38a2821f7cf173a862ad7367002e3fbc1d4c4f841a3030e328b6cd78aa9a"
     }
   ]
 }

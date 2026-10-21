@@ -24,39 +24,39 @@
   },
   {
    "fieldname": "full_name",
-   "label": "Full name",
+   "label": "Nombre completo",
    "fieldtype": "Data",
    "reqd": 1
   },
   {
    "fieldname": "email",
-   "label": "Email",
+   "label": "Correo electrónico",
    "fieldtype": "Data",
    "options": "Email"
   },
   {
    "fieldname": "phone",
-   "label": "Phone",
+   "label": "Teléfono",
    "fieldtype": "Data"
   },
   {
    "fieldname": "identity_type",
-   "label": "Identity type",
+   "label": "Tipo de identificación",
    "fieldtype": "Data"
   },
   {
    "fieldname": "identity_number",
-   "label": "Identity number",
+   "label": "Número de identificación",
    "fieldtype": "Data"
   },
   {
    "fieldname": "nationality",
-   "label": "Nationality",
+   "label": "Nacionalidad",
    "fieldtype": "Data"
   },
   {
    "fieldname": "identity_file",
-   "label": "Identity file",
+   "label": "Copia de identificación",
    "fieldtype": "Attach"
   },
   {
@@ -67,13 +67,13 @@
   },
   {
    "fieldname": "contact",
-   "label": "Contact",
+   "label": "Contacto",
    "fieldtype": "Link",
    "options": "Contact"
   },
   {
    "fieldname": "address",
-   "label": "Address",
+   "label": "Dirección",
    "fieldtype": "Link",
    "options": "Address"
   }

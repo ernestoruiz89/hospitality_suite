@@ -32,58 +32,58 @@
   },
   {
    "fieldname": "approved_by",
-   "label": "Approved by",
+   "label": "Aprobado por",
    "fieldtype": "Link",
    "options": "User",
    "reqd": 1
   },
   {
    "fieldname": "approved_at",
-   "label": "Approved at",
+   "label": "Aprobación registrada",
    "fieldtype": "Datetime"
   },
   {
    "fieldname": "cutoff",
-   "label": "Cutoff",
+   "label": "Fecha límite",
    "fieldtype": "Datetime"
   },
   {
    "fieldname": "retention_days",
-   "label": "Retention days",
+   "label": "Conservación de datos (días)",
    "fieldtype": "Int"
   },
   {
    "fieldname": "reason",
-   "label": "Reason",
+   "label": "Motivo",
    "fieldtype": "Small Text",
    "reqd": 1
   },
   {
    "fieldname": "plan",
-   "label": "Plan",
+   "label": "Plan revisado",
    "fieldtype": "Code",
    "options": "JSON"
   },
   {
    "fieldname": "files",
-   "label": "Files",
+   "label": "Archivos",
    "fieldtype": "Table",
    "options": "HS Retention File"
   },
   {
    "fieldname": "attempts",
-   "label": "Attempts",
+   "label": "Intentos",
    "fieldtype": "Int",
    "default": 0
   },
   {
    "fieldname": "last_error",
-   "label": "Last error",
+   "label": "Último error",
    "fieldtype": "Small Text"
   },
   {
    "fieldname": "completed_at",
-   "label": "Completed at",
+   "label": "Finalización registrada",
    "fieldtype": "Datetime"
   }
  ],

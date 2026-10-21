@@ -31,13 +31,13 @@
   },
   {
    "fieldname": "stay",
-   "label": "Stay",
+   "label": "Estancia",
    "fieldtype": "Link",
    "options": "HS Stay"
   },
   {
    "fieldname": "kind",
-   "label": "Kind",
+   "label": "Tipo",
    "fieldtype": "Select",
    "options": "Departure\nStay\nDeep",
    "reqd": 1,
@@ -45,7 +45,7 @@
   },
   {
    "fieldname": "priority",
-   "label": "Priority",
+   "label": "Prioridad",
    "fieldtype": "Select",
    "options": "Normal\nHigh\nUrgent",
    "reqd": 1,
@@ -53,7 +53,7 @@
   },
   {
    "fieldname": "assigned_to",
-   "label": "Assigned to",
+   "label": "Responsable",
    "fieldtype": "Link",
    "options": "User"
   },
@@ -67,28 +67,28 @@
   },
   {
    "fieldname": "started_at",
-   "label": "Started at",
+   "label": "Inicio registrado",
    "fieldtype": "Datetime"
   },
   {
    "fieldname": "completed_at",
-   "label": "Completed at",
+   "label": "Finalización registrada",
    "fieldtype": "Datetime"
   },
   {
    "fieldname": "checklist",
-   "label": "Checklist",
+   "label": "Lista de revisión",
    "fieldtype": "Code",
    "options": "JSON"
   },
   {
    "fieldname": "notes",
-   "label": "Notes",
+   "label": "Observaciones",
    "fieldtype": "Small Text"
   },
   {
    "fieldname": "inspected_by",
-   "label": "Inspected by",
+   "label": "Inspeccionado por",
    "fieldtype": "Link",
    "options": "User"
   }

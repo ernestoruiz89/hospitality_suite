@@ -24,13 +24,13 @@
   },
   {
    "fieldname": "equipment_code",
-   "label": "Equipment code",
+   "label": "Código de equipo",
    "fieldtype": "Data",
    "reqd": 1
   },
   {
    "fieldname": "label",
-   "label": "Label",
+   "label": "Nombre descriptivo",
    "fieldtype": "Data",
    "reqd": 1
   },
@@ -42,19 +42,19 @@
   },
   {
    "fieldname": "asset",
-   "label": "Asset",
+   "label": "Activo fijo",
    "fieldtype": "Link",
    "options": "Asset"
   },
   {
    "fieldname": "active",
-   "label": "Active",
+   "label": "Habilitado",
    "fieldtype": "Check",
    "default": 1
   },
   {
    "fieldname": "instructions",
-   "label": "Instructions",
+   "label": "Instrucciones",
    "fieldtype": "Small Text"
   }
  ],

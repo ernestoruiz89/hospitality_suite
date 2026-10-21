@@ -24,13 +24,13 @@
   },
   {
    "fieldname": "booking",
-   "label": "Booking",
+   "label": "Reserva",
    "fieldtype": "Link",
    "options": "HS Booking"
   },
   {
    "fieldname": "guest",
-   "label": "Guest",
+   "label": "Huésped",
    "fieldtype": "Link",
    "options": "HS Guest",
    "reqd": 1
@@ -72,12 +72,12 @@
   },
   {
    "fieldname": "actual_check_in",
-   "label": "Actual check in",
+   "label": "Entrada registrada",
    "fieldtype": "Datetime"
   },
   {
    "fieldname": "actual_check_out",
-   "label": "Actual check out",
+   "label": "Salida registrada",
    "fieldtype": "Datetime"
   },
   {
@@ -90,7 +90,7 @@
   },
   {
    "fieldname": "rate",
-   "label": "Rate",
+   "label": "Tarifa",
    "fieldtype": "Link",
    "options": "HS Rate",
    "reqd": 1
@@ -104,7 +104,7 @@
   },
   {
    "fieldname": "amount",
-   "label": "Amount",
+   "label": "Importe",
    "fieldtype": "Currency",
    "default": 0,
    "options": "currency",
@@ -112,60 +112,60 @@
   },
   {
    "fieldname": "quote_snapshot",
-   "label": "Quote snapshot",
+   "label": "Cotización aceptada",
    "fieldtype": "Code",
    "options": "JSON"
   },
   {
    "fieldname": "service_entitlements",
-   "label": "Service entitlements",
+   "label": "Servicios aceptados",
    "fieldtype": "Code",
    "options": "JSON"
   },
   {
    "fieldname": "guests",
-   "label": "Guests",
+   "label": "Huéspedes y acompañantes",
    "fieldtype": "Table",
    "options": "HS Stay Guest"
   },
   {
    "fieldname": "reason",
-   "label": "Reason",
+   "label": "Motivo",
    "fieldtype": "Small Text"
   },
   {
    "fieldname": "early_fee",
-   "label": "Early fee",
+   "label": "Cargo por entrada anticipada",
    "fieldtype": "Currency",
    "default": 0,
    "options": "currency"
   },
   {
    "fieldname": "late_fee",
-   "label": "Late fee",
+   "label": "Cargo por salida tardía",
    "fieldtype": "Currency",
    "default": 0,
    "options": "currency"
   },
   {
    "fieldname": "departure_expires_at",
-   "label": "Departure expires at",
+   "label": "Vigencia de liquidación de salida",
    "fieldtype": "Datetime"
   },
   {
    "fieldname": "departure_inspected_by",
-   "label": "Departure inspected by",
+   "label": "Salida inspeccionada por",
    "fieldtype": "Link",
    "options": "User"
   },
   {
    "fieldname": "departure_inspected_at",
-   "label": "Departure inspected at",
+   "label": "Salida inspeccionada el",
    "fieldtype": "Datetime"
   },
   {
    "fieldname": "departure_notes",
-   "label": "Departure notes",
+   "label": "Observaciones de salida",
    "fieldtype": "Small Text"
   }
  ],

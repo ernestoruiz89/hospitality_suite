@@ -11,6 +11,6 @@ def execute():
                 continue
             row = next((r for r in booking.rooms if r.name not in used and r.category==allocation.category and (r.room or "")== (allocation.room or "")),None)
             if not row:
-                frappe.throw("No se puede reconstruir la línea de la asignación " + allocation.name)
+                frappe.throw(frappe._("No se puede reconstruir la línea de la asignación {0}").format(allocation.name))
             frappe.db.set_value("HS Allocation",allocation.name,"booking_room",row.name,update_modified=False)
             used.add(row.name)

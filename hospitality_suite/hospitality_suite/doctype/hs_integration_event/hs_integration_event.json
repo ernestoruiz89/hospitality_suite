@@ -24,13 +24,13 @@
   },
   {
    "fieldname": "provider",
-   "label": "Provider",
+   "label": "Proveedor de integración",
    "fieldtype": "Data",
    "reqd": 1
   },
   {
    "fieldname": "event_id",
-   "label": "Event id",
+   "label": "Referencia del evento",
    "fieldtype": "Data",
    "reqd": 1,
    "unique": 1
@@ -45,17 +45,17 @@
   },
   {
    "fieldname": "attempts",
-   "label": "Attempts",
+   "label": "Intentos",
    "fieldtype": "Int"
   },
   {
    "fieldname": "last_error",
-   "label": "Last error",
+   "label": "Último error",
    "fieldtype": "Small Text"
   },
   {
    "fieldname": "payload",
-   "label": "Payload",
+   "label": "Datos recibidos",
    "fieldtype": "Code",
    "options": "JSON"
   }

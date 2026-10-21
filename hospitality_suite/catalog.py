@@ -8,6 +8,19 @@ PURPOSES={"any":{},"sale":{"is_sales_item":1,"is_fixed_asset":0},"stock":{"is_st
           "purchase":{"is_purchase_item":1,"is_fixed_asset":0}}
 
 
+def item_label(name,label):
+    # Only the app's original generated fixture has an operational alias.
+    # A user-created master with the same words remains literal data.
+    if name=='HS-DEMO-EXTRA-HOUR' and label=='Hora adicional de motel':
+        return frappe._('Hora adicional por tiempo')
+    return label
+
+
+def display_rows(rows):
+    for row in rows:row['display_name']=item_label(row.name,row.item_name)
+    return rows
+
+
 def authorize(property_name):
     prop=require(property_name)
     roles=set(frappe.get_roles())
@@ -21,12 +34,17 @@ def search(property_name,txt="",purpose="any"):
     if not isinstance(purpose,str) or purpose not in PURPOSES or not isinstance(txt,str) or len(txt)>140:
         frappe.throw(frappe._("Indique una búsqueda válida de hasta 140 caracteres"))
     text=txt.strip().replace("\\","\\\\").replace("%","\\%").replace("_","\\_")
+    matches=[["name","like","%"+text+"%"],["item_name","like","%"+text+"%"]] if text else None
+    if text:
+        legacy=frappe.db.get_value('Item',{'name':'HS-DEMO-EXTRA-HOUR','disabled':0},'item_name')
+        if legacy=='Hora adicional de motel' and txt.strip().casefold() in item_label('HS-DEMO-EXTRA-HOUR',legacy).casefold():
+            matches.append(['name','=','HS-DEMO-EXTRA-HOUR'])
     # Item is shared between companies in ERPNext. This explicit operational
     # projection exposes names/usage flags only, never prices, costs or balances.
     rows=frappe.get_all("Item",filters={"disabled":0,**PURPOSES[purpose]},
-                        or_filters=[["name","like","%"+text+"%"],["item_name","like","%"+text+"%"]] if text else None,
+                        or_filters=matches,
                         fields=FIELDS,order_by="item_name asc,name asc",limit_page_length=51)
-    return dict(items=rows[:50],has_more=len(rows)>50)
+    return dict(items=display_rows(rows[:50]),has_more=len(rows)>50)
 
 
 def bootstrap_items(data):
@@ -38,4 +56,4 @@ def bootstrap_items(data):
     names.difference_update(r.name for r in rows)
     if names:
         rows+=frappe.get_all("Item",filters={"name":["in",sorted(names)]},fields=FIELDS,order_by="item_name asc,name asc")
-    return rows
+    return display_rows(rows)

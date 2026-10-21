@@ -1,6 +1,10 @@
 # Manual diario por rol
 
-Aplicación 0.8.0, Frappe 16.52 / ERPNext 16.51. Los recorridos acreditados y las verificaciones pendientes están en REQUISITOS.md.
+Aplicación 0.8.1, Frappe 16.52 / ERPNext 16.51. Los recorridos acreditados y las verificaciones pendientes están en REQUISITOS.md.
+
+## Nombres y estados
+
+Las modalidades se muestran como Hotel, Por tiempo y Hotel y por tiempo. Los estados y acciones se presentan en español. En el catálogo operativo, la hora adicional del artículo demostrativo se muestra como «Hora adicional por tiempo», también al consultar su precio. Los nombres que usted haya elegido para artículos y establecimientos se conservan.
 
 ## Recepción y caja con el mismo usuario
 

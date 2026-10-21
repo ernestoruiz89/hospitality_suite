@@ -104,13 +104,23 @@
       "line": 15,
       "kind": "enumerated",
       "requirement": "- Interfaz en español, preparada para traducciones.",
-      "status": "I",
+      "status": "V",
       "implementation": [
         "hospitality_suite/public/js/hospitality.js",
         "hospitality_suite/public/js/hospitality_reporting.js",
         "hospitality_suite/i18n.py",
         "hospitality_suite/translation_messages.py",
-        "hospitality_suite/templates/print/cleaning.html"
+        "hospitality_suite/templates/print/cleaning.html",
+        "hospitality_suite/schema.py",
+        "hospitality_suite/schema_labels.py",
+        "hospitality_suite/catalog.py",
+        "hospitality_suite/item_configuration.py",
+        "hospitality_suite/install.py",
+        "hospitality_suite/translations/es.csv",
+        "hospitality_suite/public/js/hospitality_items.js",
+        "hospitality_suite/public/js/hospitality_housekeeping.js",
+        "hospitality_suite/www/hospitality.py",
+        "hospitality_suite/www/hospitality_confirmation.py"
       ],
       "evidence": [
         "docs/evidence/localization-extraction.json",
@@ -119,9 +129,24 @@
         "docs/evidence/localization-js-tests.log",
         "hospitality_suite/tests/test_localization.py",
         "docs/ESTADOS_POR_INTERVALO.md",
-        "docs/evidence/216-calendario-espanol.jpg"
+        "docs/evidence/216-calendario-espanol.jpg",
+        "docs/IDIOMA_Y_ETIQUETAS.md",
+        "hospitality_suite/tests/test_language_review.py",
+        "docs/evidence/language-review-native-tests.xml",
+        "docs/evidence/language-review-js-tests.log",
+        "docs/evidence/language-review-extraction.json",
+        "docs/evidence/language-review-wire-invariants.json",
+        "docs/evidence/language-review-metadata.json",
+        "docs/evidence/language-review-installed.json",
+        "docs/evidence/language-review-items-ui.json",
+        "docs/evidence/243-catalogo-nombre-por-tiempo.jpg",
+        "docs/evidence/244-mantenimiento-etiquetas-espanol.jpg",
+        "docs/evidence/245-mantenimiento-plazos-movil.jpg",
+        "docs/evidence/language-review-upgrade.json",
+        "docs/evidence/language-review-ux-restored.json",
+        "docs/evidence/language-review-final-state.json"
       ],
-      "remaining": "Preparación y extracción nativa acreditadas. Falta revisión completa de literales dinámicos/secundarios; el recorrido 0.8.0 conserva, por ejemplo, el nombre antiguo del artículo demostrativo de hora adicional y etiquetas HS en documentos contables estándar. No se entrega un paquete completo de otro idioma."
+      "remaining": ""
     },
     {
       "id": "S01-05",

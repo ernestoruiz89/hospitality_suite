@@ -6,3 +6,132 @@ Artículo de horas adicionales de motel,Artículo de horas adicionales por tiemp
 Configure el artículo para horas adicionales de motel,Configure el artículo para horas adicionales por tiempo
 Alojamiento motel neto facturado,Alojamiento por tiempo neto facturado
 Horas de motel ocupadas,Horas ocupadas por tiempo
+Approval,Con autorización,HS Property
+Arrival,Al ingresar,HS Property
+Disabled,Deshabilitado,HS Property
+First Night,Primera noche,HS Property
+Fixed,Importe fijo,HS Property
+Hotel,Hotel,HS Property
+Manual,Manual,HS Property
+Mixed,Hotel y por tiempo,HS Property
+Motel,Por tiempo,HS Property
+Nightly,Por noche,HS Property
+None,Sin cargo,HS Property
+Percent,Porcentaje,HS Property
+Clean,Limpia,HS Room
+Cleaning,En limpieza,HS Room
+Dirty,Sucia,HS Room
+Inspection,Pendiente de inspección,HS Room
+Hotel,Hotel,HS Rate
+Motel,Por tiempo,HS Rate
+Night,Por noche,HS Rate Service
+Stay,Estancia,HS Rate Service
+Cancelled,Cancelada,HS Booking
+Checked In,Entrada registrada,HS Booking
+Completed,Completada,HS Booking
+Confirmed,Confirmada,HS Booking
+Draft,Borrador,HS Booking
+Hold,Retención temporal,HS Booking
+No Show,No presentada,HS Booking
+Active,Activa,HS Allocation
+Maintenance,Mantenimiento,HS Allocation
+Released,Liberada,HS Allocation
+Reservation,Reserva,HS Allocation
+Stay,Estancia,HS Allocation
+Acompañante,Acompañante,HS Stay Guest
+Principal,Principal,HS Stay Guest
+Active,Alojado,HS Stay
+Arrival,Al ingresar,HS Stay
+Checked Out,Salida registrada,HS Stay
+Nightly,Por noche,HS Stay
+Closed,Cerrado,HS Folio
+Open,Abierto,HS Folio
+Adjustment,Ajuste,HS Charge
+Courtesy,Cortesía,HS Charge
+Discount,Descuento,HS Charge
+Invoiced,Facturado,HS Charge
+Lodging,Alojamiento,HS Charge
+Pending,Pendiente,HS Charge
+Reversed,Revertido,HS Charge
+Scheduled,Programado,HS Charge
+Service,Servicio,HS Charge
+Surcharge,Recargo,HS Charge
+Asset,Activo fijo,HS Stock Policy
+Cleaning,Consumo de limpieza,HS Stock Policy
+Linen,Ropa de cama,HS Stock Policy
+Merchandise,Mercancía,HS Stock Policy
+Parts,Repuestos,HS Stock Policy
+Closed,Cerrado,HS Shift
+Open,Abierto,HS Shift
+Review,Por revisar,HS Shift
+Advance,Anticipo,HS Payment
+Cancelled,Cancelada,HS Payment
+Expense,Egreso,HS Payment
+Guarantee,Garantía,HS Payment
+Guarantee Applied,Garantía aplicada,HS Payment
+Guarantee Refund,Devolución de garantía,HS Payment
+Pay,Débito bancario,HS Payment
+Payment,Cobro,HS Payment
+Posted,Contabilizado,HS Payment
+Receive,Ingreso bancario,HS Payment
+Refund,Devolución,HS Payment
+Settlement,Liquidación de tarjeta,HS Payment
+Supplier Payment,Pago a proveedor,HS Payment
+Withdrawal,Retiro de caja,HS Payment
+Completed,Completada,HS Cleaning Task
+Deep,Profunda,HS Cleaning Task
+Departure,De salida,HS Cleaning Task
+High,Alta,HS Cleaning Task
+In Progress,En proceso,HS Cleaning Task
+Inspection,Pendiente de inspección,HS Cleaning Task
+Normal,Normal,HS Cleaning Task
+Pending,Pendiente,HS Cleaning Task
+Stay,Durante estancia,HS Cleaning Task
+Urgent,Urgente,HS Cleaning Task
+Completed,Finalizada,HS Maintenance Order
+Corrective,Correctivo,HS Maintenance Order
+In Progress,En proceso,HS Maintenance Order
+Open,Abierta,HS Maintenance Order
+Preventive,Preventivo,HS Maintenance Order
+Issued,Utilizado,HS Maintenance Part
+Returned,Devuelto,HS Maintenance Part
+Cancelled,Cancelada,HS Service Request
+Delivered,Entregado,HS Service Request
+In Progress,En proceso,HS Service Request
+Requested,Solicitado,HS Service Request
+Returned,Devuelto,HS Service Request
+Damage,Daño,HS Incident
+Linen,Ropa de cama,HS Incident
+Lost Property,Objeto encontrado,HS Incident
+Open,Abierta,HS Incident
+Resolved,Resuelta,HS Incident
+Closed,Cerrado,HS Daily Close
+Reopened,Reabierto,HS Daily Close
+Review,Por revisar,HS Daily Close
+Failed,Fallido,HS Integration Event
+Processed,Procesado,HS Integration Event
+Received,Recibido,HS Integration Event
+Cancelled,Cancelada,HS Portal Request
+Converted,Convertida en reserva,HS Portal Request
+Expired,Vencida,HS Portal Request
+Hold,Retención temporal,HS Portal Request
+Hotel,Hotel,HS Portal Request
+Motel,Por tiempo,HS Portal Request
+Agency,Agencia,HS Billing Party
+Company,Empresa,HS Billing Party
+Individual,Persona,HS Billing Party
+Completed,Completada,HS Retention Run
+Failed,Fallido,HS Retention Run
+Pending,Pendiente,HS Retention Run
+Deleted,Eliminado,HS Retention File
+Failed,Fallido,HS Retention File
+Pending,Pendiente,HS Retention File
+Shared,Compartida,HS Retention File
+Sale,Venta,Stock Entry
+Cleaning,Consumo de limpieza,Stock Entry
+Waste,Merma,Stock Entry
+Linen Replacement,Reposición de ropa de cama,Stock Entry
+Maintenance,Mantenimiento,Stock Entry
+Transfer,Traslado,Stock Entry
+Adjustment,Ajuste,Stock Entry
+Laundry,Lavandería,Stock Entry

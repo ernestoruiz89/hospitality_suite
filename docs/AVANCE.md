@@ -1,6 +1,10 @@
 # Registro de implementación
 
-Actualización: 2026-10-20. Objetivo activo; el alcance obligatorio aún tiene verificaciones y componentes pendientes en REQUISITOS.md. No se declara aptitud para producción.
+Actualización: 2026-10-21. Objetivo activo; el alcance obligatorio aún tiene verificaciones y componentes pendientes en REQUISITOS.md. No se declara aptitud para producción.
+
+## Fase 0.8.1
+
+Fase 0.8.1: IDIOMA_Y_ETIQUETAS.md acredita S01-04: revisión de literales secundarios, 310 etiquetas de campos, 129 opciones contextuales y 55 enlaces en once documentos nativos. El catálogo y su detalle muestran el alias por tiempo sin renombrar datos maestros. **379 nativas (365 integración/catorce puras) y 142 JS** aprobadas. Gerencia consulta el alias y abre mantenimiento en escritorio/móvil sin guardar; controles de 44 px y sin desbordamiento. Aceptación restaurada y migrada: 71 tablas/185 filas de negocio, 72/250 con Version; principal 72/1246, dos archivos privados y fecha 19/10 conservados. Se acreditan 55 Version nuevas de etiquetas en cada sitio y la actualización nativa de Company.modified de medianoche, con originales preservados. Núcleos/servicios/PDF breve conservados; 8089 apagado. Matriz **189 V, 7 I, 0 P y 22 R: 29 sin cierre**. Continúan la revisión integral de formularios/teclado/tareas, OTA aplazada y F26 activo.
 
 ## Entorno aislado
 

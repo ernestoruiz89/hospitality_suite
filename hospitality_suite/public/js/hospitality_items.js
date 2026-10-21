@@ -5,7 +5,7 @@
   Desk.prototype.render_setup=function(el){render.call(this,el);el.find(".hs-shortcuts").append(this.button("service_items",__("17. Artículos y servicios")));};
   Desk.prototype.action_service_items=async function(){
     const config=await this.call("service_configuration",{property_name:this.property}),key=frappe.utils.get_random(24);
-    const summary=this.table([__("Uso"),__("Artículo actual")],config.mappings.map(row=>[e(row.label),e(row.item_name||__("Sin configurar"))]));
+    const summary=this.table([__("Uso"),__("Artículo actual")],config.mappings.map(row=>[e(row.label),e((row.display_name??row.item_name)||__("Sin configurar"))]));
     const fields=[{fieldname:"current_items",fieldtype:"HTML",options:summary},
       ...config.mappings.map(row=>({fieldname:row.field,label:row.label,fieldtype:"Link",options:"Item",default:config.values[row.field],get_query:()=>({filters:{disabled:0,is_sales_item:1,is_stock_item:0,is_fixed_asset:0}})})),
       {fieldname:"price_list",label:__("Lista de precios de servicios"),fieldtype:"Link",options:"Price List",default:config.values.price_list},
@@ -25,7 +25,7 @@
         const info=await this.call("service_configuration",{property_name:this.property,item});
         if(version!==revision||!d.$wrapper.is(":visible"))return;
         const row=info.service,status=row.status==="Priced"?this.amount(row.rate,info.currency):row.status==="Missing"?__("Sin precio vigente"):__("Hay precios vigentes superpuestos; revise la lista");
-        d.fields_dict.service_info.$wrapper.html(`<p><strong>${e(row.item_name)}</strong> · ${e(status)}</p><p>${e(info.price_list||__("Sin lista de precios"))} · ${e(row.is_stock_item?__("Entrega con inventario"):__("Servicio sin inventario"))}</p><p>${e(__("Precio general en la unidad de inventario; un precio específico del pagador puede prevalecer. La consulta usa la lista guardada. Guarde un cambio de lista y vuelva a abrir para consultar sus precios."))}</p>`);
+        d.fields_dict.service_info.$wrapper.html(`<p><strong>${e(row.display_name??row.item_name)}</strong> · ${e(status)}</p><p>${e(info.price_list||__("Sin lista de precios"))} · ${e(row.is_stock_item?__("Entrega con inventario"):__("Servicio sin inventario"))}</p><p>${e(__("Precio general en la unidad de inventario; un precio específico del pagador puede prevalecer. La consulta usa la lista guardada. Guarde un cambio de lista y vuelva a abrir para consultar sus precios."))}</p>`);
       }catch(error){if(version===revision)d.fields_dict.service_info.$wrapper.text(__("No se pudo consultar el precio. Vuelva a seleccionar el servicio."));}
     };
     d.$wrapper.on("hidden.bs.modal.hsServiceItems",()=>revision++);

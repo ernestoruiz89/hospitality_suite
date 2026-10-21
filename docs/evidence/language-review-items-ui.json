@@ -1,0 +1,35 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "role": "HS Manager",
+  "preparation": "Original empty acceptance baseline; no operational fixture created.",
+  "browser_checks": [
+    "Configuration catalogue searches the visible alias and the price details keep that alias.",
+    "Maintenance form shows translated type and action in its first section.",
+    "Mobile second section shows local dates, reopening guidance, responsible user and notes."
+  ],
+  "submitted_business_actions": 0,
+  "settings_saved": 0,
+  "maintenance_orders_created": 0,
+  "mobile": {
+    "viewport_width": 390,
+    "viewport_height": 844,
+    "page_scroll_width": 390,
+    "dialog_scroll_width": 390,
+    "primary_button_width": 342,
+    "primary_button_height": 44
+  },
+  "database_preservation": "language-review-upgrade.json",
+  "captures": {
+    "243-catalogo-nombre-por-tiempo.jpg": "62d99e74d4366b7ac98656fe190901973d5987589a5a73a1f365b48b146c4318",
+    "244-mantenimiento-etiquetas-espanol.jpg": "f3237a11dccbf7531cc22ba212a88e9951485a5473958f243bc965833ff03b78",
+    "245-mantenimiento-plazos-movil.jpg": "ffd9056cb541483ab91a725f173112a91bf5b8b7a9b82c380e832c1c24fbf6ba"
+  },
+  "limitations": [
+    "French readiness is proven with rolled-back native Translation records and non-identity JS translations; no complete additional language pack.",
+    "No full accounting document workflow or every secondary form is claimed in this language-only walkthrough."
+  ],
+  "test_session_logged_out": true,
+  "test_tab_closed": true,
+  "viewport_reset": true,
+  "temporary_server_stopped": true
+}

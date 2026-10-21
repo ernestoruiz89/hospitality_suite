@@ -36,6 +36,9 @@ VALUE_LABELS.update(Unclassified="Sin clasificar",Discount="Descuento",Courtesy=
 VALUE_LABELS.update(Service="Servicio",Lodging="Alojamiento",Difference="Diferencia")
 from hospitality_suite.display_labels import MODE_LABELS
 VALUE_LABELS.update(MODE_LABELS)
+from hospitality_suite.schema_labels import OPTION_LABELS
+for _code,_label in OPTION_LABELS.items():
+    VALUE_LABELS.setdefault(_code,_label)
 
 
 def hs_label(value):

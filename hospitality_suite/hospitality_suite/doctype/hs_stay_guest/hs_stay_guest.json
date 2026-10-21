@@ -10,14 +10,14 @@
  "fields": [
   {
    "fieldname": "guest",
-   "label": "Guest",
+   "label": "Huésped",
    "fieldtype": "Link",
    "options": "HS Guest",
    "reqd": 1
   },
   {
    "fieldname": "relationship",
-   "label": "Relationship",
+   "label": "Relación con la estancia",
    "fieldtype": "Select",
    "options": "Principal\nAcompañante",
    "reqd": 1,

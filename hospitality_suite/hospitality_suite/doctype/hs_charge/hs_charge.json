@@ -24,39 +24,39 @@
   },
   {
    "fieldname": "stay",
-   "label": "Stay",
+   "label": "Estancia",
    "fieldtype": "Link",
    "options": "HS Stay",
    "reqd": 1
   },
   {
    "fieldname": "folio",
-   "label": "Folio",
+   "label": "Cuenta de estancia",
    "fieldtype": "Link",
    "options": "HS Folio",
    "reqd": 1
   },
   {
    "fieldname": "item",
-   "label": "Item",
+   "label": "Artículo",
    "fieldtype": "Link",
    "options": "Item",
    "reqd": 1
   },
   {
    "fieldname": "description",
-   "label": "Description",
+   "label": "Descripción",
    "fieldtype": "Small Text"
   },
   {
    "fieldname": "quantity",
-   "label": "Quantity",
+   "label": "Cantidad",
    "fieldtype": "Float",
    "default": 1
   },
   {
    "fieldname": "rate",
-   "label": "Rate",
+   "label": "Tarifa",
    "fieldtype": "Currency",
    "default": 0,
    "options": "currency"
@@ -70,7 +70,7 @@
   },
   {
    "fieldname": "amount",
-   "label": "Amount",
+   "label": "Importe",
    "fieldtype": "Currency",
    "default": 0,
    "options": "currency",
@@ -78,13 +78,13 @@
   },
   {
    "fieldname": "business_date",
-   "label": "Business date",
+   "label": "Fecha operativa",
    "fieldtype": "Date",
    "reqd": 1
   },
   {
    "fieldname": "kind",
-   "label": "Kind",
+   "label": "Tipo",
    "fieldtype": "Select",
    "options": "Lodging\nService\nAdjustment",
    "reqd": 1,
@@ -100,13 +100,13 @@
   },
   {
    "fieldname": "sales_invoice",
-   "label": "Sales invoice",
+   "label": "Factura de venta",
    "fieldtype": "Link",
    "options": "Sales Invoice"
   },
   {
    "fieldname": "period_key",
-   "label": "Period key",
+   "label": "Referencia del período",
    "fieldtype": "Data",
    "unique": 1,
    "read_only": 1,
@@ -127,29 +127,29 @@
   },
   {
    "fieldname": "invoice_item",
-   "label": "Invoice item",
+   "label": "Línea de factura",
    "fieldtype": "Data"
   },
   {
    "fieldname": "reason",
-   "label": "Reason",
+   "label": "Motivo",
    "fieldtype": "Small Text"
   },
   {
    "fieldname": "quote_snapshot",
-   "label": "Quote snapshot",
+   "label": "Cotización aceptada",
    "fieldtype": "Code",
    "options": "JSON"
   },
   {
    "fieldname": "applies_to_charge",
-   "label": "Applies to charge",
+   "label": "Cargo de origen",
    "fieldtype": "Link",
    "options": "HS Charge"
   },
   {
    "fieldname": "adjustment_type",
-   "label": "Adjustment type",
+   "label": "Tipo de ajuste",
    "fieldtype": "Select",
    "options": "\nDiscount\nCourtesy\nSurcharge"
   }

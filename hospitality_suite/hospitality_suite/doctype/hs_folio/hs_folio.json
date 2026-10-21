@@ -24,13 +24,13 @@
   },
   {
    "fieldname": "stay",
-   "label": "Stay",
+   "label": "Estancia",
    "fieldtype": "Link",
    "options": "HS Stay"
   },
   {
    "fieldname": "booking",
-   "label": "Booking",
+   "label": "Reserva",
    "fieldtype": "Link",
    "options": "HS Booking"
   },
@@ -58,7 +58,7 @@
   },
   {
    "fieldname": "label",
-   "label": "Label",
+   "label": "Nombre descriptivo",
    "fieldtype": "Data",
    "default": "Cuenta principal"
   }

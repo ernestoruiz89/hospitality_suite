@@ -48,12 +48,12 @@
   },
   {
    "fieldname": "buffer_minutes",
-   "label": "Buffer minutes",
+   "label": "Colchón de limpieza (minutos)",
    "fieldtype": "Int"
   },
   {
    "fieldname": "kind",
-   "label": "Kind",
+   "label": "Tipo",
    "fieldtype": "Select",
    "options": "Reservation\nStay\nMaintenance",
    "reqd": 1,
@@ -69,30 +69,30 @@
   },
   {
    "fieldname": "booking",
-   "label": "Booking",
+   "label": "Reserva",
    "fieldtype": "Link",
    "options": "HS Booking"
   },
   {
    "fieldname": "stay",
-   "label": "Stay",
+   "label": "Estancia",
    "fieldtype": "Link",
    "options": "HS Stay"
   },
   {
    "fieldname": "booking_room",
-   "label": "Booking room",
+   "label": "Habitación solicitada",
    "fieldtype": "Data"
   },
   {
    "fieldname": "portal_request",
-   "label": "Portal request",
+   "label": "Solicitud del portal",
    "fieldtype": "Link",
    "options": "HS Portal Request"
   },
   {
    "fieldname": "rate",
-   "label": "Rate",
+   "label": "Tarifa",
    "fieldtype": "Link",
    "options": "HS Rate"
   },
@@ -104,20 +104,20 @@
   },
   {
    "fieldname": "accepted_amount",
-   "label": "Accepted amount",
+   "label": "Importe aceptado",
    "fieldtype": "Currency",
    "default": 0,
    "options": "currency"
   },
   {
    "fieldname": "quote_snapshot",
-   "label": "Quote snapshot",
+   "label": "Cotización aceptada",
    "fieldtype": "Code",
    "options": "JSON"
   },
   {
    "fieldname": "maintenance",
-   "label": "Maintenance",
+   "label": "Mantenimiento",
    "fieldtype": "Link",
    "options": "HS Maintenance Order"
   }

@@ -1,8 +1,12 @@
 # Siguiente fase del objetivo activo
 
-Actualizado el 20/10/2026. El alcance obligatorio sigue abierto: **188 V, ocho I, cero P y 22 R**, de las mismas 218 entradas y huella. R significa contraste individual pendiente y no función ausente. Los recuentos no son un porcentaje de programación ni una fecha de terminación.
+Actualizado el 21/10/2026. El alcance obligatorio sigue abierto: **189 V, siete I, cero P y 22 R**, de las mismas 218 entradas y huella. R significa contraste individual pendiente y no función ausente. Los recuentos no son un porcentaje de programación ni una fecha de terminación.
 
-## Última fase comprobada — 0.8.0
+## Última fase comprobada — 0.8.1
+
+Fase 0.8.1: IDIOMA_Y_ETIQUETAS.md acredita S01-04: revisión de literales secundarios, 310 etiquetas de campos, 129 opciones contextuales y 55 enlaces en once documentos nativos. El catálogo y su detalle muestran el alias por tiempo sin renombrar datos maestros. **379 nativas (365 integración/catorce puras) y 142 JS** aprobadas. Gerencia consulta el alias y abre mantenimiento en escritorio/móvil sin guardar; controles de 44 px y sin desbordamiento. Aceptación restaurada y migrada: 71 tablas/185 filas de negocio, 72/250 con Version; principal 72/1246, dos archivos privados y fecha 19/10 conservados. Se acreditan 55 Version nuevas de etiquetas en cada sitio y la actualización nativa de Company.modified de medianoche, con originales preservados. Núcleos/servicios/PDF breve conservados; 8089 apagado. Matriz **189 V, 7 I, 0 P y 22 R: 29 sin cierre**. Continúan la revisión integral de formularios/teclado/tareas, OTA aplazada y F26 activo.
+
+## Fase anterior — 0.8.0
 
 Fase 0.8.0: ACEPTACION_Y_DEMOSTRACION.md acredita S17-17/S17-18 y S18-10: generador explícito con reservas/estancias/consumos persistentes en dos sedes, repetición sin duplicar ni reiniciar trabajo, y aceptación completa desde Pages con recepción+caja autorizadas. Limpieza móvil y Supervisión liberan; Contabilidad rastrea factura/pago y Gerencia contrasta C$ 3,030.00 conciliados. **373 nativas (359 integración/catorce puras) y 136 JS** aprobadas. Ocho casos nuevos; no cambia frontend de producción. Se repite el generador después del recorrido sin cambios. Aceptación restaurada 71/185 y 72/195; principal 72/1191, dos archivos privados y fecha 19/10 conservados. Núcleos/servicios/HTTP/PDF conciso conservados, 8089 apagado. Matriz **188 V, 8 I, 0 P y 22 R: 30 sin cierre**. Las revisiones generales de tareas/formularios/teclado siguen abiertas, OTA aplazada y F26 activo.
 

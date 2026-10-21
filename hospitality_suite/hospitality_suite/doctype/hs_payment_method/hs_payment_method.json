@@ -24,14 +24,14 @@
   },
   {
    "fieldname": "mode_of_payment",
-   "label": "Mode of payment",
+   "label": "Medio de pago",
    "fieldtype": "Link",
    "options": "Mode of Payment",
    "reqd": 1
   },
   {
    "fieldname": "account",
-   "label": "Account",
+   "label": "Cuenta contable",
    "fieldtype": "Link",
    "options": "Account",
    "reqd": 1
@@ -45,58 +45,58 @@
   },
   {
    "fieldname": "reference_required",
-   "label": "Reference required",
+   "label": "Exigir referencia",
    "fieldtype": "Check"
   },
   {
    "fieldname": "is_cash",
-   "label": "Is cash",
+   "label": "Es efectivo",
    "fieldtype": "Check"
   },
   {
    "fieldname": "fee_percent",
-   "label": "Fee percent",
+   "label": "Comisión (%)",
    "fieldtype": "Percent"
   },
   {
    "fieldname": "fee_fixed",
-   "label": "Fee fixed",
+   "label": "Comisión fija",
    "fieldtype": "Currency",
    "default": 0,
    "options": "currency"
   },
   {
    "fieldname": "fee_account",
-   "label": "Fee account",
+   "label": "Cuenta de comisiones",
    "fieldtype": "Link",
    "options": "Account"
   },
   {
    "fieldname": "refund_fee_percent",
-   "label": "Refund fee percent",
+   "label": "Comisión de devolución (%)",
    "fieldtype": "Percent"
   },
   {
    "fieldname": "refund_fee_fixed",
-   "label": "Refund fee fixed",
+   "label": "Comisión fija de devolución",
    "fieldtype": "Currency",
    "default": 0,
    "options": "currency"
   },
   {
    "fieldname": "withholding_percent",
-   "label": "Withholding percent",
+   "label": "Retención (%)",
    "fieldtype": "Percent"
   },
   {
    "fieldname": "withholding_account",
-   "label": "Withholding account",
+   "label": "Cuenta de retenciones",
    "fieldtype": "Link",
    "options": "Account"
   },
   {
    "fieldname": "settlement_account",
-   "label": "Settlement account",
+   "label": "Cuenta de liquidación",
    "fieldtype": "Link",
    "options": "Account"
   }

@@ -23,19 +23,19 @@
   },
   {
    "fieldname": "people",
-   "label": "People",
+   "label": "Personas",
    "fieldtype": "Int",
    "default": 1
   },
   {
    "fieldname": "extra_beds",
-   "label": "Extra beds",
+   "label": "Camas adicionales",
    "fieldtype": "Int",
    "default": 0
   },
   {
    "fieldname": "rate",
-   "label": "Rate",
+   "label": "Tarifa",
    "fieldtype": "Link",
    "options": "HS Rate",
    "reqd": 1

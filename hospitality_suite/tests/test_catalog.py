@@ -42,7 +42,7 @@ class TestCatalog(IntegrationTestCase):
         self.assertFalse(found["has_more"])
         self.assertEqual([r.name for r in api.catalog_search(self.prop.name,"% y _","sale")["items"]],[target.name])
         self.assertFalse(api.catalog_search(self.prop.name,target.name,"stock")["items"])
-        self.assertEqual(set(found["items"][0]),set(FIELDS))
+        self.assertEqual(set(found["items"][0]),set(FIELDS)|{'display_name'})
         before=api.bootstrap(self.prop.name)
         self.assertLessEqual(len(before["items"]),50)
         self.assertNotIn(target.name,{r.name for r in before["items"]})
@@ -75,7 +75,7 @@ class TestCatalog(IntegrationTestCase):
         frappe.set_user("housekeeping@hospitality.example.invalid")
         rows=api.catalog_search(self.prop.name,"HS-DEMO-WATER","stock")["items"]
         self.assertEqual([r.name for r in rows],["HS-DEMO-WATER"])
-        self.assertEqual(set(rows[0]),set(FIELDS))
+        self.assertEqual(set(rows[0]),set(FIELDS)|{'display_name'})
         with self.assertRaises(frappe.PermissionError):
             api.catalog_search(foreign,"HS-DEMO-WATER")
         for txt,purpose in (("x"*141,"any"),("",{}),(None,"any"),("","cost")):

@@ -30,19 +30,19 @@
   },
   {
    "fieldname": "equipment",
-   "label": "Equipment",
+   "label": "Equipo",
    "fieldtype": "Link",
    "options": "HS Equipment"
   },
   {
    "fieldname": "blocks_room",
-   "label": "Blocks room",
+   "label": "Bloquea habitación",
    "fieldtype": "Check",
    "default": 1
   },
   {
    "fieldname": "title",
-   "label": "Title",
+   "label": "Título",
    "fieldtype": "Data",
    "reqd": 1
   },
@@ -67,7 +67,7 @@
   },
   {
    "fieldname": "kind",
-   "label": "Kind",
+   "label": "Tipo",
    "fieldtype": "Select",
    "options": "Corrective\nPreventive",
    "reqd": 1,
@@ -83,45 +83,45 @@
   },
   {
    "fieldname": "assigned_to",
-   "label": "Assigned to",
+   "label": "Responsable",
    "fieldtype": "Link",
    "options": "User"
   },
   {
    "fieldname": "notes",
-   "label": "Notes",
+   "label": "Observaciones",
    "fieldtype": "Small Text"
   },
   {
    "fieldname": "evidence",
-   "label": "Evidence",
+   "label": "Evidencia",
    "fieldtype": "Attach",
    "permlevel": 1
   },
   {
    "fieldname": "cost",
-   "label": "Cost",
+   "label": "Costo",
    "fieldtype": "Currency",
    "default": 0,
    "permlevel": 1
   },
   {
    "fieldname": "stock_entry",
-   "label": "Stock entry",
+   "label": "Movimiento de inventario",
    "fieldtype": "Link",
    "options": "Stock Entry",
    "permlevel": 1
   },
   {
    "fieldname": "parts",
-   "label": "Parts",
+   "label": "Repuestos",
    "fieldtype": "Table",
    "options": "HS Maintenance Part",
    "permlevel": 1
   },
   {
    "fieldname": "reopened_by",
-   "label": "Reopened by",
+   "label": "Reabierto por",
    "fieldtype": "Link",
    "options": "User"
   }

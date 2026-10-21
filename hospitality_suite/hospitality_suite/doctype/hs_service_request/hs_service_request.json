@@ -24,13 +24,13 @@
   },
   {
    "fieldname": "stay",
-   "label": "Stay",
+   "label": "Estancia",
    "fieldtype": "Link",
    "options": "HS Stay"
   },
   {
    "fieldname": "folio",
-   "label": "Folio",
+   "label": "Cuenta de estancia",
    "fieldtype": "Link",
    "options": "HS Folio"
   },
@@ -42,20 +42,20 @@
   },
   {
    "fieldname": "item",
-   "label": "Item",
+   "label": "Artículo",
    "fieldtype": "Link",
    "options": "Item",
    "reqd": 1
   },
   {
    "fieldname": "quantity",
-   "label": "Quantity",
+   "label": "Cantidad",
    "fieldtype": "Float",
    "default": 1
   },
   {
    "fieldname": "included",
-   "label": "Included",
+   "label": "Incluido sin recargo",
    "fieldtype": "Check"
   },
   {
@@ -67,7 +67,7 @@
   },
   {
    "fieldname": "amount",
-   "label": "Amount",
+   "label": "Importe",
    "fieldtype": "Currency",
    "default": 0,
    "options": "currency",
@@ -83,37 +83,37 @@
   },
   {
    "fieldname": "charge",
-   "label": "Charge",
+   "label": "Cargo",
    "fieldtype": "Link",
    "options": "HS Charge"
   },
   {
    "fieldname": "stock_entry",
-   "label": "Stock entry",
+   "label": "Movimiento de inventario",
    "fieldtype": "Link",
    "options": "Stock Entry"
   },
   {
    "fieldname": "return_stock_entry",
-   "label": "Return stock entry",
+   "label": "Devolución de inventario",
    "fieldtype": "Link",
    "options": "Stock Entry"
   },
   {
    "fieldname": "credit_note",
-   "label": "Credit note",
+   "label": "Nota de crédito",
    "fieldtype": "Link",
    "options": "Sales Invoice"
   },
   {
    "fieldname": "sales_invoice",
-   "label": "Sales invoice",
+   "label": "Factura de venta",
    "fieldtype": "Link",
    "options": "Sales Invoice"
   },
   {
    "fieldname": "notes",
-   "label": "Notes",
+   "label": "Observaciones",
    "fieldtype": "Small Text"
   }
  ],

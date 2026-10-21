@@ -25,9 +25,9 @@ class TestAuditHistory(IntegrationTestCase):
 
     def call(self,action,data,key=None):return api.execute(self.prop.name,action,key or uuid.uuid4().hex,data)
 
-    def booking(self,index=0,enter=False,days=1):
+    def booking(self,index=0,enter=False,days=1,early_minutes=10):
         start=now_datetime().replace(microsecond=0);room=self.rooms[index]
-        values=dict(starts_at=str(start-timedelta(minutes=10)),ends_at=str(start+timedelta(days=days)),guest=self.guest.name,customer=self.guest.customer,
+        values=dict(starts_at=str(start-timedelta(minutes=early_minutes)),ends_at=str(start+timedelta(days=days)),guest=self.guest.name,customer=self.guest.customer,
             rooms=[dict(category=room.category,room=room.name,people=1)])
         values['acceptance']=api.preview(self.prop.name,values)['acceptance']
         return self.call('walk_in' if enter else 'reserve',values)
@@ -200,7 +200,9 @@ class TestAuditHistory(IntegrationTestCase):
     def test_interrupted_preparation_rolls_back_nightly_work_and_retry_reports_only_completed_work(self):
         with operation():
             self.prop.lodging_charge_policy='Nightly';self.prop.business_date=frappe.utils.nowdate();self.prop.save()
-        self.booking(enter=True,days=2)
+        # This scenario needs exactly two calendar nights. Subtracting ten
+        # minutes crosses into a third date just after midnight.
+        self.booking(enter=True,days=2,early_minutes=0)
         self.assertEqual(frappe.db.count('HS Charge',{'status':'Scheduled'}),2)
         before=self.fingerprints();key=uuid.uuid4().hex
         with patch('hospitality_suite.close_financials.snapshot',side_effect=RuntimeError('Interrupted after generating nightly charges')):

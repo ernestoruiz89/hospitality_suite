@@ -30,7 +30,7 @@
   },
   {
    "fieldname": "guest",
-   "label": "Guest",
+   "label": "Huésped",
    "fieldtype": "Link",
    "options": "HS Guest"
   },
@@ -54,7 +54,7 @@
   },
   {
    "fieldname": "hold_until",
-   "label": "Hold until",
+   "label": "Retención hasta",
    "fieldtype": "Datetime"
   },
   {
@@ -65,18 +65,18 @@
   },
   {
    "fieldname": "instructions",
-   "label": "Instructions",
+   "label": "Instrucciones",
    "fieldtype": "Small Text"
   },
   {
    "fieldname": "rooms",
-   "label": "Rooms",
+   "label": "Habitaciones",
    "fieldtype": "Table",
    "options": "HS Booking Room"
   },
   {
    "fieldname": "reason",
-   "label": "Reason",
+   "label": "Motivo",
    "fieldtype": "Small Text"
   },
   {
@@ -88,7 +88,7 @@
   },
   {
    "fieldname": "amount",
-   "label": "Amount",
+   "label": "Importe",
    "fieldtype": "Currency",
    "default": 0,
    "options": "currency",
@@ -105,32 +105,32 @@
   },
   {
    "fieldname": "quote_snapshot",
-   "label": "Quote snapshot",
+   "label": "Cotización aceptada",
    "fieldtype": "Code",
    "options": "JSON"
   },
   {
    "fieldname": "fee_invoice",
-   "label": "Fee invoice",
+   "label": "Factura de penalización",
    "fieldtype": "Link",
    "options": "Sales Invoice"
   },
   {
    "fieldname": "fee_amount",
-   "label": "Fee amount",
+   "label": "Comisión o penalización",
    "fieldtype": "Currency",
    "default": 0,
    "options": "currency"
   },
   {
    "fieldname": "portal_token_hash",
-   "label": "Portal token hash",
+   "label": "Huella del acceso al portal",
    "fieldtype": "Data",
    "hidden": 1
   },
   {
    "fieldname": "portal_expires_at",
-   "label": "Portal expires at",
+   "label": "Vencimiento del acceso al portal",
    "fieldtype": "Datetime",
    "hidden": 1
   }

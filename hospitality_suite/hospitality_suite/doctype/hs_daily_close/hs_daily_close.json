@@ -24,7 +24,7 @@
   },
   {
    "fieldname": "business_date",
-   "label": "Business date",
+   "label": "Fecha operativa",
    "fieldtype": "Date",
    "reqd": 1
   },
@@ -38,24 +38,24 @@
   },
   {
    "fieldname": "summary",
-   "label": "Summary",
+   "label": "Resumen",
    "fieldtype": "Code",
    "options": "JSON"
   },
   {
    "fieldname": "blockers",
-   "label": "Blockers",
+   "label": "Pendientes de cierre",
    "fieldtype": "Code",
    "options": "JSON"
   },
   {
    "fieldname": "closed_at",
-   "label": "Closed at",
+   "label": "Cierre registrado",
    "fieldtype": "Datetime"
   },
   {
    "fieldname": "reason",
-   "label": "Reason",
+   "label": "Motivo",
    "fieldtype": "Small Text"
   }
  ],

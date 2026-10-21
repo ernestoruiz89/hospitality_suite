@@ -24,47 +24,47 @@
   },
   {
    "fieldname": "action",
-   "label": "Action",
+   "label": "Acción",
    "fieldtype": "Data",
    "reqd": 1
   },
   {
    "fieldname": "source_doctype",
-   "label": "Source doctype",
+   "label": "Tipo de documento de origen",
    "fieldtype": "Data",
    "reqd": 1
   },
   {
    "fieldname": "source_name",
-   "label": "Source name",
+   "label": "Documento de origen",
    "fieldtype": "Data",
    "reqd": 1
   },
   {
    "fieldname": "actor",
-   "label": "Actor",
+   "label": "Usuario de la operación",
    "fieldtype": "Link",
    "options": "User",
    "reqd": 1
   },
   {
    "fieldname": "occurred_at",
-   "label": "Occurred at",
+   "label": "Momento registrado",
    "fieldtype": "Datetime"
   },
   {
    "fieldname": "business_date",
-   "label": "Business date",
+   "label": "Fecha operativa",
    "fieldtype": "Date"
   },
   {
    "fieldname": "reason",
-   "label": "Reason",
+   "label": "Motivo",
    "fieldtype": "Small Text"
   },
   {
    "fieldname": "details",
-   "label": "Details",
+   "label": "Detalle",
    "fieldtype": "Code",
    "options": "JSON"
   }

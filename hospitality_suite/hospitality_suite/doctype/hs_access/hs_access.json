@@ -10,7 +10,7 @@
  "fields": [
   {
    "fieldname": "user",
-   "label": "User",
+   "label": "Usuario",
    "fieldtype": "Link",
    "options": "User",
    "reqd": 1

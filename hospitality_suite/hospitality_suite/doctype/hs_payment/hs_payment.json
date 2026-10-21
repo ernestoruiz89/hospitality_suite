@@ -24,13 +24,13 @@
   },
   {
    "fieldname": "stay",
-   "label": "Stay",
+   "label": "Estancia",
    "fieldtype": "Link",
    "options": "HS Stay"
   },
   {
    "fieldname": "booking",
-   "label": "Booking",
+   "label": "Reserva",
    "fieldtype": "Link",
    "options": "HS Booking"
   },
@@ -42,7 +42,7 @@
   },
   {
    "fieldname": "business_date_source",
-   "label": "Business date source",
+   "label": "Origen de fecha operativa",
    "fieldtype": "Data",
    "read_only": 1,
    "hidden": 1,
@@ -50,7 +50,7 @@
   },
   {
    "fieldname": "folio",
-   "label": "Folio",
+   "label": "Cuenta de estancia",
    "fieldtype": "Link",
    "options": "HS Folio"
   },
@@ -62,14 +62,14 @@
   },
   {
    "fieldname": "shift",
-   "label": "Shift",
+   "label": "Turno",
    "fieldtype": "Link",
    "options": "HS Shift",
    "reqd": 1
   },
   {
    "fieldname": "method",
-   "label": "Method",
+   "label": "Medio de pago",
    "fieldtype": "Link",
    "options": "HS Payment Method",
    "reqd": 1
@@ -83,7 +83,7 @@
   },
   {
    "fieldname": "amount",
-   "label": "Amount",
+   "label": "Importe",
    "fieldtype": "Currency",
    "default": 0,
    "options": "currency",
@@ -91,19 +91,19 @@
   },
   {
    "fieldname": "exchange_rate",
-   "label": "Exchange rate",
+   "label": "Tipo de cambio",
    "fieldtype": "Float",
    "default": 1
   },
   {
    "fieldname": "base_amount",
-   "label": "Base amount",
+   "label": "Importe en moneda base",
    "fieldtype": "Currency",
    "default": 0
   },
   {
    "fieldname": "kind",
-   "label": "Kind",
+   "label": "Tipo",
    "fieldtype": "Select",
    "options": "Payment\nAdvance\nGuarantee\nRefund\nGuarantee Refund\nGuarantee Applied\nWithdrawal\nExpense\nSupplier Payment\nSettlement",
    "reqd": 1,
@@ -119,79 +119,79 @@
   },
   {
    "fieldname": "payment_entry",
-   "label": "Payment entry",
+   "label": "Comprobante de pago",
    "fieldtype": "Link",
    "options": "Payment Entry"
   },
   {
    "fieldname": "journal_entry",
-   "label": "Journal entry",
+   "label": "Asiento contable",
    "fieldtype": "Link",
    "options": "Journal Entry"
   },
   {
    "fieldname": "reference",
-   "label": "Reference",
+   "label": "Referencia",
    "fieldtype": "Data"
   },
   {
    "fieldname": "source_payment",
-   "label": "Source payment",
+   "label": "Movimiento de origen",
    "fieldtype": "Link",
    "options": "HS Payment"
   },
   {
    "fieldname": "reason",
-   "label": "Reason",
+   "label": "Motivo",
    "fieldtype": "Small Text"
   },
   {
    "fieldname": "tendered",
-   "label": "Tendered",
+   "label": "Efectivo recibido o entregado",
    "fieldtype": "Currency",
    "default": 0,
    "options": "currency"
   },
   {
    "fieldname": "change_amount",
-   "label": "Change amount",
+   "label": "Vuelto",
    "fieldtype": "Currency",
    "default": 0,
    "options": "currency"
   },
   {
    "fieldname": "service",
-   "label": "Service",
+   "label": "Consumo",
    "fieldtype": "Link",
    "options": "HS Service Request"
   },
   {
    "fieldname": "sales_invoice",
-   "label": "Sales invoice",
+   "label": "Factura de venta",
    "fieldtype": "Link",
    "options": "Sales Invoice"
   },
   {
    "fieldname": "expense_category",
-   "label": "Expense category",
+   "label": "Categoría de gasto",
    "fieldtype": "Link",
    "options": "HS Expense Category"
   },
   {
    "fieldname": "supplier",
-   "label": "Supplier",
+   "label": "Proveedor",
    "fieldtype": "Link",
    "options": "Supplier"
   },
   {
    "fieldname": "purchase_invoice",
-   "label": "Purchase invoice",
+   "label": "Factura de proveedor",
    "fieldtype": "Link",
    "options": "Purchase Invoice"
   },
   {
    "fieldname": "fee_snapshot",
-   "label": "Fee snapshot",
+   "label": "Condiciones aceptadas del medio",
    "fieldtype": "Code",
    "options": "JSON",
    "hidden": 1,
@@ -199,34 +199,34 @@
   },
   {
    "fieldname": "fee_amount",
-   "label": "Fee amount",
+   "label": "Comisión o penalización",
    "fieldtype": "Currency",
    "default": 0,
    "options": "currency"
   },
   {
    "fieldname": "withholding_amount",
-   "label": "Withholding amount",
+   "label": "Retención",
    "fieldtype": "Currency",
    "default": 0,
    "options": "currency"
   },
   {
    "fieldname": "net_amount",
-   "label": "Net amount",
+   "label": "Importe neto",
    "fieldtype": "Currency",
    "default": 0,
    "options": "currency"
   },
   {
    "fieldname": "clearing_base_amount",
-   "label": "Clearing base amount",
+   "label": "Compensación en moneda base",
    "fieldtype": "Currency",
    "default": 0
   },
   {
    "fieldname": "settlement_direction",
-   "label": "Settlement direction",
+   "label": "Dirección de liquidación",
    "fieldtype": "Select",
    "options": "\nReceive\nPay"
   }

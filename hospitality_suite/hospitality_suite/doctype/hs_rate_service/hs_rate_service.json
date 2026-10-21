@@ -10,21 +10,21 @@
  "fields": [
   {
    "fieldname": "item",
-   "label": "Item",
+   "label": "Artículo",
    "fieldtype": "Link",
    "options": "Item",
    "reqd": 1
   },
   {
    "fieldname": "quantity",
-   "label": "Quantity",
+   "label": "Cantidad",
    "fieldtype": "Float",
    "default": 1,
    "reqd": 1
   },
   {
    "fieldname": "basis",
-   "label": "Basis",
+   "label": "Base de aplicación",
    "fieldtype": "Select",
    "options": "Stay\nNight",
    "reqd": 1,

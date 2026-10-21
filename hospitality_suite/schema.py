@@ -9,10 +9,8 @@ STANDARD_SCOPED=("Sales Invoice","Payment Entry","Journal Entry","Stock Entry","
 
 
 def f(name, kind="Data", options=None, required=False, **kwargs):
-    labels = {"property": "Establecimiento", "company": "Compañía", "status": "Estado",
-              "room": "Habitación", "category": "Categoría", "customer": "Cliente pagador",
-              "starts_at": "Desde", "ends_at": "Hasta", "currency": "Moneda"}
-    out = dict(fieldname=name, label=labels.get(name, name.replace("_", " ").capitalize()), fieldtype=kind)
+    from hospitality_suite.schema_labels import FIELD_LABELS
+    out = dict(fieldname=name, label=FIELD_LABELS.get(name, name.replace("_", " ").capitalize()), fieldtype=kind)
     if kind in ("Currency","Float"):
         out["default"]=0
     if options is not None:

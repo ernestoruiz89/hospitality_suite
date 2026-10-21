@@ -24,21 +24,21 @@
   },
   {
    "fieldname": "item",
-   "label": "Item",
+   "label": "Artículo",
    "fieldtype": "Link",
    "options": "Item",
    "reqd": 1
   },
   {
    "fieldname": "warehouse",
-   "label": "Warehouse",
+   "label": "Almacén",
    "fieldtype": "Link",
    "options": "Warehouse",
    "reqd": 1
   },
   {
    "fieldname": "purpose",
-   "label": "Purpose",
+   "label": "Uso operativo",
    "fieldtype": "Select",
    "options": "Merchandise\nCleaning\nLinen\nParts\nAsset",
    "reqd": 1,

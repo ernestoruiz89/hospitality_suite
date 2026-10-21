@@ -56,7 +56,7 @@
     const send=(data,key,p)=>this.call("execute",{property_name:p,action:"save_booking_draft",request_key:key,data:JSON.stringify(data)});
     const session=new DraftSession(property,send,info?.booking.name,info?.booking.modified);
     const scope=()=>({filters:{property}});
-    const fields=[f("draft_help",__("Estado del borrador"),"HTML",{options:`<p class="hs-draft-status" role="status">${esc(__(existing?"Borrador guardado. Puede completar datos y revisar el precio.":"Puede guardar datos incompletos como borrador."))} ${esc(__("El borrador no ocupa cupo ni fija precio."))}</p>`}),
+    const fields=[f("draft_help",__("Estado del borrador"),"HTML",{options:`<p class="hs-draft-status" role="status">${esc(__(existing?"Borrador guardado. Puede completar datos y revisar el precio.":__("Puede guardar datos incompletos como borrador.")))} ${esc(__("El borrador no ocupa cupo ni fija precio."))}</p>`}),
       {...pick("guest",__("Huésped principal (puede elegirse al ingresar)"),this.data.guests,"full_name"),default:values.guest||""},
       {...pick("customer",__("Cliente que paga"),this.data.customers,"customer_name",true),default:values.customer||""},
       f("starts_at",__("Entrada ({0})",[prop.time_zone]),"Datetime",{reqd:1,default:wall(values.starts_at)}),
@@ -95,7 +95,7 @@
           await this.mutate(action,data,key);c.hide();d.hide();
         },held?__("Aceptar retención temporal"):__("Confirmar reserva"));
       }finally{lock(d,false);}
-    },"Revisar precio");
+    },__("Revisar precio"));
     dialog.set_secondary_action_label(__("Guardar borrador"));
     dialog.set_secondary_action(()=>dialog._hsSubmit({validate:false,handler:async(v,d)=>{
       sameProperty();lock(d,true);
@@ -117,7 +117,7 @@
           sameProperty();await session.settle();
           await this.mutate("discard_booking_draft",{booking:session.booking,modified:session.modified,reason:v.reason},key);
           c.hide();dialog.hide();
-        },"Descartar borrador","small");
+        },__("Descartar borrador"),"small");
       });
     }
     return dialog;

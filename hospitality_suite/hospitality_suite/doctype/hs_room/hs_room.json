@@ -24,7 +24,7 @@
   },
   {
    "fieldname": "room_number",
-   "label": "Room number",
+   "label": "Número de habitación",
    "fieldtype": "Data",
    "reqd": 1
   },
@@ -37,34 +37,34 @@
   },
   {
    "fieldname": "floor",
-   "label": "Floor",
+   "label": "Piso",
    "fieldtype": "Data"
   },
   {
    "fieldname": "zone",
-   "label": "Zone",
+   "label": "Zona",
    "fieldtype": "Data"
   },
   {
    "fieldname": "beds",
-   "label": "Beds",
+   "label": "Camas",
    "fieldtype": "Int",
    "default": 1
   },
   {
    "fieldname": "parking",
-   "label": "Parking",
+   "label": "Estacionamiento",
    "fieldtype": "Data"
   },
   {
    "fieldname": "active",
-   "label": "Active",
+   "label": "Habilitado",
    "fieldtype": "Check",
    "default": 1
   },
   {
    "fieldname": "cleaning_status",
-   "label": "Cleaning status",
+   "label": "Estado de limpieza",
    "fieldtype": "Select",
    "options": "Clean\nDirty\nCleaning\nInspection",
    "reqd": 1,

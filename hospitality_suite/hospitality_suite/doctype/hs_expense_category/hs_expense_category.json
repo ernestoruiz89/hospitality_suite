@@ -24,13 +24,13 @@
   },
   {
    "fieldname": "label",
-   "label": "Label",
+   "label": "Nombre descriptivo",
    "fieldtype": "Data",
    "reqd": 1
   },
   {
    "fieldname": "account",
-   "label": "Account",
+   "label": "Cuenta contable",
    "fieldtype": "Link",
    "options": "Account",
    "reqd": 1
@@ -45,14 +45,14 @@
   },
   {
    "fieldname": "max_amount",
-   "label": "Max amount",
+   "label": "Importe máximo",
    "fieldtype": "Currency",
    "default": 0,
    "options": "currency"
   },
   {
    "fieldname": "active",
-   "label": "Active",
+   "label": "Habilitado",
    "fieldtype": "Check",
    "default": 1
   }

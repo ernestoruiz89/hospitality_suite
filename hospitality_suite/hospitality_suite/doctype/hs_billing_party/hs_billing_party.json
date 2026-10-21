@@ -31,7 +31,7 @@
   },
   {
    "fieldname": "kind",
-   "label": "Kind",
+   "label": "Tipo",
    "fieldtype": "Select",
    "options": "Company\nAgency\nIndividual",
    "reqd": 1,
@@ -39,23 +39,23 @@
   },
   {
    "fieldname": "credit_authorized",
-   "label": "Credit authorized",
+   "label": "Crédito autorizado",
    "fieldtype": "Check"
   },
   {
    "fieldname": "credit_limit",
-   "label": "Credit limit",
+   "label": "Límite de crédito",
    "fieldtype": "Currency",
    "default": 0
   },
   {
    "fieldname": "valid_until",
-   "label": "Valid until",
+   "label": "Válido hasta",
    "fieldtype": "Date"
   },
   {
    "fieldname": "reason",
-   "label": "Reason",
+   "label": "Motivo",
    "fieldtype": "Small Text",
    "reqd": 1
   }

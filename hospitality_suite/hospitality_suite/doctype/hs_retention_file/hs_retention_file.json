@@ -10,27 +10,27 @@
  "fields": [
   {
    "fieldname": "source_file",
-   "label": "Source file",
+   "label": "Archivo de origen",
    "fieldtype": "Data",
    "reqd": 1
   },
   {
    "fieldname": "file_url",
-   "label": "File url",
+   "label": "Ubicación del archivo",
    "fieldtype": "Data",
    "hidden": 1,
    "print_hide": 1
   },
   {
    "fieldname": "thumbnail_url",
-   "label": "Thumbnail url",
+   "label": "Ubicación de miniatura",
    "fieldtype": "Data",
    "hidden": 1,
    "print_hide": 1
   },
   {
    "fieldname": "content_hash",
-   "label": "Content hash",
+   "label": "Huella del contenido",
    "fieldtype": "Data",
    "hidden": 1,
    "print_hide": 1
@@ -45,7 +45,7 @@
   },
   {
    "fieldname": "last_error",
-   "label": "Last error",
+   "label": "Último error",
    "fieldtype": "Small Text"
   }
  ],

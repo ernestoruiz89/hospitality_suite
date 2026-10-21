@@ -24,19 +24,19 @@
   },
   {
    "fieldname": "full_name",
-   "label": "Full name",
+   "label": "Nombre completo",
    "fieldtype": "Data",
    "reqd": 1
   },
   {
    "fieldname": "email",
-   "label": "Email",
+   "label": "Correo electrónico",
    "fieldtype": "Data",
    "options": "Email"
   },
   {
    "fieldname": "phone",
-   "label": "Phone",
+   "label": "Teléfono",
    "fieldtype": "Data"
   },
   {
@@ -60,19 +60,19 @@
   },
   {
    "fieldname": "rooms",
-   "label": "Rooms",
+   "label": "Habitaciones",
    "fieldtype": "Int",
    "default": 1
   },
   {
    "fieldname": "people",
-   "label": "People",
+   "label": "Personas",
    "fieldtype": "Int",
    "default": 1
   },
   {
    "fieldname": "mode",
-   "label": "Mode",
+   "label": "Modalidad",
    "fieldtype": "Select",
    "options": "Hotel\nMotel",
    "reqd": 1,
@@ -88,7 +88,7 @@
   },
   {
    "fieldname": "hold_until",
-   "label": "Hold until",
+   "label": "Retención hasta",
    "fieldtype": "Datetime"
   },
   {
@@ -100,7 +100,7 @@
   },
   {
    "fieldname": "amount",
-   "label": "Amount",
+   "label": "Importe",
    "fieldtype": "Currency",
    "default": 0,
    "options": "currency",
@@ -108,26 +108,26 @@
   },
   {
    "fieldname": "quote_snapshot",
-   "label": "Quote snapshot",
+   "label": "Cotización aceptada",
    "fieldtype": "Code",
    "options": "JSON"
   },
   {
    "fieldname": "request_key",
-   "label": "Request key",
+   "label": "Referencia de solicitud",
    "fieldtype": "Data",
    "unique": 1,
    "hidden": 1
   },
   {
    "fieldname": "payload_hash",
-   "label": "Payload hash",
+   "label": "Huella de solicitud",
    "fieldtype": "Data",
    "hidden": 1
   },
   {
    "fieldname": "booking",
-   "label": "Booking",
+   "label": "Reserva",
    "fieldtype": "Link",
    "options": "HS Booking"
   }

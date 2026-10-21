@@ -24,7 +24,7 @@
   },
   {
    "fieldname": "title",
-   "label": "Title",
+   "label": "Título",
    "fieldtype": "Data",
    "reqd": 1
   },
@@ -37,7 +37,7 @@
   },
   {
    "fieldname": "mode",
-   "label": "Mode",
+   "label": "Modalidad",
    "fieldtype": "Select",
    "options": "Hotel\nMotel",
    "reqd": 1,
@@ -52,7 +52,7 @@
   },
   {
    "fieldname": "amount",
-   "label": "Amount",
+   "label": "Importe",
    "fieldtype": "Currency",
    "default": 0,
    "options": "currency",
@@ -60,68 +60,68 @@
   },
   {
    "fieldname": "block_hours",
-   "label": "Block hours",
+   "label": "Horas del bloque",
    "fieldtype": "Float",
    "default": 3
   },
   {
    "fieldname": "extra_hour_rate",
-   "label": "Extra hour rate",
+   "label": "Precio de hora adicional",
    "fieldtype": "Currency",
    "default": 0,
    "options": "currency"
   },
   {
    "fieldname": "grace_minutes",
-   "label": "Grace minutes",
+   "label": "Tolerancia (minutos)",
    "fieldtype": "Int",
    "default": 0
   },
   {
    "fieldname": "rounding_minutes",
-   "label": "Rounding minutes",
+   "label": "Fracción de cobro (minutos)",
    "fieldtype": "Int",
    "default": 60
   },
   {
    "fieldname": "additional_person_rate",
-   "label": "Additional person rate",
+   "label": "Precio por persona adicional",
    "fieldtype": "Currency",
    "default": 0,
    "options": "currency"
   },
   {
    "fieldname": "included_people",
-   "label": "Included people",
+   "label": "Personas incluidas",
    "fieldtype": "Int",
    "default": 2
   },
   {
    "fieldname": "extra_bed_rate",
-   "label": "Extra bed rate",
+   "label": "Precio por cama adicional",
    "fieldtype": "Currency",
    "default": 0,
    "options": "currency"
   },
   {
    "fieldname": "priority",
-   "label": "Priority",
+   "label": "Prioridad",
    "fieldtype": "Int",
    "default": 10
   },
   {
    "fieldname": "valid_from",
-   "label": "Valid from",
+   "label": "Vigente desde",
    "fieldtype": "Date"
   },
   {
    "fieldname": "valid_to",
-   "label": "Valid to",
+   "label": "Vigente hasta",
    "fieldtype": "Date"
   },
   {
    "fieldname": "weekdays",
-   "label": "Weekdays",
+   "label": "Días de la semana",
    "fieldtype": "Data",
    "description": "0=lunes ... 6=domingo; vacío=todos"
   },
@@ -133,23 +133,23 @@
   },
   {
    "fieldname": "night_start",
-   "label": "Night start",
+   "label": "Inicio de paquete nocturno",
    "fieldtype": "Time"
   },
   {
    "fieldname": "night_end",
-   "label": "Night end",
+   "label": "Fin de paquete nocturno",
    "fieldtype": "Time"
   },
   {
    "fieldname": "included_services",
-   "label": "Included services",
+   "label": "Servicios incluidos",
    "fieldtype": "Table",
    "options": "HS Rate Service"
   },
   {
    "fieldname": "active",
-   "label": "Active",
+   "label": "Habilitado",
    "fieldtype": "Check",
    "default": 1
   },

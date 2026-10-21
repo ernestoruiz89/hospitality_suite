@@ -24,26 +24,26 @@
   },
   {
    "fieldname": "request_key",
-   "label": "Request key",
+   "label": "Referencia de solicitud",
    "fieldtype": "Data",
    "reqd": 1,
    "unique": 1
   },
   {
    "fieldname": "payload_hash",
-   "label": "Payload hash",
+   "label": "Huella de solicitud",
    "fieldtype": "Data",
    "reqd": 1
   },
   {
    "fieldname": "operation",
-   "label": "Operation",
+   "label": "Operación",
    "fieldtype": "Data",
    "reqd": 1
   },
   {
    "fieldname": "result",
-   "label": "Result",
+   "label": "Resultado",
    "fieldtype": "Code",
    "options": "JSON"
   }

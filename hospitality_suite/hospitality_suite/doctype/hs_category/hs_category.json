@@ -24,25 +24,25 @@
   },
   {
    "fieldname": "category_name",
-   "label": "Category name",
+   "label": "Nombre de categoría",
    "fieldtype": "Data",
    "reqd": 1
   },
   {
    "fieldname": "capacity",
-   "label": "Capacity",
+   "label": "Capacidad",
    "fieldtype": "Int",
    "default": 2
   },
   {
    "fieldname": "max_extra_beds",
-   "label": "Max extra beds",
+   "label": "Máximo de camas adicionales",
    "fieldtype": "Int",
    "default": 0
   },
   {
    "fieldname": "amenities",
-   "label": "Amenities",
+   "label": "Comodidades",
    "fieldtype": "Small Text"
   }
  ],

@@ -24,14 +24,14 @@
   },
   {
    "fieldname": "supplier",
-   "label": "Supplier",
+   "label": "Proveedor",
    "fieldtype": "Link",
    "options": "Supplier",
    "reqd": 1
   },
   {
    "fieldname": "active",
-   "label": "Active",
+   "label": "Habilitado",
    "fieldtype": "Check",
    "default": 1
   }

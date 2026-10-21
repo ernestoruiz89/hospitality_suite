@@ -1,0 +1,31 @@
+{
+  "previous_columns_preserved": true,
+  "default_policy_preserves_existing_stays": true,
+  "sites": {
+    "hospitality.localhost": {
+      "tables": 72,
+      "rows": 1246,
+      "private_files": 2
+    },
+    "hospitality-acceptance.localhost": {
+      "tables": 72,
+      "rows": 250,
+      "private_files": 0
+    }
+  },
+  "metadata_history": {
+    "hospitality.localhost": {
+      "appended": 55,
+      "only_custom_field_label_changes": true,
+      "all_preexisting_version_rows_preserved": true
+    },
+    "hospitality-acceptance.localhost": {
+      "appended": 55,
+      "only_custom_field_label_changes": true,
+      "all_preexisting_version_rows_preserved": true
+    }
+  },
+  "native_company_cache_refresh": {
+    "hospitality.localhost": "language-review-company-cache.json"
+  }
+}

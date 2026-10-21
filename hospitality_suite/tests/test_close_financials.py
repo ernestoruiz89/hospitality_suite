@@ -23,6 +23,10 @@ class TestCloseFinancials(IntegrationTestCase):
         # scenario when the suite is run after midnight on another calendar day.
         with operation():
             self.prop.business_date=getdate(now_datetime())
+            # These accounting-date comparisons use a calendar-day window.
+            # A 06:00 cutoff would include tomorrow's 00:xx departure when the
+            # suite runs just after midnight and legitimately block closure.
+            self.prop.close_time='00:00:00'
             self.prop.save()
         self.rooms=frappe.get_all("HS Room",filters={"property":self.prop.name},fields=["name","category"],order_by="room_number")
         self.guest=frappe.get_doc("HS Guest",{"property":self.prop.name})

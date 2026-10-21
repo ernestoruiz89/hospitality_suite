@@ -24,19 +24,19 @@
   },
   {
    "fieldname": "cashier",
-   "label": "Cashier",
+   "label": "Cajero",
    "fieldtype": "Link",
    "options": "User",
    "reqd": 1
   },
   {
    "fieldname": "opened_at",
-   "label": "Opened at",
+   "label": "Apertura registrada",
    "fieldtype": "Datetime"
   },
   {
    "fieldname": "closed_at",
-   "label": "Closed at",
+   "label": "Cierre registrado",
    "fieldtype": "Datetime"
   },
   {
@@ -56,46 +56,46 @@
   },
   {
    "fieldname": "opening_amount",
-   "label": "Opening amount",
+   "label": "Fondo inicial",
    "fieldtype": "Currency",
    "default": 0,
    "options": "currency"
   },
   {
    "fieldname": "expected_amount",
-   "label": "Expected amount",
+   "label": "Importe esperado",
    "fieldtype": "Currency",
    "default": 0,
    "options": "currency"
   },
   {
    "fieldname": "counted_amount",
-   "label": "Counted amount",
+   "label": "Importe contado",
    "fieldtype": "Currency",
    "default": 0,
    "options": "currency"
   },
   {
    "fieldname": "difference",
-   "label": "Difference",
+   "label": "Diferencia",
    "fieldtype": "Currency",
    "default": 0,
    "options": "currency"
   },
   {
    "fieldname": "denominations",
-   "label": "Denominations",
+   "label": "Arqueo por denominaciones",
    "fieldtype": "Code",
    "options": "JSON"
   },
   {
    "fieldname": "reason",
-   "label": "Reason",
+   "label": "Motivo",
    "fieldtype": "Small Text"
   },
   {
    "fieldname": "approved_by",
-   "label": "Approved by",
+   "label": "Aprobado por",
    "fieldtype": "Link",
    "options": "User"
   }

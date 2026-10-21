@@ -15,8 +15,8 @@ def after_install():
 
 def after_migrate():
     custom = []
-    for name, target in [("hs_property", "HS Property"), ("hs_stay", "HS Stay"), ("hs_shift", "HS Shift"), ("hs_folio", "HS Folio"), ("hs_booking", "HS Booking")]:
-        custom.append(dict(fieldname=name, label=name.replace("_", " ").title(), fieldtype="Link", options=target, insert_after="company", no_copy=1,print_hide=1))
+    for name, target, label in [("hs_property", "HS Property", "Establecimiento de alojamiento"), ("hs_stay", "HS Stay", "Estancia de alojamiento"), ("hs_shift", "HS Shift", "Turno de caja"), ("hs_folio", "HS Folio", "Cuenta de estancia"), ("hs_booking", "HS Booking", "Reserva de alojamiento")]:
+        custom.append(dict(fieldname=name, label=label, fieldtype="Link", options=target, insert_after="company", no_copy=1,print_hide=1))
     create_custom_fields({dt: custom for dt in STANDARD_SCOPED if frappe.db.exists("DocType",dt)})
     create_custom_fields({dt:[dict(fieldname="hs_correction_reason",label="Motivo de corrección de alojamiento",fieldtype="Small Text",allow_on_submit=1,print_hide=1)] for dt in STANDARD_SCOPED if frappe.db.exists("DocType",dt)})
     create_custom_fields({"Sales Invoice Item": [dict(fieldname="hs_charge", label="Cargo de estancia", fieldtype="Link", options="HS Charge", no_copy=1,print_hide=1)]})

@@ -10,7 +10,7 @@
  "fields": [
   {
    "fieldname": "property_name",
-   "label": "Property name",
+   "label": "Nombre del establecimiento",
    "fieldtype": "Data",
    "reqd": 1
   },
@@ -23,7 +23,7 @@
   },
   {
    "fieldname": "mode",
-   "label": "Mode",
+   "label": "Modalidad",
    "fieldtype": "Select",
    "options": "Hotel\nMotel\nMixed",
    "reqd": 1,
@@ -31,20 +31,20 @@
   },
   {
    "fieldname": "time_zone",
-   "label": "Time zone",
+   "label": "Zona horaria",
    "fieldtype": "Data",
    "default": "America/Managua",
    "reqd": 1
   },
   {
    "fieldname": "business_date",
-   "label": "Business date",
+   "label": "Fecha operativa",
    "fieldtype": "Date",
    "reqd": 1
   },
   {
    "fieldname": "close_time",
-   "label": "Close time",
+   "label": "Hora de cierre",
    "fieldtype": "Time",
    "default": "06:00:00"
   },
@@ -57,31 +57,31 @@
   },
   {
    "fieldname": "check_in_time",
-   "label": "Check in time",
+   "label": "Hora habitual de entrada",
    "fieldtype": "Time",
    "default": "14:00:00"
   },
   {
    "fieldname": "check_out_time",
-   "label": "Check out time",
+   "label": "Hora habitual de salida",
    "fieldtype": "Time",
    "default": "12:00:00"
   },
   {
    "fieldname": "cleaning_minutes",
-   "label": "Cleaning minutes",
+   "label": "Tiempo de limpieza (minutos)",
    "fieldtype": "Int",
    "default": 30
   },
   {
    "fieldname": "inspection_required",
-   "label": "Inspection required",
+   "label": "Exigir inspección de limpieza",
    "fieldtype": "Check",
    "default": 1
   },
   {
    "fieldname": "discreet_mode",
-   "label": "Discreet mode",
+   "label": "Modo discreto",
    "fieldtype": "Check"
   },
   {
@@ -94,18 +94,18 @@
   },
   {
    "fieldname": "portal_enabled",
-   "label": "Portal enabled",
+   "label": "Habilitar portal",
    "fieldtype": "Check"
   },
   {
    "fieldname": "financial_enabled",
-   "label": "Financial enabled",
+   "label": "Habilitar operaciones financieras",
    "fieldtype": "Check",
    "permlevel": 1
   },
   {
    "fieldname": "allow_credit",
-   "label": "Allow credit",
+   "label": "Permitir crédito",
    "fieldtype": "Check"
   },
   {
@@ -126,31 +126,31 @@
   },
   {
    "fieldname": "guest_id_required",
-   "label": "Guest id required",
+   "label": "Exigir identificación",
    "fieldtype": "Check"
   },
   {
    "fieldname": "hold_minutes",
-   "label": "Hold minutes",
+   "label": "Duración de retención (minutos)",
    "fieldtype": "Int",
    "default": 15
   },
   {
    "fieldname": "cost_center",
-   "label": "Cost center",
+   "label": "Centro de costo",
    "fieldtype": "Link",
    "options": "Cost Center",
    "permlevel": 1
   },
   {
    "fieldname": "warehouse",
-   "label": "Warehouse",
+   "label": "Almacén",
    "fieldtype": "Link",
    "options": "Warehouse"
   },
   {
    "fieldname": "laundry_warehouse",
-   "label": "Laundry warehouse",
+   "label": "Almacén de lavandería",
    "fieldtype": "Link",
    "options": "Warehouse"
   },
@@ -177,28 +177,28 @@
   },
   {
    "fieldname": "receivable_account",
-   "label": "Receivable account",
+   "label": "Cuenta por cobrar",
    "fieldtype": "Link",
    "options": "Account",
    "permlevel": 1
   },
   {
    "fieldname": "guarantee_account",
-   "label": "Guarantee account",
+   "label": "Cuenta de garantías",
    "fieldtype": "Link",
    "options": "Account",
    "permlevel": 1
   },
   {
    "fieldname": "cash_transfer_account",
-   "label": "Cash transfer account",
+   "label": "Cuenta de entregas de efectivo",
    "fieldtype": "Link",
    "options": "Account",
    "permlevel": 1
   },
   {
    "fieldname": "lodging_item",
-   "label": "Lodging item",
+   "label": "Artículo de alojamiento",
    "fieldtype": "Link",
    "options": "Item"
   },
@@ -210,36 +210,36 @@
   },
   {
    "fieldname": "tax_template",
-   "label": "Tax template",
+   "label": "Plantilla de impuestos",
    "fieldtype": "Link",
    "options": "Sales Taxes and Charges Template",
    "permlevel": 1
   },
   {
    "fieldname": "price_list",
-   "label": "Price list",
+   "label": "Lista de precios",
    "fieldtype": "Link",
    "options": "Price List"
   },
   {
    "fieldname": "tax_policy_confirmed",
-   "label": "Tax policy confirmed",
+   "label": "Tratamiento fiscal confirmado",
    "fieldtype": "Check"
   },
   {
    "fieldname": "brand_name",
-   "label": "Brand name",
+   "label": "Nombre comercial",
    "fieldtype": "Data"
   },
   {
    "fieldname": "retention_days",
-   "label": "Retention days",
+   "label": "Conservación de datos (días)",
    "fieldtype": "Int",
    "default": 365
   },
   {
    "fieldname": "cancellation_fee_mode",
-   "label": "Cancellation fee mode",
+   "label": "Tipo de penalización por cancelación",
    "fieldtype": "Select",
    "options": "None\nFixed\nFirst Night\nPercent",
    "reqd": 1,
@@ -247,7 +247,7 @@
   },
   {
    "fieldname": "cancellation_fee_value",
-   "label": "Cancellation fee value",
+   "label": "Valor de penalización por cancelación",
    "fieldtype": "Currency",
    "default": 0,
    "options": "currency",
@@ -255,7 +255,7 @@
   },
   {
    "fieldname": "no_show_fee_mode",
-   "label": "No show fee mode",
+   "label": "Tipo de penalización por no presentación",
    "fieldtype": "Select",
    "options": "None\nFixed\nFirst Night\nPercent",
    "reqd": 1,
@@ -263,7 +263,7 @@
   },
   {
    "fieldname": "no_show_fee_value",
-   "label": "No show fee value",
+   "label": "Valor de penalización por no presentación",
    "fieldtype": "Currency",
    "default": 0,
    "options": "currency",
@@ -271,13 +271,13 @@
   },
   {
    "fieldname": "penalty_item",
-   "label": "Penalty item",
+   "label": "Artículo para penalizaciones",
    "fieldtype": "Link",
    "options": "Item"
   },
   {
    "fieldname": "early_hour_rate",
-   "label": "Early hour rate",
+   "label": "Precio por hora de entrada anticipada",
    "fieldtype": "Currency",
    "default": 0,
    "options": "currency",
@@ -285,7 +285,7 @@
   },
   {
    "fieldname": "late_hour_rate",
-   "label": "Late hour rate",
+   "label": "Precio por hora de salida tardía",
    "fieldtype": "Currency",
    "default": 0,
    "options": "currency",
@@ -293,58 +293,58 @@
   },
   {
    "fieldname": "schedule_grace_minutes",
-   "label": "Schedule grace minutes",
+   "label": "Tolerancia de horario (minutos)",
    "fieldtype": "Int",
    "default": 0
   },
   {
    "fieldname": "schedule_rounding_minutes",
-   "label": "Schedule rounding minutes",
+   "label": "Fracción de horario (minutos)",
    "fieldtype": "Int",
    "default": 60
   },
   {
    "fieldname": "timing_item",
-   "label": "Timing item",
+   "label": "Artículo de cargos por horario",
    "fieldtype": "Link",
    "options": "Item"
   },
   {
    "fieldname": "checkout_inspection_required",
-   "label": "Checkout inspection required",
+   "label": "Exigir inspección antes de salir",
    "fieldtype": "Check"
   },
   {
    "fieldname": "checkout_quote_minutes",
-   "label": "Checkout quote minutes",
+   "label": "Vigencia de liquidación de salida (minutos)",
    "fieldtype": "Int",
    "default": 5
   },
   {
    "fieldname": "cash_denominations",
-   "label": "Cash denominations",
+   "label": "Denominaciones de efectivo",
    "fieldtype": "Code",
    "options": "JSON"
   },
   {
    "fieldname": "invoice_series",
-   "label": "Invoice series",
+   "label": "Serie de facturas",
    "fieldtype": "Data"
   },
   {
    "fieldname": "payment_series",
-   "label": "Payment series",
+   "label": "Serie de pagos",
    "fieldtype": "Data"
   },
   {
    "fieldname": "invoice_print_format",
-   "label": "Invoice print format",
+   "label": "Formato de factura",
    "fieldtype": "Link",
    "options": "Print Format"
   },
   {
    "fieldname": "receipt_print_format",
-   "label": "Receipt print format",
+   "label": "Formato de recibo",
    "fieldtype": "Link",
    "options": "Print Format"
   }

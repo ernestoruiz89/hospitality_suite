@@ -38,3 +38,12 @@ test('old service prices cannot overwrite a newer selection or a closed dialog',
   d.values.item='third';const third=d.fields_dict.item.df.onchange();d.closed();const waiting=d.html;
   f.requests[2].resolve({currency:'NIO',service:{item_name:'Closed',status:'Missing'}});await third;assert.equal(d.html,waiting);
 });
+
+test('service price details show the visible alias while preserving original item data',async()=>{
+  const f=fixture(),d=await f.desk.action_service_items();d.values.item='hours';
+  const pending=d.fields_dict.item.df.onchange();
+  const service={item_name:'Hora adicional de motel',display_name:'Hora adicional por tiempo <visible>',status:'Missing'};
+  f.requests[0].resolve({currency:'NIO',service});await pending;
+  assert.match(d.html,/Hora adicional por tiempo &lt;visible&gt;/);assert.doesNotMatch(d.html,/de motel/);
+  assert.equal(service.item_name,'Hora adicional de motel');assert.equal(f.saves.length,0);
+});

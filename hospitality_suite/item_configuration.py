@@ -74,10 +74,12 @@ def selling_price(prop,item,currency,customer=None):
 
 
 def configuration(property_name,item=None):
+    from hospitality_suite.catalog import item_label
     prop=require(property_name,"setup")
     result=dict(modified=str(prop.modified),values={**bindings(prop),"price_list":prop.price_list},
                 mappings=[dict(field=field,label=frappe._(label),item=prop.get(field),item_name=frappe.db.get_value("Item",prop.get(field),"item_name") if prop.get(field) else None) for field,label in BINDINGS],
                 currency=prop.currency,price_list=prop.price_list or frappe.db.get_single_value("Selling Settings","selling_price_list"))
+    for row in result['mappings']:row['display_name']=item_label(row['item'],row['item_name'])
     if item:
         if not isinstance(item,str) or len(item)>140:
             frappe.throw(frappe._("Seleccione un artículo válido"))
@@ -86,6 +88,7 @@ def configuration(property_name,item=None):
             frappe.throw(frappe._("El artículo no está habilitado para venta"))
         _,rows=prices(prop,item,prop.currency)
         result["service"]=dict(item=source.name,item_name=source.item_name,is_stock_item=bool(source.is_stock_item),
+                               display_name=item_label(source.name,source.item_name),
                                status="Priced" if len(rows)==1 and decimal(rows[0].price_list_rate)>=0 else "Missing" if not rows else "Ambiguous",
                                rate=str(rows[0].price_list_rate) if len(rows)==1 and decimal(rows[0].price_list_rate)>=0 else None)
     return result

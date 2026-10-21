@@ -24,6 +24,15 @@ function fixture(){
     async search(d,term){d.values._hs_item_search=term;d.events._hs_item_search();const job=[...timers.values()].at(-1);timers.clear();return {pending:job()};}};
 }
 
+test('catalogue display aliases keep immutable submitted keys and disambiguate equal visible names',async()=>{
+  const f=fixture();f.desk.data.items=[{name:'generated',item_name:'Hora adicional de motel',display_name:'Hora adicional por tiempo',is_sales_item:1},
+    {name:'other',item_name:'Different stored name',display_name:'Hora adicional por tiempo',is_sales_item:1}];
+  const d=await f.open(),options=d.fields_dict.item.df.options;
+  assert.equal(options[1].value,'generated');assert.equal(options[1].label,'Hora adicional por tiempo · generated');assert.equal(options[2].label,'Hora adicional por tiempo · other');
+  await d.submit({item:'generated',quantity:1,_hs_item_search:'por tiempo'},d);
+  assert.equal(f.submissions[0].item,'generated');assert.equal(f.submissions[0].display_name,undefined);assert.equal(f.desk.data.items[0].item_name,'Hora adicional de motel');
+});
+
 test('catalogue keeps human names and immutable item keys, including duplicate descriptions',async()=>{
   const f=fixture(),d=await f.open();
   const job=await f.search(d,'Catálogo');

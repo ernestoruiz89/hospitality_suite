@@ -3,10 +3,11 @@
   const Desk=window.hospitality_suite.Desk;
   const allowed=(row,purpose)=>!row.disabled&&(purpose==="sale"?row.is_sales_item&&!row.is_fixed_asset:purpose==="stock"?row.is_stock_item&&!row.is_fixed_asset:purpose==="purchase"?row.is_purchase_item&&!row.is_fixed_asset:true);
   const choices=(rows,required)=>{
-    const names=new Map();for(const r of rows)names.set(r.item_name,(names.get(r.item_name)||0)+1);
-    return [{value:"",label:__(required?__("Seleccione…"):__("Todos"))},...rows.map(r=>({value:r.name,label:r.item_name+(names.get(r.item_name)>1?" · "+r.name:"")}))];
+    const display=row=>row.display_name??row.item_name;
+    const names=new Map();for(const r of rows)names.set(display(r),(names.get(display(r))||0)+1);
+    return [{value:"",label:__(required?__("Seleccione…"):__("Todos"))},...rows.map(r=>({value:r.name,label:display(r)+(names.get(display(r))>1?" · "+r.name:"")}))];
   };
-  Desk.prototype.item_field=function(label="Artículo",purpose="any",extra={}){
+  Desk.prototype.item_field=function(label=__("Artículo"),purpose="any",extra={}){
     return {fieldname:"item",label:__(label),fieldtype:"Select",reqd:1,_hsDataOptions:true,_hsItemPurpose:purpose,...extra};
   };
   const dialog=Desk.prototype.dialog;

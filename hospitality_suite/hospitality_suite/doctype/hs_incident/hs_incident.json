@@ -31,7 +31,7 @@
   },
   {
    "fieldname": "kind",
-   "label": "Kind",
+   "label": "Tipo",
    "fieldtype": "Select",
    "options": "Damage\nLost Property\nLinen",
    "reqd": 1,
@@ -39,24 +39,24 @@
   },
   {
    "fieldname": "description",
-   "label": "Description",
+   "label": "Descripción",
    "fieldtype": "Small Text",
    "reqd": 1
   },
   {
    "fieldname": "evidence",
-   "label": "Evidence",
+   "label": "Evidencia",
    "fieldtype": "Attach"
   },
   {
    "fieldname": "item",
-   "label": "Item",
+   "label": "Artículo",
    "fieldtype": "Link",
    "options": "Item"
   },
   {
    "fieldname": "quantity",
-   "label": "Quantity",
+   "label": "Cantidad",
    "fieldtype": "Float",
    "default": 0
   },
@@ -70,24 +70,24 @@
   },
   {
    "fieldname": "stock_entry",
-   "label": "Stock entry",
+   "label": "Movimiento de inventario",
    "fieldtype": "Link",
    "options": "Stock Entry"
   },
   {
    "fieldname": "resolution",
-   "label": "Resolution",
+   "label": "Resolución",
    "fieldtype": "Small Text"
   },
   {
    "fieldname": "resolved_by",
-   "label": "Resolved by",
+   "label": "Resuelto por",
    "fieldtype": "Link",
    "options": "User"
   },
   {
    "fieldname": "resolved_at",
-   "label": "Resolved at",
+   "label": "Resolución registrada",
    "fieldtype": "Datetime"
   }
  ],

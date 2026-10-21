@@ -10,28 +10,28 @@
  "fields": [
   {
    "fieldname": "item",
-   "label": "Item",
+   "label": "Artículo",
    "fieldtype": "Link",
    "options": "Item",
    "reqd": 1
   },
   {
    "fieldname": "quantity",
-   "label": "Quantity",
+   "label": "Cantidad",
    "fieldtype": "Float",
    "default": 0,
    "reqd": 1
   },
   {
    "fieldname": "stock_entry",
-   "label": "Stock entry",
+   "label": "Movimiento de inventario",
    "fieldtype": "Link",
    "options": "Stock Entry",
    "reqd": 1
   },
   {
    "fieldname": "cost",
-   "label": "Cost",
+   "label": "Costo",
    "fieldtype": "Currency",
    "default": 0
   },

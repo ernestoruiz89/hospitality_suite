@@ -11,7 +11,7 @@ import frappe
 
 bench=Path('/home/frappe/benches/hospitality-bench')
 parser=argparse.ArgumentParser()
-parser.add_argument('--phase',choices=['financial','service','pos','refund','guarantee','credits','mixed','accounting','integration','forms','periodic','billing','board','availability','drafts','tariffs','account-summary','guest-profiles','background-jobs','countdown','finance-audit','housekeeping-audit','permissions-audit','audit-history','inventory-audit','closing-checks','navigation','room-states','room-history','role-acceptance'],default='financial')
+parser.add_argument('--phase',choices=['financial','service','pos','refund','guarantee','credits','mixed','accounting','integration','forms','periodic','billing','board','availability','drafts','tariffs','account-summary','guest-profiles','background-jobs','countdown','finance-audit','housekeeping-audit','permissions-audit','audit-history','inventory-audit','closing-checks','navigation','room-states','room-history','role-acceptance','language-review'],default='financial')
 args=parser.parse_args()
 root=Path(__file__).resolve().parents[1]
 os.chdir(bench/'sites')
@@ -47,18 +47,30 @@ for site,database in [('hospitality-acceptance.localhost','hospitality_acceptanc
                 rows=frappe.db.sql('SELECT * FROM `tab'+dt+'` ORDER BY name',as_dict=True)
                 raw=json.dumps(rows,default=str,sort_keys=True,ensure_ascii=False,separators=(',',':')).encode()
                 actual=dict(rows=len(rows),sha256=hashlib.sha256(raw).hexdigest())
-                if args.phase in ('accounting','integration','forms','periodic','billing','board','availability','drafts','tariffs','account-summary','guest-profiles','background-jobs','countdown','finance-audit','housekeeping-audit','permissions-audit','audit-history','inventory-audit','closing-checks','navigation','room-states','room-history','role-acceptance') and dt=='Company' and actual!=expected:
-                    cache=json.loads((bench/'.hospitality-accounting-company-cache.json').read_text())
+                if args.phase in ('accounting','integration','forms','periodic','billing','board','availability','drafts','tariffs','account-summary','guest-profiles','background-jobs','countdown','finance-audit','housekeeping-audit','permissions-audit','audit-history','inventory-audit','closing-checks','navigation','room-states','room-history','role-acceptance','language-review') and dt=='Company' and actual!=expected:
+                    cache_candidates=[]
+                    for candidate in ('accounting','language-review'):
+                        path=bench/f'.hospitality-{candidate}-company-cache.json'
+                        if path.is_file():cache_candidates.append((candidate,json.loads(path.read_text())))
+                    matching=[(phase,value) for phase,value in cache_candidates if value['source_company_sha256']==expected['sha256'] and value['current_company_sha256']==actual['sha256']]
+                    assert len(matching)==1,'A native cache refresh needs an exact attestation for the current Company row'
+                    cache_phase,cache=matching[0]
                     assert cache['source_company_sha256']==expected['sha256'] and cache['current_company_sha256']==actual['sha256']
                     assert cache['changed_fields']==['modified','sales_monthly_history','transactions_annual_history']
-                    assert cache['company_matches_pre_phase_backup'] and cache['cached_histories_match_native_read_functions']
+                    assert cache['cached_histories_match_native_read_functions']
+                    if cache_phase=='language-review':
+                        assert cache['phase_backup_row_matches'] and cache['noncache_fields_match_pre_phase_backup']
+                        assert set(cache['phase_cache_changed_fields']).issubset({'modified','sales_monthly_history','transactions_annual_history'})
+                    else:assert cache['company_matches_pre_phase_backup']
                     refreshed.append(dt)
                     continue
                 assert actual==expected,dt
                 checked.append(dt)
             proof['main']=dict(site=site,integration_fixture_guard_rejects=True,native_tables_unchanged=len(checked),business_date=str(frappe.db.get_value('HS Property',{'property_name':'Hotel Jardín Demo'},'business_date')))
             if refreshed:
-                proof['main'].update(native_derived_cache_refreshed=refreshed,native_tables_equal_pre_phase_backup=len(checked)+len(refreshed),company_cache_evidence='accounting-company-cache.json')
+                proof['main'].update(native_derived_cache_refreshed=refreshed,
+                    native_tables_equal_pre_phase_backup=len(checked)+(len(refreshed) if cache['company_matches_pre_phase_backup'] else 0),
+                    company_noncache_fields_preserved=True,company_cache_evidence=f'{cache_phase}-company-cache.json')
     finally:
         frappe.db.rollback()
         frappe.destroy()
