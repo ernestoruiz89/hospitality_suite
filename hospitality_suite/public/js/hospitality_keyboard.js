@@ -32,6 +32,7 @@
     }
     // Native field-name copy tooltips are developer hints, not spoken labels.
     for(const tip of root.querySelectorAll('.tooltip-content'))tip.setAttribute('aria-hidden','true');
+    for(const button of root.querySelectorAll('.grid-collapse-row'))button.setAttribute('aria-label',__('Volver a la tabla'));
     for(const wrap of root.querySelectorAll('.hs-table-wrap')){
       if(wrap.scrollWidth>wrap.clientWidth+1&&!wrap.hasAttribute('tabindex')){wrap.tabIndex=0;wrap.setAttribute('role','region');wrap.setAttribute('aria-label',__('Tabla de resultados'));wrap.setAttribute('data-hs-scroll-region','true');}
       else if(wrap.getAttribute('data-hs-scroll-region')&&wrap.scrollWidth<=wrap.clientWidth+1)for(const key of ['tabindex','role','aria-label','data-hs-scroll-region'])wrap.removeAttribute(key);

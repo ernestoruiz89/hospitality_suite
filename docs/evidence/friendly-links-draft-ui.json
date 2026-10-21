@@ -1,0 +1,39 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "stage": "draft",
+  "fixture_origin": "Pages UI only",
+  "mutations_by_inspector": false,
+  "operation_counts": {
+    "HS Booking": 1,
+    "HS Stay": 0,
+    "HS Charge": 0,
+    "HS Payment": 0,
+    "HS Shift": 0,
+    "Sales Invoice": 0,
+    "Payment Entry": 0,
+    "Journal Entry": 0,
+    "HS Allocation": 0
+  },
+  "booking": "RES-2026-00001",
+  "status": "Draft",
+  "amount": 0.0,
+  "ids": {
+    "category": "qmcbb8qlvg",
+    "room": "qmf5ju94js",
+    "rate": "qmilrb2ctu"
+  },
+  "labels": {
+    "category": "Estándar",
+    "room": "H101",
+    "rate": "Noche estándar"
+  },
+  "people": 2,
+  "extra_beds": 0,
+  "keys_preserved_from_draft": false,
+  "execute_http_statuses": [
+    "200",
+    "200"
+  ],
+  "http_500": 0,
+  "business_date": "2026-10-19"
+}

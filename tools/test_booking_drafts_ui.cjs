@@ -70,6 +70,9 @@ test('draft cards show missing data and unquoted price without leaking identifie
   assert.doesNotMatch(html,/opaque-draft/);
   assert.equal((html.match(/Ver reserva/g)||[]).length,1);
   desk.allowed=()=>false;desk.render_reservations({html(value){html=value;}});assert.doesNotMatch(html,/Retomar borrador/);
+  desk.allowed=()=>true;desk.data.bookings=[{name:'partial',status:'Draft'}];desk.table=Object.getPrototypeOf(desk).table;
+  desk.render_reservations({html(value){html=value;}});assert.match(html,/Borradores por completar/);assert.match(html,/No hay reservas confirmadas ni retenciones vigentes/);assert.doesNotMatch(html,/No hay pendientes/);
+  desk.bookingHistory=true;desk.render_reservations({html(value){html=value;}});assert.match(html,/No hay reservas en el historial/);
 });
 
 test('availability prefill reaches the editor without saving and keeps accepted offsets for price review',async()=>{

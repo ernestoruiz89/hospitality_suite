@@ -2,6 +2,12 @@
 
 Actualización: 2026-10-21. Objetivo activo; el alcance obligatorio aún tiene verificaciones y componentes pendientes en REQUISITOS.md. No se declara aptitud para producción.
 
+## Ampliación comprobada — 0.8.6
+
+[SELECTORES_Y_RESERVA_MANUAL.md](SELECTORES_Y_RESERVA_MANUAL.md): nombres y descripciones en Links operativos, búsqueda/filtros/permisos conservados y detalle de habitación con camas/tarifa accesibles. Se detectan y corrigen etiquetas ausentes y pérdida de personas por editor oculto. La repetición guarda/retoma/confirma la misma reserva con dos personas y referencias originales. Vacío específico de reservas separado de borradores; consulta Por tiempo en la segunda propiedad sin guardar. **203 JS aprobadas**, catorce eventos incrementales y defectos previos conservados como tales.
+
+S04-16 y las demás I siguen abiertas por reglas/estados y tareas del conjunto; las incidencias concretas de selector/vacío/editor documentadas quedan resueltas. **198 V, 6 I, 0 P y 14 R: veinte sin cierre**. Aceptación restaurada/migrada, principal 72/1246 y dos archivos privados conservados, fecha 19/10 y ambos sitios 0.8.6. Regresión nativa de 380 casos de beac44d como antecedente. OTA aplazada y F26 pendiente.
+
 ## Ampliación comprobada — 0.8.5
 
 [ACTIVIDAD_Y_RECUPERACION_PAGES.md](ACTIVIDAD_Y_RECUPERACION_PAGES.md): estado compartido de carga/guardado/preparación, botones bloqueados, doble activación controlada y notificaciones pendientes recuperadas. Caja/Recepción con demoras sintéticas y un 503 recuperable; 21 eventos iniciales. La revisión visual detecta aviso fuera de pantalla móvil: la compilación final lo coloca junto al botón y comprueba tres eventos adicionales con un borrador después de restaurar. **196 JS aprobadas**; 380 nativas de 0.8.2 conservadas como antecedente.

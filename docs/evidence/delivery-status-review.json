@@ -1,12 +1,12 @@
 {
-  "reviewed_at_utc": "2026-10-21T18:44:20.201780+00:00",
+  "reviewed_at_utc": "2026-10-21T19:35:10.516973+00:00",
   "requirements": [
     "S18-11",
     "S18-12"
   ],
   "scope": "Delivered evidence and differentiated status list, not proof of overall app completion.",
   "source_sha256": "876632e08057a1ea0386bd9e01fde6f477c62380a9414bed23e2a852765fb651",
-  "audit_sha256": "53e673825952301c4cfb63e7a51d79ad90dad10c020e11b74c40279f82a0ff0f",
+  "audit_sha256": "b43e4fc81983b6e4408f73361462b877b52bf275a290276c8a4f17d7da9bcd85",
   "statuses": {
     "R": 14,
     "I": 6,
@@ -236,7 +236,7 @@
     {
       "id": "S04-16",
       "status": "I",
-      "remaining": "0.8.3/0.8.4 acreditan validación compartida y cantidad/personas; 0.8.5 acredita actividad/carga/guardado/preparación, reintento y aviso contextual móvil, con condiciones sintéticas explícitas. Completar demás reglas por campo/estados de vistas secundarias, sustituir el autocompletado técnico de categoría/habitación y precisar el vacío de reservas confirmadas junto a borradores. Los clics durante cierre visual nativo conservan observación; no se afirma una causa completa. ACTIVIDAD_Y_RECUPERACION_PAGES.md delimita los dos escenarios y la regresión final."
+      "remaining": "0.8.3–0.8.5 acreditan validación compartida, límites de cantidad/personas y actividad/reintento. 0.8.6 resuelve selectores técnicos, vacío junto a borradores y acceso/etiquetas/conservación numérica del editor expandido, con defectos originales y repetición final. Completar las demás reglas específicas por campo y estados de búsquedas/vistas secundarias, incluida su carga/vacío y doble envío. Los clics durante cierre visual nativo conservan observación histórica; no se afirma una causa completa. SELECTORES_Y_RESERVA_MANUAL.md delimita esta fase."
     },
     {
       "id": "S04-20",
@@ -315,11 +315,11 @@
     }
   ],
   "current_javascript": {
-    "tests": 196,
-    "desk": 193,
+    "tests": 203,
+    "desk": 200,
     "portal": 3,
-    "phase": "0.8.5",
-    "executed_log_sha256": "c23e0e05b7e6c9fcfe2fb8e55570c50a38505fba0be789e39ccd62b007f720bd"
+    "phase": "0.8.6",
+    "executed_log_sha256": "396406b8629bbee46baef4b061c1101a90887fda2734e95e6fb7456324c1761c"
   },
   "historical_native": {
     "tests": 380,
@@ -332,16 +332,25 @@
     "raw_output_sha256": "65a1af400a31cc767da3d16eae035f6706f000d163afb637a2d43907671fa0db"
   },
   "current_ui": {
-    "initial_events": 21,
-    "final_events": 3,
-    "initial_bundle": "YN2QKLHG",
-    "final_bundle": "ITJVEKQP",
-    "synthetic_conditions_explicit": true,
+    "events": 14,
+    "intermediate_bundles": [
+      "7GSBLVX5",
+      "KLCLM4FU",
+      "2ID7RQ6C"
+    ],
+    "workflow_bundle": "P3YHSTYY",
+    "installed_bundle": "DYBXC4MH",
+    "final_readonly_checks": [
+      "friendly-links-final-presentation.json",
+      "friendly-links-final-colors.json"
+    ],
+    "workflow_repeated_on_installed_bundle": false,
+    "intermediate_defects_preserved": true,
     "limitations_preserved": true
   },
   "references_sha256": {
-    "docs/ESTADO_Y_EVIDENCIAS_ENTREGA.md": "32895300fac696c539ce7d1d7bb6026d76e97cb7b3ef8006d1698b461b68639a",
-    "docs/AUDITORIA_ESPECIFICACION.md": "be0c3c61b2fe2b6e9d5e932c151c746ef0e11031f8e6cf35d28a62efe2759ac2",
+    "docs/ESTADO_Y_EVIDENCIAS_ENTREGA.md": "7caef122ba613cb4372327b05386701b139991a017bf88714ccbe40bc2a62d39",
+    "docs/AUDITORIA_ESPECIFICACION.md": "252d33d5774c77b5249d7e53f387734b9b5876893688f5843f36b10ad0241ed7",
     "docs/DISPONIBILIDAD_POR_CANTIDAD.md": "e76226a821cfd7e00108f3cc566572a29d85f915ceeecc4e6c846d9dc10ea534",
     "docs/BORRADORES_DE_RESERVA.md": "2faf6f5f80a63db0f64d746c4b45fd441704f00a3ba157934d50869082e32134",
     "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md": "28ae1e61084e23e47e17b7cb139a05a33db29bd4b92eefa75959bb778100eff0",
@@ -361,22 +370,28 @@
     "docs/IDIOMA_Y_ETIQUETAS.md": "42facb8a22b825c8b01b37163fa08d8e9ece72fac5ed7a7e70c8256d2ae3a177",
     "docs/TECLADO_Y_FOCO.md": "67c86f6f910c2fb82b000132af73b3c971a6a71c2d4d49fd7f73366a9fcfb599",
     "docs/DISPONIBILIDAD_VISUAL_Y_LIMITES.md": "b729b491c2d3b78d05d3e226a7a6374ac66c86c874c672a700eea3b0ca29c970",
+    "docs/SELECTORES_Y_RESERVA_MANUAL.md": "c655b18546ee1b0da0efbebaa949eb896af45d37563153db71cdcea23251e63e",
     "docs/ACEPTACION_Y_DEMOSTRACION.md": "13da6f66c1f9f15f79458cf2578110abdff7367dbc48b692255f1daf0da90a8e",
     "docs/API.md": "cb31df9551615fdba910598fbcee9c6aad07bcc1da0b73f8216053048b727061",
     "docs/ENTREGABLES_Y_REVISION.md": "807e44556e603eb39cd491f6a43a1b454abf53541e4b746b4f41a05dd1d8422c",
-    "docs/REQUISITOS.md": "3c73c03538ffc6ce76d22a43638e9216ae26e86d9fa03b3c08badd319d81a677",
-    "docs/PENDIENTES.md": "725f201af622534a2feda5382a1871945c0317b6afddcd3090c53c1222c9b995",
+    "docs/REQUISITOS.md": "01d0ecd2d45d3efb5d9a2ee1ae10da23a3ee0b9aec6da6fbd7f838efd253f59b",
+    "docs/PENDIENTES.md": "1d82d9bea5434f74248b6f3edce19c1d0f322240495c8b15820ecb85c581591d",
     "docs/VALIDACION_FORMULARIOS.md": "eb6a8a866f2dcc2037fa9808654ad62a76355c8a4632eed2ab04a2205babd7e4",
     "docs/ACTIVIDAD_Y_RECUPERACION_PAGES.md": "75de66165b82ce9ba32215d7fafb0563b2310bf92036223ddabe5573d8492821",
     "docs/OPERACION.md": "a31cdb595406f0e93266d2d5bbc164d112b4776551a2e98d7c6a954a5a139a20",
-    "docs/evidence/page-activity-js-tests.log": "c23e0e05b7e6c9fcfe2fb8e55570c50a38505fba0be789e39ccd62b007f720bd",
+    "docs/evidence/friendly-links-js-tests.log": "396406b8629bbee46baef4b061c1101a90887fda2734e95e6fb7456324c1761c",
+    "docs/evidence/friendly-links-browser.json": "659475047e1c3d15abcee14ee1c218f4effeee5a356a8f97f52c67850c4e7453",
+    "docs/evidence/friendly-links-draft-ui.json": "c5865ccbdf199c74b10dde6a2045ad52581afaf1d68a5ffa2dae8a32bce82c89",
+    "docs/evidence/friendly-links-confirmed-ui.json": "1704740645b8ad0ce68693979a7cbc5620ea61662d8e82170aed12c261f70bd7",
+    "docs/evidence/friendly-links-final-presentation.json": "2eb71ccf756e903fe540a7c561d1a94381a3994f257dc0ecd79437faba745a99",
+    "docs/evidence/friendly-links-final-colors.json": "e4e3156c55f5076cad715eade28b410425212977dbeac5389ea41122881846f7",
     "docs/evidence/page-activity-browser.json": "cf251ab36a27f075e39dafc12a02b346792b293b0cbcb59ba2a6be7c6a45956c",
     "docs/evidence/page-activity-final-browser.json": "d3038de17df288a3fc1d95ae7f15fe667628554a0ee6a739d5aab6b319cdbc86",
-    "docs/evidence/page-activity-items-ui.json": "5a5b90e82e52e7839526887067e8e34d221d44ed04f1083d1bc0d58a3feca608",
-    "docs/evidence/page-activity-final-items-ui.json": "8f74617356319994e18cd9b28f7d17c359f763d39da8e1a2edf0acf884b069d8",
+    "docs/evidence/page-activity-verification.json": "024473311fd588575f0db7c49e06ec978fe94293bddd3d18c313ae4b54a4445e",
     "docs/evidence/keyboard-review-native-tests.xml": "699836cd8af70e29367d6f893f76893dd915d1d3fe1a29dc03b80c497d9c156d",
     "docs/evidence/keyboard-review-native-tests.log": "65a1af400a31cc767da3d16eae035f6706f000d163afb637a2d43907671fa0db",
     "docs/evidence/action-context-verification.json": "b807b408d40b3b3dd65d1f9a4feeff4030509b9591d372d6cefb8204eb8936c8",
+    "docs/evidence/page-activity-js-tests.log": "c23e0e05b7e6c9fcfe2fb8e55570c50a38505fba0be789e39ccd62b007f720bd",
     "docs/evidence/page-activity-build.log": "54c84f299b8e3960c9e3391fc4f590925f046f017d5ac6eddc3d06198a98f4cc",
     "docs/evidence/page-activity-wire-invariants.json": "822a023cc7c57284da8fdd56843a19adcd733e20bec98b02be7b471bdd814a1e",
     "docs/evidence/294-actualizacion-en-proceso.jpg": "477ccbce8e4f69077213c5edf65f4bf33ed235417253878628d1636d3ec9c59c",
@@ -388,12 +403,31 @@
     "docs/evidence/302-detalle-reserva-preparado.jpg": "7ec556061d7bc94609d3dbb55630fc159ffdfabd963981e47dd28fe5de68ad89",
     "docs/evidence/303-actualizacion-error-recuperable.jpg": "9fbfdc8bbc65e1fc5ed8f1a95bdb52408598dfd71f4838a0919a46c02c8c262e",
     "docs/evidence/304-actualizacion-recuperada.jpg": "28a47b0ad8b69dd417a8a51842b1c0fb987a33f0bb1b74cdc68eec41d54e05bd",
+    "docs/evidence/page-activity-items-ui.json": "5a5b90e82e52e7839526887067e8e34d221d44ed04f1083d1bc0d58a3feca608",
     "docs/evidence/page-activity-first-ux-restored.json": "d64122ce2f087e8c83c8bab5973d424f985f228ef11f9dd44506d25ef5e0f633",
     "docs/evidence/305-preparacion-junto-al-boton-movil.jpg": "7b5cf41a8d6828363ff1923a6fbbe281d3ab38553f9bf8b348a92015d506b542",
     "docs/evidence/306-borrador-retomado-movil.jpg": "c8ed07272141556481128bc8594626d7157574d0aadc24444ffd9f6c6037455a",
+    "docs/evidence/page-activity-final-items-ui.json": "8f74617356319994e18cd9b28f7d17c359f763d39da8e1a2edf0acf884b069d8",
     "docs/evidence/298-autocompletado-categoria-limitacion.jpg": "cfe0b2c86c971b22b9c7305c2a513f8f90c34d7d7e0f707af22c0ee8393a8032",
     "docs/evidence/page-activity-native-title-before.json": "955cf66ef82a113b45faff44a8e677a31448e5b14176522100d1b5c65caed4d4",
-    "docs/evidence/page-activity-verification.json": "024473311fd588575f0db7c49e06ec978fe94293bddd3d18c313ae4b54a4445e"
+    "docs/evidence/friendly-links-build.log": "53198e88bb30e6ba79c445242f794d8471a658cf92428ea0c71d786163e649c7",
+    "docs/evidence/friendly-links-wire-invariants.json": "30656d9f17b3989ae976f31eed1958440d058daddb843458355c57b537ae4bee",
+    "docs/evidence/307-selector-categoria-claro.jpg": "526bb97808f09a60ee5320c5fda8b5fbeff1ffad80f4320d49e9f86fc4dd5738",
+    "docs/evidence/308-selector-habitacion-claro.jpg": "6f163bc71be4e2e4dcf372d9ac3faba096d8d3eecf728f1e5dbbe364d3b4f843",
+    "docs/evidence/309-detalle-fila-etiquetas-limitacion.jpg": "7915eb6dafc3e5085c7ebe7c13acfd9cf0cfa52de4b44748f6465a3f7d6427ee",
+    "docs/evidence/310-tarifa-y-detalle-habitacion-claro.jpg": "f19b92680e322210a7c72a307ffbeb37f15480ce55643265a566a801f7eff6ad",
+    "docs/evidence/311-personas-borrador-defecto.jpg": "4533bfa50b5faed21633b72973bae3b2ee2bc61b3d411d395f3013580e19f351",
+    "docs/evidence/friendly-links-observed-draft-ui.json": "83727790cef073e3b6556aa7970c4058fa976088c9fa62f5708c38e6309df5b9",
+    "docs/evidence/312-personas-detalle-conservadas.jpg": "864aab51901b3b507046b365f84bc1e8be6d2ce5ba37e8c477afdd507fe919e8",
+    "docs/evidence/313-borrador-y-vacio-reservas-movil.jpg": "35ef99908475f279190715b515aeb4f3708f75adeb155f7be38dc73a8a3b8219",
+    "docs/evidence/314-borrador-selecciones-movil.jpg": "6844bf9f4454684e747f631dff5d17054341cc21076b46effd3a590a8bca3b4e",
+    "docs/evidence/315-cotizacion-reserva-retomada-movil.jpg": "dbdd33bfa0e2e4951aaace7de1505ca038fef3af9038e8187ba7377c71fa6c38",
+    "docs/evidence/316-reserva-confirmada-movil.jpg": "4449107b1ce61a32efb04836cc5887ff1ae45459a57d0d167536aba8cc5a7b8d",
+    "docs/evidence/317-selector-tarifa-por-tiempo.jpg": "542ddb7a2cd8642cbba74c141f083bb5fd864af1c694c26ad438d79f8486f7ea",
+    "docs/evidence/friendly-links-workflow-build.log": "e3f7d91ed9ade847fb6da8efd51ebe29803dcda6c701ee99b90616351500a3da",
+    "docs/evidence/318-selector-final-instalado.jpg": "5c2db4055a1a6e11ca312af5e61c440d1b09402bf3a6e2691d9162d3351982ca",
+    "docs/evidence/319-disponibilidad-colores-version-final.jpg": "5b48a36b06e13d9fd15456dd892bc0fae66bf911f55cc53577cf1b194cc0144d",
+    "docs/evidence/friendly-links-verification.json": "e61eaedaf4a8382c9996b75e06f65c4c099827daa238616132999201f895ba34"
   },
   "database_mutations": false,
   "ui_replay": false,

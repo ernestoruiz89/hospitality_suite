@@ -238,6 +238,21 @@ test('numeric bounds stop an original decimal draft before native parsing can si
   raw='0';capture({target:input});await dialog._hsSubmit({validate:false});assert.equal(sent,2,'explicit partial drafts keep their bypass');
 });
 
+test('expanded row edits survive native refresh and collapse without a stale inline editor overwriting them',async()=>{
+  const {desk,context}=fixture(),doc={name:'row-1',people:1};let capture,payload,expandedVisible=true,inlineVisible=false,expandedRaw='2',inlineRaw='1',inlineWrites=0,expandedWrites=0;
+  const inlineInput={},expandedInput={};
+  const control=(input,read,isVisible,write)=>({df:{fieldname:'people',fieldtype:'Int'},$input:{0:input,is:isVisible},get_input_value:read,get_parsed_value:Number,async parse_validate_and_set_in_model(raw){write();doc.people=Number(raw);}});
+  const inline=control(inlineInput,()=>inlineRaw,()=>inlineVisible,()=>inlineWrites++),expanded=control(expandedInput,()=>expandedRaw,()=>expandedVisible,()=>expandedWrites++);
+  context.frappe.ui={Dialog:class{
+    constructor(){this.fields_dict={rooms:{df:{fieldname:'rooms',fieldtype:'Table'},grid:{grid_rows:[{doc,on_grid_fields_dict:{people:inline},grid_form:{fields_dict:{people:expanded}}}]}}};this.$wrapper={addClass(){},on(events,selector,callback){if(events.includes('hsNumeric'))capture=callback;}};}
+    get_close_btn(){return{attr(){}};}get_primary_btn(){return{off(){return this;},on(){return this;},prop(){return this;}};}show(){}get_values(){return{rooms:[{people:doc.people}]};}
+  }};
+  const dialog=await desk.dialog('Reserva',[],async values=>payload=values);
+  capture({target:expandedInput});assert.equal(doc.people,2);expandedRaw='1';expandedVisible=false; // native refresh leaves an old displayed control behind
+  await dialog._hsSubmit();assert.equal(payload.rooms[0].people,2);assert.equal(expandedWrites,1);assert.equal(inlineWrites,0);
+  inlineVisible=true;inlineRaw='3';capture({target:inlineInput});await dialog._hsSubmit();assert.equal(payload.rooms[0].people,3);assert.equal(inlineWrites,1);assert.equal(expandedWrites,1);
+});
+
 test('dependency reads keep a just-typed required price and its caret before native blur, including zero',async()=>{
   const {desk,context}=fixture();
   const input={value:'900',type:'text',isConnected:true,selectionStart:1,selectionEnd:2,getClientRects:()=>[{}],setSelectionRange(start,end){this.selectionStart=start;this.selectionEnd=end;}};

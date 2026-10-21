@@ -1,0 +1,214 @@
+{
+  "assembled_at_utc": "2026-10-21T19:34:56.917106+00:00",
+  "version": "0.8.6",
+  "evidence_assembly_only": true,
+  "database_mutations": false,
+  "ui_replay": false,
+  "scope": "Friendly operational Links, complete room row editor and reservation empty states; final read-only colors regression.",
+  "javascript": {
+    "tests": 203,
+    "desk": 200,
+    "portal": 3,
+    "new_cases": 7,
+    "failures": 0,
+    "skipped": 0
+  },
+  "workflow": {
+    "events": 14,
+    "bundle": "hospitality.bundle.P3YHSTYY.js",
+    "repeated_on_final_installed_bundle": false,
+    "intermediate_defects_preserved": true
+  },
+  "installed_readonly_queries": {
+    "count": 2,
+    "bundle": "hospitality.bundle.DYBXC4MH.js",
+    "malicious_markup_browser_test": false,
+    "native_description_encoding_unit_regression": true
+  },
+  "native": {
+    "tests": 380,
+    "rerun_in_this_phase": false,
+    "revision": "beac44d",
+    "junit_sha256": "699836cd8af70e29367d6f893f76893dd915d1d3fe1a29dc03b80c497d9c156d"
+  },
+  "native_python_behavior_unchanged": true,
+  "native_versions": [
+    {
+      "site": "main",
+      "version": "0.8.6",
+      "listing_sha256": "1d3f7c32f92fde6e2555588c0f4732c7b531e5953ff548ffffb88bac50e2445d",
+      "migration_sha256": "d6959b8597472b2bdac15762b4c4ccf4449cbfc28497ef1794ba916253050ceb"
+    },
+    {
+      "site": "acceptance",
+      "version": "0.8.6",
+      "listing_sha256": "1d3f7c32f92fde6e2555588c0f4732c7b531e5953ff548ffffb88bac50e2445d",
+      "migration_sha256": "96cf15953d0bffe4fbfbe38829710d58a2ec6e79f48f2ad0661f149373dc0e32"
+    }
+  ],
+  "core": {
+    "frappe": {
+      "commit": "4515014c87ece6cb20ee91d2cfb121c5cbd1ff4a",
+      "clean": true
+    },
+    "erpnext": {
+      "commit": "5af6561f5aa48104559692fb4fd82f2580e8d338",
+      "clean": true
+    }
+  },
+  "statuses": {
+    "R": 14,
+    "I": 6,
+    "V": 198
+  },
+  "open_requirements": 20,
+  "all_requirements_completed": false,
+  "known_open_observations": [
+    "Continuar reglas específicas por campo, estados y tareas secundarias del conjunto. La carga/vacío de búsquedas nativas debe contrastarse al revisar esos estados.",
+    "Los clics durante el cierre visual de diálogos conservan observación histórica; esta fase espera a que termine la capa nativa."
+  ],
+  "protected_sites": {
+    "hospitality.localhost": {
+      "tables": 72,
+      "rows": 1246,
+      "private_files": 2
+    },
+    "hospitality-acceptance.localhost": {
+      "tables": 72,
+      "rows": 250,
+      "private_files": 0
+    }
+  },
+  "final_services": {
+    "8086": true,
+    "8089": false,
+    "9001": true,
+    "11001": true,
+    "13001": true
+  },
+  "source_sha256": {
+    "hospitality_suite/__init__.py": "48fce31ff6b42a2f75eadb731acea29893abc581a3861cf4eaebb8561204fb38",
+    "hospitality_suite/public/js/hospitality.js": "44dea7ee37ec3f68dca447be24b05c4a3836ed7d402e7fa55baaf12a4dad840b",
+    "hospitality_suite/public/js/hospitality_links.js": "25727ad5e02d923729e52bfbd8d5cf35db91879c158689cd49092412d1a4d1f4",
+    "hospitality_suite/public/js/hospitality_drafts.js": "1bb26dda43241d8785eddd303dd816cd4a4a1a95f993672c00f20757a36526b7",
+    "hospitality_suite/public/js/hospitality_keyboard.js": "b6111aabc03f57576a017b21f25b9f20222051f763bb7c705a88a75bc228890e",
+    "hospitality_suite/public/hospitality.bundle.js": "34ae0ede1e1ac47ee338caa843e210cc4a632688fb5828d608291d551a18cfeb",
+    "tools/test_links_ui.cjs": "5cc44a36c3bed4bac661dfc911d9852f9ce2863843686abf23f381c024e6ca1d",
+    "tools/test_desk_transport.cjs": "ae312fec7499a491a33ca1ac30cdb20889d6ef6fd837d85d891b70cd51848922",
+    "tools/test_booking_drafts_ui.cjs": "f548db075842fc4c4a2c0565b13f3df6eddb5092bae628e5f7ceeb2ef69a7d83",
+    "tools/friendly_links_ux.py": "d95cbbf252fb2812634d3b1637fbf4a035b8b56a1a3585461cee852dab8f21f3",
+    "tools/verify_friendly_links.py": "0db755d3c386361a8a5ed0e847cc4f21e61022b2bb70de3f69f7a98902d3a2c1",
+    "docs/SELECTORES_Y_RESERVA_MANUAL.md": "c655b18546ee1b0da0efbebaa949eb896af45d37563153db71cdcea23251e63e",
+    "docs/ESTADO_Y_EVIDENCIAS_ENTREGA.md": "7caef122ba613cb4372327b05386701b139991a017bf88714ccbe40bc2a62d39",
+    "docs/specification-audit.json": "b43e4fc81983b6e4408f73361462b877b52bf275a290276c8a4f17d7da9bcd85"
+  },
+  "references": {
+    "friendly-links-browser.json": "659475047e1c3d15abcee14ee1c218f4effeee5a356a8f97f52c67850c4e7453",
+    "friendly-links-observed-draft-ui.json": "83727790cef073e3b6556aa7970c4058fa976088c9fa62f5708c38e6309df5b9",
+    "friendly-links-draft-ui.json": "c5865ccbdf199c74b10dde6a2045ad52581afaf1d68a5ffa2dae8a32bce82c89",
+    "friendly-links-confirmed-ui.json": "1704740645b8ad0ce68693979a7cbc5620ea61662d8e82170aed12c261f70bd7",
+    "friendly-links-final-presentation.json": "2eb71ccf756e903fe540a7c561d1a94381a3994f257dc0ecd79437faba745a99",
+    "friendly-links-final-colors.json": "e4e3156c55f5076cad715eade28b410425212977dbeac5389ea41122881846f7",
+    "friendly-links-ux-restored.json": "d64122ce2f087e8c83c8bab5973d424f985f228ef11f9dd44506d25ef5e0f633",
+    "friendly-links-upgrade.json": "a2403d24a3f4a341b864767ccbeee143bba60f1df4afa7c60427dddac8ee36b5",
+    "friendly-links-final-state.json": "176401532521962c267204c1b6c21d175d378d6273101dec8fd962c92075efc4",
+    "friendly-links-language-installed.json": "a93de5acfd94b19f76a90ab091b80693a88bc951aa5480b959f8d160a00d81ba",
+    "friendly-links-js-tests.log": "396406b8629bbee46baef4b061c1101a90887fda2734e95e6fb7456324c1761c",
+    "friendly-links-build.log": "53198e88bb30e6ba79c445242f794d8471a658cf92428ea0c71d786163e649c7",
+    "friendly-links-workflow-build.log": "e3f7d91ed9ade847fb6da8efd51ebe29803dcda6c701ee99b90616351500a3da",
+    "friendly-links-wire-invariants.json": "30656d9f17b3989ae976f31eed1958440d058daddb843458355c57b537ae4bee"
+  },
+  "screenshots": [
+    {
+      "path": "docs/evidence/307-selector-categoria-claro.jpg",
+      "sha256": "526bb97808f09a60ee5320c5fda8b5fbeff1ffad80f4320d49e9f86fc4dd5738",
+      "captured_bytes_unchanged": true,
+      "scope": "Initial friendly names: 7GSBLVX5"
+    },
+    {
+      "path": "docs/evidence/308-selector-habitacion-claro.jpg",
+      "sha256": "6f163bc71be4e2e4dcf372d9ac3faba096d8d3eecf728f1e5dbbe364d3b4f843",
+      "captured_bytes_unchanged": true,
+      "scope": "Initial friendly names: 7GSBLVX5"
+    },
+    {
+      "path": "docs/evidence/309-detalle-fila-etiquetas-limitacion.jpg",
+      "sha256": "7915eb6dafc3e5085c7ebe7c13acfd9cf0cfa52de4b44748f6465a3f7d6427ee",
+      "captured_bytes_unchanged": true,
+      "scope": "Observed defect before correction"
+    },
+    {
+      "path": "docs/evidence/310-tarifa-y-detalle-habitacion-claro.jpg",
+      "sha256": "f19b92680e322210a7c72a307ffbeb37f15480ce55643265a566a801f7eff6ad",
+      "captured_bytes_unchanged": true,
+      "scope": "Names/labels before numeric correction: 2ID7RQ6C"
+    },
+    {
+      "path": "docs/evidence/311-personas-borrador-defecto.jpg",
+      "sha256": "4533bfa50b5faed21633b72973bae3b2ee2bc61b3d411d395f3013580e19f351",
+      "captured_bytes_unchanged": true,
+      "scope": "Observed defect before correction"
+    },
+    {
+      "path": "docs/evidence/312-personas-detalle-conservadas.jpg",
+      "sha256": "864aab51901b3b507046b365f84bc1e8be6d2ce5ba37e8c477afdd507fe919e8",
+      "captured_bytes_unchanged": true,
+      "scope": "Corrected P3YHSTYY workflow"
+    },
+    {
+      "path": "docs/evidence/313-borrador-y-vacio-reservas-movil.jpg",
+      "sha256": "35ef99908475f279190715b515aeb4f3708f75adeb155f7be38dc73a8a3b8219",
+      "captured_bytes_unchanged": true,
+      "scope": "Corrected P3YHSTYY workflow"
+    },
+    {
+      "path": "docs/evidence/314-borrador-selecciones-movil.jpg",
+      "sha256": "6844bf9f4454684e747f631dff5d17054341cc21076b46effd3a590a8bca3b4e",
+      "captured_bytes_unchanged": true,
+      "scope": "Corrected P3YHSTYY workflow"
+    },
+    {
+      "path": "docs/evidence/315-cotizacion-reserva-retomada-movil.jpg",
+      "sha256": "dbdd33bfa0e2e4951aaace7de1505ca038fef3af9038e8187ba7377c71fa6c38",
+      "captured_bytes_unchanged": true,
+      "scope": "Corrected P3YHSTYY workflow"
+    },
+    {
+      "path": "docs/evidence/316-reserva-confirmada-movil.jpg",
+      "sha256": "4449107b1ce61a32efb04836cc5887ff1ae45459a57d0d167536aba8cc5a7b8d",
+      "captured_bytes_unchanged": true,
+      "scope": "Corrected P3YHSTYY workflow"
+    },
+    {
+      "path": "docs/evidence/317-selector-tarifa-por-tiempo.jpg",
+      "sha256": "542ddb7a2cd8642cbba74c141f083bb5fd864af1c694c26ad438d79f8486f7ea",
+      "captured_bytes_unchanged": true,
+      "scope": "Corrected P3YHSTYY workflow"
+    },
+    {
+      "path": "docs/evidence/318-selector-final-instalado.jpg",
+      "sha256": "5c2db4055a1a6e11ca312af5e61c440d1b09402bf3a6e2691d9162d3351982ca",
+      "captured_bytes_unchanged": true,
+      "scope": "Final installed DYBXC4MH read-only query"
+    },
+    {
+      "path": "docs/evidence/319-disponibilidad-colores-version-final.jpg",
+      "sha256": "5b48a36b06e13d9fd15456dd892bc0fae66bf911f55cc53577cf1b194cc0144d",
+      "captured_bytes_unchanged": true,
+      "scope": "Final installed DYBXC4MH read-only query"
+    }
+  ],
+  "compiled_javascript": {
+    "name": "hospitality.bundle.DYBXC4MH.js",
+    "sha256": "72bb8b118c7d9188f9357867eb39266d46e6ac30df7ed4579ac00998b1062ee1"
+  },
+  "raw_command_outputs": {
+    "js-security.log": "2923d199aee77207eb0776f7aeff8e56f2cfa8d9c445a90e289003e99dbef5e4",
+    "build-security.log": "24a97003a4de7b5f22f79699c3171f6e0b1a76d3b24e8c2ddbaeabf6d6867eed",
+    "build-rows.log": "a78305666f0f63254d66acbd0b4090e64eaf08c093d7bf9709228e46ccb2202a"
+  },
+  "public_log_normalization": "UTF-8 LF and trailing whitespace removed; original private command output retained.",
+  "external_providers_activated": false,
+  "ota_sync_deferred_by_user": true,
+  "final_deployment_rollback_proven": false
+}

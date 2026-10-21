@@ -204,12 +204,14 @@ window.hospitality_suite = window.hospitality_suite || {};
       });
       if(this.route==="hospitality-reception")this.root.find("[data-room-arrival]").each((_,node)=>{node.textContent=this.arrivalState(node.dataset.roomArrival);});
     }
-    table(headers,rows){return rows.length?`<div class="hs-table-wrap"><table class="hs-table"><thead><tr>${headers.map(h=>`<th scope="col">${esc(__(h))}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map((v,i)=>`<td data-label="${esc(__(headers[i]))}">${v}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`:this.empty();}
+    table(headers,rows,emptyMessage){return rows.length?`<div class="hs-table-wrap"><table class="hs-table"><thead><tr>${headers.map(h=>`<th scope="col">${esc(__(h))}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map((v,i)=>`<td data-label="${esc(__(headers[i]))}">${v}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`:this.empty(emptyMessage);}
     render_reservations(el) {
       const bookings=(this.data.bookings||[]).filter(b=>b.status!=="Draft"&&(this.bookingHistory||!["Cancelled","No Show","Completed"].includes(b.status)));
       const drafts=this.allowed("reserve")?(this.data.bookings||[]).filter(b=>b.status==="Draft"):[];
+      const emptyMessage=this.bookingHistory?__("No hay reservas en el historial."):__("No hay reservas confirmadas ni retenciones vigentes.");
+      const listing=this.table([__("Reserva"),__("Llegada / salida"),__("Canal"),__("Estado"),__("Importe"),__("Acciones")],bookings.map(b=>[esc(this.bookingLabel(b.name)),`${esc(this.date(b.starts_at))}<br>${esc(this.date(b.ends_at))}`,esc(b.channel),this.badge(b.status),b.draft_data?esc(__("Sin cotizar")):this.amount(b.amount,b.currency),this.button("booking",__("Ver reserva"),b.name)]),emptyMessage);
       const draftList=drafts.length?`<section class="hs-section"><h2>${esc(__("Borradores por completar"))} (${drafts.length})</h2><p>${esc(__("No ocupan cupo ni fijan precio. Retome uno para completar datos y revisar la cotización."))}</p>${this.table([__("Solicitante"),__("Entrada prevista"),__("Precio"),__("Acciones")],drafts.map(b=>[esc(b.guest?this.guestName(b.guest):(this.data.customers||[]).find(c=>c.name===b.customer)?.customer_name||__("Por definir")),esc(b.starts_at?this.date(b.starts_at):__("Por definir")),esc(__("Sin cotizar")),this.button("booking",__("Retomar borrador"),b.name)]))}</section>`:"";
-      el.html(`<div class="hs-toolbar"><div><h2>${frappe.utils.escape_html(__("Reservas vigentes"))}</h2><p>${frappe.utils.escape_html(__("Reservas individuales y grupales; las retenciones liberan cupo al vencer."))}</p><label><input id="hs-booking-history" type="checkbox" ${this.bookingHistory?"checked":""}> ${frappe.utils.escape_html(__("Mostrar historial"))}</label></div>${this.button("reserve",__("Reservar"),"","primary")}${this.button("availability",__("Buscar disponibilidad"))}</div>${draftList}${this.table([__("Reserva"),__("Llegada / salida"),__("Canal"),__("Estado"),__("Importe"),__("Acciones")],bookings.map(b=>[esc(this.bookingLabel(b.name)),`${esc(this.date(b.starts_at))}<br>${esc(this.date(b.ends_at))}`,esc(b.channel),this.badge(b.status),b.draft_data?esc(__("Sin cotizar")):this.amount(b.amount,b.currency),this.button("booking",__("Ver reserva"),b.name)]))}`);
+      el.html(`<div class="hs-toolbar"><div><h2>${frappe.utils.escape_html(__("Reservas vigentes"))}</h2><p>${frappe.utils.escape_html(__("Reservas individuales y grupales; las retenciones liberan cupo al vencer."))}</p><label><input id="hs-booking-history" type="checkbox" ${this.bookingHistory?"checked":""}> ${frappe.utils.escape_html(__("Mostrar historial"))}</label></div>${this.button("reserve",__("Reservar"),"","primary")}${this.button("availability",__("Buscar disponibilidad"))}</div>${draftList}${listing}`);
     }
     render_stays(el) {el.html(`<div class="hs-toolbar"><h2>${frappe.utils.escape_html(__("Huéspedes alojados y cuentas"))}</h2>${this.button("walk_in",__("Registrar entrada inmediata"),"","primary")}</div>${this.table([__("Habitación"),__("Huésped"),__("Salida prevista"),__("Estado"),__("Acciones")],(this.data.stays||[]).map(s=>[esc(this.roomName(s.room)),esc(this.guestName(s.guest)),esc(this.date(s.ends_at)),this.badge(s.status),this.button("detail",__("Ver cuenta"),s.name)]))}`);}
     render_cashier(el) {
@@ -237,6 +239,7 @@ window.hospitality_suite = window.hospitality_suite || {};
       }
       const selectors=fields.filter(df=>df.fieldtype==="Select").map(df=>({df,options:df.options}));
       for(const {df} of selectors)df.options=[];
+      this.prepare_operational_links?.(fields);
       const d=new frappe.ui.Dialog({title:__(titleText),fields,size,primary_action_label:__(label),primary_action:()=>{}});
       d.get_values=preserveEditingValue(d,d.get_values);
       d.$wrapper.addClass("hs-form-dialog");
@@ -245,18 +248,21 @@ window.hospitality_suite = window.hospitality_suite || {};
         const control=d.fields_dict[df.fieldname];df.options=options;control.df.options=options;control.last_options=null;control.set_options=safeSelectOptions;control.set_options();
         if(df.default!==undefined)await control.set_value(df.default);
       }
-      const numeric=["Int","Float","Currency","Percent","Check"],edits=new Map(),rowEdits=new Map();
+      const numeric=["Int","Float","Currency","Percent","Check"],edits=new Map(),rowEdits=new Map(),rowEditors=new Map();
+      const rowControls=row=>[...new Set([...Object.values(row.on_grid_fields_dict||{}),...Object.values(row.grid_form?.fields_dict||{})])];
       // Grid editors are reused/refreshed when focus moves or another row is
       // added. Keep the user's numeric input before those native refreshes.
       d.$wrapper.on("input.hsNumeric change.hsNumeric","input",event=>{
         for(const field of Object.values(d.fields_dict)){
           if(numeric.includes(field.df.fieldtype)&&field.$input?.[0]===event.target)edits.set(field.df.fieldname,field.get_input_value());
-          for(const row of field.grid?.grid_rows||[])for(const control of Object.values(row.on_grid_fields_dict||{})){
+          for(const row of field.grid?.grid_rows||[])for(const control of rowControls(row)){
             if(!numeric.includes(control.df.fieldtype)||control.$input?.[0]!==event.target)continue;
             const key=`${field.df.fieldname}|${row.doc.name}`;
             if(!rowEdits.has(key))rowEdits.set(key,new Map());
+            if(!rowEditors.has(key))rowEditors.set(key,new Map());
             const raw=control.get_input_value();
             rowEdits.get(key).set(control.df.fieldname,raw);
+            rowEditors.get(key).set(control.df.fieldname,control);
             row.doc[control.df.fieldname]=control.get_parsed_value(raw);
           }
         }
@@ -271,7 +277,14 @@ window.hospitality_suite = window.hospitality_suite || {};
           };
           for(const field of Object.values(d.fields_dict)){
             capture(field,edits);
-            for(const row of field.grid?.grid_rows||[])for(const control of Object.values(row.on_grid_fields_dict||{}))capture(control,rowEdits.get(`${field.df.fieldname}|${row.doc.name}`),row.doc);
+            for(const row of field.grid?.grid_rows||[]){
+              const key=`${field.df.fieldname}|${row.doc.name}`,controls=rowControls(row);
+              for(const name of new Set(controls.map(control=>control.df.fieldname))){
+                const candidates=controls.filter(control=>control.df.fieldname===name),last=rowEditors.get(key)?.get(name);
+                const control=candidates.find(control=>control.$input?.is(":visible"))||(candidates.includes(last)?last:candidates[0]);
+                capture(control,rowEdits.get(key),row.doc);
+              }
+            }
           }
           // Snapshot everything before awaiting: a control refresh must not
           // overwrite a later control's freshly typed value or an inactive row.

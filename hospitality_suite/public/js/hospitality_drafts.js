@@ -62,7 +62,7 @@
       f("starts_at",__("Entrada ({0})",[prop.time_zone]),"Datetime",{reqd:1,default:wall(values.starts_at)}),
       f("ends_at",__("Salida prevista"),"Datetime",{reqd:1,default:wall(values.ends_at)}),
       f("mode",__("Modalidad"),"Select",{reqd:1,options:prop.mode==="Mixed"?["Hotel","Motel"]:[prop.mode],default:values.mode}),
-      f("rooms",__("Habitaciones solicitadas"),"Table",{reqd:1,in_place_edit:true,data:copy(values.rooms||[]),fields:[
+      f("rooms",__("Habitaciones solicitadas"),"Table",{reqd:1,in_place_edit:false,data:copy(values.rooms||[]),fields:[
         f("category",__("Categoría"),"Link",{options:"HS Category",reqd:1,in_list_view:1,get_query:scope}),
         f("room",__("Habitación (opcional)"),"Link",{options:"HS Room",in_list_view:1,get_query:()=>({filters:{property,active:1}})}),
         f("people",__("Personas"),"Int",{reqd:1,default:1,in_list_view:1}),
