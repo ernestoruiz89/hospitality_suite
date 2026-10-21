@@ -1,5 +1,7 @@
 # Registro de implementación
 
+[TIEMPO_REAL_SITIOS_LOCALES.md](TIEMPO_REAL_SITIOS_LOCALES.md): corregida resolución WSL de ambos nombres usados por la autenticación nativa. Cinco casos del helper, cinco conexiones autenticadas con aislamiento/commit/rollback y recuperación de cambios; Recepción/Caja se actualizan por aviso y recuperan un corte largo mediante Actualizar. Herramientas y configuración local, sin cambios de reglas/esquema ni nueva batería general. Matriz sin nuevos cierres: 200 V, seis I y doce R. OTA aplazada; objetivo activo.
+
 [DISPONIBILIDAD_VISIBLE.md](DISPONIBILIDAD_VISIBLE.md): estados verde/rojo desplegados al consultar y tarjetas sin «en el intervalo» ni repetición de «Disponible». Diez pruebas dirigidas aprobadas y revisión real en escritorio/móvil sobre la compilación PEHNOLTE. La matriz mantiene 200 V, seis I y doce R; no se declara terminada la revisión general.
 
 ## Ampliación comprobada - 0.8.7

@@ -1,0 +1,104 @@
+{
+  "ui_sessions": 2,
+  "ui_user_role": "HS Manager in both UI tabs",
+  "separate_user_transport_roles": "HS Receptionist and HS Cashier verified by native client",
+  "events": [
+    {
+      "stage": "main_connected",
+      "site": "hospitality.localhost",
+      "observed_at": "2026-10-21T20:55:55.164Z",
+      "state": {
+        "business_date": "2026-10-19",
+        "connection": "● Tiempo real conectado",
+        "date": "Reservas\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\n● Tiempo real conectado\nCerrar sesión"
+      }
+    },
+    {
+      "stage": "before_api_stay",
+      "observed_at": "2026-10-21T20:56:30.120Z",
+      "reception": {
+        "connection": "● Tiempo real conectado",
+        "occupied": 0
+      },
+      "cashier": {
+        "connection": "● Tiempo real conectado",
+        "text": "H\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nCaja\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nTurnos y cobros\n\nAnticipos, ingresos y garantías conservan su origen contable.\n\nAbrir turno\nCobrar\nRetirar / entregar efectivo\nAplicar garantía\nNota de crédito\nRegistrar egreso\nPagar proveedor\nRegistrar liquidación\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nMovimientos recientes\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 14:56:16.204772 · NIO"
+      }
+    },
+    {
+      "stage": "after_first_api_commit_without_refresh",
+      "observed_at": "2026-10-21T20:58:10.752Z",
+      "reception": {
+        "connection": "● Tiempo real conectado",
+        "occupied": 1,
+        "occupied_cards": [
+          "HABITACIÓN\nH101\nEstándar · Piso 1\nAlojado\nLimpia\nEntrada prevista\n21/10/2026 14:57\nSalida prevista\n22/10/2026 14:57\nTiempo restante: 23 h 59 min\nSaldo:\nC$ 1,500.00\nVer estancia\nHistorial"
+        ]
+      },
+      "cashier": {
+        "connection": "● Tiempo real conectado",
+        "text": "H\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nCaja\n\nFecha operativa: 2026-10-21\n\nEstablecimiento\nHotel Jardín Demo\nMotel Luna Demo\nActualizar\nCerrar sesión\nTurnos y cobros\n\nAnticipos, ingresos y garantías conservan su origen contable.\n\nAbrir turno\nCobrar\nRetirar / entregar efectivo\nAplicar garantía\nNota de crédito\nRegistrar egreso\nPagar proveedor\nRegistrar liquidación\nResponsable\tApertura\tMoneda\tEfectivo esperado\tEstado\tAcciones\nmanager@hospitality.example.invalid\t21/10/2026 14:57\tNIO\tC$ 0.00\tAbierto\tArqueo y cierre\nMovimientos recientes\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 14:57:18.304788 · NIO"
+      }
+    },
+    {
+      "stage": "socket_service_cut",
+      "observed_at": "2026-10-21T20:58:34.163Z",
+      "reception": {
+        "connection": "Sin tiempo real · pulse Actualizar",
+        "occupied": 1
+      },
+      "cashier": {
+        "connection": "Sin tiempo real · pulse Actualizar",
+        "text": "H\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\nSin tiempo real · pulse Actualizar\nGESTIÓN DE ALOJAMIENTO\nCaja\n\nFecha operativa: 2026-10-21\n\nEstablecimiento\nHotel Jardín Demo\nMotel Luna Demo\nActualizar\nCerrar sesión\nTurnos y cobros\n\nAnticipos, ingresos y garantías conservan su origen contable.\n\nAbrir turno\nCobrar\nRetirar / entregar efectivo\nAplicar garantía\nNota de crédito\nRegistrar egreso\nPagar proveedor\nRegistrar liquidación\nResponsable\tApertura\tMoneda\tEfectivo esperado\tEstado\tAcciones\nmanager@hospitality.example.invalid\t21/10/2026 14:57\tNIO\tC$ 0.00\tAbierto\tArqueo y cierre\nMovimientos recientes\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 14:57:18.304788 · NIO"
+      }
+    },
+    {
+      "stage": "committed_during_cut",
+      "observed_at": "2026-10-21T20:58:50.240Z",
+      "reception": {
+        "connection": "Sin tiempo real · pulse Actualizar",
+        "occupied": 1
+      },
+      "cashier": {
+        "connection": "Sin tiempo real · pulse Actualizar",
+        "text": "H\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\nSin tiempo real · pulse Actualizar\nGESTIÓN DE ALOJAMIENTO\nCaja\n\nFecha operativa: 2026-10-21\n\nEstablecimiento\nHotel Jardín Demo\nMotel Luna Demo\nActualizar\nCerrar sesión\nTurnos y cobros\n\nAnticipos, ingresos y garantías conservan su origen contable.\n\nAbrir turno\nCobrar\nRetirar / entregar efectivo\nAplicar garantía\nNota de crédito\nRegistrar egreso\nPagar proveedor\nRegistrar liquidación\nResponsable\tApertura\tMoneda\tEfectivo esperado\tEstado\tAcciones\nmanager@hospitality.example.invalid\t21/10/2026 14:57\tNIO\tC$ 0.00\tAbierto\tArqueo y cierre\nMovimientos recientes\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 14:57:18.304788 · NIO"
+      }
+    },
+    {
+      "stage": "service_restarted_before_manual_action",
+      "observed_at": "2026-10-21T20:59:06.355Z",
+      "reception": {
+        "connection": "Sin tiempo real · pulse Actualizar",
+        "occupied": 1
+      },
+      "cashier": {
+        "connection": "Sin tiempo real · pulse Actualizar",
+        "text": "H\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\nSin tiempo real · pulse Actualizar\nGESTIÓN DE ALOJAMIENTO\nCaja\n\nFecha operativa: 2026-10-21\n\nEstablecimiento\nHotel Jardín Demo\nMotel Luna Demo\nActualizar\nCerrar sesión\nTurnos y cobros\n\nAnticipos, ingresos y garantías conservan su origen contable.\n\nAbrir turno\nCobrar\nRetirar / entregar efectivo\nAplicar garantía\nNota de crédito\nRegistrar egreso\nPagar proveedor\nRegistrar liquidación\nResponsable\tApertura\tMoneda\tEfectivo esperado\tEstado\tAcciones\nmanager@hospitality.example.invalid\t21/10/2026 14:57\tNIO\tC$ 0.00\tAbierto\tArqueo y cierre\nMovimientos recientes\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 14:57:18.304788 · NIO"
+      }
+    },
+    {
+      "stage": "recovered_after_actualizar",
+      "manual_actions": [
+        "Actualizar in Recepción",
+        "Actualizar in Caja"
+      ],
+      "observed_at": "2026-10-21T20:59:35.014Z",
+      "reception": {
+        "connection": "● Tiempo real conectado",
+        "occupied": 2,
+        "rooms": [
+          "H101",
+          "H102"
+        ]
+      },
+      "cashier": {
+        "connection": "● Tiempo real conectado",
+        "text": "H\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nCaja\n\nFecha operativa: 2026-10-21\n\nEstablecimiento\nHotel Jardín Demo\nMotel Luna Demo\nActualizar\nCerrar sesión\nTurnos y cobros\n\nAnticipos, ingresos y garantías conservan su origen contable.\n\nAbrir turno\nCobrar\nRetirar / entregar efectivo\nAplicar garantía\nNota de crédito\nRegistrar egreso\nPagar proveedor\nRegistrar liquidación\nResponsable\tApertura\tMoneda\tEfectivo esperado\tEstado\tAcciones\nmanager@hospitality.example.invalid\t21/10/2026 14:57\tNIO\tC$ 0.00\tCerrado\tImprimir\nMovimientos recientes\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 14:59:25.773050 · NIO"
+      }
+    }
+  ],
+  "automatic_refresh_before_cut": true,
+  "long_cut_recovery_action": "Actualizar in each Page after native retries were exhausted",
+  "fixture_creation": "Native API, not UI",
+  "business_mutations_submitted_from_ui": 0
+}

@@ -1,0 +1,24 @@
+{
+  "initial_cause": "Both named development hosts failed WSL DNS lookup with ENOTFOUND; native Socket.IO authentication fetches the browser Origin URL.",
+  "main_connection_check": "Named-origin authenticated socket succeeded after scoped WSL hosts repair; a fresh main Page load showed connected.",
+  "first_ui_fixture_helper": {
+    "error": "JSON report construction repeated room keyword after the transaction had already committed",
+    "operation_repeated": false,
+    "resolution": "Report uses room_number; authoritative read-only first-stage inspection verified one stay and one open zero shift before continuing."
+  },
+  "first_ui_fixture_inspector": {
+    "error": "Expected no HS Booking for immediate check-in",
+    "resolution": "Inspection corrected to include the real linked reservation produced by walk_in; no production operation changed."
+  },
+  "long_cut": {
+    "native_retries_exhausted": true,
+    "recovered_automatically": false,
+    "action_used": "Actualizar in each Page after Socket.IO restart",
+    "page_reload_used": false
+  },
+  "ui_sessions": "Two tabs using the same authorized HS Manager; distinct Receptionist and Cashier authenticated sessions tested in native transport client.",
+  "fixture_origin": "Native API, not UI-created operations",
+  "main_business_operations_created": 0,
+  "external_providers_activated": false,
+  "ota_sync_deferred_by_user": true
+}

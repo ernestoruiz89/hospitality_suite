@@ -9,6 +9,8 @@ import subprocess
 import signal
 import time
 
+from configure_local_hosts import check_local_hosts
+
 BENCH=Path("/home/frappe/benches/hospitality-bench")
 SITE="hospitality.localhost"
 
@@ -30,6 +32,10 @@ def main():
     config=json.loads((BENCH/"sites/common_site_config.json").read_text())
     if config.get("redis_cache")!="redis://127.0.0.1:13001" or config.get("redis_queue")!="redis://127.0.0.1:11001":
         raise SystemExit("Se requieren Redis aislados de este bench")
+    try:
+        check_local_hosts()
+    except (ValueError, OSError) as error:
+        raise SystemExit(str(error)) from None
     state=BENCH/".hospitality-run"
     state.mkdir(exist_ok=True,mode=0o700)
     for name,port in (("cache",13001),("queue",11001)):
@@ -81,7 +87,7 @@ def main():
         pidfile.write_text(str(process.pid))
         print(name+": iniciado")
     subprocess.run([bench,"--site",SITE,"enable-scheduler"],cwd=BENCH,check=True)
-    print("Sitio de pruebas: http://localhost:8086/app/hospitality-reception")
+    print("Sitio de pruebas: http://hospitality.localhost:8086/app/hospitality-reception")
     print("Registros:",state)
 
 

@@ -1,0 +1,19 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "stage": "first",
+  "counts": {
+    "HS Stay": 1,
+    "HS Booking": 1,
+    "HS Charge": 1,
+    "HS Payment": 0,
+    "HS Shift": 1,
+    "Sales Invoice": 0,
+    "Payment Entry": 0,
+    "Journal Entry": 0
+  },
+  "committed_transport_guests": 3,
+  "api_fixture_stays": 1,
+  "ui_created_operations": false,
+  "external_providers_contacted": false,
+  "main_business_mutation": false
+}

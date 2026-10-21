@@ -1,0 +1,27 @@
+# Tiempo real con los nombres de los sitios locales
+
+Revisión sobre Frappe 16.52.0, ERPNext 16.51.1 y hospitality_suite 0.8.7. La inspección del middleware nativo confirmó que autentica la sesión mediante HTTP hacia el origen del navegador. WSL devolvía `ENOTFOUND` para ambos nombres, aunque el navegador los reconocía. La prueba histórica con `localhost` no cubría este fallo.
+
+`tools/configure_local_hosts.py` añade solo `hospitality.localhost` y `hospitality-acceptance.localhost` a `127.0.0.1` en WSL. Conserva los bytes existentes, rechaza direcciones conflictivas y no cambia la configuración general de WSL ni los núcleos. `--check` verifica sin escribir; `run_dev.py` comprueba la resolución antes de arrancar. WSL puede regenerar hosts al reiniciar: los comandos repetibles están en el README. [Resolución antes/después e idempotencia](evidence/realtime-origins-hosts.json); [cinco casos del helper](evidence/realtime-origins-hosts-tests.log).
+
+## Transporte y recorrido real
+
+[verify_realtime_origins.cjs](../tools/verify_realtime_origins.cjs) abre **cinco conexiones autenticadas**: dos sesiones de un usuario de Hotel y un usuario de otra propiedad en principal; Recepción y Caja con usuarios separados en aceptación. Usa los orígenes reales `hospitality.localhost:8086` y `hospitality-acceptance.localhost:8089`. La demostración solo publica invalidaciones sin escribir documentos de negocio. Tres huéspedes sintéticos se confirman exclusivamente en aceptación, con otro alta revertida.
+
+[Resultado de transporte](evidence/realtime-origins-transport.json): ningún aviso antes del commit o después del rollback; dos receptores autorizados; cero avisos de otra propiedad o sitio; payload limitado a `property`. Una sesión pierde el transporte, recupera el alta omitida mediante bootstrap y recibe el siguiente aviso al reconectar. No se contacta a proveedores.
+
+En el navegador se abren Recepción y Caja en **dos pestañas con el mismo usuario Gerencia autorizado**. La separación de usuarios de Recepción/Caja la acredita el cliente nativo anterior, no estas pestañas. Los cambios se preparan por API y no se presentan como entradas/cierres creados desde UI:
+
+1. Antes: cero ocupadas y ningún turno. El primer commit crea entrada H101 y turno cero. Ambas vistas se actualizan sin pulsar Actualizar: una ocupada y turno Abierto. Capturas [Caja anterior](evidence/345-caja-antes-aviso-tiempo-real.png), [Recepción actualizada](evidence/346-recepcion-actualizada-por-aviso.png) y [Caja actualizada](evidence/347-caja-actualizada-por-aviso.png).
+2. Se detiene únicamente el PID verificado de Socket.IO de este bench. Ambas muestran «Sin tiempo real · pulse Actualizar». Durante el corte se crea H102 y se cierra el turno en cero; las vistas conservan todavía una ocupada y Abierto. [Aviso del corte](evidence/348-caja-corte-tiempo-real.png).
+3. Tras restablecer el servicio, los tres reintentos nativos ya se agotaron. Se pulsa **Actualizar en cada Page**, sin recargar ni reingresar: ambas conectan, Recepción recupera H101/H102 y Caja muestra Cerrado. Esto acredita recuperación explícita después de un corte largo, no reconexión automática indefinida. [Recepción recuperada](evidence/349-recepcion-recupera-cambios-del-corte.png), [Caja recuperada](evidence/350-caja-recupera-cierre-tras-corte.png) y [traza completa](evidence/realtime-origins-browser.json).
+
+[Inspección del primer escenario](evidence/realtime-origins-ui-first-data.json) y [del final](evidence/realtime-origins-ui-data.json): dos entradas/reservas enlazadas y sus cargos pendientes, un turno cerrado en cero, sin pagos, facturas ni asientos. El primer helper falló al informar una operación ya confirmada por una clave `room` duplicada en su JSON; se verificó el estado sin repetir la entrada. También se corrigió la expectativa del inspector: una entrada inmediata sí conserva su reserva interna. [Diagnósticos delimitados](evidence/realtime-origins-diagnostics.json).
+
+## Conservación y alcance
+
+Se cierran sesión y pestañas temporales, se detiene 8089 y se restaura aceptación con base y archivos; se completa migrate y la comparación estricta. [Restauración](evidence/realtime-origins-ux-restored.json), [conservación de columnas/archivos](evidence/realtime-origins-upgrade.json) y [servicios/guardas](evidence/realtime-origins-final-state.json) vinculan el resultado: aceptación 71 tablas/185 filas de negocio y 72/250 incluyendo Version; principal 72/1246 y dos archivos privados, fecha operativa 19/10. La [demostración conectada](evidence/351-tiempo-real-conectado-final.png) queda abierta en Reservas.
+
+[Verificación de esta fase](evidence/realtime-origins-verification.json) comprueba evidencia, alcance y núcleos limpios. Esta fase cambia herramientas/configuración local, no reglas de negocio ni esquema: cinco casos del helper y transporte/UI reales nuevos. Las 386 nativas/210 JS generales de 0.8.7 y las diez dirigidas de disponibilidad del ajuste anterior son evidencia histórica conservada, no baterías generales repetidas aquí. Tampoco se genera otro PDF.
+
+S04-18 conserva V con esta cobertura adicional. La matriz mantiene **200 V, seis I y doce R: dieciocho entradas abiertas**; siguen tareas/estados secundarios, contratos externos y contraste/ensayo final de entrega. El objetivo permanece activo. OTA Airbnb/Booking continúa aplazada. Restaurar fixtures no acredita el ensayo final F26 de despliegue/reversión.

@@ -57,13 +57,16 @@ Se requieren Redis, MariaDB, worker, scheduler y Socket.IO de Frappe. Los PDF us
 
 ## Sitio de WSL creado para esta tarea
 
-Bench separado: `/home/frappe/benches/hospitality-bench`. Sitio operativo de demostración: [Recepción local](http://localhost:8086/app/hospitality-reception). La batería usa `hospitality-acceptance.localhost`, restaurado a su base sin operaciones antes de ejecutarla. El sitio histórico `hospitality-clean.localhost` está en cuarentena con su respaldo de diagnóstico; no se reutiliza para estas pruebas.
+Bench separado: `/home/frappe/benches/hospitality-bench`. Sitio operativo de demostración: [Recepción local](http://hospitality.localhost:8086/app/hospitality-reception). La batería usa `hospitality-acceptance.localhost`, restaurado a su base sin operaciones antes de ejecutarla. El sitio histórico `hospitality-clean.localhost` está en cuarentena con su respaldo de diagnóstico; no se reutiliza para estas pruebas.
 
 Desde PowerShell:
 
 ```powershell
+wsl -d Ubuntu-24.04 -u root -- python3 /mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/tools/configure_local_hosts.py
 wsl -d Ubuntu-24.04 -u frappe -- python3 /mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/tools/run_dev.py
 ```
+
+El primer comando añade únicamente los alias de demostración y aceptación a `127.0.0.1` dentro de WSL. Es repetible, conserva las líneas existentes y rechaza direcciones conflictivas. El navegador puede resolver `*.localhost` aunque WSL no lo haga; el servidor de tiempo real también necesita esa resolución para autenticar. WSL puede regenerar `/etc/hosts` al reiniciar: `run_dev.py` comprueba los alias antes de arrancar y pide repetir la configuración si faltan. Use `configure_local_hosts.py --check` como usuario frappe para verificar sin escribir. [Prueba con los dos nombres reales](docs/TIEMPO_REAL_SITIOS_LOCALES.md).
 
 El script solo arranca el bench aislado, reutiliza puertos activos y deja PID/registros en `.hospitality-run`. Tras cambiar Python, ejecute el mismo comando con `--restart-web` y, si cambian hooks/jobs, `--restart-worker`; el servidor administrado usa `--noreload`. No es un despliegue de producción. Las credenciales se conservan únicamente en los archivos privados del bench/sitio descritos en `docs/AVANCE.md`; no están en Git.
 

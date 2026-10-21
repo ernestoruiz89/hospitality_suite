@@ -1,0 +1,27 @@
+{
+  "main_origin": "http://hospitality.localhost:8086",
+  "acceptance_origin": "http://hospitality-acceptance.localhost:8089",
+  "authenticated_socket_sessions": 5,
+  "main_distinct_users": 2,
+  "acceptance_roles": [
+    "HS Receptionist",
+    "HS Cashier"
+  ],
+  "main_business_writes": 0,
+  "main_authorized_receivers": 2,
+  "other_property_events": 0,
+  "cross_site_events": 0,
+  "payload_keys": [
+    "property"
+  ],
+  "before_commit_events": 0,
+  "after_rollback_events": 0,
+  "acceptance_committed_test_guests": 3,
+  "acceptance_authorized_receivers": 2,
+  "disconnect": true,
+  "reconnect": true,
+  "missed_commit_recovered_by_native_bootstrap": true,
+  "event_after_reconnect": true,
+  "provider_requests": 0,
+  "ui_replay": false
+}

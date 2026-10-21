@@ -1197,7 +1197,11 @@
       "implementation": [
         "hospitality_suite/public/js/hospitality.js",
         "hospitality_suite/security.py",
-        "hospitality_suite/service.py"
+        "hospitality_suite/service.py",
+        "tools/configure_local_hosts.py",
+        "tools/run_dev.py",
+        "tools/realtime_origin_probe.py",
+        "tools/verify_realtime_origins.cjs"
       ],
       "evidence": [
         "docs/AUDITORIA_PAGES_HABITACIONES.md",
@@ -1205,7 +1209,16 @@
         "docs/evidence/transport-sessions.json",
         "docs/evidence/22-tiempo-real-interrumpido.png",
         "docs/evidence/23-tiempo-real-recuperado.png",
-        "docs/evidence/pages-rooms-audit.json"
+        "docs/evidence/pages-rooms-audit.json",
+        "docs/TIEMPO_REAL_SITIOS_LOCALES.md",
+        "docs/evidence/realtime-origins-hosts.json",
+        "docs/evidence/realtime-origins-hosts-tests.log",
+        "docs/evidence/realtime-origins-transport.json",
+        "docs/evidence/realtime-origins-browser.json",
+        "docs/evidence/realtime-origins-ui-data.json",
+        "docs/evidence/realtime-origins-ux-restored.json",
+        "docs/evidence/realtime-origins-upgrade.json",
+        "docs/evidence/realtime-origins-final-state.json"
       ],
       "remaining": ""
     },

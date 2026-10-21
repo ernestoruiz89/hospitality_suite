@@ -1,0 +1,23 @@
+{
+  "before_sha256": "222b7ee346cd9c73f348ecc368879633be73a43c6c29215dbd46aeeb4a54ede1",
+  "after_sha256": "a1eefe0a0b96658219777f03df1950cc5e4494297d00171ba2062c8d40f10443",
+  "existing_bytes_preserved": true,
+  "second_execution_unchanged": true,
+  "dns_before": {
+    "hospitality.localhost": {
+      "error_code": -2
+    },
+    "hospitality-acceptance.localhost": {
+      "error_code": -2
+    }
+  },
+  "dns_after": {
+    "hospitality.localhost": [
+      "127.0.0.1"
+    ],
+    "hospitality-acceptance.localhost": [
+      "127.0.0.1"
+    ]
+  },
+  "scope": "Only the two development site aliases appended to WSL /etc/hosts; no Frappe/ERPNext core changes"
+}

@@ -6,6 +6,10 @@ En el sitio de pruebas de esta tarea, `tools/run_dev.py` arranca web 8086, Socke
 
 El arranque directo de web incluye `DEV_SERVER=true`, como normalmente hace `bench start`. Sin esa variable, Desk intenta Socket.IO sobre el puerto web esperando un proxy productivo y sus consultas fallan. Se comprobó `window.dev_server=1`, puerto 9001 y conexión autenticada en Page. Después de cambiar Python use `--restart-web`: el proceso de pruebas utiliza `--noreload`. No se alteran archivos del núcleo para resolverlo.
 
+Para los nombres `hospitality.localhost` y `hospitality-acceptance.localhost`, configure también su resolución a `127.0.0.1` dentro de WSL con el comando de `configure_local_hosts.py` del README. El reconocimiento automático de estos nombres por el navegador no basta: el middleware nativo autentica mediante una petición HTTP desde Node al origen del navegador. El helper conserva las líneas existentes, rechaza conflictos y solo añade estos dos alias. WSL puede regenerar hosts al reiniciar; el arranque comprueba esta condición sin cambiar la configuración general de WSL ni el núcleo de Frappe.
+
+Se corrigió y verificó el fallo `ENOTFOUND` con ambos orígenes, cinco conexiones autenticadas, aislamiento y transacciones reales. Las Pages reciben automáticamente los cambios mientras están conectadas. Después de un corte largo que agote los tres reintentos nativos, muestran «Sin tiempo real · pulse Actualizar»: esa acción reconecta y recupera los cambios mediante bootstrap. [Alcance, recorrido y evidencia](TIEMPO_REAL_SITIOS_LOCALES.md). Esta recuperación explícita no se presenta como reconexión automática indefinida.
+
 Es un servidor de desarrollo local. Para un despliegue definitivo use la administración de procesos, proxy, HTTPS y configuración de Bench correspondiente al sistema de destino; no copie este arranque como servicio público de producción.
 
 ## Motor PDF del bench de pruebas
