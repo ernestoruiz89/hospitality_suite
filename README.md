@@ -2,9 +2,11 @@
 
 PMS nativo para modalidades Hotel, Por tiempo y Hotel y por tiempo. Recepción, caja, limpieza y gerencia trabajan desde once Pages de Desk en español; la contabilidad y el inventario permanecen en ERPNext.
 
-Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. App 0.8.3 con validación local de formularios ampliada; el objetivo completo sigue activo. Otras versiones no están acreditadas.
+Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. App 0.8.4 con disponibilidad verde/roja y límites locales de consulta; el objetivo completo sigue activo. Otras versiones no están acreditadas.
 
 El desarrollo continúa: [matriz de requisitos](docs/REQUISITOS.md), [auditoría punto por punto](docs/AUDITORIA_ESPECIFICACION.md), [registro de avance](docs/AVANCE.md) y [arquitectura](docs/ARQUITECTURA.md). No se declara listo para producción mientras existan pendientes obligatorios.
+
+[Disponibilidad visual y límites](docs/DISPONIBILIDAD_VISUAL_Y_LIMITES.md), 0.8.4: tarjetas verdes disponibles y rojas sin disponibilidad, con estado escrito y motivo. Pulsar una disponible conserva habitación/fechas; prueba con una reserva real ficticia y móvil sin desbordamiento. Cantidad/personas inválidas se explican junto al campo antes del parseo y la consulta. **191 JS aprobadas**; la batería nativa de 380 casos de 0.8.2 se conserva como antecedente. S04-16 mantiene revisión del conjunto y dos observaciones de contexto de acciones. **22 entradas sin cierre**, OTA aplazada y F26 pendiente.
 
 [Caja y contabilidad](docs/AUDITORIA_CAJA_CONTABILIDAD.md): conciliación por estancia/turno, cuentas grupales completas y filtros más compactos. 294 pruebas nativas y 80 JS aprobadas. Resultados de esa fase en su auditoría. El PDF habitual de cuenta mantiene la [presentación resumida](docs/CUENTA_RESUMIDA.md).
 

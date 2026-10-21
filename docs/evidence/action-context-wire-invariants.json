@@ -1,0 +1,179 @@
+{
+  "baseline": "211276bcbc037b830480ad6d9eb6c5c8c6002410",
+  "files": [
+    {
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "existing_wire_literals": 335,
+      "unchanged": true,
+      "sha256": "05d55c3ea30de967f747ae8fb94a06000f41db301442dac5e54c9f181a1540db"
+    },
+    {
+      "file": "hospitality_suite/public/js/hospitality_audit.js",
+      "existing_wire_literals": 7,
+      "unchanged": true,
+      "sha256": "e12de6bbe843075ce700ffd3f08d053080d90d4f5145a69e8b4533cee3fa5db1"
+    },
+    {
+      "file": "hospitality_suite/public/js/hospitality_availability.js",
+      "existing_wire_literals": 19,
+      "unchanged": true,
+      "sha256": "21e4f63d4ee598d55c37222471daa03bff3a0486b34eee9ba3335214e0366fad"
+    },
+    {
+      "file": "hospitality_suite/public/js/hospitality_board.js",
+      "existing_wire_literals": 11,
+      "unchanged": true,
+      "sha256": "239aefd3a03aee41eb278b00077d243e017d7b5029b8c92e96b3ad7c3e7c23ff"
+    },
+    {
+      "file": "hospitality_suite/public/js/hospitality_booking_summary.js",
+      "existing_wire_literals": 2,
+      "unchanged": true,
+      "sha256": "213aaf64f9760de98c8b2c4bbfc90227337462a4940c85b52685e1de41ead472"
+    },
+    {
+      "file": "hospitality_suite/public/js/hospitality_catalog.js",
+      "existing_wire_literals": 6,
+      "unchanged": true,
+      "sha256": "043339e834d28fb7560d2ecebfa360d38aed1b6bc62ad93313d696a83768dc85"
+    },
+    {
+      "file": "hospitality_suite/public/js/hospitality_close.js",
+      "existing_wire_literals": 8,
+      "unchanged": true,
+      "sha256": "490db37b8ef14de6b2c1dd83080084b44b9ce477a2f658437d3f7385d4a9d1ec"
+    },
+    {
+      "file": "hospitality_suite/public/js/hospitality_credits.js",
+      "existing_wire_literals": 26,
+      "unchanged": true,
+      "sha256": "1b6367858f40100ffeb1ae70b5f5e4c0579b16bc7f8ca205edf8585a855595a0"
+    },
+    {
+      "file": "hospitality_suite/public/js/hospitality_drafts.js",
+      "existing_wire_literals": 45,
+      "unchanged": true,
+      "sha256": "2855499dced9ec2c2e7b796fa94a7992a983286b4b6dddbaccb212e4d0992431"
+    },
+    {
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "existing_wire_literals": 244,
+      "unchanged": true,
+      "sha256": "86b4623d96c7dce440ab067c9eb7ac22015e2e3f580a07810a459edf6f86b3cb"
+    },
+    {
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "existing_wire_literals": 167,
+      "unchanged": true,
+      "sha256": "f2e288fcd7d948074cad39c1f1bf3879733c06f72fcd1ae35a366c3522d2f53c"
+    },
+    {
+      "file": "hospitality_suite/public/js/hospitality_forms.js",
+      "existing_wire_literals": 21,
+      "unchanged": true,
+      "sha256": "452794487c44ba098a104ff17e4decd7c94038acd5dc67b7ce44a218a78b3b1a"
+    },
+    {
+      "file": "hospitality_suite/public/js/hospitality_guests.js",
+      "existing_wire_literals": 23,
+      "unchanged": true,
+      "sha256": "4921bef6600b5052e350608e00ba045196e1a349b938bf21adb6e10de7e6ef5c"
+    },
+    {
+      "file": "hospitality_suite/public/js/hospitality_housekeeping.js",
+      "existing_wire_literals": 26,
+      "unchanged": true,
+      "sha256": "b9fb92003f9719be1d06a3ff0cc38f7a338fa2302a6e42fe62aa5892ea96335d"
+    },
+    {
+      "file": "hospitality_suite/public/js/hospitality_inventory.js",
+      "existing_wire_literals": 8,
+      "unchanged": true,
+      "sha256": "fd168657ab5c1e56db3ebea81370c454f6bf5c0d7eaba1dfb2778e90253f41f1"
+    },
+    {
+      "file": "hospitality_suite/public/js/hospitality_invoicing.js",
+      "existing_wire_literals": 9,
+      "unchanged": true,
+      "sha256": "c5690fef3712e0afad74f0531ea99fffa4d131fe738f6da8ae9841590e215d9d"
+    },
+    {
+      "file": "hospitality_suite/public/js/hospitality_items.js",
+      "existing_wire_literals": 10,
+      "unchanged": true,
+      "sha256": "bf90f4bf3de31649547699b3267d57f39ea8fae44b598997650404182786059c"
+    },
+    {
+      "file": "hospitality_suite/public/js/hospitality_keyboard.js",
+      "existing_wire_literals": 17,
+      "unchanged": true,
+      "sha256": "deefd5180753582f3a5a1941708b4b64eaa36f15d7b3caa87aa87ff0e5778194"
+    },
+    {
+      "file": "hospitality_suite/public/js/hospitality_navigation.js",
+      "existing_wire_literals": 24,
+      "unchanged": true,
+      "sha256": "5c7a05b1f748d2f9efd90ddb1afc433f0d2d141bd2273747b90d1fef5994eaca"
+    },
+    {
+      "file": "hospitality_suite/public/js/hospitality_policies.js",
+      "existing_wire_literals": 12,
+      "unchanged": true,
+      "sha256": "f028b44003977e37a1eeb5da1c82834a29bb9783c53bbd0ee5f14a0973fbe101"
+    },
+    {
+      "file": "hospitality_suite/public/js/hospitality_pos.js",
+      "existing_wire_literals": 1,
+      "unchanged": true,
+      "sha256": "a886e1b72e933c003ebc08687aadca2d4594d80129ebcf509a1fd65d3d215092"
+    },
+    {
+      "file": "hospitality_suite/public/js/hospitality_privacy.js",
+      "existing_wire_literals": 29,
+      "unchanged": true,
+      "sha256": "760e95c9a0248f70469e33d57955d93aaff77014875ff321308244fe1ba935b2"
+    },
+    {
+      "file": "hospitality_suite/public/js/hospitality_refunds.js",
+      "existing_wire_literals": 9,
+      "unchanged": true,
+      "sha256": "0d88ae6fae168a27e4ded1377af9d3082092c21e20af2efca6e6aa7f2ab41de4"
+    },
+    {
+      "file": "hospitality_suite/public/js/hospitality_reporting.js",
+      "existing_wire_literals": 70,
+      "unchanged": true,
+      "sha256": "cc29263f9e382e5af10780092b0cc690e15589ad7f45a1e093ad19eab1a2f52a"
+    },
+    {
+      "file": "hospitality_suite/public/js/hospitality_room_history.js",
+      "existing_wire_literals": 14,
+      "unchanged": true,
+      "sha256": "6fd482597b92b2ac9d2bc7caca1e0f74b56790e1d68c55456f7fe30ac2801a6b"
+    },
+    {
+      "file": "hospitality_suite/public/js/hospitality_service_accounting.js",
+      "existing_wire_literals": 12,
+      "unchanged": true,
+      "sha256": "955a140218c220f50afa61f87e48cb7cc72cc966a301b2dd26adf34ec433ea5a"
+    },
+    {
+      "file": "hospitality_suite/public/js/hospitality_tariffs.js",
+      "existing_wire_literals": 0,
+      "unchanged": true,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "existing_wire_literals": 219,
+      "unchanged": true,
+      "sha256": "5cc43ae0a5e37e54d99834252b177ab3865fad4bdf90939e5a45cbebe77a2f2f"
+    },
+    {
+      "file": "hospitality_suite/www/hospitality.js",
+      "existing_wire_literals": 3,
+      "unchanged": true,
+      "sha256": "7492b0efd714fc48756ab18043b4e1738cd656ce986f5d40b4d616119b7152ab"
+    }
+  ]
+}

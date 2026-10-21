@@ -254,6 +254,9 @@ window.hospitality_suite = window.hospitality_suite || {};
           }
           // Snapshot everything before awaiting: a control refresh must not
           // overwrite a later control's freshly typed value or an inactive row.
+          // Explicit numeric bounds must see the raw draft before native Int
+          // parsing truncates a fraction or turns a malformed value into zero.
+          if(validate&&this.validate_form_dialog&&!this.validate_form_dialog(d,{onlyNumeric:true,pending}))return;
           for(const value of pending)if(value.doc)value.doc[value.control.df.fieldname]=value.control.get_parsed_value(value.raw);
           for(const {control,raw} of pending)await control.parse_validate_and_set_in_model(raw);
           if(validate&&this.validate_form_dialog&&!this.validate_form_dialog(d))return;

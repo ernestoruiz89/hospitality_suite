@@ -179,3 +179,35 @@ test('each dialog owns its accessible messages and processing state without decl
   a.desk.set_form_status(a.dialog,'error','Sin confirmación');assert.equal(a.root.getAttribute('aria-busy'),'false');assert.equal(a.root.querySelector('.hs-form-status').textContent,'Sin confirmación');
   a.desk.set_form_status(a.dialog,'ready');assert.equal(a.root.querySelector('.hs-form-status').hidden,true);assert.equal(a.body.children.filter(node=>node.className==='hs-form-status').length,1);
 });
+
+test('explicit positive integer bounds reject zero, fractions, negatives and malformed drafts without affecting valid zero amounts',()=>{
+  const f=validationFixture(),field=f.add('quantity',1,{fieldtype:'Int',_hsBounds:{min:1,integer:true}}),amount=f.add('amount',0,{fieldtype:'Currency',reqd:1});
+  for(const value of [0,-1,1.5,'1.5','2abc',Infinity,NaN]){
+    field.set(value);assert.equal(f.desk.validate_form_dialog(f.dialog),false,String(value));assert.match(f.dialog._hsFormErrors[0].message,/número entero de 1 o más/);
+    assert.equal(amount.get_value(),0);
+  }
+  field.set(2);assert.equal(f.desk.validate_form_dialog(f.dialog),true);
+});
+
+test('bounds inspect the saved raw draft before native integer truncation and keep that mistake visible without writing the model',()=>{
+  const f=validationFixture(),field=f.add('people',1,{fieldtype:'Int',_hsBounds:{min:1,integer:true}});field.$input[0].value='1';
+  assert.equal(f.desk.validate_form_dialog(f.dialog,{onlyNumeric:true,pending:[{control:field,raw:'1.5'}]}),false);
+  assert.equal(field.$input[0].value,'1.5');assert.equal(field.get_value(),1);assert.equal(f.focused().field,field);
+  assert.match(f.dialog._hsFormErrors[0].message,/número entero/);
+});
+
+test('bounds use the control native expression/locale evaluator and leave optional blanks, read-only fields and unrelated integers alone',()=>{
+  const f=validationFixture(),field=f.add('quantity',2,{fieldtype:'Int',_hsBounds:{min:1,integer:true}});let received;
+  field.eval_expression=raw=>{received=raw;return raw==='1+2'?3:raw==='2,000'?2000:NaN;};
+  for(const raw of ['1+2','2,000'])assert.equal(f.desk.validate_form_dialog(f.dialog,{onlyNumeric:true,pending:[{control:field,raw}]}),true);
+  assert.equal(received,'2,000');assert.equal(f.dialog._hsValidationAttempted,undefined,'a passing preflight does not clear other validation state');
+  field.set('');assert.equal(f.desk.validate_form_dialog(f.dialog),true);field.set(-1);field.df.read_only=1;
+  f.add('priority',-5,{fieldtype:'Int'});assert.equal(f.desk.validate_form_dialog(f.dialog),true);
+});
+
+test('an explicit maximum and a nonnegative decimal bound keep zero and optional blank values valid',()=>{
+  const f=validationFixture(),field=f.add('percentage',0,{fieldtype:'Float',_hsBounds:{min:0,max:100}});
+  for(const value of [0,1.5,100,'']){field.set(value);assert.equal(f.desk.validate_form_dialog(f.dialog),true,String(value));}
+  field.set(101);assert.equal(f.desk.validate_form_dialog(f.dialog),false);assert.match(f.dialog._hsFormErrors[0].message,/máximo permitido es 100/);
+  field.set(-0.5);assert.equal(f.desk.validate_form_dialog(f.dialog),false);assert.match(f.dialog._hsFormErrors[0].message,/número de 0 o más/);
+});

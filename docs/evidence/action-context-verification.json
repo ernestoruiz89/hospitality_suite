@@ -1,0 +1,185 @@
+{
+  "assembled_at_utc": "2026-10-21T18:12:16.058724+00:00",
+  "version": "0.8.4",
+  "scope": "Availability colors with written states and explicit quantity bounds; not acceptance of every secondary task.",
+  "evidence_assembly_only": true,
+  "ui_replay_by_verifier": false,
+  "database_mutations_by_verifier": false,
+  "javascript": {
+    "tests": 191,
+    "desk": 188,
+    "portal": 3,
+    "failures": 0,
+    "skipped": 0,
+    "new_cases": 8
+  },
+  "native_regression": {
+    "tests": 380,
+    "rerun_in_this_phase": false,
+    "revision": "beac44d",
+    "junit": "keyboard-review-native-tests.xml",
+    "junit_sha256": "699836cd8af70e29367d6f893f76893dd915d1d3fe1a29dc03b80c497d9c156d"
+  },
+  "native_behavior_python_unchanged": true,
+  "version_metadata_only_python_change": true,
+  "native_versions": [
+    {
+      "site": "main",
+      "installed_version": "0.8.4",
+      "version_output_sha256": "bdf58f148b9f9082ef796a52a7991f2e108f8e8ef411239a4e7513ba0335eb88",
+      "migration_output_sha256": "ad2ac4cb4755f03b5a185be15ad9bdb359ccb016099a7b9999822095aa3429e3"
+    },
+    {
+      "site": "acceptance",
+      "installed_version": "0.8.4",
+      "version_output_sha256": "bdf58f148b9f9082ef796a52a7991f2e108f8e8ef411239a4e7513ba0335eb88",
+      "migration_output_sha256": "54b5e0e9d46210f842b712d86e1fc24ef981f80d761fb5da4c870100f2a78224"
+    }
+  ],
+  "core": {
+    "frappe": {
+      "commit": "4515014c87ece6cb20ee91d2cfb121c5cbd1ff4a",
+      "clean": true
+    },
+    "erpnext": {
+      "commit": "5af6561f5aa48104559692fb4fd82f2580e8d338",
+      "clean": true
+    }
+  },
+  "known_open_observations": [
+    "El primer clic durante el refresco posterior a Confirmar reserva no abrió disponibilidad; revisar señalización de acción ocupada.",
+    "Una confirmación nativa visible tras varios diálogos no resolvió por nombre accesible; inspeccionar reutilización de títulos. La salida sí finalizó usando el único diálogo visible."
+  ],
+  "statuses": {
+    "R": 16,
+    "I": 6,
+    "V": 196
+  },
+  "open_requirements": 22,
+  "all_requirements_completed": false,
+  "protected_sites": {
+    "hospitality.localhost": {
+      "tables": 72,
+      "rows": 1246,
+      "private_files": 2
+    },
+    "hospitality-acceptance.localhost": {
+      "tables": 72,
+      "rows": 250,
+      "private_files": 0
+    }
+  },
+  "business_date_preserved": "2026-10-19",
+  "final_services": {
+    "8086": true,
+    "8089": false,
+    "9001": true,
+    "11001": true,
+    "13001": true
+  },
+  "historical_guide_review_verified_at": "beac44d",
+  "source_sha256": {
+    "hospitality_suite/public/js/hospitality.js": "f4814dbe12f83868f5edecde125126da7f91a2ac82423fb8ef705ea5fcd4fad6",
+    "hospitality_suite/public/js/hospitality_forms.js": "224d1fa50caf479f9f08549567d79e6af8e35256e0410425db9634053a078f8c",
+    "hospitality_suite/public/js/hospitality_availability.js": "15e4f74f6bb767fb0629964b1335bb8c1abd697997b78ed94ff2ca09d9f353ab",
+    "hospitality_suite/public/hospitality.bundle.css": "576e08433dfa446c79e19f1f3cd14364292a0b0a462e7b2e268fa1f3bc35b32e",
+    "hospitality_suite/__init__.py": "a1ffc8cb98efeba077c652a632d3e1d2c30df6d56384db559e8a3f47cc85a2ee",
+    "tools/test_forms_ui.cjs": "1e8968dffa9baa602d79b5bac8cad5f2f4bb838d30a7d1e37cb89db543a4f233",
+    "tools/test_desk_transport.cjs": "434b3fa659f90a21043472c505f6eb6fae9f6992fd26e9a5a75865da0f9a4e4c",
+    "tools/test_availability_ui.cjs": "d4dc4ee2ca9ae892e9b96611540d8a70125597451a12712b8821d0fa0dd2b83f",
+    "docs/DISPONIBILIDAD_VISUAL_Y_LIMITES.md": "b729b491c2d3b78d05d3e226a7a6374ac66c86c874c672a700eea3b0ca29c970"
+  },
+  "references": {
+    "action-context-browser.json": "25c5124ba73bf43c5895a1eb79cda85f7af8e7ae7a208292dbd8ccf536e949d2",
+    "action-context-invalid-checkpoint.json": "83c3ee217ba0cd54f6d8efdbdb08a02d1e84d15528e6b6e81cb83fab13736a46",
+    "action-context-items-ui.json": "2bfa935c800535e95e2b26336389049fd82d791103abe34c6c7f74c4df52acaa",
+    "action-context-ux-restored.json": "d64122ce2f087e8c83c8bab5973d424f985f228ef11f9dd44506d25ef5e0f633",
+    "action-context-upgrade.json": "a2403d24a3f4a341b864767ccbeee143bba60f1df4afa7c60427dddac8ee36b5",
+    "action-context-final-state.json": "176401532521962c267204c1b6c21d175d378d6273101dec8fd962c92075efc4",
+    "action-context-js-tests.log": "6fc2beb108a29857663ba108584569a8679dcd9ab63033cca9720e84bbfc0707",
+    "action-context-build.log": "856236f0dc9224faee6887cb5ac1b1a22bbe18704ed6c75eb8708829961408cf",
+    "action-context-language-installed.json": "afaffdb7426aae5395e136f47b50aa4a6e15bfbf2e5b9f4739158a7ad0c699af",
+    "action-context-wire-invariants.json": "3d547bc33b2e26dfe637f2e787d91935e4503d6784f4504085e5603adc2f031b",
+    "action-context-main-handoff.json": "4c0a9c1ee14aeb2e90a5dd5e56aa3943a1fbde5a105c6611fad98564e35d5d2c"
+  },
+  "screenshots": [
+    {
+      "path": "docs/evidence/283-salida-tras-arqueo-confirmacion.jpg",
+      "sha256": "ddab0c1524d61018b36b7e2ba24cfe8d783998c537df0f77df79cacb16ab0b3a",
+      "captured_bytes_unchanged": true,
+      "scope": "Bounds/action context before colors: DALLPPL6"
+    },
+    {
+      "path": "docs/evidence/284-cantidad-cero-validacion.jpg",
+      "sha256": "80b3315b5c462f102bd969c4f19fe2d9925e8e63964bb1c23d85c9de6579b990",
+      "captured_bytes_unchanged": true,
+      "scope": "Bounds/action context before colors: DALLPPL6"
+    },
+    {
+      "path": "docs/evidence/285-cantidad-decimal-validacion.jpg",
+      "sha256": "3803193d10575ce50687f9f7ac0fa4f66c1a7297e565e54c35bb3b37e76eec82",
+      "captured_bytes_unchanged": true,
+      "scope": "Bounds/action context before colors: DALLPPL6"
+    },
+    {
+      "path": "docs/evidence/286-personas-validacion-movil.jpg",
+      "sha256": "76fef39ab8171dc9af1840552cb3160d66c940a83977043f00596aacf17bb429",
+      "captured_bytes_unchanged": true,
+      "scope": "Bounds/action context before colors: DALLPPL6"
+    },
+    {
+      "path": "docs/evidence/287-disponibilidad-cantidades-corregidas.jpg",
+      "sha256": "5107948304d879c83dc92df0fc17e8c668caa7097cb94f292f0082b4c1792998",
+      "captured_bytes_unchanged": true,
+      "scope": "Bounds/action context before colors: DALLPPL6"
+    },
+    {
+      "path": "docs/evidence/288-opciones-disponibles-verdes.jpg",
+      "sha256": "1129190a8dead6eb95aceeb0001188c565f91855043190b7419ef5a693ab8d2b",
+      "captured_bytes_unchanged": true,
+      "scope": "Requested colors: DB4YLAYT"
+    },
+    {
+      "path": "docs/evidence/289-tarjeta-reserva-preseleccionada.jpg",
+      "sha256": "377e82698a2063a94c5f19f0dae25d3d8ed208851f99e04d177658fc1003c318",
+      "captured_bytes_unchanged": true,
+      "scope": "Requested colors: DB4YLAYT"
+    },
+    {
+      "path": "docs/evidence/290-disponibilidad-verde-rojo-escritorio.jpg",
+      "sha256": "8c35461c900e4e66e6dca1a82586eb0d8aedcaef4e9b463df5ed578c058db914",
+      "captured_bytes_unchanged": true,
+      "scope": "Requested colors: DB4YLAYT"
+    },
+    {
+      "path": "docs/evidence/291-disponibilidad-verde-rojo-amplio.jpg",
+      "sha256": "b4115cc3c1ed8a4044d06dac5f267f950a0ea5f1ed80b941239a371c595d2a38",
+      "captured_bytes_unchanged": true,
+      "scope": "Requested colors: DB4YLAYT"
+    },
+    {
+      "path": "docs/evidence/292-disponibilidad-verde-rojo-movil.jpg",
+      "sha256": "b51ae1330de5097fadd4e0ee8d370956b4e9e291118f459ec92021cb60786f4a",
+      "captured_bytes_unchanged": true,
+      "scope": "Requested colors: DB4YLAYT"
+    },
+    {
+      "path": "docs/evidence/293-disponibilidad-colores-demostracion.jpg",
+      "sha256": "7a5733f0c9951afcebafa1fcb1ec6e61039b6a648817463965b06be25ee6e95c",
+      "captured_bytes_unchanged": true,
+      "scope": "Main read-only handoff: DB4YLAYT"
+    }
+  ],
+  "raw_command_outputs": {
+    "js-colors.log": "8bccab35331e2eb55ac5280b617ac8b65611369e2bc68b613ccd515ca3cc49f1",
+    "build-colors.log": "030273a2a12af2c396d7c56e1c8ed97cb1334edbdbe291d7251e233b73a11f9c"
+  },
+  "public_log_normalization": "UTF-8 LF and trailing whitespace removed; original command outputs preserved privately with hashes.",
+  "compiled_javascript": {
+    "name": "hospitality.bundle.DB4YLAYT.js",
+    "bytes": 243403,
+    "sha256": "b36691374b108a395c92c2d9df670efabc7c02f70d7ee6338acd4dc13fbc894e"
+  },
+  "external_providers_activated": false,
+  "final_deployment_rollback_proven": false
+}

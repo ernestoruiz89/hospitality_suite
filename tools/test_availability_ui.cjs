@@ -22,6 +22,7 @@ test('quantity form has five operational inputs, inline results and an explicit 
   assert.equal(dialog.label,'Buscar disponibilidad');
   assert.deepEqual(Array.from(dialog.fields.filter(df=>df.reqd).map(df=>df.fieldname)),['category','quantity','people','starts_at','ends_at']);
   assert.equal(dialog.fields.find(df=>df.fieldname==='category').default,'CAT-ID');
+  for(const name of ['quantity','people'])assert.deepEqual(JSON.parse(JSON.stringify(dialog.fields.find(df=>df.fieldname===name)._hsBounds)),{min:1,integer:true});
   await dialog.submit({...values,_ignored_layout:'unsafe'},dialog);
   assert.equal(sent.method,'availability_search');assert.equal(sent.args.quantity,2);assert.equal(sent.args.property_name,'hotel');assert(!('_ignored_layout' in sent.args));
   assert.match(wrapper.htmlValue,/No alcanza el cupo para 2/);assert.match(wrapper.htmlValue,/Cupo disponible: 1/);assert.match(wrapper.htmlValue,/Ver opciones de habitación \(5\)/);
@@ -72,10 +73,43 @@ test('query failures and wrong response context never appear as zero capacity',a
 });
 test('interval contrast keeps dates and current cleaning distinct, hides internal names and escapes labels even at zero capacity',()=>{
   const {desk}=fixture();const html=desk.availability_result({...answer(),available:0,room_states:[
-    {name:'INTERNAL-ID',room_number:'<H101>',label:'Reservada para el intervalo',cleaning_status:'Clean'},
-    {name:'secret-key',room_number:'H102',label:'<Ocupada>',cleaning_status:'Inspection'},
-    {name:'other-key',room_number:'H103',label:'Sin cupo por categoría',cleaning_status:'Dirty'}]});
+    {name:'INTERNAL-ID',room_number:'<H101>',status:'Reserved',label:'Reservada para el intervalo',cleaning_status:'Clean'},
+    {name:'secret-key',room_number:'H102',status:'Occupied',label:'<Ocupada>',cleaning_status:'Inspection'},
+    {name:'other-key',room_number:'H103',status:'Category Full',label:'Sin cupo por categoría',cleaning_status:'Dirty'}]});
   assert.match(html,/Estado de las habitaciones en estas fechas \(3\)/);assert.match(html,/Limpieza actual: Limpia/);assert.match(html,/Pendiente de inspección/);
   assert.match(html,/Reservada para el intervalo/);assert.match(html,/&lt;Ocupada&gt;/);assert.doesNotMatch(html,/INTERNAL-ID|secret-key|other-key|<H101>/);
   assert.doesNotMatch(html,/data-availability-room/);assert.match(html,/Sin cupo por categoría/);assert.match(html,/debe verificarse antes de la entrada/);
+});
+
+test('all authoritative interval states have written availability and fixed semantic colors independent of current cleaning',()=>{
+  const {desk}=fixture();
+  for(const status of ['Available','Reserved','Occupied','Blocked','Buffer','Inactive','Category Full']){
+    const available=status==='Available';
+    const html=desk.availability_states({room_states:[{room_number:'H101',status,label:'Estado del intervalo',cleaning_status:available?'Dirty':'Clean'}]});
+    assert.match(html,new RegExp('class="hs-room-state '+(available?'is-available':'is-unavailable')+'"'));
+    assert.match(html,available?/> Disponible<\//:/> No disponible<\//);
+    assert.match(html,available?/Limpieza actual: Sucia/:/Limpieza actual: Limpia/);
+    assert.match(html,/aria-hidden="true"/);assert.doesNotMatch(html,/data-availability-room/);
+  }
+});
+
+test('unknown or absent statuses remain neutral and cannot inject style classes or markup',()=>{
+  const {desk}=fixture();
+  for(const status of [undefined,'Future State','Available" onclick="evil']){
+    const html=desk.availability_states({room_states:[{room_number:'<H101>',status,label:'<Estado>',cleaning_status:'Clean'}]});
+    assert.match(html,/class="hs-room-state is-unknown"/);assert.match(html,/> Por revisar<\//);
+    assert.match(html,/&lt;H101&gt;/);assert.match(html,/&lt;Estado&gt;/);assert.doesNotMatch(html,/is-available|is-unavailable|onclick|<Estado>/);
+  }
+});
+
+test('green candidate cards keep reservation actions and explicit labels while insufficient group capacity stays informational',()=>{
+  const {desk}=fixture();const html=desk.availability_result(fits());
+  assert.match(html,/class="btn btn-default hs-available-room is-available" data-availability-room="0"/);
+  assert.match(html,/aria-label="Reservar habitación &lt;H101&gt; · Disponible"/);assert.match(html,/> Disponible<\//);
+  for(const restricted of ['capacity','permission']){
+    desk.allowed=()=>restricted!=='permission';
+    const info=desk.availability_result(restricted==='capacity'?answer():fits());
+    assert.match(info,/class="hs-room-option is-available"/);assert.doesNotMatch(info,/data-availability-room/);
+    if(restricted==='capacity')assert.match(info,/No alcanza el cupo para 2/);
+  }
 });

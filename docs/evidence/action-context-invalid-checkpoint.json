@@ -1,0 +1,38 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "mutations_by_inspector": false,
+  "fixture_origin": "User actions from Pages",
+  "shifts": [
+    {
+      "name": "TUR-2026-00002",
+      "status": "Closed",
+      "cashier": "cashier@hospitality.example.invalid",
+      "opening_amount": 0.0,
+      "counted_amount": 0.0,
+      "difference": 0.0
+    },
+    {
+      "name": "TUR-2026-00001",
+      "status": "Closed",
+      "cashier": "cashier@hospitality.example.invalid",
+      "opening_amount": 0.0,
+      "counted_amount": 0.0,
+      "difference": 0.0
+    }
+  ],
+  "operation_counts": {
+    "HS Booking": 0,
+    "HS Stay": 0,
+    "HS Payment": 0,
+    "HS Charge": 0,
+    "Sales Invoice": 0,
+    "Payment Entry": 0,
+    "Journal Entry": 0
+  },
+  "business_date": "2026-10-19",
+  "availability_http_statuses": [],
+  "logout_http_statuses": [
+    "200"
+  ],
+  "http_500": 0
+}

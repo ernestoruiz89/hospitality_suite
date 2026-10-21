@@ -160,6 +160,21 @@ test('the common dialog validates before native submission and retains one in-fl
   name='';await dialog._hsSubmit({validate:false});assert.equal(requests,3,'partial draft saves can still omit required fields');
 });
 
+test('numeric bounds stop an original decimal draft before native parsing can silently turn it into a valid integer',async()=>{
+  const {desk,context}=fixture();vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../hospitality_suite/public/js/hospitality_forms.js'),'utf8'),context);
+  let capture,raw='1.5',model=1,parsed=0,sent=0,reads=0;
+  const input={value:'1.5'},control={df:{fieldname:'quantity',fieldtype:'Int',label:'Habitaciones',reqd:1,_hsBounds:{min:1,integer:true}},$input:{0:input,is:()=>true},get_value:()=>model,get_input_value:()=>raw,async parse_validate_and_set_in_model(value){parsed++;model=Math.trunc(Number(value));raw=String(model);}};
+  context.frappe.ui={Dialog:class{
+    constructor(){this.fields_dict={quantity:control};this.$wrapper={addClass(){},on(events,selector,callback){if(events.includes('hsNumeric'))capture=callback;}};}
+    get_close_btn(){return{attr(){}};}get_primary_btn(){return{off(){return this;},on(){return this;},prop(){return this;}};}show(){}
+    get_values(){reads++;return{quantity:model};}
+  }};
+  const dialog=await desk.dialog('Consulta',[],async()=>{sent++;});capture({target:input});raw='1';input.value='1'; // native blur already truncated its display
+  await dialog._hsSubmit();assert.equal(parsed,0);assert.equal(reads,0);assert.equal(sent,0);assert.equal(input.value,'1.5');assert.equal(model,1);
+  raw='2';capture({target:input});await dialog._hsSubmit();assert.equal(parsed,1);assert.equal(sent,1);assert.equal(model,2);
+  raw='0';capture({target:input});await dialog._hsSubmit({validate:false});assert.equal(sent,2,'explicit partial drafts keep their bypass');
+});
+
 test('dependency reads keep a just-typed required price and its caret before native blur, including zero',async()=>{
   const {desk,context}=fixture();
   const input={value:'900',type:'text',isConnected:true,selectionStart:1,selectionEnd:2,getClientRects:()=>[{}],setSelectionRange(start,end){this.selectionStart=start;this.selectionEnd=end;}};

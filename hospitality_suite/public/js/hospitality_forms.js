@@ -8,15 +8,29 @@
   const missing=(value,type)=>value==null||typeof value==='string'&&!value.trim()||Array.isArray(value)&&!value.length||type==='Check'&&!value;
   const emptyTypes=new Set(['HTML','Button','Tab Break','Section Break','Column Break']);
   let errorSequence=0;
+  const numericError=(field,raw)=>{
+    const bounds=field.df._hsBounds;if(!bounds||raw==null||typeof raw==='string'&&!raw.trim())return null;
+    let value;
+    try{value=Number(field.eval_expression?field.eval_expression(raw):raw);}catch{value=NaN;}
+    if(!Number.isFinite(value)||bounds.integer&&!Number.isInteger(value)||bounds.min!==undefined&&value<bounds.min){
+      if(bounds.min!==undefined)return bounds.integer?__('Indique un número entero de {0} o más.',[bounds.min]):__('Indique un número de {0} o más.',[bounds.min]);
+      return bounds.integer?__('Indique un número entero.'):__('Indique un número válido.');
+    }
+    return bounds.max!==undefined&&value>bounds.max?__('El valor máximo permitido es {0}.',[bounds.max]):null;
+  };
   // Keep native controls, values and business rules. These messages explain
   // local mistakes beside the field before opening any server confirmation.
-  Desk.prototype.form_error_entries=function(dialog){
+  Desk.prototype.form_error_entries=function(dialog,{onlyNumeric=false,pending=[]}={}){
     const errors=[],fields=Object.values(dialog.fields_dict||{}),add=(field,message)=>errors.push({field,message});
     for(const field of fields){
       if(!editable(field)||emptyTypes.has(field.df.fieldtype))continue;
       const value=field.get_value(),input=field.$input?.[0],label=__(field.df.label||'Dato');
+      const draft=pending.find(edit=>edit.control===field&&!edit.doc);
+      const numeric=numericError(field,draft?draft.raw:field.get_input_value?.()??value);
+      if(numeric)errors.push({field,message:numeric,...(draft?{raw:draft.raw}:{})});
+      if(onlyNumeric)continue;
       if(field.df.reqd&&missing(value,field.df.fieldtype))add(field,field.df.fieldtype==='Check'?__('Marque esta casilla para continuar.'):__('Complete {0}.',[label]));
-      else if(field.df.invalid||input?.validity?.valid===false)add(field,__('Revise el valor de {0}.',[label]));
+      else if(!numeric&&(field.df.invalid||input?.validity?.valid===false))add(field,__('Revise el valor de {0}.',[label]));
       if(field.df.fieldtype!=='Table'||!Array.isArray(value))continue;
       const columns=field.grid?.docfields||field.df.fields||[];
       value.forEach((row,index)=>{
@@ -28,7 +42,7 @@
         }
       });
     }
-    for(const [start,end,inclusive] of [['starts_at','ends_at',false],['from_date','to_date',true],['valid_from','valid_to',true]]){
+    if(!onlyNumeric)for(const [start,end,inclusive] of [['starts_at','ends_at',false],['from_date','to_date',true],['valid_from','valid_to',true]]){
       const a=dialog.fields_dict?.[start],b=dialog.fields_dict?.[end];
       if(!editable(a)||!editable(b)||!a.get_value()||!b.get_value()||errors.some(row=>row.field===a||row.field===b))continue;
       const first=Date.parse(a.get_value()),last=Date.parse(b.get_value());
@@ -54,8 +68,11 @@
     node.textContent=message;node.hidden=!message;node.setAttribute('data-state',kind);
     root.setAttribute('aria-busy',String(kind==='busy'));
   };
-  Desk.prototype.validate_form_dialog=function(dialog,{focus=true}={}){
-    const errors=this.form_error_entries(dialog);dialog._hsFormErrors=errors;dialog._hsValidationAttempted=true;
+  Desk.prototype.validate_form_dialog=function(dialog,{focus=true,onlyNumeric=false,pending=[]}={}){
+    const errors=this.form_error_entries(dialog,{onlyNumeric,pending});
+    if(onlyNumeric&&!errors.length)return true;
+    dialog._hsFormErrors=errors;dialog._hsValidationAttempted=true;
+    for(const error of errors)if(error.raw!==undefined&&error.field.$input?.[0])error.field.$input[0].value=String(error.raw);
     clearInline(dialog);
     const grouped=new Map();
     for(const error of errors){if(!grouped.has(error.field))grouped.set(error.field,[]);grouped.get(error.field).push(error.message);}

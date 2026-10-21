@@ -1,0 +1,28 @@
+Linking /home/frappe/benches/hospitality-bench/apps/frappe/frappe/public to ./assets/frappe
+Linking /home/frappe/benches/hospitality-bench/apps/frappe/node_modules to ./assets/frappe/node_modules
+Linking /home/frappe/benches/hospitality-bench/apps/erpnext/erpnext/public to ./assets/erpnext
+Linking /home/frappe/benches/hospitality-bench/apps/erpnext/node_modules to ./assets/erpnext/node_modules
+Linking /mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/public to ./assets/hospitality_suite
+✔ Application Assets Linked
+
+
+yarn run v1.22.22
+$ node esbuild --production --apps hospitality_suite --run-build-command
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+File                                                        Size
+
+hospitality_suite/dist/js/
+└─ hospitality.bundle.DB4YLAYT.js                           243.40 Kb
+
+hospitality_suite/dist/css/
+└─ hospitality.bundle.7ABEJ5NU.css                          24.16 Kb
+
+hospitality_suite/dist/css-rtl/
+└─ hospitality.bundle.EPJODYQN.css                          24.17 Kb
+
+ DONE  Total Build Time: 590.967ms
+
+Done in 1.11s.
+Compiling translations for hospitality_suite

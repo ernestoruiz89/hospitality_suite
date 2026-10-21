@@ -2,6 +2,10 @@
 
 Actualizado el 21/10/2026. El alcance obligatorio sigue abierto: **196 V, seis I, cero P y 16 R**, de las mismas 218 entradas y huella: **22 sin cierre**. R significa contraste individual pendiente y no función ausente. Los recuentos no son un porcentaje de programación ni una fecha de terminación.
 
+## Ampliación comprobada — 0.8.4
+
+[DISPONIBILIDAD_VISUAL_Y_LIMITES.md](DISPONIBILIDAD_VISUAL_Y_LIMITES.md) conserva 191 JS aprobadas y el recorrido real: verde/rojo por fechas, texto/motivo y una reserva creada desde tarjeta con preselección, escritorio/móvil. Cantidad/personas se validan localmente antes del parseo, con texto conservado y checkpoint sin consultas inválidas. Dos arqueos cero y sus salidas comprobados; la incidencia histórica de salida no se declara resuelta. S04-16 conserva reglas y vistas secundarias, señalización del clic durante refresco y nombre accesible de confirmación tras varios diálogos. Las seis I y 16 R siguen abiertas. Aceptación restaurada; principal, archivos y fecha conservados. OTA aplazada y F26 pendiente.
+
 ## Ampliación comprobada — 0.8.3
 
 [VALIDACION_FORMULARIOS.md](VALIDACION_FORMULARIOS.md) conserva **183 JS aprobadas**, nueve nuevas. Mensajes locales junto a campos/filas, pestaña y foco del primer error, ayudas ARIA preservadas, corrección sin salto, intervalos válidos y bloqueo de envío/reintento/borrador. La prueba móvil encontró y corrigió la pérdida de un nombre recién escrito antes del debounce; la repetición conserva nombre y cero. Administración guarda una categoría por doble clic; Caja abre/cierra en cero sin facturas ni pagos. La tarifa móvil se cancela sin guardar.

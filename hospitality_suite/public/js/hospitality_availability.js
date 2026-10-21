@@ -3,17 +3,24 @@
   const Desk=window.hospitality_suite.Desk;
   const e=value=>frappe.utils.escape_html(String(value??""));
   const field=(fieldname,label,fieldtype="Data",extra={})=>({fieldname,label:__(label),fieldtype,...extra});
+  const unavailable=new Set(["Reserved","Occupied","Blocked","Buffer","Inactive","Category Full"]);
+  const state=status=>status==="Available"?{css:"is-available",text:__("Disponible"),icon:"✓"}:
+    unavailable.has(status)?{css:"is-unavailable",text:__("No disponible"),icon:"×"}:{css:"is-unknown",text:__("Por revisar"),icon:"?"};
+  const badge=status=>`<span class="hs-room-availability"><span aria-hidden="true">${status.icon}</span> ${e(status.text)}</span>`;
   Desk.prototype.availability_states=function(result){
     const rows=result.room_states||[];if(!rows.length)return "";
     const cleaning={Clean:__("Limpia"),Dirty:__("Sucia"),Cleaning:__("En limpieza"),Inspection:__("Pendiente de inspección")};
-    return `<details class="hs-interval-states"><summary>${e(__("Estado de las habitaciones en estas fechas ({0})",[rows.length]))}</summary><p>${e(__("El estado corresponde al intervalo consultado. La limpieza se muestra como está ahora; debe verificarse antes de la entrada."))}</p><ul>${rows.map(row=>`<li><strong>${e(row.room_number)}</strong><span>${e(row.label)}</span><small>${e(__("Limpieza actual"))}: ${e(cleaning[row.cleaning_status]||__("Por revisar"))}</small></li>`).join("")}</ul></details>`;
+    return `<details class="hs-interval-states"><summary>${e(__("Estado de las habitaciones en estas fechas ({0})",[rows.length]))}</summary><p>${e(__("El estado corresponde al intervalo consultado. La limpieza se muestra como está ahora; debe verificarse antes de la entrada."))}</p><ul>${rows.map(row=>{
+      const status=state(row.status);
+      return `<li class="hs-room-state ${status.css}"><div class="hs-room-state-heading"><strong>${e(row.room_number)}</strong>${badge(status)}</div><span>${e(row.label||status.text)}</span><small>${e(__("Limpieza actual"))}: ${e(cleaning[row.cleaning_status]||__("Por revisar"))}</small></li>`;
+    }).join("")}</ul></details>`;
   };
   Desk.prototype.availability_result=function(result){
     const headline=result.enough?
       (result.quantity===1?__("Hay cupo para 1 habitación"):__("Hay cupo para {0} habitaciones",[result.quantity])):
       (result.quantity===1?__("No alcanza el cupo para 1 habitación"):__("No alcanza el cupo para {0} habitaciones",[result.quantity]));
     const selectable=result.enough&&this.allowed("reserve");
-    const rooms=(result.rooms||[]).map((room,index)=>`<li>${selectable?`<button type="button" class="btn btn-default hs-available-room" data-availability-room="${index}" aria-label="${e(__("Reservar habitación {0}",[room.room_number]))}">${e(room.room_number)}</button>`:e(room.room_number)}</li>`).join("");
+    const rooms=(result.rooms||[]).map((room,index)=>`<li class="${selectable?"":"hs-room-option is-available"}">${selectable?`<button type="button" class="btn btn-default hs-available-room is-available" data-availability-room="${index}" aria-label="${e(__("Reservar habitación {0}",[room.room_number]))} · ${e(__("Disponible"))}"><strong>${e(room.room_number)}</strong>${badge(state("Available"))}</button>`:`<strong>${e(room.room_number)}</strong>${badge(state("Available"))}`}</li>`).join("");
     return `<section class="hs-availability-answer ${result.enough?"is-available":"is-unavailable"}"><h3>${e(headline)}</h3><p>${e(result.category_label)} · ${e(__("Personas por habitación: {0}",[result.people]))}</p><p>${e(this.date(result.starts_at))} → ${e(this.date(result.ends_at))}</p><p>${e(__("Cupo disponible: {0} · Habitaciones solicitadas: {1}",[result.available,result.quantity]))}</p>${result.needs_assignment_review?`<p class="hs-availability-warning">${e(__("Hay cupo por categoría, pero no hay suficientes habitaciones libres durante todo el intervalo. Recepción debe revisar la asignación física."))}</p>`:""}${result.available>0&&rooms?`<details><summary>${e(__("Ver opciones de habitación ({0})",[result.physical_available]))}</summary><p>${e(__("Puede elegir entre estas habitaciones, hasta el cupo disponible. La limpieza se verifica antes del ingreso."))}</p><ul>${rooms}</ul></details>`:""}${this.availability_states(result)}<small>${e(__("Esta consulta no reserva habitaciones. El cupo se vuelve a comprobar al confirmar una reserva."))}</small></section>`;
   };
   Desk.prototype.action_availability=async function(){
@@ -21,8 +28,8 @@
     const end=moment(now).add(this.prop.mode==="Motel"?3:24,"hours").format("YYYY-MM-DD HH:mm:ss");
     const categories=this.data.categories,fields=[
       field("category",__("Categoría"),"Select",{reqd:1,_hsDataOptions:true,default:categories.length===1?categories[0].name:"",options:[{value:"",label:__("Seleccione…")},...categories.map(r=>({value:r.name,label:r.category_name}))]}),
-      field("quantity",__("Cantidad de habitaciones"),"Int",{reqd:1,default:1}),
-      field("people",__("Personas por habitación"),"Int",{reqd:1,default:1}),
+      field("quantity",__("Cantidad de habitaciones"),"Int",{reqd:1,default:1,_hsBounds:{min:1,integer:true}}),
+      field("people",__("Personas por habitación"),"Int",{reqd:1,default:1,_hsBounds:{min:1,integer:true}}),
       field("_availability_column","","Column Break"),
       field("starts_at",__("Entrada ({0})",[this.prop.time_zone]),"Data",{reqd:1,_hsDateTime:true,default:now}),
       field("ends_at",__("Salida prevista"),"Data",{reqd:1,_hsDateTime:true,default:end}),

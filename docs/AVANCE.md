@@ -2,6 +2,12 @@
 
 Actualización: 2026-10-21. Objetivo activo; el alcance obligatorio aún tiene verificaciones y componentes pendientes en REQUISITOS.md. No se declara aptitud para producción.
 
+## Ampliación comprobada — 0.8.4
+
+[DISPONIBILIDAD_VISUAL_Y_LIMITES.md](DISPONIBILIDAD_VISUAL_Y_LIMITES.md): tarjetas verdes/rojas con texto y motivo, estado desconocido neutral y limpieza independiente. Recepción confirma una reserva ficticia desde la tarjeta y consulta H101 roja/nueve verdes en escritorio y móvil. Cantidad/personas inválidas se rechazan antes del parseo Int, conservan el texto y reciben mensaje/foco; el checkpoint registra cero consultas antes de corregir. **191 JS aprobadas**; los 380 casos nativos de 0.8.2 siguen como antecedente.
+
+Dos arqueos cero completan salida, sin acreditar resuelta la incidencia histórica. Siguen observaciones de clic durante refresco y nombre accesible de confirmación nativa tras varios diálogos. S04-16 y tareas secundarias continúan I. **196 V, 6 I, 0 P y 16 R: 22 sin cierre**. Aceptación restaurada 71/185 y 72/250, principal 72/1246/dos archivos/fecha 19/10 conservados, ambos sitios 0.8.4 y servicios verificados. OTA aplazada y F26 pendiente.
+
 ## Ampliación comprobada — 0.8.3
 
 [VALIDACION_FORMULARIOS.md](VALIDACION_FORMULARIOS.md) conserva **183 JS aprobadas**, nueve nuevas. Mensajes locales junto a campos/filas, pestaña y foco del primer error, ayudas ARIA preservadas, corrección sin salto, intervalos válidos y bloqueo de envío/reintento/borrador. La prueba móvil encontró y corrigió la pérdida de un nombre recién escrito antes del debounce; la repetición conserva nombre y cero. Administración guarda una categoría por doble clic; Caja abre/cierra en cero sin facturas ni pagos. La tarifa móvil se cancela sin guardar.
