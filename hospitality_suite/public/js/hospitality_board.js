@@ -23,7 +23,7 @@
   };
   Desk.prototype.render_stays=function(el){
     this.boardSelections??={};
-    const selection=this.boardSelections[this.property]??={view:"hosted",date:(this.data.property_now||this.data.server_time).slice(0,10),offset:0};
+    const selection=this.boardSelections[this.property]=this.restore_board_selection?this.restore_board_selection():this.boardSelections[this.property]||{view:"hosted",date:(this.data.property_now||this.data.server_time).slice(0,10),offset:0};
     el.html(`<div class="hs-toolbar hs-board-toolbar">${this.button("walk_in",__("Registrar entrada inmediata"),"","primary")}</div>`+
       `<div class="hs-board-views" role="group" aria-label="${e(__("Vistas de estancias"))}">${Object.entries(labels).map(([view,label])=>`<button type="button" class="btn btn-secondary hs-board-view" data-board-view="${view}" aria-pressed="${view===selection.view}">${e(label)} · …</button>`).join("")}</div>`+
       `<p class="hs-board-period"></p><div class="hs-board-date"><label for="hs-board-date">${e(__("Consultar pendientes hasta"))}</label><input id="hs-board-date" type="date" class="form-control" value="${e(selection.date)}"><small>${e(__("Fecha calendario local. La fecha operativa se conserva."))}</small></div>`+
@@ -34,6 +34,7 @@
     this.loadBoard(el,selection);
   };
   Desk.prototype.loadBoard=async function(el,selection){
+    this.save_preference?.("stay-board",selection);
     const sequence=this.boardSequence=(this.boardSequence||0)+1,property=this.property,query={property_name:property,...selection};
     const results=el.find(".hs-board-results"),pager=el.find(".hs-board-pagination");
     el.find("[data-board-view]").each((_,node)=>$(node).attr("aria-pressed",String(node.dataset.boardView===selection.view)));

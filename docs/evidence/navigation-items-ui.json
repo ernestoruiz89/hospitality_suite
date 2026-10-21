@@ -1,0 +1,17 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "synthetic_api_fixture": true,
+  "home_calendar_date": "2026-10-20",
+  "counts": {
+    "hosted": 1,
+    "arrivals": 2,
+    "departures": 1,
+    "accounts": 1
+  },
+  "unassigned_arrival_included": true,
+  "next_day_excluded": true,
+  "ui_operations_read_only": true,
+  "unchanged_tables": 72,
+  "business_date_unchanged": true,
+  "all_native_tables_unchanged": true
+}

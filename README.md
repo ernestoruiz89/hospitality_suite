@@ -2,7 +2,7 @@
 
 PMS nativo para modalidades Hotel, Por tiempo y Hotel y por tiempo. Recepción, caja, limpieza y gerencia trabajan desde once Pages de Desk en español; la contabilidad y el inventario permanecen en ERPNext.
 
-Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. App 0.7.5. Otras versiones no están acreditadas.
+Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. App 0.7.6. Otras versiones no están acreditadas.
 
 El desarrollo continúa: [matriz de requisitos](docs/REQUISITOS.md), [auditoría punto por punto](docs/AUDITORIA_ESPECIFICACION.md), [registro de avance](docs/AVANCE.md) y [arquitectura](docs/ARQUITECTURA.md). No se declara listo para producción mientras existan pendientes obligatorios.
 
@@ -16,7 +16,9 @@ El desarrollo continúa: [matriz de requisitos](docs/REQUISITOS.md), [auditoría
 
 [Inventario y servicios](docs/AUDITORIA_INVENTARIO_SERVICIOS.md): entregas/devoluciones conciliadas, consultas por ubicación y acciones claras por estado. **337 nativas y 101 JS aprobadas**. Estado de esa fase: **179 V, 14 I y 25 R; 39 entradas sin cierre**.
 
-[Fecha y pendientes del cierre](docs/FECHA_Y_PENDIENTES_CIERRE.md): corte explícito, grupos con entradas pendientes y descripciones con acciones para resolver el cierre. **345 nativas y 106 JS aprobadas**. Estado actual: **181 V, 14 I y 23 R; 37 entradas sin cierre**.
+[Inicio y filtros de Recepción](docs/INICIO_Y_FILTROS.md): llegadas/salidas accionables y filtros combinados que se conservan por usuario y establecimiento. **117 JS y nueve nativas dirigidas aprobadas**; escritorio/móvil y dos roles comprobados. Estado actual: **183 V, 12 I y 23 R; 35 entradas sin cierre**.
+
+[Fecha y pendientes del cierre](docs/FECHA_Y_PENDIENTES_CIERRE.md) conserva la fase 0.7.5: corte explícito, pendientes y acciones para resolver el cierre; su batería completa de 345 nativas se mantiene como evidencia anterior.
 
 ## Instalación en Bench
 

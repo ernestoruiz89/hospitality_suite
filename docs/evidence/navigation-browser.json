@@ -1,0 +1,148 @@
+{
+  "app_version": "0.7.6",
+  "site": "hospitality-acceptance.localhost:8089",
+  "fixture_created_by_api": true,
+  "manager": {
+    "home_arrivals": 2,
+    "home_departures": 1,
+    "clean_vacant_unblocked": 6,
+    "arrival_action_opened_readable_group_reservation": true,
+    "departure_action_opened_H101_account_1500": true,
+    "filters_combined_and_reloaded": true,
+    "hotel_after_other_property": {
+      "count": "Mostrando 1 de 10 habitaciones",
+      "filters": [
+        {
+          "id": "hs-search",
+          "value": "jardin"
+        },
+        {
+          "id": "hs-floor",
+          "value": "2"
+        },
+        {
+          "id": "hs-category",
+          "value": "CAT-00001"
+        },
+        {
+          "id": "hs-state",
+          "value": "vacant"
+        },
+        {
+          "id": "hs-clean-filter",
+          "value": "Clean"
+        }
+      ],
+      "rooms": [
+        "H102"
+      ]
+    },
+    "other_property": {
+      "query": "M101",
+      "floor": "3",
+      "room": "M101"
+    },
+    "empty_result_then_reset_to_ten": true
+  },
+  "mobile_filters": {
+    "filters": [
+      {
+        "height": 44,
+        "label": "Piso"
+      },
+      {
+        "height": 44,
+        "label": "Categoría"
+      },
+      {
+        "height": 44,
+        "label": "Estado de la habitación"
+      },
+      {
+        "height": 44,
+        "label": "Limpieza"
+      }
+    ],
+    "scrollWidth": 390,
+    "visibleRooms": [
+      "H102"
+    ],
+    "width": 390
+  },
+  "mobile_home": {
+    "buttons": [
+      {
+        "height": 44,
+        "text": "Ver llegadas"
+      },
+      {
+        "height": 44,
+        "text": "Ver salidas"
+      }
+    ],
+    "queues": "Por atender\n\nPendientes hasta 20/10/2026 · America/Managua\n\nLlegadas pendientes\n2\nVer llegadas\nSalidas pendientes\n1\nVer salidas\n\nIncluye pendientes de días anteriores y retenciones vigentes. Las llegadas se cuentan por habitación, también las que faltan por asignar.\n\nActualizar pendientes",
+    "scrollWidth": 390,
+    "width": 390
+  },
+  "cleaner_home": {
+    "links": [
+      {
+        "href": "/app/hospitality-housekeeping",
+        "text": "Limpieza pendiente1Habitaciones por prepararAbrir vista →"
+      },
+      {
+        "href": "/app/hospitality-maintenance",
+        "text": "Mantenimiento pendiente1Órdenes por completarAbrir vista →"
+      },
+      {
+        "href": "/app/hospitality-housekeeping",
+        "text": "LimpiezaVer operación →"
+      },
+      {
+        "href": "/app/hospitality-maintenance",
+        "text": "MantenimientoVer operación →"
+      }
+    ],
+    "queues": 0,
+    "text": "Su jornada de un vistazo\n\nRevise los pendientes y elija la siguiente tarea.\n\nHabitaciones ocupadas\n1\nEstancias activas\nLimpias sin ocupación ni bloqueo\n6\nRevise fechas antes de asignar\nLimpieza pendiente\n1\nHabitaciones por preparar\nAbrir vista →\nMantenimiento pendiente\n1\nÓrdenes por completar\nAbrir vista →\nAccesos para su jornada\nLimpieza\nVer operación →\nMantenimiento\nVer operación →"
+  },
+  "keyboard_summary_collapsed": true,
+  "transport": "Socket.IO fallback; no realtime transport claim",
+  "screenshots": [
+    "196",
+    "197",
+    "198",
+    "199",
+    "200",
+    "201",
+    "202",
+    "203",
+    "204",
+    "205"
+  ],
+  "business_commands_from_ui": 0,
+  "logout_sessions": 2,
+  "viewport_reset": true,
+  "browser_errors": [
+    {
+      "level": "error",
+      "message": "Error connecting to socket.io: Unauthorized: TypeError: fetch failed"
+    },
+    {
+      "level": "error",
+      "message": "Error connecting to socket.io: Unauthorized: TypeError: fetch failed"
+    },
+    {
+      "level": "error",
+      "message": "Error connecting to socket.io: Unauthorized: TypeError: fetch failed"
+    },
+    {
+      "level": "error",
+      "message": "Error connecting to socket.io: Unauthorized: TypeError: fetch failed"
+    },
+    {
+      "level": "error",
+      "message": "Error connecting to socket.io: Unauthorized: TypeError: fetch failed"
+    }
+  ]
+}

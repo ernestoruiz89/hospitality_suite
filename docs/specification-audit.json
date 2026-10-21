@@ -686,17 +686,33 @@
       "line": 55,
       "kind": "enumerated",
       "requirement": "A. Inicio: indicadores, alertas, pendientes y accesos rápidos.",
-      "status": "I",
+      "status": "V",
       "implementation": [
         "hospitality_suite/public/js/hospitality.js",
+        "hospitality_suite/public/js/hospitality_navigation.js",
+        "hospitality_suite/public/hospitality.bundle.css",
+        "hospitality_suite/public/js/hospitality_board.js",
+        "hospitality_suite/desk_board.py",
         "hospitality_suite/api.py"
       ],
       "evidence": [
         "docs/AUDITORIA_PAGES_HABITACIONES.md",
         "docs/UX_FORMULARIOS.md",
-        "docs/evidence/pages-rooms-audit.json"
+        "docs/evidence/pages-rooms-audit.json",
+        "docs/INICIO_Y_FILTROS.md",
+        "tools/test_navigation_ui.cjs",
+        "docs/evidence/navigation-js-tests.log",
+        "docs/evidence/navigation-browser.json",
+        "docs/evidence/navigation-items-ui.json",
+        "docs/evidence/navigation-upgrade.json",
+        "docs/evidence/navigation-ux-restored.json",
+        "docs/evidence/navigation-final-state.json",
+        "docs/evidence/navigation-native-tests.xml",
+        "docs/evidence/196-inicio-pendientes.jpg",
+        "docs/evidence/204-inicio-movil.jpg",
+        "docs/evidence/205-inicio-limpieza.jpg"
       ],
-      "remaining": "Inicio muestra indicadores de ocupación, pendientes de limpieza/mantenimiento y accesos. Completar revisión de alertas accionables de llegada/salida y aceptación de Inicio; los indicadores agregados no acreditan por sí solos todas las alertas."
+      "remaining": ""
     },
     {
       "id": "S04-02",
@@ -1002,17 +1018,31 @@
       "line": 71,
       "kind": "enumerated",
       "requirement": "- Búsqueda rápida, filtros por establecimiento/piso/categoría/estado y filtros persistentes cuando resulte útil.",
-      "status": "I",
+      "status": "V",
       "implementation": [
         "hospitality_suite/public/js/hospitality.js",
-        "hospitality_suite/public/js/hospitality_extras.js"
+        "hospitality_suite/public/js/hospitality_navigation.js",
+        "hospitality_suite/public/hospitality.bundle.css"
       ],
       "evidence": [
         "docs/AUDITORIA_PAGES_HABITACIONES.md",
         "docs/evidence/106-cuenta-accion-facturar.png",
-        "docs/evidence/pages-rooms-audit.json"
+        "docs/evidence/pages-rooms-audit.json",
+        "docs/INICIO_Y_FILTROS.md",
+        "tools/test_navigation_ui.cjs",
+        "docs/evidence/navigation-js-tests.log",
+        "docs/evidence/navigation-browser.json",
+        "docs/evidence/navigation-items-ui.json",
+        "docs/evidence/navigation-upgrade.json",
+        "docs/evidence/navigation-ux-restored.json",
+        "docs/evidence/navigation-final-state.json",
+        "docs/evidence/199-filtros-recepcion-recarga.jpg",
+        "docs/evidence/200-filtros-sin-resultados.jpg",
+        "docs/evidence/201-filtros-por-tiempo.jpg",
+        "docs/evidence/202-filtros-movil.jpg",
+        "docs/evidence/203-recepcion-movil-filtrada.jpg"
       ],
-      "remaining": "Búsqueda textual y filtros de limpieza/piso/categoría implementados; establecimiento y filtros se guardan en localStorage por propiedad. Falta ejecutar combinación de filtros, persistencia al recargar/cambiar propiedad y estado sin resultados; no se infiere ese recorrido de una captura."
+      "remaining": ""
     },
     {
       "id": "S04-16",

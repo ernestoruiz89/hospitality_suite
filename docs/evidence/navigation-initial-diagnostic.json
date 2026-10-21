@@ -1,0 +1,28 @@
+{
+  "fixture_initial_tables_equal_original_backup": 72,
+  "fixture_failures": [
+    {
+      "attempt": 1,
+      "reason": "El fixture intentó insertar una tarea de limpieza fuera de las acciones autorizadas. Validación nativa rechazó; finally revierte la transacción.",
+      "correction": "Usar schedule_cleaning, sin omitir la validación."
+    },
+    {
+      "attempt": 2,
+      "reason": "El fixture esperaba dos cuentas; las reservas sin entrada no crean cuenta. Había una cuenta.",
+      "correction": "Exigir una cuenta y conservar la regla de negocio."
+    }
+  ],
+  "fixture_failure_outputs": "Salidas de herramientas conservadas en el hilo; no se inventa otro log.",
+  "native_initial_attempt": {
+    "terminal_exit": 1,
+    "cases_executed": 0,
+    "reason": "Redis aislado 13001 no estaba escuchando; se comprobaron procesos/puertos antes de reiniciar.",
+    "log_sha256": "316d505106ee93711ff7d99e92366d21b998e044b78bc162f92e0fc39ad764d4"
+  },
+  "native_final_attempt": {
+    "terminal_exit": 0,
+    "integration_cases": 9,
+    "log_sha256": "0bfba77e0e968647e187113ce188829fc3c2a048dfbc005ba7a86a6beb634fd7"
+  },
+  "baselines_replaced": false
+}

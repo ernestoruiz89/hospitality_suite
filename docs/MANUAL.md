@@ -1,8 +1,14 @@
 # Manual diario por rol
 
-Aplicación 0.7.5, Frappe 16.52 / ERPNext 16.51. Los recorridos acreditados y las verificaciones pendientes están en REQUISITOS.md.
+Aplicación 0.7.6, Frappe 16.52 / ERPNext 16.51. Los recorridos acreditados y las verificaciones pendientes están en REQUISITOS.md.
 
 Los formularios extensos están organizados en pestañas por tarea. Puede cambiar de sección sin perder lo escrito y guardar desde cualquiera. Los datos adicionales del huésped y las opciones de reserva tienen su propia sección. La acción de guardar o revisar permanece visible; si falta un dato obligatorio, el formulario abre su sección. Al cerrar una revisión de precio o cobro, vuelve al borrador sin registrarlo. Véase UX_FORMULARIOS.md.
+
+## Inicio y búsqueda
+
+Inicio resume ocupación y tareas pendientes. Ver llegadas y Ver salidas abren Estancias con el establecimiento y la fecha calendario local elegidos; pueden incluir atrasadas. La fecha operativa se conserva por separado. Desde la lista puede gestionar la reserva o revisar la cuenta. Los indicadores de limpieza/mantenimiento abren su Page si tiene permiso.
+
+En Recepción escriba el número, piso, categoría o zona; la búsqueda acepta acentos omitidos. Filtros de habitaciones despliega piso, categoría, estado operativo y limpieza. Puede combinarlos, plegar el panel y usar Restablecer filtros para volver a todas. La búsqueda y los filtros se recuerdan para cada usuario/establecimiento en este navegador, incluso al recargar. Una habitación sin ocupación aún requiere comprobar disponibilidad para sus fechas. Véase INICIO_Y_FILTROS.md.
 
 ## Recepción
 

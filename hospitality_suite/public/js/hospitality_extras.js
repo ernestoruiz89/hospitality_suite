@@ -13,18 +13,6 @@
     for(const df of fields){const control=dialog.fields_dict[df.fieldname];if(control?.$input)control.$input.attr("aria-label",__(df.label));}
     return dialog;
   };
-  const reception=Desk.prototype.render_reception;
-  Desk.prototype.render_reception=function(el){
-    reception.call(this,el);
-    const floors=[...new Set(this.data.rooms.map(r=>r.floor).filter(Boolean))].sort();
-    el.find(".hs-toolbar").prepend(`<select class="form-control hs-extra-filter" id="hs-floor" aria-label="${frappe.utils.escape_html(__("Filtrar por piso"))}"><option value="">${frappe.utils.escape_html(__("Todos los pisos"))}</option>${floors.map(x=>`<option>${e(x)}</option>`).join("")}</select><select class="form-control hs-extra-filter" id="hs-category" aria-label="${frappe.utils.escape_html(__("Filtrar por categoría"))}"><option value="">${frappe.utils.escape_html(__("Todas las categorías"))}</option>${this.data.categories.map(c=>`<option value="${e(c.name)}">${e(c.category_name)}</option>`).join("")}</select>`);
-    el.find(".hs-room").each((index,node)=>{node.dataset.floor=this.data.rooms[index].floor||"";node.dataset.category=this.data.rooms[index].category;});
-    for(const key of ["floor","category"]){el.find(`#hs-${key}`).val(localStorage.getItem(`hs-${key}-${this.property}`)||"").on("change",event=>{localStorage.setItem(`hs-${key}-${this.property}`,event.target.value);this.filterRooms();});}
-    this.filterRooms();
-    if(this.allowed("stay")||this.allowed("finance"))this.call("room_balances",{property_name:this.property}).then(values=>{el.find(".hs-room").each((index,node)=>{const stay=this.data.occupied.find(s=>s.room===this.data.rooms[index].name);if(stay&&values[stay.name]!==undefined)$(node).find(".hs-room-info").append(`<small>${values[stay.name].shared?"Saldo compartido de grupo":"Saldo"}: <strong>${e(this.amount(values[stay.name].amount))}</strong></small>`);});}).catch(()=>{});
-  };
-  const filter=Desk.prototype.filterRooms;
-  Desk.prototype.filterRooms=function(){filter.call(this);const floor=this.root.find("#hs-floor").val(),cat=this.root.find("#hs-category").val();this.root.find(".hs-room:visible").each((_,node)=>{if((floor&&node.dataset.floor!==floor)||(cat&&node.dataset.category!==cat))$(node).hide();});this.root.find(".hs-filter-empty").prop("hidden",this.root.find(".hs-room:visible").length>0);};
   const reservations=Desk.prototype.render_reservations;
   Desk.prototype.render_reservations=function(el){
     reservations.call(this,el);

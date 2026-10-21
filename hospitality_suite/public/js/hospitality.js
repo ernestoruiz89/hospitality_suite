@@ -2,6 +2,11 @@
 window.hospitality_suite = window.hospitality_suite || {};
 (() => {
   const esc = (value) => frappe.utils.escape_html(String(value ?? ""));
+  // A denied/full browser store must never prevent operational Pages from opening.
+  const memory=new Map(),unsaved=new Set();
+  const storage={getItem(key){if(unsaved.has(key))return memory.get(key)??null;try{return localStorage.getItem(key)??memory.get(key)??null;}catch{return memory.get(key)??null;}},
+    setItem(key,value){memory.set(key,String(value));try{localStorage.setItem(key,String(value));unsaved.delete(key);}catch{unsaved.add(key);}}};
+  window.hospitality_suite.ui_storage=storage;
   const serverMessage=error=>Boolean(error?._server_messages||error?._error_message||error?.responseJSON?._server_messages||error?.responseJSON?._error_message);
   const labels = {Clean:__("Limpia"), Dirty:__("Sucia"), Cleaning:__("En limpieza"), Inspection:__("Pendiente de inspección"),
     Active:__("Alojado"), "Checked Out":__("Salida registrada"), Confirmed:__("Confirmada"), Hold:__("Retención temporal"),
@@ -42,7 +47,7 @@ window.hospitality_suite = window.hospitality_suite || {};
       this.route = route;
       this.page = frappe.ui.make_app_page({parent:wrapper,title:__("Hospitality Suite"),single_column:true,hide_sidebar:true});
       this.root = $('<div class="hs-app"></div>').appendTo(this.page.main);
-      this.property = localStorage.getItem("hs-property") || "";
+      this.property = storage.getItem("hs-property") || "";
       this.query = "";
       this.busy = false;
       this.load();
@@ -77,7 +82,7 @@ window.hospitality_suite = window.hospitality_suite || {};
         this.data=data;
         this.syncClock(data.server_time,data.system_timezone);
         this.prop=data.properties.find(p=>p.name===this.property);
-        localStorage.setItem("hs-property",this.property);
+        storage.setItem("hs-property",this.property);
         this.render();
       } catch(error) {
         if(sequence!==this.loadSequence)return;
@@ -117,8 +122,8 @@ window.hospitality_suite = window.hospitality_suite || {};
         catch(error) {if(!serverMessage(error))frappe.msgprint({title:__("No se completó la acción"),message:__("Revise los datos y vuelva a intentarlo. No confirme el movimiento hasta recibir respuesta del servidor."),indicator:"red"});}
       });
       this.root.find("#hs-property").on("change",e=>{this.property=e.target.value;this.data=null;this.load();});
-      this.root.find("#hs-search").on("input",e=>{this.query=e.target.value.toLowerCase();this.filterRooms();});
-      this.root.find("#hs-clean-filter").on("change",e=>{localStorage.setItem(`hs-clean-${this.property}`,e.target.value);this.filterRooms();});
+      this.root.find("#hs-search").on("input",e=>{if(this.update_room_filter)this.update_room_filter("query",e.target.value);else{this.query=e.target.value.toLowerCase();this.filterRooms();}});
+      this.root.find("#hs-clean-filter").on("change",e=>{if(this.update_room_filter)this.update_room_filter("clean",e.target.value);else{storage.setItem(`hs-clean-${this.property}`,e.target.value);this.filterRooms();}});
       this.root.find("#hs-booking-history").on("change",e=>{this.bookingHistory=e.target.checked;this.render();});
     }
     render_home(el) {
@@ -126,12 +131,13 @@ window.hospitality_suite = window.hospitality_suite || {};
       el.html(`<section class="hs-welcome"><div><h2>${frappe.utils.escape_html(__("Todo listo para atender"))}</h2><p>${frappe.utils.escape_html(__("Habitaciones, personas y pendientes en un solo lugar."))}</p></div>${this.allowed("reserve")?this.button("reserve",__("Reservar"),"","primary"):""}</section><div class="hs-metrics">${[[__("Habitaciones ocupadas"),occupied,__("Estancias activas")],[__("Limpias sin ocupación"),available,__("Revise el intervalo antes de asignar")],[__("Limpieza pendiente"),this.data.cleaning.filter(t=>t.status!=="Completed").length,__("Habitaciones por preparar")],[__("Mantenimiento"),this.data.maintenance.filter(t=>t.status!=="Completed").length,__("Incidencias abiertas")]].map(([label,value,help])=>`<article><span>${esc(label)}</span><strong>${esc(value)}</strong><small>${esc(__(help))}</small></article>`).join("")}</div><section class="hs-section"><h2>${frappe.utils.escape_html(__("Accesos para su jornada"))}</h2><div class="hs-shortcuts">${this.data.pages.filter(p=>p.route!==this.route).map(p=>`<a href="/app/${esc(p.route)}"><strong>${esc(__(p.title))}</strong><span>${frappe.utils.escape_html(__("Ver operación →"))}</span></a>`).join("")}</div></section>`);
     }
     render_reception(el) {
-      const filter=localStorage.getItem(`hs-clean-${this.property}`)||"";
+      const filter=this.roomFilters?.clean??storage.getItem(`hs-clean-${this.property}`)??"";
       el.html(`<div class="hs-toolbar"><div><label for="hs-search" class="sr-only">${frappe.utils.escape_html(__("Buscar habitación, piso o categoría"))}</label><input id="hs-search" class="form-control" placeholder="${frappe.utils.escape_html(__("Buscar habitación, piso o categoría…"))}" value="${esc(this.query)}"></div><select id="hs-clean-filter" class="form-control" aria-label="${frappe.utils.escape_html(__("Filtrar por limpieza"))}"><option value="">${frappe.utils.escape_html(__("Todos los estados"))}</option>${["Clean","Dirty","Cleaning","Inspection"].map(s=>`<option value="${s}" ${filter===s?"selected":""}>${esc(title(s))}</option>`).join("")}</select>${this.allowed("reserve")?this.button("reserve",__("Reservar"),"","primary")+this.button("walk_in",__("Registrar entrada inmediata")):""}</div>${this.data.occupied.length?`<p class="text-muted hs-countdown-help">${esc(__("Los contadores son orientativos; revise los cargos antes de confirmar."))}</p>`:""}<div class="hs-room-grid">${this.data.rooms.map(room=>{
         const stay=this.data.occupied.find(s=>s.room===room.name), block=this.data.blocks.find(b=>b.room===room.name && b.starts_at<=this.data.server_time && (!b.ends_at || b.ends_at>this.data.server_time));
         const cat=this.data.categories.find(c=>c.name===room.category)?.category_name || "";
         const arrival=(this.data.room_arrivals||[]).find(row=>row.room===room.name);
-        return `<article class="hs-room ${stay?"is-occupied":""} ${block?"is-blocked":""}" data-search="${esc([room.room_number,cat,room.floor,room.zone].join(" ").toLowerCase())}" data-clean="${esc(room.cleaning_status)}"><div class="hs-room-top"><span>${frappe.utils.escape_html(__("HABITACIÓN"))}</span><strong>${esc(room.room_number)}</strong><small>${esc(cat)}${room.floor?" · "+esc(__("Piso"))+" "+esc(room.floor):""}</small></div><div class="hs-room-tags">${this.badge(stay?"Active":block?"Fuera de servicio":"Sin ocupación")}${this.badge(room.cleaning_status)}</div><div class="hs-room-info">${block&&!block.ends_at?`<p>${esc(__("Hasta reapertura autorizada"))}</p>`:this.roomTiming(stay,arrival)}</div><div class="hs-room-actions">${stay?this.button("detail",__("Ver estancia"),stay.name):block&&!block.ends_at?`<small>${esc(__("Reapertura pendiente"))}</small>`:arrival?this.button("booking",__("Ver reserva"),arrival.booking):this.allowed("reserve")?this.button("reserve",__("Reservar"),room.name):""}</div></article>`;
+        const inactive=room.active===0||room.active===false;
+        return `<article class="hs-room ${stay?"is-occupied":""} ${block?"is-blocked":""}" data-room="${esc(room.name)}" data-search="${esc([room.room_number,cat,room.floor,room.zone].join(" ").toLowerCase())}" data-clean="${esc(room.cleaning_status)}"><div class="hs-room-top"><span>${frappe.utils.escape_html(__("HABITACIÓN"))}</span><strong>${esc(room.room_number)}</strong><small>${esc(cat)}${room.floor?" · "+esc(__("Piso"))+" "+esc(room.floor):""}</small></div><div class="hs-room-tags">${this.badge(stay?"Active":inactive?"Inactiva":block?"Fuera de servicio":"Sin ocupación")}${this.badge(room.cleaning_status)}</div><div class="hs-room-info">${block&&!block.ends_at?`<p>${esc(__("Hasta reapertura autorizada"))}</p>`:this.roomTiming(stay,arrival)}</div><div class="hs-room-actions">${stay?this.button("detail",__("Ver estancia"),stay.name):inactive?`<small>${esc(__("Habitación desactivada"))}</small>`:block&&!block.ends_at?`<small>${esc(__("Reapertura pendiente"))}</small>`:arrival?this.button("booking",__("Ver reserva"),arrival.booking):this.allowed("reserve")?this.button("reserve",__("Reservar"),room.name):""}</div></article>`;
       }).join("")}</div><p class="hs-filter-empty" hidden>${frappe.utils.escape_html(__("No se encontraron habitaciones con esos filtros."))}</p>`);
       this.filterRooms();
     }
