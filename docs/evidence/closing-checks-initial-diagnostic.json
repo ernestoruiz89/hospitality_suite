@@ -1,0 +1,28 @@
+{
+  "initial_directed_run_passed": false,
+  "initial_directed_log_sha256": "0100e77e52524da63c1a388c18aea2bd297706968567feb826d87a19c90d5cb7",
+  "product_difference": "Python 3.14 time.fromisoformat accepts 24:00 as 00:00; reject hour 24 explicitly",
+  "directed_fixture_error": "Partial group tried to check in before its reserved calendar date; fixture now respects arrival rules",
+  "first_ui_fixture": {
+    "passed": false,
+    "reason": "Missing explicit group allocation; availability rejected selecting a different reserved line",
+    "raw_local_log_available": false,
+    "original_output_retained_in_thread": true,
+    "transaction_rolled_back": true,
+    "original_tables_and_files_verified_before_retry": true
+  },
+  "first_inspection": {
+    "passed": false,
+    "incorrect_expectation": "Version changes when a new Review is inserted",
+    "actual_changed_tables": [
+      "HS Audit Event",
+      "HS Daily Close",
+      "HS Request"
+    ],
+    "correction": "Expect the three command tables and explicitly require Version unchanged",
+    "original_fixture_state_sha256": "0a7448e51be6fb90a61e47d18adf639f8f8491529af26497b91896c8b331e9bf",
+    "baseline_replaced": false
+  },
+  "final_report": "closing-checks-native-tests.xml",
+  "final_ui_proof": "closing-checks-items-ui.json"
+}

@@ -1,6 +1,6 @@
 # Manual diario por rol
 
-Aplicación 0.7.4, Frappe 16.52 / ERPNext 16.51. Los recorridos acreditados y las verificaciones pendientes están en REQUISITOS.md.
+Aplicación 0.7.5, Frappe 16.52 / ERPNext 16.51. Los recorridos acreditados y las verificaciones pendientes están en REQUISITOS.md.
 
 Los formularios extensos están organizados en pestañas por tarea. Puede cambiar de sección sin perder lo escrito y guardar desde cualquiera. Los datos adicionales del huésped y las opciones de reserva tienen su propia sección. La acción de guardar o revisar permanece visible; si falta un dato obligatorio, el formulario abre su sección. Al cerrar una revisión de precio o cobro, vuelve al borrador sin registrarlo. Véase UX_FORMULARIOS.md.
 
@@ -180,3 +180,11 @@ El historial permite «Ver resumen» sin volver a calcular el día. En Auditorí
 En Consumos e inventario, Actualizar ofrece acciones según el estado del servicio: iniciar preparación, confirmar entrega o cancelar la solicitud. La entrega añade el cargo y descuenta los artículos inventariables una vez. Los servicios sin inventario generan únicamente el cargo. Para devolver, Gerencia/Administración indica el motivo; si ya se facturó, registre primero la nota de crédito correspondiente. Devolver un cargo pendiente revierte también sus descuentos/cortesías pendientes. Un servicio cancelado/devuelto queda visible sin otra acción.
 
 En Existencias por ubicación seleccione el almacén. Disponible, Mínimo, Cantidad a reponer y Reponer corresponden a esa ubicación. Una consulta en curso muestra carga y un error permite reintentar. Los activos muestran Registro de activos, con cantidades/mínimos no aplicables. Los mínimos y la clasificación se configuran desde Configuración → Clasificación y mínimos, usando Item Reorder estándar.
+
+## Resolver pendientes del cierre — 0.7.5
+
+La fecha operativa permanece fija hasta confirmar el cierre. El período va desde la hora de corte de esa fecha hasta el corte del día siguiente, sin incluir ese último instante. Configure la hora en Configuración → Horarios y políticas; use 00:00 para medianoche. Cambiar el corte no avanza la fecha ni cambia resúmenes guardados.
+
+En Gerencia → Preparar cierre del día, los pendientes aparecen primero. Ver pendientes muestra habitación, fecha o importe y explica la tarea. Una reserva grupal puede tener habitaciones todavía por ingresar aunque otra ya esté alojada. Las llegadas/salidas del período siguiente no forman parte de esa lista; una salida incluida que ya pasó se muestra como estancia vencida.
+
+Abra la cuenta o la Page indicada para registrar la entrada/salida, extender, revisar la reserva, facturar o cerrar el turno. Las diferencias de conciliación se corrigen desde el documento de origen mediante su flujo autorizado. Vuelva al cierre y pulse Actualizar revisión; confirmar sigue deshabilitado mientras queden pendientes. Ver resumen en el historial conserva lo que estaba registrado al ejecutar aquella revisión. Solo una revisión activa ofrece actualizar; los eventos históricos no se recalculan.

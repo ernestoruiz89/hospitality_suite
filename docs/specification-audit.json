@@ -2922,10 +2922,22 @@
       "line": 175,
       "kind": "enumerated",
       "requirement": "- Fecha operativa independiente de la fecha del reloj, con corte configurable.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/time.py",
+        "hospitality_suite/setup.py",
+        "hospitality_suite/controllers.py",
+        "hospitality_suite/closing.py",
+        "hospitality_suite/close_checks.py"
+      ],
+      "evidence": [
+        "docs/FECHA_Y_PENDIENTES_CIERRE.md",
+        "hospitality_suite/tests/test_closing_checks.py",
+        "docs/evidence/closing-checks-native-tests.xml",
+        "docs/evidence/closing-checks-items-ui.json",
+        "docs/evidence/closing-checks-browser.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S12-02",
@@ -2934,10 +2946,21 @@
       "line": 176,
       "kind": "enumerated",
       "requirement": "- Detectar llegadas y salidas pendientes, estancias vencidas, cargos sin procesar, caja abierta y diferencias de conciliación.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/close_checks.py",
+        "hospitality_suite/closing.py",
+        "hospitality_suite/reconciliation.py",
+        "hospitality_suite/public/js/hospitality_close.js"
+      ],
+      "evidence": [
+        "docs/FECHA_Y_PENDIENTES_CIERRE.md",
+        "hospitality_suite/tests/test_closing_checks.py",
+        "docs/evidence/closing-checks-native-tests.xml",
+        "docs/evidence/closing-checks-items-ui.json",
+        "docs/evidence/closing-checks-browser.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S12-03",

@@ -1,0 +1,142 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "synthetic_api_fixture": true,
+  "manager_prepared_from_page": true,
+  "operational_date": "2026-10-19",
+  "review": {
+    "confirm_disabled": true,
+    "date_text": true,
+    "pending_groups": [
+      "Llegadas pendientes (2)",
+      "Turnos sin cerrar (1)",
+      "Cargos sin facturar (1)"
+    ]
+  },
+  "arrivals": {
+    "reservation_link": "Ir a Reservas",
+    "rows": [
+      "Habitaciones-noche0",
+      "Horas ocupadas0",
+      "ADR0.00 NIO",
+      "RevPAR0.00 NIO",
+      "Importe de cargos y ventas registrados3000.00NIO",
+      "Neto sin impuestos0.00NIO",
+      "Impuestos0.00NIO",
+      "Total con impuestos0.00NIO",
+      "Notas de crédito, ya restadas del total0.00NIO",
+      "Ajuste de redondeo0.00NIO",
+      "Total exigible con redondeo0.00NIO",
+      "Cobros de facturas0.00NIO",
+      "Anticipos recibidos0.00NIO",
+      "Garantías recibidas0.00NIO",
+      "Devoluciones de cobros y anticipos0.00NIO",
+      "Garantías devueltas0.00NIO",
+      "Cobros POS nativos, netos de vuelto0.00NIO",
+      "Devoluciones POS nativas0.00NIO",
+      "Dinero recibido de clientes, neto de devoluciones0.00NIO",
+      "Garantías aplicadas, sin nuevo ingreso de dinero0.00NIO",
+      "Cargos pendientes de facturar3000.00NIO",
+      "Alojamiento programado, aún sin generar0.00NIO",
+      "Facturas pendientes de cobro, en moneda de la cuenta0.00NIO",
+      "Créditos pendientes a favor de clientes, en moneda de la cuenta0.00NIO",
+      "Anticipos por aplicar, en moneda de la cuenta0.00NIO",
+      "Garantías disponibles, en moneda original0.00NIO",
+      "Habitaciones: H102Entrada prevista: 20/10/2026 05:00 · habitaciones pendientes: 1—",
+      "Habitaciones: H103Entrada prevista: 20/10/2026 05:30 · habitaciones pendientes: 1—"
+    ]
+  },
+  "next_day_room_H104_absent": true,
+  "linked_account_opened": {
+    "room": "H101",
+    "pending": "3,000.00 NIO",
+    "mutations": false
+  },
+  "saved_review": {
+    "refresh_buttons": 0,
+    "title": "Resumen conservado · 2026-10-19"
+  },
+  "mobile_overview": {
+    "grid_width": 334,
+    "modal_width": 374,
+    "pending_buttons": [
+      {
+        "height": 44,
+        "width": 119.90625
+      },
+      {
+        "height": 44,
+        "width": 119.90625
+      },
+      {
+        "height": 44,
+        "width": 119.90625
+      }
+    ],
+    "scroll_width": 390,
+    "width": 390
+  },
+  "initial_mobile_list": {
+    "actions": [
+      {
+        "height": 29,
+        "label": "Anterior",
+        "width": 71.546875
+      },
+      {
+        "height": 29,
+        "label": "Siguiente",
+        "width": 80.40625
+      },
+      {
+        "height": 29,
+        "label": "Ir a Reservas",
+        "width": 101.203125
+      }
+    ],
+    "scroll_width": 390,
+    "width": 390
+  },
+  "final_mobile_list": {
+    "actions": [
+      {
+        "height": 44,
+        "label": "Anterior",
+        "width": 71.546875
+      },
+      {
+        "height": 44,
+        "label": "Siguiente",
+        "width": 80.40625
+      },
+      {
+        "height": 44,
+        "label": "Ir a Reservas",
+        "width": 101.203125
+      }
+    ],
+    "scroll_width": 390,
+    "width": 390,
+    "visible_table_text": "DocumentoQué revisarHabitaciones: H102Entrada prevista: 20/10/2026 05:00 · habitaciones pendientes: 1Habitaciones: H103Entrada prevista: 20/10/2026 05:30 · habitaciones pendientes: 1"
+  },
+  "initial_mobile_screenshot_superseded": "194-cierre-llegadas-movil.jpg",
+  "final_mobile_screenshot": "195-cierre-llegadas-movil-final.jpg",
+  "confirmed_day": false,
+  "console_errors": [
+    {
+      "level": "error",
+      "message": "Error connecting to socket.io: Invalid namespace",
+      "timestamp": "2026-10-21T02:05:18.531Z",
+      "url": "http://localhost:8089/assets/frappe/dist/js/desk.bundle.C3NJ2YK5.js"
+    },
+    {
+      "level": "error",
+      "message": "Error connecting to socket.io: Invalid namespace",
+      "timestamp": "2026-10-21T02:09:56.660Z",
+      "url": "http://localhost:8089/assets/frappe/dist/js/desk.bundle.C3NJ2YK5.js"
+    }
+  ],
+  "realtime_limit": "Temporary acceptance server uses Socket.IO fallback; realtime transport is not certified here.",
+  "sessions_logged_out": 1,
+  "viewport_reset": true,
+  "tab_closed": true
+}

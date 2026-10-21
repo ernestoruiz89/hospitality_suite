@@ -44,7 +44,11 @@ def cutoff_time(value):
         elif isinstance(value,clock):
             result=value
         else:
-            result=clock.fromisoformat(re.sub(r"^(\d):",r"0\1:",str(value)))
+            text=str(value).removeprefix('T')
+            # Python 3.14 accepts ISO 24:00 as 00:00, losing the entered hour.
+            if re.match(r'^\d{2}',text) and int(text[:2])>=24:
+                raise ValueError()
+            result=clock.fromisoformat(re.sub(r"^(\d):",r"0\1:",text))
         if result.tzinfo:
             raise ValueError()
         return result

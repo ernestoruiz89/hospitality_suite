@@ -7,23 +7,8 @@ from hospitality_suite.service import insert, audit, canonical
 
 
 def blockers(prop):
-    from hospitality_suite.reconciliation import differences
-    filters = {"property": prop.name}
-    result = []
-    for dt, extra, label in [
-        ("HS Stay", {"status": "Active", "ends_at": ["<", now_datetime()]}, "Estancias vencidas"),
-        ("HS Booking", {"status": "Confirmed", "starts_at": ["<", now_datetime()]}, "Llegadas pendientes"),
-        ("HS Shift", {"status": ["in", ["Open", "Review"]]}, "Turnos sin cerrar"),
-        ("HS Charge", {"status": "Pending", "business_date": ["<=", prop.business_date]}, "Cargos sin facturar"),
-        ("HS Charge", {"status": "Scheduled", "service_date": ["<=", prop.business_date]}, "Cargos nocturnos sin generar"),
-    ]:
-        names = current_all(dt, filters={**filters, **extra}, pluck="name")
-        if names:
-            result.append(dict(type=label, documents=names))
-    mismatches=differences(prop)
-    if mismatches:
-        result.append(dict(type="Diferencias entre PMS y ERPNext",documents=[r["source"] for r in mismatches]))
-    return result
+    from hospitality_suite.close_checks import blockers as collect
+    return collect(prop)
 
 
 def daily_close(prop, data):
@@ -43,6 +28,8 @@ def daily_close(prop, data):
         generate(prop)
     problems = blockers(prop)
     captured=summary(prop)
+    from hospitality_suite.close_checks import period_labels
+    captured['close_review']=period_labels(prop)
     captured['presentation']=dict(property_name=prop.property_name,time_zone=prop.time_zone,reason=reason or '')
     from hospitality_suite.close_financials import snapshot
     captured["financial"]=snapshot(prop,captured)

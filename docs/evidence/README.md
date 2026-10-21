@@ -1,6 +1,6 @@
 # Evidencia de pruebas
 
-Índice acumulado de evidencia histórica y actual. Versión de aplicación vigente: 0.7.4; Frappe 16.52.0 y ERPNext 16.51.1, en un bench separado de WSL Ubuntu 24.04. Sitios ficticios: hospitality.localhost, hospitality-clean.localhost, hospitality-restore.localhost y hospitality-acceptance.localhost. No hay datos ni operaciones de producción.
+Índice acumulado de evidencia histórica y actual. Versión de aplicación vigente: 0.7.5; Frappe 16.52.0 y ERPNext 16.51.1, en un bench separado de WSL Ubuntu 24.04. Sitios ficticios: hospitality.localhost, hospitality-clean.localhost, hospitality-restore.localhost y hospitality-acceptance.localhost. No hay datos ni operaciones de producción.
 
 La batería vigente está en board-native-tests.log/xml: **229 aprobadas** (215 integración y catorce puras), y board-js-tests.log: **45 regresiones JavaScript** (43 Desk y dos portal). ESTANCIAS_Y_LLEGADAS.md delimita el nuevo recorrido con recepcionista y sus fixtures. Los resultados menores que siguen pertenecen a fases anteriores; no representan otra ejecución ni recorridos adicionales.
 
@@ -379,3 +379,11 @@ La revisión final de 0.7.1 añadió rechazo de contexto ajeno en limpieza/mante
 - `inventory-audit-items-ui.json`: estados de Page, salida estándar anulada al devolver, cargo revertido, stock 98/2 y 62 tablas sin cambios. La estancia, traslado inicial y solicitud proceden del fixture API. No es otra compra/pago desde Page; sus recorridos históricos siguen separados.
 - `inventory-audit-upgrade.json`, `inventory-audit-ux-restored.json`, `inventory-audit-final-state.json` y `inventory-audit-source.json`: conservación de datos/archivos, restauración, servicios y revisión estática actual. Sin HRMS instalado, cambios de esquema ni PDF nuevo.
 - `../AUDITORIA_INVENTARIO_SERVICIOS.md`: nueve R→V; 179 V, 14 I, 25 R; 39 sin cierre. F26 activo y OTA aplazada.
+
+## Fecha y pendientes del cierre — 0.7.5
+
+- `closing-checks-native-tests.log/xml`: 345 aprobadas, 331 integración/catorce puras; ocho nuevas. `closing-checks-js-tests.log`: 106 aprobadas, cinco nuevas. `closing-checks-initial-diagnostic.json` distingue el comportamiento de hora 24 y los errores de preparación del fixture, con fuentes locales por SHA.
+- Capturas 188 en adelante y `closing-checks-browser.json`: revisión de Gerencia, fecha/corte, pendientes legibles, cuenta vinculada e historial guardado en escritorio/móvil. No confirma el cierre ni acredita transporte Socket.IO.
+- `closing-checks-items-ui.json`: reserva parcial H102/llegada H103 incluidas, H104 del siguiente período excluida, Review guardado, día sin avance, 69 tablas y todas las nativas intactas tras las lecturas/preparación. Las reservas/estancia/turno iniciales son fixture API.
+- `closing-checks-upgrade.json`, `closing-checks-ux-restored.json`, `closing-checks-final-state.json` y `closing-checks-source.json`: restauración original, igualdad de datos/archivos, servicios y manifiesto actual. Sin esquema/PDF nuevo ni sustitución del ensayo final F26.
+- `../FECHA_Y_PENDIENTES_CIERRE.md`: S12-01/02 R→V, sección 12 completa en contraste individual; 181 V, 14 I, 23 R; 37 sin cierre. OTA aplazada y objetivo activo.

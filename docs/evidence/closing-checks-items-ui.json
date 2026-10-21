@@ -1,0 +1,27 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "synthetic_api_fixture": true,
+  "manager_prepared_and_consulted_page": true,
+  "not_confirmed": true,
+  "business_date": "2026-10-19",
+  "pending_types": [
+    "Llegadas pendientes",
+    "Turnos sin cerrar",
+    "Cargos sin facturar"
+  ],
+  "pending_arrival_rooms": [
+    "H102",
+    "H103"
+  ],
+  "next_day_arrival_excluded": true,
+  "readable_frozen_items": true,
+  "close_status": "Review",
+  "unchanged_tables": 69,
+  "changed_tables": [
+    "HS Audit Event",
+    "HS Daily Close",
+    "HS Request"
+  ],
+  "all_native_tables_unchanged": true,
+  "operational_date_unchanged": true
+}
