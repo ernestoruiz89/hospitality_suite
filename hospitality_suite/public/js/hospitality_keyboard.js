@@ -26,6 +26,12 @@
   };
   const prepare=root=>{
     if(!root||root.classList?.contains('modal')&&!states.has(root))return;
+    if(root.classList?.contains('hs-app'))for(const button of root.closest('.page-container')?.querySelectorAll('.page-head .sidebar-toggle-btn')||[]){
+      if(!button.getAttribute('aria-label'))button.setAttribute('aria-label',__('Menú de navegación'));
+      button.classList.add('hs-keyboard-menu');
+    }
+    // Native field-name copy tooltips are developer hints, not spoken labels.
+    for(const tip of root.querySelectorAll('.tooltip-content'))tip.setAttribute('aria-hidden','true');
     for(const wrap of root.querySelectorAll('.hs-table-wrap')){
       if(wrap.scrollWidth>wrap.clientWidth+1&&!wrap.hasAttribute('tabindex')){wrap.tabIndex=0;wrap.setAttribute('role','region');wrap.setAttribute('aria-label',__('Tabla de resultados'));wrap.setAttribute('data-hs-scroll-region','true');}
       else if(wrap.getAttribute('data-hs-scroll-region')&&wrap.scrollWidth<=wrap.clientWidth+1)for(const key of ['tabindex','role','aria-label','data-hs-scroll-region'])wrap.removeAttribute(key);
@@ -96,7 +102,10 @@
   const register=modal=>{
     if(!modal?.classList?.contains('modal'))return;
     const root=scope(),parent=stack.at(-1);if(!root&&!states.has(parent))return;
-    const active=document.activeElement,opener=visible(active)&&!modal.contains(active)?active:states.get(parent)?.last||rootFocus.get(root);
+    const active=document.activeElement;
+    // Native construction can blur the trigger onto body before registration.
+    // Only an element in the Page or parent dialog can be a usable opener.
+    const opener=visible(active)&&!modal.contains(active)&&(root?.contains(active)||parent?.contains(active))?active:states.get(parent)?.last||rootFocus.get(root);
     const state={origin:describe(opener,root||states.get(parent)?.origin.root),last:null};states.set(modal,state);stack.push(modal);
     modal.classList.add('hs-keyboard-dialog');modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');heading(modal);
   };
@@ -108,6 +117,12 @@
   const keydown=event=>{
     const modal=top();if(!states.has(modal)||event.altKey||event.ctrlKey||event.metaKey)return;
     prepare(modal);const active=document.activeElement;
+    // Native grid row navigation also intercepts Select arrows. Let the
+    // browser choose an option without moving to another row. Link inputs
+    // retain Frappe's autocomplete keys.
+    if(active?.tagName==='SELECT'&&active.closest('.hs-keyboard-grid')&&['ArrowUp','ArrowDown'].includes(event.key)){
+      event.stopPropagation();return;
+    }
     if(event.key==='Tab'){
       // Native inline-grid Tab adds a new row after its last input. Keep
       // browser focus order and blur validation, requiring an explicit action
@@ -117,6 +132,12 @@
       if(!list.length){event.preventDefault();focus(heading(modal));}
       else if(!modal.contains(active)||index===-1&&event.shiftKey||index===0&&event.shiftKey||index===list.length-1&&!event.shiftKey){event.preventDefault();focus(event.shiftKey?list.at(-1):list[0]);}
       return;
+    }
+    // Frappe's global Enter shortcut clicks the primary confirmation action.
+    // A focused native button/link already has its own browser activation;
+    // prevent a second click (and keep Enter on No from also choosing Yes).
+    if(event.key==='Enter'&&(active?.tagName==='BUTTON'||active?.tagName==='A'&&active.hasAttribute('href'))&&modal.contains(active)){
+      event.stopPropagation();if(event.repeat)event.preventDefault();return;
     }
     if(active?.getAttribute('data-hs-grid-action')&&['Enter',' '].includes(event.key)&&!event.repeat){
       const action=active.getAttribute('data-hs-grid-action');event.preventDefault();event.stopPropagation();active.click();prepare(modal);
@@ -133,7 +154,12 @@
     const target=tabs[event.key==='Home'?0:event.key==='End'?tabs.length-1:(index+(event.key===next?1:-1)+tabs.length)%tabs.length];
     if(target){event.preventDefault();target.click();syncTabs(modal);focus(target);}
   };
-  const hidden=modal=>{const state=states.get(modal);if(state){const index=stack.indexOf(modal);if(index>=0)stack.splice(index,1);modal.classList.remove('hs-keyboard-dialog');states.delete(modal);restore(state);}};
+  const hidden=modal=>{const state=states.get(modal);if(state){
+    // Reports open their result before hiding the filters. If that parent
+    // closes first, the surviving child must return to the parent's opener.
+    for(const child of stack){const next=states.get(child);if(child!==modal&&next?.origin.node&&modal.contains(next.origin.node))next.origin=state.origin;}
+    const index=stack.indexOf(modal);if(index>=0)stack.splice(index,1);modal.classList.remove('hs-keyboard-dialog');states.delete(modal);restore(state);
+  }};
   ns.keyboard={visible,nodes,describe,find,focus,prepare,syncTabs,register,shown,keydown,restore,hidden,states};
   const attach=dialog=>{
     const modal=dialog.$wrapper?.[0];if(!states.has(modal))register(modal);

@@ -2,7 +2,7 @@
 
 PMS nativo para modalidades Hotel, Por tiempo y Hotel y por tiempo. Recepción, caja, limpieza y gerencia trabajan desde once Pages de Desk en español; la contabilidad y el inventario permanecen en ERPNext.
 
-Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. App 0.8.2 en validación; última fase cerrada 0.8.1. Otras versiones no están acreditadas.
+Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. App 0.8.2 con la fase de teclado y guías comprobada; el objetivo completo sigue activo. Otras versiones no están acreditadas.
 
 El desarrollo continúa: [matriz de requisitos](docs/REQUISITOS.md), [auditoría punto por punto](docs/AUDITORIA_ESPECIFICACION.md), [registro de avance](docs/AVANCE.md) y [arquitectura](docs/ARQUITECTURA.md). No se declara listo para producción mientras existan pendientes obligatorios.
 
@@ -20,7 +20,7 @@ El desarrollo continúa: [matriz de requisitos](docs/REQUISITOS.md), [auditoría
 
 [Idioma y etiquetas](docs/IDIOMA_Y_ETIQUETAS.md): campos y enlaces en español, estados por contexto y catálogo con nombres claros. **379 nativas y 142 JS aprobadas** en 0.8.1. Estado al cerrar esa fase: **189 V, 7 I y 22 R; 29 entradas sin cierre**. Datos originales conservados, con Version de metadatos y caché nativa documentadas.
 
-[Teclado y foco](docs/TECLADO_Y_FOCO.md) conserva la revisión en curso: **379 nativas y 162 JS aprobadas**, con aceptación visual actual pendiente. La [revisión de entregables](docs/ENTREGABLES_Y_REVISION.md) acredita los [diagramas completos](docs/MODELO_ESTADOS_Y_FLUJOS.md) y la matriz original: **191 V, 7 I y 20 R; 27 entradas sin cierre**. S04-17 permanece I.
+[Teclado y foco](docs/TECLADO_Y_FOCO.md) acredita S04-17: nueve roles, escritorio/móvil y portal, con **380 nativas y 174 JS aprobadas**. Precio conservado, tablas sin filas implícitas, checklist y retorno de foco; Enter respeta No/Sí y el portal anuncia su resultado. La [revisión de entregables](docs/ENTREGABLES_Y_REVISION.md) acredita también las guías S18-06 a S18-09, además de diagramas y matriz: **196 V, 6 I y 16 R; 22 entradas sin cierre**. Las tareas/formularios secundarios, contratos y recuperación final mantienen su verificación propia.
 
 [Historial de habitaciones](docs/HISTORIAL_HABITACIONES.md) conserva la fase 0.7.8: operaciones, cambios de datos y períodos por rango; valores plegados, paginación y permisos por establecimiento. **365 nativas y 136 JS aprobadas** en esa fase. Recepción comprueba cancelación, limpieza, cambio de habitación, bloqueos, tres páginas y móvil.
 
@@ -47,7 +47,7 @@ Se requieren Redis, MariaDB, worker, scheduler y Socket.IO de Frappe. Los PDF us
 
 ## Sitio de WSL creado para esta tarea
 
-Bench separado: `/home/frappe/benches/hospitality-bench`. Sitio operativo de demostración: [Recepción local](http://localhost:8086/app/hospitality-reception). Segundo sitio de instalación limpia: `hospitality-clean.localhost`.
+Bench separado: `/home/frappe/benches/hospitality-bench`. Sitio operativo de demostración: [Recepción local](http://localhost:8086/app/hospitality-reception). La batería usa `hospitality-acceptance.localhost`, restaurado a su base sin operaciones antes de ejecutarla. El sitio histórico `hospitality-clean.localhost` está en cuarentena con su respaldo de diagnóstico; no se reutiliza para estas pruebas.
 
 Desde PowerShell:
 
@@ -117,7 +117,9 @@ bench --site hospitality-acceptance.localhost set-config hospitality_integration
 bench --site hospitality-acceptance.localhost run-tests --app hospitality_suite
 ```
 
-`before_tests` exige Redis disponible y un sitio designado sin operaciones; después carga solo la base de prueba. Cada caso revierte sus movimientos. El ejemplo usa el sitio de aceptación instalado en WSL; en otro entorno cree e instale primero un sitio desechable equivalente. Conserve un respaldo inicial para recuperar una ejecución interrumpida. Última batería conjunta: **379 aprobadas** en hospitality-acceptance.localhost, 365 de integración y 14 puras, sobre 0.8.2. Las seis de idioma cubren alias, metadatos, contextos y extracción; IDIOMA_Y_ETIQUETAS.md delimita aquella revisión. TECLADO_Y_FOCO.md conserva el orden de ejecución de esta fase y su aceptación pendiente. Las ocho de 0.8.0 y ACEPTACION_Y_DEMOSTRACION.md conservan la aceptación operativa de Pages. Se conservan los seis escenarios adicionales con el worker real de TRABAJOS_Y_REINTENTOS.md como evidencia de esa fase.
+Para conservar JUnit, sustituya la última línea por `bench --site hospitality-acceptance.localhost run-tests --app hospitality_suite --junit-xml-output /ruta/absoluta/pruebas.xml`. En la versión probada Frappe añade un documento XML por cohorte; conserve la salida original y genere un archivo único para CI con `python3 tools/normalize_junit.py /ruta/pruebas.xml /ruta/pruebas-normalizadas.xml` desde el repositorio. El normalizador cuenta los casos, errores y fallos sin cambiar sus resultados. Un final de proceso correcto no sustituye revisar esos resultados.
+
+`before_tests` exige Redis disponible y un sitio designado sin operaciones; después carga solo la base de prueba. Cada caso revierte sus movimientos. El ejemplo usa el sitio de aceptación instalado en WSL; en otro entorno cree e instale primero un sitio desechable equivalente. Conserve un respaldo inicial para recuperar una ejecución interrumpida. Última batería conjunta: **380 aprobadas** en hospitality-acceptance.localhost, 366 de integración y 14 puras, sobre 0.8.2. Las seis de idioma cubren alias, metadatos, contextos y extracción; IDIOMA_Y_ETIQUETAS.md delimita aquella revisión. TECLADO_Y_FOCO.md conserva su recorrido real y la restauración final; el caso añadido verifica etiquetas de mantenimiento y valores históricos intactos. Las ocho de 0.8.0 y ACEPTACION_Y_DEMOSTRACION.md conservan su aceptación operativa anterior. Los seis escenarios con el worker real de TRABAJOS_Y_REINTENTOS.md son evidencia de esa fase.
 
 La fase histórica 0.7.1 acredita **307 pruebas nativas y 85 JS**, con trece casos nuevos de limpieza, bloqueos y contexto de establecimiento. La matriz registra 157 V, 14 I, 0 P y 47 R; cada entrada conserva su evidencia y límites. Las auditorías anteriores mantienen los recorridos históricos. El sitio limpio anterior conserva respaldo de diagnóstico, y la demostración principal conserva operaciones UX: ninguno sustituye el sitio de aceptación. Los dos casos de concurrencia usan conexiones y commits reales; se ejecutan aparte sobre aceptación con respaldo y restauración posterior:
 
@@ -126,7 +128,7 @@ bench --site hospitality-acceptance.localhost execute hospitality_suite.tests.co
 bench --site hospitality-acceptance.localhost execute hospitality_suite.tests.concurrency.verify_category
 ```
 
-Las pruebas JS sin servidor cubren transporte, edición numérica, catálogo, traducción/presentación, políticas, cierre, servicios, POS, devoluciones, notas de crédito, formularios, foco/teclado, historial y portal: **160 de Desk y dos del portal**. Ejecute las 162 con:
+Las pruebas JS sin servidor cubren transporte, edición numérica, catálogo, traducción/presentación, políticas, cierre, servicios, POS, devoluciones, notas de crédito, formularios, foco/teclado, historial y portal: **171 de Desk y tres del portal**. Ejecute las 174 con:
 
 ```sh
 node tools/run_ui_tests.cjs

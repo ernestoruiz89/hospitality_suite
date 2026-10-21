@@ -73,6 +73,33 @@ test('a read-only review starts on its title and never activates confirmation by
   assert.equal(f.document.activeElement,m.children[0]);assert.equal(confirm.clicks,0);assert.equal(confirm.tabIndex,0);
 });
 
+test('Enter on No activates only No and cannot also reach the native global confirmation shortcut',()=>{
+  const f=fixture(),m=f.modal(),yes=m.append(f.el('button')),no=m.append(f.el('button')),link=m.append(f.el('a',{href:'/receipt'}));f.enter(m);
+  for(const active of [no,yes,link]){
+    active.focus();const event=f.key('Enter');
+    if(!event.stopped)yes.click(); // native global confirmation shortcut
+    if(!event.prevented)active.click(); // browser default activation
+    assert.equal(event.stopped,true);assert.equal(active.clicks,1);
+  }
+  assert.equal(yes.clicks,1);no.focus();assert.equal(f.key('Enter',{repeat:true}).prevented,true);
+  const input=m.append(f.el('input'));input.focus();assert.equal(f.key('Enter').stopped,undefined,'input submission remains native');
+});
+
+test('a result dialog returns to the Page action when its filter parent closes first',()=>{
+  const f=fixture(),opener=f.root.append(f.el('button',{'data-act':'report','data-id':'production'}));opener.focus();
+  const filters=f.modal(),parent=f.enter(filters),query=filters.append(f.el('button'));query.focus();
+  const results=f.modal(),child=f.enter(results);f.leave(filters,parent);
+  assert.equal(f.api.states.has(results),true);assert.equal(f.document.activeElement,results.children[0]);
+  f.leave(results,child);assert.equal(f.document.activeElement,opener);
+});
+
+test('native construction blurring onto body preserves the last Page action and nested parent trigger',()=>{
+  const f=fixture(),opener=f.root.append(f.el('button',{'data-act':'report','data-id':'production'}));opener.focus();
+  const filters=f.modal();f.document.activeElement=f.document.body;const parent=f.enter(filters),query=filters.append(f.el('button'));query.focus();
+  const results=f.modal();f.document.activeElement=f.document.body;const child=f.enter(results);f.leave(filters,parent);f.leave(results,child);
+  assert.equal(f.document.activeElement,opener);
+});
+
 test('an error field remains pending while a native message is opening and receives focus when that message closes',()=>{
   const f=fixture(),m=f.modal(),input=m.append(f.el('input'));const parent=f.enter(m);input.focus();
   const message=f.modal();f.api.register(message); // before Frappe pushes it at shown.bs.modal
@@ -156,8 +183,21 @@ test('Tab in an inline grid preserves browser navigation and blur while stopping
   input.focus();const forward=f.key('Tab'),backward=f.key('Tab',{shiftKey:true});
   assert.equal(forward.stopped,true);assert.equal(backward.stopped,true);
   assert.equal(forward.prevented,undefined);assert.equal(backward.prevented,undefined);
-  assert.equal(f.key('ArrowDown').stopped,undefined,'native Link and Select arrows stay native');
+  assert.equal(f.key('ArrowDown').stopped,undefined,'native Link autocomplete arrows stay native');
   save.focus();assert.equal(f.key('Tab',{shiftKey:true}).stopped,undefined,'other form controls keep native handlers');
+});
+
+test('Select arrows keep native option selection without triggering grid row navigation',()=>{
+  const f=fixture(),m=f.modal(),gridRoot=m.append(f.el('div')),select=gridRoot.append(f.el('select')),outside=m.append(f.el('select'));
+  const d=f.enter(m);d.fields_dict={lines:{grid:{wrapper:[gridRoot],is_editable:()=>true,grid_rows:[]}}};f.api.prepare(m);
+  select.focus();
+  for(const key of ['ArrowDown','ArrowUp']){
+    const event=f.key(key);assert.equal(event.stopped,true);assert.equal(event.prevented,undefined,'browser default still selects the option');
+    assert.equal(f.document.activeElement,select);
+  }
+  assert.equal(f.key('ArrowDown',{ctrlKey:true}).stopped,undefined,'modified shortcuts stay native');
+  assert.equal(f.key('ArrowRight').stopped,undefined);
+  outside.focus();assert.equal(f.key('ArrowDown').stopped,undefined,'other Select controls stay native');
 });
 
 test('a Select grid cell shows its option label in text and its accessible editing name while preserving the stored code',()=>{
@@ -206,4 +246,20 @@ test('focusing a native grid outside operational Pages does not prepare or chang
   assert.equal(f.api.states.has(m),false);assert.equal(heading.tabIndex,0);
   assert.equal(cell.getAttribute('role'),null);assert.equal(gridRoot.classList.contains('hs-keyboard-grid'),false);
   assert.equal(f.key('Tab').stopped,undefined);
+});
+
+test('operational field-name tooltips are excluded from spoken labels while unrelated dialogs stay unchanged',()=>{
+  const f=fixture(),m=f.modal(),tip=m.append(f.el('span',{class:'tooltip-content'}));tip.textContent='amount';f.enter(m);f.api.prepare(m);
+  assert.equal(tip.getAttribute('aria-hidden'),'true');assert.equal(tip.textContent,'amount');
+  const other=f.modal(),native=other.append(f.el('span',{class:'tooltip-content'}));f.api.prepare(other);
+  assert.equal(native.getAttribute('aria-hidden'),null);
+});
+
+test('the native mobile menu receives a label only inside the operational Page container',()=>{
+  const f=fixture(),page=f.el('div',{class:'page-container'}),header=page.append(f.el('div',{class:'page-head'})),menu=header.append(f.el('button',{class:'sidebar-toggle-btn'}));
+  f.document.body.children=[];f.document.body.append(page);page.append(f.root);
+  const other=f.document.body.append(f.el('div',{class:'page-container'})),otherHeader=other.append(f.el('div',{class:'page-head'})),native=otherHeader.append(f.el('button',{class:'sidebar-toggle-btn'}));
+  f.api.prepare(f.root);assert.equal(menu.getAttribute('aria-label'),'Menú de navegación');assert.equal(menu.classList.contains('hs-keyboard-menu'),true);
+  assert.equal(native.getAttribute('aria-label'),null);assert.equal(native.classList.contains('hs-keyboard-menu'),false);
+  menu.setAttribute('aria-label','Nombre nativo');f.api.prepare(f.root);assert.equal(menu.getAttribute('aria-label'),'Nombre nativo');
 });

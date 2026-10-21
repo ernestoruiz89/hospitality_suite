@@ -108,7 +108,7 @@
       "new_source": true,
       "existing_wire_literals": 0,
       "preservation_checked": false,
-      "sha256": "fdd6a779b0b15fe492486e95230e43a16ff7ecc978550b6319125b81e19128a8"
+      "sha256": "bf9b4b2dfc99bbcc97d2d1856af6955cd1a9119c6a6b91330daffb2645c3c0cf"
     },
     {
       "file": "hospitality_suite/public/js/hospitality_navigation.js",

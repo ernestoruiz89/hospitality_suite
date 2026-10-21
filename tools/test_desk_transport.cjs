@@ -127,6 +127,62 @@ test('dialog keeps numeric edits across row refreshes and leaves untouched hidde
   typed='1';row1.people=1; // a later native editor refresh must not replace the edit
   await submit();assert.equal(accepted.rows[0].people,2);assert.equal(accepted.rows[1].people,7);
 });
+
+test('a required checklist blocks submission and requests error focus while zero amounts and draft saves remain valid',async()=>{
+  const {desk,context}=fixture();let checked=0,accepted=0,revealed=0;const messages=[];
+  context.frappe.msgprint=message=>messages.push(message);desk.reveal_form_error=()=>revealed++;
+  const primary={off(){return this;},on(){return this;},prop(){return this;}};
+  context.frappe.ui={Dialog:class{
+    constructor(){this.fields_dict={bath:{df:{fieldname:'bath',fieldtype:'Check',label:'Baño revisado',reqd:1},get_value:()=>checked},amount:{df:{fieldname:'amount',fieldtype:'Currency',reqd:1},get_value:()=>0}};this.$wrapper={addClass(){},on(){}};}
+    get_close_btn(){return{attr(){}};}get_primary_btn(){return primary;}show(){}get_values(){return{bath:checked,amount:0};}
+  }};
+  const d=await desk.dialog('Checklist',[],async values=>{accepted++;assert.equal(values.amount,0);});
+  await d._hsSubmit();assert.equal(accepted,0);assert.equal(revealed,1);assert.match(messages[0].message,/Baño revisado/);assert.equal(d._hsBusy,false);
+  checked=1;await d._hsSubmit();assert.equal(accepted,1);
+  checked=0;for(const key of ['hidden','hidden_due_to_dependency','read_only']){d.fields_dict.bath.df[key]=1;await d._hsSubmit();delete d.fields_dict.bath.df[key];}
+  assert.equal(accepted,4);assert.equal(messages.length,1);
+  await d._hsSubmit({validate:false});assert.equal(accepted,5,'partial drafts do not require the checklist');assert.equal(revealed,1);
+});
+
+test('dependency reads keep a just-typed required price and its caret before native blur, including zero',async()=>{
+  const {desk,context}=fixture();
+  const input={value:'900',type:'text',isConnected:true,selectionStart:1,selectionEnd:2,getClientRects:()=>[{}],setSelectionRange(start,end){this.selectionStart=start;this.selectionEnd=end;}};
+  context.document={activeElement:input};let calls=0,original;
+  context.frappe.ui={Dialog:class{
+    constructor(){this.fields_dict={amount:{df:{fieldname:'amount',fieldtype:'Currency',reqd:1},$input:[input]}};this.$wrapper={addClass(){},on(){}};}
+    get_close_btn(){return{attr(){}};}get_primary_btn(){return{off(){return this;},on(){return this;}};}show(){}
+    get_values(ignoreErrors){assert.equal(ignoreErrors,true);assert.equal(this.fields_dict.amount.value,undefined,'read must not commit another value');calls++;const values={amount:Number(input.value)};input.value='';input.selectionStart=0;input.selectionEnd=0;return values;}
+  }};
+  original=context.frappe.ui.Dialog.prototype.get_values;
+  const dialog=await desk.dialog('Precio',[{fieldname:'amount',fieldtype:'Currency',reqd:1}],()=>{});
+  assert.equal(dialog.get_values(true).amount,900);assert.equal(input.value,'900');assert.deepEqual([input.selectionStart,input.selectionEnd],[1,2]);
+  input.value='0';assert.equal(dialog.get_values(true).amount,0);assert.equal(input.value,'0');
+  assert.equal(calls,2);assert.equal(context.frappe.ui.Dialog.prototype.get_values,original);
+});
+
+test('a required checkbox keeps its just-selected state while a native message retains focus',()=>{
+  const {context}=fixture(),input={type:'checkbox',checked:true,isConnected:true,getClientRects:()=>[{}]},message={tagName:'H4'};
+  context.document={activeElement:input};const dialog={fields_dict:{check:{df:{reqd:1},$input:[input]}}};
+  const read=context.window.hospitality_suite.preserve_editing_value(dialog,function(){const values={check:input.checked?1:0};input.checked=false;context.document.activeElement=message;return values;});
+  assert.equal(read.call(dialog).check,1);assert.equal(input.checked,true);assert.equal(context.document.activeElement,message);
+});
+
+test('native dependency changes to hidden, disabled or replaced controls are preserved',()=>{
+  const {context}=fixture();
+  for(const change of ['hidden','disabled','readonly','replaced']){
+    let visible=true;const input={value:'old',isConnected:true,getClientRects:()=>visible?[{}]:[]},field={df:{},$input:[input]},dialog={fields_dict:{value:field}};
+    context.document={activeElement:input};
+    const read=context.window.hospitality_suite.preserve_editing_value(dialog,()=>{input.value='native change';if(change==='hidden')visible=false;if(change==='disabled')input.disabled=true;if(change==='readonly')field.df.read_only=1;if(change==='replaced')field.$input=[{}];return{};});
+    read();assert.equal(input.value,'native change',change);
+  }
+});
+
+test('native read errors remain errors and leave the active draft intact',()=>{
+  const {context}=fixture(),input={value:'unfinished',isConnected:true,getClientRects:()=>[{}]};context.document={activeElement:input};
+  const dialog={fields_dict:{value:{df:{},$input:[input]}}},error=Error('native validation');
+  const read=context.window.hospitality_suite.preserve_editing_value(dialog,()=>{input.value='';throw error;});
+  assert.throws(read,e=>e===error);assert.equal(input.value,'unfinished');
+});
 test('a partly arrived group exposes its remaining numbered request and valid actions',async()=>{
   const {desk,context}=fixture();
   vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../hospitality_suite/public/js/hospitality_booking_summary.js'),'utf8'),context);

@@ -36,6 +36,23 @@ window.hospitality_suite = window.hospitality_suite || {};
     this.$input.trigger("select-change");
   };
   window.hospitality_suite.safe_select_options=safeSelectOptions;
+  // FieldGroup evaluates dependencies with get_values(true). Its required-field
+  // refresh can replace a focused input before its blur has committed the value.
+  // Preserve only that visible editor around the native read, including a zero
+  // or unchecked checkbox. Parsing, validation and submitted values stay native.
+  const preserveEditingValue=(dialog,read)=>function(...args){
+    const active=typeof document==='undefined'?null:document.activeElement;
+    const control=Object.values(dialog.fields_dict||{}).find(field=>field.$input?.[0]===active);
+    const editable=()=>Boolean(control&&!control.df.read_only&&active?.isConnected&&!active.disabled&&!active.readOnly&&active.getClientRects?.().length);
+    if(!editable())return read.apply(this,args);
+    const value=active.value,checked=active.checked,selection=typeof active.selectionStart==='number'?[active.selectionStart,active.selectionEnd]:null;
+    try{return read.apply(this,args);}
+    finally{if(editable()&&control.$input?.[0]===active){
+      if(['checkbox','radio'].includes(active.type))active.checked=checked;else active.value=value;
+      if(selection&&document.activeElement===active)active.setSelectionRange?.(...selection);
+    }}
+  };
+  window.hospitality_suite.preserve_editing_value=preserveEditingValue;
   const modeOptions=options=>(Array.isArray(options)?options:String(options||"").split("\n")).map(option=>{
     const code=typeof option==="object"?option.value:option;
     const label={Hotel:__("Hotel"),Motel:__("Por tiempo"),Mixed:__("Hotel y por tiempo")}[code];
@@ -197,6 +214,7 @@ window.hospitality_suite = window.hospitality_suite || {};
       const selectors=fields.filter(df=>df.fieldtype==="Select").map(df=>({df,options:df.options}));
       for(const {df} of selectors)df.options=[];
       const d=new frappe.ui.Dialog({title:__(titleText),fields,size,primary_action_label:__(label),primary_action:()=>{}});
+      d.get_values=preserveEditingValue(d,d.get_values);
       d.$wrapper.addClass("hs-form-dialog");
       d.get_close_btn().attr("aria-label",__("Cerrar formulario"));
       for(const {df,options} of selectors){
@@ -240,7 +258,15 @@ window.hospitality_suite = window.hospitality_suite || {};
           const values=validate?d.get_values():Object.fromEntries(Object.values(d.fields_dict)
             .filter(control=>control.get_value&&!["HTML","Button","Tab Break","Section Break","Column Break"].includes(control.df.fieldtype))
             .map(control=>[control.df.fieldname,control.get_value()]));
-          if(values)await handler(values,d);else this.reveal_form_error?.(d);
+          if(values){
+            // Native get_values accepts numeric zero for a Check as well as
+            // amounts. An explicitly required checklist must be checked.
+            const unchecked=validate?Object.values(d.fields_dict).filter(control=>control.df.fieldtype==='Check'&&control.df.reqd&&!control.df.hidden&&!control.df.hidden_due_to_dependency&&!control.df.read_only&&control.get_value&&!control.get_value()):[];
+            if(unchecked.length){
+              frappe.msgprint({title:__('Campos requeridos'),message:__('Marque las casillas obligatorias: {0}',[unchecked.map(control=>esc(__(control.df.label))).join(', ')])});
+              this.reveal_form_error?.(d);
+            }else await handler(values,d);
+          }else this.reveal_form_error?.(d);
         }catch(error){if(!serverMessage(error))frappe.msgprint({title:__("Sin confirmación del servidor"),message:__("Mantenga esta ventana y reintente con los mismos datos. La solicitud conserva su referencia para evitar duplicados."),indicator:"orange"});}
         finally{d._hsBusy=false;d.get_primary_btn().prop("disabled",Boolean(d._hsCatalogBlocked));}
       };d.get_primary_btn().off("click").on("click",()=>d._hsSubmit());

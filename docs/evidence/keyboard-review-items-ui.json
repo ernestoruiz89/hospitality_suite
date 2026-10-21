@@ -1,0 +1,31 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "preparation": "Original baseline only; no API-created operational fixtures.",
+  "category": "CAT-00001",
+  "rate": "TAR-00001",
+  "rate_amount": 900,
+  "rate_services": 2,
+  "mobile_rate_draft_unsaved": true,
+  "portal_requests_sent": 0,
+  "guest": "HUE-00001",
+  "booking": "RES-2026-00001",
+  "stay": "EST-2026-00001",
+  "invoice": "ACC-SINV-2026-00001",
+  "payment_entry": "ACC-PAY-2026-00001",
+  "total": 1530,
+  "outstanding": 0,
+  "shift_difference": 0,
+  "cleaning_inspected": true,
+  "maintenance_reopened_by_supervisor": true,
+  "receptionist_cashier_permissions_separate": true,
+  "native_counts": {
+    "Stock Entry": 2,
+    "GL Entry": 8,
+    "Stock Ledger Entry": 2,
+    "Sales Invoice": 1,
+    "Payment Entry": 1
+  },
+  "business_date_unchanged": true,
+  "browser_evidence": "keyboard-review-roles-ui.json",
+  "mutations_by_inspector": false
+}

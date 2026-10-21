@@ -14,15 +14,15 @@ Browserslist: caniuse-lite is outdated. Please run:
 File                                                        Size
 
 hospitality_suite/dist/js/
-└─ hospitality.bundle.MCZ4FVDH.js                           234.15 Kb
+└─ hospitality.bundle.TSVX6BYI.js                           236.24 Kb
 
 hospitality_suite/dist/css/
-└─ hospitality.bundle.VQAON2DX.css                          22.04 Kb
+└─ hospitality.bundle.B2CPLEQR.css                          22.17 Kb
 
 hospitality_suite/dist/css-rtl/
-└─ hospitality.bundle.F73QHHUC.css                          22.05 Kb
+└─ hospitality.bundle.MK2AYSMD.css                          22.17 Kb
 
- DONE  Total Build Time: 499.576ms
+ DONE  Total Build Time: 465.007ms
 
-Done in 1.18s.
+Done in 1.20s.
 Compiling translations for hospitality_suite

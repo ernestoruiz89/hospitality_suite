@@ -1,0 +1,63 @@
+{
+  "review_date": "2026-10-21",
+  "requirements": [
+    "S18-06",
+    "S18-07",
+    "S18-08",
+    "S18-09"
+  ],
+  "artifact_review_only": true,
+  "scope": "Delivery and consistency of the Spanish guides; not completion of every described flow or final deployment/rollback.",
+  "review_document": "docs/ENTREGABLES_Y_REVISION.md",
+  "documents": {
+    "README.md": "d80a2cd1695bdc38c1fe0e3dbed0e1010d019d1d6c5bc8ae997b9cbb018dc7a6",
+    "docs/MANUAL.md": "f546bb87b6c53446cd0014b59ef9301264f09234d2edcb54e83ab73d2a95feda",
+    "docs/CONTABILIDAD.md": "d5a495c87cd048f42964b6d93b6114273a8772730f6019bdc724f47b7096b687",
+    "docs/OPERACION.md": "a31cdb595406f0e93266d2d5bbc164d112b4776551a2e98d7c6a954a5a139a20",
+    "docs/ENTREGABLES_Y_REVISION.md": "807e44556e603eb39cd491f6a43a1b454abf53541e4b746b4f41a05dd1d8422c",
+    "pyproject.toml": "15b03572ee2651701955c079cb3cef51e097a41318ea99309bb993021e0f0acb"
+  },
+  "reviewed_sources": {
+    "hospitality_suite/install.py": "ccf98c331fbda1d84c43d9a9ee0a5b74bab8ae00aa06231af4e0199cef1afb97",
+    "hospitality_suite/setup.py": "695f06e880ea809437264368cee8093f1b42220d016c5fc3b8890b414fa36e1f",
+    "hospitality_suite/accounting.py": "3fe5fa22b16c24e85cc432276bf9fcdbce84afd855862be8dc2947356da0129b",
+    "hospitality_suite/payment_policies.py": "c3bd32195eeff93d3da902cc37f935062abcbbdb882e00474580d367d3d719e7",
+    "hospitality_suite/service_accounting.py": "f851ef6caeeff0cc9fdcd9139dcfe3e04f537baff2da035b058151c5303d60e1",
+    "hospitality_suite/treasury.py": "8611d8f765526d503e9b8c7c41d42ec3a8a583db67cad641a878dad4eb02f1dc",
+    "hospitality_suite/reports.py": "5d30742c3d09de0ce27f0fa1a2c104fc41a08ee372b51f04e5b8d3542d639a40",
+    "hospitality_suite/security.py": "cdfb44bacf86da383976fe02616e12d8e8b960d454ce714a0e002dc8305b5062",
+    "hospitality_suite/hooks.py": "bd4d82bc2d2e87c29da9ea2668c5a16ba28111dc711f92139399c2e89fef9d47"
+  },
+  "cli_evidence": "delivery-review-cli.json",
+  "cli_sha256": "54887eaf39d7cfb6d533d265c75a4662af067f29da03ebb5eabcbe0e3f0114eb",
+  "native_commands_checked": 13,
+  "native_junit": "keyboard-review-native-tests.xml",
+  "native_junit_sha256": "699836cd8af70e29367d6f893f76893dd915d1d3fe1a29dc03b80c497d9c156d",
+  "financial_classes_passed": {
+    "TestInitialSetup": 4,
+    "TestFinance": 22,
+    "TestFinancialAudit": 8,
+    "TestAppliedRefunds": 6,
+    "TestGuaranteeRefunds": 5,
+    "TestServiceAccounting": 6,
+    "TestTreasury": 6,
+    "TestCloseFinancials": 6
+  },
+  "manual_ui_evidence": "keyboard-review-roles-ui.json",
+  "manual_ui_sha256": "65aa978b13c669c8f1e45aacd683c9d4fb78ebb01d1f8d3dbe6229a540ff52f8",
+  "manual_roles_observed": [
+    "HS Accountant",
+    "HS Administrator",
+    "HS Auditor",
+    "HS Cashier",
+    "HS Housekeeping",
+    "HS Maintenance",
+    "HS Manager",
+    "HS Receptionist",
+    "HS Supervisor"
+  ],
+  "restoration_evidence": "keyboard-review-upgrade.json",
+  "restoration_sha256": "a2403d24a3f4a341b864767ccbeee143bba60f1df4afa7c60427dddac8ee36b5",
+  "final_deployment_rollback_proven": false,
+  "database_mutations": false
+}

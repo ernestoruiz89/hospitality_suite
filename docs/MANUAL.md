@@ -1,6 +1,30 @@
 # Manual diario por rol
 
-Aplicación 0.8.1, Frappe 16.52 / ERPNext 16.51. Los recorridos acreditados y las verificaciones pendientes están en REQUISITOS.md.
+Código 0.8.2 en validación, Frappe 16.52.0 / ERPNext 16.51.1. Los recorridos acreditados y las verificaciones pendientes están en REQUISITOS.md; la revisión completa de teclado continúa en TECLADO_Y_FOCO.md.
+
+## Guía rápida por rol
+
+Seleccione el establecimiento antes de trabajar. Las acciones disponibles dependen de su rol y del acceso asignado a esa sede.
+
+| Rol | Trabajo diario | Si queda un pendiente |
+|---|---|---|
+| Administración | Mantener categorías, habitaciones, tarifas, medios de pago y políticas en Configuración. | Revisar la configuración y escalar altas de usuarios o establecimientos a administración del sistema. |
+| Gerencia | Revisar producción, conciliación y pendientes; autorizar correcciones y cerrar el día. | Resolver el documento de origen y actualizar la revisión antes de confirmar. |
+| Supervisión | Asignar e inspeccionar limpieza/mantenimiento; revisar diferencias de arqueo autorizadas. | Devolver una limpieza con observaciones o escalar las aprobaciones financieras de gerencia. |
+| Recepción | Registrar huéspedes, reservas, entradas, cambios y salidas. | Solicitar a Caja la liquidación de la cuenta y a Supervisión la liberación de la habitación. |
+| Caja | Abrir turno, revisar y confirmar cobros/devoluciones, contar y cerrar. | Conservar la ventana si falta confirmación; revisar recibo y saldo antes de iniciar otro movimiento. |
+| Limpieza | Iniciar la tarea, completar su lista y solicitar inspección cuando corresponda. | Registrar observaciones y esperar la revisión de Supervisión. |
+| Mantenimiento | Registrar incidencias, trabajar en órdenes y registrar repuestos/evidencia. | Pedir a Supervisión la finalización y reapertura de disponibilidad. |
+| Contabilidad | Revisar facturas, pagos, anticipos, garantías y diferencias de Conciliación. | Rastrear el comprobante y utilizar su corrección autorizada conservando el original. |
+| Auditoría | Consultar reportes, bitácora y valores registrados. | Comunicar la referencia y el motivo al responsable de corregir; su rol de auditoría conserva lectura. |
+
+## Administración y configuración inicial
+
+Configure categorías, habitaciones y tarifas antes de recibir reservas. Revise horarios, zona, identificación, inspección y políticas de crédito, anticipos y garantías. Configure cuentas, almacenes, artículos y medios con Contabilidad; habilite las operaciones financieras después de revisar impuestos y el formato de factura.
+
+Usuarios y roles y Crear establecimiento requieren administración del sistema. El rol de administración operativa de Hospitality permite configurar las sedes a las que ya tiene acceso. Cuando una persona también cobra, asigne expresamente el rol de Caja además del de Recepción. Los permisos de ERPNext adicionales se administran por separado.
+
+La sincronización con Airbnb, Booking.com y otros canales está aplazada. Las reservas de esos orígenes pueden registrarse manualmente indicando el canal y anotando la referencia en Solicitudes especiales; no se envían ni reciben cambios de disponibilidad desde esas plataformas.
 
 ## Nombres y estados
 
@@ -120,6 +144,10 @@ En los selectores de consumos, venta directa, ropa, repuestos, movimientos, cont
 - El indicador Tiempo real conectado refleja Socket.IO. Si muestra Sin tiempo real, pulse Actualizar para reconectar y consultar el estado del servidor. Los movimientos siguen requiriendo respuesta válida; una conexión de notificaciones no sustituye esa confirmación.
 - Si falla facturación o stock, el comando revierte su operación local completa. El error no equivale a una reserva, cobro o salida confirmada.
 - Para corregir documentos presentados, use nota de crédito, devolución o cancelación autorizada con motivo. Conserve documentos y auditoría.
+
+Para trabajar con teclado, use Tab y Mayús+Tab entre controles; en las pestañas use flechas, Inicio y Fin. Espacio marca una casilla y Enter activa el botón o editor enfocado. En las tablas, Añadir fila crea otra línea expresamente: avanzar con Tab conserva las filas existentes. Las listas obligatorias señalan las casillas pendientes y devuelven el foco al primer punto incompleto al cerrar el aviso. Escape cierra la revisión y permite continuar desde su origen. Los estados también aparecen escritos.
+
+En el portal público, una consulta sin fechas señala el dato pendiente. Al recibir precio o falta de disponibilidad, el foco pasa al resultado si no está editando otro campo. Consultar no envía una solicitud: Solicitar confirmación es una acción separada. La página no cobra.
 
 ## Reportes con información legible
 

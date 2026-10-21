@@ -8,12 +8,30 @@ async function fixture(){
  const elements=Object.fromEntries(ids.map(id=>['hp-'+id,{value:['quantity','people'].includes(id)?'1':'',hidden:id==='request',disabled:false,handlers:{},options:[],
    addEventListener(event,callback){this.handlers[event]=callback;},add(option){this.options.push(option);if(!this.value)this.value=option.value;},replaceChildren(){this.options=[];this.value='';}}]));
  elements['hp-form'].elements=ids.filter(id=>!['form','empty','result','zone'].includes(id)).map(id=>elements['hp-'+id]);
- const requests=[];let init,quote=async()=>({amount:'1500.00',currency:'NIO',acceptance:'accepted'}),request=async()=>({confirmation_url:'/signed-confirmation'}),redirect;
- const context={__:(value,args)=>typeof value==="string"&&args?value.replace(/\{(\d+)\}/g,(m,n)=>args[n]??m):value,document:{getElementById:id=>elements[id]},Option:class{constructor(text,value){this.text=text;this.value=value;}},crypto:{randomUUID:()=> 'stable-request-key'},
-  window:{location:{assign:url=>{redirect=url;}}},frappe:{ready:callback=>{init=callback();},call:async({method,args})=>({message:method.endsWith('.catalog')?[{name:'hotel',property_name:'Hotel ficticio',time_zone:'America/Managua',categories:[{name:'standard',category_name:'Estándar'}]}]:method.endsWith('.quote')?await quote(args):await (async()=>{requests.push(args);return request(args);})()})}};
+ const document={getElementById:id=>elements[id],body:{}};document.activeElement=document.body;
+ for(const element of Object.values(elements))element.focus=()=>{document.activeElement=element;};
+ const requests=[];let nativeMessages=0,init,quote=async()=>({amount:'1500.00',currency:'NIO',acceptance:'accepted'}),request=async()=>({confirmation_url:'/signed-confirmation'}),redirect;
+ const context={__:(value,args)=>typeof value==="string"&&args?value.replace(/\{(\d+)\}/g,(m,n)=>args[n]??m):value,document,$:()=>({length:0}),Option:class{constructor(text,value){this.text=text;this.value=value;}},crypto:{randomUUID:()=> 'stable-request-key'},
+  window:{location:{assign:url=>{redirect=url;}}},frappe:{ready:callback=>{init=callback();},call:async({method,args,error_msg})=>{
+   try{return{message:method.endsWith('.catalog')?[{name:'hotel',property_name:'Hotel ficticio',time_zone:'America/Managua',categories:[{name:'standard',category_name:'Estándar'}]}]:method.endsWith('.quote')?await quote(args):await (async()=>{requests.push(args);return request(args);})()};}
+   catch(error){if(error.responseJSON?._server_messages&&!error_msg)nativeMessages++;throw error;} // native Website ignores silent
+  }}};
  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../hospitality_suite/www/hospitality.js'),'utf8'),context);await init;
- return{elements,requests,setQuote:fn=>{quote=fn;},setRequest:fn=>{request=fn;},redirect:()=>redirect};
+ return{elements,requests,document,nativeMessages:()=>nativeMessages,setQuote:fn=>{quote=fn;},setRequest:fn=>{request=fn;},redirect:()=>redirect};
 }
+
+test('quote results recover focus after a disabled button, without stealing focus from another field',async()=>{
+ const f=await fixture(),form=f.elements['hp-form'],result=f.elements['hp-result'];
+ let resolve;f.setQuote(()=>new Promise(done=>{resolve=done;}));f.elements['hp-quote'].focus();
+ const first=form.handlers.submit({preventDefault(){}});f.document.activeElement=f.document.body; // native disabled button loses focus
+ resolve({amount:'1500.00',currency:'NIO',acceptance:'current'});await first;
+ assert.equal(f.document.activeElement,result);assert.equal(result.tabIndex,-1);assert.equal(f.elements['hp-request'].hidden,false);
+ const next=form.handlers.submit({preventDefault(){}});f.elements['hp-name'].focus();resolve({amount:'1500.00',currency:'NIO',acceptance:'next'});await next;
+ assert.equal(f.document.activeElement,f.elements['hp-name']);
+ f.document.activeElement=f.document.body;f.setQuote(async()=>{throw{responseJSON:{_server_messages:'No queda cupo'}};});await form.handlers.submit({preventDefault(){}});
+ assert.equal(f.document.activeElement,result);assert.match(result.textContent,/No se encontró disponibilidad/);assert.equal(f.elements['hp-request'].hidden,true);
+ assert.equal(f.nativeMessages(),0,'Website must not open a second modal for the same business rejection');
+});
 test('editing dates while a quote is in flight invalidates its response',async()=>{
  const f=await fixture();let resolve;f.setQuote(()=>new Promise(done=>{resolve=done;}));
  const submit=f.elements['hp-form'].handlers.submit({preventDefault(){}});

@@ -102,6 +102,18 @@ class TestHousekeepingAudit(IntegrationTestCase):
             self.assertTrue(block.until_reopened)
         self.assertIn('Hasta reapertura autorizada',api.report_page(self.prop.name,'Mantenimiento')['rows'][0]['_display']['ends_at'])
 
+    def test_maintenance_audit_labels_describe_the_work_and_schedule_without_changing_recorded_values(self):
+        name=self.order()['order'];before=frappe.get_doc('HS Maintenance Order',name).as_dict()
+        event=frappe.db.get_value('HS Audit Event',{'source_name':name,'source_doctype':'HS Maintenance Order','action':'Maintenance Open'},'name')
+        frappe.set_user('auditor@hospitality.example.invalid');detail=api.audit_detail(self.prop.name,event)
+        rows={row['field']:row for row in detail['values']}
+        self.assertEqual(rows['title']['label'],'Trabajo requerido');self.assertEqual(rows['title']['after'],before['title'])
+        self.assertEqual(rows['starts_at']['label'],'Inicio del trabajo');self.assertEqual(rows['ends_at']['label'],'Fin previsto')
+        self.assertEqual(rows['ends_at']['after'],'Sin dato');self.assertFalse(rows['ends_at']['changed'])
+        self.assertEqual(frappe.get_doc('HS Maintenance Order',name).as_dict(),before)
+        from hospitality_suite.audit_trail import LABELS
+        self.assertEqual(LABELS['title'],'Nombre de tarifa','tariff history keeps its own caption')
+
     def test_full_block_checks_all_future_room_and_roomless_reservations_without_cancelling_them(self):
         booking=self.call('reserve',self.booking(days=3650));before=frappe.get_doc('HS Booking',booking['booking']).as_dict()
         with self.assertRaises(frappe.ValidationError):self.order()

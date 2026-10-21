@@ -1,0 +1,196 @@
+{
+  "review_date": "2026-10-21",
+  "requirements": [
+    "S18-06",
+    "S18-09"
+  ],
+  "checked_at_utc": "2026-10-21T16:58:49.283064+00:00",
+  "verifier_sha256": "f3fbed671681664ae45d29b1b8159a85de4c1eb5873a7773825f4d4c636b8639",
+  "scope": "Native --help and read-only diagnostics; no install, migrate, backup, restore, maintenance or scheduler setting executed.",
+  "database_or_operational_mutations": false,
+  "commands": [
+    {
+      "command": [
+        "bench",
+        "get-app",
+        "--help"
+      ],
+      "exit_code": 0,
+      "expected_options_present": [
+        "--branch"
+      ],
+      "output_sha256": "08806c285b76993dd21ce5b9f5d96d33e54e10c54ea80740948205e1c010e79e",
+      "usage": "Usage: bench get-app [OPTIONS] [NAME]... GIT_URL"
+    },
+    {
+      "command": [
+        "bench",
+        "--site",
+        "hospitality.localhost",
+        "install-app",
+        "--help"
+      ],
+      "exit_code": 0,
+      "expected_options_present": [
+        "--help"
+      ],
+      "output_sha256": "a3f201a1fb147cfad3594ad6cd7f3277f62cfe2cf75a4166dfbc2f6584d116f9",
+      "usage": "Usage: bench  install-app [OPTIONS] [APPS]..."
+    },
+    {
+      "command": [
+        "bench",
+        "--site",
+        "hospitality.localhost",
+        "migrate",
+        "--help"
+      ],
+      "exit_code": 0,
+      "expected_options_present": [
+        "--help"
+      ],
+      "output_sha256": "59c3f3ca9241f6e1a6ab75b64885b7953693d51b47b928873bbae3fa56c028d3",
+      "usage": "Usage: bench  migrate [OPTIONS]"
+    },
+    {
+      "command": [
+        "bench",
+        "build",
+        "--help"
+      ],
+      "exit_code": 0,
+      "expected_options_present": [
+        "--app"
+      ],
+      "output_sha256": "cc5af59282832ca80fc030942f5b09df7a5204b49c17f395c3cbe4ef3ab4cb5f",
+      "usage": "Usage: bench  build [OPTIONS]"
+    },
+    {
+      "command": [
+        "bench",
+        "--site",
+        "hospitality.localhost",
+        "backup",
+        "--help"
+      ],
+      "exit_code": 0,
+      "expected_options_present": [
+        "--with-files"
+      ],
+      "output_sha256": "cdc17f289b99fbb497199386754473ebf000c39a9fa8045ee6d976a1f522bbab",
+      "usage": "Usage: bench  backup [OPTIONS]"
+    },
+    {
+      "command": [
+        "bench",
+        "--site",
+        "hospitality.localhost",
+        "restore",
+        "--help"
+      ],
+      "exit_code": 0,
+      "expected_options_present": [
+        "--with-public-files",
+        "--with-private-files"
+      ],
+      "output_sha256": "6a3dbc5d26cb40af7e31bcca49cad8be6ee2ed06a74c3435345a5743da946f3c",
+      "usage": "Usage: bench  restore [OPTIONS] SQL_FILE_PATH"
+    },
+    {
+      "command": [
+        "bench",
+        "--site",
+        "hospitality-acceptance.localhost",
+        "run-tests",
+        "--help"
+      ],
+      "exit_code": 0,
+      "expected_options_present": [
+        "--app",
+        "--junit-xml-output"
+      ],
+      "output_sha256": "c8d8545518d432780a5f7ee2bcce7639b5f7b4c80f2cc2e87d6262a6cea808d4",
+      "usage": "Usage: bench  run-tests [OPTIONS]"
+    },
+    {
+      "command": [
+        "bench",
+        "--site",
+        "hospitality.localhost",
+        "set-maintenance-mode",
+        "--help"
+      ],
+      "exit_code": 0,
+      "expected_options_present": [
+        "--help"
+      ],
+      "output_sha256": "c5dd8c3b26e5a9ea7525c026b864da7ecba4abe4cd80fdf9558d969e48e60c9c",
+      "usage": "Usage: bench  set-maintenance-mode [OPTIONS] {on|off}"
+    },
+    {
+      "command": [
+        "bench",
+        "--site",
+        "hospitality.localhost",
+        "disable-scheduler",
+        "--help"
+      ],
+      "exit_code": 0,
+      "expected_options_present": [
+        "--help"
+      ],
+      "output_sha256": "a7ed4a0ad1b202484adc034ed8ebab32f308d3596af8d5d566639aab7bdd546a",
+      "usage": "Usage: bench  disable-scheduler [OPTIONS]"
+    },
+    {
+      "command": [
+        "bench",
+        "--site",
+        "hospitality.localhost",
+        "enable-scheduler",
+        "--help"
+      ],
+      "exit_code": 0,
+      "expected_options_present": [
+        "--help"
+      ],
+      "output_sha256": "193f3288c279b7b4ccb2784f0e0d75919cd10d7fa39921416b32b2e1e3fbf499",
+      "usage": "Usage: bench  enable-scheduler [OPTIONS]"
+    },
+    {
+      "command": [
+        "bench",
+        "--site",
+        "hospitality.localhost",
+        "list-apps"
+      ],
+      "exit_code": 0,
+      "output_sha256": "2b781112985ba59b4310324c24deb424ecaeb6213e9361517a821fc1390e7507",
+      "output_bytes": 126,
+      "output": "frappe            16.52.0 version-16\nerpnext           16.51.1 version-16\nhospitality_suite 0.8.2   codex/hospitality-suite"
+    },
+    {
+      "command": [
+        "bench",
+        "--site",
+        "hospitality.localhost",
+        "doctor"
+      ],
+      "exit_code": 0,
+      "output_sha256": "a98c93d46e9d703b2b0892e665d28c08df085901f9f9f2ebabfd0a34cad6da96",
+      "output_bytes": 91,
+      "output": "-----Checking scheduler status-----\nWorkers online: 2\n-----hospitality.localhost Jobs-----"
+    },
+    {
+      "command": [
+        "bench",
+        "--site",
+        "hospitality.localhost",
+        "show-pending-jobs"
+      ],
+      "exit_code": 0,
+      "output_sha256": "98bf97aa308c4d7686e6914afb373986b951c81a53095395e8043af8f145e3fd",
+      "output_bytes": 23
+    }
+  ]
+}

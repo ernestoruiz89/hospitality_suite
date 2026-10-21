@@ -1,0 +1,357 @@
+{
+  "assembled_at_utc": "2026-10-21T17:16:34.284246+00:00",
+  "requirement": "S04-17",
+  "evidence_assembly_only": true,
+  "not_an_independent_browser_replay": true,
+  "tests": {
+    "native": 380,
+    "integration": 366,
+    "pure": 14,
+    "javascript": 174,
+    "desk": 171,
+    "portal": 3,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "verified_ui_roles": [
+    "HS Accountant",
+    "HS Administrator",
+    "HS Auditor",
+    "HS Cashier",
+    "HS Housekeeping",
+    "HS Maintenance",
+    "HS Manager",
+    "HS Receptionist",
+    "HS Supervisor"
+  ],
+  "actor_observations": 43,
+  "ui_events": 180,
+  "scenario": {
+    "site": "hospitality-acceptance.localhost",
+    "preparation": "Original baseline only; no API-created operational fixtures.",
+    "category": "CAT-00001",
+    "rate": "TAR-00001",
+    "rate_amount": 900,
+    "rate_services": 2,
+    "mobile_rate_draft_unsaved": true,
+    "portal_requests_sent": 0,
+    "guest": "HUE-00001",
+    "booking": "RES-2026-00001",
+    "stay": "EST-2026-00001",
+    "invoice": "ACC-SINV-2026-00001",
+    "payment_entry": "ACC-PAY-2026-00001",
+    "total": 1530,
+    "outstanding": 0,
+    "shift_difference": 0,
+    "cleaning_inspected": true,
+    "maintenance_reopened_by_supervisor": true,
+    "receptionist_cashier_permissions_separate": true,
+    "native_counts": {
+      "Stock Entry": 2,
+      "GL Entry": 8,
+      "Stock Ledger Entry": 2,
+      "Sales Invoice": 1,
+      "Payment Entry": 1
+    },
+    "business_date_unchanged": true,
+    "browser_evidence": "keyboard-review-roles-ui.json",
+    "mutations_by_inspector": false
+  },
+  "restored": {
+    "site": "hospitality-acceptance.localhost",
+    "restored": true,
+    "tables": 71,
+    "rows": 185,
+    "aggregate_sha256": "482c538cfb073ab53a86dbaa3e4bad4c9971f24397deb4595a587ef172b34b68",
+    "stay_records": 0,
+    "invoices": 0,
+    "payments": 0
+  },
+  "protected_data": {
+    "hospitality.localhost": {
+      "tables": 72,
+      "rows": 1246,
+      "private_files": 2
+    },
+    "hospitality-acceptance.localhost": {
+      "tables": 72,
+      "rows": 250,
+      "private_files": 0
+    }
+  },
+  "services": {
+    "8086": true,
+    "8089": false,
+    "9001": true,
+    "11001": true,
+    "13001": true
+  },
+  "main_http": 200,
+  "business_date": "2026-10-19",
+  "installed_compact_print_preserved": true,
+  "external_providers_activated": false,
+  "final_deployment_rollback_proven": false,
+  "references": {
+    "keyboard-review-roles-ui.json": "65aa978b13c669c8f1e45aacd683c9d4fb78ebb01d1f8d3dbe6229a540ff52f8",
+    "keyboard-review-items-ui.json": "56c63f1b5a335eea36fe884575c23e9bd2556f38d252e9c0630b7e63cab0274d",
+    "keyboard-review-logout.json": "fea24512cff63b07f406c71cc1a8dc4d1a4be223b5ab77527e442aeec5c43b80",
+    "keyboard-review-native-tests.xml": "699836cd8af70e29367d6f893f76893dd915d1d3fe1a29dc03b80c497d9c156d",
+    "keyboard-review-native-tests.log": "65a1af400a31cc767da3d16eae035f6706f000d163afb637a2d43907671fa0db",
+    "keyboard-review-js-tests.log": "73ec16325e602788b5db70c144075162a72866eb9871e34dd3c070e3bd007b86",
+    "keyboard-review-build.log": "22279cad1e4d4fdfbe2b2ef13d5c2d021f3b679cb247d8ff934f6d51d6d34690",
+    "keyboard-review-wire-invariants.json": "9d34a6f120e3ceac25623a41f912a3b4556798b556393f806a24e6cd524bc607",
+    "keyboard-review-language-installed.json": "88115e3c2dc13da86de5eae07aad79d60e75c240219d70026b5b924708cad8f0",
+    "keyboard-review-permissions-source.json": "ff99743fa7dc8682df39e0521bec37958705b0bbd53eeabb0612fd17e08fe3ce",
+    "keyboard-review-ux-restored.json": "d64122ce2f087e8c83c8bab5973d424f985f228ef11f9dd44506d25ef5e0f633",
+    "keyboard-review-upgrade.json": "a2403d24a3f4a341b864767ccbeee143bba60f1df4afa7c60427dddac8ee36b5",
+    "keyboard-review-final-state.json": "176401532521962c267204c1b6c21d175d378d6273101dec8fd962c92075efc4",
+    "account-summary-installed.json": "e3f772746c651a01e1130b67018d8c4056db6390ec42b27ae7c0e1796f9c486a",
+    "architecture-current.json": "b64b99e65c8a31789ed71370bf9af8f2b3f7cdcb5e1f29c7c3c25b3741ef20c4"
+  },
+  "screenshots": [
+    {
+      "path": "docs/evidence/247-tarifa-precio-perdido.jpg",
+      "sha256": "d3266d464967dacdd4a3ff0d17421d8024b52b10d4174547031516ef7c9d30c6",
+      "mime_type": "image/jpeg",
+      "width": 1179,
+      "height": 884,
+      "captured_bytes_unchanged": true,
+      "scope": "Before/intermediate defect observation, not final acceptance"
+    },
+    {
+      "path": "docs/evidence/248-tarifa-precio-conservado.jpg",
+      "sha256": "ec6fdb57fc3f508f6b8166c5abf3f5458de9419bde8d89b30f67fc05d1219e03",
+      "mime_type": "image/jpeg",
+      "width": 1179,
+      "height": 884,
+      "captured_bytes_unchanged": true,
+      "scope": "Observed browser state; see role trace for its step and build"
+    },
+    {
+      "path": "docs/evidence/249-tarifa-tabla-teclado.jpg",
+      "sha256": "fce06f0835a8980f79b008752d4385395929b85728be748d20b6850ffe92ab62",
+      "mime_type": "image/jpeg",
+      "width": 1179,
+      "height": 884,
+      "captured_bytes_unchanged": true,
+      "scope": "Observed browser state; see role trace for its step and build"
+    },
+    {
+      "path": "docs/evidence/250-reserva-resumen-teclado.jpg",
+      "sha256": "db5d023f6acafdc390c83fc9861a1bb46cd6f72fdfe30e012134d0b7751417dd",
+      "mime_type": "image/jpeg",
+      "width": 1179,
+      "height": 884,
+      "captured_bytes_unchanged": true,
+      "scope": "Observed browser state; see role trace for its step and build"
+    },
+    {
+      "path": "docs/evidence/251-consumo-entregado-teclado.jpg",
+      "sha256": "e2f3437b8daafca9bf9f048d726af4bc240841f5f8dcf750decd2427c27f5bb3",
+      "mime_type": "image/jpeg",
+      "width": 1179,
+      "height": 884,
+      "captured_bytes_unchanged": true,
+      "scope": "Observed browser state; see role trace for its step and build"
+    },
+    {
+      "path": "docs/evidence/252-revision-cobro-teclado.jpg",
+      "sha256": "8fcc417423923da1999b3cfbf289f057a5ad71e493c533eff28557b4e8d54100",
+      "mime_type": "image/jpeg",
+      "width": 1179,
+      "height": 884,
+      "captured_bytes_unchanged": true,
+      "scope": "Observed browser state; see role trace for its step and build"
+    },
+    {
+      "path": "docs/evidence/253-cobro-confirmado-teclado.jpg",
+      "sha256": "0e58f6cd88e70ac1846e95316c095cd4dd7ae70af97f4ac4edf7768832a04bd3",
+      "mime_type": "image/jpeg",
+      "width": 1179,
+      "height": 884,
+      "captured_bytes_unchanged": true,
+      "scope": "Observed browser state; see role trace for its step and build"
+    },
+    {
+      "path": "docs/evidence/254-caja-turno-cerrado-teclado.jpg",
+      "sha256": "417ed2242d6728c6e9ef49a5f1e2d5d58f22bb5129f77aaa05f36a31bddc1b5e",
+      "mime_type": "image/jpeg",
+      "width": 1179,
+      "height": 884,
+      "captured_bytes_unchanged": true,
+      "scope": "Observed browser state; see role trace for its step and build"
+    },
+    {
+      "path": "docs/evidence/255-salida-teclado.jpg",
+      "sha256": "298f7f1f256bc6bbbcbe41b2596a633cb417d28dce69f9a54f5927626ea61df0",
+      "mime_type": "image/jpeg",
+      "width": 1179,
+      "height": 884,
+      "captured_bytes_unchanged": true,
+      "scope": "Observed browser state; see role trace for its step and build"
+    },
+    {
+      "path": "docs/evidence/256-checklist-teclado.jpg",
+      "sha256": "7ba2a84a90ceec07442756a0d889424effcaf267ea7dc57420ac2d63e793f10d",
+      "mime_type": "image/jpeg",
+      "width": 1179,
+      "height": 884,
+      "captured_bytes_unchanged": true,
+      "scope": "Observed browser state; see role trace for its step and build"
+    },
+    {
+      "path": "docs/evidence/257-limpieza-espera-supervision.jpg",
+      "sha256": "41058a77b0d7b0cf58bdfda1e86d33ee9783a77fe1bb37e7aa5988b7b77232c8",
+      "mime_type": "image/jpeg",
+      "width": 1179,
+      "height": 884,
+      "captured_bytes_unchanged": true,
+      "scope": "Observed browser state; see role trace for its step and build"
+    },
+    {
+      "path": "docs/evidence/258-inspeccion-completada-teclado.jpg",
+      "sha256": "616c31071e21396d6f19907aa4886d96c5b0466163650080ba51f6ed117fe770",
+      "mime_type": "image/jpeg",
+      "width": 1179,
+      "height": 884,
+      "captured_bytes_unchanged": true,
+      "scope": "Observed browser state; see role trace for its step and build"
+    },
+    {
+      "path": "docs/evidence/259-mantenimiento-permisos-teclado.jpg",
+      "sha256": "e019aeaec0e735cff17a8d3a019dfd866b63d7b4e6faae744e41578846ec5aed",
+      "mime_type": "image/jpeg",
+      "width": 1179,
+      "height": 884,
+      "captured_bytes_unchanged": true,
+      "scope": "Observed browser state; see role trace for its step and build"
+    },
+    {
+      "path": "docs/evidence/260-mantenimiento-liberado-teclado.jpg",
+      "sha256": "eb37b1d65d43b4554b42a274fcb64cc6a05cb52dd3776bb727bc2ce8cc3f7650",
+      "mime_type": "image/jpeg",
+      "width": 1179,
+      "height": 884,
+      "captured_bytes_unchanged": true,
+      "scope": "Observed browser state; see role trace for its step and build"
+    },
+    {
+      "path": "docs/evidence/261-conciliacion-teclado.jpg",
+      "sha256": "edae43cd9ce3e185405cdebbe048ae584e6f687fc047a9e7709d7dd584bfb4e6",
+      "mime_type": "image/jpeg",
+      "width": 1179,
+      "height": 884,
+      "captured_bytes_unchanged": true,
+      "scope": "Observed browser state; see role trace for its step and build"
+    },
+    {
+      "path": "docs/evidence/262-factura-concisa-contabilidad.jpg",
+      "sha256": "e5d89ac8c2986e644eb167abebec9af15c9a9b7239cf7aceb73ad402066ecd25",
+      "mime_type": "image/jpeg",
+      "width": 1164,
+      "height": 873,
+      "captured_bytes_unchanged": true,
+      "scope": "Observed browser state; see role trace for its step and build"
+    },
+    {
+      "path": "docs/evidence/263-produccion-gerencia-teclado.jpg",
+      "sha256": "b3be2bf6dcc985011c38bc36080f6dc0a850e5e3a8f0f5595ec4ed4db3d0db19",
+      "mime_type": "image/jpeg",
+      "width": 1179,
+      "height": 884,
+      "captured_bytes_unchanged": true,
+      "scope": "Observed browser state; see role trace for its step and build"
+    },
+    {
+      "path": "docs/evidence/264-confirmacion-no-teclado.jpg",
+      "sha256": "fa640f1752f9e0f242b560ca7fd2fcc202b44e0f17401e2af2123d882683fdf0",
+      "mime_type": "image/jpeg",
+      "width": 1179,
+      "height": 884,
+      "captured_bytes_unchanged": true,
+      "scope": "Observed browser state; see role trace for its step and build"
+    },
+    {
+      "path": "docs/evidence/265-auditoria-valores-teclado.jpg",
+      "sha256": "fd624a1cfd50b9d6b81a51bb0a066317d2185ae3907270c3cfbfe517c672e0b6",
+      "mime_type": "image/jpeg",
+      "width": 1179,
+      "height": 884,
+      "captured_bytes_unchanged": true,
+      "scope": "Observed browser state; see role trace for its step and build"
+    },
+    {
+      "path": "docs/evidence/266-auditoria-filtros-movil.jpg",
+      "sha256": "902277bd1d8c2d02aa209bba5d3c05c86658938f40ab42abb8d0d81e5de263e2",
+      "mime_type": "image/jpeg",
+      "width": 390,
+      "height": 844,
+      "captured_bytes_unchanged": true,
+      "scope": "Observed browser state; see role trace for its step and build"
+    },
+    {
+      "path": "docs/evidence/267-auditoria-mantenimiento-movil.jpg",
+      "sha256": "57ad1949ab8697ef92519974e1d1b9182758e370f3db2519b2d3705a0b18dabc",
+      "mime_type": "image/jpeg",
+      "width": 390,
+      "height": 844,
+      "captured_bytes_unchanged": true,
+      "scope": "Observed browser state; see role trace for its step and build"
+    },
+    {
+      "path": "docs/evidence/268-tarifa-movil-precio-conservado.jpg",
+      "sha256": "8ae9068b5f4b86820a808d8330757b236ab406121359ab9b0e813f7610508876",
+      "mime_type": "image/jpeg",
+      "width": 390,
+      "height": 844,
+      "captured_bytes_unchanged": true,
+      "scope": "Observed browser state; see role trace for its step and build"
+    },
+    {
+      "path": "docs/evidence/269-tarifa-tabla-movil-teclado.jpg",
+      "sha256": "aff43c616f7ae2bba0e2432ab7cb1fb60020a10b4d8f96cc960e75c8e618361e",
+      "mime_type": "image/jpeg",
+      "width": 390,
+      "height": 844,
+      "captured_bytes_unchanged": true,
+      "scope": "Observed browser state; see role trace for its step and build"
+    },
+    {
+      "path": "docs/evidence/270-portal-resultado-movil.jpg",
+      "sha256": "c72cd58f970a6b53e1b262d848620c240c484dcb44504f2b6744f5686a04ba2c",
+      "mime_type": "image/jpeg",
+      "width": 375,
+      "height": 812,
+      "captured_bytes_unchanged": true,
+      "scope": "Observed browser state; see role trace for its step and build"
+    },
+    {
+      "path": "docs/evidence/271-portal-sin-cupo-movil.jpg",
+      "sha256": "e3f902023c81f1683022046d721048f5a8ab4bc9cbe29d8cb9b7fac40980a376",
+      "mime_type": "image/jpeg",
+      "width": 390,
+      "height": 844,
+      "captured_bytes_unchanged": true,
+      "scope": "Before/intermediate defect observation, not final acceptance"
+    },
+    {
+      "path": "docs/evidence/272-portal-error-final-movil.jpg",
+      "sha256": "411f69da7aa904f92f1a26dc0e5288ebd13808891583f582576faa4884ed9183",
+      "mime_type": "image/jpeg",
+      "width": 375,
+      "height": 812,
+      "captured_bytes_unchanged": true,
+      "scope": "Observed browser state; see role trace for its step and build"
+    },
+    {
+      "path": "docs/evidence/273-portal-escritorio-teclado.jpg",
+      "sha256": "6d906f21f4531077da8ea064667261d135c7896761bbe21802f7ebb8108b8e77",
+      "mime_type": "image/jpeg",
+      "width": 1164,
+      "height": 873,
+      "captured_bytes_unchanged": true,
+      "scope": "Observed browser state; see role trace for its step and build"
+    }
+  ]
+}

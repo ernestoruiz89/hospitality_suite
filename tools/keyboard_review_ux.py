@@ -84,6 +84,11 @@ elif args.action in ('begin','inspect'):
             assert guest.owner=='receptionist@hospitality.example.invalid'
             category=frappe.get_doc('HS Category',{'property':prop.name,'category_name':'Categoría teclado'})
             assert category.owner=='administrator@hospitality.example.invalid'
+            rate=frappe.get_doc('HS Rate',{'property':prop.name,'title':'Tarifa teclado'})
+            assert rate.owner==category.owner and rate.amount==900
+            assert sorted((row.item,float(row.quantity),row.basis) for row in rate.included_services)==[('HS-DEMO-EXTRA-HOUR',1.0,'Stay'),('HS-DEMO-WATER',2.0,'Night')]
+            assert frappe.db.count('HS Rate',{'property':prop.name})==2,'The mobile draft must remain unsaved'
+            assert frappe.db.count('HS Portal Request',{'property':prop.name})==0,'Portal review quotes only; no request was sent'
             booking=frappe.get_doc('HS Booking',{'property':prop.name,'guest':guest.name});assert booking.owner==guest.owner
             stay=frappe.get_doc('HS Stay',{'booking':booking.name});assert stay.status=='Checked Out'
             assert frappe.db.get_value('HS Room',stay.room,'room_number')=='H101'
@@ -109,7 +114,8 @@ elif args.action in ('begin','inspect'):
             assert counts['Stock Entry']==state['baseline_native_counts']['Stock Entry']+1
             assert counts['Stock Ledger Entry']==state['baseline_native_counts']['Stock Ledger Entry']+1
             proof=dict(site=SITE,preparation='Original baseline only; no API-created operational fixtures.',
-                category=category.name,guest=guest.name,booking=booking.name,stay=stay.name,invoice=invoice.name,payment_entry=entry.name,
+                category=category.name,rate=rate.name,rate_amount=900,rate_services=2,mobile_rate_draft_unsaved=True,portal_requests_sent=0,
+                guest=guest.name,booking=booking.name,stay=stay.name,invoice=invoice.name,payment_entry=entry.name,
                 total=1530,outstanding=0,shift_difference=0,cleaning_inspected=True,maintenance_reopened_by_supervisor=True,
                 receptionist_cashier_permissions_separate=True,native_counts=counts,business_date_unchanged=True,
                 browser_evidence='keyboard-review-roles-ui.json',mutations_by_inspector=False)

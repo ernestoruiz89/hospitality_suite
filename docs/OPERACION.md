@@ -81,14 +81,40 @@ Ensayo ejecutado: respaldo nativo con archivos de hospitality.localhost y restau
 
 ## Actualización y reversión de despliegue
 
-1. Registre las versiones y haga respaldo completo.
-2. Ensaye el commit nuevo sobre una copia restaurada; ejecute migrate, build y pruebas apropiadas.
-3. Planifique la ventana, controle trabajos en curso y despliegue mediante el administrador de procesos del entorno.
-4. Migre el sitio, compile assets y verifique salud, roles, conciliación y un recorrido autorizado.
-5. Si falla antes de operar con datos nuevos, restaure respaldo y código compatible en el destino controlado. Volver solo a un commit anterior no revierte una migración de base.
-6. Si ya hubo operaciones, preserve el estado nuevo y los registros antes de decidir una restauración; una reversión de código puede necesitar una migración correctiva. No descarte facturas/cobros nuevos mediante un rollback de base sin conciliarlos.
+El responsable del despliegue debe identificar bench, sitio y base antes de ejecutar estos ejemplos. Sustituya `hotel.localhost` por ese destino confirmado. Registre también qué procesos lo sirven y si el scheduler estaba habilitado; una sede de recuperación puede requerir que siga pausado.
+
+1. Conserve los commits de Frappe, ERPNext y Hospitality, versiones de Python/Node y dependencias, configuración del administrador de procesos, runtime PDF y estado inicial de salud. `list-apps` muestra la versión registrada por la última migración; contrástela con el código y commit que se va a ejecutar. Preserve cambios locales antes de sustituir código.
+2. Ensaye primero el commit exacto sobre una copia restaurada: instalación de sus dependencias, migración, construcción, pruebas y un recorrido autorizado por roles. Compare datos, documentos nativos y archivos privados con el respaldo. Este ensayo no utiliza la sede operativa como batería de integración.
+3. Durante la ventana, ponga el sitio en mantenimiento, evite nuevos despachos del scheduler y deje terminar los trabajos en curso. `disable-scheduler` no detiene un job ya iniciado. Examine colas, trabajos en ejecución/fallidos y logs; coordine después la parada de workers con el administrador de procesos de ese bench.
+
+```sh
+bench --site hotel.localhost set-maintenance-mode on
+bench --site hotel.localhost disable-scheduler
+bench --site hotel.localhost show-pending-jobs
+bench --site hotel.localhost backup --with-files
+```
+
+4. Verifique y copie fuera del equipo el SQL, archivos públicos/privados, configuración y clave de cifrado del mismo punto. Registre sus hashes y los commits anteriores. Despliegue el código/dependencias ensayados; migre y construya antes de reiniciar web, workers y Socket.IO con su administrador de procesos configurado. No cambie de versión del núcleo de forma implícita al actualizar solo esta app.
+
+```sh
+bench --site hotel.localhost migrate
+bench build --app hospitality_suite
+bench --site hotel.localhost clear-cache
+```
+
+5. Compruebe versiones registradas/código, `doctor`, colas, HTTP, Socket.IO, permisos por sede, archivos privados, conciliación de facturas/pagos/stock y las tareas acordadas. Habilite el scheduler solamente si estaba habilitado antes y retire mantenimiento cuando la revisión permita reabrir la operación.
+
+```sh
+bench --site hotel.localhost enable-scheduler
+bench --site hotel.localhost set-maintenance-mode off
+```
+
+6. Si el despliegue falla, mantenga el destino cerrado y conserve estado/logs de la falla. Antes de restaurar compruebe si hubo reservas, facturas, pagos, stock o trabajos nuevos. Si no hubo actividad nueva, restaure en el destino controlado el SQL y archivos del mismo respaldo, su clave y el conjunto compatible de código/dependencias anteriores; utilice el comando de restauración descrito arriba. Verifique identidad/conexión del destino, migre con ese código, reconstruya y reinicie sus procesos. Repita las comparaciones y el recorrido antes de reabrir. Volver solo al commit anterior no revierte la base ni sus archivos.
+7. Si hubo actividad nueva, preserve un respaldo del estado posterior y concilie sus documentos antes de decidir la recuperación. Puede ser necesaria una corrección hacia delante o una recuperación asistida; una restauración antigua descartaría movimientos válidos. El responsable debe resolver ese alcance antes de reabrir y conservar la evidencia de ambos puntos.
 
 Los patches de la app reconstruyen referencias de líneas y snapshots de asignaciones anteriores, sin reescribir importes contabilizados. Conserve sus registros de ejecución y repita migrate para verificar idempotencia.
+
+Esta sección entrega el procedimiento. Las restauraciones históricas y las restauraciones del sitio sintético durante desarrollo no sustituyen el ensayo final de despliegue/reversión de la versión a entregar; F26/S19-07 conservan esa verificación pendiente.
 
 ## Seguridad y monitoreo
 
@@ -106,8 +132,8 @@ Los patches de la app reconstruyen referencias de líneas y snapshots de asignac
 
 `cut_test_socket.py` verifica PID/comando/directorio del servicio aislado antes de detener Socket.IO. Restablezca inmediatamente con run_dev.py. Se observaron Sin tiempo real y Tiempo real conectado tras Actualizar; web/worker/scheduler siguieron activos. Las peticiones necesitan respuesta del servidor aun cuando Socket.IO está conectado. Una respuesta perdida mantiene la ventana y su referencia: reintente los mismos datos. Una recarga completa pierde la referencia en memoria; consulte documentos/saldos antes de iniciar otra operación.
 
-## Catálogo extenso en el sitio limpio
+## Ensayo histórico de catálogo extenso
 
-`tools/catalog_preview.py prepare` crea explícitamente 606 Item ficticios únicamente en hospitality-clean.localhost (base hospitality_clean, allow_tests requerido), sin stock ni movimientos financieros. Conserva los artículos existentes y admite repetición. `start` inicia web temporal en 8089; `stop` verifica PID/comando/directorio y detiene solo esa vista. Ejecute estos comandos con env/bin/python del bench. El sitio principal 8086 sigue independiente.
+El ensayo anterior de `tools/catalog_preview.py` creó 606 Item ficticios en hospitality-clean.localhost, sin stock ni movimientos financieros. Ese sitio está ahora en cuarentena y conserva respaldo de diagnóstico: esta descripción es evidencia histórica, no una instrucción para volver a prepararlo o arrancarlo. Las revisiones actuales usan hospitality-acceptance.localhost, su respaldo inicial y los helpers acotados de la fase documentada. 8089 es temporal y se detiene antes de restaurar; 8086 pertenece a la demostración principal.
 
-URL de revisión: http://hospitality-clean.localhost:8089/desk/hospitality-suite/hospitality-services. Use los usuarios ficticios ya creados en ese sitio y sus credenciales privadas; no copie claves a esta guía. Busque Servicio especial del catálogo y compruebe el Item HS-CATALOG-QA-0605. El ensayo acreditado selecciona el artículo sin enviar un consumo; el precio/entrega con un catálogo grande se comprueba en integración con rollback. La vista temporal no configura un segundo Socket.IO; ese transporte se prueba en el sitio principal. Deténgala al terminar.
+El caso histórico seleccionó Servicio especial del catálogo / HS-CATALOG-QA-0605 sin enviar un consumo; el precio/entrega con un catálogo grande se comprobó en integración con rollback. Las credenciales de pruebas permanecen privadas. La vista temporal no configura un segundo Socket.IO; ese transporte conserva su prueba independiente en el sitio principal.

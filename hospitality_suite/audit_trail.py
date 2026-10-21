@@ -78,6 +78,7 @@ def room_changed(doc):
 
 
 EXTRAS={'HS Rate':('included_services',),'HS Shift':('denominations',),'HS Daily Close':('financial_totals',)}
+CONTEXT_LABELS={'HS Maintenance Order':{'title':'Trabajo requerido','starts_at':'Inicio del trabajo','ends_at':'Fin previsto'}}
 LABELS={'rooms':'Habitaciones registradas','room_number':'Número de habitación','floor':'Piso','zone':'Zona','beds':'Camas','parking':'Estacionamiento','cleaning_status':'Estado de limpieza',
     'equipment':'Equipo','until_reopened':'Hasta reapertura autorizada','blocks_room':'Bloquea habitación','assigned_to':'Responsable','started_at':'Inicio registrado','completed_at':'Finalización registrada','notes':'Observaciones',
     'included_services':'Servicios incluidos','denominations':'Arqueo por moneda','financial_totals':'Resumen financiero conservado',
@@ -150,7 +151,7 @@ def detail(prop,name):
             for field in allowed:
                 if field not in before and field not in after:continue
                 df=meta.get_field(field)
-                rows.append(dict(field=field,label=frappe._(LABELS.get(field) or (df.label if df else field)),
+                rows.append(dict(field=field,label=frappe._(CONTEXT_LABELS.get(dt,{}).get(field) or LABELS.get(field) or (df.label if df else field)),
                     before=display_value(prop,dt,field,before.get(field),df,before,context),after=display_value(prop,dt,field,after.get(field),df,after,context),
                     changed=before.get(field)!=after.get(field),fieldtype=df.fieldtype if df else 'Data'))
     recorded_title=(stored.get('after') or {}).get('title') if rows and stored.get('doctype')=='HS Rate' else None

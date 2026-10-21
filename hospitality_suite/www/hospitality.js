@@ -1,6 +1,19 @@
 frappe.ready(async()=>{
+  const menu=document.querySelector?.('button.navbar-toggler');
+  if(menu){menu.setAttribute('aria-label',__('Menú de navegación'));menu.classList.add('hs-portal-menu');}
   const el=id=>document.getElementById(id);
-  const call=async(method,args={})=>(await frappe.call({method:"hospitality_suite.portal."+method,args})).message;
+  const showResult=message=>{
+    const result=el('hp-result');result.textContent=message;result.tabIndex=-1;
+    // Disabling the submit button can blur it onto body. Announce the result
+    // there, but do not interrupt someone already editing another field.
+    if(document.activeElement===document.body||document.activeElement===el('hp-quote')||document.activeElement===el('hp-request'))result.focus();
+  };
+  // This public form presents its own inline result, including business
+  // rejections; avoid a second native popup stealing that result's focus.
+  // Website's process_response uses error_msg rather than Desk's silent flag.
+  // An empty native jQuery target consumes that duplicate message without
+  // inserting server HTML into this public form; showResult uses textContent.
+  const call=async(method,args={})=>(await frappe.call({method:"hospitality_suite.portal."+method,args,silent:true,error_msg:$()})).message;
   let catalog;
   try{catalog=await call("catalog");}catch{el("hp-empty").textContent=__("No se pudieron consultar los establecimientos. Recargue la página para reintentar.");return;}
   if(!catalog.length){el("hp-empty").textContent=__("Las reservas en línea todavía no están habilitadas. Consulte directamente con recepción.");return;}
@@ -18,16 +31,16 @@ frappe.ready(async()=>{
       const quote=await call("quote",{property_name:property,data:JSON.stringify(requested)});
       if(current!==revision)return;
       accepted=quote;values=requested;acceptedProperty=property;key=crypto.randomUUID();
-      el("hp-result").textContent=__("Alojamiento: {0} {1}. Recepción confirmará las condiciones y los impuestos aplicables.",[accepted.amount,accepted.currency]);
+      showResult(__("Alojamiento: {0} {1}. Recepción confirmará las condiciones y los impuestos aplicables.",[accepted.amount,accepted.currency]));
       el("hp-request").hidden=false;
-    }catch{if(current===revision)el("hp-result").textContent=__("No se encontró disponibilidad o no se pudo consultar. Revise las fechas e intente nuevamente.");}
+    }catch{if(current===revision)showResult(__("No se encontró disponibilidad o no se pudo consultar. Revise las fechas e intente nuevamente."));}
     finally{el("hp-quote").disabled=false;}
   });
   el("hp-request").addEventListener("click",async()=>{
     if(!accepted||el("hp-request").disabled)return;
     const controls=[...el("hp-form").elements];controls.forEach(control=>{control.disabled=true;});
     try{const result=await call("request",{property_name:acceptedProperty,data:JSON.stringify({...values,acceptance:accepted.acceptance}),request_key:key});window.location.assign(result.confirmation_url);}
-    catch{el("hp-result").textContent=__("Sin confirmación del servidor. Reintente con estos mismos datos; la solicitud conserva su referencia. No se ha registrado ningún pago.");}
+    catch{showResult(__("Sin confirmación del servidor. Reintente con estos mismos datos; la solicitud conserva su referencia. No se ha registrado ningún pago."));}
     finally{controls.forEach(control=>{control.disabled=false;});}
   });
 });

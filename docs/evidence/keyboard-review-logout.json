@@ -1,0 +1,17 @@
+{
+  "new_http_500": 0,
+  "source": "Temporary acceptance HTTP server log, read only",
+  "core_changed": false,
+  "bundle": "hospitality.bundle.MX2USS23.js",
+  "before": {
+    "server_500": 2,
+    "logout_posts": 22
+  },
+  "no_logout_requests": 0,
+  "after": {
+    "logout_posts": 23,
+    "server_500": 2
+  },
+  "scope": "Native confirmation from the operational Page; No then Yes via Enter",
+  "yes_logout_requests": 1
+}

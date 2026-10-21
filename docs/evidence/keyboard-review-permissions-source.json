@@ -5,7 +5,7 @@
     "hospitality_suite/__init__.py": "977483af76afce66727b013a12b6681b89d117bad711cc0a5d49dff983197e3d",
     "hospitality_suite/accounting.py": "3fe5fa22b16c24e85cc432276bf9fcdbce84afd855862be8dc2947356da0129b",
     "hospitality_suite/api.py": "5403990a23900406e916a8b8be93510c8865f304bae7d573c874fad3ecda8e03",
-    "hospitality_suite/audit_trail.py": "f66ec0e9c8ec0cf48502d9a2713511dddb742cd874d4f06a27fb465f2f10f6c9",
+    "hospitality_suite/audit_trail.py": "a384fe5263b67374251f14233da9a76adab3028718c7840f78961cf32c344cfa",
     "hospitality_suite/availability.py": "54689474e326494c080235dd2057170505c50da8ecca650e1e0a3fbf68afc62a",
     "hospitality_suite/availability_search.py": "81f57f98927b4fe24f1f4493aa1dd54d5dfc4c68779a9d441bc1479c604cd3b6",
     "hospitality_suite/booking_drafts.py": "4c36f912cdcf00a9c5b330f0865eb608f75c4033f1a9a7f37663ee13caba4b08",
