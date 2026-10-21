@@ -16,7 +16,7 @@ from hospitality_suite.schema import SCHEMA, PAGES
 
 ROOT = Path(__file__).resolve().parents[1]
 parser=argparse.ArgumentParser()
-parser.add_argument('--phase',choices=['print-delivery','provider-contracts'],default='print-delivery')
+parser.add_argument('--phase',choices=['print-delivery','provider-contracts','phase-review'],default='print-delivery')
 args=parser.parse_args()
 BENCH = Path('/home/frappe/benches/hospitality-bench')
 META = ROOT / 'hospitality_suite/hospitality_suite'
@@ -24,7 +24,7 @@ sha = lambda path: hashlib.sha256(path.read_bytes()).hexdigest()
 sources = [ROOT/'hospitality_suite/hooks.py', ROOT/'hospitality_suite/install.py', ROOT/'hospitality_suite/api.py',
            ROOT/'hospitality_suite/schema.py', ROOT/'hospitality_suite/controllers.py', ROOT/'hospitality_suite/printing.py', ROOT/'hospitality_suite/demo.py',
            ROOT/'hospitality_suite/tests/setup.py', ROOT/'hospitality_suite/patches.txt']
-if args.phase=='provider-contracts':
+if args.phase in ['provider-contracts','phase-review']:
     sources += [ROOT/'hospitality_suite/provider_adapters.py',ROOT/'hospitality_suite/tests/test_provider_adapters.py']
 formats = []
 for path in sorted((META/'print_format').glob('*/*.json')):

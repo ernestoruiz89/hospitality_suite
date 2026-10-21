@@ -1,5 +1,11 @@
 # Registro de implementación
 
+## Contraste de fases sobre 0.8.8
+
+[REVISION_FASES_Y_ACCIONES.md](REVISION_FASES_Y_ACCIONES.md) contrasta las doce R generales/de fases. S19-01/S19-03/S19-04/S19-05/S19-06/S19-09 pasan a V, con fuentes, módulos/casos y evidencia real anterior delimitada; las otras seis pasan a I con paquete/instalación, aceptación y recuperación final explícitamente pendientes. No se convierte el inventario de botones en aceptación de todas las tareas. **208 V, diez I, cero P y cero R: diez sin cierre** de las mismas 218 entradas/huella.
+
+Revisión actual de 35 DocTypes, once Pages, nueve roles, índices y metadatos de ambos sitios; 84 manejadores, 97 apariciones literales de botones y dos grupos dinámicos resueltos según el orden del bundle. Nombres RPC/mutaciones declarados corresponden al servidor. La app no cambia respecto de `fb8c022`: 404 nativas y 210 JS de esa ejecución se reutilizan con alcance explícito, sin nueva batería completa ni recorrido UI. Comparación estricta actual: principal 72/1246/dos archivos/fecha 19/10 y aceptación 72/250, sin operaciones; HTTP/servicios correctos, 8089 detenido. No hay nuevas mutaciones, respaldo/restauración ni PDF. Continúan la aceptación transversal y F26; OTA aplazada, objetivo activo.
+
 ## Ampliación comprobada — 0.8.8
 
 [CONTRATOS_PROVEEDORES.md](CONTRATOS_PROVEEDORES.md): contratos y adaptadores ejecutables para el protocolo propio de referencia de pagos, correo/WhatsApp y cerraduras; normalización entrante de canales sin publicación. Transporte HTTPS desactivado por defecto, ámbito y respuestas validados, claves/huellas de idempotencia, errores sin cuerpo/secretos, firmas y vigencias explícitas. Sin RPC/jobs/hooks que los activen, proveedores comerciales ni movimientos externos. Se corrige el cierre de HTTPError detectado en el primer pase.

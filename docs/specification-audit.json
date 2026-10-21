@@ -9,10 +9,20 @@
       "line": 6,
       "kind": "clause",
       "requirement": "Tu tarea es DISEÑAR, PROGRAMAR, INTEGRAR Y PROBAR una aplicación completa e instalable para administrar hoteles, moteles y establecimientos mixtos. Trabaja directamente sobre el repositorio y entorno disponibles. Entrega código funcional, no solamente recomendaciones, pantallas de demostración o una descripción del sistema.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "I",
+      "implementation": [
+        "README.md",
+        "pyproject.toml",
+        "hospitality_suite/install.py",
+        "hospitality_suite/public/hospitality.bundle.js"
+      ],
+      "evidence": [
+        "docs/REVISION_FASES_Y_ACCIONES.md",
+        "docs/evidence/phase-review-native-artifacts.json",
+        "docs/evidence/phase-review-crosswalk.json",
+        "docs/evidence/provider-contracts-native-tests.xml"
+      ],
+      "remaining": "Completar las tareas/estados transversales S00-02/S04-14/S04-16/S04-20 y el paquete/instalación/actualización/reversión final S18-01/S19-02/S19-07/S19-08 antes de declarar íntegro el alcance."
     },
     {
       "id": "S00-02",
@@ -44,7 +54,9 @@
         "docs/evidence/print-delivery-js-tests.log",
         "docs/evidence/print-delivery-browser.json",
         "docs/evidence/print-delivery-pdfs.json",
-        "docs/evidence/print-delivery-ui-data.json"
+        "docs/evidence/print-delivery-ui-data.json",
+        "docs/REVISION_FASES_Y_ACCIONES.md",
+        "docs/evidence/phase-review-actions.json"
       ],
       "remaining": "La aceptación S17-18 queda acreditada en 0.8.0 con recepción+caja, limpieza/supervisión, contabilidad y gerencia. Completar el contraste del conjunto de tareas habituales y secundarias de todos los roles/Pages; este recorrido de aceptación no acredita por sí solo todos los casos y formularios."
     },
@@ -295,10 +307,20 @@
       "line": 23,
       "kind": "enumerated",
       "requirement": "- Implementa por etapas, pero continúa hasta cubrir el alcance obligatorio. No te detengas después del esquema de DocTypes o de la primera pantalla.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "I",
+      "implementation": [
+        "README.md",
+        "pyproject.toml",
+        "hospitality_suite/install.py",
+        "hospitality_suite/public/hospitality.bundle.js"
+      ],
+      "evidence": [
+        "docs/REVISION_FASES_Y_ACCIONES.md",
+        "docs/evidence/phase-review-native-artifacts.json",
+        "docs/evidence/phase-review-crosswalk.json",
+        "docs/evidence/provider-contracts-native-tests.xml"
+      ],
+      "remaining": "Completar las tareas/estados transversales S00-02/S04-14/S04-16/S04-20 y el paquete/instalación/actualización/reversión final S18-01/S19-02/S19-07/S19-08 antes de declarar íntegro el alcance."
     },
     {
       "id": "S01-13",
@@ -1048,7 +1070,9 @@
         "docs/evidence/print-delivery-js-tests.log",
         "docs/evidence/print-delivery-browser.json",
         "docs/evidence/print-delivery-pdfs.json",
-        "docs/evidence/print-delivery-ui-data.json"
+        "docs/evidence/print-delivery-ui-data.json",
+        "docs/REVISION_FASES_Y_ACCIONES.md",
+        "docs/evidence/phase-review-actions.json"
       ],
       "remaining": "La aceptación S17-18 queda acreditada en 0.8.0 con recepción+caja, limpieza/supervisión, contabilidad y gerencia. Completar el contraste del conjunto de tareas habituales y secundarias de todos los roles/Pages; este recorrido de aceptación no acredita por sí solo todos los casos y formularios."
     },
@@ -1140,7 +1164,9 @@
         "docs/evidence/print-delivery-js-tests.log",
         "docs/evidence/print-delivery-browser.json",
         "docs/evidence/print-delivery-pdfs.json",
-        "docs/evidence/print-delivery-ui-data.json"
+        "docs/evidence/print-delivery-ui-data.json",
+        "docs/REVISION_FASES_Y_ACCIONES.md",
+        "docs/evidence/phase-review-actions.json"
       ],
       "remaining": "0.8.3–0.8.5 acreditan validación compartida, límites de cantidad/personas y actividad/reintento. 0.8.6 resuelve selectores técnicos, vacío junto a borradores y acceso/etiquetas/conservación numérica del editor expandido, con defectos originales y repetición final. Completar las demás reglas específicas por campo y estados de búsquedas/vistas secundarias, incluida su carga/vacío y doble envío. Los clics durante cierre visual nativo conservan observación histórica; no se afirma una causa completa. SELECTORES_Y_RESERVA_MANUAL.md delimita esta fase. 0.8.7 corrige la deshabilitación persistente de acciones en modales y su reinserción tardía, con defectos intermedios y repetición real conservados. Esto no acredita todas las reglas/estados ni todos los clics durante el cierre visual nativo."
     },
@@ -1274,7 +1300,9 @@
         "docs/evidence/print-delivery-js-tests.log",
         "docs/evidence/print-delivery-browser.json",
         "docs/evidence/print-delivery-pdfs.json",
-        "docs/evidence/print-delivery-ui-data.json"
+        "docs/evidence/print-delivery-ui-data.json",
+        "docs/REVISION_FASES_Y_ACCIONES.md",
+        "docs/evidence/phase-review-actions.json"
       ],
       "remaining": "La aceptación S17-18 queda acreditada en 0.8.0 con recepción+caja, limpieza/supervisión, contabilidad y gerencia. Completar el contraste del conjunto de tareas habituales y secundarias de todos los roles/Pages; este recorrido de aceptación no acredita por sí solo todos los casos y formularios. En 0.8.3 se observa salida de sesión sin confirmación después de arqueo hasta recargar; falta reproducir y resolver ese contexto de acciones, sin atribuirlo aún a una causa. En 0.8.4 dos arqueos completan salida sin recarga; permanecen observaciones del clic durante refresco y confirmación por nombre accesible tras varios diálogos, documentadas en DISPONIBILIDAD_VISUAL_Y_LIMITES.md. 0.8.7 acredita accesos a nueve impresiones desde cinco roles y limpieza móvil; sus documentos se preparan mediante API y no se atribuye su creación a la UI. La acción de reserva a cuenta antes deshabilitada se corrige y repite; el contraste global permanece abierto."
     },
@@ -4604,10 +4632,20 @@
       "line": 271,
       "kind": "enumerated",
       "requirement": "- Repositorio de la app con código completo, estructura nativa, dependencias declaradas y archivos de construcción.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "I",
+      "implementation": [
+        "README.md",
+        "pyproject.toml",
+        "hospitality_suite/install.py",
+        "hospitality_suite/public/hospitality.bundle.js"
+      ],
+      "evidence": [
+        "docs/REVISION_FASES_Y_ACCIONES.md",
+        "docs/evidence/phase-review-native-artifacts.json",
+        "docs/evidence/phase-review-crosswalk.json",
+        "docs/evidence/provider-contracts-native-tests.xml"
+      ],
+      "remaining": "Comprobar paquete distribuible, dependencias/construcción e instalación limpia de la versión final; el código y los metadatos existentes no sustituyen ese ensayo."
     },
     {
       "id": "S18-02",
@@ -4913,10 +4951,24 @@
       "line": 286,
       "kind": "phase",
       "requirement": "Fase 1: inspección del entorno, decisiones de arquitectura, matriz de alcance, modelo, estados y permisos.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "docs/ARQUITECTURA.md",
+        "docs/MODELO_ESTADOS_Y_FLUJOS.md",
+        "hospitality_suite/schema.py",
+        "hospitality_suite/security.py",
+        "hospitality_suite/controllers.py"
+      ],
+      "evidence": [
+        "docs/evidence/phase-review-architecture.json",
+        "docs/evidence/phase-review-native-artifacts.json",
+        "docs/AUDITORIA_ARQUITECTURA.md",
+        "docs/REVISION_FASES_Y_ACCIONES.md",
+        "docs/evidence/phase-review-crosswalk.json",
+        "docs/evidence/provider-contracts-native-tests.xml",
+        "docs/evidence/provider-contracts-js-tests.log"
+      ],
+      "remaining": ""
     },
     {
       "id": "S19-02",
@@ -4925,10 +4977,23 @@
       "line": 287,
       "kind": "phase",
       "requirement": "Fase 2: app instalable, configuración, habitaciones, tarifas y disponibilidad protegida contra concurrencia.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "I",
+      "implementation": [
+        "hospitality_suite/install.py",
+        "hospitality_suite/setup.py",
+        "hospitality_suite/pricing.py",
+        "hospitality_suite/availability.py",
+        "pyproject.toml"
+      ],
+      "evidence": [
+        "docs/evidence/phase-review-native-artifacts.json",
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/REVISION_FASES_Y_ACCIONES.md",
+        "docs/evidence/phase-review-crosswalk.json",
+        "docs/evidence/provider-contracts-native-tests.xml",
+        "docs/evidence/provider-contracts-js-tests.log"
+      ],
+      "remaining": "Ejecutar instalación limpia de la versión final y comprobar su paquete, dependencias, metadatos, permisos y primer arranque. No sustituirla con migrate de los dos sitios existentes."
     },
     {
       "id": "S19-03",
@@ -4937,10 +5002,27 @@
       "line": 288,
       "kind": "phase",
       "requirement": "Fase 3: Pages de recepción/reservas, entradas, estancias, extensiones y salidas.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/operations.py",
+        "hospitality_suite/booking_drafts.py",
+        "hospitality_suite/public/js/hospitality_workflows.js",
+        "hospitality_suite/public/js/hospitality_drafts.js",
+        "hospitality_suite/public/js/hospitality_extras.js"
+      ],
+      "evidence": [
+        "docs/ACEPTACION_Y_DEMOSTRACION.md",
+        "docs/AUDITORIA_FLUJOS_TRANSACCIONES.md",
+        "docs/evidence/role-acceptance-browser.json",
+        "docs/evidence/role-acceptance-items-ui.json",
+        "docs/evidence/24-grupo-modificacion.png",
+        "docs/evidence/36-plan-cambio-extension.png",
+        "docs/REVISION_FASES_Y_ACCIONES.md",
+        "docs/evidence/phase-review-crosswalk.json",
+        "docs/evidence/provider-contracts-native-tests.xml",
+        "docs/evidence/provider-contracts-js-tests.log"
+      ],
+      "remaining": ""
     },
     {
       "id": "S19-04",
@@ -4949,10 +5031,26 @@
       "line": 289,
       "kind": "phase",
       "requirement": "Fase 4: folios, consumos, facturación, anticipos, garantías, caja y conciliación.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/cashier.py",
+        "hospitality_suite/treasury.py",
+        "hospitality_suite/refunds.py",
+        "hospitality_suite/reconciliation.py",
+        "hospitality_suite/public/js/hospitality_finance_stock.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_CAJA_CONTABILIDAD.md",
+        "docs/AUDITORIA_DEVOLUCIONES.md",
+        "docs/evidence/role-acceptance-browser.json",
+        "docs/evidence/role-acceptance-items-ui.json",
+        "docs/REVISION_FASES_Y_ACCIONES.md",
+        "docs/evidence/phase-review-crosswalk.json",
+        "docs/evidence/provider-contracts-native-tests.xml",
+        "docs/evidence/provider-contracts-js-tests.log"
+      ],
+      "remaining": ""
     },
     {
       "id": "S19-05",
@@ -4961,10 +5059,28 @@
       "line": 290,
       "kind": "phase",
       "requirement": "Fase 5: limpieza, mantenimiento, inventario, servicios y cierre diario.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/housekeeping.py",
+        "hospitality_suite/inventory.py",
+        "hospitality_suite/procurement.py",
+        "hospitality_suite/periodic.py",
+        "hospitality_suite/closing.py",
+        "hospitality_suite/close_checks.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_LIMPIEZA_MANTENIMIENTO.md",
+        "docs/AUDITORIA_INVENTARIO_SERVICIOS.md",
+        "docs/BITACORA_Y_CIERRES.md",
+        "docs/evidence/housekeeping-audit-browser.json",
+        "docs/evidence/inventory-audit-browser.json",
+        "docs/evidence/audit-history-browser.json",
+        "docs/REVISION_FASES_Y_ACCIONES.md",
+        "docs/evidence/phase-review-crosswalk.json",
+        "docs/evidence/provider-contracts-native-tests.xml",
+        "docs/evidence/provider-contracts-js-tests.log"
+      ],
+      "remaining": ""
     },
     {
       "id": "S19-06",
@@ -4973,10 +5089,28 @@
       "line": 291,
       "kind": "phase",
       "requirement": "Fase 6: reportes, portal opcional e infraestructura para integraciones externas.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/reports.py",
+        "hospitality_suite/report_queries.py",
+        "hospitality_suite/portal.py",
+        "hospitality_suite/integrations.py",
+        "hospitality_suite/provider_adapters.py",
+        "hospitality_suite/public/js/hospitality_reporting.js"
+      ],
+      "evidence": [
+        "docs/API.md",
+        "docs/CONTRATOS_PROVEEDORES.md",
+        "docs/evidence/portal-converted.json",
+        "docs/evidence/finance-audit-browser.json",
+        "docs/evidence/provider-contracts-boundaries.json",
+        "docs/evidence/273-portal-escritorio-teclado.jpg",
+        "docs/REVISION_FASES_Y_ACCIONES.md",
+        "docs/evidence/phase-review-crosswalk.json",
+        "docs/evidence/provider-contracts-native-tests.xml",
+        "docs/evidence/provider-contracts-js-tests.log"
+      ],
+      "remaining": ""
     },
     {
       "id": "S19-07",
@@ -4985,10 +5119,20 @@
       "line": 292,
       "kind": "phase",
       "requirement": "Fase 7: pruebas completas, correcciones, instalación limpia, documentación y entrega.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "I",
+      "implementation": [
+        "README.md",
+        "docs/OPERACION.md",
+        "docs/ESTADO_Y_EVIDENCIAS_ENTREGA.md",
+        "tools/run_native_tests.py"
+      ],
+      "evidence": [
+        "docs/evidence/provider-contracts-native-tests.xml",
+        "docs/evidence/provider-contracts-js-tests.log",
+        "docs/REVISION_FASES_Y_ACCIONES.md",
+        "docs/evidence/phase-review-crosswalk.json"
+      ],
+      "remaining": "Completar S00-02/S04-14/S04-16/S04-20, empaquetado/instalación limpia S18-01/S19-02 y ensayo final F26 de actualización y recuperación coordinada de código, base y archivos en un destino aislado."
     },
     {
       "id": "S19-08",
@@ -4997,10 +5141,20 @@
       "line": 294,
       "kind": "clause",
       "requirement": "En cada fase implementa y verifica el flujo correspondiente. Mantén un registro de avance para continuar sin perder decisiones. No reduzcas el alcance obligatorio a un MVP sin indicarlo y acordarlo. No presentes pantallas con botones sin acción como funcionalidades terminadas.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "I",
+      "implementation": [
+        "docs/AVANCE.md",
+        "docs/REQUISITOS.md",
+        "hospitality_suite/public/hospitality.bundle.js"
+      ],
+      "evidence": [
+        "docs/evidence/phase-review-actions.json",
+        "docs/REVISION_FASES_Y_ACCIONES.md",
+        "docs/evidence/phase-review-crosswalk.json",
+        "docs/evidence/provider-contracts-native-tests.xml",
+        "docs/evidence/provider-contracts-js-tests.log"
+      ],
+      "remaining": "Cerrar la aceptación global de tareas/estados y la fase 7/F26. Mantener el registro y comprobar resultados de las acciones; la presencia de manejador no acredita por sí sola una tarea completada."
     },
     {
       "id": "S19-09",
@@ -5009,10 +5163,23 @@
       "line": 296,
       "kind": "clause",
       "requirement": "Si el entorno impide terminar una parte, deja el código y las instrucciones verificables de lo que sí puedes completar, explica el bloqueo concreto y continúa con los componentes independientes. No ocultes pendientes.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "docs/PENDIENTES.md",
+        "docs/ESTADO_Y_EVIDENCIAS_ENTREGA.md",
+        "docs/TIEMPO_REAL_SITIOS_LOCALES.md",
+        "docs/CONTRATOS_PROVEEDORES.md"
+      ],
+      "evidence": [
+        "docs/evidence/realtime-origins-diagnostics.json",
+        "docs/evidence/provider-contracts-verification.json",
+        "docs/evidence/phase-review-preservation.json",
+        "docs/REVISION_FASES_Y_ACCIONES.md",
+        "docs/evidence/phase-review-crosswalk.json",
+        "docs/evidence/provider-contracts-native-tests.xml",
+        "docs/evidence/provider-contracts-js-tests.log"
+      ],
+      "remaining": ""
     }
   ]
 }

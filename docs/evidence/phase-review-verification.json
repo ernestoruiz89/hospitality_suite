@@ -1,0 +1,77 @@
+{
+  "reviewed_at_utc": "2026-10-21T22:01:49.843999+00:00",
+  "application_version": "0.8.8",
+  "specification_sha256": "876632e08057a1ea0386bd9e01fde6f477c62380a9414bed23e2a852765fb651",
+  "entries": 218,
+  "statuses": {
+    "V": 208,
+    "I": 10,
+    "P": 0,
+    "R": 0
+  },
+  "open_entries": 10,
+  "verified_phase_entries": [
+    "S19-01",
+    "S19-03",
+    "S19-04",
+    "S19-05",
+    "S19-06",
+    "S19-09"
+  ],
+  "remaining_entries": [
+    "S00-01",
+    "S00-02",
+    "S01-12",
+    "S04-14",
+    "S04-16",
+    "S04-20",
+    "S18-01",
+    "S19-02",
+    "S19-07",
+    "S19-08"
+  ],
+  "application_matches_executed_revision": "fb8c022",
+  "native": {
+    "tests": 404,
+    "reused_execution": true
+  },
+  "javascript": {
+    "tests": 210,
+    "reused_execution": true
+  },
+  "current_checks": [
+    "bundle action/RPC/command bindings",
+    "native environment/model/indexes",
+    "installed metadata both sites",
+    "protected data and files"
+  ],
+  "sources_sha256": {
+    "README.md": "47f46af6b4c90118e563b552dcc07d089928af804bc13fdfd8873ed8735ebc94",
+    "docs/AUDITORIA_ESPECIFICACION.md": "700a7e9829e8e063dcf9b52cd515f2e5a05e9041785f21be01cf5cef3e76b2ee",
+    "docs/AVANCE.md": "c0d128bf50dc5685274ecb3a106d0b3eb6e0212db9a3ed19fb75018a09da366c",
+    "docs/ESTADO_Y_EVIDENCIAS_ENTREGA.md": "56b8e85e98e8e937a412f4666bc67e421124421f58fbc4d49fe6a9a75e80981d",
+    "docs/PENDIENTES.md": "9e0e4066dd4829af3955500c123f65cfc0f8b1960dae18b715fbb80f06d8a462",
+    "docs/REQUISITOS.md": "0e08b81ae9d397cbf668e10d9e1a8eed1a90f2793a2b6f0e36f86aa112badbdd",
+    "docs/REVISION_FASES_Y_ACCIONES.md": "fa348b3fbbe3ab1b0e10b4c04e356c6960a597933348f509e2b3fb41cc4f006a",
+    "docs/evidence/phase-review-actions.json": "3b6fb506990b5d0ea5c5787c9c4eaac374cd00e6ffc5cf789b5e0ccf3a7f3cec",
+    "docs/evidence/phase-review-architecture.json": "c6ce78de9c28bb73bd94522d5ea6381efa47a2bed2da86fe7d4e129abcb7f466",
+    "docs/evidence/phase-review-crosswalk.json": "04457234f49e75ff451bdef8078f3094a6c304c0c284f941c7f5119b66f0cc80",
+    "docs/evidence/phase-review-native-artifacts.json": "b229e7f88912f8aa0c5a001b3c611ef28f2ff175d9a55d680157f1632a83c54f",
+    "docs/evidence/phase-review-preservation.json": "7dd6cb9366807f7a978cb6a1e92e82c7a15f338a075113ffd7adc2c5799422b2",
+    "docs/specification-audit.json": "caba2c5ddcde68c36fd5608a0ebfb293f01235e1f15c6f5326f7c485ff67002c",
+    "tools/audit_operational_actions.cjs": "5eeb2521ded38aa1a501eee8cafa1927aee94f83b4ab0c58284fdcdf38a87240",
+    "tools/review_implementation_phases.py": "6576c0f977b4b7435f7be76854039dafdf75e819aa2e9da0c3be315152c9a59e",
+    "tools/verify_architecture.py": "7abfeb5c602274892600dcd8bbe795137f6ffb9d88126f813df347e3f0d31516",
+    "tools/verify_delivery_status.py": "8140dc74327d847ee0ab85723fafe354ab24409b165498fc0370bae02d76e7a9",
+    "tools/verify_native_artifacts.py": "a845762169a49c80d4537b58d34f28fc7932ec499d44fa275c82cb2f5e6b3a9f",
+    "tools/verify_phase_preservation.py": "47ff9d991ef254648b6a7c3f839021ff94e1afb37d7eae3b5a80fb343682e3df",
+    "tools/verify_phase_review.py": "c2166257e35aa543fbdd4f18d4e43e2b81115cecdd37f0c3abc48c617745a740"
+  },
+  "ui_replay": false,
+  "full_suite_rerun": false,
+  "database_mutations": false,
+  "new_backup_or_restore": false,
+  "external_providers_activated": false,
+  "ota_sync_deferred_by_user": true,
+  "all_requirements_completed": false
+}

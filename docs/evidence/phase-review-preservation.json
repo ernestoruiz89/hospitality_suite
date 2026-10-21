@@ -1,0 +1,29 @@
+{
+  "reviewed_at_utc": "2026-10-21T21:51:26.361362+00:00",
+  "baseline_sha256": "e0199b32ef7d4038aadb003ac0ef4aeff53a285cd8a85ca7884d0f2ef0c8cda9",
+  "sites": {
+    "hospitality.localhost": {
+      "tables": 72,
+      "rows": 1246,
+      "private_files": 2,
+      "exact_match": true,
+      "business_date": "2026-10-19"
+    },
+    "hospitality-acceptance.localhost": {
+      "tables": 72,
+      "rows": 250,
+      "private_files": 0,
+      "exact_match": true
+    }
+  },
+  "ports": {
+    "8086": true,
+    "8089": false,
+    "9001": true,
+    "11001": true,
+    "13001": true
+  },
+  "main_http": 200,
+  "database_mutations": false,
+  "new_backup_or_restore": false
+}

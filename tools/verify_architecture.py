@@ -1,5 +1,6 @@
 """Read-only inventory of the installed model, roles, indexes and native runtime."""
 import hashlib
+import argparse
 import json
 import os
 from pathlib import Path
@@ -8,9 +9,13 @@ import subprocess
 
 import frappe
 import erpnext
+import hospitality_suite
 
 BENCH=Path('/home/frappe/benches/hospitality-bench')
 ROOT=Path(__file__).resolve().parents[1]
+parser=argparse.ArgumentParser()
+parser.add_argument('--phase',choices=['architecture','phase-review'],default='architecture')
+args=parser.parse_args()
 os.chdir(BENCH/'sites')
 frappe.init(site='hospitality.localhost',sites_path=str(BENCH/'sites'))
 frappe.connect()
@@ -62,10 +67,11 @@ try:
         asset=BENCH/'sites'/bundled_asset(name).lstrip('/')
         assert asset.is_file(),str(asset)
         assets.append(dict(name=name,bytes=asset.stat().st_size,sha256=hashlib.sha256(asset.read_bytes()).hexdigest()))
-    proof=dict(site=frappe.local.site,mutations=False,core=core,python=platform.python_version(),
+    proof=dict(site=frappe.local.site,mutations=False,core=core,python=platform.python_version(),app_version=hospitality_suite.__version__,node=subprocess.check_output(['node','--version'],text=True).strip(),
                database=frappe.db.sql('SELECT VERSION()')[0][0],installed_apps=frappe.get_installed_apps(),
                roles=ROLES,actions=ACTIONS,model=model,pages=pages,native_doctypes=sorted(required),assets=assets)
-    (ROOT/'docs/evidence/architecture-current.json').write_text(json.dumps(proof,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
+    filename='architecture-current.json' if args.phase=='architecture' else 'phase-review-architecture.json'
+    (ROOT/'docs/evidence'/filename).write_text(json.dumps(proof,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
     print(json.dumps(dict(core=core,doctypes=len(model),pages=len(pages),roles=len(ROLES),native_doctypes=len(required),assets=len(assets)),ensure_ascii=False))
 finally:
     frappe.db.rollback()

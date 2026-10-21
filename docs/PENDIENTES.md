@@ -1,5 +1,9 @@
 # Siguiente fase del objetivo activo
 
+## Contraste individual de fases — código 0.8.8 sin cambios
+
+[REVISION_FASES_Y_ACCIONES.md](REVISION_FASES_Y_ACCIONES.md) cierra seis R de fases y concreta las otras seis como I; **208 V y diez I: diez entradas sin cierre**. No se han reejecutado la batería completa ni las Pages en este contraste. Los diez pendientes se agrupan en aceptación de tareas/estados por rol (incluidos límites numéricos y secuencias rápidas de diálogos), paquete e instalación limpia, y recuperación/entrega final F26. El inventario de 84 manejadores ayuda a terminar esa colección; no es su aceptación. La sincronización OTA permanece aplazada.
+
 ## Ampliación comprobada — 0.8.8
 
 [CONTRATOS_PROVEEDORES.md](CONTRATOS_PROVEEDORES.md) acredita S14-05/S14-07: preparación de adaptadores de referencia y dieciocho casos simulados, sin red ni proveedores reales. Canal solo normaliza una solicitud entrante; publicar disponibilidad continúa rechazado. **404 nativas y 210 JS aprobadas**, actualización y conservación verificadas. Quedan **cuatro I** del conjunto de tareas/Pages y reglas/estados secundarios, y **doce R** de completitud/entregables/fases: **dieciséis entradas abiertas**. Siguiente trabajo: contraste de tareas por rol y de fases, con instalación limpia/actualización/reversión final F26 todavía pendiente. OTA aplazada; objetivo activo.
@@ -11,7 +15,7 @@
 [IMPRESIONES_OPERATIVAS.md](IMPRESIONES_OPERATIVAS.md): nueve formatos operativos desde las Pages y dos entregables contrastados. **386 nativas (372 integración/catorce puras) y 210 JS aprobadas**, cinco roles, limpieza móvil, diez páginas PDF reales revisadas y veintidós eventos de navegador. Se conserva la cuenta concisa y se corrigen nombres, redondeo mostrado, acompañantes y acciones de modal/reinserción tardía. Los documentos de la prueba de impresión se preparan por API; no se atribuye su creación a la UI. S18-02/S18-03 quedan V; **200 V, seis I, cero P y doce R: dieciocho sin cierre**. Datos/archivos restaurados, ambos sitios 0.8.7. Continúan las tareas/estados secundarios, contratos y fases/entrega final. OTA aplazada y F26 pendiente.
 
 
-Actualizado el 21/10/2026. El alcance obligatorio sigue abierto: **202 V, cuatro I, cero P y doce R**, de las mismas 218 entradas y huella: **dieciséis sin cierre**. R significa contraste individual pendiente y no función ausente. Los recuentos no son un porcentaje de programación ni una fecha de terminación.
+Actualizado el 21/10/2026. El alcance obligatorio sigue abierto: **208 V, diez I, cero P y cero R**, de las mismas 218 entradas y huella: **diez sin cierre**. Ya no quedan entradas sin contraste individual; I conserva implementación con comprobaciones pendientes. Los recuentos no son un porcentaje de programación ni una fecha de terminación.
 
 ## Ampliación comprobada — 0.8.6
 

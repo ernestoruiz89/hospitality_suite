@@ -1,6 +1,6 @@
 # Estado de entrega y evidencias — revisión 21/10/2026
 
-La app continúa en desarrollo. Esta lista diferencia funciones completadas con evidencia individual, limitaciones verificadas y trabajo externo pendiente. La [auditoría original](AUDITORIA_ESPECIFICACION.md) mantiene las mismas 218 entradas, texto y huella. **202 V, cuatro I, cero P y doce R: dieciséis entradas sin cierre**. V acredita solo el texto de su entrada; la entrega completa y la aptitud para producción siguen sin acreditarse.
+La app continúa en desarrollo. Esta lista diferencia funciones completadas con evidencia individual, limitaciones verificadas y trabajo externo pendiente. La [auditoría original](AUDITORIA_ESPECIFICACION.md) mantiene las mismas 218 entradas, texto y huella. **208 V, diez I, cero P y cero R: diez entradas sin cierre**. V acredita solo el texto de su entrada; la entrega completa y la aptitud para producción siguen sin acreditarse. [Contraste de fases y acciones](REVISION_FASES_Y_ACCIONES.md) identifica la evidencia histórica reutilizada y las comprobaciones de lectura actuales; no es un recorrido visual nuevo.
 
 ## Funciones completadas con evidencia individual
 
@@ -28,7 +28,9 @@ La tabla agrupa funciones acreditadas; no convierte en V las revisiones generale
 | I | S00-02/S04-14/S04-20: contrastar las tareas habituales y secundarias del conjunto de roles/Pages | [Matriz](REQUISITOS.md) y [siguiente fase](PENDIENTES.md) |
 | I | S04-16: demás reglas por campo y estados de búsquedas/vistas secundarias, con contraste del conjunto; 0.8.6 resuelve selectores técnicos, vacío junto a borradores y captura numérica del editor expandido | [Validación](VALIDACION_FORMULARIOS.md), [actividad/recuperación](ACTIVIDAD_Y_RECUPERACION_PAGES.md), [reserva manual](SELECTORES_Y_RESERVA_MANUAL.md) |
 | Observación abierta | Algunos clics inmediatos durante el cierre visual de un diálogo no abren la siguiente acción; después de desaparecer la capa nativa sí continúa | Recorrido de actividad/recuperación, sin atribuir una causa completa ni afirmar una solución total |
-| R | S00-01/S01-12, S18-01 y S19-01 a S19-09: contraste individual de completitud y fases | Auditoría original con pendiente explícito; S18-02/S18-03 se acreditan en 0.8.7 |
+| I | S00-01/S01-12: completar aceptación transversal y entrega antes de declarar íntegro el alcance | Contraste de fases con los diez pendientes explícitos |
+| I | S18-01/S19-02: comprobar paquete/dependencias/construcción, instalación limpia y primer arranque de la versión final | La estructura/código/metadatos existen; migrate de sitios existentes no reemplaza ese ensayo |
+| I | S19-07/S19-08: terminar aceptación y ensayo/entrega final, conservando registro por fase y resultados reales de acciones | S19-01/S19-03/S19-04/S19-05/S19-06/S19-09 quedan V con el alcance descrito en REVISION_FASES_Y_ACCIONES.md |
 | Ensayo final | F26/S19-07: instalación, actualización y reversión de la versión final; las restauraciones de fixtures no lo sustituyen | [Operación](OPERACION.md) y matriz |
 
 ## Integraciones externas pendientes
