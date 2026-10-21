@@ -14,6 +14,7 @@ from frappe.utils import now_datetime
 from hospitality_suite import api
 from hospitality_suite.service import operation
 from hospitality_suite.time import local
+from hospitality_suite.tests.setup import require_test_site
 
 
 FORMATS = {
@@ -31,8 +32,7 @@ FORMATS = {
 
 def make_scenario():
     """Synthetic API scenario only; caller owns rollback and the designated site."""
-    assert frappe.local.site == 'hospitality-acceptance.localhost'
-    assert frappe.conf.allow_tests and frappe.conf.hospitality_integration_test_site and frappe.conf.pause_scheduler
+    require_test_site(paused=True)
     frappe.set_user('Administrator')
     prop = frappe.get_doc('HS Property', {'property_name': 'Hotel Jardín Demo'})
     now = now_datetime().replace(microsecond=0)

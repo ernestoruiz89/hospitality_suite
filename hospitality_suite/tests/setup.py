@@ -1,12 +1,18 @@
 import frappe
 
 
-def before_tests():
+def require_test_site(*, paused=False):
     site=frappe.local.site
     if not frappe.conf.allow_tests or not (site.endswith(".localhost") or "test" in site):
         frappe.throw("La batería de integración requiere un sitio de pruebas explícito")
     if not frappe.conf.get("hospitality_integration_test_site"):
         frappe.throw("Designe un sitio vacío con hospitality_integration_test_site antes de ejecutar esta batería")
+    if paused and not frappe.conf.get("pause_scheduler"):
+        frappe.throw("Pause el scheduler del sitio de integración antes de preparar escenarios con commits")
+
+
+def before_tests():
+    require_test_site()
     # Fail before seeding or creating documents if infrastructure or the initial
     # fixture is unavailable. A demo/UX site is not the test suite's baseline.
     frappe.cache.ping()

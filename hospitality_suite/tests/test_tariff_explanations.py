@@ -136,7 +136,11 @@ class TestTariffExplanations(IntegrationTestCase):
         self.assertIn('solamente una diferencia',last.pricing['scope'])
 
     def test_legacy_shared_article_shows_quote_components_as_reference_for_each_recorded_part(self):
-        self.motel();entered=self.enter(hours=5)
+        self.motel()
+        # This is an old shared-article contract, not a dependency on demo history.
+        with operation():
+            self.prop.extra_hour_item=self.prop.lodging_item;self.prop.save()
+        entered=self.enter(hours=5)
         rows=self.rows(entered['stay'])
         self.assertEqual(len(rows),2)
         self.assertEqual(self.prop.lodging_item,self.prop.extra_hour_item)

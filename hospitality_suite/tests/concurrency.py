@@ -12,6 +12,7 @@ import uuid
 import frappe
 from frappe.utils import now_datetime
 from hospitality_suite import api
+from hospitality_suite.tests.setup import require_test_site
 
 
 def verify_category():
@@ -19,10 +20,7 @@ def verify_category():
 
 
 def verify(case="room"):
-    if (frappe.local.site not in ("hospitality-acceptance.localhost", "hospitality-release.localhost")
-            or not frappe.conf.allow_tests or not frappe.conf.get("hospitality_integration_test_site")
-            or not frappe.conf.get("pause_scheduler")):
-        frappe.throw("Esta prueba con commits requiere un sitio de integración aislado y designado, con scheduler pausado")
+    require_test_site(paused=True)
     if any(frappe.db.count(dt) for dt in ("HS Stay", "HS Charge", "HS Payment", "HS Shift", "HS Daily Close")):
         frappe.throw("La prueba de concurrencia requiere un sitio sin operaciones")
     if any(row.channel != "Prueba de concurrencia" for row in frappe.get_all("HS Booking", fields=["channel"])):
