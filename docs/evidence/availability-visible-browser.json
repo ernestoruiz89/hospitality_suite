@@ -1,0 +1,89 @@
+{
+  "observed_at_utc": "2026-10-21T20:46:44.372Z",
+  "site": "hospitality.localhost",
+  "scope": "Read-only availability query, no reservation or business mutation submitted",
+  "starts_at": "2026-10-21T14:00:00-06:00",
+  "ends_at": "2026-10-22T12:00:00-06:00",
+  "desktop": {
+    "bundle": "http://hospitality.localhost:8086/assets/hospitality_suite/dist/js/hospitality.bundle.PEHNOLTE.js",
+    "cards": [
+      {
+        "background": "rgb(234, 246, 237)",
+        "color": "rgb(23, 100, 58)",
+        "text": "H101\n✓ Disponible\nLimpieza actual: Limpia"
+      },
+      {
+        "background": "rgb(234, 246, 237)",
+        "color": "rgb(23, 100, 58)",
+        "text": "H102\n✓ Disponible\nLimpieza actual: Sucia"
+      },
+      {
+        "background": "rgb(234, 246, 237)",
+        "color": "rgb(23, 100, 58)",
+        "text": "H103\n✓ Disponible\nLimpieza actual: Sucia"
+      },
+      {
+        "background": "rgb(234, 246, 237)",
+        "color": "rgb(23, 100, 58)",
+        "text": "H104\n✓ Disponible\nLimpieza actual: Sucia"
+      },
+      {
+        "background": "rgb(252, 236, 238)",
+        "color": "rgb(161, 38, 46)",
+        "text": "H105\n× No disponible\nOcupada\nLimpieza actual: Limpia"
+      },
+      {
+        "background": "rgb(234, 246, 237)",
+        "color": "rgb(23, 100, 58)",
+        "text": "H106\n✓ Disponible\nLimpieza actual: Limpia"
+      },
+      {
+        "background": "rgb(234, 246, 237)",
+        "color": "rgb(23, 100, 58)",
+        "text": "H107\n✓ Disponible\nLimpieza actual: Limpia"
+      },
+      {
+        "background": "rgb(234, 246, 237)",
+        "color": "rgb(23, 100, 58)",
+        "text": "H108\n✓ Disponible\nLimpieza actual: Limpia"
+      },
+      {
+        "background": "rgb(234, 246, 237)",
+        "color": "rgb(23, 100, 58)",
+        "text": "H109\n✓ Disponible\nLimpieza actual: Limpia"
+      },
+      {
+        "background": "rgb(234, 246, 237)",
+        "color": "rgb(23, 100, 58)",
+        "text": "H110\n✓ Disponible\nLimpieza actual: Limpia"
+      }
+    ],
+    "document": 697,
+    "expanded": true,
+    "viewport": 697
+  },
+  "mobile": {
+    "cards": [
+      "H101\n✓ Disponible\nLimpieza actual: Limpia",
+      "H102\n✓ Disponible\nLimpieza actual: Sucia",
+      "H103\n✓ Disponible\nLimpieza actual: Sucia",
+      "H104\n✓ Disponible\nLimpieza actual: Sucia",
+      "H105\n× No disponible\nOcupada\nLimpieza actual: Limpia",
+      "H106\n✓ Disponible\nLimpieza actual: Limpia",
+      "H107\n✓ Disponible\nLimpieza actual: Limpia",
+      "H108\n✓ Disponible\nLimpieza actual: Limpia",
+      "H109\n✓ Disponible\nLimpieza actual: Limpia",
+      "H110\n✓ Disponible\nLimpieza actual: Limpia"
+    ],
+    "document": 390,
+    "expanded": true,
+    "modal": [
+      {
+        "clientWidth": 373,
+        "scrollWidth": 373,
+        "width": 374
+      }
+    ],
+    "viewport": 390
+  }
+}

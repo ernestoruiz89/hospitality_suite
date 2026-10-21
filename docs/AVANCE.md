@@ -1,5 +1,7 @@
 # Registro de implementación
 
+[DISPONIBILIDAD_VISIBLE.md](DISPONIBILIDAD_VISIBLE.md): estados verde/rojo desplegados al consultar y tarjetas sin «en el intervalo» ni repetición de «Disponible». Diez pruebas dirigidas aprobadas y revisión real en escritorio/móvil sobre la compilación PEHNOLTE. La matriz mantiene 200 V, seis I y doce R; no se declara terminada la revisión general.
+
 ## Ampliación comprobada - 0.8.7
 
 [IMPRESIONES_OPERATIVAS.md](IMPRESIONES_OPERATIVAS.md): nueve formatos operativos desde las Pages y dos entregables contrastados. **386 nativas (372 integración/catorce puras) y 210 JS aprobadas**, cinco roles, limpieza móvil, diez páginas PDF reales revisadas y veintidós eventos de navegador. Se conserva la cuenta concisa y se corrigen nombres, redondeo mostrado, acompañantes y acciones de modal/reinserción tardía. Los documentos de la prueba de impresión se preparan por API; no se atribuye su creación a la UI. S18-02/S18-03 quedan V; **200 V, seis I, cero P y doce R: dieciocho sin cierre**. Datos/archivos restaurados, ambos sitios 0.8.7. Continúan las tareas/estados secundarios, contratos y fases/entrega final. OTA aplazada y F26 pendiente.

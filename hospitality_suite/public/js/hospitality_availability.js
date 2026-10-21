@@ -10,9 +10,11 @@
   Desk.prototype.availability_states=function(result){
     const rows=result.room_states||[];if(!rows.length)return "";
     const cleaning={Clean:__("Limpia"),Dirty:__("Sucia"),Cleaning:__("En limpieza"),Inspection:__("Pendiente de inspección")};
-    return `<details class="hs-interval-states"><summary>${e(__("Estado de las habitaciones en estas fechas ({0})",[rows.length]))}</summary><p>${e(__("El estado corresponde al intervalo consultado. La limpieza se muestra como está ahora; debe verificarse antes de la entrada."))}</p><ul>${rows.map(row=>{
+    const reasons={Reserved:__("Reservada"),Occupied:__("Ocupada"),Blocked:__("Fuera de servicio"),Buffer:__("Colchón de limpieza"),Inactive:__("Habitación inactiva"),"Category Full":__("Sin cupo por categoría")};
+    return `<details class="hs-interval-states" open><summary>${e(__("Estado de las habitaciones en estas fechas ({0})",[rows.length]))}</summary><p>${e(__("El estado corresponde al intervalo consultado. La limpieza se muestra como está ahora; debe verificarse antes de la entrada."))}</p><ul>${rows.map(row=>{
       const status=state(row.status);
-      return `<li class="hs-room-state ${status.css}"><div class="hs-room-state-heading"><strong>${e(row.room_number)}</strong>${badge(status)}</div><span>${e(row.label||status.text)}</span><small>${e(__("Limpieza actual"))}: ${e(cleaning[row.cleaning_status]||__("Por revisar"))}</small></li>`;
+      const reason=row.status==="Available"?"":(unavailable.has(row.status)?reasons[row.status]:row.label);
+      return `<li class="hs-room-state ${status.css}"><div class="hs-room-state-heading"><strong>${e(row.room_number)}</strong>${badge(status)}</div>${reason?`<span>${e(reason)}</span>`:""}<small>${e(__("Limpieza actual"))}: ${e(cleaning[row.cleaning_status]||__("Por revisar"))}</small></li>`;
     }).join("")}</ul></details>`;
   };
   Desk.prototype.availability_result=function(result){

@@ -1,0 +1,9 @@
+# Disponibilidad visible y textos breves
+
+Revisión del 21/10/2026 sobre 0.8.7. Al consultar, el detalle de habitaciones queda desplegado: verde con «Disponible», rojo con «No disponible» y el motivo breve («Ocupada», «Reservada», etc.). Se retiran «en el intervalo» y «para el intervalo» de las tarjetas, y la disponible no repite su estado en otra línea. Las fechas continúan en el resumen; la limpieza actual conserva su propia etiqueta.
+
+Se ejecutan las **diez pruebas dirigidas de disponibilidad**, todas aprobadas: [resultado](evidence/availability-visible-js-tests.log). Incluyen consulta, preselección de reserva, permisos, respuestas obsoletas, estados, errores y escape. Compilación instalada: `PEHNOLTE`; no se modifica backend ni esquema. La batería general de 386 nativas y 210 JS de la fase anterior conserva su alcance histórico; no se atribuye una nueva ejecución completa a este ajuste.
+
+La consulta real de solo lectura en la demostración principal, por Recepción, abarca del 21/10/2026 14:00 al 22/10/2026 12:00: nueve tarjetas verdes y H105 roja con «Ocupada». Las diez tarjetas se muestran al recibir el resultado. [Escritorio final](evidence/342-disponibilidad-textos-breves.png), [móvil final](evidence/343-disponibilidad-textos-breves-movil.png) y [lectura del DOM](evidence/availability-visible-browser.json). En móvil, documento y viewport miden 390 px; el modal no tiene desbordamiento horizontal. Se restablece el tamaño original. No se guarda reserva ni se envía una operación de negocio. Las capturas 340/341 conservan el estado intermedio anterior a abreviar el texto.
+
+El ajuste no cierra otra obligación: la matriz mantiene **200 V, seis I y doce R: dieciocho entradas abiertas**. S04-16 continúa I por las reglas y vistas secundarias del conjunto; el objetivo general sigue activo y la sincronización OTA permanece aplazada.

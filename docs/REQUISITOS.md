@@ -1,5 +1,7 @@
 # Matriz de alcance obligatorio
 
+Ajuste de disponibilidad: [DISPONIBILIDAD_VISIBLE.md](DISPONIBILIDAD_VISIBLE.md) acredita estados verde/rojo desplegados y textos breves en tarjetas, diez pruebas dirigidas y revisión real en escritorio/móvil. Sin nuevos cierres: **200 V, seis I, cero P y doce R**; S04-16 conserva la revisión general pendiente.
+
 [IMPRESIONES_OPERATIVAS.md](IMPRESIONES_OPERATIVAS.md): nueve formatos operativos desde las Pages y dos entregables contrastados. **386 nativas (372 integración/catorce puras) y 210 JS aprobadas**, cinco roles, limpieza móvil, diez páginas PDF reales revisadas y veintidós eventos de navegador. Se conserva la cuenta concisa y se corrigen nombres, redondeo mostrado, acompañantes y acciones de modal/reinserción tardía. Los documentos de la prueba de impresión se preparan por API; no se atribuye su creación a la UI. S18-02/S18-03 quedan V; **200 V, seis I, cero P y doce R: dieciocho sin cierre**. Datos/archivos restaurados, ambos sitios 0.8.7. Continúan las tareas/estados secundarios, contratos y fases/entrega final. OTA aplazada y F26 pendiente.
 
 

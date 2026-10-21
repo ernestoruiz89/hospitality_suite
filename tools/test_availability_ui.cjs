@@ -77,7 +77,7 @@ test('interval contrast keeps dates and current cleaning distinct, hides interna
     {name:'secret-key',room_number:'H102',status:'Occupied',label:'<Ocupada>',cleaning_status:'Inspection'},
     {name:'other-key',room_number:'H103',status:'Category Full',label:'Sin cupo por categoría',cleaning_status:'Dirty'}]});
   assert.match(html,/Estado de las habitaciones en estas fechas \(3\)/);assert.match(html,/Limpieza actual: Limpia/);assert.match(html,/Pendiente de inspección/);
-  assert.match(html,/Reservada para el intervalo/);assert.match(html,/&lt;Ocupada&gt;/);assert.doesNotMatch(html,/INTERNAL-ID|secret-key|other-key|<H101>/);
+  assert.match(html,/>Reservada<\//);assert.match(html,/>Ocupada<\//);assert.doesNotMatch(html,/en el intervalo|para el intervalo|INTERNAL-ID|secret-key|other-key|<H101>|<Ocupada>/);
   assert.doesNotMatch(html,/data-availability-room/);assert.match(html,/Sin cupo por categoría/);assert.match(html,/debe verificarse antes de la entrada/);
 });
 

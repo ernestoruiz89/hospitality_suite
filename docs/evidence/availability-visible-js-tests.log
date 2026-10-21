@@ -1,0 +1,70 @@
+TAP version 13
+# Subtest: quantity form has five operational inputs, inline results and an explicit query action
+ok 1 - quantity form has five operational inputs, inline results and an explicit query action
+  ---
+  duration_ms: 2.8756
+  type: 'test'
+  ...
+# Subtest: room click opens review with the accepted dates, category, people and full requested quantity, without a mutation
+ok 2 - room click opens review with the accepted dates, category, people and full requested quantity, without a mutation
+  ---
+  duration_ms: 1.2024
+  type: 'test'
+  ...
+# Subtest: room handoff ignores changed filters, a pending requery, old property, closed modal, invalid index and insufficient capacity
+ok 3 - room handoff ignores changed filters, a pending requery, old property, closed modal, invalid index and insufficient capacity
+  ---
+  duration_ms: 5.3886
+  type: 'test'
+  ...
+# Subtest: zero capacity is not a network error and a category-only fit warns about physical assignment
+ok 4 - zero capacity is not a network error and a category-only fit warns about physical assignment
+  ---
+  duration_ms: 0.6737
+  type: 'test'
+  ...
+# Subtest: edited filters, closed dialog and property change discard stale availability replies
+ok 5 - edited filters, closed dialog and property change discard stale availability replies
+  ---
+  duration_ms: 0.866
+  type: 'test'
+  ...
+# Subtest: query failures and wrong response context never appear as zero capacity
+ok 6 - query failures and wrong response context never appear as zero capacity
+  ---
+  duration_ms: 0.8578
+  type: 'test'
+  ...
+# Subtest: interval contrast keeps dates and current cleaning distinct, hides internal names and escapes labels even at zero capacity
+ok 7 - interval contrast keeps dates and current cleaning distinct, hides internal names and escapes labels even at zero capacity
+  ---
+  duration_ms: 0.9018
+  type: 'test'
+  ...
+# Subtest: all authoritative interval states have written availability and fixed semantic colors independent of current cleaning
+ok 8 - all authoritative interval states have written availability and fixed semantic colors independent of current cleaning
+  ---
+  duration_ms: 0.8701
+  type: 'test'
+  ...
+# Subtest: unknown or absent statuses remain neutral and cannot inject style classes or markup
+ok 9 - unknown or absent statuses remain neutral and cannot inject style classes or markup
+  ---
+  duration_ms: 0.7664
+  type: 'test'
+  ...
+# Subtest: green candidate cards keep reservation actions and explicit labels while insufficient group capacity stays informational
+ok 10 - green candidate cards keep reservation actions and explicit labels while insufficient group capacity stays informational
+  ---
+  duration_ms: 0.8956
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 77.8181
