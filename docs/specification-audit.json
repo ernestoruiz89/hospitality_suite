@@ -1096,9 +1096,14 @@
         "docs/ESTADOS_POR_INTERVALO.md",
         "tools/test_calendar_ui.cjs",
         "docs/evidence/214-calendario-fecha-requerida.jpg",
-        "docs/evidence/215-calendario-ultima-fecha.jpg"
+        "docs/evidence/215-calendario-ultima-fecha.jpg",
+        "docs/VALIDACION_FORMULARIOS.md",
+        "docs/evidence/secondary-forms-js-tests.log",
+        "docs/evidence/secondary-forms-browser.json",
+        "docs/evidence/secondary-forms-items-ui.json",
+        "docs/evidence/secondary-forms-verification.json"
       ],
-      "remaining": "Tablero, consulta de disponibilidad y calendario tienen carga/error/vacío, contexto y respuestas obsoletas acreditados; el calendario valida su fecha junto al campo en 0.7.7. Completar el contraste de validación junto al campo, carga/error/éxito y doble envío del conjunto de formularios y vistas secundarios. La gestión de reserva por acción y motivo breve está acreditada en 0.6.4; ampliar la aceptación al resto de tareas."
+      "remaining": "0.8.3 acredita errores locales junto a obligatorios/filas/fechas, foco/ARIA, corrección y debounce con nueve JS nuevas y dos roles reales. Contrastar límites numéricos específicos (cantidad cero aún rechazada por el servidor), estado vacío/carga/error/éxito y doble envío del conjunto de vistas/formularios secundarios. La incidencia de salida de sesión tras arqueo requiere reproducir y resolver el contexto de acciones; VALIDACION_FORMULARIOS.md delimita las observaciones abiertas."
     },
     {
       "id": "S04-17",
@@ -1200,7 +1205,7 @@
         "docs/FACTURACION_DESDE_PAGES.md",
         "docs/evidence/pages-rooms-audit.json"
       ],
-      "remaining": "La aceptación S17-18 queda acreditada en 0.8.0 con recepción+caja, limpieza/supervisión, contabilidad y gerencia. Completar el contraste del conjunto de tareas habituales y secundarias de todos los roles/Pages; este recorrido de aceptación no acredita por sí solo todos los casos y formularios."
+      "remaining": "La aceptación S17-18 queda acreditada en 0.8.0 con recepción+caja, limpieza/supervisión, contabilidad y gerencia. Completar el contraste del conjunto de tareas habituales y secundarias de todos los roles/Pages; este recorrido de aceptación no acredita por sí solo todos los casos y formularios. En 0.8.3 se observa salida de sesión sin confirmación después de arqueo hasta recargar; falta reproducir y resolver ese contexto de acciones, sin atribuirlo aún a una causa."
     },
     {
       "id": "S05-01",

@@ -2,6 +2,14 @@
 
 Actualización: 2026-10-21. Objetivo activo; el alcance obligatorio aún tiene verificaciones y componentes pendientes en REQUISITOS.md. No se declara aptitud para producción.
 
+## Ampliación comprobada — 0.8.3
+
+[VALIDACION_FORMULARIOS.md](VALIDACION_FORMULARIOS.md) conserva **183 JS aprobadas**, nueve nuevas. Mensajes locales junto a campos/filas, pestaña y foco del primer error, ayudas ARIA preservadas, corrección sin salto, intervalos válidos y bloqueo de envío/reintento/borrador. La prueba móvil encontró y corrigió la pérdida de un nombre recién escrito antes del debounce; la repetición conserva nombre y cero. Administración guarda una categoría por doble clic; Caja abre/cierra en cero sin facturas ni pagos. La tarifa móvil se cancela sin guardar.
+
+S04-16 sigue I: falta contrastar reglas específicas por campo, incluido el límite de cantidad actualmente rechazado por el servidor, y el conjunto de vistas secundarias. Después del arqueo se observó que los clics de salida no abrían confirmación hasta recargar; la traza deja esa incidencia pendiente de reproducción y solución en el contexto de acciones. No se presenta este recorrido como aceptación de todos los roles. **196 V, 6 I, 0 P y 16 R: 22 sin cierre**.
+
+La batería nativa de 380 casos de 0.8.2 es antecedente conservado; esta fase cambia interfaz, no reglas Python, y no afirma otra ejecución completa. Aceptación restaurada y migrada, comparación de 71/185 y 72/250; principal 72/1246, dos archivos privados y fecha 19/10 conservados. OTA aplazada y F26 activo.
+
 ## Fase comprobada — 0.8.2
 
 [TECLADO_Y_FOCO.md](TECLADO_Y_FOCO.md) acredita S04-17: recorrido por los nueve roles con usuarios separados, escritorio/móvil y portal; 180 eventos con 43 identidades observadas. Se conservan el precio recién escrito y los valores de tablas, Tab no crea filas, los checklist obligatorios reciben foco y Enter distingue No/Sí sin doble ejecución. El portal presenta su resultado en línea sin aviso duplicado. Las etiquetas de mantenimiento describen el trabajo y sus fechas.

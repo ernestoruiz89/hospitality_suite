@@ -144,6 +144,22 @@ test('a required checklist blocks submission and requests error focus while zero
   await d._hsSubmit({validate:false});assert.equal(accepted,5,'partial drafts do not require the checklist');assert.equal(revealed,1);
 });
 
+test('the common dialog validates before native submission and retains one in-flight request for a safe retry',async()=>{
+  const {desk,context}=fixture();vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../hospitality_suite/public/js/hospitality_forms.js'),'utf8'),context);
+  let name='',requests=0,reads=0,payload;const messages=[],pending=deferred();context.frappe.msgprint=value=>messages.push(value);
+  context.frappe.ui={Dialog:class{
+    constructor(){this.fields_dict={name:{df:{fieldname:'name',fieldtype:'Data',label:'Nombre',reqd:1},get_value:()=>name}};this.$wrapper={addClass(){},on(){}};}
+    get_close_btn(){return{attr(){}};}get_primary_btn(){return{off(){return this;},on(){return this;},prop(){return this;}};}show(){}
+    get_values(){reads++;return{name};}
+  }};
+  const dialog=await desk.dialog('Nombre',[],async values=>{payload=values;requests++;if(requests===1)await pending.promise;});
+  await dialog._hsSubmit();assert.equal(reads,0);assert.equal(requests,0);assert.equal(dialog._hsFormErrors[0].field.df.fieldname,'name');assert.equal(messages.length,0,'required mistakes stay beside the field');
+  name='Visitante';const first=dialog._hsSubmit();await dialog._hsSubmit();assert.equal(requests,1);assert.equal(dialog._hsBusy,true);
+  pending.reject({responseJSON:{_server_messages:'Rejected by native validation'}});await first;assert.equal(dialog._hsBusy,false);assert.equal(name,'Visitante');
+  await dialog._hsSubmit();assert.equal(requests,2);assert.equal(payload.name,'Visitante');assert.equal(messages.length,0,'native server rejection is not duplicated');
+  name='';await dialog._hsSubmit({validate:false});assert.equal(requests,3,'partial draft saves can still omit required fields');
+});
+
 test('dependency reads keep a just-typed required price and its caret before native blur, including zero',async()=>{
   const {desk,context}=fixture();
   const input={value:'900',type:'text',isConnected:true,selectionStart:1,selectionEnd:2,getClientRects:()=>[{}],setSelectionRange(start,end){this.selectionStart=start;this.selectionEnd=end;}};
@@ -165,6 +181,17 @@ test('a required checkbox keeps its just-selected state while a native message r
   context.document={activeElement:input};const dialog={fields_dict:{check:{df:{reqd:1},$input:[input]}}};
   const read=context.window.hospitality_suite.preserve_editing_value(dialog,function(){const values={check:input.checked?1:0};input.checked=false;context.document.activeElement=message;return values;});
   assert.equal(read.call(dialog).check,1);assert.equal(input.checked,true);assert.equal(context.document.activeElement,message);
+});
+
+test('a fast field or tab change cannot erase a required name before native debounced commit',()=>{
+  const {context}=fixture(),name={value:'Tarifa escrita',isConnected:true,getClientRects:()=>[]},other={value:'NIO',isConnected:true,getClientRects:()=>[{}]};
+  context.document={activeElement:other};const field={df:{reqd:1},$input:[name]},dialog={fields_dict:{name:field,other:{df:{},$input:[other]}}};
+  const read=context.window.hospitality_suite.preserve_editing_value(dialog,()=>{name.value='';return{name:'Tarifa escrita'};});
+  assert.equal(read().name,'Tarifa escrita');assert.equal(name.value,'Tarifa escrita','inactive tab keeps the pending name');assert.equal(field.value,undefined,'the wrapper does not write the model');
+  field.df.hidden_due_to_dependency=1;read();assert.equal(name.value,'','dependency hiding is preserved');
+  delete field.df.hidden_due_to_dependency;name.value='Old input';
+  const commit=context.window.hospitality_suite.preserve_editing_value(dialog,()=>{field.value='New native value';name.value=field.value;return{};});
+  commit();assert.equal(name.value,'New native value','a new native model value wins');
 });
 
 test('native dependency changes to hidden, disabled or replaced controls are preserved',()=>{

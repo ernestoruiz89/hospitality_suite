@@ -1,0 +1,164 @@
+{
+  "assembled_at_utc": "2026-10-21T17:43:22.710398+00:00",
+  "version": "0.8.3",
+  "scope": "Shared local form validation and pending-input preservation; not acceptance of all secondary tasks.",
+  "evidence_assembly_only": true,
+  "ui_replay_by_verifier": false,
+  "database_mutations_by_verifier": false,
+  "javascript": {
+    "tests": 183,
+    "desk": 180,
+    "portal": 3,
+    "failures": 0,
+    "skipped": 0,
+    "new_cases": 9
+  },
+  "native_regression": {
+    "tests": 380,
+    "rerun_in_this_phase": false,
+    "revision": "beac44d",
+    "junit": "keyboard-review-native-tests.xml",
+    "junit_sha256": "699836cd8af70e29367d6f893f76893dd915d1d3fe1a29dc03b80c497d9c156d"
+  },
+  "native_behavior_python_unchanged": true,
+  "version_metadata_only_python_change": true,
+  "native_versions": [
+    {
+      "site": "main",
+      "installed_version": "0.8.3",
+      "version_output_sha256": "da76663ef480721299ce9492cbc6af822a738d38592f61ed278f642e9ab13ee9",
+      "migration_output_sha256": "626a6e228a1c8f7e5b05f2d342d32ef801d22c2065a07bc1a6d776dae205412e"
+    },
+    {
+      "site": "acceptance",
+      "installed_version": "0.8.3",
+      "version_output_sha256": "da76663ef480721299ce9492cbc6af822a738d38592f61ed278f642e9ab13ee9",
+      "migration_output_sha256": "e720375bb7723d2bd6c2f5bee57aab2c736125fb17c1264b1e885cdeed798e58"
+    }
+  ],
+  "core": {
+    "frappe": {
+      "commit": "4515014c87ece6cb20ee91d2cfb121c5cbd1ff4a",
+      "clean": true
+    },
+    "erpnext": {
+      "commit": "5af6561f5aa48104559692fb4fd82f2580e8d338",
+      "clean": true
+    }
+  },
+  "known_open_observations": [
+    "Quantity zero still uses a native server rejection; explicit field bounds require review.",
+    "Page logout clicks after shift closure did not display confirmation until reload; context of actions remains under review."
+  ],
+  "statuses": {
+    "R": 16,
+    "I": 6,
+    "V": 196
+  },
+  "open_requirements": 22,
+  "all_requirements_completed": false,
+  "protected_sites": {
+    "hospitality.localhost": {
+      "tables": 72,
+      "rows": 1246,
+      "private_files": 2
+    },
+    "hospitality-acceptance.localhost": {
+      "tables": 72,
+      "rows": 250,
+      "private_files": 0
+    }
+  },
+  "business_date_preserved": "2026-10-19",
+  "final_services": {
+    "8086": true,
+    "8089": false,
+    "9001": true,
+    "11001": true,
+    "13001": true
+  },
+  "historical_guide_review_verified_at": "beac44d",
+  "source_sha256": {
+    "hospitality_suite/public/js/hospitality.js": "8244ae2accff766346d49144ce99feea27b3ecc5136b3fd8798178c3a4f6094a",
+    "hospitality_suite/public/js/hospitality_forms.js": "a73f7fc1247ea73a2a9ec7089d49cc6e7d9415d91bb169bb66923a1184d4000d",
+    "hospitality_suite/public/hospitality.bundle.css": "940fd1a38eec761e79369f79017b4b83c99c80c062ecd4be6375de1f40986350",
+    "hospitality_suite/__init__.py": "74bd44d0210fe5f33784c5e77facd718c86774c91290d80b83076dfadc056075",
+    "tools/test_forms_ui.cjs": "0268e619558fabd92f1129a9753dcf44d10f53214020aad354623330e0353762",
+    "tools/test_desk_transport.cjs": "81827686b0a53a81bb1e4e490b363cfc7f153e72b972637985919443e523108c",
+    "docs/VALIDACION_FORMULARIOS.md": "eb6a8a866f2dcc2037fa9808654ad62a76355c8a4632eed2ab04a2205babd7e4"
+  },
+  "references": {
+    "secondary-forms-browser.json": "b98941f0434dfd55f4e3572f62788d474f01965d3cbe1a4aac12a6bb9cc4f3d3",
+    "secondary-forms-items-ui.json": "c665a7e1f14be73e1454b03e65e2f8116f77fc2f49eff30d0abe334bcdbc21e6",
+    "secondary-forms-ux-restored.json": "d64122ce2f087e8c83c8bab5973d424f985f228ef11f9dd44506d25ef5e0f633",
+    "secondary-forms-upgrade.json": "a2403d24a3f4a341b864767ccbeee143bba60f1df4afa7c60427dddac8ee36b5",
+    "secondary-forms-final-state.json": "176401532521962c267204c1b6c21d175d378d6273101dec8fd962c92075efc4",
+    "secondary-forms-js-tests.log": "6568669e693c0bc9c3f5b59fb550ae077e72d8c6af762efaeb82f1e8a551d1cf",
+    "secondary-forms-build.log": "e1dc7c77487de4574a46d632fa8537807bf7a9f828c7b9bb824fcdb03b5fb09e",
+    "secondary-forms-language-installed.json": "4fdced7ba293b8f01e859c533796b78aec383d80cd6b7a55aced77fd3da24b15",
+    "secondary-forms-wire-invariants.json": "138583d8d0851d76c9df6a6baf16d9a913a13f1c6fe3177af14cda4387eee0a8"
+  },
+  "screenshots": [
+    {
+      "path": "docs/evidence/274-categoria-error-en-linea.jpg",
+      "sha256": "9459823e1bbb458dc48c5a89957e9e7749a84cfc0b433cadedec793b087979c1",
+      "captured_bytes_unchanged": true,
+      "scope": "Observed UI state; incremental build scope in browser trace"
+    },
+    {
+      "path": "docs/evidence/275-tarifa-validacion-movil.jpg",
+      "sha256": "1f79b87ed2c938696a40c9254d21b995f1f5fb0fc1fa660482d8f041034a8c4c",
+      "captured_bytes_unchanged": true,
+      "scope": "Observed UI state; incremental build scope in browser trace"
+    },
+    {
+      "path": "docs/evidence/276-tarifa-fila-incompleta-movil.jpg",
+      "sha256": "00d101ed691e6e151d728985d0b0f7b11ff7b48e46325235a835282c0dd36b77",
+      "captured_bytes_unchanged": true,
+      "scope": "Intermediate defect/known open observation"
+    },
+    {
+      "path": "docs/evidence/277-tarifa-fila-validacion-final-movil.jpg",
+      "sha256": "c05ebde779d4a9b0624b18b778d0ca53169fe4c8cb2bcaebaba4185ffdf0b0de",
+      "captured_bytes_unchanged": true,
+      "scope": "Observed UI state; incremental build scope in browser trace"
+    },
+    {
+      "path": "docs/evidence/278-tarifa-cero-conservado-movil.jpg",
+      "sha256": "534797a858faab2e7633288dd9a8d06cd555a184167a0965671cabe87f640c5c",
+      "captured_bytes_unchanged": true,
+      "scope": "Observed UI state; incremental build scope in browser trace"
+    },
+    {
+      "path": "docs/evidence/279-fechas-validacion-en-linea.jpg",
+      "sha256": "88c422fe65b31fd413cf038484d981e88afa3506ab3d9c7441f40014b9c023c2",
+      "captured_bytes_unchanged": true,
+      "scope": "Observed UI state; incremental build scope in browser trace"
+    },
+    {
+      "path": "docs/evidence/280-disponibilidad-corregida.jpg",
+      "sha256": "39bb3fe324ff441caa2be3fb6e5358ca78c566ee97161636827aee7fff4a2901",
+      "captured_bytes_unchanged": true,
+      "scope": "Observed UI state; incremental build scope in browser trace"
+    },
+    {
+      "path": "docs/evidence/281-cantidad-rechazada-servidor.jpg",
+      "sha256": "fd7072611f4e118a9250f54d77f69774b8be17add2404e8d5d2ea08ee3de4426",
+      "captured_bytes_unchanged": true,
+      "scope": "Intermediate defect/known open observation"
+    },
+    {
+      "path": "docs/evidence/282-arqueo-cero-conservado.jpg",
+      "sha256": "f53dc548fe617aa10b99665fb707a70cc5a81f7f436373fe1d7eace38e87effb",
+      "captured_bytes_unchanged": true,
+      "scope": "Observed UI state; incremental build scope in browser trace"
+    }
+  ],
+  "compiled_javascript": {
+    "name": "hospitality.bundle.TU7AFJT4.js",
+    "bytes": 241629,
+    "sha256": "d1d2c7396a02f9268c632dbb11c3796e01ea596ca788576a0d0d4f078559169a"
+  },
+  "external_providers_activated": false,
+  "final_deployment_rollback_proven": false
+}

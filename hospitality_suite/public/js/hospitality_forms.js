@@ -4,6 +4,80 @@
   let sequence=0;
   const refund=doc=>["Refund","Guarantee Refund"].includes(doc.kind);
   const group=(label,left,right=[],extra={})=>({label,columns:[left,right],...extra});
+  const editable=control=>control?.get_value&&!control.df.hidden&&!control.df.hidden_due_to_dependency&&!control.df.read_only;
+  const missing=(value,type)=>value==null||typeof value==='string'&&!value.trim()||Array.isArray(value)&&!value.length||type==='Check'&&!value;
+  const emptyTypes=new Set(['HTML','Button','Tab Break','Section Break','Column Break']);
+  let errorSequence=0;
+  // Keep native controls, values and business rules. These messages explain
+  // local mistakes beside the field before opening any server confirmation.
+  Desk.prototype.form_error_entries=function(dialog){
+    const errors=[],fields=Object.values(dialog.fields_dict||{}),add=(field,message)=>errors.push({field,message});
+    for(const field of fields){
+      if(!editable(field)||emptyTypes.has(field.df.fieldtype))continue;
+      const value=field.get_value(),input=field.$input?.[0],label=__(field.df.label||'Dato');
+      if(field.df.reqd&&missing(value,field.df.fieldtype))add(field,field.df.fieldtype==='Check'?__('Marque esta casilla para continuar.'):__('Complete {0}.',[label]));
+      else if(field.df.invalid||input?.validity?.valid===false)add(field,__('Revise el valor de {0}.',[label]));
+      if(field.df.fieldtype!=='Table'||!Array.isArray(value))continue;
+      const columns=field.grid?.docfields||field.df.fields||[];
+      value.forEach((row,index)=>{
+        for(const column of columns){
+          if(!column.reqd||column.hidden||column.read_only||emptyTypes.has(column.fieldtype))continue;
+          const editor=field.grid?.grid_rows?.find(gridRow=>gridRow.doc===row||gridRow.doc?.name&&gridRow.doc.name===row.name)?.on_grid_fields_dict?.[column.fieldname];
+          if(editor&&!editable(editor))continue;
+          if(missing(row[column.fieldname],column.fieldtype)||editor?.df.invalid)add(field,__('Fila {0}: revise {1}.',[index+1,__(column.label||column.fieldname)]));
+        }
+      });
+    }
+    for(const [start,end,inclusive] of [['starts_at','ends_at',false],['from_date','to_date',true],['valid_from','valid_to',true]]){
+      const a=dialog.fields_dict?.[start],b=dialog.fields_dict?.[end];
+      if(!editable(a)||!editable(b)||!a.get_value()||!b.get_value()||errors.some(row=>row.field===a||row.field===b))continue;
+      const first=Date.parse(a.get_value()),last=Date.parse(b.get_value());
+      if(Number.isFinite(first)&&Number.isFinite(last)&&(inclusive?last<first:last<=first))add(b,inclusive?__('La fecha final debe ser igual o posterior a la inicial.'):__('La salida o fecha final debe ser posterior al inicio.'));
+    }
+    return errors;
+  };
+  const clearInline=dialog=>{
+    for(const entry of dialog._hsInlineFields||[]){
+      entry.node.remove();
+      if(entry.target){
+        const ids=(entry.target.getAttribute('aria-describedby')||'').split(/\s+/).filter(id=>id&&id!==entry.node.id);
+        if(ids.length)entry.target.setAttribute('aria-describedby',ids.join(' '));else entry.target.removeAttribute('aria-describedby');
+        if(entry.invalid===null)entry.target.removeAttribute('aria-invalid');else entry.target.setAttribute('aria-invalid',entry.invalid);
+      }
+    }
+    dialog._hsInlineFields=[];
+  };
+  Desk.prototype.set_form_status=function(dialog,kind,message=''){
+    const root=dialog.$wrapper?.[0];if(!root||typeof document==='undefined')return;
+    let node=root.querySelector('.hs-form-status');
+    if(!node){node=document.createElement('p');node.className='hs-form-status';node.setAttribute('role','status');node.setAttribute('aria-live','polite');(root.querySelector('.modal-body')||root).prepend(node);}
+    node.textContent=message;node.hidden=!message;node.setAttribute('data-state',kind);
+    root.setAttribute('aria-busy',String(kind==='busy'));
+  };
+  Desk.prototype.validate_form_dialog=function(dialog,{focus=true}={}){
+    const errors=this.form_error_entries(dialog);dialog._hsFormErrors=errors;dialog._hsValidationAttempted=true;
+    clearInline(dialog);
+    const grouped=new Map();
+    for(const error of errors){if(!grouped.has(error.field))grouped.set(error.field,[]);grouped.get(error.field).push(error.message);}
+    if(typeof document!=='undefined')for(const [field,messages] of grouped){
+      const wrapper=field.$wrapper?.[0];if(!wrapper)continue;
+      const node=document.createElement('p');node.className='hs-field-error';node.id='hs-field-error-'+(++errorSequence);node.tabIndex=-1;node.textContent=messages.join(' ');wrapper.append(node);
+      const target=field.$input?.[0]||field.grid?.wrapper?.[0];
+      if(target){const invalid=target.getAttribute('aria-invalid');target.setAttribute('aria-invalid','true');target.setAttribute('aria-describedby',[(target.getAttribute('aria-describedby')||''),node.id].filter(Boolean).join(' '));dialog._hsInlineFields.push({node,target,invalid});}
+      else dialog._hsInlineFields.push({node});
+      for(const error of errors.filter(row=>row.field===field))error.focus={...field,$input:[field.$input?.[0]||node]};
+    }
+    if(errors.length){
+      this.set_form_status(dialog,'invalid',__('Revise los campos indicados antes de continuar.'));
+      if(focus)this.reveal_form_error(dialog);
+    }else if(dialog.$wrapper?.[0]?.querySelector('.hs-form-status')?.getAttribute('data-state')==='invalid')this.set_form_status(dialog,'ready');
+    return !errors.length;
+  };
+  Desk.prototype.prepare_form_validation=function(dialog){
+    dialog.$wrapper.on('input.hsValidation change.hsValidation','input,select,textarea',()=>{
+      if(dialog._hsValidationAttempted&&!dialog._hsBusy)this.validate_form_dialog(dialog,{focus:false});
+    });
+  };
   Desk.prototype.form_layout=function(fields){
     if(fields.some(df=>["Tab Break","Section Break","Column Break"].includes(df.fieldtype)))return null;
     const names=new Set(fields.map(df=>df.fieldname)),has=(...keys)=>keys.every(key=>names.has(key));
@@ -80,7 +154,7 @@
     return {kind,title,action,fields:result};
   };
   Desk.prototype.reveal_form_error=function(dialog){
-    const field=Object.values(dialog.fields_dict).find(control=>{
+    const first=dialog._hsFormErrors?.[0],field=first?.field||Object.values(dialog.fields_dict).find(control=>{
       if(!control.get_value||control.df.hidden||control.df.hidden_due_to_dependency)return false;
       const value=control.get_value();
       return control.df.invalid||(control.df.reqd&&(value==null||value===""||(Array.isArray(value)&&!value.length)||(control.df.fieldtype==='Check'&&!value)));
@@ -88,7 +162,7 @@
     field?.tab?.tab_link.find(".nav-link").trigger("click");
     dialog._hsSyncFormTabs?.();
     field?.$wrapper?.[0]?.scrollIntoView({block:"nearest"});
-    this.focus_form_error?.(dialog,field);
+    this.focus_form_error?.(dialog,first?.focus||field);
   };
   Desk.prototype.configure_form_dialog=function(dialog,layout){
     const parent=(frappe.ui.open_dialogs||[]).filter(open=>open!==dialog).at(-1);

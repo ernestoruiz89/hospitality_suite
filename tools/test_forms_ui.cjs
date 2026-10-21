@@ -1,7 +1,7 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs'),path=require('node:path');
-function fixture(open_dialogs=[]){
+function fixture(open_dialogs=[],document){
   class Desk{constructor(){this.prop={guest_id_required:0};this.data={payment_methods:[{name:'cash',is_cash:1},{name:'bank',is_cash:0,reference_required:1}]};}}
-  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../hospitality_suite/public/js/hospitality_forms.js'),'utf8'),{window:{hospitality_suite:{Desk}},frappe:{ui:{open_dialogs}},__:text=>text});
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../hospitality_suite/public/js/hospitality_forms.js'),'utf8'),{document,window:{hospitality_suite:{Desk}},frappe:{ui:{open_dialogs}},__:(text,args)=>String(text).replace(/\{(\d+)\}/g,(_,n)=>args?.[n]??_)});
   return new Desk();
 }
 const input=(fieldname,extra={})=>({fieldname,label:fieldname,fieldtype:'Data',...extra});
@@ -96,4 +96,86 @@ test('a review hides and makes its parent inert, then restores its unchanged dra
   assert(classes.has('hs-form-suspended'));assert.equal(attributes.inert,'');assert.equal(attributes['aria-hidden'],'true');
   cancel();assert(!classes.has('hs-form-suspended'));assert.equal(attributes.inert,undefined);assert.equal(attributes['aria-hidden'],undefined);
   assert.deepEqual(parent.values,{guest:'unchanged',amount:1500});
+});
+
+function validationFixture(){
+  class Element{
+    constructor(){this.children=[];this.attrs={};}
+    append(node){node.parent=this;this.children.push(node);}
+    prepend(node){node.parent=this;this.children.unshift(node);}
+    remove(){this.parent.children=this.parent.children.filter(node=>node!==this);}
+    setAttribute(key,value){this.attrs[key]=String(value);}getAttribute(key){return this.attrs[key]??null;}removeAttribute(key){delete this.attrs[key];}
+    querySelector(selector){return this.children.find(node=>node.className===selector.slice(1))||this.children.map(node=>node.querySelector(selector)).find(Boolean)||null;}
+  }
+  const document={createElement:()=>new Element()},desk=fixture([],document),root=new Element(),body=new Element();body.className='modal-body';root.append(body);
+  const events={},dialog={fields_dict:{},$wrapper:{0:root,on(name,selector,callback){events[name]=callback;}}};
+  let focused;desk.reveal_form_error=d=>focused=d._hsFormErrors[0];
+  const add=(name,value,extra={})=>{
+    const wrapper=new Element(),input=new Element();input.validity={valid:true};wrapper.append(input);body.append(wrapper);
+    const control={df:{fieldname:name,label:name,fieldtype:'Data',...extra},$wrapper:[wrapper],$input:[input],get_value:()=>value,set(value_){value=value_;}};
+    dialog.fields_dict[name]=control;return control;
+  };
+  return{desk,dialog,root,body,document,add,events,focused:()=>focused};
+}
+
+test('inline required messages retain zero amounts and skip hidden, dependent or read-only fields',()=>{
+  const f=validationFixture(),zero=f.add('amount',0,{fieldtype:'Currency',reqd:1}),check=f.add('bath',0,{fieldtype:'Check',reqd:1}),blank=f.add('name','   ',{reqd:1});
+  for(const key of ['hidden','hidden_due_to_dependency','read_only'])f.add(key,'',{reqd:1,[key]:1});
+  assert.equal(f.desk.validate_form_dialog(f.dialog),false);assert.equal(f.dialog._hsFormErrors.length,2);assert.equal(f.focused().field,check);
+  assert.match(check.$wrapper[0].querySelector('.hs-field-error').textContent,/Marque/);assert.equal(zero.$input[0].getAttribute('aria-invalid'),null);
+  check.set(1);blank.set('Visitante');assert.equal(f.desk.validate_form_dialog(f.dialog),true);
+  assert.equal(check.$wrapper[0].querySelector('.hs-field-error'),null);assert.equal(blank.get_value(),'Visitante');assert.equal(zero.get_value(),0);
+});
+
+test('table errors identify the row and column without changing row identity, values or optional fields',()=>{
+  const f=validationFixture(),rows=[{name:'existing',people:2,category:''},{name:'other',people:0,category:'category'}],table=f.add('rooms',rows,{fieldtype:'Table',reqd:1,fields:[input('category',{reqd:1,label:'Categoría'}),input('people',{fieldtype:'Int',reqd:1}),input('room'),input('hidden',{reqd:1,hidden:1})]});
+  delete table.$input;table.grid={docfields:table.df.fields,grid_rows:[]};
+  assert.equal(f.desk.validate_form_dialog(f.dialog),false);assert.equal(f.dialog._hsFormErrors.length,1);
+  const message=table.$wrapper[0].querySelector('.hs-field-error');assert.match(message.textContent,/Fila 1: revise Categoría/);assert.equal(f.focused().focus.$input[0],message);
+  assert.equal(table.get_value(),rows);assert.equal(rows[1].people,0);assert.equal(rows[0].category,'');
+  rows[0].category='category';assert.equal(f.desk.validate_form_dialog(f.dialog),true);assert.equal(table.$wrapper[0].querySelector('.hs-field-error'),null);
+  table.set([]);assert.equal(f.desk.validate_form_dialog(f.dialog),false);assert.match(table.$wrapper[0].querySelector('.hs-field-error').textContent,/Complete rooms/);
+});
+
+test('native invalid flags and incomplete browser dates cannot pass as complete optional values',()=>{
+  const f=validationFixture(),link=f.add('room','missing',{fieldtype:'Link',invalid:1}),date=f.add('starts_at','');date.$input[0].validity.valid=false;
+  assert.equal(f.desk.validate_form_dialog(f.dialog),false);assert.equal(f.dialog._hsFormErrors.length,2);
+  delete link.df.invalid;date.$input[0].validity.valid=true;assert.equal(f.desk.validate_form_dialog(f.dialog),true);
+});
+
+test('stay intervals require a later end while report and rate date ranges include the same final day',()=>{
+  const f=validationFixture(),start=f.add('starts_at','2026-10-22T14:00'),end=f.add('ends_at','2026-10-22T14:00');
+  assert.equal(f.desk.validate_form_dialog(f.dialog),false);assert.equal(f.focused().field,end);assert.match(f.focused().message,/posterior/);
+  end.set('2026-10-23T14:00');assert.equal(f.desk.validate_form_dialog(f.dialog),true);
+  start.set('');assert.equal(f.desk.validate_form_dialog(f.dialog),true,'optional missing bounds remain optional');
+  for(const [a,b] of [['from_date','to_date'],['valid_from','valid_to']]){
+    f.add(a,'2026-10-22');const last=f.add(b,'2026-10-22');assert.equal(f.desk.validate_form_dialog(f.dialog),true);
+    last.set('2026-10-21');assert.equal(f.desk.validate_form_dialog(f.dialog),false);assert.equal(f.focused().field,last);last.set('2026-10-22');
+  }
+});
+
+test('inline errors preserve native descriptions and invalid markers, use text, and do not accumulate on retry',()=>{
+  const f=validationFixture(),field=f.add('name','',{reqd:1,label:'<img src=x onerror=alert(1)>'}),target=field.$input[0];target.setAttribute('aria-describedby','native-help');target.setAttribute('aria-invalid','false');
+  f.desk.validate_form_dialog(f.dialog);const old=field.$wrapper[0].querySelector('.hs-field-error');assert.equal(old.children.length,0);assert.match(old.textContent,/<img/);assert.equal(target.getAttribute('aria-invalid'),'true');
+  f.desk.validate_form_dialog(f.dialog);const next=field.$wrapper[0].querySelector('.hs-field-error');assert.notEqual(old.id,next.id);
+  assert.equal(target.getAttribute('aria-describedby'),'native-help '+next.id);assert.equal(field.$wrapper[0].children.length,2);
+  field.set('Corrected');f.desk.validate_form_dialog(f.dialog);assert.equal(target.getAttribute('aria-describedby'),'native-help');assert.equal(target.getAttribute('aria-invalid'),'false');
+  field.set('');target.setAttribute('aria-invalid','true');f.desk.validate_form_dialog(f.dialog);field.set('Corrected');f.desk.validate_form_dialog(f.dialog);assert.equal(target.getAttribute('aria-invalid'),'true','pre-existing native marker is retained');
+});
+
+test('editing clears corrected messages after the first attempt without moving focus or validating a busy draft',()=>{
+  const f=validationFixture(),field=f.add('name','',{reqd:1});f.desk.prepare_form_validation(f.dialog);const change=f.events['input.hsValidation change.hsValidation'];
+  change();assert.equal(f.dialog._hsValidationAttempted,undefined);f.desk.validate_form_dialog(f.dialog);const first=f.focused();
+  field.set('Corrected');change();assert.equal(field.$wrapper[0].querySelector('.hs-field-error'),null);assert.equal(f.focused(),first);
+  field.set('');f.dialog._hsBusy=true;change();assert.equal(field.$wrapper[0].querySelector('.hs-field-error'),null);
+  f.dialog._hsBusy=false;change();assert.match(field.$wrapper[0].querySelector('.hs-field-error').textContent,/Complete/);assert.equal(f.focused(),first);
+});
+
+test('each dialog owns its accessible messages and processing state without declaring server success',()=>{
+  const a=validationFixture(),b=validationFixture(),fa=a.add('name','',{reqd:1}),fb=b.add('name','',{reqd:1});b.desk=a.desk; // two dialogs in the same installed module
+  a.desk.validate_form_dialog(a.dialog);b.desk.validate_form_dialog(b.dialog);
+  assert.notEqual(fa.$wrapper[0].querySelector('.hs-field-error').id,fb.$wrapper[0].querySelector('.hs-field-error').id);
+  a.desk.set_form_status(a.dialog,'busy','Procesando…');assert.equal(a.root.getAttribute('aria-busy'),'true');assert.equal(b.root.getAttribute('aria-busy'),'false');
+  a.desk.set_form_status(a.dialog,'error','Sin confirmación');assert.equal(a.root.getAttribute('aria-busy'),'false');assert.equal(a.root.querySelector('.hs-form-status').textContent,'Sin confirmación');
+  a.desk.set_form_status(a.dialog,'ready');assert.equal(a.root.querySelector('.hs-form-status').hidden,true);assert.equal(a.body.children.filter(node=>node.className==='hs-form-status').length,1);
 });

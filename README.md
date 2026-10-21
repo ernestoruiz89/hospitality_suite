@@ -2,7 +2,7 @@
 
 PMS nativo para modalidades Hotel, Por tiempo y Hotel y por tiempo. Recepción, caja, limpieza y gerencia trabajan desde once Pages de Desk en español; la contabilidad y el inventario permanecen en ERPNext.
 
-Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. App 0.8.2 con la fase de teclado y guías comprobada; el objetivo completo sigue activo. Otras versiones no están acreditadas.
+Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. App 0.8.3 con validación local de formularios ampliada; el objetivo completo sigue activo. Otras versiones no están acreditadas.
 
 El desarrollo continúa: [matriz de requisitos](docs/REQUISITOS.md), [auditoría punto por punto](docs/AUDITORIA_ESPECIFICACION.md), [registro de avance](docs/AVANCE.md) y [arquitectura](docs/ARQUITECTURA.md). No se declara listo para producción mientras existan pendientes obligatorios.
 
@@ -21,6 +21,8 @@ El desarrollo continúa: [matriz de requisitos](docs/REQUISITOS.md), [auditoría
 [Idioma y etiquetas](docs/IDIOMA_Y_ETIQUETAS.md): campos y enlaces en español, estados por contexto y catálogo con nombres claros. **379 nativas y 142 JS aprobadas** en 0.8.1. Estado al cerrar esa fase: **189 V, 7 I y 22 R; 29 entradas sin cierre**. Datos originales conservados, con Version de metadatos y caché nativa documentadas.
 
 [Teclado y foco](docs/TECLADO_Y_FOCO.md) acredita S04-17: nueve roles, escritorio/móvil y portal, con **380 nativas y 174 JS aprobadas**. Precio conservado, tablas sin filas implícitas, checklist y retorno de foco; Enter respeta No/Sí y el portal anuncia su resultado. La [revisión de entregables](docs/ENTREGABLES_Y_REVISION.md) acredita también las guías S18-06 a S18-09, además de diagramas y matriz: **196 V, 6 I y 16 R; 22 entradas sin cierre**. Las tareas/formularios secundarios, contratos y recuperación final mantienen su verificación propia.
+
+[Validación de formularios](docs/VALIDACION_FORMULARIOS.md), 0.8.3: mensajes junto al campo y fila, corrección sin perder valores, rangos de fechas y nombre conservado al cambiar rápidamente de pestaña. **183 JS aprobadas** y recorrido con Administración/Caja, incluido móvil y arqueo cero. La batería nativa de 380 casos corresponde a 0.8.2; no se vuelve a presentar como una ejecución de 0.8.3. S04-16 y el conjunto de tareas secundarias siguen abiertos, con límites numéricos y una incidencia de salida de sesión por revisar. La matriz mantiene 22 entradas sin cierre.
 
 [Historial de habitaciones](docs/HISTORIAL_HABITACIONES.md) conserva la fase 0.7.8: operaciones, cambios de datos y períodos por rango; valores plegados, paginación y permisos por establecimiento. **365 nativas y 136 JS aprobadas** en esa fase. Recepción comprueba cancelación, limpieza, cambio de habitación, bloqueos, tres páginas y móvil.
 

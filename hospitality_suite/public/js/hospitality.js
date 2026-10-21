@@ -38,18 +38,21 @@ window.hospitality_suite = window.hospitality_suite || {};
   window.hospitality_suite.safe_select_options=safeSelectOptions;
   // FieldGroup evaluates dependencies with get_values(true). Its required-field
   // refresh can replace a focused input before its blur has committed the value.
-  // Preserve only that visible editor around the native read, including a zero
-  // or unchecked checkbox. Parsing, validation and submitted values stay native.
+  // A Data control commits on a debounce, so a just-blurred required editor
+  // can also still have an empty model. Keep those pending inputs across the
+  // read, including controls in another tab. Native dependency changes win.
   const preserveEditingValue=(dialog,read)=>function(...args){
     const active=typeof document==='undefined'?null:document.activeElement;
-    const control=Object.values(dialog.fields_dict||{}).find(field=>field.$input?.[0]===active);
-    const editable=()=>Boolean(control&&!control.df.read_only&&active?.isConnected&&!active.disabled&&!active.readOnly&&active.getClientRects?.().length);
-    if(!editable())return read.apply(this,args);
-    const value=active.value,checked=active.checked,selection=typeof active.selectionStart==='number'?[active.selectionStart,active.selectionEnd]:null;
+    const editable=(control,input)=>Boolean(control&&!control.df.hidden&&!control.df.hidden_due_to_dependency&&!control.df.read_only&&input?.isConnected&&!input.disabled&&!input.readOnly);
+    const saved=Object.values(dialog.fields_dict||{}).flatMap(control=>{
+      const input=control.$input?.[0],focused=input===active;
+      if(!editable(control,input)||!(focused?input.getClientRects?.().length:control.df.reqd&&!control.value&&(input.value||input.checked)))return [];
+      return [{control,input,focused,value:input.value,checked:input.checked,selection:focused&&typeof input.selectionStart==='number'?[input.selectionStart,input.selectionEnd]:null}];
+    });
     try{return read.apply(this,args);}
-    finally{if(editable()&&control.$input?.[0]===active){
-      if(['checkbox','radio'].includes(active.type))active.checked=checked;else active.value=value;
-      if(selection&&document.activeElement===active)active.setSelectionRange?.(...selection);
+    finally{for(const {control,input,focused,value,checked,selection} of saved)if(editable(control,input)&&control.$input?.[0]===input&&(focused?input.getClientRects?.().length:!control.value)){
+      if(['checkbox','radio'].includes(input.type))input.checked=checked;else input.value=value;
+      if(selection&&document.activeElement===input)input.setSelectionRange?.(...selection);
     }}
   };
   window.hospitality_suite.preserve_editing_value=preserveEditingValue;
@@ -253,6 +256,9 @@ window.hospitality_suite = window.hospitality_suite || {};
           // overwrite a later control's freshly typed value or an inactive row.
           for(const value of pending)if(value.doc)value.doc[value.control.df.fieldname]=value.control.get_parsed_value(value.raw);
           for(const {control,raw} of pending)await control.parse_validate_and_set_in_model(raw);
+          if(validate&&this.validate_form_dialog&&!this.validate_form_dialog(d))return;
+          if(!validate)this.set_form_status?.(d,'ready');
+          this.set_form_status?.(d,'busy',__('Procesando… Espere la respuesta antes de volver a confirmar.'));
           // Frappe's get_values may refresh a required input whose model is empty.
           // Synchronize first and validate once, without the default double read.
           const values=validate?d.get_values():Object.fromEntries(Object.values(d.fields_dict)
@@ -267,10 +273,13 @@ window.hospitality_suite = window.hospitality_suite || {};
               this.reveal_form_error?.(d);
             }else await handler(values,d);
           }else this.reveal_form_error?.(d);
-        }catch(error){if(!serverMessage(error))frappe.msgprint({title:__("Sin confirmación del servidor"),message:__("Mantenga esta ventana y reintente con los mismos datos. La solicitud conserva su referencia para evitar duplicados."),indicator:"orange"});}
-        finally{d._hsBusy=false;d.get_primary_btn().prop("disabled",Boolean(d._hsCatalogBlocked));}
+        }catch(error){
+          this.set_form_status?.(d,'error',serverMessage(error)?__('Revise el aviso del servidor y los datos antes de reintentar.'):__('Sin confirmación del servidor. Mantenga esta ventana y reintente con los mismos datos.'));
+          if(!serverMessage(error))frappe.msgprint({title:__("Sin confirmación del servidor"),message:__("Mantenga esta ventana y reintente con los mismos datos. La solicitud conserva su referencia para evitar duplicados."),indicator:"orange"});
+        }
+        finally{d._hsBusy=false;d.get_primary_btn().prop("disabled",Boolean(d._hsCatalogBlocked));if(d.$wrapper?.[0]?.querySelector('.hs-form-status')?.getAttribute('data-state')==='busy')this.set_form_status?.(d,'ready');}
       };d.get_primary_btn().off("click").on("click",()=>d._hsSubmit());
-      for(const df of fields.filter(f=>f._hsDateTime||f._hsTime||f._hsDate)){const c=d.fields_dict[df.fieldname];c.$input.attr({type:df._hsTime?"time":df._hsDate?"date":"datetime-local",step:"1"});if(df.default)c.set_value(df._hsTime?String(df.default).replace(/^(\d):/,"0$1:"):String(df.default).replace(" ","T"));} this.prepare_keyboard_dialog?.(d);d.show();this.configure_form_dialog?.(d,layout);return d;
+      for(const df of fields.filter(f=>f._hsDateTime||f._hsTime||f._hsDate)){const c=d.fields_dict[df.fieldname];c.$input.attr({type:df._hsTime?"time":df._hsDate?"date":"datetime-local",step:"1"});if(df.default)c.set_value(df._hsTime?String(df.default).replace(/^(\d):/,"0$1:"):String(df.default).replace(" ","T"));} this.prepare_keyboard_dialog?.(d);d.show();this.configure_form_dialog?.(d,layout);this.prepare_form_validation?.(d);return d;
     }
     async mutate(action,data,key) {
       this.busy=true;this.connection();
