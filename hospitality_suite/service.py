@@ -56,10 +56,11 @@ def insert(dt, prop, **values):
     return doc.insert(ignore_permissions=dt in ("HS Request", "HS Audit Event", "HS Allocation"))
 
 
-def audit(prop, action, doc, reason=None, details=None):
+def audit(prop, action, doc, reason=None, details=None, before=None, values_doc=None, business_date=None):
+    from hospitality_suite.audit_trail import enrich
     return insert("HS Audit Event", prop, action=action, source_doctype=doc.doctype, source_name=doc.name,
-                  actor=frappe.session.user, occurred_at=now_datetime(), business_date=prop.business_date,
-                  reason=reason, details=canonical(details or {}))
+                  actor=frappe.session.user, occurred_at=now_datetime(), business_date=business_date or prop.business_date,
+                  reason=reason, details=canonical(enrich(values_doc or doc,details,before)))
 
 
 def command(property_name, action, key, payload, handler):

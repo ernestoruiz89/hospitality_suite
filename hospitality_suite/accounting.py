@@ -285,7 +285,7 @@ def credit_note(prop,data):
                 service = locked_doc("HS Service Request", service_name)
                 service.credit_note = credit.name
                 service.save()
-    audit(prop, "Credit note", locked_doc("HS Folio",inv.hs_folio) if inv.hs_folio else inv, data["reason"], {"invoice": inv.name, "credit_note": credit.name,"refund_journal":refund_journal,"review":review})
+    audit(prop, "Credit note", locked_doc("HS Folio",inv.hs_folio) if inv.hs_folio else inv, data["reason"], {"invoice": inv.name, "credit_note": credit.name,"refund_journal":refund_journal,"review":review},values_doc=credit)
     return dict(credit_note=credit.name, amount=credit.grand_total,currency=credit.currency,pos=review['pos'],refund_journal=refund_journal)
 
 
@@ -704,6 +704,6 @@ def sync_document(doc, method=None):
                    exchange_rate=doc.target_exchange_rate if doc.payment_type == "Receive" else doc.source_exchange_rate,
                    kind="Supplier Payment" if doc.party_type=="Supplier" else ("Payment" if doc.references else "Advance") if doc.payment_type == "Receive" else "Refund",
                    status="Posted", payment_entry=doc.name, reference=doc.reference_no, reason=doc.remarks)
-        audit(prop, method or "ERP update", stay or doc, doc.get("hs_correction_reason"),details={"doctype": doc.doctype, "name": doc.name, "docstatus": doc.docstatus,"payment_policy":doc.flags.get("hs_payment_policy") or {}})
+        audit(prop, method or "ERP update", stay or doc, doc.get("hs_correction_reason"),details={"doctype": doc.doctype, "name": doc.name, "docstatus": doc.docstatus,"payment_policy":doc.flags.get("hs_payment_policy") or {}},values_doc=doc)
     from hospitality_suite.security import realtime
     realtime(prop.name)

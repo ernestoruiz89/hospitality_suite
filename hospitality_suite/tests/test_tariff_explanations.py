@@ -52,7 +52,7 @@ class TestTariffExplanations(IntegrationTestCase):
         with operation():
             category=frappe.get_doc('HS Category',self.room.category)
             category.capacity=4;category.max_extra_beds=1;category.save()
-            rate=self.rate();rate.included_people=2;rate.additional_person_rate=50;rate.extra_bed_rate=100;rate.save()
+            rate=self.rate();rate.included_people=2;rate.additional_person_rate=50;rate.extra_bed_rate=100;rate.change_reason='Preparación de tarifa sintética para la prueba';rate.save()
         return rate
 
     def separate_hours(self):
@@ -80,7 +80,7 @@ class TestTariffExplanations(IntegrationTestCase):
         self.assertTrue(any('Camas adicionales' in text for text in before['entries'][0]['details']))
         with operation():
             for target in (rate,seasonal):
-                target.title='Tarifa nueva que no debe aparecer';target.amount=9999;target.additional_person_rate=999;target.save()
+                target.title='Tarifa nueva que no debe aparecer';target.amount=9999;target.additional_person_rate=999;target.change_reason='Preparación de tarifa sintética para la prueba';target.save()
         fingerprints=self.fingerprints()
         self.assertEqual(self.rows(stay)[0]['pricing'],before)
         printed=hs_account_context(stay)['charges'][0]
@@ -106,7 +106,7 @@ class TestTariffExplanations(IntegrationTestCase):
     def test_motel_base_and_overtime_are_separate_and_keep_accepted_grace_rounding_and_occupancy(self):
         self.motel();self.separate_hours();rate=self.supplement_rate()
         with operation():
-            rate.grace_minutes=10;rate.rounding_minutes=30;rate.save()
+            rate.grace_minutes=10;rate.rounding_minutes=30;rate.change_reason='Preparación de tarifa sintética para la prueba';rate.save()
         stay=self.enter(hours=3+41/60,people=3,extra_beds=1)['stay']
         rows=self.rows(stay)
         base=next(r for r in rows if r.item==self.prop.lodging_item)
@@ -119,7 +119,7 @@ class TestTariffExplanations(IntegrationTestCase):
         self.assertIn('Fracciones aceptadas: 2 de 30 min.',hours.pricing['entries'][0]['details'])
         previous={r.name:r.pricing for r in rows}
         with operation():
-            rate.amount=9000;rate.grace_minutes=0;rate.rounding_minutes=15;rate.title='Nuevo precio';rate.save()
+            rate.amount=9000;rate.grace_minutes=0;rate.rounding_minutes=15;rate.title='Nuevo precio';rate.change_reason='Preparación de tarifa sintética para la prueba';rate.save()
         self.assertEqual({r.name:r.pricing for r in self.rows(stay)},previous)
 
     def test_second_motel_extension_distinguishes_a_new_difference_from_total_overtime_reference(self):

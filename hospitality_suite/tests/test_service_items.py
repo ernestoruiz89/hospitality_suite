@@ -51,7 +51,7 @@ class TestServiceItems(IntegrationTestCase):
             rate=frappe.get_doc('HS Rate',{'property':self.prop.name,'mode':'Motel'})
             rate.rounding_minutes=15
             rate.grace_minutes=0
-            rate.save()
+            rate.change_reason='Preparación de tarifa sintética para la prueba';rate.save()
         stay=self.enter(hours=3.25)
         records=frappe.get_all('HS Charge',filters={'stay':stay['stay']},fields=['item','amount','quantity'])
         self.assertEqual(sum(decimal(r.amount) for r in records if r.item==self.hour),decimal('37.50'))
@@ -104,7 +104,7 @@ class TestServiceItems(IntegrationTestCase):
             rate=frappe.get_doc('HS Rate',{'property':self.prop.name,'mode':'Motel'})
             rate.rounding_minutes=15
             rate.grace_minutes=0
-            rate.save()
+            rate.change_reason='Preparación de tarifa sintética para la prueba';rate.save()
         stay=self.enter(hours=3.25)
         invoice=self.call('invoice',dict(folio=stay['folio']))['invoice']
         inv=frappe.get_doc('Sales Invoice',invoice)

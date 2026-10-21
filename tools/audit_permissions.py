@@ -1,10 +1,12 @@
 """Source inventory for the security review; not a penetration-test substitute."""
 import ast
+import argparse
 import hashlib
 import json
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
+parser=argparse.ArgumentParser();parser.add_argument('--output',default='docs/evidence/permissions-audit-source.json');args=parser.parse_args()
 sources={};endpoints=[];delegations=[]
 for path in sorted((ROOT/'hospitality_suite').rglob('*.py')):
     if 'tests' in path.relative_to(ROOT/'hospitality_suite').parts:continue
@@ -33,5 +35,5 @@ assert all(row['rate_limit'] and row['rate_limit']['seconds']==60 for row in pub
 assert all(row['methods']==['POST'] for row in public if row['function'] in ('request','webhook'))
 proof=dict(source_review_only=True,not_proof_of_all_runtime_paths=True,sources=sources,endpoints=endpoints,
     explicit_permission_delegations=delegations,public_endpoint_count=len(public),external_provider_activation=False)
-(ROOT/'docs/evidence/permissions-audit-source.json').write_text(json.dumps(proof,indent=2)+'\n',encoding='utf-8',newline='\n')
+(ROOT/args.output).write_text(json.dumps(proof,indent=2)+'\n',encoding='utf-8',newline='\n')
 print(json.dumps(dict(production_python_files=len(sources),whitelisted_endpoints=len(endpoints),public_endpoints=len(public),explicit_delegations=len(delegations))))

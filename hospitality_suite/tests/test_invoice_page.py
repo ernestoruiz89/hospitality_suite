@@ -29,7 +29,7 @@ class TestInvoicePage(IntegrationTestCase):
     def enter(self,free=False):
         if free:
             rate=frappe.get_doc('HS Rate',{'property':self.prop.name})
-            with operation():rate.amount=0;rate.save()
+            with operation():rate.amount=0;rate.change_reason='Preparación de tarifa sintética para la prueba';rate.save()
         start=now_datetime().replace(microsecond=0)
         data=dict(starts_at=str(start),ends_at=str(start+timedelta(days=2)),guest=self.guest.name,customer=self.guest.customer,
                   rooms=[dict(category=self.room.category,room=self.room.name,people=1)])

@@ -21,7 +21,7 @@ class TestIncludedServices(IntegrationTestCase):
         self.rate=frappe.get_doc("HS Rate",{"property":self.prop.name,"category":self.rooms[0].category})
         with operation():
             self.rate.set("included_services",[dict(item="HS-DEMO-WATER",quantity=2,basis="Night"),dict(item="HS-DEMO-WATER",quantity=1,basis="Stay")])
-            self.rate.save()
+            self.rate.change_reason='Preparación de tarifa sintética para la prueba';self.rate.save()
         start=now_datetime().replace(microsecond=0)
         self.end=start+timedelta(days=2)
         values=dict(starts_at=str(start),ends_at=str(self.end),guest=self.guest.name,customer=self.guest.customer,
@@ -65,7 +65,7 @@ class TestIncludedServices(IntegrationTestCase):
         with operation():
             self.rate.included_services[0].quantity=3
             self.rate.included_services[1].quantity=20
-            self.rate.save()
+            self.rate.change_reason='Preparación de tarifa sintética para la prueba';self.rate.save()
         self.assertEqual(json.loads(self.stay.service_entitlements)[0]["quantity"],"5.0")
         target=next(r for r in self.rooms if r.name!=self.stay.room)
         values=dict(stay=self.stay.name,room=target.name,folio=self.entered["folio"],modified=str(self.stay.modified),reason="Cambio ficticio")

@@ -98,7 +98,7 @@ class TestLocalization(IntegrationTestCase):
             rate.weekdays=None
             rate.amount=1500
             rate.set("included_services",[dict(item="HS-DEMO-WATER",quantity=1,basis="Night"),dict(item="HS-DEMO-WATER",quantity=1,basis="Stay")])
-            rate.save()
+            rate.change_reason='Preparación de tarifa sintética para la prueba';rate.save()
         frappe.local.lang="fr"
         values=self.values(2)
         quote=api.preview(self.prop.name,values)

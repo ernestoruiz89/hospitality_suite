@@ -1,0 +1,11 @@
+{
+  "fixture_run": 1,
+  "passed": false,
+  "stage": "inspection after successful Page operations",
+  "incorrect_expectation": "Zero Stock Entry rows",
+  "baseline_stock_entry_rows": 1,
+  "fixture_state_sha256": "4c5aa2dd578bf28c7b8a63d4dd879c6260f512ecdc71b8c9fa319cd518f2da37",
+  "correction": "Compare additions and fingerprints with the original fixture; preserve opening stock entry",
+  "recovery": "Original backup restored before repeat fixture run 2; Manager repeated prepare and confirm",
+  "final_proof": "audit-history-items-ui.json"
+}

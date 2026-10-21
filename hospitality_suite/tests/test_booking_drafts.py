@@ -117,7 +117,7 @@ class TestBookingDrafts(IntegrationTestCase):
         rate = frappe.get_doc('HS Rate',{'property':self.prop.name,'category':self.room.category,'mode':'Hotel'})
         with operation():
             rate.amount = 2000
-            rate.save()
+            rate.change_reason='Preparación de tarifa sintética para la prueba';rate.save()
         with self.assertRaises(frappe.ValidationError):
             self.command('confirm_booking_draft',dict(booking=draft['booking'],modified=draft['modified'],draft_acceptance=quote['draft_acceptance']))
         self.assertEqual(frappe.db.get_value('HS Booking',draft['booking'],'status'),'Draft')

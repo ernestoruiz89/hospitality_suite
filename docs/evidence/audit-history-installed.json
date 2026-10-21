@@ -1,0 +1,14 @@
+{
+  "format": "HS Cierre diario",
+  "html_sha256": "1ac7aa128d658f6875266e953c385d047157bd84a480186c51453198dfddb10a",
+  "sites": {
+    "hospitality.localhost": {
+      "installed_matches_source": true,
+      "mutations": false
+    },
+    "hospitality-acceptance.localhost": {
+      "installed_matches_source": true,
+      "mutations": false
+    }
+  }
+}

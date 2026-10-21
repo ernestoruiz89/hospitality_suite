@@ -304,6 +304,8 @@ def extension_quote(prop, data):
 
 def extend(prop, data):
     stay = document("HS Stay", data["stay"], "stay")
+    from hospitality_suite.audit_trail import values
+    before=values(stay)
     assert_version(stay, data.get("modified"))
     result = extension_quote(prop, data)
     if result["acceptance"] != data.get("acceptance"):
@@ -342,7 +344,7 @@ def extend(prop, data):
         motel=result["rules"]["mode"]=="Motel"
         quantity=decimal(result["difference"])/decimal(result["rules"]["extra_hour_rate"]) if motel and decimal(result["rules"].get("extra_hour_rate")) else 1
         charge(prop,stay,folio,bound_item(prop,result,"extra_hour_item" if motel else "lodging_item"),result["difference"],"Lodging","Extensión de estancia",result,quantity=hours_quantity(prop,result,quantity) if motel else 1)
-    audit(prop, "Extend", stay, data.get("reason"), result)
+    audit(prop, "Extend", stay, data.get("reason") or frappe._('Ampliación de la estancia aceptada'), result,before=before)
     return dict(stay=stay.name, amount=result["amount"])
 
 

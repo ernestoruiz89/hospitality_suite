@@ -152,6 +152,12 @@
    "label": "Active",
    "fieldtype": "Check",
    "default": 1
+  },
+  {
+   "fieldname": "change_reason",
+   "label": "Motivo del cambio de tarifa",
+   "fieldtype": "Small Text",
+   "depends_on": "eval:!doc.__islocal"
   }
  ],
  "field_order": [
@@ -177,7 +183,8 @@
   "night_start",
   "night_end",
   "included_services",
-  "active"
+  "active",
+  "change_reason"
  ],
  "permissions": [
   {

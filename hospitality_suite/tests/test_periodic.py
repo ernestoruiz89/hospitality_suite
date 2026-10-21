@@ -57,7 +57,7 @@ class TestPeriodic(IntegrationTestCase):
         balance=accounting.folio_balance(entered['folio'])
         self.assertEqual((balance['pending'],balance['scheduled'],balance['outstanding']),('0.00','4500.00','4500.00'))
         rate=frappe.get_doc('HS Rate',{'property':self.prop.name})
-        with operation():rate.amount=9999;rate.save()
+        with operation():rate.amount=9999;rate.change_reason='Preparación de tarifa sintética para la prueba';rate.save()
         first=self.call('generate_lodging')
         self.assertEqual(first['generated'],1)
         self.assertEqual(self.call('generate_lodging')['generated'],0)
@@ -179,7 +179,7 @@ class TestPeriodic(IntegrationTestCase):
         self.assertEqual([row.amount for row in self.rows(entered['stay'])],[1500,2000,1500])
         self.assertEqual(accounting.folio_balance(entered['folio'])['outstanding'],'5000.00')
         self.assertEqual(reports.summary(self.prop)['production'],'0.00')
-        with operation():special.amount=9000;special.save()
+        with operation():special.amount=9000;special.change_reason='Cambio de precio posterior a la aceptación sintética';special.save()
         self.day(1)
         self.assertEqual(self.call('generate_lodging')['generated'],2)
         self.assertEqual([row.amount for row in self.rows(entered['stay'])],[1500,2000,1500])
@@ -263,7 +263,7 @@ class TestPeriodic(IntegrationTestCase):
     def test_zero_price_extension_still_preserves_its_accepted_night_and_origin(self):
         entered=self.enter(1)
         rate=frappe.get_doc('HS Rate',{'property':self.prop.name})
-        with operation():rate.amount=0;rate.save()
+        with operation():rate.amount=0;rate.change_reason='Preparación de tarifa sintética para la prueba';rate.save()
         stay=frappe.get_doc('HS Stay',entered['stay'])
         data=dict(stay=stay.name,folio=entered['folio'],ends_at=str(self.start+timedelta(days=2)),modified=str(stay.modified))
         data['acceptance']=api.preview(self.prop.name,data,action='extend')['acceptance']

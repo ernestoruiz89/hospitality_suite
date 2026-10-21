@@ -37,7 +37,7 @@ class TestSetupReporting(IntegrationTestCase):
             cat.save()
             rate=frappe.get_doc("HS Rate",{"property":self.prop.name,"category":cat.name})
             rate.extra_bed_rate=200
-            rate.save()
+            rate.change_reason='Preparación de tarifa sintética para la prueba';rate.save()
         values=self.values(1)
         quote=api.preview(self.prop.name,values)
         self.assertEqual(quote["amount"],"1700.00")
@@ -45,7 +45,7 @@ class TestSetupReporting(IntegrationTestCase):
         booking=self.call("reserve",values)
         with operation():
             rate.extra_bed_rate=400
-            rate.save()
+            rate.change_reason='Preparación de tarifa sintética para la prueba';rate.save()
         book=frappe.get_doc("HS Booking",booking["booking"])
         self.assertEqual(book.rooms[0].extra_beds,1)
         entered=self.call("check_in",dict(booking=book.name,modified=str(book.modified),guest=self.guest.name,room=self.room.name))

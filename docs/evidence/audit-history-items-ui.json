@@ -1,0 +1,214 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "synthetic_api_fixture": true,
+  "manager_prepared_and_closed_from_page": true,
+  "operational_date_before": "2026-10-19",
+  "operational_date_after": "2026-10-20",
+  "captured_exception_events": 2,
+  "close_status": "Closed",
+  "unchanged_tables": 67,
+  "changed_tables": [
+    "HS Audit Event",
+    "HS Daily Close",
+    "HS Property",
+    "HS Request",
+    "Version"
+  ],
+  "fixture_run": 2,
+  "financial_and_stock_operations_added": {
+    "HS Stay": 0,
+    "HS Charge": 0,
+    "HS Payment": 0,
+    "HS Shift": 0,
+    "Sales Invoice": 0,
+    "Payment Entry": 0,
+    "Journal Entry": 0,
+    "Stock Entry": 0
+  },
+  "opening_stock_entries_preserved": 1,
+  "api_fixture_rate_detail": {
+    "name": "dpfc0klef4",
+    "action": "Tarifa modificada",
+    "actor": "Administrator",
+    "occurred_at": "20/10/2026 19:16:01",
+    "business_date": "2026-10-19",
+    "document_type": "Tarifa",
+    "document": "Noche estándar",
+    "reason": "Temporada de prueba revisada por gerencia",
+    "values": [
+      {
+        "field": "title",
+        "label": "Nombre de tarifa",
+        "before": "Noche estándar",
+        "after": "Noche estándar",
+        "changed": false,
+        "fieldtype": "Data"
+      },
+      {
+        "field": "category",
+        "label": "Categoría",
+        "before": "Estándar",
+        "after": "Estándar",
+        "changed": false,
+        "fieldtype": "Link"
+      },
+      {
+        "field": "mode",
+        "label": "Modalidad",
+        "before": "Hotel",
+        "after": "Hotel",
+        "changed": false,
+        "fieldtype": "Select"
+      },
+      {
+        "field": "currency",
+        "label": "Moneda",
+        "before": "NIO",
+        "after": "NIO",
+        "changed": false,
+        "fieldtype": "Link"
+      },
+      {
+        "field": "amount",
+        "label": "Importe",
+        "before": "1,500.00 NIO",
+        "after": "1,800.00 NIO",
+        "changed": true,
+        "fieldtype": "Currency"
+      },
+      {
+        "field": "block_hours",
+        "label": "Horas del bloque",
+        "before": "3.0",
+        "after": "3.0",
+        "changed": false,
+        "fieldtype": "Float"
+      },
+      {
+        "field": "extra_hour_rate",
+        "label": "Precio de hora adicional",
+        "before": "150.00 NIO",
+        "after": "150.00 NIO",
+        "changed": false,
+        "fieldtype": "Currency"
+      },
+      {
+        "field": "grace_minutes",
+        "label": "Tolerancia (minutos)",
+        "before": "10",
+        "after": "10",
+        "changed": false,
+        "fieldtype": "Int"
+      },
+      {
+        "field": "rounding_minutes",
+        "label": "Fracción de cobro (minutos)",
+        "before": "60",
+        "after": "60",
+        "changed": false,
+        "fieldtype": "Int"
+      },
+      {
+        "field": "included_people",
+        "label": "Personas incluidas",
+        "before": "2",
+        "after": "2",
+        "changed": false,
+        "fieldtype": "Int"
+      },
+      {
+        "field": "additional_person_rate",
+        "label": "Precio de persona adicional",
+        "before": "0.00 NIO",
+        "after": "0.00 NIO",
+        "changed": false,
+        "fieldtype": "Currency"
+      },
+      {
+        "field": "extra_bed_rate",
+        "label": "Precio de cama adicional",
+        "before": "0.00 NIO",
+        "after": "0.00 NIO",
+        "changed": false,
+        "fieldtype": "Currency"
+      },
+      {
+        "field": "priority",
+        "label": "Prioridad",
+        "before": "10",
+        "after": "10",
+        "changed": false,
+        "fieldtype": "Int"
+      },
+      {
+        "field": "valid_from",
+        "label": "Vigente desde",
+        "before": "Sin dato",
+        "after": "Sin dato",
+        "changed": false,
+        "fieldtype": "Date"
+      },
+      {
+        "field": "valid_to",
+        "label": "Vigente hasta",
+        "before": "Sin dato",
+        "after": "Sin dato",
+        "changed": false,
+        "fieldtype": "Date"
+      },
+      {
+        "field": "weekdays",
+        "label": "Días de la semana",
+        "before": "Sin dato",
+        "after": "Sin dato",
+        "changed": false,
+        "fieldtype": "Data"
+      },
+      {
+        "field": "night_start",
+        "label": "Inicio de paquete nocturno",
+        "before": "Sin dato",
+        "after": "Sin dato",
+        "changed": false,
+        "fieldtype": "Time"
+      },
+      {
+        "field": "night_end",
+        "label": "Fin de paquete nocturno",
+        "before": "Sin dato",
+        "after": "Sin dato",
+        "changed": false,
+        "fieldtype": "Time"
+      },
+      {
+        "field": "active",
+        "label": "Habilitada",
+        "before": "Sí",
+        "after": "Sí",
+        "changed": false,
+        "fieldtype": "Check"
+      },
+      {
+        "field": "customer",
+        "label": "Pagador de la tarifa",
+        "before": "Sin dato",
+        "after": "Sin dato",
+        "changed": false,
+        "fieldtype": "Link"
+      },
+      {
+        "field": "included_services",
+        "label": "Servicios incluidos",
+        "before": "Sin servicios incluidos",
+        "after": "Sin servicios incluidos",
+        "changed": false,
+        "fieldtype": "Table"
+      }
+    ],
+    "historical_values_available": true,
+    "values_document": "Tarifa · Noche estándar",
+    "close_snapshot": null,
+    "close_blockers": null
+  },
+  "historical_entry_has_no_values": true
+}

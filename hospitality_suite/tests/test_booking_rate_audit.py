@@ -80,6 +80,7 @@ class TestBookingRateAudit(IntegrationTestCase):
         # Equal priority prefers this payer's agreement over the general rate.
         with operation():
             negotiated.valid_from = '2026-12-28'
+            negotiated.change_reason='Cambio de vigencia sintético para probar la prioridad'
             negotiated.save()
         self.assertEqual(self.price(start, end, customer=self.guest.customer)['amount'], '2400.00')
         self.rate(amount=999, priority=20, customer=self.guest.customer,

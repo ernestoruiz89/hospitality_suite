@@ -1,6 +1,6 @@
 # Evidencia de pruebas
 
-Índice acumulado de evidencia histórica y actual. Versión de aplicación vigente: 0.6.2; Frappe 16.52.0 y ERPNext 16.51.1, en un bench separado de WSL Ubuntu 24.04. Sitios ficticios: hospitality.localhost, hospitality-clean.localhost, hospitality-restore.localhost y hospitality-acceptance.localhost. No hay datos ni operaciones de producción.
+Índice acumulado de evidencia histórica y actual. Versión de aplicación vigente: 0.7.3; Frappe 16.52.0 y ERPNext 16.51.1, en un bench separado de WSL Ubuntu 24.04. Sitios ficticios: hospitality.localhost, hospitality-clean.localhost, hospitality-restore.localhost y hospitality-acceptance.localhost. No hay datos ni operaciones de producción.
 
 La batería vigente está en board-native-tests.log/xml: **229 aprobadas** (215 integración y catorce puras), y board-js-tests.log: **45 regresiones JavaScript** (43 Desk y dos portal). ESTANCIAS_Y_LLEGADAS.md delimita el nuevo recorrido con recepcionista y sus fixtures. Los resultados menores que siguen pertenecen a fases anteriores; no representan otra ejecución ni recorridos adicionales.
 
@@ -362,3 +362,12 @@ La revisión final de 0.7.1 añadió rechazo de contexto ajeno en limpieza/mante
 - `permissions-audit-upgrade.json`, `permissions-audit-ux-restored.json` y `permissions-audit-final-state.json`: conservación de principal, restauración con archivos de aceptación, núcleos limpios y servicios/HTTP activos con 8089 apagado. El formato de cuenta resumida sigue idéntico bajo 0.7.2. No hubo migración ni cambios de assets; las 85 JS anteriores se conservan sin otra ejecución.
 - `permissions-audit-fixture-cleanup.json`: dos textos sintéticos huérfanos retirados solo después de confirmar restauración, comprobar carpeta/nombres y comparar sus SHA-256; principal intacto.
 - `../AUDITORIA_SEGURIDAD.md`: nueve S15 R→V; S15-07 R→I por contraste integral de bitácoras. **166 V, 15 I, 0 P y 37 R**; 52 sin cierre, F26 activo y OTA aplazada.
+
+## Bitácora y cierres — 0.7.3
+
+- `audit-history-native-tests.log/xml`: 329 aprobadas, 315 integración y catorce puras; diez casos nuevos. `audit-history-js-tests.log`: 95 aprobadas, diez nuevas.
+- `170-auditoria-registros.jpg` a `179-auditor-resumen-consulta.jpg` y `audit-history-browser.json`: recorrido 1 de Gerencia/Auditoría, dos pestañas, valores legibles, registro anterior, móvil 390 px y resumen por ejecución. El servidor temporal conserva aviso de fallback de Socket.IO; no acredita transporte en tiempo real.
+- `180-cierre-repetido-aceptacion.jpg` y `audit-history-items-ui.json`: repetición 2 de preparación/confirmación con Gerencia después de restaurar; dos excepciones, día 19→20 solo en aceptación, 67 tablas idénticas y stock inicial conservado, cero operaciones financieras/stock añadidas. Los tiempos difieren de las capturas del recorrido 1.
+- `audit-history-fixture-diagnostic.json`, `audit-history-initial-diagnostic.log` y `audit-history-rate-fixture-diagnostic.log`: expectativas iniciales corregidas; no son pases. `audit-history-infrastructure-diagnostic.json` conserva fallo previo al inicio por Redis detenido y recuperación.
+- `audit-history-upgrade.json`, `audit-history-ux-restored.json`, `audit-history-installed.json`, `audit-history-final-state.json` y `audit-history-source.json`: conservación de tablas/archivos, restauración original, formato instalado, servicios y manifiesto estático. No sustituyen la recuperación final F26.
+- `../BITACORA_Y_CIERRES.md`: S15-07 I→V y S12-04/06/07 R→V, 170 V/14 I/34 R; 48 sin cierre. Sin sincronización OTA ni PDF nuevo renderizado en esta fase.

@@ -53,6 +53,10 @@ ACTIONS={
     "Stock policy":"Política de inventario configurada","Reopen day":"Fecha operativa reabierta","Grant operational access":"Acceso operativo concedido",
     "Approve data retention":"Retención de datos aprobada","Retire sensitive fields":"Datos sensibles retirados","Dispose retained files":"Archivos vencidos procesados",
     "Retry file disposal":"Reintento de eliminación de archivos","Verified integration event":"Evento de integración verificado",
+    "Rate created":"Tarifa creada","Rate changed":"Tarifa modificada",
+    "Cancelled":"Reserva cancelada","No Show":"Reserva sin presentación",
+    "Daily close Review":"Cierre revisado","Daily close Closed":"Día cerrado","Daily close Reopened":"Día reabierto",
+    "on_submit":"Documento presentado","on_cancel":"Documento anulado","on_update_after_submit":"Documento presentado actualizado","ERP update":"Documento actualizado",
 }
 
 

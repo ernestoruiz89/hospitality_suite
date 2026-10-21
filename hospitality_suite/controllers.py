@@ -145,6 +145,13 @@ class ScopedDocument(Document):
                 from frappe.utils.password import get_encryption_key
                 get_encryption_key()
         if self.doctype == "HS Rate":
+            from hospitality_suite.audit_trail import values
+            previous=self.get_doc_before_save()
+            reason=self.get('change_reason')
+            if reason is not None and (not isinstance(reason,str) or len(reason)>1000):
+                frappe.throw(_("Escriba un motivo de tarifa de hasta 1000 caracteres"))
+            if previous and values(previous)!=values(self) and not (reason or '').strip():
+                frappe.throw(_("Indique el motivo del cambio de tarifa"))
             if self.get("property") and prop.financial_enabled and self.mode=="Motel" and self.active and self.extra_hour_rate>0 and not prop.get("extra_hour_item"):
                 frappe.throw(frappe._("Configure el artículo para horas adicionales de motel"))
             if self.amount < 0 or self.block_hours <= 0 or self.rounding_minutes <= 0 or (self.grace_minutes or 0)<0 or any((self.get(field) or 0)<0 for field in ("extra_hour_rate","extra_bed_rate","additional_person_rate")) or self.included_people<1:
@@ -208,6 +215,11 @@ class ScopedDocument(Document):
                 frappe.throw(frappe._("Una cuenta debe pertenecer a una estancia o reserva grupal"))
             if self.stay and self.booking and frappe.db.get_value("HS Stay",self.stay,"booking")!=self.booking:
                 frappe.throw(frappe._("La cuenta y la reserva no corresponden a la misma estancia"))
+
+    def on_update(self):
+        if self.doctype=='HS Rate':
+            from hospitality_suite.audit_trail import rate_changed
+            rate_changed(self)
 
     def on_trash(self):
         if self.doctype=="HS Payment Method":

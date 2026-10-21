@@ -2869,10 +2869,21 @@
       "line": 178,
       "kind": "enumerated",
       "requirement": "- Revisar cancelaciones, no presentaciones, descuentos, cortesías, devoluciones y cambios manuales.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/audit_trail.py",
+        "hospitality_suite/closing.py",
+        "hospitality_suite/public/js/hospitality_audit.js",
+        "hospitality_suite/public/js/hospitality_close.js"
+      ],
+      "evidence": [
+        "docs/BITACORA_Y_CIERRES.md",
+        "hospitality_suite/tests/test_audit_history.py",
+        "docs/evidence/audit-history-native-tests.xml",
+        "docs/evidence/audit-history-items-ui.json",
+        "docs/evidence/audit-history-browser.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S12-05",
@@ -2906,10 +2917,21 @@
       "line": 180,
       "kind": "enumerated",
       "requirement": "- Cierre autorizado, reporte reproducible e historial de ejecución. La reapertura debe tener permisos y motivo.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/closing.py",
+        "hospitality_suite/audit_trail.py",
+        "hospitality_suite/templates/print/daily_close.html",
+        "hospitality_suite/public/js/hospitality_close.js"
+      ],
+      "evidence": [
+        "docs/BITACORA_Y_CIERRES.md",
+        "hospitality_suite/tests/test_audit_history.py",
+        "docs/evidence/audit-history-native-tests.xml",
+        "docs/evidence/audit-history-items-ui.json",
+        "docs/evidence/audit-history-browser.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S12-07",
@@ -2918,10 +2940,20 @@
       "line": 181,
       "kind": "enumerated",
       "requirement": "- Poder recuperar una ejecución interrumpida de manera segura y conocer qué operaciones se completaron.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/service.py",
+        "hospitality_suite/closing.py",
+        "hospitality_suite/periodic.py"
+      ],
+      "evidence": [
+        "docs/BITACORA_Y_CIERRES.md",
+        "hospitality_suite/tests/test_audit_history.py",
+        "docs/evidence/audit-history-native-tests.xml",
+        "docs/evidence/audit-history-items-ui.json",
+        "docs/evidence/audit-history-browser.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S13-01",
@@ -3511,22 +3543,24 @@
       "line": 225,
       "kind": "enumerated",
       "requirement": "- Bitácora con usuario, momento, acción, documento, motivo y valores relevantes para tarifas, descuentos, extensiones, anulaciones, devoluciones y cierres.",
-      "status": "I",
+      "status": "V",
       "implementation": [
         "hospitality_suite/service.py",
+        "hospitality_suite/audit_trail.py",
+        "hospitality_suite/controllers.py",
         "hospitality_suite/operations.py",
-        "hospitality_suite/cashier.py",
+        "hospitality_suite/accounting.py",
         "hospitality_suite/closing.py",
-        "hospitality_suite/accounting.py"
+        "hospitality_suite/schema.py"
       ],
       "evidence": [
-        "docs/AUDITORIA_SEGURIDAD.md",
-        "docs/evidence/permissions-audit-native-tests.xml",
-        "hospitality_suite/tests/test_lifecycle.py",
-        "hospitality_suite/tests/test_treasury.py",
-        "hospitality_suite/tests/test_guest_profiles.py"
+        "docs/BITACORA_Y_CIERRES.md",
+        "hospitality_suite/tests/test_audit_history.py",
+        "docs/evidence/audit-history-native-tests.xml",
+        "docs/evidence/audit-history-items-ui.json",
+        "docs/evidence/audit-history-browser.json"
       ],
-      "remaining": "Contrastar actor, momento, documento, motivo y valores relevantes en tarifas, descuentos, extensiones, anulaciones, devoluciones y cierres, incluidas ediciones estándar de maestros; no inferir cobertura completa de eventos localizados."
+      "remaining": ""
     },
     {
       "id": "S15-08",

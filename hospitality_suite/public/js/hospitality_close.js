@@ -17,21 +17,32 @@
       }
       if(finance.sources.unattributed_movements.length)html+=`<p role="alert">${e(__("Hay {0} movimientos históricos sin fecha operativa acreditada; revise sus documentos de origen.",[finance.sources.unattributed_movements.length]))}</p>`;
     }else html+=`<p>${e(__("Este cierre histórico no conserva el resumen financiero ampliado."))}</p>`;
+    if(period.audit_review){
+      const counts={};for(const row of period.audit_review.rows||[])counts[row.category]=(counts[row.category]||0)+1;
+      html+=`<details><summary>${e(__('Registros para revisar'))} (${period.audit_review.rows.length})</summary>`+this.table([__('Clase de registro'),__('Cantidad')],Object.entries(counts).map(([label,count])=>[e(label),count]))+`<button type="button" class="btn btn-secondary" data-hs-audit-review>${e(__('Ver registros'))}</button></details>`;
+    }
     html+=`<h4>${e(__("Pendientes conservados"))}</h4>`+(blockers.length?`<ul>${blockers.map(row=>`<li>${e(__(row.type))}: ${e(row.documents.length)}</li>`).join("")}</ul>`:`<p>${e(__("Sin pendientes registrados."))}</p>`);
     return html;
   };
   Desk.prototype.action_daily_close=async function(){
+    if(!this.allowed('finance')){frappe.msgprint(__('Puede consultar los cierres guardados en el historial.'));return;}
     const result=await this.mutate("daily_close",{confirm:false}),key=frappe.utils.get_random(24);
     const dialog=await this.dialog(__("Cierre del día"),[{fieldname:"review",fieldtype:"HTML",options:this.close_summary_html(result.period,result.blockers)}],async(v,d)=>{
       await this.mutate("daily_close",{confirm:true,review_acceptance:result.review_acceptance},key);d.hide();
     },__("Confirmar cierre"),"extra-large");
     if(result.blockers.length||!this.allowed("approve"))dialog.get_primary_btn().prop("disabled",true);
+    dialog.$wrapper?.on('click','[data-hs-audit-review]',()=>this.show_audit_review(result.period.audit_review));
     return dialog;
   };
   Desk.prototype.action_view_close=async function(id){
     const close=(this.data.closes||[]).find(row=>row.name===id);
     if(!close){frappe.msgprint(__("Actualice la página para consultar el cierre"));return;}
     const period=JSON.parse(close.summary||"{}"),blockers=JSON.parse(close.blockers||"[]");
-    return this.dialog(__("Resumen conservado · {0}",[close.business_date]),[{fieldname:"saved_close",fieldtype:"HTML",options:this.close_summary_html(period,blockers)}],async(v,d)=>d.hide(),__("Cerrar"),"extra-large");
+    return this.show_close_snapshot(period,blockers,__("Resumen conservado · {0}",[close.business_date]));
+  };
+  Desk.prototype.show_close_snapshot=async function(period,blockers,title){
+    const dialog=await this.dialog(title,[{fieldname:"saved_close",fieldtype:"HTML",options:this.close_summary_html(period,blockers)}],async(v,d)=>d.hide(),__("Cerrar"),"extra-large");
+    dialog.$wrapper?.on('click','[data-hs-audit-review]',()=>this.show_audit_review(period.audit_review));
+    return dialog;
   };
 })();

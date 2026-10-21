@@ -1,6 +1,6 @@
 # Manual diario por rol
 
-Aplicación 0.7.1, Frappe 16.52 / ERPNext 16.51. Los recorridos acreditados y las verificaciones pendientes están en REQUISITOS.md.
+Aplicación 0.7.3, Frappe 16.52 / ERPNext 16.51. Los recorridos acreditados y las verificaciones pendientes están en REQUISITOS.md.
 
 Los formularios extensos están organizados en pestañas por tarea. Puede cambiar de sección sin perder lo escrito y guardar desde cualquiera. Los datos adicionales del huésped y las opciones de reserva tienen su propia sección. La acción de guardar o revisar permanece visible; si falta un dato obligatorio, el formulario abre su sección. Al cerrar una revisión de precio o cobro, vuelve al borrador sin registrarlo. Véase UX_FORMULARIOS.md.
 
@@ -166,3 +166,11 @@ Nueva orden separa Trabajo y ubicación de Plazo y responsable. Indique un fin p
 ## Establecimiento de la operación — 0.7.2
 
 Las acciones y cotizaciones deben pertenecer al establecimiento seleccionado. Si aparece «El documento no pertenece al establecimiento seleccionado», seleccione el establecimiento correcto y vuelva a abrir el registro desde su lista. Un intento rechazado no guarda cambios parciales. Tener acceso a varios establecimientos no mezcla sus operaciones. El auditor puede consultar sus reportes; no puede abrir turnos ni registrar cobros.
+
+## Consultar cambios y cierres — 0.7.3
+
+En Gerencia → Auditoría consulte el período y pulse «Ver cambio» en el registro. «Operación» muestra usuario, momento, fecha operativa, documento y motivo. «Valores registrados» compara antes/después; los otros datos conservados se despliegan. Los registros anteriores sin desglose lo indican. Para cambiar reglas o precios de una tarifa existente, escriba un motivo.
+
+Al preparar el cierre, «Registros para revisar» reúne cancelaciones, no presentaciones, ajustes, devoluciones y cambios de esa fecha. «Ver registros» abre sus detalles; el conteo representa eventos, no dinero. Revise también los pendientes y totales antes de confirmar. Si otro cambio invalida la revisión, actualícela.
+
+El historial permite «Ver resumen» sin volver a calcular el día. En Auditoría, un evento de cierre ofrece «Ver resumen de esta ejecución», incluso después de una reapertura. El rol Auditoría solo consulta el historial; la confirmación requiere Gerencia/Administración y reabrir requiere permiso y motivo.

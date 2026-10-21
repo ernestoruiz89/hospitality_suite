@@ -273,7 +273,7 @@
       "doctype": "HS Rate",
       "child": false,
       "autoname": "TAR-.#####",
-      "fields": 23,
+      "fields": 24,
       "indexes": {
         "PRIMARY": {
           "unique": true,
@@ -1455,13 +1455,13 @@
   "assets": [
     {
       "name": "hospitality.bundle.js",
-      "bytes": 194016,
-      "sha256": "f7d70498928b049757279338f9e7f7b8ee610102498aa245a32a701c6d762652"
+      "bytes": 199188,
+      "sha256": "16ff32955ddb3ef406dcda2ca0176733692c4648bdbeff8e4870b8117d94d18e"
     },
     {
       "name": "hospitality.bundle.css",
       "bytes": 16977,
-      "sha256": "93de54fde5974be4a220f302e563a060b4b46c812cffd65a86fdcdebd4263a6d"
+      "sha256": "5d589817431a5e827d05d6cfa44a24dd1ae6b7eac78f5758f4dcb5fdc3ceeccc"
     }
   ]
 }

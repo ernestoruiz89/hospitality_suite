@@ -1,0 +1,81 @@
+{
+  "initial_native_tab_error": "Frappe Tab required a parent context; undefined doctype reached frappe.scrub",
+  "corrected_with_unique_tab_parents": true,
+  "manager_operation_detail": true,
+  "manager_historical_values": {
+    "before": "1,500.00 NIO",
+    "after": "1,800.00 NIO",
+    "readable_rate_name": true,
+    "raw_rate_hash_hidden": true
+  },
+  "mobile": {
+    "document_width": 390,
+    "modal_width": 390,
+    "tabs": [
+      {
+        "label": "Operación",
+        "selected": "false"
+      },
+      {
+        "label": "Valores registrados",
+        "selected": "true"
+      }
+    ],
+    "viewport_height": 844,
+    "viewport_width": 390,
+    "close_button": {
+      "height": 44,
+      "width": 342
+    }
+  },
+  "legacy_missing_values_explained": true,
+  "manager_exception_review": {
+    "operational_day": "2026-10-19",
+    "records": 2,
+    "actions": [
+      "Tarifa modificada",
+      "Reserva cancelada"
+    ],
+    "paged": true
+  },
+  "manager_closed_day": {
+    "before": "2026-10-19",
+    "after": "2026-10-20",
+    "historical_status": "Cerrado",
+    "site": "hospitality-acceptance.localhost"
+  },
+  "per_execution_snapshot_opened": true,
+  "auditor": {
+    "prepare_buttons": 0,
+    "read_only_note": true,
+    "saved_summary_opened": true
+  },
+  "sessions_logged_out": 2,
+  "final_errors": [
+    {
+      "message": "Error connecting to socket.io: Invalid namespace",
+      "timestamp": "2026-10-20T22:44:25.936Z"
+    }
+  ],
+  "realtime_preview_limit": "Temporary acceptance server reports Invalid namespace; this phase verifies Page fallback, not realtime transport.",
+  "viewport_reset": true,
+  "tab_closed": true,
+  "screenshots_fixture_run": 1,
+  "native_preservation_fixture_run": 2,
+  "repeated_manager_prepare_confirm": {
+    "fixture_run": 2,
+    "prepared_from_page": true,
+    "confirmed_from_page": true,
+    "site": "hospitality-acceptance.localhost",
+    "operational_date_before": "2026-10-19",
+    "operational_date_after": "2026-10-20",
+    "history_day": "2026-10-19",
+    "history_status": "Cerrado",
+    "observed_at": "2026-10-21T01:17:05.623Z",
+    "session_logged_out": true,
+    "tab_closed": true,
+    "viewport_override_applied": false
+  },
+  "corrected_first_tab_hidden_zero": true,
+  "aria_selected_synchronized": true
+}

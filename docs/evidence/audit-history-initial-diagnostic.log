@@ -1,0 +1,6 @@
+Initial directed run: fixture diagnostic, not an acceptance pass.
+Raw local log SHA-256: dcfd3bb0b12b6b55ebdcb7daa425aa2b2c8d54795026f22e33ae87aa0722318d
+
+TimestampMismatchError: reusing a document after validation failure; corrected by reloading.
+AssertionError: monetary strings compared against integers in refund and shift cases; corrected to numeric comparisons.
+Two assertion failures and one fixture error. Final complete run is audit-history-native-tests.xml.

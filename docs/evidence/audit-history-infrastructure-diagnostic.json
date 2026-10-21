@@ -1,0 +1,9 @@
+{
+  "attempt": "full-6",
+  "passed": false,
+  "tests_executed": false,
+  "raw_log_sha256": "75edc3363b332e0b76cf7ee4b6afcc3179073215adb83d64e041908b0f38f4b5",
+  "cause": "Redis 13001 connection refused before integration suite started",
+  "recovery": "Restarted isolated development services with run_dev.py; complete full-7 passed 329 tests",
+  "final_report": "audit-history-native-tests.xml"
+}

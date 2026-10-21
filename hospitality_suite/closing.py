@@ -28,8 +28,13 @@ def blockers(prop):
 
 def daily_close(prop, data):
     from hospitality_suite.reports import summary
+    reason=data.get('reason')
+    if reason is not None and (not isinstance(reason,str) or len(reason)>1000):
+        frappe.throw(frappe._('Escriba una observación de cierre de hasta 1000 caracteres'))
     name = frappe.db.get_value("HS Daily Close", {"property": prop.name, "business_date": prop.business_date})
     doc = locked_doc("HS Daily Close", name) if name else None
+    from hospitality_suite.audit_trail import values as audit_values
+    before=audit_values(doc)
     if doc and doc.status == "Closed":
         return dict(close=doc.name, status=doc.status)
     from hospitality_suite.security import ACTIONS,is_system
@@ -38,15 +43,18 @@ def daily_close(prop, data):
         generate(prop)
     problems = blockers(prop)
     captured=summary(prop)
+    captured['presentation']=dict(property_name=prop.property_name,time_zone=prop.time_zone,reason=reason or '')
     from hospitality_suite.close_financials import snapshot
     captured["financial"]=snapshot(prop,captured)
+    from hospitality_suite.audit_trail import review
+    captured['audit_review']=review(prop)
     import hashlib
     stable={k:v for k,v in captured["financial"].items() if k!="captured_at"}
     fixed={k:v for k,v in captured.items() if k not in {"financial","occupied_hours","utilization","average_stay_hours"}}
     acceptance=hashlib.sha256(canonical(dict(operational=fixed,financial=stable,blockers=problems)).encode()).hexdigest()
     if data.get("confirm") and data.get("review_acceptance") and data["review_acceptance"]!=acceptance:
         frappe.throw(frappe._("El resumen del cierre cambió. Actualice la revisión antes de confirmar"))
-    values = dict(business_date=prop.business_date, status="Review", summary=canonical(captured), blockers=canonical(problems))
+    values = dict(business_date=prop.business_date, status="Review", summary=canonical(captured), blockers=canonical(problems),reason=reason)
     if doc:
         doc.update(values)
         doc.save()
@@ -57,10 +65,13 @@ def daily_close(prop, data):
         if problems:
             frappe.throw(frappe._("Resuelva los pendientes antes de confirmar el cierre"))
         doc.status, doc.closed_at = "Closed", now_datetime()
+        from hospitality_suite.time import local
+        captured['presentation']['closed_at']=local(doc.closed_at,prop).strftime('%d/%m/%Y %H:%M:%S')
+        doc.summary=canonical(captured)
         doc.save()
         prop.business_date = add_days(prop.business_date, 1)
         prop.save()
-    audit(prop, "Daily close " + doc.status, doc)
+    audit(prop, "Daily close " + doc.status, doc,data.get('reason') or frappe._('Confirmación autorizada del cierre' if doc.status=='Closed' else 'Preparación de la auditoría del día'),before=before,business_date=doc.business_date)
     return dict(close=doc.name, status=doc.status, blockers=problems,period=frappe.parse_json(doc.summary),review_acceptance=acceptance)
 
 

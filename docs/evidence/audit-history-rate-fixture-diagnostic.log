@@ -1,0 +1,119 @@
+Diagnostic only; not an acceptance pass. Public copy: LF newlines and expanded indentation tabs.
+Raw local log SHA-256: 59d9077b574f0780f60484f28663d067157908d0485397eb679da3a49ba8f619
+
+Starting test run with parameters: site=hospitality-acceptance.localhost, app=hospitality_suite, verbose=False, tests=(), force=False, profile=False, junit_xml_output=/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/.local/audit-history/full-1-raw.xml, failfast=False, skip_before_tests=False, debug=False, selected_categories=[]
+View detailed logs (using --verbose): /home/frappe/benches/hospitality-bench/logs/frappe.testing.log
+
+Running 313 integration tests for hospitality_suite
+
+Running tests...
+----------------------------------------------------------------------
+.........................................E......................................................................................................................................................E........................................................................................................................
+======================================================================
+ERROR [0.053s]: test_season_weekday_payer_plan_and_priority_have_one_winner_per_night (hospitality_suite.tests.test_booking_rate_audit.TestBookingRateAudit.test_season_weekday_payer_plan_and_priority_have_one_winner_per_night)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/tests/test_booking_rate_audit.py", line 83, in test_season_weekday_payer_plan_and_priority_have_one_winner_per_night
+    negotiated.save()
+    ~~~~~~~~~~~~~~~^^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/model/document.py", line 558, in save
+    return self._save(*args, **kwargs)
+           ~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/model/document.py", line 595, in _save
+    self.run_before_save_methods()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/model/document.py", line 1414, in run_before_save_methods
+    self.run_method("validate")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/model/document.py", line 1262, in run_method
+    out = Document.hook(fn)(self, *args, **kwargs)
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/model/document.py", line 1664, in composer
+    return composed(self, method, *args, **kwargs)
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/model/document.py", line 1638, in runner
+    add_to_return_value(self, fn(self, *args, **kwargs))
+                              ~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/model/document.py", line 1259, in fn
+    return method_object(*args, **kwargs)
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/controllers.py", line 151, in validate
+    frappe.throw(_("Indique el motivo del cambio de tarifa"))
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/utils/messages.py", line 159, in throw
+    msgprint(
+    ~~~~~~~~^
+        msg,
+     ^^^^
+    ...<7 lines>...
+        allow_dangerous_html=allow_dangerous_html,
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/utils/messages.py", line 118, in msgprint
+    _raise_exception()
+    ~~~~~~~~~~~~~~~~^^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/utils/messages.py", line 59, in _raise_exception
+    raise exc
+frappe.exceptions.ValidationError: Indique el motivo del cambio de tarifa
+
+======================================================================
+ERROR [0.160s]: test_unequal_accepted_nights_are_not_averaged_or_counted_as_current_production (hospitality_suite.tests.test_periodic.TestPeriodic.test_unequal_accepted_nights_are_not_averaged_or_counted_as_current_production)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/tests/test_periodic.py", line 182, in test_unequal_accepted_nights_are_not_averaged_or_counted_as_current_production
+    with operation():special.amount=9000;special.save()
+                                         ~~~~~~~~~~~~^^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/model/document.py", line 558, in save
+    return self._save(*args, **kwargs)
+           ~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/model/document.py", line 595, in _save
+    self.run_before_save_methods()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/model/document.py", line 1414, in run_before_save_methods
+    self.run_method("validate")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/model/document.py", line 1262, in run_method
+    out = Document.hook(fn)(self, *args, **kwargs)
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/model/document.py", line 1664, in composer
+    return composed(self, method, *args, **kwargs)
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/model/document.py", line 1638, in runner
+    add_to_return_value(self, fn(self, *args, **kwargs))
+                              ~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/model/document.py", line 1259, in fn
+    return method_object(*args, **kwargs)
+  File "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/hospitality_suite/controllers.py", line 151, in validate
+    frappe.throw(_("Indique el motivo del cambio de tarifa"))
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/utils/messages.py", line 159, in throw
+    msgprint(
+    ~~~~~~~~^
+        msg,
+     ^^^^
+    ...<7 lines>...
+        allow_dangerous_html=allow_dangerous_html,
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/utils/messages.py", line 118, in msgprint
+    _raise_exception()
+    ~~~~~~~~~~~~~~~~^^
+  File "/home/frappe/benches/hospitality-bench/apps/frappe/frappe/utils/messages.py", line 59, in _raise_exception
+    raise exc
+frappe.exceptions.ValidationError: Indique el motivo del cambio de tarifa
+
+----------------------------------------------------------------------
+Ran 313 tests in 131.558s
+
+FAILED (errors=2)
+
+Generating XML reports...
+
+
+Running tests...
+Running 14 unspecified-category tests for hospitality_suite
+----------------------------------------------------------------------
+..............
+----------------------------------------------------------------------
+Ran 14 tests in 0.146s
+
+OK
+
+Generating XML reports...

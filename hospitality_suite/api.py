@@ -453,9 +453,15 @@ def save_setup(property_name, section, data, request_key, expected_modified=None
         else:
             dt = {"room": "HS Room", "category": "HS Category", "rate": "HS Rate", "payment_method": "HS Payment Method","billing_party":"HS Billing Party","expense_category":"HS Expense Category","supplier":"HS Supplier","equipment":"HS Equipment"}[section]
             doc = insert(dt, prop, **values)
-        audit(prop, "Setup " + section, doc)
+        if section!='rate':audit(prop, "Setup " + section, doc)
         return dict(name=doc.name)
     return command(property_name, "setup", request_key, dict(operation="setup_" + section, **values), save)
+
+
+@frappe.whitelist()
+def audit_detail(property_name,name):
+    from hospitality_suite.audit_trail import detail
+    return detail(require(property_name,'report'),name)
 
 
 @frappe.whitelist(methods=["POST"])
