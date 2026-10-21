@@ -1,6 +1,6 @@
 # Evidencia de pruebas
 
-Índice acumulado de evidencia histórica y actual. Versión de aplicación vigente: 0.7.3; Frappe 16.52.0 y ERPNext 16.51.1, en un bench separado de WSL Ubuntu 24.04. Sitios ficticios: hospitality.localhost, hospitality-clean.localhost, hospitality-restore.localhost y hospitality-acceptance.localhost. No hay datos ni operaciones de producción.
+Índice acumulado de evidencia histórica y actual. Versión de aplicación vigente: 0.7.4; Frappe 16.52.0 y ERPNext 16.51.1, en un bench separado de WSL Ubuntu 24.04. Sitios ficticios: hospitality.localhost, hospitality-clean.localhost, hospitality-restore.localhost y hospitality-acceptance.localhost. No hay datos ni operaciones de producción.
 
 La batería vigente está en board-native-tests.log/xml: **229 aprobadas** (215 integración y catorce puras), y board-js-tests.log: **45 regresiones JavaScript** (43 Desk y dos portal). ESTANCIAS_Y_LLEGADAS.md delimita el nuevo recorrido con recepcionista y sus fixtures. Los resultados menores que siguen pertenecen a fases anteriores; no representan otra ejecución ni recorridos adicionales.
 
@@ -371,3 +371,11 @@ La revisión final de 0.7.1 añadió rechazo de contexto ajeno en limpieza/mante
 - `audit-history-fixture-diagnostic.json`, `audit-history-initial-diagnostic.log` y `audit-history-rate-fixture-diagnostic.log`: expectativas iniciales corregidas; no son pases. `audit-history-infrastructure-diagnostic.json` conserva fallo previo al inicio por Redis detenido y recuperación.
 - `audit-history-upgrade.json`, `audit-history-ux-restored.json`, `audit-history-installed.json`, `audit-history-final-state.json` y `audit-history-source.json`: conservación de tablas/archivos, restauración original, formato instalado, servicios y manifiesto estático. No sustituyen la recuperación final F26.
 - `../BITACORA_Y_CIERRES.md`: S15-07 I→V y S12-04/06/07 R→V, 170 V/14 I/34 R; 48 sin cierre. Sin sincronización OTA ni PDF nuevo renderizado en esta fase.
+
+## Inventario y servicios — 0.7.4
+
+- `inventory-audit-native-tests.log/xml`: 337 aprobadas, 323 integración y catorce puras; ocho nuevas. `inventory-audit-js-tests.log`: 101 aprobadas, seis nuevas. `inventory-audit-initial-diagnostic.json` distingue el fallo real del descuento pendiente y tres errores del fixture original.
+- Capturas `181`–`184`: ubicación inicial, preparación, entrega y devolución móvil desde Gerencia. `185-inventario-alerta-movil.jpg` es presentación intermedia; `186-inventario-movil-compacto.jpg` acredita la ficha final y selector 44 px. `187-servicio-devuelto-final.jpg` muestra el estado final en escritorio. `inventory-audit-browser.json` conserva medidas, límites de Socket.IO y sesiones cerradas.
+- `inventory-audit-items-ui.json`: estados de Page, salida estándar anulada al devolver, cargo revertido, stock 98/2 y 62 tablas sin cambios. La estancia, traslado inicial y solicitud proceden del fixture API. No es otra compra/pago desde Page; sus recorridos históricos siguen separados.
+- `inventory-audit-upgrade.json`, `inventory-audit-ux-restored.json`, `inventory-audit-final-state.json` y `inventory-audit-source.json`: conservación de datos/archivos, restauración, servicios y revisión estática actual. Sin HRMS instalado, cambios de esquema ni PDF nuevo.
+- `../AUDITORIA_INVENTARIO_SERVICIOS.md`: nueve R→V; 179 V, 14 I, 25 R; 39 sin cierre. F26 activo y OTA aplazada.

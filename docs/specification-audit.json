@@ -2690,10 +2690,21 @@
       "line": 162,
       "kind": "enumerated",
       "requirement": "- Minibar, bebidas, alimentos, room service, lavandería, estacionamiento y otros servicios.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/inventory.py",
+        "hospitality_suite/item_configuration.py",
+        "hospitality_suite/accounting.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_INVENTARIO_SERVICIOS.md",
+        "hospitality_suite/tests/test_inventory_audit.py",
+        "hospitality_suite/tests/test_procurement.py",
+        "docs/evidence/inventory-audit-native-tests.xml",
+        "docs/evidence/inventory-audit-items-ui.json",
+        "docs/evidence/inventory-audit-browser.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S11-02",
@@ -2725,10 +2736,20 @@
       "line": 164,
       "kind": "enumerated",
       "requirement": "- Solicitudes de servicio con estados: solicitado, en preparación/en proceso, entregado y cancelado.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/inventory.py",
+        "hospitality_suite/public/js/hospitality_inventory.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_INVENTARIO_SERVICIOS.md",
+        "hospitality_suite/tests/test_inventory_audit.py",
+        "hospitality_suite/tests/test_procurement.py",
+        "docs/evidence/inventory-audit-native-tests.xml",
+        "docs/evidence/inventory-audit-items-ui.json",
+        "docs/evidence/inventory-audit-browser.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S11-04",
@@ -2737,10 +2758,21 @@
       "line": 165,
       "kind": "enumerated",
       "requirement": "- Almacenes por establecimiento y ubicaciones cuando corresponda, mínimos y alertas de reposición.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/procurement.py",
+        "hospitality_suite/api.py",
+        "hospitality_suite/public/js/hospitality_inventory.js"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_INVENTARIO_SERVICIOS.md",
+        "hospitality_suite/tests/test_inventory_audit.py",
+        "hospitality_suite/tests/test_procurement.py",
+        "docs/evidence/inventory-audit-native-tests.xml",
+        "docs/evidence/inventory-audit-items-ui.json",
+        "docs/evidence/inventory-audit-browser.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S11-05",
@@ -2749,10 +2781,20 @@
       "line": 166,
       "kind": "enumerated",
       "requirement": "- Integrar recepción de compras, traslados, salidas y ajustes con documentos estándar de ERPNext.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/procurement.py",
+        "hospitality_suite/security.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_INVENTARIO_SERVICIOS.md",
+        "hospitality_suite/tests/test_inventory_audit.py",
+        "hospitality_suite/tests/test_procurement.py",
+        "docs/evidence/inventory-audit-native-tests.xml",
+        "docs/evidence/inventory-audit-items-ui.json",
+        "docs/evidence/inventory-audit-browser.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S11-06",
@@ -2761,10 +2803,22 @@
       "line": 167,
       "kind": "enumerated",
       "requirement": "- Separar mercancía vendida, consumibles de limpieza, mermas y activos.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/procurement.py",
+        "hospitality_suite/equipment.py",
+        "hospitality_suite/report_queries.py",
+        "hospitality_suite/schema.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_INVENTARIO_SERVICIOS.md",
+        "hospitality_suite/tests/test_inventory_audit.py",
+        "hospitality_suite/tests/test_procurement.py",
+        "docs/evidence/inventory-audit-native-tests.xml",
+        "docs/evidence/inventory-audit-items-ui.json",
+        "docs/evidence/inventory-audit-browser.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S11-07",
@@ -2773,10 +2827,22 @@
       "line": 168,
       "kind": "enumerated",
       "requirement": "- Definir si el inventario se descuenta al entregar o al facturar; impedir el doble descuento.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/inventory.py",
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/security.py",
+        "hospitality_suite/native_pos.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_INVENTARIO_SERVICIOS.md",
+        "hospitality_suite/tests/test_inventory_audit.py",
+        "hospitality_suite/tests/test_procurement.py",
+        "docs/evidence/inventory-audit-native-tests.xml",
+        "docs/evidence/inventory-audit-items-ui.json",
+        "docs/evidence/inventory-audit-browser.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S11-08",
@@ -2785,10 +2851,21 @@
       "line": 169,
       "kind": "enumerated",
       "requirement": "- Permitir anulación/devolución mediante el flujo correspondiente y conciliar con la cuenta de estancia.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/inventory.py",
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/direct_sales.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_INVENTARIO_SERVICIOS.md",
+        "hospitality_suite/tests/test_inventory_audit.py",
+        "hospitality_suite/tests/test_procurement.py",
+        "docs/evidence/inventory-audit-native-tests.xml",
+        "docs/evidence/inventory-audit-items-ui.json",
+        "docs/evidence/inventory-audit-browser.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S11-09",
@@ -2797,10 +2874,22 @@
       "line": 170,
       "kind": "enumerated",
       "requirement": "- Para restaurante o POS, reutilizar funciones disponibles de ERPNext y completar la integración de cargos a habitación. No desarrollar otro ERP de restaurante innecesariamente.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/native_pos.py",
+        "hospitality_suite/accounting.py",
+        "hospitality_suite/security.py",
+        "hospitality_suite/inventory.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_INVENTARIO_SERVICIOS.md",
+        "hospitality_suite/tests/test_inventory_audit.py",
+        "hospitality_suite/tests/test_procurement.py",
+        "docs/evidence/inventory-audit-native-tests.xml",
+        "docs/evidence/inventory-audit-items-ui.json",
+        "docs/evidence/inventory-audit-browser.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S11-10",
@@ -2809,10 +2898,22 @@
       "line": 171,
       "kind": "enumerated",
       "requirement": "- Compras, proveedores, gastos, activos y nómina pueden reutilizar sus módulos estándar. HRMS será opcional y su ausencia no debe impedir el funcionamiento del PMS.",
-      "status": "R",
-      "implementation": [],
-      "evidence": [],
-      "remaining": "Contraste individual con código y evidencia pendiente."
+      "status": "V",
+      "implementation": [
+        "hospitality_suite/procurement.py",
+        "hospitality_suite/treasury.py",
+        "hospitality_suite/equipment.py",
+        "hospitality_suite/hooks.py"
+      ],
+      "evidence": [
+        "docs/AUDITORIA_INVENTARIO_SERVICIOS.md",
+        "hospitality_suite/tests/test_inventory_audit.py",
+        "hospitality_suite/tests/test_procurement.py",
+        "docs/evidence/inventory-audit-native-tests.xml",
+        "docs/evidence/inventory-audit-items-ui.json",
+        "docs/evidence/inventory-audit-browser.json"
+      ],
+      "remaining": ""
     },
     {
       "id": "S12-01",

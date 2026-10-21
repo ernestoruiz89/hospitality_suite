@@ -1,0 +1,120 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "synthetic_api_fixture": true,
+  "manager_page_states": [
+    "En proceso",
+    "Entregado",
+    "Devuelto"
+  ],
+  "room": "H101",
+  "quantity": 2,
+  "stock_observed": {
+    "main_before": 98,
+    "main_delivered": 96,
+    "main_returned": 98,
+    "floor": 2,
+    "minimum_main": 120,
+    "minimum_floor": 4,
+    "reorder_quantity": 8
+  },
+  "mobile_dialog": {
+    "action": [
+      {
+        "height": 44,
+        "width": 342
+      }
+    ],
+    "modal_width": 374,
+    "scroll_width": 390,
+    "width": 390
+  },
+  "mobile_inventory_before": {
+    "location": [
+      {
+        "height": 36,
+        "label": "Piso de prueba de inventario",
+        "width": 189
+      }
+    ],
+    "scroll_width": 390,
+    "tables": [
+      {
+        "scroll_width": 352,
+        "width": 352
+      },
+      {
+        "scroll_width": 314,
+        "width": 314
+      }
+    ],
+    "width": 390
+  },
+  "mobile_inventory_final": {
+    "card": {
+      "columns": "148px 148px",
+      "display": "grid",
+      "height": 228.375,
+      "width": 314
+    },
+    "cells": [
+      {
+        "label": "Artículo",
+        "text": "Agua minibar (demostración)",
+        "x": 42,
+        "y": 489.015625
+      },
+      {
+        "label": "Clasificación",
+        "text": "Mercancía para venta",
+        "x": 42,
+        "y": 541.609375
+      },
+      {
+        "label": "Disponible",
+        "text": "2",
+        "x": 190,
+        "y": 541.609375
+      },
+      {
+        "label": "Mínimo",
+        "text": "4",
+        "x": 42,
+        "y": 594.203125
+      },
+      {
+        "label": "Cantidad a reponer",
+        "text": "8",
+        "x": 190,
+        "y": 594.203125
+      },
+      {
+        "label": "Alerta",
+        "text": "Reponer",
+        "x": 42,
+        "y": 646.796875
+      }
+    ],
+    "scroll_width": 390,
+    "selector": {
+      "height": 44,
+      "label": "Piso de prueba de inventario",
+      "width": 314
+    },
+    "width": 390
+  },
+  "final_mobile_screenshot": "186-inventario-movil-compacto.jpg",
+  "initial_mobile_screenshot_superseded": "185-inventario-alerta-movil.jpg",
+  "sessions_logged_out": 2,
+  "viewport_reset": true,
+  "tab_closed": true,
+  "console_errors": [
+    {
+      "level": "error",
+      "message": "Error connecting to socket.io: Invalid namespace",
+      "timestamp": "2026-10-21T01:34:08.880Z",
+      "url": "http://localhost:8089/assets/frappe/dist/js/desk.bundle.C3NJ2YK5.js"
+    }
+  ],
+  "realtime_limit": "Temporary acceptance server uses fallback; this phase does not certify realtime transport.",
+  "new_purchase_or_payment_page_flow": false
+}

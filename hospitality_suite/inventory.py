@@ -30,7 +30,7 @@ def request_service(prop, data):
     item = locked_doc("Item", data["item"])
     if item.disabled or not item.is_sales_item or item.is_fixed_asset:
         frappe.throw(frappe._("El artículo no está habilitado para venta"))
-    quantity = decimal(data.get("quantity") or 1)
+    quantity = decimal(data.get("quantity",1))
     if quantity <= 0:
         frappe.throw(frappe._("La cantidad debe ser positiva"))
     included=data.get("included") in (True,1,"1")
@@ -80,6 +80,10 @@ def update_service(prop, data):
             if original.status != "Invoiced":
                 original.status, original.reason = "Reversed", data["reason"]
                 original.save()
+                for name in current_all('HS Charge',filters={'applies_to_charge':original.name,'status':['in',['Pending','Scheduled']]},pluck='name'):
+                    adjustment=locked_doc('HS Charge',name)
+                    adjustment.status,adjustment.reason='Reversed',data['reason']
+                    adjustment.save()
         if doc.stock_entry:
             entry = locked_doc("Stock Entry", doc.stock_entry)
             entry.flags.ignore_permissions = True

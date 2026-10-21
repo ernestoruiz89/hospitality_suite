@@ -2,7 +2,7 @@
 
 PMS nativo para modalidades Hotel, Por tiempo y Hotel y por tiempo. Recepción, caja, limpieza y gerencia trabajan desde once Pages de Desk en español; la contabilidad y el inventario permanecen en ERPNext.
 
-Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. App 0.7.3. Otras versiones no están acreditadas.
+Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. App 0.7.4. Otras versiones no están acreditadas.
 
 El desarrollo continúa: [matriz de requisitos](docs/REQUISITOS.md), [auditoría punto por punto](docs/AUDITORIA_ESPECIFICACION.md), [registro de avance](docs/AVANCE.md) y [arquitectura](docs/ARQUITECTURA.md). No se declara listo para producción mientras existan pendientes obligatorios.
 
@@ -12,7 +12,9 @@ El desarrollo continúa: [matriz de requisitos](docs/REQUISITOS.md), [auditoría
 
 [Permisos y aislamiento](docs/AUDITORIA_SEGURIDAD.md): contexto validado en servidor, JSON acotado y 19 comprobaciones HTTP. 319 nativas aprobadas. Estado de esa fase: **166 V, 15 I y 37 R; 52 entradas sin cierre**.
 
-[Bitácora y cierres](docs/BITACORA_Y_CIERRES.md): cambios legibles, valores históricos y resumen por ejecución. **329 nativas y 95 JS aprobadas**. Estado actual: **170 V, 14 I y 34 R; 48 entradas sin cierre**.
+[Bitácora y cierres](docs/BITACORA_Y_CIERRES.md): cambios legibles, valores históricos y resumen por ejecución. **329 nativas y 95 JS aprobadas**. Estado de esa fase: **170 V, 14 I y 34 R; 48 entradas sin cierre**.
+
+[Inventario y servicios](docs/AUDITORIA_INVENTARIO_SERVICIOS.md): entregas/devoluciones conciliadas, consultas por ubicación y acciones claras por estado. **337 nativas y 101 JS aprobadas**. Estado actual: **179 V, 14 I y 25 R; 39 entradas sin cierre**.
 
 ## Instalación en Bench
 
@@ -99,7 +101,7 @@ bench --site hotel.localhost set-config hospitality_integration_test_site true
 bench --site hotel.localhost run-tests --app hospitality_suite
 ```
 
-`before_tests` exige Redis disponible y un sitio designado sin operaciones; después carga la demostración explícita. Cada caso revierte sus movimientos. Conserve un respaldo inicial para recuperar una ejecución interrumpida. Última batería conjunta: **329 aprobadas** en hospitality-acceptance.localhost, 315 de integración y 14 puras, sobre 0.7.3. Seis escenarios adicionales con el worker real acreditan reintentos, agotamiento, rollback, logs y recuperación de reserva/portal en TRABAJOS_Y_REINTENTOS.md.
+`before_tests` exige Redis disponible y un sitio designado sin operaciones; después carga la demostración explícita. Cada caso revierte sus movimientos. Conserve un respaldo inicial para recuperar una ejecución interrumpida. Última batería conjunta: **337 aprobadas** en hospitality-acceptance.localhost, 323 de integración y 14 puras, sobre 0.7.4. Seis escenarios adicionales con el worker real acreditan reintentos, agotamiento, rollback, logs y recuperación de reserva/portal en TRABAJOS_Y_REINTENTOS.md.
 
 La fase histórica 0.7.1 acredita **307 pruebas nativas y 85 JS**, con trece casos nuevos de limpieza, bloqueos y contexto de establecimiento. La matriz registra 157 V, 14 I, 0 P y 47 R; cada entrada conserva su evidencia y límites. Las auditorías anteriores mantienen los recorridos históricos. El sitio limpio anterior conserva respaldo de diagnóstico, y la demostración principal conserva operaciones UX: ninguno sustituye el sitio de aceptación. Los dos casos de concurrencia usan conexiones y commits reales; se ejecutan aparte sobre aceptación con respaldo y restauración posterior:
 
@@ -108,7 +110,7 @@ bench --site hospitality-acceptance.localhost execute hospitality_suite.tests.co
 bench --site hospitality-acceptance.localhost execute hospitality_suite.tests.concurrency.verify_category
 ```
 
-Las pruebas JS sin servidor cubren transporte, edición numérica, catálogo, traducción/presentación, políticas, cierre, servicios, POS, devoluciones, notas de crédito, formularios y portal: **93 de Desk y dos del portal**. Ejecute las 95 con:
+Las pruebas JS sin servidor cubren transporte, edición numérica, catálogo, traducción/presentación, políticas, cierre, servicios, POS, devoluciones, notas de crédito, formularios y portal: **99 de Desk y dos del portal**. Ejecute las 101 con:
 
 ```sh
 node tools/run_ui_tests.cjs
@@ -126,4 +128,4 @@ El núcleo incluye disponibilidad serializada, snapshots tarifarios, grupos, fol
 
 La retención de identificaciones y evidencias requiere revisión de gerencia y una política por establecimiento; los archivos se eliminan mediante outbox después del commit. Su alcance y recuperación están en docs/OPERACION.md.
 
-La matriz distingue lo implementado de lo probado y lo pendiente. Mantenimiento, planes incluidos, portal Guest, grupos y fallos de transporte ya tienen recorridos de navegador; faltan ampliación de inventario móvil y auditoría/recuperación final de despliegue. Pasarelas, canales, mensajería y cerraduras solo tienen contratos; no hay proveedor real configurado ni pagos simulados como liquidados.
+La matriz distingue lo implementado de lo probado y lo pendiente. Mantenimiento, planes incluidos, portal Guest, grupos, consumos y existencias móviles ya tienen recorridos de navegador. Continúan la aceptación integral por roles y formularios secundarios, el contraste restante y la recuperación final de despliegue. Pasarelas, canales, mensajería y cerraduras solo tienen contratos; no hay proveedor real configurado ni pagos simulados como liquidados.

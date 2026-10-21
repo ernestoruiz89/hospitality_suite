@@ -1,0 +1,14 @@
+{
+  "passed": false,
+  "raw_log_sha256": "337a4fcd9ae2ad01f5fa50a649578e253e94cdb7d117350fcd37b0af5b83897c",
+  "initial_cases": 6,
+  "product_failure": "An unbilled service return left its discount Pending instead of Reversed",
+  "fixture_assumptions": [
+    "Property price_list unset; use native demonstration price list",
+    "Asset Category requires standard company accounts",
+    "Both demo properties share Stores; create exclusive warehouses before testing cross-property rejection"
+  ],
+  "correction": "Reverse pending related adjustments transactionally and use valid native fixtures",
+  "later_cases": "Two additional checks: quantity zero/rollback after stock submission and native POS room charges",
+  "final_report": "inventory-audit-native-tests.xml"
+}

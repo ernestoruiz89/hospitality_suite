@@ -1,6 +1,6 @@
 # Manual diario por rol
 
-Aplicación 0.7.3, Frappe 16.52 / ERPNext 16.51. Los recorridos acreditados y las verificaciones pendientes están en REQUISITOS.md.
+Aplicación 0.7.4, Frappe 16.52 / ERPNext 16.51. Los recorridos acreditados y las verificaciones pendientes están en REQUISITOS.md.
 
 Los formularios extensos están organizados en pestañas por tarea. Puede cambiar de sección sin perder lo escrito y guardar desde cualquiera. Los datos adicionales del huésped y las opciones de reserva tienen su propia sección. La acción de guardar o revisar permanece visible; si falta un dato obligatorio, el formulario abre su sección. Al cerrar una revisión de precio o cobro, vuelve al borrador sin registrarlo. Véase UX_FORMULARIOS.md.
 
@@ -174,3 +174,9 @@ En Gerencia → Auditoría consulte el período y pulse «Ver cambio» en el reg
 Al preparar el cierre, «Registros para revisar» reúne cancelaciones, no presentaciones, ajustes, devoluciones y cambios de esa fecha. «Ver registros» abre sus detalles; el conteo representa eventos, no dinero. Revise también los pendientes y totales antes de confirmar. Si otro cambio invalida la revisión, actualícela.
 
 El historial permite «Ver resumen» sin volver a calcular el día. En Auditoría, un evento de cierre ofrece «Ver resumen de esta ejecución», incluso después de una reapertura. El rol Auditoría solo consulta el historial; la confirmación requiere Gerencia/Administración y reabrir requiere permiso y motivo.
+
+## Consumos y existencias — 0.7.4
+
+En Consumos e inventario, Actualizar ofrece acciones según el estado del servicio: iniciar preparación, confirmar entrega o cancelar la solicitud. La entrega añade el cargo y descuenta los artículos inventariables una vez. Los servicios sin inventario generan únicamente el cargo. Para devolver, Gerencia/Administración indica el motivo; si ya se facturó, registre primero la nota de crédito correspondiente. Devolver un cargo pendiente revierte también sus descuentos/cortesías pendientes. Un servicio cancelado/devuelto queda visible sin otra acción.
+
+En Existencias por ubicación seleccione el almacén. Disponible, Mínimo, Cantidad a reponer y Reponer corresponden a esa ubicación. Una consulta en curso muestra carga y un error permite reintentar. Los activos muestran Registro de activos, con cantidades/mínimos no aplicables. Los mínimos y la clasificación se configuran desde Configuración → Clasificación y mínimos, usando Item Reorder estándar.

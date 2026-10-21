@@ -1,0 +1,35 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "synthetic_api_fixture": true,
+  "manager_page_states": [
+    "In Progress",
+    "Delivered",
+    "Returned"
+  ],
+  "room": "H101",
+  "quantity": 2,
+  "native_issue_status": 2,
+  "pending_service_charge_reversed": true,
+  "main_water": 98,
+  "floor_water": 2,
+  "unchanged_tables": 62,
+  "changed_tables": [
+    "Bin",
+    "GL Entry",
+    "HS Audit Event",
+    "HS Charge",
+    "HS Request",
+    "HS Service Request",
+    "Stock Entry",
+    "Stock Entry Detail",
+    "Stock Ledger Entry",
+    "Version"
+  ],
+  "financial_and_purchase_tables_unchanged": true,
+  "installed_apps": [
+    "frappe",
+    "erpnext",
+    "hospitality_suite"
+  ],
+  "read_only_inventory_queries": true
+}
