@@ -1,0 +1,3950 @@
+{
+  "roles": [
+    "HS Manager",
+    "HS Housekeeping",
+    "HS Cashier"
+  ],
+  "desktop_only": true,
+  "fixture_origin": "Native API prerequisites only; warehouse configuration, classification, linen movements, replacement and policies through Pages",
+  "events": [
+    {
+      "label": "manager-setup-initial",
+      "at": "2026-10-22T03:22:11.555Z",
+      "backdrops": [],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.U6M7DYHK.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "1. Políticas y contabilidad →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "2. Categorías →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "3. Habitaciones →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "4. Tarifas →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "5. Medios de pago →"
+        },
+        {
+          "action": "billing_party",
+          "disabled": false,
+          "text": "6. Empresas, agencias y crédito"
+        },
+        {
+          "action": "policies",
+          "disabled": false,
+          "text": "7. Horarios y penalizaciones"
+        },
+        {
+          "action": "denominations",
+          "disabled": false,
+          "text": "8. Denominaciones de caja"
+        },
+        {
+          "action": "document_settings",
+          "disabled": false,
+          "text": "9. Series y formatos"
+        },
+        {
+          "action": "expense_category",
+          "disabled": false,
+          "text": "11. Categorías de gasto"
+        },
+        {
+          "action": "stock_policy",
+          "disabled": false,
+          "text": "12. Clasificación y mínimos"
+        },
+        {
+          "action": "equipment",
+          "disabled": false,
+          "text": "13. Equipos y activos"
+        },
+        {
+          "action": "retention_policy",
+          "disabled": false,
+          "text": "14. Retención de datos"
+        },
+        {
+          "action": "portal_settings",
+          "disabled": false,
+          "text": "15. Portal de reservas"
+        },
+        {
+          "action": "payment_policies",
+          "disabled": false,
+          "text": "16. Anticipos y garantías"
+        },
+        {
+          "action": "service_items",
+          "disabled": false,
+          "text": "17. Artículos y servicios"
+        },
+        {
+          "action": "service_accounting",
+          "disabled": false,
+          "text": "18. Contabilidad por servicio"
+        }
+      ],
+      "dialogs": [],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Configuración\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nConfiguración\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nConfigure la operación paso a paso\n\nLas cuentas e impuestos se seleccionan explícitamente de ERPNext.\n\n1. Políticas y contabilidad →\n2. Categorías →\n3. Habitaciones →\n4. Tarifas →\n5. Medios de pago →\n6. Empresas, agencias y crédito\n7. Horarios y penalizaciones\n8. Denominaciones de caja\n9. Series y formatos\n11. Categorías de gasto\n12. Clasificación y mínimos\n13. Equipos y activos\n14. Retención de datos\n15. Portal de reservas\n16. Anticipos y garantías\n17. Artículos y servicios\n18. Contabilidad por servicio\nConfiguración actual\n\n10 habitaciones · 1 categorías · 1 tarifas\n\nHora de referencia del servidor: 2026-10-21 21:22:10.642667 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-setup"
+    },
+    {
+      "label": "manager-laundry-created",
+      "at": "2026-10-22T03:22:28.720Z",
+      "backdrops": [],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.U6M7DYHK.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "service",
+          "disabled": false,
+          "text": "Agregar consumo"
+        },
+        {
+          "action": "direct_sale",
+          "disabled": false,
+          "text": "Venta directa"
+        },
+        {
+          "action": "purchase_order",
+          "disabled": false,
+          "text": "Nueva compra"
+        },
+        {
+          "action": "purchase_invoice",
+          "disabled": false,
+          "text": "Facturar recepción"
+        },
+        {
+          "action": "move_stock",
+          "disabled": false,
+          "text": "Mover / consumir stock"
+        },
+        {
+          "action": "adjust_stock",
+          "disabled": false,
+          "text": "Ajustar conteo"
+        },
+        {
+          "action": "register_supplier",
+          "disabled": false,
+          "text": "Nuevo proveedor"
+        },
+        {
+          "action": "create_warehouse",
+          "disabled": false,
+          "text": "Nuevo almacén"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Almacén o ubicación del establecimiento",
+          "visible": false
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": "Almacén de existencias",
+          "options": [
+            {
+              "label": "Lavandería de aceptación operativa",
+              "value": "Lavandería de aceptación operativa - HSD"
+            },
+            {
+              "label": "Reserva de ropa de aceptación",
+              "value": "Reserva de ropa de aceptación - HSD"
+            },
+            {
+              "label": "Stores",
+              "value": "Stores - HSD"
+            }
+          ],
+          "value": "Stores - HSD"
+        }
+      ],
+      "text": "Consumos e inventario\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nConsumos e inventario\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nConsumos y servicios\n\nLa entrega genera el cargo y, si corresponde, una única salida de inventario.\n\nAgregar consumo\nVenta directa\nNueva compra\nFacturar recepción\nMover / consumir stock\nAjustar conteo\nNuevo proveedor\nNuevo almacén\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nCompras por recibir\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nExistencias por ubicación\nAlmacén\nLavandería de aceptación operativa\nReserva de ropa de aceptación\nStores\nArtículo\tClasificación\tDisponible\tMínimo\tCantidad a reponer\tAlerta\nAgua minibar (demostración)\tMercancía para venta\t100\tSin configurar\t—\t—\nSábana de aceptación operativa\tMercancía para venta\t10\tSin configurar\t—\t—\nHora de referencia del servidor: 2026-10-21 21:22:28.704749 · NIO\nOperación confirmada",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-services"
+    },
+    {
+      "label": "manager-laundry-selected",
+      "at": "2026-10-22T03:23:17.580Z",
+      "backdrops": [
+        "modal-backdrop show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.U6M7DYHK.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "1. Políticas y contabilidad →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "2. Categorías →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "3. Habitaciones →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "4. Tarifas →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "5. Medios de pago →"
+        },
+        {
+          "action": "billing_party",
+          "disabled": false,
+          "text": "6. Empresas, agencias y crédito"
+        },
+        {
+          "action": "policies",
+          "disabled": false,
+          "text": "7. Horarios y penalizaciones"
+        },
+        {
+          "action": "denominations",
+          "disabled": false,
+          "text": "8. Denominaciones de caja"
+        },
+        {
+          "action": "document_settings",
+          "disabled": false,
+          "text": "9. Series y formatos"
+        },
+        {
+          "action": "expense_category",
+          "disabled": false,
+          "text": "11. Categorías de gasto"
+        },
+        {
+          "action": "stock_policy",
+          "disabled": false,
+          "text": "12. Clasificación y mínimos"
+        },
+        {
+          "action": "equipment",
+          "disabled": false,
+          "text": "13. Equipos y activos"
+        },
+        {
+          "action": "retention_policy",
+          "disabled": false,
+          "text": "14. Retención de datos"
+        },
+        {
+          "action": "portal_settings",
+          "disabled": false,
+          "text": "15. Portal de reservas"
+        },
+        {
+          "action": "payment_policies",
+          "disabled": false,
+          "text": "16. Anticipos y garantías"
+        },
+        {
+          "action": "service_items",
+          "disabled": false,
+          "text": "17. Artículos y servicios"
+        },
+        {
+          "action": "service_accounting",
+          "disabled": false,
+          "text": "18. Contabilidad por servicio"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Operación"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Cargos de alojamiento"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Cuentas y almacenes"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Artículos e impuestos"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Guardar configuración"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show",
+          "title": "Políticas y contabilidad",
+          "visible": true
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": "Centro de costo",
+          "name": "cost_center",
+          "value": "Principal - HSD"
+        },
+        {
+          "invalid": null,
+          "label": "Cuenta por cobrar",
+          "name": "receivable_account",
+          "value": "DEUDORES VARIOS - HSD"
+        },
+        {
+          "invalid": null,
+          "label": "Pasivo de garantías",
+          "name": "guarantee_account",
+          "value": "Garantías de huéspedes demo - HSD"
+        },
+        {
+          "invalid": null,
+          "label": "Almacén",
+          "name": "warehouse",
+          "value": "Stores - HSD"
+        },
+        {
+          "invalid": null,
+          "label": "Almacén de lavandería",
+          "name": "laundry_warehouse",
+          "value": "Lavandería de aceptación operativa - HSD"
+        },
+        {
+          "invalid": null,
+          "label": "Cuenta de entrega de efectivo",
+          "name": "cash_transfer_account",
+          "value": ""
+        }
+      ],
+      "text": "Configuración\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nConfiguración\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nConfigure la operación paso a paso\n\nLas cuentas e impuestos se seleccionan explícitamente de ERPNext.\n\n1. Políticas y contabilidad →\n2. Categorías →\n3. Habitaciones →\n4. Tarifas →\n5. Medios de pago →\n6. Empresas, agencias y crédito\n7. Horarios y penalizaciones\n8. Denominaciones de caja\n9. Series y formatos\n11. Categorías de gasto\n12. Clasificación y mínimos\n13. Equipos y activos\n14. Retención de datos\n15. Portal de reservas\n16. Anticipos y garantías\n17. Artículos y servicios\n18. Contabilidad por servicio\nConfiguración actual\n\n10 habitaciones · 1 categorías · 1 tarifas\n\nHora de referencia del servidor: 2026-10-21 21:22:36.765586 · NIO\nPolíticas y contabilidad\nOperación\nCargos de alojamiento\nCuentas y almacenes\nArtículos e impuestos\nCentro de costo\nEmpieza a escribir para ver resultados.\ncost_center\nCuenta por cobrar\nEmpieza a escribir para ver resultados.\nreceivable_account\nPasivo de garantías\nEmpieza a escribir para ver resultados.\nguarantee_account\nAlmacén\nEmpieza a escribir para ver resultados.\nwarehouse\nAlmacén de lavandería\nlaundry_warehouse\nCuenta de entrega de efectivo\n\nActivo circulante - HSD\n\nAvances de Empleado - HSD\n\nCuentas bancarias - HSD\n\nCuentas por cobrar - HSD\n\nDEUDORES VARIOS - HSD\n\nEfectivo - HSD\n\nEfectivo en caja - HSD\n\nINVERSIONES Y PRESTAMOS - HSD\n\nUTILIZACIÓN DE FONDOS (ACTIVOS) - HSD\n\nValores y Depósitos - HSD\n\n Búsqueda Avanzada\n\n11 resultados encontrados\ncash_transfer_account\nGuardar configuración",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-setup"
+    },
+    {
+      "label": "manager-linen-classified",
+      "at": "2026-10-22T03:23:39.948Z",
+      "backdrops": [
+        "modal-backdrop fade show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.U6M7DYHK.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "1. Políticas y contabilidad →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "2. Categorías →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "3. Habitaciones →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "4. Tarifas →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "5. Medios de pago →"
+        },
+        {
+          "action": "billing_party",
+          "disabled": false,
+          "text": "6. Empresas, agencias y crédito"
+        },
+        {
+          "action": "policies",
+          "disabled": false,
+          "text": "7. Horarios y penalizaciones"
+        },
+        {
+          "action": "denominations",
+          "disabled": false,
+          "text": "8. Denominaciones de caja"
+        },
+        {
+          "action": "document_settings",
+          "disabled": false,
+          "text": "9. Series y formatos"
+        },
+        {
+          "action": "expense_category",
+          "disabled": false,
+          "text": "11. Categorías de gasto"
+        },
+        {
+          "action": "stock_policy",
+          "disabled": false,
+          "text": "12. Clasificación y mínimos"
+        },
+        {
+          "action": "equipment",
+          "disabled": false,
+          "text": "13. Equipos y activos"
+        },
+        {
+          "action": "retention_policy",
+          "disabled": false,
+          "text": "14. Retención de datos"
+        },
+        {
+          "action": "portal_settings",
+          "disabled": false,
+          "text": "15. Portal de reservas"
+        },
+        {
+          "action": "payment_policies",
+          "disabled": false,
+          "text": "16. Anticipos y garantías"
+        },
+        {
+          "action": "service_items",
+          "disabled": false,
+          "text": "17. Artículos y servicios"
+        },
+        {
+          "action": "service_accounting",
+          "disabled": false,
+          "text": "18. Contabilidad por servicio"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Políticas y contabilidad",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Clasificación y mínimos de inventario",
+          "visible": false
+        },
+        {
+          "classes": "modal fade show hs-keyboard-dialog",
+          "title": "Habilitar reordenamiento automático",
+          "visible": true
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            },
+            {
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Configuración\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nConfiguración\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nHotel Jardín Demo\nMotel Luna Demo\nActualizar\nCerrar sesión\nConfigure la operación paso a paso\n\nLas cuentas e impuestos se seleccionan explícitamente de ERPNext.\n\n1. Políticas y contabilidad →\n2. Categorías →\n3. Habitaciones →\n4. Tarifas →\n5. Medios de pago →\n6. Empresas, agencias y crédito\n7. Horarios y penalizaciones\n8. Denominaciones de caja\n9. Series y formatos\n11. Categorías de gasto\n12. Clasificación y mínimos\n13. Equipos y activos\n14. Retención de datos\n15. Portal de reservas\n16. Anticipos y garantías\n17. Artículos y servicios\n18. Contabilidad por servicio\nConfiguración actual\n\n10 habitaciones · 1 categorías · 1 tarifas\n\nHora de referencia del servidor: 2026-10-21 21:23:39.966900 · NIO\nOperación confirmada\nHabilitar reordenamiento automático\nDebe habilitar el reordenamiento automático en la Configuración de inventario para mantener los niveles de reordenamiento.",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-setup"
+    },
+    {
+      "label": "manager-native-reorder-notice",
+      "at": "2026-10-22T03:23:45.717Z",
+      "backdrops": [
+        "modal-backdrop fade show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.U6M7DYHK.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "1. Políticas y contabilidad →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "2. Categorías →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "3. Habitaciones →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "4. Tarifas →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "5. Medios de pago →"
+        },
+        {
+          "action": "billing_party",
+          "disabled": false,
+          "text": "6. Empresas, agencias y crédito"
+        },
+        {
+          "action": "policies",
+          "disabled": false,
+          "text": "7. Horarios y penalizaciones"
+        },
+        {
+          "action": "denominations",
+          "disabled": false,
+          "text": "8. Denominaciones de caja"
+        },
+        {
+          "action": "document_settings",
+          "disabled": false,
+          "text": "9. Series y formatos"
+        },
+        {
+          "action": "expense_category",
+          "disabled": false,
+          "text": "11. Categorías de gasto"
+        },
+        {
+          "action": "stock_policy",
+          "disabled": false,
+          "text": "12. Clasificación y mínimos"
+        },
+        {
+          "action": "equipment",
+          "disabled": false,
+          "text": "13. Equipos y activos"
+        },
+        {
+          "action": "retention_policy",
+          "disabled": false,
+          "text": "14. Retención de datos"
+        },
+        {
+          "action": "portal_settings",
+          "disabled": false,
+          "text": "15. Portal de reservas"
+        },
+        {
+          "action": "payment_policies",
+          "disabled": false,
+          "text": "16. Anticipos y garantías"
+        },
+        {
+          "action": "service_items",
+          "disabled": false,
+          "text": "17. Artículos y servicios"
+        },
+        {
+          "action": "service_accounting",
+          "disabled": false,
+          "text": "18. Contabilidad por servicio"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Políticas y contabilidad",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Clasificación y mínimos de inventario",
+          "visible": false
+        },
+        {
+          "classes": "modal fade show hs-keyboard-dialog",
+          "title": "Habilitar reordenamiento automático",
+          "visible": true
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            },
+            {
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Configuración\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nConfiguración\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nHotel Jardín Demo\nMotel Luna Demo\nActualizar\nCerrar sesión\nConfigure la operación paso a paso\n\nLas cuentas e impuestos se seleccionan explícitamente de ERPNext.\n\n1. Políticas y contabilidad →\n2. Categorías →\n3. Habitaciones →\n4. Tarifas →\n5. Medios de pago →\n6. Empresas, agencias y crédito\n7. Horarios y penalizaciones\n8. Denominaciones de caja\n9. Series y formatos\n11. Categorías de gasto\n12. Clasificación y mínimos\n13. Equipos y activos\n14. Retención de datos\n15. Portal de reservas\n16. Anticipos y garantías\n17. Artículos y servicios\n18. Contabilidad por servicio\nConfiguración actual\n\n10 habitaciones · 1 categorías · 1 tarifas\n\nHora de referencia del servidor: 2026-10-21 21:23:40.244631 · NIO\nOperación confirmada\nHabilitar reordenamiento automático\nDebe habilitar el reordenamiento automático en la Configuración de inventario para mantener los niveles de reordenamiento.",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-setup"
+    },
+    {
+      "label": "manager-cancellation-percent-125-saved-before-fix",
+      "at": "2026-10-22T03:25:23.998Z",
+      "backdrops": [],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.U6M7DYHK.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": true,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": true,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "setup",
+          "disabled": true,
+          "text": "1. Políticas y contabilidad →"
+        },
+        {
+          "action": "setup",
+          "disabled": true,
+          "text": "2. Categorías →"
+        },
+        {
+          "action": "setup",
+          "disabled": true,
+          "text": "3. Habitaciones →"
+        },
+        {
+          "action": "setup",
+          "disabled": true,
+          "text": "4. Tarifas →"
+        },
+        {
+          "action": "setup",
+          "disabled": true,
+          "text": "5. Medios de pago →"
+        },
+        {
+          "action": "billing_party",
+          "disabled": true,
+          "text": "6. Empresas, agencias y crédito"
+        },
+        {
+          "action": "policies",
+          "disabled": true,
+          "text": "7. Horarios y penalizaciones"
+        },
+        {
+          "action": "denominations",
+          "disabled": true,
+          "text": "8. Denominaciones de caja"
+        },
+        {
+          "action": "document_settings",
+          "disabled": true,
+          "text": "9. Series y formatos"
+        },
+        {
+          "action": "expense_category",
+          "disabled": true,
+          "text": "11. Categorías de gasto"
+        },
+        {
+          "action": "stock_policy",
+          "disabled": true,
+          "text": "12. Clasificación y mínimos"
+        },
+        {
+          "action": "equipment",
+          "disabled": true,
+          "text": "13. Equipos y activos"
+        },
+        {
+          "action": "retention_policy",
+          "disabled": true,
+          "text": "14. Retención de datos"
+        },
+        {
+          "action": "portal_settings",
+          "disabled": true,
+          "text": "15. Portal de reservas"
+        },
+        {
+          "action": "payment_policies",
+          "disabled": true,
+          "text": "16. Anticipos y garantías"
+        },
+        {
+          "action": "service_items",
+          "disabled": true,
+          "text": "17. Artículos y servicios"
+        },
+        {
+          "action": "service_accounting",
+          "disabled": true,
+          "text": "18. Contabilidad por servicio"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Políticas y contabilidad",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Clasificación y mínimos de inventario",
+          "visible": false
+        },
+        {
+          "classes": "modal fade",
+          "title": "Habilitar reordenamiento automático",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Horarios y penalizaciones",
+          "visible": false
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            },
+            {
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Configuración\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nConfiguración\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nHotel Jardín Demo\nMotel Luna Demo\nActualizar\nCerrar sesión\nConfigure la operación paso a paso\n\nLas cuentas e impuestos se seleccionan explícitamente de ERPNext.\n\n1. Políticas y contabilidad →\n2. Categorías →\n3. Habitaciones →\n4. Tarifas →\n5. Medios de pago →\n6. Empresas, agencias y crédito\n7. Horarios y penalizaciones\n8. Denominaciones de caja\n9. Series y formatos\n11. Categorías de gasto\n12. Clasificación y mínimos\n13. Equipos y activos\n14. Retención de datos\n15. Portal de reservas\n16. Anticipos y garantías\n17. Artículos y servicios\n18. Contabilidad por servicio\nConfiguración actual\n\n10 habitaciones · 1 categorías · 1 tarifas\n\nHora de referencia del servidor: 2026-10-21 21:25:24.019511 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-setup"
+    },
+    {
+      "label": "manager-policy-corrected-to-25-before-fix",
+      "at": "2026-10-22T03:26:45.200Z",
+      "backdrops": [],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.U6M7DYHK.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "1. Políticas y contabilidad →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "2. Categorías →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "3. Habitaciones →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "4. Tarifas →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "5. Medios de pago →"
+        },
+        {
+          "action": "billing_party",
+          "disabled": false,
+          "text": "6. Empresas, agencias y crédito"
+        },
+        {
+          "action": "policies",
+          "disabled": false,
+          "text": "7. Horarios y penalizaciones"
+        },
+        {
+          "action": "denominations",
+          "disabled": false,
+          "text": "8. Denominaciones de caja"
+        },
+        {
+          "action": "document_settings",
+          "disabled": false,
+          "text": "9. Series y formatos"
+        },
+        {
+          "action": "expense_category",
+          "disabled": false,
+          "text": "11. Categorías de gasto"
+        },
+        {
+          "action": "stock_policy",
+          "disabled": false,
+          "text": "12. Clasificación y mínimos"
+        },
+        {
+          "action": "equipment",
+          "disabled": false,
+          "text": "13. Equipos y activos"
+        },
+        {
+          "action": "retention_policy",
+          "disabled": false,
+          "text": "14. Retención de datos"
+        },
+        {
+          "action": "portal_settings",
+          "disabled": false,
+          "text": "15. Portal de reservas"
+        },
+        {
+          "action": "payment_policies",
+          "disabled": false,
+          "text": "16. Anticipos y garantías"
+        },
+        {
+          "action": "service_items",
+          "disabled": false,
+          "text": "17. Artículos y servicios"
+        },
+        {
+          "action": "service_accounting",
+          "disabled": false,
+          "text": "18. Contabilidad por servicio"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Políticas y contabilidad",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Clasificación y mínimos de inventario",
+          "visible": false
+        },
+        {
+          "classes": "modal fade",
+          "title": "Habilitar reordenamiento automático",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Horarios y penalizaciones",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Horarios y penalizaciones",
+          "visible": false
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            },
+            {
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Configuración\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nConfiguración\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nHotel Jardín Demo\nMotel Luna Demo\nActualizar\nCerrar sesión\nConfigure la operación paso a paso\n\nLas cuentas e impuestos se seleccionan explícitamente de ERPNext.\n\n1. Políticas y contabilidad →\n2. Categorías →\n3. Habitaciones →\n4. Tarifas →\n5. Medios de pago →\n6. Empresas, agencias y crédito\n7. Horarios y penalizaciones\n8. Denominaciones de caja\n9. Series y formatos\n11. Categorías de gasto\n12. Clasificación y mínimos\n13. Equipos y activos\n14. Retención de datos\n15. Portal de reservas\n16. Anticipos y garantías\n17. Artículos y servicios\n18. Contabilidad por servicio\nConfiguración actual\n\n10 habitaciones · 1 categorías · 1 tarifas\n\nHora de referencia del servidor: 2026-10-21 21:26:44.555260 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-setup"
+    },
+    {
+      "label": "manager-policy-125-inline-final",
+      "at": "2026-10-22T03:28:33.604Z",
+      "backdrops": [
+        "modal-backdrop show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "1. Políticas y contabilidad →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "2. Categorías →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "3. Habitaciones →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "4. Tarifas →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "5. Medios de pago →"
+        },
+        {
+          "action": "billing_party",
+          "disabled": false,
+          "text": "6. Empresas, agencias y crédito"
+        },
+        {
+          "action": "policies",
+          "disabled": false,
+          "text": "7. Horarios y penalizaciones"
+        },
+        {
+          "action": "denominations",
+          "disabled": false,
+          "text": "8. Denominaciones de caja"
+        },
+        {
+          "action": "document_settings",
+          "disabled": false,
+          "text": "9. Series y formatos"
+        },
+        {
+          "action": "expense_category",
+          "disabled": false,
+          "text": "11. Categorías de gasto"
+        },
+        {
+          "action": "stock_policy",
+          "disabled": false,
+          "text": "12. Clasificación y mínimos"
+        },
+        {
+          "action": "equipment",
+          "disabled": false,
+          "text": "13. Equipos y activos"
+        },
+        {
+          "action": "retention_policy",
+          "disabled": false,
+          "text": "14. Retención de datos"
+        },
+        {
+          "action": "portal_settings",
+          "disabled": false,
+          "text": "15. Portal de reservas"
+        },
+        {
+          "action": "payment_policies",
+          "disabled": false,
+          "text": "16. Anticipos y garantías"
+        },
+        {
+          "action": "service_items",
+          "disabled": false,
+          "text": "17. Artículos y servicios"
+        },
+        {
+          "action": "service_accounting",
+          "disabled": false,
+          "text": "18. Contabilidad por servicio"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Horarios"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Cargos por horario"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Cancelaciones"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Guardar horarios y políticas"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show",
+          "title": "Horarios y penalizaciones",
+          "visible": true
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            },
+            {
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": "Penalización de cancelación",
+          "name": "cancellation_fee_mode",
+          "options": [
+            {
+              "label": "Sin cargo",
+              "value": "None"
+            },
+            {
+              "label": "Importe fijo",
+              "value": "Fixed"
+            },
+            {
+              "label": "Primera noche",
+              "value": "First Night"
+            },
+            {
+              "label": "Porcentaje",
+              "value": "Percent"
+            }
+          ],
+          "value": "Percent"
+        },
+        {
+          "invalid": "true",
+          "label": "Importe fijo o porcentaje de cancelación",
+          "name": "cancellation_fee_value",
+          "value": "125.00"
+        },
+        {
+          "invalid": null,
+          "label": "Penalización por no presentación",
+          "name": "no_show_fee_mode",
+          "options": [
+            {
+              "label": "Sin cargo",
+              "value": "None"
+            },
+            {
+              "label": "Importe fijo",
+              "value": "Fixed"
+            },
+            {
+              "label": "Primera noche",
+              "value": "First Night"
+            },
+            {
+              "label": "Porcentaje",
+              "value": "Percent"
+            }
+          ],
+          "value": "None"
+        },
+        {
+          "invalid": null,
+          "label": "Importe fijo o porcentaje de no presentación",
+          "name": "no_show_fee_value",
+          "value": "0.00"
+        },
+        {
+          "invalid": null,
+          "label": "Artículo para penalizaciones",
+          "name": "penalty_item",
+          "value": "HS-DEMO-LODGING"
+        }
+      ],
+      "text": "Configuración\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nConfiguración\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nHotel Jardín Demo\nMotel Luna Demo\nActualizar\nCerrar sesión\nConfigure la operación paso a paso\n\nLas cuentas e impuestos se seleccionan explícitamente de ERPNext.\n\n1. Políticas y contabilidad →\n2. Categorías →\n3. Habitaciones →\n4. Tarifas →\n5. Medios de pago →\n6. Empresas, agencias y crédito\n7. Horarios y penalizaciones\n8. Denominaciones de caja\n9. Series y formatos\n11. Categorías de gasto\n12. Clasificación y mínimos\n13. Equipos y activos\n14. Retención de datos\n15. Portal de reservas\n16. Anticipos y garantías\n17. Artículos y servicios\n18. Contabilidad por servicio\nConfiguración actual\n\n10 habitaciones · 1 categorías · 1 tarifas\n\nHora de referencia del servidor: 2026-10-21 21:28:27.711097 · NIO\nHorarios y penalizaciones\n\nRevise los campos indicados antes de continuar.\n\nHorarios\nCargos por horario\nCancelaciones\nPenalización de cancelación\nSin cargo\nImporte fijo\nPrimera noche\nPorcentaje\ncancellation_fee_mode\nImporte fijo o porcentaje de cancelación\ncancellation_fee_value\n\nEl porcentaje debe estar entre 0 y 100.\n\nPenalización por no presentación\nSin cargo\nImporte fijo\nPrimera noche\nPorcentaje\nno_show_fee_mode\nImporte fijo o porcentaje de no presentación\nno_show_fee_value\nArtículo para penalizaciones\nEmpieza a escribir para ver resultados.\npenalty_item\nGuardar horarios y políticas",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-setup"
+    },
+    {
+      "label": "manager-fixed-125-accepted",
+      "at": "2026-10-22T03:28:46.094Z",
+      "backdrops": [
+        "modal-backdrop show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "1. Políticas y contabilidad →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "2. Categorías →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "3. Habitaciones →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "4. Tarifas →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "5. Medios de pago →"
+        },
+        {
+          "action": "billing_party",
+          "disabled": false,
+          "text": "6. Empresas, agencias y crédito"
+        },
+        {
+          "action": "policies",
+          "disabled": false,
+          "text": "7. Horarios y penalizaciones"
+        },
+        {
+          "action": "denominations",
+          "disabled": false,
+          "text": "8. Denominaciones de caja"
+        },
+        {
+          "action": "document_settings",
+          "disabled": false,
+          "text": "9. Series y formatos"
+        },
+        {
+          "action": "expense_category",
+          "disabled": false,
+          "text": "11. Categorías de gasto"
+        },
+        {
+          "action": "stock_policy",
+          "disabled": false,
+          "text": "12. Clasificación y mínimos"
+        },
+        {
+          "action": "equipment",
+          "disabled": false,
+          "text": "13. Equipos y activos"
+        },
+        {
+          "action": "retention_policy",
+          "disabled": false,
+          "text": "14. Retención de datos"
+        },
+        {
+          "action": "portal_settings",
+          "disabled": false,
+          "text": "15. Portal de reservas"
+        },
+        {
+          "action": "payment_policies",
+          "disabled": false,
+          "text": "16. Anticipos y garantías"
+        },
+        {
+          "action": "service_items",
+          "disabled": false,
+          "text": "17. Artículos y servicios"
+        },
+        {
+          "action": "service_accounting",
+          "disabled": false,
+          "text": "18. Contabilidad por servicio"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Horarios"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Cargos por horario"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Cancelaciones"
+        },
+        {
+          "action": null,
+          "disabled": true,
+          "text": "Guardar horarios y políticas"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show",
+          "title": "Horarios y penalizaciones",
+          "visible": true
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            },
+            {
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": "Penalización de cancelación",
+          "name": "cancellation_fee_mode",
+          "options": [
+            {
+              "label": "Sin cargo",
+              "value": "None"
+            },
+            {
+              "label": "Importe fijo",
+              "value": "Fixed"
+            },
+            {
+              "label": "Primera noche",
+              "value": "First Night"
+            },
+            {
+              "label": "Porcentaje",
+              "value": "Percent"
+            }
+          ],
+          "value": "Fixed"
+        },
+        {
+          "invalid": null,
+          "label": "Importe fijo o porcentaje de cancelación",
+          "name": "cancellation_fee_value",
+          "value": "125.00"
+        },
+        {
+          "invalid": null,
+          "label": "Penalización por no presentación",
+          "name": "no_show_fee_mode",
+          "options": [
+            {
+              "label": "Sin cargo",
+              "value": "None"
+            },
+            {
+              "label": "Importe fijo",
+              "value": "Fixed"
+            },
+            {
+              "label": "Primera noche",
+              "value": "First Night"
+            },
+            {
+              "label": "Porcentaje",
+              "value": "Percent"
+            }
+          ],
+          "value": "None"
+        },
+        {
+          "invalid": null,
+          "label": "Importe fijo o porcentaje de no presentación",
+          "name": "no_show_fee_value",
+          "value": "0.00"
+        },
+        {
+          "invalid": null,
+          "label": "Artículo para penalizaciones",
+          "name": "penalty_item",
+          "value": "HS-DEMO-LODGING"
+        }
+      ],
+      "text": "Configuración\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nConfiguración\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nHotel Jardín Demo\nMotel Luna Demo\nActualizar\nCerrar sesión\nConfigure la operación paso a paso\n\nLas cuentas e impuestos se seleccionan explícitamente de ERPNext.\n\n1. Políticas y contabilidad →\n2. Categorías →\n3. Habitaciones →\n4. Tarifas →\n5. Medios de pago →\n6. Empresas, agencias y crédito\n7. Horarios y penalizaciones\n8. Denominaciones de caja\n9. Series y formatos\n11. Categorías de gasto\n12. Clasificación y mínimos\n13. Equipos y activos\n14. Retención de datos\n15. Portal de reservas\n16. Anticipos y garantías\n17. Artículos y servicios\n18. Contabilidad por servicio\nConfiguración actual\n\n10 habitaciones · 1 categorías · 1 tarifas\n\nHora de referencia del servidor: 2026-10-21 21:28:27.711097 · NIO\nHorarios y penalizaciones\n\nProcesando… Espere la respuesta antes de volver a confirmar.\n\nHorarios\nCargos por horario\nCancelaciones\nPenalización de cancelación\nSin cargo\nImporte fijo\nPrimera noche\nPorcentaje\ncancellation_fee_mode\nImporte fijo o porcentaje de cancelación\ncancellation_fee_value\nPenalización por no presentación\nSin cargo\nImporte fijo\nPrimera noche\nPorcentaje\nno_show_fee_mode\nImporte fijo o porcentaje de no presentación\nno_show_fee_value\nArtículo para penalizaciones\nEmpieza a escribir para ver resultados.\npenalty_item\nGuardar horarios y políticas",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-setup"
+    },
+    {
+      "label": "manager-no-show-negative-inline",
+      "at": "2026-10-22T03:29:05.472Z",
+      "backdrops": [
+        "modal-backdrop show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "1. Políticas y contabilidad →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "2. Categorías →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "3. Habitaciones →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "4. Tarifas →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "5. Medios de pago →"
+        },
+        {
+          "action": "billing_party",
+          "disabled": false,
+          "text": "6. Empresas, agencias y crédito"
+        },
+        {
+          "action": "policies",
+          "disabled": false,
+          "text": "7. Horarios y penalizaciones"
+        },
+        {
+          "action": "denominations",
+          "disabled": false,
+          "text": "8. Denominaciones de caja"
+        },
+        {
+          "action": "document_settings",
+          "disabled": false,
+          "text": "9. Series y formatos"
+        },
+        {
+          "action": "expense_category",
+          "disabled": false,
+          "text": "11. Categorías de gasto"
+        },
+        {
+          "action": "stock_policy",
+          "disabled": false,
+          "text": "12. Clasificación y mínimos"
+        },
+        {
+          "action": "equipment",
+          "disabled": false,
+          "text": "13. Equipos y activos"
+        },
+        {
+          "action": "retention_policy",
+          "disabled": false,
+          "text": "14. Retención de datos"
+        },
+        {
+          "action": "portal_settings",
+          "disabled": false,
+          "text": "15. Portal de reservas"
+        },
+        {
+          "action": "payment_policies",
+          "disabled": false,
+          "text": "16. Anticipos y garantías"
+        },
+        {
+          "action": "service_items",
+          "disabled": false,
+          "text": "17. Artículos y servicios"
+        },
+        {
+          "action": "service_accounting",
+          "disabled": false,
+          "text": "18. Contabilidad por servicio"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Horarios"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Cargos por horario"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Cancelaciones"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Guardar horarios y políticas"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Horarios y penalizaciones",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show",
+          "title": "Horarios y penalizaciones",
+          "visible": true
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            },
+            {
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": "Penalización de cancelación",
+          "name": "cancellation_fee_mode",
+          "options": [
+            {
+              "label": "Sin cargo",
+              "value": "None"
+            },
+            {
+              "label": "Importe fijo",
+              "value": "Fixed"
+            },
+            {
+              "label": "Primera noche",
+              "value": "First Night"
+            },
+            {
+              "label": "Porcentaje",
+              "value": "Percent"
+            }
+          ],
+          "value": "Percent"
+        },
+        {
+          "invalid": null,
+          "label": "Importe fijo o porcentaje de cancelación",
+          "name": "cancellation_fee_value",
+          "value": "25.50"
+        },
+        {
+          "invalid": null,
+          "label": "Penalización por no presentación",
+          "name": "no_show_fee_mode",
+          "options": [
+            {
+              "label": "Sin cargo",
+              "value": "None"
+            },
+            {
+              "label": "Importe fijo",
+              "value": "Fixed"
+            },
+            {
+              "label": "Primera noche",
+              "value": "First Night"
+            },
+            {
+              "label": "Porcentaje",
+              "value": "Percent"
+            }
+          ],
+          "value": "Fixed"
+        },
+        {
+          "invalid": "true",
+          "label": "Importe fijo o porcentaje de no presentación",
+          "name": "no_show_fee_value",
+          "value": "-1.00"
+        },
+        {
+          "invalid": null,
+          "label": "Artículo para penalizaciones",
+          "name": "penalty_item",
+          "value": "HS-DEMO-LODGING"
+        }
+      ],
+      "text": "Configuración\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nConfiguración\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nHotel Jardín Demo\nMotel Luna Demo\nActualizar\nCerrar sesión\nConfigure la operación paso a paso\n\nLas cuentas e impuestos se seleccionan explícitamente de ERPNext.\n\n1. Políticas y contabilidad →\n2. Categorías →\n3. Habitaciones →\n4. Tarifas →\n5. Medios de pago →\n6. Empresas, agencias y crédito\n7. Horarios y penalizaciones\n8. Denominaciones de caja\n9. Series y formatos\n11. Categorías de gasto\n12. Clasificación y mínimos\n13. Equipos y activos\n14. Retención de datos\n15. Portal de reservas\n16. Anticipos y garantías\n17. Artículos y servicios\n18. Contabilidad por servicio\nConfiguración actual\n\n10 habitaciones · 1 categorías · 1 tarifas\n\nHora de referencia del servidor: 2026-10-21 21:28:48.429861 · NIO\nHorarios y penalizaciones\n\nRevise los campos indicados antes de continuar.\n\nHorarios\nCargos por horario\nCancelaciones\nPenalización de cancelación\nSin cargo\nImporte fijo\nPrimera noche\nPorcentaje\ncancellation_fee_mode\nImporte fijo o porcentaje de cancelación\ncancellation_fee_value\nPenalización por no presentación\nSin cargo\nImporte fijo\nPrimera noche\nPorcentaje\nno_show_fee_mode\nImporte fijo o porcentaje de no presentación\nno_show_fee_value\n\nIndique un importe de 0 o más.\n\nArtículo para penalizaciones\nEmpieza a escribir para ver resultados.\npenalty_item\nGuardar horarios y políticas",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-setup"
+    },
+    {
+      "label": "manager-payment-policies-saved",
+      "at": "2026-10-22T03:29:26.312Z",
+      "backdrops": [],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "1. Políticas y contabilidad →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "2. Categorías →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "3. Habitaciones →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "4. Tarifas →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "5. Medios de pago →"
+        },
+        {
+          "action": "billing_party",
+          "disabled": false,
+          "text": "6. Empresas, agencias y crédito"
+        },
+        {
+          "action": "policies",
+          "disabled": false,
+          "text": "7. Horarios y penalizaciones"
+        },
+        {
+          "action": "denominations",
+          "disabled": false,
+          "text": "8. Denominaciones de caja"
+        },
+        {
+          "action": "document_settings",
+          "disabled": false,
+          "text": "9. Series y formatos"
+        },
+        {
+          "action": "expense_category",
+          "disabled": false,
+          "text": "11. Categorías de gasto"
+        },
+        {
+          "action": "stock_policy",
+          "disabled": false,
+          "text": "12. Clasificación y mínimos"
+        },
+        {
+          "action": "equipment",
+          "disabled": false,
+          "text": "13. Equipos y activos"
+        },
+        {
+          "action": "retention_policy",
+          "disabled": false,
+          "text": "14. Retención de datos"
+        },
+        {
+          "action": "portal_settings",
+          "disabled": false,
+          "text": "15. Portal de reservas"
+        },
+        {
+          "action": "payment_policies",
+          "disabled": false,
+          "text": "16. Anticipos y garantías"
+        },
+        {
+          "action": "service_items",
+          "disabled": false,
+          "text": "17. Artículos y servicios"
+        },
+        {
+          "action": "service_accounting",
+          "disabled": false,
+          "text": "18. Contabilidad por servicio"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Horarios y penalizaciones",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Horarios y penalizaciones",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Políticas de anticipos y garantías",
+          "visible": false
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            },
+            {
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Configuración\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nConfiguración\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nHotel Jardín Demo\nMotel Luna Demo\nActualizar\nCerrar sesión\nConfigure la operación paso a paso\n\nLas cuentas e impuestos se seleccionan explícitamente de ERPNext.\n\n1. Políticas y contabilidad →\n2. Categorías →\n3. Habitaciones →\n4. Tarifas →\n5. Medios de pago →\n6. Empresas, agencias y crédito\n7. Horarios y penalizaciones\n8. Denominaciones de caja\n9. Series y formatos\n11. Categorías de gasto\n12. Clasificación y mínimos\n13. Equipos y activos\n14. Retención de datos\n15. Portal de reservas\n16. Anticipos y garantías\n17. Artículos y servicios\n18. Contabilidad por servicio\nConfiguración actual\n\n10 habitaciones · 1 categorías · 1 tarifas\n\nHora de referencia del servidor: 2026-10-21 21:29:27.320866 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-setup"
+    },
+    {
+      "label": "housekeeping-setup-denied",
+      "at": "2026-10-22T03:29:42.994Z",
+      "backdrops": [
+        "modal-backdrop fade show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal fade show",
+          "title": "No permitido",
+          "visible": true
+        }
+      ],
+      "inputs": [],
+      "text": "No permitido\nEl usuario housekeeping@hospitality.example.invalid no tiene acceso a doctype a través del permiso de rol para el documento Página\nSin permiso para Página",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-setup"
+    },
+    {
+      "label": "housekeeping-linen-form",
+      "at": "2026-10-22T03:29:48.458Z",
+      "backdrops": [
+        "modal-backdrop show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "incident",
+          "disabled": false,
+          "text": "Registrar novedad"
+        },
+        {
+          "action": "linen",
+          "disabled": false,
+          "text": "Ropa de cama"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Guardar"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show",
+          "title": "Movimiento de ropa de cama",
+          "visible": true
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            },
+            {
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": "Habitación de referencia",
+          "name": "room",
+          "options": [
+            {
+              "label": "Seleccione…",
+              "value": ""
+            },
+            {
+              "label": "H101",
+              "value": "qmf5ju94js"
+            },
+            {
+              "label": "H102",
+              "value": "qmf24e5qke"
+            },
+            {
+              "label": "H103",
+              "value": "qmfnhs65gb"
+            },
+            {
+              "label": "H104",
+              "value": "qmfodmger0"
+            },
+            {
+              "label": "H105",
+              "value": "qmfvqm1he4"
+            },
+            {
+              "label": "H106",
+              "value": "qmfaq0ktsg"
+            },
+            {
+              "label": "H107",
+              "value": "qmfsq0ov22"
+            },
+            {
+              "label": "H108",
+              "value": "qmfo34k6dr"
+            },
+            {
+              "label": "H109",
+              "value": "qmf4nvo6rd"
+            },
+            {
+              "label": "H110",
+              "value": "qmffump0i2"
+            }
+          ],
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Buscar artículo por nombre o código",
+          "name": "_hs_item_search",
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Artículo de inventario",
+          "name": "item",
+          "options": [
+            {
+              "label": "Seleccione…",
+              "value": ""
+            },
+            {
+              "label": "Agua minibar (demostración)",
+              "value": "HS-DEMO-WATER"
+            },
+            {
+              "label": "Sábana de aceptación operativa",
+              "value": "HS-UX-LINEN-SF"
+            }
+          ],
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Cantidad",
+          "name": "quantity",
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Movimiento",
+          "name": "direction",
+          "options": [
+            {
+              "label": "Enviar a lavandería",
+              "value": "Send"
+            },
+            {
+              "label": "Recibir de lavandería",
+              "value": "Receive"
+            },
+            {
+              "label": "Registrar pérdida",
+              "value": "Loss"
+            }
+          ],
+          "value": "Send"
+        },
+        {
+          "invalid": null,
+          "label": "Observaciones / motivo",
+          "name": "reason",
+          "value": ""
+        }
+      ],
+      "text": "Limpieza\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nhousekeeping@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nLimpieza\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nHotel Jardín Demo\nMotel Luna Demo\nActualizar\nCerrar sesión\nPreparar habitaciones\n\nInicie la tarea, complete la revisión y solicite inspección.\n\n0 pendientes\nRegistrar novedad\nRopa de cama\n✓\nLas habitaciones están al día\n\nLa información se actualiza al registrar movimientos.\n\nDaños y objetos encontrados\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 21:29:43.781959 · NIO\nMovimiento de ropa de cama\nHabitación de referencia\nSeleccione…\nH101\nH102\nH103\nH104\nH105\nH106\nH107\nH108\nH109\nH110\nroom\nBuscar artículo por nombre o código\n_hs_item_search\nArtículo de inventario\nSeleccione…\nAgua minibar (demostración)\nSábana de aceptación operativa\nSe muestran hasta 50 coincidencias. Busque por nombre o código para consultar todo el catálogo.\nitem\nCantidad\nquantity\nMovimiento\nEnviar a lavandería\nRecibir de lavandería\nRegistrar pérdida\ndirection\nObservaciones / motivo\nreason\nGuardar",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-housekeeping"
+    },
+    {
+      "label": "housekeeping-linen-zero-rejected",
+      "at": "2026-10-22T03:30:06.553Z",
+      "backdrops": [
+        "modal-backdrop show",
+        "modal-backdrop fade show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "incident",
+          "disabled": false,
+          "text": "Registrar novedad"
+        },
+        {
+          "action": "linen",
+          "disabled": false,
+          "text": "Ropa de cama"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Guardar"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show",
+          "title": "Movimiento de ropa de cama",
+          "visible": true
+        },
+        {
+          "classes": "modal fade show",
+          "title": "Mensaje",
+          "visible": true
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            },
+            {
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": "Habitación de referencia",
+          "name": "room",
+          "options": [
+            {
+              "label": "Seleccione…",
+              "value": ""
+            },
+            {
+              "label": "H101",
+              "value": "qmf5ju94js"
+            },
+            {
+              "label": "H102",
+              "value": "qmf24e5qke"
+            },
+            {
+              "label": "H103",
+              "value": "qmfnhs65gb"
+            },
+            {
+              "label": "H104",
+              "value": "qmfodmger0"
+            },
+            {
+              "label": "H105",
+              "value": "qmfvqm1he4"
+            },
+            {
+              "label": "H106",
+              "value": "qmfaq0ktsg"
+            },
+            {
+              "label": "H107",
+              "value": "qmfsq0ov22"
+            },
+            {
+              "label": "H108",
+              "value": "qmfo34k6dr"
+            },
+            {
+              "label": "H109",
+              "value": "qmf4nvo6rd"
+            },
+            {
+              "label": "H110",
+              "value": "qmffump0i2"
+            }
+          ],
+          "value": "qmf5ju94js"
+        },
+        {
+          "invalid": null,
+          "label": "Buscar artículo por nombre o código",
+          "name": "_hs_item_search",
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Artículo de inventario",
+          "name": "item",
+          "options": [
+            {
+              "label": "Seleccione…",
+              "value": ""
+            },
+            {
+              "label": "Agua minibar (demostración)",
+              "value": "HS-DEMO-WATER"
+            },
+            {
+              "label": "Sábana de aceptación operativa",
+              "value": "HS-UX-LINEN-SF"
+            }
+          ],
+          "value": "HS-UX-LINEN-SF"
+        },
+        {
+          "invalid": null,
+          "label": "Cantidad",
+          "name": "quantity",
+          "value": "0.000"
+        },
+        {
+          "invalid": null,
+          "label": "Movimiento",
+          "name": "direction",
+          "options": [
+            {
+              "label": "Enviar a lavandería",
+              "value": "Send"
+            },
+            {
+              "label": "Recibir de lavandería",
+              "value": "Receive"
+            },
+            {
+              "label": "Registrar pérdida",
+              "value": "Loss"
+            }
+          ],
+          "value": "Send"
+        },
+        {
+          "invalid": null,
+          "label": "Observaciones / motivo",
+          "name": "reason",
+          "value": ""
+        }
+      ],
+      "text": "Limpieza\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nhousekeeping@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nLimpieza\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nHotel Jardín Demo\nMotel Luna Demo\nActualizar\nCerrar sesión\nPreparar habitaciones\n\nInicie la tarea, complete la revisión y solicite inspección.\n\n0 pendientes\nRegistrar novedad\nRopa de cama\n✓\nLas habitaciones están al día\n\nLa información se actualiza al registrar movimientos.\n\nDaños y objetos encontrados\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 21:29:43.781959 · NIO\nMovimiento de ropa de cama\n\nRevise el aviso del servidor y los datos antes de reintentar.\n\nHabitación de referencia\nSeleccione…\nH101\nH102\nH103\nH104\nH105\nH106\nH107\nH108\nH109\nH110\nroom\nBuscar artículo por nombre o código\n_hs_item_search\nArtículo de inventario\nSeleccione…\nAgua minibar (demostración)\nSábana de aceptación operativa\nSe muestran hasta 50 coincidencias. Busque por nombre o código para consultar todo el catálogo.\nitem\nCantidad\nquantity\nMovimiento\nEnviar a lavandería\nRecibir de lavandería\nRegistrar pérdida\ndirection\nObservaciones / motivo\nreason\nGuardar\nMensaje\nArtículo, cantidad o movimiento de ropa inválido",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-housekeeping"
+    },
+    {
+      "label": "housekeeping-linen-zero-server-message",
+      "at": "2026-10-22T03:30:11.315Z",
+      "backdrops": [
+        "modal-backdrop show",
+        "modal-backdrop fade show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "incident",
+          "disabled": false,
+          "text": "Registrar novedad"
+        },
+        {
+          "action": "linen",
+          "disabled": false,
+          "text": "Ropa de cama"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Guardar"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show",
+          "title": "Movimiento de ropa de cama",
+          "visible": true
+        },
+        {
+          "classes": "modal fade show hs-keyboard-dialog",
+          "title": "Mensaje",
+          "visible": true
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            },
+            {
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": "Habitación de referencia",
+          "name": "room",
+          "options": [
+            {
+              "label": "Seleccione…",
+              "value": ""
+            },
+            {
+              "label": "H101",
+              "value": "qmf5ju94js"
+            },
+            {
+              "label": "H102",
+              "value": "qmf24e5qke"
+            },
+            {
+              "label": "H103",
+              "value": "qmfnhs65gb"
+            },
+            {
+              "label": "H104",
+              "value": "qmfodmger0"
+            },
+            {
+              "label": "H105",
+              "value": "qmfvqm1he4"
+            },
+            {
+              "label": "H106",
+              "value": "qmfaq0ktsg"
+            },
+            {
+              "label": "H107",
+              "value": "qmfsq0ov22"
+            },
+            {
+              "label": "H108",
+              "value": "qmfo34k6dr"
+            },
+            {
+              "label": "H109",
+              "value": "qmf4nvo6rd"
+            },
+            {
+              "label": "H110",
+              "value": "qmffump0i2"
+            }
+          ],
+          "value": "qmf5ju94js"
+        },
+        {
+          "invalid": null,
+          "label": "Buscar artículo por nombre o código",
+          "name": "_hs_item_search",
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Artículo de inventario",
+          "name": "item",
+          "options": [
+            {
+              "label": "Seleccione…",
+              "value": ""
+            },
+            {
+              "label": "Agua minibar (demostración)",
+              "value": "HS-DEMO-WATER"
+            },
+            {
+              "label": "Sábana de aceptación operativa",
+              "value": "HS-UX-LINEN-SF"
+            }
+          ],
+          "value": "HS-UX-LINEN-SF"
+        },
+        {
+          "invalid": null,
+          "label": "Cantidad",
+          "name": "quantity",
+          "value": "0.000"
+        },
+        {
+          "invalid": null,
+          "label": "Movimiento",
+          "name": "direction",
+          "options": [
+            {
+              "label": "Enviar a lavandería",
+              "value": "Send"
+            },
+            {
+              "label": "Recibir de lavandería",
+              "value": "Receive"
+            },
+            {
+              "label": "Registrar pérdida",
+              "value": "Loss"
+            }
+          ],
+          "value": "Send"
+        },
+        {
+          "invalid": null,
+          "label": "Observaciones / motivo",
+          "name": "reason",
+          "value": ""
+        }
+      ],
+      "text": "Limpieza\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nhousekeeping@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nLimpieza\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nHotel Jardín Demo\nMotel Luna Demo\nActualizar\nCerrar sesión\nPreparar habitaciones\n\nInicie la tarea, complete la revisión y solicite inspección.\n\n0 pendientes\nRegistrar novedad\nRopa de cama\n✓\nLas habitaciones están al día\n\nLa información se actualiza al registrar movimientos.\n\nDaños y objetos encontrados\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 21:29:43.781959 · NIO\nMovimiento de ropa de cama\n\nRevise el aviso del servidor y los datos antes de reintentar.\n\nHabitación de referencia\nSeleccione…\nH101\nH102\nH103\nH104\nH105\nH106\nH107\nH108\nH109\nH110\nroom\nBuscar artículo por nombre o código\n_hs_item_search\nArtículo de inventario\nSeleccione…\nAgua minibar (demostración)\nSábana de aceptación operativa\nSe muestran hasta 50 coincidencias. Busque por nombre o código para consultar todo el catálogo.\nitem\nCantidad\nquantity\nMovimiento\nEnviar a lavandería\nRecibir de lavandería\nRegistrar pérdida\ndirection\nObservaciones / motivo\nreason\nGuardar\nMensaje\nArtículo, cantidad o movimiento de ropa inválido",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-housekeeping"
+    },
+    {
+      "label": "housekeeping-linen-zero-corrected",
+      "at": "2026-10-22T03:30:39.303Z",
+      "backdrops": [
+        "modal-backdrop show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "incident",
+          "disabled": false,
+          "text": "Registrar novedad"
+        },
+        {
+          "action": "linen",
+          "disabled": false,
+          "text": "Ropa de cama"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Guardar"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show",
+          "title": "Movimiento de ropa de cama",
+          "visible": true
+        },
+        {
+          "classes": "modal fade",
+          "title": "Mensaje",
+          "visible": false
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            },
+            {
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": "Habitación de referencia",
+          "name": "room",
+          "options": [
+            {
+              "label": "Seleccione…",
+              "value": ""
+            },
+            {
+              "label": "H101",
+              "value": "qmf5ju94js"
+            },
+            {
+              "label": "H102",
+              "value": "qmf24e5qke"
+            },
+            {
+              "label": "H103",
+              "value": "qmfnhs65gb"
+            },
+            {
+              "label": "H104",
+              "value": "qmfodmger0"
+            },
+            {
+              "label": "H105",
+              "value": "qmfvqm1he4"
+            },
+            {
+              "label": "H106",
+              "value": "qmfaq0ktsg"
+            },
+            {
+              "label": "H107",
+              "value": "qmfsq0ov22"
+            },
+            {
+              "label": "H108",
+              "value": "qmfo34k6dr"
+            },
+            {
+              "label": "H109",
+              "value": "qmf4nvo6rd"
+            },
+            {
+              "label": "H110",
+              "value": "qmffump0i2"
+            }
+          ],
+          "value": "qmf5ju94js"
+        },
+        {
+          "invalid": null,
+          "label": "Buscar artículo por nombre o código",
+          "name": "_hs_item_search",
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Artículo de inventario",
+          "name": "item",
+          "options": [
+            {
+              "label": "Seleccione…",
+              "value": ""
+            },
+            {
+              "label": "Agua minibar (demostración)",
+              "value": "HS-DEMO-WATER"
+            },
+            {
+              "label": "Sábana de aceptación operativa",
+              "value": "HS-UX-LINEN-SF"
+            }
+          ],
+          "value": "HS-UX-LINEN-SF"
+        },
+        {
+          "invalid": null,
+          "label": "Cantidad",
+          "name": "quantity",
+          "value": "4"
+        },
+        {
+          "invalid": null,
+          "label": "Movimiento",
+          "name": "direction",
+          "options": [
+            {
+              "label": "Enviar a lavandería",
+              "value": "Send"
+            },
+            {
+              "label": "Recibir de lavandería",
+              "value": "Receive"
+            },
+            {
+              "label": "Registrar pérdida",
+              "value": "Loss"
+            }
+          ],
+          "value": "Send"
+        },
+        {
+          "invalid": null,
+          "label": "Observaciones / motivo",
+          "name": "reason",
+          "value": ""
+        }
+      ],
+      "text": "Limpieza\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nhousekeeping@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nLimpieza\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nHotel Jardín Demo\nMotel Luna Demo\nActualizar\nCerrar sesión\nPreparar habitaciones\n\nInicie la tarea, complete la revisión y solicite inspección.\n\n0 pendientes\nRegistrar novedad\nRopa de cama\n✓\nLas habitaciones están al día\n\nLa información se actualiza al registrar movimientos.\n\nDaños y objetos encontrados\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 21:29:43.781959 · NIO\nMovimiento de ropa de cama\n\nRevise el aviso del servidor y los datos antes de reintentar.\n\nHabitación de referencia\nSeleccione…\nH101\nH102\nH103\nH104\nH105\nH106\nH107\nH108\nH109\nH110\nroom\nBuscar artículo por nombre o código\n_hs_item_search\nArtículo de inventario\nSeleccione…\nAgua minibar (demostración)\nSábana de aceptación operativa\nSe muestran hasta 50 coincidencias. Busque por nombre o código para consultar todo el catálogo.\nitem\nCantidad\nquantity\nMovimiento\nEnviar a lavandería\nRecibir de lavandería\nRegistrar pérdida\ndirection\nObservaciones / motivo\nreason\nGuardar",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-housekeeping"
+    },
+    {
+      "label": "housekeeping-linen-send-submitted",
+      "at": "2026-10-22T03:30:47.290Z",
+      "backdrops": [
+        "modal-backdrop show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": true,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": true,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "incident",
+          "disabled": true,
+          "text": "Registrar novedad"
+        },
+        {
+          "action": "linen",
+          "disabled": true,
+          "text": "Ropa de cama"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": true,
+          "text": "Guardar"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show",
+          "title": "Movimiento de ropa de cama",
+          "visible": true
+        },
+        {
+          "classes": "modal fade",
+          "title": "Mensaje",
+          "visible": false
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            },
+            {
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": "Habitación de referencia",
+          "name": "room",
+          "options": [
+            {
+              "label": "Seleccione…",
+              "value": ""
+            },
+            {
+              "label": "H101",
+              "value": "qmf5ju94js"
+            },
+            {
+              "label": "H102",
+              "value": "qmf24e5qke"
+            },
+            {
+              "label": "H103",
+              "value": "qmfnhs65gb"
+            },
+            {
+              "label": "H104",
+              "value": "qmfodmger0"
+            },
+            {
+              "label": "H105",
+              "value": "qmfvqm1he4"
+            },
+            {
+              "label": "H106",
+              "value": "qmfaq0ktsg"
+            },
+            {
+              "label": "H107",
+              "value": "qmfsq0ov22"
+            },
+            {
+              "label": "H108",
+              "value": "qmfo34k6dr"
+            },
+            {
+              "label": "H109",
+              "value": "qmf4nvo6rd"
+            },
+            {
+              "label": "H110",
+              "value": "qmffump0i2"
+            }
+          ],
+          "value": "qmf5ju94js"
+        },
+        {
+          "invalid": null,
+          "label": "Buscar artículo por nombre o código",
+          "name": "_hs_item_search",
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Artículo de inventario",
+          "name": "item",
+          "options": [
+            {
+              "label": "Seleccione…",
+              "value": ""
+            },
+            {
+              "label": "Agua minibar (demostración)",
+              "value": "HS-DEMO-WATER"
+            },
+            {
+              "label": "Sábana de aceptación operativa",
+              "value": "HS-UX-LINEN-SF"
+            }
+          ],
+          "value": "HS-UX-LINEN-SF"
+        },
+        {
+          "invalid": null,
+          "label": "Cantidad",
+          "name": "quantity",
+          "value": "4.000"
+        },
+        {
+          "invalid": null,
+          "label": "Movimiento",
+          "name": "direction",
+          "options": [
+            {
+              "label": "Enviar a lavandería",
+              "value": "Send"
+            },
+            {
+              "label": "Recibir de lavandería",
+              "value": "Receive"
+            },
+            {
+              "label": "Registrar pérdida",
+              "value": "Loss"
+            }
+          ],
+          "value": "Send"
+        },
+        {
+          "invalid": null,
+          "label": "Observaciones / motivo",
+          "name": "reason",
+          "value": "Envío de cuatro sábanas sintéticas a lavandería"
+        }
+      ],
+      "text": "Limpieza\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nhousekeeping@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nLimpieza\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nHotel Jardín Demo\nMotel Luna Demo\nActualizar\nCerrar sesión\nPreparar habitaciones\n\nInicie la tarea, complete la revisión y solicite inspección.\n\n0 pendientes\nRegistrar novedad\nRopa de cama\n✓\nLas habitaciones están al día\n\nLa información se actualiza al registrar movimientos.\n\nDaños y objetos encontrados\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 21:29:43.781959 · NIO\nMovimiento de ropa de cama\n\nProcesando… Espere la respuesta antes de volver a confirmar.\n\nHabitación de referencia\nSeleccione…\nH101\nH102\nH103\nH104\nH105\nH106\nH107\nH108\nH109\nH110\nroom\nBuscar artículo por nombre o código\n_hs_item_search\nArtículo de inventario\nSeleccione…\nAgua minibar (demostración)\nSábana de aceptación operativa\nSe muestran hasta 50 coincidencias. Busque por nombre o código para consultar todo el catálogo.\nitem\nCantidad\nquantity\nMovimiento\nEnviar a lavandería\nRecibir de lavandería\nRegistrar pérdida\ndirection\nObservaciones / motivo\nreason\nGuardar",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-housekeeping"
+    },
+    {
+      "label": "housekeeping-send-confirmed",
+      "at": "2026-10-22T03:31:09.888Z",
+      "backdrops": [],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "incident",
+          "disabled": false,
+          "text": "Registrar novedad"
+        },
+        {
+          "action": "linen",
+          "disabled": false,
+          "text": "Ropa de cama"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Movimiento de ropa de cama",
+          "visible": false
+        },
+        {
+          "classes": "modal fade",
+          "title": "Mensaje",
+          "visible": false
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            },
+            {
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Limpieza\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nhousekeeping@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nLimpieza\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nHotel Jardín Demo\nMotel Luna Demo\nActualizar\nCerrar sesión\nPreparar habitaciones\n\nInicie la tarea, complete la revisión y solicite inspección.\n\n0 pendientes\nRegistrar novedad\nRopa de cama\n✓\nLas habitaciones están al día\n\nLa información se actualiza al registrar movimientos.\n\nDaños y objetos encontrados\nHabitación\tNovedad\tDescripción\tEstado\tResolución / acciones\nH101\tRopa de cama\tEnvío de cuatro sábanas sintéticas a lavandería\tResuelto\t\nHora de referencia del servidor: 2026-10-21 21:30:48.430892 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-housekeeping"
+    },
+    {
+      "label": "housekeeping-loss-reason-required",
+      "at": "2026-10-22T03:31:55.176Z",
+      "backdrops": [
+        "modal-backdrop show",
+        "modal-backdrop fade show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "incident",
+          "disabled": false,
+          "text": "Registrar novedad"
+        },
+        {
+          "action": "linen",
+          "disabled": false,
+          "text": "Ropa de cama"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Guardar"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Movimiento de ropa de cama",
+          "visible": false
+        },
+        {
+          "classes": "modal fade show hs-keyboard-dialog",
+          "title": "Mensaje",
+          "visible": true
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Movimiento de ropa de cama",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show",
+          "title": "Movimiento de ropa de cama",
+          "visible": true
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            },
+            {
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": "Habitación de referencia",
+          "name": "room",
+          "options": [
+            {
+              "label": "Seleccione…",
+              "value": ""
+            },
+            {
+              "label": "H101",
+              "value": "qmf5ju94js"
+            },
+            {
+              "label": "H102",
+              "value": "qmf24e5qke"
+            },
+            {
+              "label": "H103",
+              "value": "qmfnhs65gb"
+            },
+            {
+              "label": "H104",
+              "value": "qmfodmger0"
+            },
+            {
+              "label": "H105",
+              "value": "qmfvqm1he4"
+            },
+            {
+              "label": "H106",
+              "value": "qmfaq0ktsg"
+            },
+            {
+              "label": "H107",
+              "value": "qmfsq0ov22"
+            },
+            {
+              "label": "H108",
+              "value": "qmfo34k6dr"
+            },
+            {
+              "label": "H109",
+              "value": "qmf4nvo6rd"
+            },
+            {
+              "label": "H110",
+              "value": "qmffump0i2"
+            }
+          ],
+          "value": "qmf5ju94js"
+        },
+        {
+          "invalid": null,
+          "label": "Buscar artículo por nombre o código",
+          "name": "_hs_item_search",
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Artículo de inventario",
+          "name": "item",
+          "options": [
+            {
+              "label": "Seleccione…",
+              "value": ""
+            },
+            {
+              "label": "Agua minibar (demostración)",
+              "value": "HS-DEMO-WATER"
+            },
+            {
+              "label": "Sábana de aceptación operativa",
+              "value": "HS-UX-LINEN-SF"
+            }
+          ],
+          "value": "HS-UX-LINEN-SF"
+        },
+        {
+          "invalid": null,
+          "label": "Cantidad",
+          "name": "quantity",
+          "value": "1.000"
+        },
+        {
+          "invalid": null,
+          "label": "Movimiento",
+          "name": "direction",
+          "options": [
+            {
+              "label": "Enviar a lavandería",
+              "value": "Send"
+            },
+            {
+              "label": "Recibir de lavandería",
+              "value": "Receive"
+            },
+            {
+              "label": "Registrar pérdida",
+              "value": "Loss"
+            }
+          ],
+          "value": "Loss"
+        },
+        {
+          "invalid": null,
+          "label": "Observaciones / motivo",
+          "name": "reason",
+          "value": ""
+        }
+      ],
+      "text": "Limpieza\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nhousekeeping@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nLimpieza\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nHotel Jardín Demo\nMotel Luna Demo\nActualizar\nCerrar sesión\nPreparar habitaciones\n\nInicie la tarea, complete la revisión y solicite inspección.\n\n0 pendientes\nRegistrar novedad\nRopa de cama\n✓\nLas habitaciones están al día\n\nLa información se actualiza al registrar movimientos.\n\nDaños y objetos encontrados\nHabitación\tNovedad\tDescripción\tEstado\tResolución / acciones\nH101\tRopa de cama\tRecepción de tres sábanas lavadas de prueba\tResuelto\t\nH101\tRopa de cama\tEnvío de cuatro sábanas sintéticas a lavandería\tResuelto\t\nHora de referencia del servidor: 2026-10-21 21:31:12.649664 · NIO\nMensaje\nIndique el motivo de la pérdida\nMovimiento de ropa de cama\n\nRevise el aviso del servidor y los datos antes de reintentar.\n\nHabitación de referencia\nSeleccione…\nH101\nH102\nH103\nH104\nH105\nH106\nH107\nH108\nH109\nH110\nroom\nBuscar artículo por nombre o código\n_hs_item_search\nArtículo de inventario\nSeleccione…\nAgua minibar (demostración)\nSábana de aceptación operativa\nSe muestran hasta 50 coincidencias. Busque por nombre o código para consultar todo el catálogo.\nitem\nCantidad\nquantity\nMovimiento\nEnviar a lavandería\nRecibir de lavandería\nRegistrar pérdida\ndirection\nObservaciones / motivo\nreason\nGuardar",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-housekeeping"
+    },
+    {
+      "label": "housekeeping-loss-submitted",
+      "at": "2026-10-22T03:32:13.221Z",
+      "backdrops": [],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "incident",
+          "disabled": false,
+          "text": "Registrar novedad"
+        },
+        {
+          "action": "linen",
+          "disabled": false,
+          "text": "Ropa de cama"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Movimiento de ropa de cama",
+          "visible": false
+        },
+        {
+          "classes": "modal fade",
+          "title": "Mensaje",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Movimiento de ropa de cama",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Movimiento de ropa de cama",
+          "visible": false
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            },
+            {
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Limpieza\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nhousekeeping@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nLimpieza\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nHotel Jardín Demo\nMotel Luna Demo\nActualizar\nCerrar sesión\nPreparar habitaciones\n\nInicie la tarea, complete la revisión y solicite inspección.\n\n0 pendientes\nRegistrar novedad\nRopa de cama\n✓\nLas habitaciones están al día\n\nLa información se actualiza al registrar movimientos.\n\nDaños y objetos encontrados\nHabitación\tNovedad\tDescripción\tEstado\tResolución / acciones\nH101\tRopa de cama\tSábana sintética dañada, pérdida de una unidad documentada\tResuelto\t\nH101\tRopa de cama\tRecepción de tres sábanas lavadas de prueba\tResuelto\t\nH101\tRopa de cama\tEnvío de cuatro sábanas sintéticas a lavandería\tResuelto\t\nHora de referencia del servidor: 2026-10-21 21:32:11.843581 · NIO\nOperación confirmada",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-housekeeping"
+    },
+    {
+      "label": "housekeeping-three-linen-movements",
+      "at": "2026-10-22T03:32:30.677Z",
+      "backdrops": [],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "incident",
+          "disabled": false,
+          "text": "Registrar novedad"
+        },
+        {
+          "action": "linen",
+          "disabled": false,
+          "text": "Ropa de cama"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Movimiento de ropa de cama",
+          "visible": false
+        },
+        {
+          "classes": "modal fade",
+          "title": "Mensaje",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Movimiento de ropa de cama",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Movimiento de ropa de cama",
+          "visible": false
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            },
+            {
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Limpieza\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nhousekeeping@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nLimpieza\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nHotel Jardín Demo\nMotel Luna Demo\nActualizar\nCerrar sesión\nPreparar habitaciones\n\nInicie la tarea, complete la revisión y solicite inspección.\n\n0 pendientes\nRegistrar novedad\nRopa de cama\n✓\nLas habitaciones están al día\n\nLa información se actualiza al registrar movimientos.\n\nDaños y objetos encontrados\nHabitación\tNovedad\tDescripción\tEstado\tResolución / acciones\nH101\tRopa de cama\tSábana sintética dañada, pérdida de una unidad documentada\tResuelto\t\nH101\tRopa de cama\tRecepción de tres sábanas lavadas de prueba\tResuelto\t\nH101\tRopa de cama\tEnvío de cuatro sábanas sintéticas a lavandería\tResuelto\t\nHora de referencia del servidor: 2026-10-21 21:32:12.300743 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-housekeeping"
+    },
+    {
+      "label": "manager-replenishment-alert-nine",
+      "at": "2026-10-22T03:33:03.787Z",
+      "backdrops": [
+        "modal-backdrop show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "service",
+          "disabled": false,
+          "text": "Agregar consumo"
+        },
+        {
+          "action": "direct_sale",
+          "disabled": false,
+          "text": "Venta directa"
+        },
+        {
+          "action": "purchase_order",
+          "disabled": false,
+          "text": "Nueva compra"
+        },
+        {
+          "action": "purchase_invoice",
+          "disabled": false,
+          "text": "Facturar recepción"
+        },
+        {
+          "action": "move_stock",
+          "disabled": false,
+          "text": "Mover / consumir stock"
+        },
+        {
+          "action": "adjust_stock",
+          "disabled": false,
+          "text": "Ajustar conteo"
+        },
+        {
+          "action": "register_supplier",
+          "disabled": false,
+          "text": "Nuevo proveedor"
+        },
+        {
+          "action": "create_warehouse",
+          "disabled": false,
+          "text": "Nuevo almacén"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Guardar"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show",
+          "title": "Traslado, consumo o reposición",
+          "visible": true
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            },
+            {
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": "Almacén de existencias",
+          "options": [
+            {
+              "label": "Lavandería de aceptación operativa",
+              "value": "Lavandería de aceptación operativa - HSD"
+            },
+            {
+              "label": "Reserva de ropa de aceptación",
+              "value": "Reserva de ropa de aceptación - HSD"
+            },
+            {
+              "label": "Stores",
+              "value": "Stores - HSD"
+            }
+          ],
+          "value": "Stores - HSD"
+        },
+        {
+          "invalid": null,
+          "label": "Movimiento",
+          "name": "purpose",
+          "options": [
+            {
+              "label": "Traslado entre almacenes",
+              "value": "Transfer"
+            },
+            {
+              "label": "Consumo de limpieza",
+              "value": "Cleaning"
+            },
+            {
+              "label": "Merma o pérdida",
+              "value": "Waste"
+            },
+            {
+              "label": "Reposición de ropa de cama",
+              "value": "Linen Replacement"
+            }
+          ],
+          "value": "Transfer"
+        },
+        {
+          "invalid": null,
+          "label": "Buscar artículo por nombre o código",
+          "name": "_hs_item_search",
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Artículo",
+          "name": "item",
+          "options": [
+            {
+              "label": "Seleccione…",
+              "value": ""
+            },
+            {
+              "label": "Agua minibar (demostración)",
+              "value": "HS-DEMO-WATER"
+            },
+            {
+              "label": "Sábana de aceptación operativa",
+              "value": "HS-UX-LINEN-SF"
+            }
+          ],
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Cantidad",
+          "name": "quantity",
+          "value": "1.00"
+        },
+        {
+          "invalid": null,
+          "label": "Almacén de origen",
+          "name": "source_warehouse",
+          "options": [
+            {
+              "label": "Seleccione…",
+              "value": ""
+            },
+            {
+              "label": "Lavandería de aceptación operativa",
+              "value": "Lavandería de aceptación operativa - HSD"
+            },
+            {
+              "label": "Reserva de ropa de aceptación",
+              "value": "Reserva de ropa de aceptación - HSD"
+            },
+            {
+              "label": "Stores",
+              "value": "Stores - HSD"
+            }
+          ],
+          "value": "Stores - HSD"
+        },
+        {
+          "invalid": null,
+          "label": "Almacén destino",
+          "name": "target_warehouse",
+          "options": [
+            {
+              "label": "Seleccione…",
+              "value": ""
+            },
+            {
+              "label": "Lavandería de aceptación operativa",
+              "value": "Lavandería de aceptación operativa - HSD"
+            },
+            {
+              "label": "Reserva de ropa de aceptación",
+              "value": "Reserva de ropa de aceptación - HSD"
+            },
+            {
+              "label": "Stores",
+              "value": "Stores - HSD"
+            }
+          ],
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Motivo y destino del consumo",
+          "name": "reason",
+          "value": ""
+        }
+      ],
+      "text": "Consumos e inventario\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nConsumos e inventario\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nHotel Jardín Demo\nMotel Luna Demo\nActualizar\nCerrar sesión\nConsumos y servicios\n\nLa entrega genera el cargo y, si corresponde, una única salida de inventario.\n\nAgregar consumo\nVenta directa\nNueva compra\nFacturar recepción\nMover / consumir stock\nAjustar conteo\nNuevo proveedor\nNuevo almacén\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nCompras por recibir\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nExistencias por ubicación\nAlmacén\nLavandería de aceptación operativa\nReserva de ropa de aceptación\nStores\nArtículo\tClasificación\tDisponible\tMínimo\tCantidad a reponer\tAlerta\nAgua minibar (demostración)\tMercancía para venta\t100\tSin configurar\t—\t—\nSábana de aceptación operativa\tRopa de cama\t9\t10\t5\tReponer\nHora de referencia del servidor: 2026-10-21 21:32:54.567932 · NIO\nTraslado, consumo o reposición\nMovimiento\nTraslado entre almacenes\nConsumo de limpieza\nMerma o pérdida\nReposición de ropa de cama\npurpose\nBuscar artículo por nombre o código\n_hs_item_search\nArtículo\nSeleccione…\nAgua minibar (demostración)\nSábana de aceptación operativa\nSe muestran hasta 50 coincidencias. Busque por nombre o código para consultar todo el catálogo.\nitem\nCantidad\nquantity\nAlmacén de origen\nSeleccione…\nLavandería de aceptación operativa\nReserva de ropa de aceptación\nStores\nsource_warehouse\nAlmacén destino\nSeleccione…\nLavandería de aceptación operativa\nReserva de ropa de aceptación\nStores\ntarget_warehouse\nMotivo y destino del consumo\nreason\nGuardar",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-services"
+    },
+    {
+      "label": "manager-linen-replacement-submitted",
+      "at": "2026-10-22T03:33:04.593Z",
+      "backdrops": [],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "service",
+          "disabled": false,
+          "text": "Agregar consumo"
+        },
+        {
+          "action": "direct_sale",
+          "disabled": false,
+          "text": "Venta directa"
+        },
+        {
+          "action": "purchase_order",
+          "disabled": false,
+          "text": "Nueva compra"
+        },
+        {
+          "action": "purchase_invoice",
+          "disabled": false,
+          "text": "Facturar recepción"
+        },
+        {
+          "action": "move_stock",
+          "disabled": false,
+          "text": "Mover / consumir stock"
+        },
+        {
+          "action": "adjust_stock",
+          "disabled": false,
+          "text": "Ajustar conteo"
+        },
+        {
+          "action": "register_supplier",
+          "disabled": false,
+          "text": "Nuevo proveedor"
+        },
+        {
+          "action": "create_warehouse",
+          "disabled": false,
+          "text": "Nuevo almacén"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Traslado, consumo o reposición",
+          "visible": false
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            },
+            {
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": "Almacén de existencias",
+          "options": [
+            {
+              "label": "Lavandería de aceptación operativa",
+              "value": "Lavandería de aceptación operativa - HSD"
+            },
+            {
+              "label": "Reserva de ropa de aceptación",
+              "value": "Reserva de ropa de aceptación - HSD"
+            },
+            {
+              "label": "Stores",
+              "value": "Stores - HSD"
+            }
+          ],
+          "value": "Stores - HSD"
+        }
+      ],
+      "text": "Consumos e inventario\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nConsumos e inventario\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nHotel Jardín Demo\nMotel Luna Demo\nActualizar\nCerrar sesión\nConsumos y servicios\n\nLa entrega genera el cargo y, si corresponde, una única salida de inventario.\n\nAgregar consumo\nVenta directa\nNueva compra\nFacturar recepción\nMover / consumir stock\nAjustar conteo\nNuevo proveedor\nNuevo almacén\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nCompras por recibir\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nExistencias por ubicación\nAlmacén\nLavandería de aceptación operativa\nReserva de ropa de aceptación\nStores\nArtículo\tClasificación\tDisponible\tMínimo\tCantidad a reponer\tAlerta\nAgua minibar (demostración)\tMercancía para venta\t100\tSin configurar\t—\t—\nSábana de aceptación operativa\tRopa de cama\t10\t10\t5\t—\nHora de referencia del servidor: 2026-10-21 21:33:05.179878 · NIO\nOperación confirmada",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-services"
+    },
+    {
+      "label": "manager-stock-final-ten-no-alert",
+      "at": "2026-10-22T03:33:34.815Z",
+      "backdrops": [],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "service",
+          "disabled": false,
+          "text": "Agregar consumo"
+        },
+        {
+          "action": "direct_sale",
+          "disabled": false,
+          "text": "Venta directa"
+        },
+        {
+          "action": "purchase_order",
+          "disabled": false,
+          "text": "Nueva compra"
+        },
+        {
+          "action": "purchase_invoice",
+          "disabled": false,
+          "text": "Facturar recepción"
+        },
+        {
+          "action": "move_stock",
+          "disabled": false,
+          "text": "Mover / consumir stock"
+        },
+        {
+          "action": "adjust_stock",
+          "disabled": false,
+          "text": "Ajustar conteo"
+        },
+        {
+          "action": "register_supplier",
+          "disabled": false,
+          "text": "Nuevo proveedor"
+        },
+        {
+          "action": "create_warehouse",
+          "disabled": false,
+          "text": "Nuevo almacén"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Traslado, consumo o reposición",
+          "visible": false
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            },
+            {
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": "Almacén de existencias",
+          "options": [
+            {
+              "label": "Lavandería de aceptación operativa",
+              "value": "Lavandería de aceptación operativa - HSD"
+            },
+            {
+              "label": "Reserva de ropa de aceptación",
+              "value": "Reserva de ropa de aceptación - HSD"
+            },
+            {
+              "label": "Stores",
+              "value": "Stores - HSD"
+            }
+          ],
+          "value": "Stores - HSD"
+        }
+      ],
+      "text": "Consumos e inventario\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nConsumos e inventario\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nHotel Jardín Demo\nMotel Luna Demo\nActualizar\nCerrar sesión\nConsumos y servicios\n\nLa entrega genera el cargo y, si corresponde, una única salida de inventario.\n\nAgregar consumo\nVenta directa\nNueva compra\nFacturar recepción\nMover / consumir stock\nAjustar conteo\nNuevo proveedor\nNuevo almacén\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nCompras por recibir\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nExistencias por ubicación\nAlmacén\nLavandería de aceptación operativa\nReserva de ropa de aceptación\nStores\nArtículo\tClasificación\tDisponible\tMínimo\tCantidad a reponer\tAlerta\nAgua minibar (demostración)\tMercancía para venta\t100\tSin configurar\t—\t—\nSábana de aceptación operativa\tRopa de cama\t10\t10\t5\t—\nHora de referencia del servidor: 2026-10-21 21:33:05.635976 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-services"
+    },
+    {
+      "label": "cashier-policies-effect",
+      "at": "2026-10-22T03:33:53.364Z",
+      "backdrops": [
+        "modal-backdrop show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "open_shift",
+          "disabled": false,
+          "text": "Abrir turno"
+        },
+        {
+          "action": "payment",
+          "disabled": false,
+          "text": "Cobrar"
+        },
+        {
+          "action": "withdrawal",
+          "disabled": false,
+          "text": "Retirar / entregar efectivo"
+        },
+        {
+          "action": "cash_expense",
+          "disabled": false,
+          "text": "Registrar egreso"
+        },
+        {
+          "action": "supplier_payment",
+          "disabled": false,
+          "text": "Pagar proveedor"
+        },
+        {
+          "action": "settlement",
+          "disabled": false,
+          "text": "Registrar liquidación"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Cuenta y concepto"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Importe"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Revisar cobro"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show",
+          "title": "Registrar cobro",
+          "visible": true
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            },
+            {
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": "Concepto",
+          "name": "kind",
+          "options": [
+            {
+              "label": "Cobro",
+              "value": "Payment"
+            },
+            {
+              "label": "Garantía · requiere gerencia",
+              "value": "Guarantee"
+            },
+            {
+              "label": "Devolución",
+              "value": "Refund"
+            },
+            {
+              "label": "Devolución de garantía",
+              "value": "Guarantee Refund"
+            }
+          ],
+          "value": "Payment"
+        },
+        {
+          "invalid": null,
+          "label": "Estancia",
+          "name": "stay",
+          "options": [
+            {
+              "label": "Seleccione…",
+              "value": ""
+            }
+          ],
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Reserva o grupo",
+          "name": "booking",
+          "options": [
+            {
+              "label": "Seleccione…",
+              "value": ""
+            }
+          ],
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Cuenta",
+          "name": "folio",
+          "options": [
+            {
+              "label": "Seleccione…",
+              "value": ""
+            }
+          ],
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Turno abierto",
+          "name": "shift",
+          "options": [
+            {
+              "label": "Seleccione…",
+              "value": ""
+            }
+          ],
+          "value": ""
+        }
+      ],
+      "text": "Caja\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\ncashier@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nCaja\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nHotel Jardín Demo\nMotel Luna Demo\nActualizar\nCerrar sesión\nTurnos y cobros\n\nAnticipos, ingresos y garantías conservan su origen contable.\n\nAbrir turno\nCobrar\nRetirar / entregar efectivo\nRegistrar egreso\nPagar proveedor\nRegistrar liquidación\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nMovimientos recientes\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 21:33:48.532516 · NIO\nRegistrar cobro\nCuenta y concepto\nImporte\nConcepto\nCobro\nGarantía · requiere gerencia\nDevolución\nDevolución de garantía\nkind\nEstancia\nSeleccione…\nstay\nReserva o grupo\nSeleccione…\nbooking\nCuenta\nSeleccione…\nfolio\nTurno abierto\nSeleccione…\nshift\nRevisar cobro",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-cashier",
+      "policyChoices": [
+        {
+          "label": null,
+          "options": [
+            {
+              "disabled": false,
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            },
+            {
+              "disabled": false,
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            }
+          ]
+        },
+        {
+          "label": "Concepto",
+          "options": [
+            {
+              "disabled": false,
+              "label": "Cobro",
+              "value": "Payment"
+            },
+            {
+              "disabled": true,
+              "label": "Garantía · requiere gerencia",
+              "value": "Guarantee"
+            },
+            {
+              "disabled": false,
+              "label": "Devolución",
+              "value": "Refund"
+            },
+            {
+              "disabled": false,
+              "label": "Devolución de garantía",
+              "value": "Guarantee Refund"
+            }
+          ]
+        },
+        {
+          "label": "Estancia",
+          "options": [
+            {
+              "disabled": false,
+              "label": "Seleccione…",
+              "value": ""
+            }
+          ]
+        },
+        {
+          "label": "Reserva o grupo",
+          "options": [
+            {
+              "disabled": false,
+              "label": "Seleccione…",
+              "value": ""
+            }
+          ]
+        },
+        {
+          "label": "Cuenta",
+          "options": [
+            {
+              "disabled": false,
+              "label": "Seleccione…",
+              "value": ""
+            }
+          ]
+        },
+        {
+          "label": "Turno abierto",
+          "options": [
+            {
+              "disabled": false,
+              "label": "Seleccione…",
+              "value": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "cashier-logged-out",
+      "at": "2026-10-22T03:34:33.620Z",
+      "backdrops": [],
+      "bundle": [],
+      "buttons": [
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Continuar"
+        }
+      ],
+      "dialogs": [],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "value": ""
+        }
+      ],
+      "text": "Iniciar Sesión\n\n¡Bienvenido! Por favor, inicia sesión para continuar.\n\nCorreo electrónico\nContraseña\n\n¿Olvidaste la contraseña?\n\nContinuar\nIniciar sesión con enlace de correo",
+      "url": "http://hospitality-acceptance.localhost:8089/login?redirect-to=%2Fdesk%2Fhospitality-suite%2Fhospitality-cashier"
+    }
+  ],
+  "remaining": [
+    "retention-retry",
+    "portal-conversion",
+    "other-private-attachments"
+  ],
+  "full_secondary_acceptance": false,
+  "label_correction": {
+    "from": "manager-cancellation-percent-rejected",
+    "to": "manager-cancellation-percent-125-saved-before-fix",
+    "reason": "The native checkpoint proved 125 percent was saved; the initial expected rejection did not occur."
+  }
+}

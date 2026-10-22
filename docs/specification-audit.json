@@ -30,9 +30,11 @@
         "docs/TESORERIA_Y_COMPRAS_DESDE_PAGES.md",
         "docs/evidence/secondary-finance-verification.json",
         "docs/PANEL_ESTANCIA_Y_ESTADOS.md",
-        "docs/evidence/stay-panel-verification.json"
+        "docs/evidence/stay-panel-verification.json",
+        "docs/ROPA_Y_POLITICAS_DESDE_PAGES.md",
+        "docs/evidence/secondary-flows-verification.json"
       ],
-      "remaining": "S04-16 acreditado con el contrato compartido y la corrección/repetición del panel. 213 V/cinco I. Continúan S04-20 (ropa de cama, políticas/otros adjuntos, retención/reintento y conversión del portal), F26, paquete actualizado y entrega. Objetivo completo aún no acreditado."
+      "remaining": "T14 ropa y T18 políticas/configuración añadidos a la aceptación de Pages, con tres roles, 409 nativas/230 JS y restauración estricta. Continúan S04-20: retención/reintento, otros adjuntos privados y conversión del portal; después F26, paquete actualizado y entrega. 213 V/cinco I; objetivo completo aún no acreditado."
     },
     {
       "id": "S00-02",
@@ -346,9 +348,11 @@
         "docs/TESORERIA_Y_COMPRAS_DESDE_PAGES.md",
         "docs/evidence/secondary-finance-verification.json",
         "docs/PANEL_ESTANCIA_Y_ESTADOS.md",
-        "docs/evidence/stay-panel-verification.json"
+        "docs/evidence/stay-panel-verification.json",
+        "docs/ROPA_Y_POLITICAS_DESDE_PAGES.md",
+        "docs/evidence/secondary-flows-verification.json"
       ],
-      "remaining": "Continuar hasta cerrar S04-20 y F26/paquete/entrega final. S04-16 queda V tras revisar los seis estados y la ruta omitida del panel. 229 JS actuales y 407 nativas históricas con Python idéntico; no se reduce el alcance restante."
+      "remaining": "Continuar hasta cerrar retención/reintento, otros adjuntos y conversión del portal S04-20, además de F26/paquete/entrega. Ropa y las políticas recorridas quedan acreditadas con tres roles, 409 nativas/230 JS; no se reduce el alcance obligatorio."
     },
     {
       "id": "S01-13",
@@ -1212,7 +1216,9 @@
         "docs/TESORERIA_Y_COMPRAS_DESDE_PAGES.md",
         "docs/evidence/secondary-finance-verification.json",
         "docs/PANEL_ESTANCIA_Y_ESTADOS.md",
-        "docs/evidence/stay-panel-verification.json"
+        "docs/evidence/stay-panel-verification.json",
+        "docs/ROPA_Y_POLITICAS_DESDE_PAGES.md",
+        "docs/evidence/secondary-flows-verification.json"
       ],
       "remaining": ""
     },
@@ -1357,9 +1363,11 @@
         "docs/TESORERIA_Y_COMPRAS_DESDE_PAGES.md",
         "docs/evidence/secondary-finance-verification.json",
         "docs/PANEL_ESTANCIA_Y_ESTADOS.md",
-        "docs/evidence/stay-panel-verification.json"
+        "docs/evidence/stay-panel-verification.json",
+        "docs/ROPA_Y_POLITICAS_DESDE_PAGES.md",
+        "docs/evidence/secondary-flows-verification.json"
       ],
-      "remaining": "T11/T19 conservan su aceptación de tres roles. Panel de estancia y sus estados compartidos corregidos/probados en escritorio con Gerencia, sin comandos financieros. Completar ropa de cama, políticas/otros adjuntos, retención/reintento y conversión del portal. 229 JS y el contrato de estados no sustituyen esos recorridos completos."
+      "remaining": "T11/T19 conservan la aceptación previa. Se añaden T14: envío/recepción/pérdida/reposición de ropa con Limpieza/Gerencia y ledger; T18: lavandería/clasificación/mínimos, penalizaciones y efecto de anticipos/garantías en Caja. 409 nativas/230 JS actuales. Completar retención/reintento, otros adjuntos privados y conversión del portal; no se atribuyen todas las variantes a estos 26 eventos de escritorio."
     },
     {
       "id": "S05-01",
@@ -5212,9 +5220,11 @@
         "docs/TESORERIA_Y_COMPRAS_DESDE_PAGES.md",
         "docs/evidence/secondary-finance-verification.json",
         "docs/PANEL_ESTANCIA_Y_ESTADOS.md",
-        "docs/evidence/stay-panel-verification.json"
+        "docs/evidence/stay-panel-verification.json",
+        "docs/ROPA_Y_POLITICAS_DESDE_PAGES.md",
+        "docs/evidence/secondary-flows-verification.json"
       ],
-      "remaining": "Completar S04-20 y F26 con recuperación coordinada de código/base/archivos, paquete actualizado y entrega. Instalación independiente previa acreditada; su paquete aún no incluye las correcciones posteriores. S04-16 acreditado, 229 JS actuales y 407 nativas históricas con Python idéntico no sustituyen F26."
+      "remaining": "Completar S04-20 (retención/reintento, otros adjuntos y portal) y F26 con recuperación coordinada de código/base/archivos, paquete actualizado y entrega. La instalación independiente previa no incluye las últimas correcciones. 409 nativas/230 JS y restauración actual no sustituyen F26."
     },
     {
       "id": "S19-08",
@@ -5244,9 +5254,11 @@
         "docs/TESORERIA_Y_COMPRAS_DESDE_PAGES.md",
         "docs/evidence/secondary-finance-verification.json",
         "docs/PANEL_ESTANCIA_Y_ESTADOS.md",
-        "docs/evidence/stay-panel-verification.json"
+        "docs/evidence/stay-panel-verification.json",
+        "docs/ROPA_Y_POLITICAS_DESDE_PAGES.md",
+        "docs/evidence/secondary-flows-verification.json"
       ],
-      "remaining": "Cerrar los otros recorridos secundarios y fase 7/F26, paquete actualizado y entrega. PANEL_ESTANCIA_Y_ESTADOS.md acredita los seis estados compartidos, dos escenarios reales delimitados y cuatro regresiones; no se atribuye al tramo la entrega completa."
+      "remaining": "Cerrar los otros recorridos secundarios y fase 7/F26, paquete actualizado y entrega. ROPA_Y_POLITICAS_DESDE_PAGES.md acredita T14/variantes T18 y la corrección de penalizaciones con 409 nativas/230 JS, sin atribuir al tramo la entrega completa."
     },
     {
       "id": "S19-09",

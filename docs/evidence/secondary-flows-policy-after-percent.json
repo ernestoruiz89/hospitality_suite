@@ -1,0 +1,176 @@
+{
+  "label": "policy-after-percent",
+  "at_utc": "2026-10-22T03:25:32.408956+00:00",
+  "site": "hospitality-acceptance.localhost",
+  "mutation": false,
+  "fixture": {
+    "origin": "Native API/standard documents: one linen item, reserve warehouse and opening stock 10 operational + 5 reserve at 25. No linen movement, laundry warehouse, policy or portal request created by this fixture.",
+    "item": "HS-UX-LINEN-SF",
+    "reserve": "Reserva de ropa de aceptación - HSD",
+    "operational": "Stores - HSD",
+    "receipt": "MAT-STE-2026-00002"
+  },
+  "property": {
+    "name": "qmbjb0i1qc",
+    "modified": "2026-10-21 21:25:23.962518",
+    "business_date": "2026-10-19",
+    "laundry_warehouse": "Lavandería de aceptación operativa - HSD",
+    "warehouse": "Stores - HSD",
+    "check_in_time": "14:00:00",
+    "check_out_time": "12:00:00",
+    "cancellation_fee_mode": "Percent",
+    "cancellation_fee_value": 125.0,
+    "no_show_fee_mode": "None",
+    "no_show_fee_value": 0.0,
+    "advance_policy": "Manual",
+    "guarantee_policy": "Manual",
+    "retention_days": 365,
+    "portal_enabled": 0,
+    "guest_id_required": 0
+  },
+  "stock": [
+    {
+      "warehouse": "Reserva de ropa de aceptación - HSD",
+      "actual_qty": 5.0,
+      "valuation_rate": 25.0
+    },
+    {
+      "warehouse": "Stores - HSD",
+      "actual_qty": 10.0,
+      "valuation_rate": 25.0
+    }
+  ],
+  "stock_entries": [
+    {
+      "name": "MAT-STE-2026-00001",
+      "stock_entry_type": "Material Receipt",
+      "docstatus": 1,
+      "hs_stock_purpose": "",
+      "owner": "Administrator",
+      "modified_by": "Administrator",
+      "total_outgoing_value": 0.0
+    },
+    {
+      "name": "MAT-STE-2026-00002",
+      "stock_entry_type": "Material Receipt",
+      "docstatus": 1,
+      "hs_stock_purpose": "",
+      "owner": "Administrator",
+      "modified_by": "Administrator",
+      "total_outgoing_value": 0.0
+    }
+  ],
+  "linen_incidents": [],
+  "stock_policies": [
+    {
+      "name": "POLSTK-00001",
+      "warehouse": "Stores - HSD",
+      "purpose": "Linen",
+      "owner": "manager@hospitality.example.invalid"
+    }
+  ],
+  "reorder": [
+    {
+      "warehouse": "Stores - HSD",
+      "warehouse_reorder_level": 10.0,
+      "warehouse_reorder_qty": 5.0
+    }
+  ],
+  "gl": [
+    {
+      "voucher_type": "Stock Entry",
+      "voucher_no": "MAT-STE-2026-00001",
+      "account": "Stock en mano - HSD",
+      "debit": 1000.0,
+      "credit": 0.0,
+      "owner": "Administrator"
+    },
+    {
+      "voucher_type": "Stock Entry",
+      "voucher_no": "MAT-STE-2026-00001",
+      "account": "Ajuste de existencias - HSD",
+      "debit": 0.0,
+      "credit": 1000.0,
+      "owner": "Administrator"
+    },
+    {
+      "voucher_type": "Stock Entry",
+      "voucher_no": "MAT-STE-2026-00002",
+      "account": "Stock en mano - HSD",
+      "debit": 375.0,
+      "credit": 0.0,
+      "owner": "Administrator"
+    },
+    {
+      "voucher_type": "Stock Entry",
+      "voucher_no": "MAT-STE-2026-00002",
+      "account": "Ajuste de existencias - HSD",
+      "debit": 0.0,
+      "credit": 375.0,
+      "owner": "Administrator"
+    }
+  ],
+  "stock_ledger": [
+    {
+      "voucher_type": "Stock Entry",
+      "voucher_no": "MAT-STE-2026-00002",
+      "warehouse": "Stores - HSD",
+      "actual_qty": 10.0,
+      "stock_value_difference": 250.0,
+      "owner": "Administrator"
+    },
+    {
+      "voucher_type": "Stock Entry",
+      "voucher_no": "MAT-STE-2026-00002",
+      "warehouse": "Reserva de ropa de aceptación - HSD",
+      "actual_qty": 5.0,
+      "stock_value_difference": 125.0,
+      "owner": "Administrator"
+    }
+  ],
+  "audit": [
+    {
+      "actor": "Administrator",
+      "action": "on_submit",
+      "source_doctype": "Stock Entry",
+      "source_name": "MAT-STE-2026-00002",
+      "reason": null
+    },
+    {
+      "actor": "manager@hospitality.example.invalid",
+      "action": "Create property warehouse",
+      "source_doctype": "Warehouse",
+      "source_name": "Lavandería de aceptación operativa - HSD",
+      "reason": "Lavado y control de ropa sintética de prueba"
+    },
+    {
+      "actor": "manager@hospitality.example.invalid",
+      "action": "Setup property",
+      "source_doctype": "HS Property",
+      "source_name": "qmbjb0i1qc",
+      "reason": null
+    },
+    {
+      "actor": "manager@hospitality.example.invalid",
+      "action": "Stock policy",
+      "source_doctype": "HS Stock Policy",
+      "source_name": "POLSTK-00001",
+      "reason": null
+    },
+    {
+      "actor": "manager@hospitality.example.invalid",
+      "action": "Setup property",
+      "source_doctype": "HS Property",
+      "source_name": "qmbjb0i1qc",
+      "reason": null
+    }
+  ],
+  "finance_counts": {
+    "HS Payment": 0,
+    "HS Shift": 0,
+    "Sales Invoice": 0,
+    "Payment Entry": 0,
+    "Journal Entry": 0
+  },
+  "original_physical_files": 741
+}

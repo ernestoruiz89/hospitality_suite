@@ -59,6 +59,13 @@
         }
       });
     }
+    if(!onlyNumeric)for(const prefix of ['cancellation','no_show']){
+      const mode=dialog.fields_dict?.[prefix+'_fee_mode'],field=dialog.fields_dict?.[prefix+'_fee_value'];
+      if(!mode||!editable(field)||errors.some(row=>row.field===field))continue;
+      const value=Number(field.get_value());
+      if(value<0)add(field,__('Indique un importe de 0 o más.'));
+      else if(mode.get_value()==='Percent'&&value>100)add(field,__('El porcentaje debe estar entre 0 y 100.'));
+    }
     if(!onlyNumeric)for(const [start,end,inclusive] of [['starts_at','ends_at',false],['from_date','to_date',true],['valid_from','valid_to',true]]){
       const a=dialog.fields_dict?.[start],b=dialog.fields_dict?.[end];
       if(!editable(a)||!editable(b)||!a.get_value()||!b.get_value()||errors.some(row=>row.field===a||row.field===b))continue;

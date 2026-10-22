@@ -1,0 +1,306 @@
+{
+  "label": "linen-received",
+  "at_utc": "2026-10-22T03:31:47.694576+00:00",
+  "site": "hospitality-acceptance.localhost",
+  "mutation": false,
+  "fixture": {
+    "origin": "Native API/standard documents: one linen item, reserve warehouse and opening stock 10 operational + 5 reserve at 25. No linen movement, laundry warehouse, policy or portal request created by this fixture.",
+    "item": "HS-UX-LINEN-SF",
+    "reserve": "Reserva de ropa de aceptación - HSD",
+    "operational": "Stores - HSD",
+    "receipt": "MAT-STE-2026-00002"
+  },
+  "property": {
+    "name": "qmbjb0i1qc",
+    "modified": "2026-10-21 21:29:27.256549",
+    "business_date": "2026-10-19",
+    "laundry_warehouse": "Lavandería de aceptación operativa - HSD",
+    "warehouse": "Stores - HSD",
+    "check_in_time": "14:00:00",
+    "check_out_time": "12:00:00",
+    "cancellation_fee_mode": "Percent",
+    "cancellation_fee_value": 25.5,
+    "no_show_fee_mode": "Fixed",
+    "no_show_fee_value": 50.0,
+    "advance_policy": "Disabled",
+    "guarantee_policy": "Approval",
+    "retention_days": 365,
+    "portal_enabled": 0,
+    "guest_id_required": 0
+  },
+  "stock": [
+    {
+      "warehouse": "Lavandería de aceptación operativa - HSD",
+      "actual_qty": 1.0,
+      "valuation_rate": 25.0
+    },
+    {
+      "warehouse": "Reserva de ropa de aceptación - HSD",
+      "actual_qty": 5.0,
+      "valuation_rate": 25.0
+    },
+    {
+      "warehouse": "Stores - HSD",
+      "actual_qty": 9.0,
+      "valuation_rate": 25.0
+    }
+  ],
+  "stock_entries": [
+    {
+      "name": "MAT-STE-2026-00001",
+      "stock_entry_type": "Material Receipt",
+      "docstatus": 1,
+      "hs_stock_purpose": "",
+      "owner": "Administrator",
+      "modified_by": "Administrator",
+      "total_outgoing_value": 0.0
+    },
+    {
+      "name": "MAT-STE-2026-00002",
+      "stock_entry_type": "Material Receipt",
+      "docstatus": 1,
+      "hs_stock_purpose": "",
+      "owner": "Administrator",
+      "modified_by": "Administrator",
+      "total_outgoing_value": 0.0
+    },
+    {
+      "name": "MAT-STE-2026-00003",
+      "stock_entry_type": "Material Transfer",
+      "docstatus": 1,
+      "hs_stock_purpose": "Laundry",
+      "owner": "housekeeping@hospitality.example.invalid",
+      "modified_by": "housekeeping@hospitality.example.invalid",
+      "total_outgoing_value": 100.0
+    },
+    {
+      "name": "MAT-STE-2026-00004",
+      "stock_entry_type": "Material Transfer",
+      "docstatus": 1,
+      "hs_stock_purpose": "Laundry",
+      "owner": "housekeeping@hospitality.example.invalid",
+      "modified_by": "housekeeping@hospitality.example.invalid",
+      "total_outgoing_value": 75.0
+    }
+  ],
+  "linen_incidents": [
+    {
+      "name": "INC-2026-00002",
+      "status": "Resolved",
+      "item": "HS-UX-LINEN-SF",
+      "quantity": 3.0,
+      "description": "Recepción de tres sábanas lavadas de prueba",
+      "stock_entry": "MAT-STE-2026-00004",
+      "owner": "housekeeping@hospitality.example.invalid"
+    },
+    {
+      "name": "INC-2026-00001",
+      "status": "Resolved",
+      "item": "HS-UX-LINEN-SF",
+      "quantity": 4.0,
+      "description": "Envío de cuatro sábanas sintéticas a lavandería",
+      "stock_entry": "MAT-STE-2026-00003",
+      "owner": "housekeeping@hospitality.example.invalid"
+    }
+  ],
+  "stock_policies": [
+    {
+      "name": "POLSTK-00001",
+      "warehouse": "Stores - HSD",
+      "purpose": "Linen",
+      "owner": "manager@hospitality.example.invalid"
+    }
+  ],
+  "reorder": [
+    {
+      "warehouse": "Stores - HSD",
+      "warehouse_reorder_level": 10.0,
+      "warehouse_reorder_qty": 5.0
+    }
+  ],
+  "gl": [
+    {
+      "voucher_type": "Stock Entry",
+      "voucher_no": "MAT-STE-2026-00001",
+      "account": "Stock en mano - HSD",
+      "debit": 1000.0,
+      "credit": 0.0,
+      "owner": "Administrator"
+    },
+    {
+      "voucher_type": "Stock Entry",
+      "voucher_no": "MAT-STE-2026-00001",
+      "account": "Ajuste de existencias - HSD",
+      "debit": 0.0,
+      "credit": 1000.0,
+      "owner": "Administrator"
+    },
+    {
+      "voucher_type": "Stock Entry",
+      "voucher_no": "MAT-STE-2026-00002",
+      "account": "Stock en mano - HSD",
+      "debit": 375.0,
+      "credit": 0.0,
+      "owner": "Administrator"
+    },
+    {
+      "voucher_type": "Stock Entry",
+      "voucher_no": "MAT-STE-2026-00002",
+      "account": "Ajuste de existencias - HSD",
+      "debit": 0.0,
+      "credit": 375.0,
+      "owner": "Administrator"
+    }
+  ],
+  "stock_ledger": [
+    {
+      "voucher_type": "Stock Entry",
+      "voucher_no": "MAT-STE-2026-00002",
+      "warehouse": "Stores - HSD",
+      "actual_qty": 10.0,
+      "stock_value_difference": 250.0,
+      "owner": "Administrator"
+    },
+    {
+      "voucher_type": "Stock Entry",
+      "voucher_no": "MAT-STE-2026-00002",
+      "warehouse": "Reserva de ropa de aceptación - HSD",
+      "actual_qty": 5.0,
+      "stock_value_difference": 125.0,
+      "owner": "Administrator"
+    },
+    {
+      "voucher_type": "Stock Entry",
+      "voucher_no": "MAT-STE-2026-00003",
+      "warehouse": "Stores - HSD",
+      "actual_qty": -4.0,
+      "stock_value_difference": -100.0,
+      "owner": "housekeeping@hospitality.example.invalid"
+    },
+    {
+      "voucher_type": "Stock Entry",
+      "voucher_no": "MAT-STE-2026-00003",
+      "warehouse": "Lavandería de aceptación operativa - HSD",
+      "actual_qty": 4.0,
+      "stock_value_difference": 100.0,
+      "owner": "housekeeping@hospitality.example.invalid"
+    },
+    {
+      "voucher_type": "Stock Entry",
+      "voucher_no": "MAT-STE-2026-00004",
+      "warehouse": "Lavandería de aceptación operativa - HSD",
+      "actual_qty": -3.0,
+      "stock_value_difference": -75.0,
+      "owner": "housekeeping@hospitality.example.invalid"
+    },
+    {
+      "voucher_type": "Stock Entry",
+      "voucher_no": "MAT-STE-2026-00004",
+      "warehouse": "Stores - HSD",
+      "actual_qty": 3.0,
+      "stock_value_difference": 75.0,
+      "owner": "housekeeping@hospitality.example.invalid"
+    }
+  ],
+  "audit": [
+    {
+      "actor": "Administrator",
+      "action": "on_submit",
+      "source_doctype": "Stock Entry",
+      "source_name": "MAT-STE-2026-00002",
+      "reason": null
+    },
+    {
+      "actor": "manager@hospitality.example.invalid",
+      "action": "Create property warehouse",
+      "source_doctype": "Warehouse",
+      "source_name": "Lavandería de aceptación operativa - HSD",
+      "reason": "Lavado y control de ropa sintética de prueba"
+    },
+    {
+      "actor": "manager@hospitality.example.invalid",
+      "action": "Setup property",
+      "source_doctype": "HS Property",
+      "source_name": "qmbjb0i1qc",
+      "reason": null
+    },
+    {
+      "actor": "manager@hospitality.example.invalid",
+      "action": "Stock policy",
+      "source_doctype": "HS Stock Policy",
+      "source_name": "POLSTK-00001",
+      "reason": null
+    },
+    {
+      "actor": "manager@hospitality.example.invalid",
+      "action": "Setup property",
+      "source_doctype": "HS Property",
+      "source_name": "qmbjb0i1qc",
+      "reason": null
+    },
+    {
+      "actor": "manager@hospitality.example.invalid",
+      "action": "Setup property",
+      "source_doctype": "HS Property",
+      "source_name": "qmbjb0i1qc",
+      "reason": null
+    },
+    {
+      "actor": "manager@hospitality.example.invalid",
+      "action": "Setup property",
+      "source_doctype": "HS Property",
+      "source_name": "qmbjb0i1qc",
+      "reason": null
+    },
+    {
+      "actor": "manager@hospitality.example.invalid",
+      "action": "Setup property",
+      "source_doctype": "HS Property",
+      "source_name": "qmbjb0i1qc",
+      "reason": null
+    },
+    {
+      "actor": "manager@hospitality.example.invalid",
+      "action": "Setup property",
+      "source_doctype": "HS Property",
+      "source_name": "qmbjb0i1qc",
+      "reason": null
+    },
+    {
+      "actor": "housekeeping@hospitality.example.invalid",
+      "action": "on_submit",
+      "source_doctype": "Stock Entry",
+      "source_name": "MAT-STE-2026-00003",
+      "reason": null
+    },
+    {
+      "actor": "housekeeping@hospitality.example.invalid",
+      "action": "Linen Send",
+      "source_doctype": "HS Incident",
+      "source_name": "INC-2026-00001",
+      "reason": "Envío de cuatro sábanas sintéticas a lavandería"
+    },
+    {
+      "actor": "housekeeping@hospitality.example.invalid",
+      "action": "on_submit",
+      "source_doctype": "Stock Entry",
+      "source_name": "MAT-STE-2026-00004",
+      "reason": null
+    },
+    {
+      "actor": "housekeeping@hospitality.example.invalid",
+      "action": "Linen Receive",
+      "source_doctype": "HS Incident",
+      "source_name": "INC-2026-00002",
+      "reason": "Recepción de tres sábanas lavadas de prueba"
+    }
+  ],
+  "finance_counts": {
+    "HS Payment": 0,
+    "HS Shift": 0,
+    "Sales Invoice": 0,
+    "Payment Entry": 0,
+    "Journal Entry": 0
+  },
+  "original_physical_files": 741
+}

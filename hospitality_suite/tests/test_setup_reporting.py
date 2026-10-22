@@ -25,6 +25,33 @@ class TestSetupReporting(IntegrationTestCase):
     def call(self,action,data,key=None):
         return api.execute(self.prop.name,action,key or uuid.uuid4().hex,data)
 
+    def test_penalty_settings_reject_invalid_values_without_request_or_property_changes(self):
+        frappe.set_user('manager@hospitality.example.invalid')
+        for prefix in ('cancellation','no_show'):
+            for mode,value in [('Percent',125),('Percent',-1),('Fixed',-1)]:
+                with self.subTest(prefix=prefix,mode=mode,value=value):
+                    self.prop.reload()
+                    before=(str(self.prop.modified),self.prop.get(prefix+'_fee_mode'),self.prop.get(prefix+'_fee_value'))
+                    count=frappe.db.count('HS Request')
+                    with self.assertRaises(frappe.ValidationError):
+                        api.save_setup(self.prop.name,'property',{prefix+'_fee_mode':mode,prefix+'_fee_value':value},
+                            uuid.uuid4().hex,str(self.prop.modified))
+                    self.prop.reload()
+                    self.assertEqual((str(self.prop.modified),self.prop.get(prefix+'_fee_mode'),self.prop.get(prefix+'_fee_value')),before)
+                    self.assertEqual(frappe.db.count('HS Request'),count)
+
+    def test_penalty_settings_accept_percent_endpoints_fractional_rates_and_fixed_amounts(self):
+        frappe.set_user('manager@hospitality.example.invalid')
+        for prefix in ('cancellation','no_show'):
+            for mode,value in [('Percent',0),('Percent',25.5),('Percent',100),('Fixed',125),('Fixed',0)]:
+                with self.subTest(prefix=prefix,mode=mode,value=value):
+                    self.prop.reload()
+                    api.save_setup(self.prop.name,'property',{prefix+'_fee_mode':mode,prefix+'_fee_value':value},
+                        uuid.uuid4().hex,str(self.prop.modified))
+                    self.prop.reload()
+                    self.assertEqual(self.prop.get(prefix+'_fee_mode'),mode)
+                    self.assertEqual(self.prop.get(prefix+'_fee_value'),value)
+
     def values(self,beds=0):
         start=now_datetime().replace(microsecond=0)
         return dict(starts_at=str(start),ends_at=str(start+timedelta(days=1)),guest=self.guest.name,customer=self.guest.customer,

@@ -122,6 +122,13 @@ class ScopedDocument(Document):
             validate_configuration(self)
             from hospitality_suite.time import cutoff_time
             cutoff_time(self.close_time)
+            from hospitality_suite.pricing import decimal
+            for prefix,label in [('cancellation',_('cancelación')),('no_show',_('no presentación'))]:
+                value=decimal(self.get(prefix+'_fee_value'))
+                if not value.is_finite() or value<0:
+                    frappe.throw(_('La penalización por {0} debe ser un importe de cero o más.').format(label))
+                if self.get(prefix+'_fee_mode')=='Percent' and value>100:
+                    frappe.throw(_('El porcentaje de penalización por {0} debe estar entre 0 y 100.').format(label))
             if not 0<=(self.retention_days or 0)<=36500:
                 frappe.throw(frappe._("La retención admite de 0 a 36500 días; cero desactiva el proceso"))
             from hospitality_suite.setup import validate_document_settings

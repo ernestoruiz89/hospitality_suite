@@ -5,6 +5,21 @@ function fixture(open_dialogs=[],document){
   return new Desk();
 }
 const input=(fieldname,extra={})=>({fieldname,label:fieldname,fieldtype:'Data',...extra});
+
+test('penalty policies reject invalid percentages beside their own field while fixed amounts and drafts keep their meaning',()=>{
+  const desk=fixture();
+  for(const prefix of ['cancellation','no_show']){
+    let mode='Percent',amount=125;
+    const field={df:input(prefix+'_fee_value',{fieldtype:'Currency'}),get_value:()=>amount};
+    const dialog={fields_dict:{[prefix+'_fee_mode']:{df:input(prefix+'_fee_mode'),get_value:()=>mode},[prefix+'_fee_value']:field}};
+    let errors=desk.form_error_entries(dialog);
+    assert.equal(errors.length,1);assert.equal(errors[0].field,field);assert.match(errors[0].message,/0.*100/);
+    assert.equal(desk.form_error_entries(dialog,{onlyNumeric:true,typesOnly:true}).length,0,'a partial draft is not confirmation');
+    mode='Fixed';assert.equal(desk.form_error_entries(dialog).length,0,'125 is a valid fixed currency amount');
+    amount=-1;errors=desk.form_error_entries(dialog);assert.equal(errors.length,1);assert.equal(errors[0].field,field);
+    mode='Percent';for(amount of [0,25.5,100])assert.equal(desk.form_error_entries(dialog).length,0);
+  }
+});
 test('tabbed forms preserve every original control, callback, required flag and future extension once',()=>{
   const desk=fixture(),query=()=>({filters:{property:'authorized'}}),onchange=()=>{};
   const fields=[input('block_hours',{fieldtype:'Float',default:3}),input('amount',{fieldtype:'Currency',reqd:1}),input('title'),

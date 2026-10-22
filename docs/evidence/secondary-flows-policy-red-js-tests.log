@@ -1,0 +1,172 @@
+TAP version 13
+# Subtest: penalty policies reject invalid percentages beside their own field while fixed amounts and drafts keep their meaning
+not ok 1 - penalty policies reject invalid percentages beside their own field while fixed amounts and drafts keep their meaning
+  ---
+  duration_ms: 12.51906
+  type: 'test'
+  location: '/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/tools/test_forms_ui.cjs:9:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+
+    0 !== 1
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/tools/test_forms_ui.cjs:16:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1325:25)
+    Test.start (node:internal/test_runner/test:1191:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17)
+  ...
+# Subtest: tabbed forms preserve every original control, callback, required flag and future extension once
+ok 2 - tabbed forms preserve every original control, callback, required flag and future extension once
+  ---
+  duration_ms: 5.332981
+  type: 'test'
+  ...
+# Subtest: hotel rates keep people charges while block/hour options are reserved for motel mode
+ok 3 - hotel rates keep people charges while block/hour options are reserved for motel mode
+  ---
+  duration_ms: 4.393585
+  type: 'test'
+  ...
+# Subtest: cash and refund controls follow the selected intent without changing wire values or hiding the amount
+ok 4 - cash and refund controls follow the selected intent without changing wire values or hiding the amount
+  ---
+  duration_ms: 4.942586
+  type: 'test'
+  ...
+# Subtest: missing required controls reveal their tab while zero and hidden values do not become false errors
+ok 5 - missing required controls reveal their tab while zero and hidden values do not become false errors
+  ---
+  duration_ms: 5.293611
+  type: 'test'
+  ...
+# Subtest: a mandatory unchecked checklist is the first error while a numeric zero is still valid
+ok 6 - a mandatory unchecked checklist is the first error while a numeric zero is still valid
+  ---
+  duration_ms: 4.838591
+  type: 'test'
+  ...
+# Subtest: payment headings and review actions distinguish receiving cash from returning it
+ok 7 - payment headings and review actions distinguish receiving cash from returning it
+  ---
+  duration_ms: 4.910879
+  type: 'test'
+  ...
+# Subtest: tab selection has an explicit accessible state after navigation and required-field recovery
+ok 8 - tab selection has an explicit accessible state after navigation and required-field recovery
+  ---
+  duration_ms: 4.972275
+  type: 'test'
+  ...
+# Subtest: a review hides and makes its parent inert, then restores its unchanged draft on cancellation
+ok 9 - a review hides and makes its parent inert, then restores its unchanged draft on cancellation
+  ---
+  duration_ms: 3.997274
+  type: 'test'
+  ...
+# Subtest: inline required messages retain zero amounts and skip hidden, dependent or read-only fields
+ok 10 - inline required messages retain zero amounts and skip hidden, dependent or read-only fields
+  ---
+  duration_ms: 5.624915
+  type: 'test'
+  ...
+# Subtest: table errors identify the row and column without changing row identity, values or optional fields
+ok 11 - table errors identify the row and column without changing row identity, values or optional fields
+  ---
+  duration_ms: 4.648377
+  type: 'test'
+  ...
+# Subtest: native invalid flags and incomplete browser dates cannot pass as complete optional values
+ok 12 - native invalid flags and incomplete browser dates cannot pass as complete optional values
+  ---
+  duration_ms: 4.5519
+  type: 'test'
+  ...
+# Subtest: stay intervals require a later end while report and rate date ranges include the same final day
+ok 13 - stay intervals require a later end while report and rate date ranges include the same final day
+  ---
+  duration_ms: 5.007286
+  type: 'test'
+  ...
+# Subtest: inline errors preserve native descriptions and invalid markers, use text, and do not accumulate on retry
+ok 14 - inline errors preserve native descriptions and invalid markers, use text, and do not accumulate on retry
+  ---
+  duration_ms: 4.958259
+  type: 'test'
+  ...
+# Subtest: editing clears corrected messages after the first attempt without moving focus or validating a busy draft
+ok 15 - editing clears corrected messages after the first attempt without moving focus or validating a busy draft
+  ---
+  duration_ms: 4.185769
+  type: 'test'
+  ...
+# Subtest: each dialog owns its accessible messages and processing state without declaring server success
+ok 16 - each dialog owns its accessible messages and processing state without declaring server success
+  ---
+  duration_ms: 8.743147
+  type: 'test'
+  ...
+# Subtest: explicit positive integer bounds reject zero, fractions, negatives and malformed drafts without affecting valid zero amounts
+ok 17 - explicit positive integer bounds reject zero, fractions, negatives and malformed drafts without affecting valid zero amounts
+  ---
+  duration_ms: 4.891873
+  type: 'test'
+  ...
+# Subtest: bounds inspect the saved raw draft before native integer truncation and keep that mistake visible without writing the model
+ok 18 - bounds inspect the saved raw draft before native integer truncation and keep that mistake visible without writing the model
+  ---
+  duration_ms: 4.914089
+  type: 'test'
+  ...
+# Subtest: bounds use the control native expression/locale evaluator and leave optional blanks, read-only fields and unrelated integers alone
+ok 19 - bounds use the control native expression/locale evaluator and leave optional blanks, read-only fields and unrelated integers alone
+  ---
+  duration_ms: 4.970164
+  type: 'test'
+  ...
+# Subtest: an explicit maximum and a nonnegative decimal bound keep zero and optional blank values valid
+ok 20 - an explicit maximum and a nonnegative decimal bound keep zero and optional blank values valid
+  ---
+  duration_ms: 4.414143
+  type: 'test'
+  ...
+# Subtest: all editable numeric controls reject malformed drafts and integer fractions without needing domain bounds
+ok 21 - all editable numeric controls reject malformed drafts and integer fractions without needing domain bounds
+  ---
+  duration_ms: 22.718072
+  type: 'test'
+  ...
+# Subtest: numeric row preflight inspects optional columns and the saved expanded draft before native parsing
+ok 22 - numeric row preflight inspects optional columns and the saved expanded draft before native parsing
+  ---
+  duration_ms: 5.700765
+  type: 'test'
+  ...
+# Subtest: row validation keeps separate tables and collapsed row drafts independent
+ok 23 - row validation keeps separate tables and collapsed row drafts independent
+  ---
+  duration_ms: 5.098452
+  type: 'test'
+  ...
+# Subtest: partial draft type preflight still rejects lossy integer input but leaves domain minimums for confirmation
+ok 24 - partial draft type preflight still rejects lossy integer input but leaves domain minimums for confirmation
+  ---
+  duration_ms: 4.57472
+  type: 'test'
+  ...
+1..24
+# tests 24
+# suites 0
+# pass 23
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 254.035937

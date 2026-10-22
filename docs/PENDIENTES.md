@@ -1,5 +1,7 @@
 # Siguiente fase del objetivo activo
 
+[ROPA_Y_POLITICAS_DESDE_PAGES.md](ROPA_Y_POLITICAS_DESDE_PAGES.md) acredita envío/recepción/pérdida/reposición de ropa, lavandería/clasificación/mínimos y políticas de penalización/anticipos/garantías con Gerencia, Limpieza y Caja. Se corrige la configuración que admitía 125 % y luego impedía cancelar; validación local y nativa coherentes, importes fijos válidos conservados. **409 nativas (377 integración/32 unitarias) y 230 JS aprobadas**, 26 observaciones de escritorio. Datos restaurados, 741 archivos originales idénticos y once artefactos nativos conservados fuera del sitio. **213 V/cinco I**: quedan retención/reintento, otros adjuntos privados y portal S04-20; después F26/paquete/entrega y cierres generales. OTA aplazada. Los apartados posteriores conservan sus recuentos históricos.
+
 [PANEL_ESTANCIA_Y_ESTADOS.md](PANEL_ESTANCIA_Y_ESTADOS.md) acredita **S04-16**: seis estados compartidos, ruta del panel unificada con el coordinador, error/reintento y aviso de preparación visible. **229 JS aprobadas** y dos escenarios de Gerencia separados por restauración; 407 nativas históricas conservadas con todas las fuentes Python idénticas. Ambas restauraciones y 741 archivos originales verificados. **213 V y cinco I**, de 218: S00-01/S01-12/S04-20/S19-07/S19-08. Quedan los otros recorridos secundarios, F26, paquete actualizado y entrega. OTA aplazada. Los apartados posteriores conservan sus recuentos históricos.
 
 ## Después de tesorería y compras
