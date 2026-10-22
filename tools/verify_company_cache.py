@@ -13,7 +13,7 @@ import frappe
 
 BENCH=Path('/home/frappe/benches/hospitality-bench')
 ROOT=Path(__file__).resolve().parents[1]
-parser=argparse.ArgumentParser();parser.add_argument('--phase',choices=['accounting','language-review'],default='accounting');args=parser.parse_args()
+parser=argparse.ArgumentParser();parser.add_argument('--phase',choices=['accounting','language-review','final-recovery'],default='accounting');args=parser.parse_args()
 
 
 def tokens(text):
@@ -56,7 +56,8 @@ try:
     frappe.set_user('Administrator')
     original=json.loads((BENCH/'.hospitality-financial-upgrade.json').read_text())['tables']['Company']
     phase_data=json.loads((BENCH/f'.hospitality-{args.phase}-upgrade.json').read_text())
-    phase=(phase_data['hospitality.localhost'] if args.phase=='language-review' else phase_data)['tables']['Company']
+    phase=(phase_data['hospitality.localhost'] if args.phase in ['language-review','final-recovery'] else phase_data)['tables']['Company']
+    if args.phase=='final-recovery':original=phase
     current=frappe.db.sql('SELECT * FROM `tabCompany` ORDER BY name',as_dict=True)
     assert len(current)==original['rows']==phase['rows']==1
     if args.phase=='accounting':assert digest(current)==phase['sha256'],'Company changed during this phase'
@@ -92,7 +93,9 @@ try:
     else:
         assert matched is not None,'No backup row proves the original Company snapshot'
         changed=sorted(field for field in set(matched)|set(current[0]) if matched.get(field)!=current[0].get(field))
-        assert changed==allowed,changed
+        if args.phase=='final-recovery':
+            assert 'modified' in changed and set(changed).issubset(allowed),changed
+        else:assert changed==allowed,changed
     method='erpnext.setup.doctype.company.company.cache_companies_monthly_sales_history'
     job=frappe.db.get_value('Scheduled Job Type',{'method':method},'name')
     logs=frappe.get_all('Scheduled Job Log',filters={'scheduled_job_type':job,'status':'Complete'},fields=['creation','modified'],order_by='creation desc',limit_page_length=10)
@@ -112,7 +115,11 @@ try:
         native_method=method,native_schedule='daily_maintenance',job_status='Complete',
         job_started=str(run.creation),job_finished=str(run.modified),company_modified=str(current[0].modified),cached_histories_match_native_read_functions=True)
     private=BENCH/f'.hospitality-{args.phase}-company-cache.json'
+    output=ROOT/('docs/evidence/delivery-final-company-cache.json' if args.phase=='final-recovery' else f'docs/evidence/{args.phase}-company-cache.json')
+    if args.phase=='final-recovery':
+        assert not output.exists() and not private.exists(),'Preserve previous cache attestations'
+        proof['attestation_source_sha256']=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
     private.write_text(json.dumps(proof,indent=2)+'\n');private.chmod(0o600)
-    (ROOT/f'docs/evidence/{args.phase}-company-cache.json').write_text(json.dumps(proof,indent=2)+'\n',encoding='utf-8',newline='\n')
+    output.write_text(json.dumps(proof,indent=2)+'\n',encoding='utf-8',newline='\n')
     print(json.dumps(proof))
 finally:frappe.db.rollback();frappe.destroy()

@@ -1,0 +1,99 @@
+{
+  "at_utc": "2026-10-22T06:14:43.028719+00:00",
+  "version": "0.8.9",
+  "source_revision": "589f153c691a625431913f9c1e5bd2e31afe321c",
+  "output": "output/entrega-0.8.9",
+  "requirements": 218,
+  "native_tests": 410,
+  "javascript_tests": 232,
+  "application_files": 332,
+  "archive_app_bytes_match_current_and_tested_candidate": true,
+  "delivery_zip_readback_verified": true,
+  "zip_members": 20,
+  "files": {
+    "docs/AUDITORIA_ESPECIFICACION.md": {
+      "bytes": 240087,
+      "sha256": "7f2010b5c8e52b7fa9bf971acd08f8ef0f685bfd2de8abf61bf760516540795a"
+    },
+    "docs/COTEJO_FINAL.md": {
+      "bytes": 9977,
+      "sha256": "0a6e1e240c8ca34bad86f7be852f914fbabf5b9fd0169ddc631f4a5214b805b2"
+    },
+    "docs/ENTREGA_FINAL.md": {
+      "bytes": 4316,
+      "sha256": "342e52bf2bdaa1b5679a6f34359cd902753f95d8ff1d4ff1e806c220b8a237d0"
+    },
+    "docs/evidence/completion-final-review.json": {
+      "bytes": 4295985,
+      "sha256": "d159d462c4f43ad9de5567825cc6843fd3957a375fc6a70af7a776295bafc1d9"
+    },
+    "docs/evidence/delivery-final-company-cache.json": {
+      "bytes": 1172,
+      "sha256": "e929ccf9ecdc1393022bcc6b0286691dbc53b0b45d5e9b8c71d84711ff4e3b3d"
+    },
+    "docs/evidence/delivery-final-runtime.json": {
+      "bytes": 1720,
+      "sha256": "6038e9c48986d7a230bbb9755b81206f786b95d3ea261dc6e0c55df42d705b85"
+    },
+    "docs/evidence/delivery-package-final.json": {
+      "bytes": 1148,
+      "sha256": "75810138e8b8c4e159d4ec4b0ea5a66f51fb148a3cdd98813fbb54b5f7adb368"
+    },
+    "docs/evidence/f26-js-run.json": {
+      "bytes": 390,
+      "sha256": "88680eb952608963ae807c3991f95154fbbf044a8492dc40f1b4cdf55c557147"
+    },
+    "docs/evidence/final-recovery-native-run.json": {
+      "bytes": 738,
+      "sha256": "24159cecd2827facf9ab462a0d58a511a6e430d677f04de27824c532d5a62d5d"
+    },
+    "docs/specification-audit.json": {
+      "bytes": 217599,
+      "sha256": "d561721f055da0bf59251d1865e892e31da2c0a09484594cef9bd7ba29b48f3d"
+    },
+    "hospitality-suite-repository.tar.gz": {
+      "bytes": 18454907,
+      "sha256": "af1005cca0da5e71136e1822f273a496edd3f426efc17b282dc7a32b912e6552"
+    },
+    "hospitality_suite-0.8.9-py3-none-any.whl": {
+      "bytes": 616268,
+      "sha256": "85c7988223580436eb1f6ca0c0e397ec56219d9de08d6ba1a72777f0faa929c9"
+    },
+    "hospitality_suite-0.8.9.tar.gz": {
+      "bytes": 18525286,
+      "sha256": "7ef0111b621238b91efabc9c894a8bd9328e7f7d556b506f89579dcd7f5375b0"
+    },
+    "LEAME.txt": {
+      "bytes": 758,
+      "sha256": "34180bde991da412656f40c384b1f23bc29d93cc850de739daae7a0490e4f8e7"
+    },
+    "README.md": {
+      "bytes": 7350,
+      "sha256": "f22ad54ab129394357a6ddf1c8c0804d138cfe72a55c925b71a15b9aeca62ca2"
+    },
+    "tools/assemble_delivery.py": {
+      "bytes": 8095,
+      "sha256": "5231d9d16e2f252027200199b8bd0962442050ed39da0a3a680ca4c77666f214"
+    },
+    "tools/verify_company_cache.py": {
+      "bytes": 7698,
+      "sha256": "f247f9c06a5f4816f29ec17f04bdd6fcb8e4fd6e24a5e4f57a0f8a24c6efc6cf"
+    },
+    "tools/verify_delivery_runtime.py": {
+      "bytes": 6963,
+      "sha256": "f9a7a83dc568ae9ad601d9ebcfb878c9e4d7c0d18ceb4b5bb3fb0e4f91a95f9f"
+    },
+    "manifest.json": {
+      "bytes": 3352,
+      "sha256": "2a2d4da9fb470a1430c71f0cbb1a43ddb94a9ddfa764df7c03252ff5457b8c3b"
+    },
+    "hospitality-suite-0.8.9-entrega.zip": {
+      "bytes": 37727958,
+      "sha256": "bea703998aad9fe79f7b4f81389c42ddab58bc111e690fa9d9f5a94a70212e2f"
+    }
+  },
+  "outer_checksums_include_zip": true,
+  "inner_checksums_cover_payload": true,
+  "public_archives_exclude_private_runtime_and_unrelated_untracked_files": true,
+  "external_OTA_sync_deferred_by_user": true
+}

@@ -1,0 +1,58 @@
+{
+  "at_utc": "2026-10-22T06:13:28.859204+00:00",
+  "read_only": true,
+  "sites": {
+    "hospitality.localhost": {
+      "tables": 72,
+      "rows": 1246,
+      "private_files": 2,
+      "all_business_rows_preserved": true,
+      "private_file_bytes_identical": true,
+      "attested_native_company_cache": {
+        "path": "docs/evidence/delivery-final-company-cache.json",
+        "sha256": "e929ccf9ecdc1393022bcc6b0286691dbc53b0b45d5e9b8c71d84711ff4e3b3d"
+      },
+      "registered_versions": {
+        "frappe": "16.52.0",
+        "erpnext": "16.51.1",
+        "hospitality_suite": "0.8.9"
+      }
+    },
+    "hospitality-acceptance.localhost": {
+      "tables": 72,
+      "rows": 250,
+      "private_files": 0,
+      "all_business_rows_preserved": true,
+      "private_file_bytes_identical": true,
+      "attested_native_company_cache": null,
+      "registered_versions": {
+        "frappe": "16.52.0",
+        "erpnext": "16.51.1",
+        "hospitality_suite": "0.8.9"
+      }
+    }
+  },
+  "application_files_match_tested_candidate": 332,
+  "core_revisions": {
+    "frappe": "4515014c87ece6cb20ee91d2cfb121c5cbd1ff4a",
+    "erpnext": "5af6561f5aa48104559692fb4fd82f2580e8d338"
+  },
+  "core_worktrees_clean": true,
+  "ports": {
+    "8086": true,
+    "8089": false,
+    "8091": false,
+    "9001": true,
+    "9003": false,
+    "11001": true,
+    "13001": true,
+    "11003": false,
+    "13003": false
+  },
+  "http_status": 200,
+  "ping": "pong",
+  "primary_bundle": "/assets/hospitality_suite/dist/js/hospitality.bundle.WNYHCSFG.js",
+  "served_bundle_sha256": "a6c6548d27eb62dc3257e3563132ced33591fceb17edfad9b7bf4d4d242dd04d",
+  "accepted_UI_bundle_unchanged": true,
+  "external_OTA_sync_deferred_by_user": true
+}
