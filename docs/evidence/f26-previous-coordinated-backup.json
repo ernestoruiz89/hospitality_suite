@@ -1,0 +1,9 @@
+{
+  "action": "backup-baseline",
+  "label": "previous-coordinated-backup",
+  "at_utc": "2026-10-22T04:42:04.773036+00:00",
+  "site": "hospitality-release.localhost",
+  "backup_verified": true,
+  "previous_revision": "be67c92d3b22b70f9a4a17d0841eb829a8e38f02",
+  "external_providers_activated": false
+}

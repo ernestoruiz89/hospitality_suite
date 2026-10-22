@@ -1,0 +1,26 @@
+{
+  "at_utc": "2026-10-22T05:23:53.065236+00:00",
+  "sites": {
+    "hospitality.localhost": {
+      "frappe": "16.52.0",
+      "erpnext": "16.51.1",
+      "hospitality_suite": "0.8.9"
+    },
+    "hospitality-acceptance.localhost": {
+      "frappe": "16.52.0",
+      "erpnext": "16.51.1",
+      "hospitality_suite": "0.8.9"
+    }
+  },
+  "only_managed_processes_stopped": [],
+  "native_tests_required_before_upgrade": 410,
+  "app_source_sha256": "51a0406f992ae7392023b871322897746a3b897eb3befe09797e5b26cb4c3c81",
+  "raw_log_sha256": {
+    "build_requirement": "e0a981342016360725356a6c59d3250c30deb03dc8eca6c6b501f931b5685064",
+    "package_metadata": "ace3c2726d06fdb7615c69c241609b5ae243ed631c1401ad4b5e9f032c6606af",
+    "hospitality.localhost": "3f86a8cf24138270b8172266f83634bfb64d6d360fa52789dfd42b7e2c848b61",
+    "hospitality-acceptance.localhost": "5671d9957809f60fd07d7ba064a6587c86aeea771023f4c2432a075f228e457b",
+    "business_preservation": "af6c627b6219b146c83ac81d47f106fe49e78ad2083c862a104cd80ff60bf44d"
+  },
+  "external_providers_activated": false
+}

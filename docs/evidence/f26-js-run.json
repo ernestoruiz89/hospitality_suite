@@ -1,0 +1,10 @@
+{
+  "exit_code": 0,
+  "tests": 232,
+  "pass_count": 232,
+  "failures": 0,
+  "reporter": "tap",
+  "native_log_sha256": "13c74b5fc59fa875fc428fd198b0730db793300feee62ddc9673118355709f0a",
+  "source": "independent clone at candidate revision; explicit reporter after the first harness expected TAP but Node emitted spec",
+  "original_spec_report_preserved": "docs/evidence/f26-js-tests.log"
+}

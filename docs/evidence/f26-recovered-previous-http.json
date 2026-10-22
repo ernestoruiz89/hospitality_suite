@@ -1,0 +1,22 @@
+{
+  "at_utc": "2026-10-22T05:01:14.138609+00:00",
+  "label": "recovered-previous-http",
+  "expected": "healthy",
+  "site": "hospitality-release.localhost",
+  "bundle": "/assets/hospitality_suite/dist/js/hospitality.bundle.DWFPEU45.js",
+  "results": {
+    "/api/method/ping": {
+      "status": 200,
+      "sha256": "535e0f7e4562372c2262737b55d250b8a0fc4d3ed4237fc0b23a73b062ad645c"
+    },
+    "/login": {
+      "status": 200,
+      "sha256": "94f20d47fb3d8d6b528f25017a19cafe1dbd27ebd444d266c3f882dda1f1be45"
+    },
+    "/assets/hospitality_suite/dist/js/hospitality.bundle.DWFPEU45.js": {
+      "status": 200,
+      "sha256": "285588bf135d343a1be98224e51b616a615ee15fb4a39743b860462dbc5be145"
+    }
+  },
+  "read_only": true
+}

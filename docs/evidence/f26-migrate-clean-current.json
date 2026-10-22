@@ -1,0 +1,11 @@
+{
+  "action": "migrate",
+  "label": "migrate-clean-current",
+  "at_utc": "2026-10-22T05:15:24.109438+00:00",
+  "site": "hospitality-release.localhost",
+  "exit_code": 0,
+  "native_log_sha256": "0356164857a44a91a84720793c35582d01db73a215455f527a05651f563dd54d",
+  "revision": "977adb2d6396904da0251e83313230269fb0a5e1",
+  "version": "0.8.9",
+  "external_providers_activated": false
+}

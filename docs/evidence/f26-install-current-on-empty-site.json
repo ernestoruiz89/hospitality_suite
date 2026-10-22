@@ -1,0 +1,11 @@
+{
+  "action": "install-clean-app",
+  "label": "install-current-on-empty-site",
+  "at_utc": "2026-10-22T05:14:24.196908+00:00",
+  "site": "hospitality-release.localhost",
+  "exit_code": 0,
+  "native_log_sha256": "ec6da90fd4006c52574a54435cbbdc4b26d1ddd99d1542252a2a3da69988e28d",
+  "revision": "977adb2d6396904da0251e83313230269fb0a5e1",
+  "version": "0.8.9",
+  "external_providers_activated": false
+}

@@ -1,0 +1,11 @@
+{
+  "action": "install-deps",
+  "label": "redeploy-current-deps",
+  "at_utc": "2026-10-22T05:08:54.106949+00:00",
+  "site": "hospitality-release.localhost",
+  "exit_code": 0,
+  "native_log_sha256": "3ebc1391d3f545a61f15f170106c369c98133f5b563c4a2843955f54752e2ddd",
+  "revision": "977adb2d6396904da0251e83313230269fb0a5e1",
+  "version": "0.8.9",
+  "external_providers_activated": false
+}

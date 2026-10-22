@@ -1,0 +1,29 @@
+{
+  "action": "check",
+  "label": "upgraded-current",
+  "at_utc": "2026-10-22T04:44:41.747127+00:00",
+  "site": "hospitality-release.localhost",
+  "revision": "977adb2d6396904da0251e83313230269fb0a5e1",
+  "version": "0.8.9",
+  "counts": {
+    "HS Property": 2,
+    "HS Room": 20,
+    "HS Booking": 23,
+    "HS Stay": 5,
+    "HS Charge": 10,
+    "HS Payment": 11,
+    "Sales Invoice": 7,
+    "Payment Entry": 9,
+    "Journal Entry": 2,
+    "GL Entry": 66,
+    "Stock Entry": 13,
+    "Stock Ledger Entry": 19,
+    "File": 4
+  },
+  "all_business_rows_and_columns_identical": true,
+  "all_physical_files_identical": true,
+  "tables": 72,
+  "rows": 1246,
+  "private_files": 2,
+  "external_providers_activated": false
+}

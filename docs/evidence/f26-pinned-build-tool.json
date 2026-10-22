@@ -1,0 +1,5 @@
+{
+  "build_requirement": "flit_core==3.12.0",
+  "exit_code": 0,
+  "native_log_sha256": "e0a981342016360725356a6c59d3250c30deb03dc8eca6c6b501f931b5685064"
+}

@@ -1,0 +1,10 @@
+{
+  "action": "restore-original",
+  "label": "restore-original-release",
+  "at_utc": "2026-10-22T05:21:47.245021+00:00",
+  "site": "hospitality-release.localhost",
+  "native_test_physical_files_archived": 14,
+  "exit_code": 0,
+  "native_log_sha256": "4e15459dac965242e99c3d49500c4b9f56d0839cb9346024bae2dc73240980cf",
+  "external_providers_activated": false
+}

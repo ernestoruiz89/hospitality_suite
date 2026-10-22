@@ -1,0 +1,5 @@
+The first independent JS run reported 232 tests, 232 passes and zero failures
+using Node's spec reporter. Its wrapper then failed because it required literal
+TAP '# tests' lines. The original spec output remains f26-js-tests.log.
+The same complete file list was rerun with explicit --test-reporter=tap, preserving
+the second raw log and exit code separately. No application/test code was changed.

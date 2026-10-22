@@ -1,0 +1,6 @@
+The second launcher attempt found the existing web/socket/worker/scheduler and
+left them running, but its Windows HTTP health probe could not reach the named
+origin. This hostname is resolved in WSL and in the browser's localhost handling;
+the Windows-native resolver is a different context. The health gate now runs
+inside WSL using the same named origin, requiring HTTP 200 and JSON pong. The
+launcher does not change the Windows hosts file or substitute an unrelated site.

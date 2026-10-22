@@ -1,0 +1,11 @@
+{
+  "action": "build",
+  "label": "build-current",
+  "at_utc": "2026-10-22T04:45:43.348176+00:00",
+  "site": "hospitality-release.localhost",
+  "exit_code": 0,
+  "native_log_sha256": "186020034ce6b0634fc3643dce97da1d7b7265d3e3cd106fc52e585f1b6f0ff3",
+  "revision": "977adb2d6396904da0251e83313230269fb0a5e1",
+  "version": "0.8.9",
+  "external_providers_activated": false
+}

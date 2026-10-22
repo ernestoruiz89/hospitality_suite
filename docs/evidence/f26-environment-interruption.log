@@ -1,0 +1,17 @@
+After the upgraded Reception read-only smoke check, the WSL test environment
+lost the managed bench listeners and regenerated /etc/hosts without the local
+site aliases. The first failed-asset HTTP observation ended in DNS resolution
+error; it is not counted as the expected controlled HTTP 404 gate.
+
+Live handles 69923 and 12558 were polled to terminal exit 0. Their receipts show
+the post-UI baseline comparison and then the deliberately injected asset fault.
+Both helper invocations had been launched before the first was observed terminal;
+the fault invocation retained its probe/fault state and private asset payload,
+but replaced the in-memory check journal entry of the concurrent observer.
+The public comparison receipt remains preserved. An exclusive process lock was
+added to serialize subsequent rehearsal helper actions. No business action is
+repeated to repair that observation metadata.
+
+Observed boot ID after the interruption:
+0b67e633-51e0-4957-b345-09216dd61703
+Only the named bench aliases and managed processes are to be re-established.

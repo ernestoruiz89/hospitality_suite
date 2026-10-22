@@ -1,0 +1,9 @@
+{
+  "action": "checkout-current",
+  "label": "redeploy-current-code",
+  "at_utc": "2026-10-22T05:08:22.598513+00:00",
+  "site": "hospitality-release.localhost",
+  "revision": "977adb2d6396904da0251e83313230269fb0a5e1",
+  "source_checkout_unchanged": true,
+  "external_providers_activated": false
+}

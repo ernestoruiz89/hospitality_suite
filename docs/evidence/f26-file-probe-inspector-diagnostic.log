@@ -1,0 +1,6 @@
+The first failed-state inspector assumed one physical path per save_file call.
+It stopped before writing its receipt. Native File processing produced two
+physical TXT paths for the one synthetic File record. The inspection was changed
+to require both exact probe-prefix paths, one new File record, all original
+physical/private bytes preserved, and unchanged operational/financial counts.
+No product code, database record or failed-state snapshot changed for this repair.

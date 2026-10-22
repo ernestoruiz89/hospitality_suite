@@ -1,5 +1,7 @@
 # Registro de implementación
 
+[ACTUALIZACION_Y_RECUPERACION_FINAL.md](ACTUALIZACION_Y_RECUPERACION_FINAL.md) acredita **F26** sobre 0.8.9: actualización, fallo controlado, respaldo del estado fallido, recuperación coordinada de código/base/archivos y segundo despliegue, con las 72 tablas/1,246 filas y archivos originales idénticos. Instalación limpia actual: 35 DocTypes/11 Pages/9 roles/9 formatos/6 patches, **410 nativas y 232 JS aprobadas**. Sitios del principal actualizados sin perder datos; destino original/21 archivos restablecidos, 14 archivos del escenario nativo archivados y servicios temporales apagados. **214 V/cuatro I**: quedan paquete definitivo, auditoría de cierre y entrega S00-01/S01-12/S19-07/S19-08. OTA aplazada. Los apartados posteriores son antecedentes con su propio alcance.
+
 ## Tesorería y compras desde Pages — 0.8.8
 
 [TESORERIA_Y_COMPRAS_DESDE_PAGES.md](TESORERIA_Y_COMPRAS_DESDE_PAGES.md) acredita el recorrido secundario T11/T19 con Gerencia, Caja y Contabilidad: egreso/límite/corrección, entrega, liquidaciones parciales, compra 2+4, facturas/pagos y movimiento/conteo. Se corrigen filas y acciones de recepción innecesarias, facturación vacía y permiso nativo del conteo sin conceder escritura general. **407 nativas (375 integración/32 unitarias) y 225 JS aprobadas**, 48 observaciones de escritorio. Datos restaurados y 741 archivos originales conservados. **212 V/seis I**: quedan activación rápida desde el panel de estancia, otros recorridos secundarios y F26/paquete/entrega. OTA aplazada. Los registros anteriores son históricos.

@@ -1,0 +1,21 @@
+{
+  "at_utc": "2026-10-22T04:57:01.177774+00:00",
+  "label": "failed-http-gate",
+  "expected": "asset-fault",
+  "site": "hospitality-release.localhost",
+  "bundle": "/assets/hospitality_suite/dist/js/hospitality.bundle.54UPL6MN.js",
+  "results": {
+    "/api/method/ping": {
+      "status": 200,
+      "sha256": "535e0f7e4562372c2262737b55d250b8a0fc4d3ed4237fc0b23a73b062ad645c"
+    },
+    "/login": {
+      "status": 200,
+      "sha256": "574ae159d7ee560c581545927a753874863516bf5b0007245ea5b37ac9fe9ae0"
+    },
+    "/assets/hospitality_suite/dist/js/hospitality.bundle.54UPL6MN.js": {
+      "status": 404
+    }
+  },
+  "read_only": true
+}

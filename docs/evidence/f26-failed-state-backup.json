@@ -1,0 +1,23 @@
+{
+  "action": "backup-failed",
+  "label": "failed-state-backup",
+  "at_utc": "2026-10-22T04:57:23.679530+00:00",
+  "site": "hospitality-release.localhost",
+  "failed_state_preserved_before_rollback": true,
+  "counts": {
+    "HS Property": 2,
+    "HS Room": 20,
+    "HS Booking": 23,
+    "HS Stay": 5,
+    "HS Charge": 10,
+    "HS Payment": 11,
+    "Sales Invoice": 7,
+    "Payment Entry": 9,
+    "Journal Entry": 2,
+    "GL Entry": 66,
+    "Stock Entry": 13,
+    "Stock Ledger Entry": 19,
+    "File": 5
+  },
+  "external_providers_activated": false
+}

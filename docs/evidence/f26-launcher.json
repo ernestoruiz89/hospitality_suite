@@ -1,0 +1,12 @@
+{
+  "at_utc": "2026-10-22T05:35:35.4342730Z",
+  "command": "powershell ./tools/start_local_hotel.ps1",
+  "exit_code": 0,
+  "existing_managed_pids_preserved": true,
+  "managed_process_count": 4,
+  "native_windows_dns_resolves_origin": false,
+  "health_check_context": "WSL",
+  "http_status": 200,
+  "message": "pong",
+  "no_new_business_operations": true
+}

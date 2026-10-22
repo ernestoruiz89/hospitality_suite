@@ -1,0 +1,11 @@
+{
+  "action": "install-deps",
+  "label": "install-current-deps",
+  "at_utc": "2026-10-22T04:43:49.246390+00:00",
+  "site": "hospitality-release.localhost",
+  "exit_code": 0,
+  "native_log_sha256": "2c8d4a81d7018596cc469cde00999007c279b32d840736374875a66a328e7a07",
+  "revision": "977adb2d6396904da0251e83313230269fb0a5e1",
+  "version": "0.8.9",
+  "external_providers_activated": false
+}

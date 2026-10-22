@@ -118,7 +118,7 @@ bench --site hotel.localhost set-maintenance-mode off
 
 Los patches de la app reconstruyen referencias de líneas y snapshots de asignaciones anteriores, sin reescribir importes contabilizados. Conserve sus registros de ejecución y repita migrate para verificar idempotencia.
 
-Esta sección entrega el procedimiento. Las restauraciones históricas y las restauraciones del sitio sintético durante desarrollo no sustituyen el ensayo final de despliegue/reversión de la versión a entregar; F26/S19-07 conservan esa verificación pendiente.
+El ensayo de este procedimiento en 0.8.9 queda acreditado en [ACTUALIZACION_Y_RECUPERACION_FINAL.md](ACTUALIZACION_Y_RECUPERACION_FINAL.md): actualización, recuperación coordinada de código/base/archivos y segundo despliegue, datos/bytes idénticos y 410 nativas/232 JS. F26 queda verificado; S19-07 conserva paquete definitivo y auditoría/entrega final. Las restauraciones históricas no se presentan como sustituto de este ensayo.
 
 ## Seguridad y monitoreo
 

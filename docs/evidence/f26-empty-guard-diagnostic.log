@@ -1,0 +1,6 @@
+The first empty-site uninstall guard correctly stopped before running uninstall:
+the restored native site contains two File rows. A read-only inspection showed
+only the standard Home and Attachments folders, with no file_url or attachment.
+The guard now explicitly requires those two native folders and zero non-folder
+File records, together with zero app/business/native accounting records. No
+business record or actual file was removed to satisfy this check.

@@ -1,0 +1,9 @@
+{
+  "action": "checkout-previous",
+  "label": "rollback-previous-code",
+  "at_utc": "2026-10-22T04:58:12.118283+00:00",
+  "site": "hospitality-release.localhost",
+  "revision": "be67c92d3b22b70f9a4a17d0841eb829a8e38f02",
+  "source_checkout_unchanged": true,
+  "external_providers_activated": false
+}

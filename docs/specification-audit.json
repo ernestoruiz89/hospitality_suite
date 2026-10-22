@@ -35,9 +35,13 @@
         "docs/evidence/secondary-flows-verification.json",
         "docs/RETENCION_Y_PORTAL_DESDE_PAGES.md",
         "docs/evidence/privacy-portal-task-acceptance.json",
-        "docs/evidence/privacy-portal-verification.json"
+        "docs/evidence/privacy-portal-verification.json",
+        "docs/ACTUALIZACION_Y_RECUPERACION_FINAL.md",
+        "docs/evidence/f26-verification.json",
+        "docs/evidence/f26-clean-install.json",
+        "docs/evidence/final-recovery-native-tests.xml"
       ],
-      "remaining": "Aceptación de Pages completada con la colección acumulada de 22 familias, retención/reintento y portal comprobados, 410 nativas/232 JS. Continúan F26: actualización y recuperación coordinadas de código/base/archivos, paquete final actualizado y entrega. 214 V/cuatro I; la instalación independiente previa no incluye las últimas correcciones. OTA real aplazada por el usuario."
+      "remaining": "F26 verificado: actualización 0.8.8→0.8.9, fallo controlado, respaldo fallido, recuperación coordinada de código/base/archivos y segundo despliegue; instalación limpia actual, 410 nativas/232 JS, datos/archivos preservados y principal actualizado. Quedan paquete definitivo con la documentación/evidencias actuales, auditoría integral de cierre y entrega. 214 V/cuatro I; OTA real aplazada por el usuario."
     },
     {
       "id": "S00-02",
@@ -356,9 +360,13 @@
         "docs/evidence/secondary-flows-verification.json",
         "docs/RETENCION_Y_PORTAL_DESDE_PAGES.md",
         "docs/evidence/privacy-portal-task-acceptance.json",
-        "docs/evidence/privacy-portal-verification.json"
+        "docs/evidence/privacy-portal-verification.json",
+        "docs/ACTUALIZACION_Y_RECUPERACION_FINAL.md",
+        "docs/evidence/f26-verification.json",
+        "docs/evidence/f26-clean-install.json",
+        "docs/evidence/final-recovery-native-tests.xml"
       ],
-      "remaining": "Aceptación de Pages completada con la colección acumulada de 22 familias, retención/reintento y portal comprobados, 410 nativas/232 JS. Continúan F26: actualización y recuperación coordinadas de código/base/archivos, paquete final actualizado y entrega. 214 V/cuatro I; la instalación independiente previa no incluye las últimas correcciones. OTA real aplazada por el usuario."
+      "remaining": "F26 verificado: actualización 0.8.8→0.8.9, fallo controlado, respaldo fallido, recuperación coordinada de código/base/archivos y segundo despliegue; instalación limpia actual, 410 nativas/232 JS, datos/archivos preservados y principal actualizado. Quedan paquete definitivo con la documentación/evidencias actuales, auditoría integral de cierre y entrega. 214 V/cuatro I; OTA real aplazada por el usuario."
     },
     {
       "id": "S01-13",
@@ -4615,7 +4623,11 @@
         "docs/evidence/accounting-upgrade.json",
         "docs/evidence/accounting-ux-restored.json",
         "docs/evidence/accounting-final-state.json",
-        "docs/AUDITORIA_FLUJOS_TRANSACCIONES.md"
+        "docs/AUDITORIA_FLUJOS_TRANSACCIONES.md",
+        "docs/ACTUALIZACION_Y_RECUPERACION_FINAL.md",
+        "docs/evidence/f26-verification.json",
+        "docs/evidence/f26-clean-install.json",
+        "docs/evidence/final-recovery-native-tests.xml"
       ],
       "remaining": ""
     },
@@ -4728,7 +4740,11 @@
         "docs/evidence/release-install-environment.json",
         "docs/evidence/release-install-native-tests.xml",
         "docs/evidence/release-install-concurrency-room.json",
-        "docs/evidence/release-install-concurrency-category.json"
+        "docs/evidence/release-install-concurrency-category.json",
+        "docs/ACTUALIZACION_Y_RECUPERACION_FINAL.md",
+        "docs/evidence/f26-verification.json",
+        "docs/evidence/f26-clean-install.json",
+        "docs/evidence/final-recovery-native-tests.xml"
       ],
       "remaining": ""
     },
@@ -4928,7 +4944,11 @@
       "evidence": [
         "docs/ENTREGABLES_Y_REVISION.md",
         "docs/evidence/delivery-review-guides.json",
-        "docs/evidence/delivery-review-cli.json"
+        "docs/evidence/delivery-review-cli.json",
+        "docs/ACTUALIZACION_Y_RECUPERACION_FINAL.md",
+        "docs/evidence/f26-verification.json",
+        "docs/evidence/f26-clean-install.json",
+        "docs/evidence/final-recovery-native-tests.xml"
       ],
       "remaining": ""
     },
@@ -5237,9 +5257,13 @@
         "docs/evidence/secondary-flows-verification.json",
         "docs/RETENCION_Y_PORTAL_DESDE_PAGES.md",
         "docs/evidence/privacy-portal-task-acceptance.json",
-        "docs/evidence/privacy-portal-verification.json"
+        "docs/evidence/privacy-portal-verification.json",
+        "docs/ACTUALIZACION_Y_RECUPERACION_FINAL.md",
+        "docs/evidence/f26-verification.json",
+        "docs/evidence/f26-clean-install.json",
+        "docs/evidence/final-recovery-native-tests.xml"
       ],
-      "remaining": "Aceptación de Pages completada con la colección acumulada de 22 familias, retención/reintento y portal comprobados, 410 nativas/232 JS. Continúan F26: actualización y recuperación coordinadas de código/base/archivos, paquete final actualizado y entrega. 214 V/cuatro I; la instalación independiente previa no incluye las últimas correcciones. OTA real aplazada por el usuario."
+      "remaining": "F26 verificado: actualización 0.8.8→0.8.9, fallo controlado, respaldo fallido, recuperación coordinada de código/base/archivos y segundo despliegue; instalación limpia actual, 410 nativas/232 JS, datos/archivos preservados y principal actualizado. Quedan paquete definitivo con la documentación/evidencias actuales, auditoría integral de cierre y entrega. 214 V/cuatro I; OTA real aplazada por el usuario."
     },
     {
       "id": "S19-08",
@@ -5274,9 +5298,13 @@
         "docs/evidence/secondary-flows-verification.json",
         "docs/RETENCION_Y_PORTAL_DESDE_PAGES.md",
         "docs/evidence/privacy-portal-task-acceptance.json",
-        "docs/evidence/privacy-portal-verification.json"
+        "docs/evidence/privacy-portal-verification.json",
+        "docs/ACTUALIZACION_Y_RECUPERACION_FINAL.md",
+        "docs/evidence/f26-verification.json",
+        "docs/evidence/f26-clean-install.json",
+        "docs/evidence/final-recovery-native-tests.xml"
       ],
-      "remaining": "Aceptación de Pages completada con la colección acumulada de 22 familias, retención/reintento y portal comprobados, 410 nativas/232 JS. Continúan F26: actualización y recuperación coordinadas de código/base/archivos, paquete final actualizado y entrega. 214 V/cuatro I; la instalación independiente previa no incluye las últimas correcciones. OTA real aplazada por el usuario."
+      "remaining": "F26 verificado: actualización 0.8.8→0.8.9, fallo controlado, respaldo fallido, recuperación coordinada de código/base/archivos y segundo despliegue; instalación limpia actual, 410 nativas/232 JS, datos/archivos preservados y principal actualizado. Quedan paquete definitivo con la documentación/evidencias actuales, auditoría integral de cierre y entrega. 214 V/cuatro I; OTA real aplazada por el usuario."
     },
     {
       "id": "S19-09",

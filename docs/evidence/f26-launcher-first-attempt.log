@@ -1,0 +1,5 @@
+The first manual Windows launcher test failed before configuring aliases or
+starting a process: wslpath received the Windows path with stripped backslashes,
+and the wrapper attempted Trim() on its missing output. The launcher now uses
+WSL --exec, forward slashes for path conversion, and an explicit missing-output
+guard. The first attempt did not change the site's database or process state.

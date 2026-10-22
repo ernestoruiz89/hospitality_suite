@@ -4,6 +4,7 @@ All SQL, configuration, credentials, original media and failed-state artifacts
 remain private. Only counts, hashes, revisions and command receipts are exported.
 """
 import argparse
+import fcntl
 from datetime import datetime, timezone
 import hashlib
 import importlib.metadata
@@ -44,6 +45,9 @@ assert config['db_name']=='hospitality_release' and config.get('pause_scheduler'
 assert config.get('hospitality_integration_test_site')
 owner=pwd.getpwnam('frappe')
 STATE.mkdir(mode=0o700,exist_ok=True);os.chown(STATE,owner.pw_uid,owner.pw_gid)
+lock=STATE/'operation.lock'
+lock_handle=lock.open('a+');lock.chmod(0o600);os.chown(lock,owner.pw_uid,owner.pw_gid)
+fcntl.flock(lock_handle,fcntl.LOCK_EX|fcntl.LOCK_NB)
 git=lambda *args:subprocess.check_output(['git',*args],cwd=BENCH/'apps/hospitality_suite',text=True).strip()
 sha=lambda path:hashlib.sha256(path.read_bytes()).hexdigest()
 
@@ -187,6 +191,22 @@ elif args.action in ['migrate','build','install-deps','uninstall-clean-app','ins
     stopped()
     if args.action in ['uninstall-clean-app','install-clean-app']:
         assert state.get('clean_restored') and not state.get('original_restored')
+        assert git('rev-parse','HEAD')==state['current_revision'] and hospitality_suite.__version__=='0.8.9'
+        os.chdir(BENCH/'sites');frappe.init(site=SITE,sites_path=str(BENCH/'sites'));frappe.connect()
+        try:
+            if args.action=='uninstall-clean-app':
+                counts={dt:frappe.db.count(dt) for dt,spec in SCHEMA.items() if not spec.get('child')}
+                counts.update({dt:frappe.db.count(dt) for dt in ['Company','Account','Item','File','Customer','Supplier',
+                    'Sales Invoice','Payment Entry','Journal Entry','GL Entry','Stock Entry','Stock Reconciliation']})
+                folders=frappe.get_all('File',filters={'is_folder':1},fields=['file_name','file_url','attached_to_doctype'])
+                assert {row.file_name for row in folders}=={'Home','Attachments'}
+                assert all(not row.file_url and not row.attached_to_doctype for row in folders)
+                counts['File']=frappe.db.count('File',{'is_folder':0})
+                assert not any(counts.values()),'Uninstall is restricted to the verified empty restore'
+                proof['empty_business_counts_before_uninstall']=counts
+                proof['native_framework_File_folders']=len(folders)
+            else:assert not frappe.db.exists('DocType','HS Property')
+        finally:frappe.db.rollback();frappe.destroy()
     cmd=(['/home/frappe/.local/bin/bench','--site',SITE,'uninstall-app','hospitality_suite','--yes','--no-backup'] if args.action=='uninstall-clean-app'
         else ['/home/frappe/.local/bin/bench','--site',SITE,'install-app','hospitality_suite'] if args.action=='install-clean-app'
         else [str(BENCH/'env/bin/python'),'-m','pip','install','--no-build-isolation','--no-deps','-e','apps/hospitality_suite[test]'] if args.action=='install-deps'
@@ -228,6 +248,10 @@ elif args.action=='restore-baseline':
     assert 'failed_backup' in state
     proof.update(restore(args.label,state['baseline_backup'],TARGET/'private/backups',state['baseline_config']))
 elif args.action=='restore-original':
+    native=json.loads((ROOT/'docs/evidence/final-recovery-native-run.json').read_text())
+    assert native['tests']==410 and not any(native[k] for k in ['exit_code','errors','failures','skipped'])
+    state['native_test_files']=tree(TARGET)
+    proof['native_test_physical_files_archived']=len(state['native_test_files'])
     proof.update(restore(args.label,state['original_backup'],TARGET/'private/backups',state['original_config']))
     if (STATE/'original-demo-users.json').exists():
         shutil.copyfile(STATE/'original-demo-users.json',TARGET/'private/hospitality-demo-users.json')
@@ -245,6 +269,12 @@ elif args.action=='check-original':
     current=fingerprint();assert current==state['original']
     proof.update(original_release_rows_and_bytes_restored=True,original_physical_files=len(current['physical_files']),counts=current['counts'],
         current_revision=state['current_revision'],current_version=hospitality_suite.__version__)
+    os.chdir(BENCH/'sites');frappe.init(site=SITE,sites_path=str(BENCH/'sites'));frappe.connect()
+    try:
+        versions={r.app_name:r.app_version for r in frappe.get_single('Installed Applications').installed_applications}
+        assert versions=={'frappe':'16.52.0','erpnext':'16.51.1','hospitality_suite':'0.8.9'}
+        proof['registered_versions']=versions
+    finally:frappe.db.rollback();frappe.destroy()
 write_private(DATA,state)
 proof.update(external_providers_activated=False)
 output.write_text(json.dumps(proof,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')

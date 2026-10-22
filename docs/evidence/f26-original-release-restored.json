@@ -1,0 +1,31 @@
+{
+  "action": "check-original",
+  "label": "original-release-restored",
+  "at_utc": "2026-10-22T05:24:49.034651+00:00",
+  "site": "hospitality-release.localhost",
+  "original_release_rows_and_bytes_restored": true,
+  "original_physical_files": 21,
+  "counts": {
+    "HS Property": 2,
+    "HS Room": 20,
+    "HS Booking": 3,
+    "HS Stay": 0,
+    "HS Charge": 0,
+    "HS Payment": 0,
+    "Sales Invoice": 0,
+    "Payment Entry": 0,
+    "Journal Entry": 0,
+    "GL Entry": 2,
+    "Stock Entry": 1,
+    "Stock Ledger Entry": 1,
+    "File": 2
+  },
+  "current_revision": "977adb2d6396904da0251e83313230269fb0a5e1",
+  "current_version": "0.8.9",
+  "registered_versions": {
+    "frappe": "16.52.0",
+    "erpnext": "16.51.1",
+    "hospitality_suite": "0.8.9"
+  },
+  "external_providers_activated": false
+}

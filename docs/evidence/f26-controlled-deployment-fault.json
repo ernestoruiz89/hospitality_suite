@@ -1,0 +1,12 @@
+{
+  "action": "inject-asset-fault",
+  "label": "controlled-deployment-fault",
+  "at_utc": "2026-10-22T04:54:31.852764+00:00",
+  "site": "hospitality-release.localhost",
+  "controlled_asset_fault": true,
+  "bundle": "/assets/hospitality_suite/dist/js/hospitality.bundle.54UPL6MN.js",
+  "synthetic_DB_and_private_file_probe": true,
+  "no_new_operational_financial_activity": true,
+  "failed_asset_bytes_preserved": true,
+  "external_providers_activated": false
+}

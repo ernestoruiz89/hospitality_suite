@@ -1,0 +1,19 @@
+{
+  "changed_compared_tables": [
+    "File",
+    "HS Property",
+    "Version"
+  ],
+  "financial_and_operational_counts_preserved": true,
+  "original_physical_files": 13,
+  "failed_state_physical_files": 15,
+  "original_private_files": 2,
+  "failed_state_private_files": 3,
+  "all_original_file_bytes_preserved": true,
+  "new_physical_probe_files": [
+    "private/files/sonda-f26-posterior-al-respaldo.txt",
+    "private/files/sonda-f26-posterior-al-respaldo1ffd6c.txt"
+  ],
+  "new_File_records": 1,
+  "new_synthetic_private_File_url": "/private/files/sonda-f26-posterior-al-respaldo1ffd6c.txt"
+}

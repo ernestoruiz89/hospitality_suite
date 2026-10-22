@@ -1,0 +1,1402 @@
+TAP version 13
+# Subtest: audit detail separates operation and values, escapes text and expands unchanged fields
+ok 1 - audit detail separates operation and values, escapes text and expands unchanged fields
+  ---
+  duration_ms: 4.024183
+  type: 'test'
+  ...
+# Subtest: legacy audit has a clear missing-data explanation and never renders arbitrary payload
+ok 2 - legacy audit has a clear missing-data explanation and never renders arbitrary payload
+  ---
+  duration_ms: 2.544192
+  type: 'test'
+  ...
+# Subtest: a response from a property that is no longer selected does not open a dialog
+ok 3 - a response from a property that is no longer selected does not open a dialog
+  ---
+  duration_ms: 1.404671
+  type: 'test'
+  ...
+# Subtest: review pages contain at most 25 saved records and detail buttons open the matching event
+ok 4 - review pages contain at most 25 saved records and detail buttons open the matching event
+  ---
+  duration_ms: 2.632553
+  type: 'test'
+  ...
+# Subtest: empty review remains readable without generating a mutation
+ok 5 - empty review remains readable without generating a mutation
+  ---
+  duration_ms: 1.881434
+  type: 'test'
+  ...
+# Subtest: the audit report exposes a readable detail action for the exact event
+ok 6 - the audit report exposes a readable detail action for the exact event
+  ---
+  duration_ms: 3.898429
+  type: 'test'
+  ...
+# Subtest: saved close review opens its frozen event list without reading current events
+ok 7 - saved close review opens its frozen event list without reading current events
+  ---
+  duration_ms: 3.505317
+  type: 'test'
+  ...
+# Subtest: each close execution opens its own captured summary instead of the current close document
+ok 8 - each close execution opens its own captured summary instead of the current close document
+  ---
+  duration_ms: 2.910086
+  type: 'test'
+  ...
+# Subtest: a read-only report user does not start preparation or submit a close mutation
+ok 9 - a read-only report user does not start preparation or submit a close mutation
+  ---
+  duration_ms: 2.150004
+  type: 'test'
+  ...
+# Subtest: audit tabs supply the native Frappe parent context without duplicate ids between dialogs
+ok 10 - audit tabs supply the native Frappe parent context without duplicate ids between dialogs
+  ---
+  duration_ms: 2.574523
+  type: 'test'
+  ...
+# Subtest: quantity form has five operational inputs, inline results and an explicit query action
+ok 11 - quantity form has five operational inputs, inline results and an explicit query action
+  ---
+  duration_ms: 7.644549
+  type: 'test'
+  ...
+# Subtest: room click opens review with the accepted dates, category, people and full requested quantity, without a mutation
+ok 12 - room click opens review with the accepted dates, category, people and full requested quantity, without a mutation
+  ---
+  duration_ms: 4.287671
+  type: 'test'
+  ...
+# Subtest: room handoff ignores changed filters, a pending requery, old property, closed modal, invalid index and insufficient capacity
+ok 13 - room handoff ignores changed filters, a pending requery, old property, closed modal, invalid index and insufficient capacity
+  ---
+  duration_ms: 10.928424
+  type: 'test'
+  ...
+# Subtest: zero capacity is not a network error and a category-only fit warns about physical assignment
+ok 14 - zero capacity is not a network error and a category-only fit warns about physical assignment
+  ---
+  duration_ms: 1.901904
+  type: 'test'
+  ...
+# Subtest: edited filters, closed dialog and property change discard stale availability replies
+ok 15 - edited filters, closed dialog and property change discard stale availability replies
+  ---
+  duration_ms: 2.025457
+  type: 'test'
+  ...
+# Subtest: query failures and wrong response context never appear as zero capacity
+ok 16 - query failures and wrong response context never appear as zero capacity
+  ---
+  duration_ms: 2.121673
+  type: 'test'
+  ...
+# Subtest: interval contrast keeps dates and current cleaning distinct, hides internal names and escapes labels even at zero capacity
+ok 17 - interval contrast keeps dates and current cleaning distinct, hides internal names and escapes labels even at zero capacity
+  ---
+  duration_ms: 1.704003
+  type: 'test'
+  ...
+# Subtest: all authoritative interval states have written availability and fixed semantic colors independent of current cleaning
+ok 18 - all authoritative interval states have written availability and fixed semantic colors independent of current cleaning
+  ---
+  duration_ms: 1.572743
+  type: 'test'
+  ...
+# Subtest: unknown or absent statuses remain neutral and cannot inject style classes or markup
+ok 19 - unknown or absent statuses remain neutral and cannot inject style classes or markup
+  ---
+  duration_ms: 1.841615
+  type: 'test'
+  ...
+# Subtest: green candidate cards keep reservation actions and explicit labels while insufficient group capacity stays informational
+ok 20 - green candidate cards keep reservation actions and explicit labels while insufficient group capacity stays informational
+  ---
+  duration_ms: 7.591911
+  type: 'test'
+  ...
+# Subtest: a future reservation has its own arrival description without claiming the room is occupied
+ok 21 - a future reservation has its own arrival description without claiming the room is occupied
+  ---
+  duration_ms: 3.045355
+  type: 'test'
+  ...
+# Subtest: operational rows use human labels and escape data while action identities remain stable
+ok 22 - operational rows use human labels and escape data while action identities remain stable
+  ---
+  duration_ms: 1.627366
+  type: 'test'
+  ...
+# Subtest: an older board success or failure cannot replace a newer selection or clear its busy state
+ok 23 - an older board success or failure cannot replace a newer selection or clear its busy state
+  ---
+  duration_ms: 6.658503
+  type: 'test'
+  ...
+# Subtest: pagination preserves zero and context mismatches show an actionable error instead of another property data
+ok 24 - pagination preserves zero and context mismatches show an actionable error instead of another property data
+  ---
+  duration_ms: 1.779468
+  type: 'test'
+  ...
+# Subtest: a lost draft response retries exactly once with its original payload before saving later edits
+ok 25 - a lost draft response retries exactly once with its original payload before saving later edits
+  ---
+  duration_ms: 9.416177
+  type: 'test'
+  ...
+# Subtest: retrying unchanged partial values does not issue a second save and preview settles only the old intent
+ok 26 - retrying unchanged partial values does not issue a second save and preview settles only the old intent
+  ---
+  duration_ms: 2.084119
+  type: 'test'
+  ...
+# Subtest: a business rejection allows corrected values while preserving the existing version
+ok 27 - a business rejection allows corrected values while preserving the existing version
+  ---
+  duration_ms: 3.634014
+  type: 'test'
+  ...
+# Subtest: unchanged DST wall times preserve both explicit folds and edited/cleared dates use the new value
+ok 28 - unchanged DST wall times preserve both explicit folds and edited/cleared dates use the new value
+  ---
+  duration_ms: 2.305578
+  type: 'test'
+  ...
+# Subtest: resume keeps missing dates empty, scopes links and offers save separately from price review
+ok 29 - resume keeps missing dates empty, scopes links and offers save separately from price review
+  ---
+  duration_ms: 5.684949
+  type: 'test'
+  ...
+# Subtest: draft cards show missing data and unquoted price without leaking identifiers or mixing current bookings
+ok 30 - draft cards show missing data and unquoted price without leaking identifiers or mixing current bookings
+  ---
+  duration_ms: 4.348161
+  type: 'test'
+  ...
+# Subtest: availability prefill reaches the editor without saving and keeps accepted offsets for price review
+ok 31 - availability prefill reaches the editor without saving and keeps accepted offsets for price review
+  ---
+  duration_ms: 2.26041
+  type: 'test'
+  ...
+# Subtest: entered booking opens a complete Spanish summary instead of the opaque identifier
+ok 32 - entered booking opens a complete Spanish summary instead of the opaque identifier
+  ---
+  duration_ms: 14.331141
+  type: 'test'
+  ...
+# Subtest: confirmed and partially entered bookings keep the same summary above their available actions
+ok 33 - confirmed and partially entered bookings keep the same summary above their available actions
+  ---
+  duration_ms: 9.378238
+  type: 'test'
+  ...
+# Subtest: read-only roles see the summary, stale property replies are ignored and account links respect permissions
+ok 34 - read-only roles see the summary, stale property replies are ignored and account links respect permissions
+  ---
+  duration_ms: 3.739842
+  type: 'test'
+  ...
+# Subtest: calendar clears the previous range, announces loading and queries an explicit property timezone
+ok 35 - calendar clears the previous range, announces loading and queries an explicit property timezone
+  ---
+  duration_ms: 42.801801
+  type: 'test'
+  ...
+# Subtest: an older calendar response or error cannot replace a more recent date or clear its busy state
+ok 36 - an older calendar response or error cannot replace a more recent date or clear its busy state
+  ---
+  duration_ms: 4.438185
+  type: 'test'
+  ...
+# Subtest: changing the property invalidates success before it can combine rows with the new room list
+ok 37 - changing the property invalidates success before it can combine rows with the new room list
+  ---
+  duration_ms: 2.272682
+  type: 'test'
+  ...
+# Subtest: invalid or empty dates invalidate in-flight work and identify the date field without querying
+ok 38 - invalid or empty dates invalidate in-flight work and identify the date field without querying
+  ---
+  duration_ms: 5.385138
+  type: 'test'
+  ...
+# Subtest: network failure and malformed data display retry guidance instead of an empty available calendar
+ok 39 - network failure and malformed data display retry guidance instead of an empty available calendar
+  ---
+  duration_ms: 6.135073
+  type: 'test'
+  ...
+# Subtest: weekday headings follow the user language, default to Spanish, and safely recover from an invalid locale
+ok 40 - weekday headings follow the user language, default to Spanish, and safely recover from an invalid locale
+  ---
+  duration_ms: 4.925341
+  type: 'test'
+  ...
+# Subtest: catalogue display aliases keep immutable submitted keys and disambiguate equal visible names
+ok 41 - catalogue display aliases keep immutable submitted keys and disambiguate equal visible names
+  ---
+  duration_ms: 4.757246
+  type: 'test'
+  ...
+# Subtest: catalogue keeps human names and immutable item keys, including duplicate descriptions
+ok 42 - catalogue keeps human names and immutable item keys, including duplicate descriptions
+  ---
+  duration_ms: 2.129183
+  type: 'test'
+  ...
+# Subtest: outdated catalogue responses cannot overwrite results or authorize a failed search
+ok 43 - outdated catalogue responses cannot overwrite results or authorize a failed search
+  ---
+  duration_ms: 3.180498
+  type: 'test'
+  ...
+# Subtest: historical close reads only the saved financial values, with distinct date bases
+ok 44 - historical close reads only the saved financial values, with distinct date bases
+  ---
+  duration_ms: 4.517373
+  type: 'test'
+  ...
+# Subtest: close confirmation carries the reviewed digest and blockers disable confirmation
+ok 45 - close confirmation carries the reviewed digest and blockers disable confirmation
+  ---
+  duration_ms: 7.501243
+  type: 'test'
+  ...
+# Subtest: close groups with amounts open while zero groups retain expandable details
+ok 46 - close groups with amounts open while zero groups retain expandable details
+  ---
+  duration_ms: 1.640762
+  type: 'test'
+  ...
+# Subtest: close puts readable operational dates and pending work before indicators without rendering technical references
+ok 47 - close puts readable operational dates and pending work before indicators without rendering technical references
+  ---
+  duration_ms: 3.810087
+  type: 'test'
+  ...
+# Subtest: saved pending rows paginate in groups of 25 and open the captured account only in the original property
+ok 48 - saved pending rows paginate in groups of 25 and open the captured account only in the original property
+  ---
+  duration_ms: 6.095187
+  type: 'test'
+  ...
+# Subtest: legacy snapshots explain missing descriptions and do not echo hashes or fetch current documents
+ok 49 - legacy snapshots explain missing descriptions and do not echo hashes or fetch current documents
+  ---
+  duration_ms: 1.806852
+  type: 'test'
+  ...
+# Subtest: read-only history hides account actions and unapproved routes while keeping reconciliation a read action
+ok 50 - read-only history hides account actions and unapproved routes while keeping reconciliation a read action
+  ---
+  duration_ms: 3.058765
+  type: 'test'
+  ...
+# Subtest: only the live review refreshes and each refresh remains bound to its property; saved summaries do not mutate
+ok 51 - only the live review refreshes and each refresh remains bound to its property; saved summaries do not mutate
+  ---
+  duration_ms: 3.681648
+  type: 'test'
+  ...
+# Subtest: an incorrect device clock and forward/backward clock changes never alter elapsed server time or money
+ok 52 - an incorrect device clock and forward/backward clock changes never alter elapsed server time or money
+  ---
+  duration_ms: 8.997314
+  type: 'test'
+  ...
+# Subtest: a fresh page reconstructs the same deadline from a new server reference rather than restarting its duration
+ok 53 - a fresh page reconstructs the same deadline from a new server reference rather than restarting its duration
+  ---
+  duration_ms: 6.112
+  type: 'test'
+  ...
+# Subtest: countdown uses the system timezone of stored server timestamps and preserves precise deadline boundaries
+ok 54 - countdown uses the system timezone of stored server timestamps and preserves precise deadline boundaries
+  ---
+  duration_ms: 2.023241
+  type: 'test'
+  ...
+# Subtest: near departure is text, begins exactly one hour before the server deadline and becomes exceeded without changing money
+ok 55 - near departure is text, begins exactly one hour before the server deadline and becomes exceeded without changing money
+  ---
+  duration_ms: 5.675393
+  type: 'test'
+  ...
+# Subtest: arrival labels use the server clock, distinguish imminent and overdue reservations, and update without a mutation
+ok 56 - arrival labels use the server clock, distinguish imminent and overdue reservations, and update without a mutation
+  ---
+  duration_ms: 3.522817
+  type: 'test'
+  ...
+# Subtest: missing or invalid references display an update state rather than a false amount of time
+ok 57 - missing or invalid references display an update state rather than a false amount of time
+  ---
+  duration_ms: 4.584595
+  type: 'test'
+  ...
+# Subtest: resuming a stale visible page requests a fresh server reference and skips hidden or offline surfaces
+ok 58 - resuming a stale visible page requests a fresh server reference and skips hidden or offline surfaces
+  ---
+  duration_ms: 4.199022
+  type: 'test'
+  ...
+# Subtest: returning from a hidden page refreshes even when the device suspended its monotonic timer
+ok 59 - returning from a hidden page refreshes even when the device suspended its monotonic timer
+  ---
+  duration_ms: 1.760407
+  type: 'test'
+  ...
+# Subtest: an obsolete bootstrap response cannot replace the newer property clock
+ok 60 - an obsolete bootstrap response cannot replace the newer property clock
+  ---
+  duration_ms: 2.443345
+  type: 'test'
+  ...
+# Subtest: a fresh page resolves an inaccessible saved property before requesting its operational snapshot
+ok 61 - a fresh page resolves an inaccessible saved property before requesting its operational snapshot
+  ---
+  duration_ms: 4.331358
+  type: 'test'
+  ...
+# Subtest: full credit reviews net money and escaped labels before one stable intention posts
+ok 62 - full credit reviews net money and escaped labels before one stable intention posts
+  ---
+  duration_ms: 6.730092
+  type: 'test'
+  ...
+# Subtest: partial return sends selected source lines, requotes changed quantities and preserves its intention
+ok 63 - partial return sends selected source lines, requotes changed quantities and preserves its intention
+  ---
+  duration_ms: 6.263733
+  type: 'test'
+  ...
+# Subtest: additional receipts show remaining credit, dates and native documents without opaque source keys
+ok 64 - additional receipts show remaining credit, dates and native documents without opaque source keys
+  ---
+  duration_ms: 1.82661
+  type: 'test'
+  ...
+# Subtest: queued stay-panel activations prepare one child action through the Page coordinator
+ok 65 - queued stay-panel activations prepare one child action through the Page coordinator
+  ---
+  duration_ms: 9.99284
+  type: 'test'
+  ...
+# Subtest: stay-panel transport errors recover once and a reopened panel permits a deliberate retry
+ok 66 - stay-panel transport errors recover once and a reopened panel permits a deliberate retry
+  ---
+  duration_ms: 6.437444
+  type: 'test'
+  ...
+# Subtest: an offline stay panel remains open and its native close has no fading overlay
+ok 67 - an offline stay panel remains open and its native close has no fading overlay
+  ---
+  duration_ms: 2.183481
+  type: 'test'
+  ...
+# Subtest: stay-panel preparation remains announced outside the hidden panel and clears on success or failure
+ok 68 - stay-panel preparation remains announced outside the hidden panel and clears on success or failure
+  ---
+  duration_ms: 5.978945
+  type: 'test'
+  ...
+# Subtest: page activity covers a committed operation through its refresh, including actions appended after render
+ok 69 - page activity covers a committed operation through its refresh, including actions appended after render
+  ---
+  duration_ms: 8.737349
+  type: 'test'
+  ...
+# Subtest: double activation of an asynchronous detail opens once and a pending invalidation runs after the action ends
+ok 70 - double activation of an asynchronous detail opens once and a pending invalidation runs after the action ends
+  ---
+  duration_ms: 2.45103
+  type: 'test'
+  ...
+# Subtest: buttons created inside a native dialog while an action is pending unlock when that action finishes and follow offline recovery
+ok 71 - buttons created inside a native dialog while an action is pending unlock when that action finishes and follow offline recovery
+  ---
+  duration_ms: 5.076694
+  type: 'test'
+  ...
+# Subtest: a Page activity update affects its own dialog actions and does not unlock another Page or native dialog controls
+ok 72 - a Page activity update affects its own dialog actions and does not unlock another Page or native dialog controls
+  ---
+  duration_ms: 3.947831
+  type: 'test'
+  ...
+# Subtest: native HTML reinsertion after action completion uses current activity rather than the stale disabled markup
+ok 73 - native HTML reinsertion after action completion uses current activity rather than the stale disabled markup
+  ---
+  duration_ms: 2.319011
+  type: 'test'
+  ...
+# Subtest: action preparation is announced next to the clicked control and its local status is removed on completion or failure
+ok 74 - action preparation is announced next to the clicked control and its local status is removed on completion or failure
+  ---
+  duration_ms: 2.227104
+  type: 'test'
+  ...
+# Subtest: an action failure restores enabled controls, keeps one native error and permits a deliberate retry
+ok 75 - an action failure restores enabled controls, keeps one native error and permits a deliberate retry
+  ---
+  duration_ms: 2.418604
+  type: 'test'
+  ...
+# Subtest: only the latest load releases the page and invalidations arriving during a load are not lost
+ok 76 - only the latest load releases the page and invalidations arriving during a load are not lost
+  ---
+  duration_ms: 2.136318
+  type: 'test'
+  ...
+# Subtest: booking descriptions use people and dates while respecting discreet mode and preserving keys
+ok 77 - booking descriptions use people and dates while respecting discreet mode and preserving keys
+  ---
+  duration_ms: 1.849064
+  type: 'test'
+  ...
+# Subtest: report scope changes ignore old options and keep a failed scope unqueryable
+ok 78 - report scope changes ignore old options and keep a failed scope unqueryable
+  ---
+  duration_ms: 8.158832
+  type: 'test'
+  ...
+# Subtest: an older success cannot overwrite a newer property response
+ok 79 - an older success cannot overwrite a newer property response
+  ---
+  duration_ms: 3.092782
+  type: 'test'
+  ...
+# Subtest: reconciliation submits opaque visit keys with readable labels and clears them on scope changes
+ok 80 - reconciliation submits opaque visit keys with readable labels and clears them on scope changes
+  ---
+  duration_ms: 3.973619
+  type: 'test'
+  ...
+# Subtest: an old failure cannot clear busy or replace a newer result with an error
+ok 81 - an old failure cannot clear busy or replace a newer result with an error
+  ---
+  duration_ms: 2.224074
+  type: 'test'
+  ...
+# Subtest: an invalidation during a failed mutation is refreshed once the request ends
+ok 82 - an invalidation during a failed mutation is refreshed once the request ends
+  ---
+  duration_ms: 1.709122
+  type: 'test'
+  ...
+# Subtest: dialog keeps numeric edits across row refreshes and leaves untouched hidden rows alone
+ok 83 - dialog keeps numeric edits across row refreshes and leaves untouched hidden rows alone
+  ---
+  duration_ms: 3.600551
+  type: 'test'
+  ...
+# Subtest: a required checklist blocks submission and requests error focus while zero amounts and draft saves remain valid
+ok 84 - a required checklist blocks submission and requests error focus while zero amounts and draft saves remain valid
+  ---
+  duration_ms: 2.443692
+  type: 'test'
+  ...
+# Subtest: the common dialog validates before native submission and retains one in-flight request for a safe retry
+ok 85 - the common dialog validates before native submission and retains one in-flight request for a safe retry
+  ---
+  duration_ms: 6.932582
+  type: 'test'
+  ...
+# Subtest: numeric bounds stop an original decimal draft before native parsing can silently turn it into a valid integer
+ok 86 - numeric bounds stop an original decimal draft before native parsing can silently turn it into a valid integer
+  ---
+  duration_ms: 7.284701
+  type: 'test'
+  ...
+# Subtest: expanded row edits survive native refresh and collapse without a stale inline editor overwriting them
+ok 87 - expanded row edits survive native refresh and collapse without a stale inline editor overwriting them
+  ---
+  duration_ms: 2.467399
+  type: 'test'
+  ...
+# Subtest: row integer drafts survive collapse and cannot be truncated by confirmation or a partial save
+ok 88 - row integer drafts survive collapse and cannot be truncated by confirmation or a partial save
+  ---
+  duration_ms: 4.23298
+  type: 'test'
+  ...
+# Subtest: dependency reads keep a just-typed required price and its caret before native blur, including zero
+ok 89 - dependency reads keep a just-typed required price and its caret before native blur, including zero
+  ---
+  duration_ms: 2.501776
+  type: 'test'
+  ...
+# Subtest: a required checkbox keeps its just-selected state while a native message retains focus
+ok 90 - a required checkbox keeps its just-selected state while a native message retains focus
+  ---
+  duration_ms: 1.751265
+  type: 'test'
+  ...
+# Subtest: a fast field or tab change cannot erase a required name before native debounced commit
+ok 91 - a fast field or tab change cannot erase a required name before native debounced commit
+  ---
+  duration_ms: 2.066642
+  type: 'test'
+  ...
+# Subtest: native dependency changes to hidden, disabled or replaced controls are preserved
+ok 92 - native dependency changes to hidden, disabled or replaced controls are preserved
+  ---
+  duration_ms: 1.797506
+  type: 'test'
+  ...
+# Subtest: native read errors remain errors and leave the active draft intact
+ok 93 - native read errors remain errors and leave the active draft intact
+  ---
+  duration_ms: 3.184504
+  type: 'test'
+  ...
+# Subtest: a partly arrived group exposes its remaining numbered request and valid actions
+ok 94 - a partly arrived group exposes its remaining numbered request and valid actions
+  ---
+  duration_ms: 4.811212
+  type: 'test'
+  ...
+# Subtest: partial dialog submission bypasses required-field checks and still captures typed numeric values
+ok 95 - partial dialog submission bypasses required-field checks and still captures typed numeric values
+  ---
+  duration_ms: 3.318435
+  type: 'test'
+  ...
+# Subtest: a native business rejection keeps its server message; a lost response gets recovery guidance
+ok 96 - a native business rejection keeps its server message; a lost response gets recovery guidance
+  ---
+  duration_ms: 3.996002
+  type: 'test'
+  ...
+# Subtest: property wall-clock controls preserve native single-digit hours
+ok 97 - property wall-clock controls preserve native single-digit hours
+  ---
+  duration_ms: 2.66958
+  type: 'test'
+  ...
+# Subtest: penalty policies reject invalid percentages beside their own field while fixed amounts and drafts keep their meaning
+ok 98 - penalty policies reject invalid percentages beside their own field while fixed amounts and drafts keep their meaning
+  ---
+  duration_ms: 9.060078
+  type: 'test'
+  ...
+# Subtest: tabbed forms preserve every original control, callback, required flag and future extension once
+ok 99 - tabbed forms preserve every original control, callback, required flag and future extension once
+  ---
+  duration_ms: 3.230715
+  type: 'test'
+  ...
+# Subtest: hotel rates keep people charges while block/hour options are reserved for motel mode
+ok 100 - hotel rates keep people charges while block/hour options are reserved for motel mode
+  ---
+  duration_ms: 2.081595
+  type: 'test'
+  ...
+# Subtest: cash and refund controls follow the selected intent without changing wire values or hiding the amount
+ok 101 - cash and refund controls follow the selected intent without changing wire values or hiding the amount
+  ---
+  duration_ms: 3.294345
+  type: 'test'
+  ...
+# Subtest: missing required controls reveal their tab while zero and hidden values do not become false errors
+ok 102 - missing required controls reveal their tab while zero and hidden values do not become false errors
+  ---
+  duration_ms: 5.238396
+  type: 'test'
+  ...
+# Subtest: a mandatory unchecked checklist is the first error while a numeric zero is still valid
+ok 103 - a mandatory unchecked checklist is the first error while a numeric zero is still valid
+  ---
+  duration_ms: 1.65511
+  type: 'test'
+  ...
+# Subtest: payment headings and review actions distinguish receiving cash from returning it
+ok 104 - payment headings and review actions distinguish receiving cash from returning it
+  ---
+  duration_ms: 2.559381
+  type: 'test'
+  ...
+# Subtest: tab selection has an explicit accessible state after navigation and required-field recovery
+ok 105 - tab selection has an explicit accessible state after navigation and required-field recovery
+  ---
+  duration_ms: 2.87119
+  type: 'test'
+  ...
+# Subtest: a review hides and makes its parent inert, then restores its unchanged draft on cancellation
+ok 106 - a review hides and makes its parent inert, then restores its unchanged draft on cancellation
+  ---
+  duration_ms: 1.972182
+  type: 'test'
+  ...
+# Subtest: inline required messages retain zero amounts and skip hidden, dependent or read-only fields
+ok 107 - inline required messages retain zero amounts and skip hidden, dependent or read-only fields
+  ---
+  duration_ms: 3.874417
+  type: 'test'
+  ...
+# Subtest: table errors identify the row and column without changing row identity, values or optional fields
+ok 108 - table errors identify the row and column without changing row identity, values or optional fields
+  ---
+  duration_ms: 2.729002
+  type: 'test'
+  ...
+# Subtest: native invalid flags and incomplete browser dates cannot pass as complete optional values
+ok 109 - native invalid flags and incomplete browser dates cannot pass as complete optional values
+  ---
+  duration_ms: 1.936842
+  type: 'test'
+  ...
+# Subtest: stay intervals require a later end while report and rate date ranges include the same final day
+ok 110 - stay intervals require a later end while report and rate date ranges include the same final day
+  ---
+  duration_ms: 2.223051
+  type: 'test'
+  ...
+# Subtest: inline errors preserve native descriptions and invalid markers, use text, and do not accumulate on retry
+ok 111 - inline errors preserve native descriptions and invalid markers, use text, and do not accumulate on retry
+  ---
+  duration_ms: 2.041988
+  type: 'test'
+  ...
+# Subtest: editing clears corrected messages after the first attempt without moving focus or validating a busy draft
+ok 112 - editing clears corrected messages after the first attempt without moving focus or validating a busy draft
+  ---
+  duration_ms: 2.37197
+  type: 'test'
+  ...
+# Subtest: each dialog owns its accessible messages and processing state without declaring server success
+ok 113 - each dialog owns its accessible messages and processing state without declaring server success
+  ---
+  duration_ms: 5.781105
+  type: 'test'
+  ...
+# Subtest: explicit positive integer bounds reject zero, fractions, negatives and malformed drafts without affecting valid zero amounts
+ok 114 - explicit positive integer bounds reject zero, fractions, negatives and malformed drafts without affecting valid zero amounts
+  ---
+  duration_ms: 4.371879
+  type: 'test'
+  ...
+# Subtest: bounds inspect the saved raw draft before native integer truncation and keep that mistake visible without writing the model
+ok 115 - bounds inspect the saved raw draft before native integer truncation and keep that mistake visible without writing the model
+  ---
+  duration_ms: 1.895559
+  type: 'test'
+  ...
+# Subtest: bounds use the control native expression/locale evaluator and leave optional blanks, read-only fields and unrelated integers alone
+ok 116 - bounds use the control native expression/locale evaluator and leave optional blanks, read-only fields and unrelated integers alone
+  ---
+  duration_ms: 2.243996
+  type: 'test'
+  ...
+# Subtest: an explicit maximum and a nonnegative decimal bound keep zero and optional blank values valid
+ok 117 - an explicit maximum and a nonnegative decimal bound keep zero and optional blank values valid
+  ---
+  duration_ms: 1.440903
+  type: 'test'
+  ...
+# Subtest: all editable numeric controls reject malformed drafts and integer fractions without needing domain bounds
+ok 118 - all editable numeric controls reject malformed drafts and integer fractions without needing domain bounds
+  ---
+  duration_ms: 15.761666
+  type: 'test'
+  ...
+# Subtest: numeric row preflight inspects optional columns and the saved expanded draft before native parsing
+ok 119 - numeric row preflight inspects optional columns and the saved expanded draft before native parsing
+  ---
+  duration_ms: 3.652791
+  type: 'test'
+  ...
+# Subtest: row validation keeps separate tables and collapsed row drafts independent
+ok 120 - row validation keeps separate tables and collapsed row drafts independent
+  ---
+  duration_ms: 2.634276
+  type: 'test'
+  ...
+# Subtest: partial draft type preflight still rejects lossy integer input but leaves domain minimums for confirmation
+ok 121 - partial draft type preflight still rejects lossy integer input but leaves domain minimums for confirmation
+  ---
+  duration_ms: 2.436081
+  type: 'test'
+  ...
+# Subtest: a lost registration response settles its original request and applies edits to the same guest without another registration
+ok 122 - a lost registration response settles its original request and applies edits to the same guest without another registration
+  ---
+  duration_ms: 11.04083
+  type: 'test'
+  ...
+# Subtest: unchanged network retry does not issue another correction and business rejection allows corrected input with original versions
+ok 123 - unchanged network retry does not issue another correction and business rejection allows corrected input with original versions
+  ---
+  duration_ms: 6.140101
+  type: 'test'
+  ...
+# Subtest: guest editor prioritizes the server policy, preserves existing data and leaves optional address fields blank
+ok 124 - guest editor prioritizes the server policy, preserves existing data and leaves optional address fields blank
+  ---
+  duration_ms: 4.592873
+  type: 'test'
+  ...
+# Subtest: guest cards display payer names and editing is restricted to the guest action
+ok 125 - guest cards display payer names and editing is restricted to the guest action
+  ---
+  duration_ms: 2.921532
+  type: 'test'
+  ...
+# Subtest: old property replies and older edit requests do not open a guest modal or send a correction
+ok 126 - old property replies and older edit requests do not open a guest modal or send a correction
+  ---
+  duration_ms: 2.80485
+  type: 'test'
+  ...
+# Subtest: cleaning keeps instructions and uses explicit inspection versus release actions
+ok 127 - cleaning keeps instructions and uses explicit inspection versus release actions
+  ---
+  duration_ms: 14.52768
+  type: 'test'
+  ...
+# Subtest: requesting correction has a required reason and submits the current task version
+ok 128 - requesting correction has a required reason and submits the current task version
+  ---
+  duration_ms: 5.983864
+  type: 'test'
+  ...
+# Subtest: cards prioritize urgent work, escape notes, show type and hide another cleaner actions
+ok 129 - cards prioritize urgent work, escape notes, show type and hide another cleaner actions
+  ---
+  duration_ms: 6.302376
+  type: 'test'
+  ...
+# Subtest: open ended maintenance hides deadline, clears a stale date and fits two task tabs
+ok 130 - open ended maintenance hides deadline, clears a stale date and fits two task tabs
+  ---
+  duration_ms: 8.271995
+  type: 'test'
+  ...
+# Subtest: reception identifies an indefinite block and does not offer its room reservation
+ok 131 - reception identifies an indefinite block and does not offer its room reservation
+  ---
+  duration_ms: 6.70744
+  type: 'test'
+  ...
+# Subtest: maintenance shows the catalogue part name safely while retaining its original stock reference
+ok 132 - maintenance shows the catalogue part name safely while retaining its original stock reference
+  ---
+  duration_ms: 9.439984
+  type: 'test'
+  ...
+# Subtest: incident evidence remains accessible by its private link before and after resolution
+ok 133 - incident evidence remains accessible by its private link before and after resolution
+  ---
+  duration_ms: 4.136738
+  type: 'test'
+  ...
+# Subtest: inventory shows loading, scoped names, zero stock, assets and an explicit replenishment alert
+ok 134 - inventory shows loading, scoped names, zero stock, assets and an explicit replenishment alert
+  ---
+  duration_ms: 15.104921
+  type: 'test'
+  ...
+# Subtest: older warehouse successes and errors cannot replace the selected warehouse
+ok 135 - older warehouse successes and errors cannot replace the selected warehouse
+  ---
+  duration_ms: 4.005646
+  type: 'test'
+  ...
+# Subtest: property changes and a replaced Page discard pending replies without clearing the new busy state
+ok 136 - property changes and a replaced Page discard pending replies without clearing the new busy state
+  ---
+  duration_ms: 3.663584
+  type: 'test'
+  ...
+# Subtest: context mismatches and network failures offer retry; empty and unconfigured locations remain distinct
+ok 137 - context mismatches and network failures offer retry; empty and unconfigured locations remain distinct
+  ---
+  duration_ms: 3.873606
+  type: 'test'
+  ...
+# Subtest: service actions follow the current state and show reason only for cancellation or return
+ok 138 - service actions follow the current state and show reason only for cancellation or return
+  ---
+  duration_ms: 4.765586
+  type: 'test'
+  ...
+# Subtest: finished or missing services and unauthorized returns never submit; direct sale keeps its native return flow
+ok 139 - finished or missing services and unauthorized returns never submit; direct sale keeps its native return flow
+  ---
+  duration_ms: 4.831185
+  type: 'test'
+  ...
+# Subtest: zero invoice needs review and confirmation, preserves its account key and creates no cash action
+ok 140 - zero invoice needs review and confirmation, preserves its account key and creates no cash action
+  ---
+  duration_ms: 4.830932
+  type: 'test'
+  ...
+# Subtest: a lost response keeps the invoice confirmation open and retries with exactly the same identity
+ok 141 - a lost response keeps the invoice confirmation open and retries with exactly the same identity
+  ---
+  duration_ms: 6.1354
+  type: 'test'
+  ...
+# Subtest: unauthorized staff cannot quote and an already billed account never opens an emission confirmation
+ok 142 - unauthorized staff cannot quote and an already billed account never opens an emission confirmation
+  ---
+  duration_ms: 4.953199
+  type: 'test'
+  ...
+# Subtest: a native modal is named and Tab cycles between enabled visible controls in both directions
+ok 143 - a native modal is named and Tab cycles between enabled visible controls in both directions
+  ---
+  duration_ms: 17.375138
+  type: 'test'
+  ...
+# Subtest: tabs use one Tab stop, arrow wrapping and Home/End while hidden tabs and native selects stay independent
+ok 144 - tabs use one Tab stop, arrow wrapping and Home/End while hidden tabs and native selects stay independent
+  ---
+  duration_ms: 11.016801
+  type: 'test'
+  ...
+# Subtest: a read-only review starts on its title and never activates confirmation by focusing it
+ok 145 - a read-only review starts on its title and never activates confirmation by focusing it
+  ---
+  duration_ms: 2.536177
+  type: 'test'
+  ...
+# Subtest: Enter on No activates only No and cannot also reach the native global confirmation shortcut
+ok 146 - Enter on No activates only No and cannot also reach the native global confirmation shortcut
+  ---
+  duration_ms: 3.527018
+  type: 'test'
+  ...
+# Subtest: a result dialog returns to the Page action when its filter parent closes first
+ok 147 - a result dialog returns to the Page action when its filter parent closes first
+  ---
+  duration_ms: 4.478498
+  type: 'test'
+  ...
+# Subtest: native construction blurring onto body preserves the last Page action and nested parent trigger
+ok 148 - native construction blurring onto body preserves the last Page action and nested parent trigger
+  ---
+  duration_ms: 5.437605
+  type: 'test'
+  ...
+# Subtest: an error field remains pending while a native message is opening and receives focus when that message closes
+ok 149 - an error field remains pending while a native message is opening and receives focus when that message closes
+  ---
+  duration_ms: 5.228653
+  type: 'test'
+  ...
+# Subtest: a native message in its opening transition preserves the field target before the public shown notification
+ok 150 - a native message in its opening transition preserves the field target before the public shown notification
+  ---
+  duration_ms: 5.442019
+  type: 'test'
+  ...
+# Subtest: cancelling a nested review restores the unchanged parent control after suspension is removed
+ok 151 - cancelling a nested review restores the unchanged parent control after suspension is removed
+  ---
+  duration_ms: 2.801406
+  type: 'test'
+  ...
+# Subtest: closing after a Page refresh finds the replacement action; a different route never receives the old focus
+ok 152 - closing after a Page refresh finds the replacement action; a different route never receives the old focus
+  ---
+  duration_ms: 2.490886
+  type: 'test'
+  ...
+# Subtest: render keeps the active filter and caret or moves to the Page heading when that action no longer exists
+ok 153 - render keeps the active filter and caret or moves to the Page heading when that action no longer exists
+  ---
+  duration_ms: 2.760436
+  type: 'test'
+  ...
+# Subtest: unrelated native dialogs outside operational Pages are left to Frappe
+ok 154 - unrelated native dialogs outside operational Pages are left to Frappe
+  ---
+  duration_ms: 1.211142
+  type: 'test'
+  ...
+# Subtest: native lifecycle events delivered only on the exact wrapper still register and restore the dialog
+ok 155 - native lifecycle events delivered only on the exact wrapper still register and restore the dialog
+  ---
+  duration_ms: 1.734009
+  type: 'test'
+  ...
+# Subtest: a required checklist starts on its first checkbox and a summary remains in the native Tab cycle
+ok 156 - a required checklist starts on its first checkbox and a summary remains in the native Tab cycle
+  ---
+  duration_ms: 1.657507
+  type: 'test'
+  ...
+# Subtest: overflowing result tables get a named keyboard scroll region which is removed when it fits
+ok 157 - overflowing result tables get a named keyboard scroll region which is removed when it fits
+  ---
+  duration_ms: 1.582185
+  type: 'test'
+  ...
+# Subtest: editable grid cells have a keyboard action, read-only cells stay unchanged and inline inputs receive labels
+ok 158 - editable grid cells have a keyboard action, read-only cells stay unchanged and inline inputs receive labels
+  ---
+  duration_ms: 5.210474
+  type: 'test'
+  ...
+# Subtest: Tab skips the native heading that inserts a row on focus and keeps the explicit Add row action reachable
+ok 159 - Tab skips the native heading that inserts a row on focus and keeps the explicit Add row action reachable
+  ---
+  duration_ms: 4.244059
+  type: 'test'
+  ...
+# Subtest: Tab in an inline grid preserves browser navigation and blur while stopping native row insertion in both directions
+ok 160 - Tab in an inline grid preserves browser navigation and blur while stopping native row insertion in both directions
+  ---
+  duration_ms: 3.685724
+  type: 'test'
+  ...
+# Subtest: Select arrows keep native option selection without triggering grid row navigation
+ok 161 - Select arrows keep native option selection without triggering grid row navigation
+  ---
+  duration_ms: 2.888011
+  type: 'test'
+  ...
+# Subtest: a Select grid cell shows its option label in text and its accessible editing name while preserving the stored code
+ok 162 - a Select grid cell shows its option label in text and its accessible editing name while preserving the stored code
+  ---
+  duration_ms: 3.556194
+  type: 'test'
+  ...
+# Subtest: grid actions are removed when their field or whole grid becomes read-only
+ok 163 - grid actions are removed when their field or whole grid becomes read-only
+  ---
+  duration_ms: 3.143302
+  type: 'test'
+  ...
+# Subtest: activating a Select cell focuses its editor even when the native click only reveals it
+ok 164 - activating a Select cell focuses its editor even when the native click only reveals it
+  ---
+  duration_ms: 3.121217
+  type: 'test'
+  ...
+# Subtest: focusing a native grid outside operational Pages does not prepare or change its controls
+ok 165 - focusing a native grid outside operational Pages does not prepare or change its controls
+  ---
+  duration_ms: 1.665218
+  type: 'test'
+  ...
+# Subtest: operational field-name tooltips are excluded from spoken labels while unrelated dialogs stay unchanged
+ok 166 - operational field-name tooltips are excluded from spoken labels while unrelated dialogs stay unchanged
+  ---
+  duration_ms: 1.907631
+  type: 'test'
+  ...
+# Subtest: the native mobile menu receives a label only inside the operational Page container
+ok 167 - the native mobile menu receives a label only inside the operational Page container
+  ---
+  duration_ms: 2.360042
+  type: 'test'
+  ...
+# Subtest: recursive operational Link preparation retains native types, requirements, defaults and scoped query functions
+ok 168 - recursive operational Link preparation retains native types, requirements, defaults and scoped query functions
+  ---
+  duration_ms: 4.775272
+  type: 'test'
+  ...
+# Subtest: native search results keep their keys and current labels but show useful descriptions instead of internal names
+ok 169 - native search results keep their keys and current labels but show useful descriptions instead of internal names
+  ---
+  duration_ms: 2.947332
+  type: 'test'
+  ...
+# Subtest: a newly created authorized record absent from bootstrap remains searchable and the final record of a large snapshot is not truncated
+ok 170 - a newly created authorized record absent from bootstrap remains searchable and the final record of a large snapshot is not truncated
+  ---
+  duration_ms: 6.276871
+  type: 'test'
+  ...
+# Subtest: native on_make hooks keep their context and each row control is wrapped once without replacing native prototypes
+ok 171 - native on_make hooks keep their context and each row control is wrapped once without replacing native prototypes
+  ---
+  duration_ms: 2.504472
+  type: 'test'
+  ...
+# Subtest: plain master labels stay as data for native escaping, arbitrary result HTML is dropped and filter hints escape the property name
+ok 172 - plain master labels stay as data for native escaping, arbitrary result HTML is dropped and filter hints escape the property name
+  ---
+  duration_ms: 3.768723
+  type: 'test'
+  ...
+# Subtest: row form controls receive their visible field label while existing native labels and non-Link behavior stay intact
+ok 173 - row form controls receive their visible field label while existing native labels and non-Link behavior stay intact
+  ---
+  duration_ms: 1.689989
+  type: 'test'
+  ...
+# Subtest: translated reconciliation and audit captions retain their original routing identifiers
+ok 174 - translated reconciliation and audit captions retain their original routing identifiers
+  ---
+  duration_ms: 14.035041
+  type: 'test'
+  ...
+# Subtest: translated availability caption still selects local datetime filters and sends the original report name
+ok 175 - translated availability caption still selects local datetime filters and sends the original report name
+  ---
+  duration_ms: 5.7976
+  type: 'test'
+  ...
+# Subtest: native operational selects translate labels and preserve values, defaults and disabled state
+ok 176 - native operational selects translate labels and preserve values, defaults and disabled state
+  ---
+  duration_ms: 2.583579
+  type: 'test'
+  ...
+# Subtest: Hotel and timed labels preserve persisted codes and conditional mixed-mode choices
+ok 177 - Hotel and timed labels preserve persisted codes and conditional mixed-mode choices
+  ---
+  duration_ms: 3.653696
+  type: 'test'
+  ...
+# Subtest: master-data names are literal text even when matching a translation key or containing markup
+ok 178 - master-data names are literal text even when matching a translation key or containing markup
+  ---
+  duration_ms: 5.759766
+  type: 'test'
+  ...
+# Subtest: secondary status captions translate without changing their CSS or protocol keys
+ok 179 - secondary status captions translate without changing their CSS or protocol keys
+  ---
+  duration_ms: 4.043526
+  type: 'test'
+  ...
+# Subtest: display aliases remain literal data and raw catalogue names are retained
+ok 180 - display aliases remain literal data and raw catalogue names are retained
+  ---
+  duration_ms: 2.610886
+  type: 'test'
+  ...
+# Subtest: native integer controls cannot silently truncate scientific notation or a large expression after passing preflight
+ok 181 - native integer controls cannot silently truncate scientific notation or a large expression after passing preflight
+  ---
+  duration_ms: 14.44301
+  type: 'test'
+  ...
+# Subtest: native integer and decimal controls reject radix literals that Number interprets differently
+ok 182 - native integer and decimal controls reject radix literals that Number interprets differently
+  ---
+  duration_ms: 3.310722
+  type: 'test'
+  ...
+# Subtest: native formulas, locale grouping, signed values, zero and precise decimal rounding remain accepted
+ok 183 - native formulas, locale grouping, signed values, zero and precise decimal rounding remain accepted
+  ---
+  duration_ms: 10.698432
+  type: 'test'
+  ...
+# Subtest: scientific notation accepted by native decimal controls remains a decimal while fractional integers fail
+ok 184 - scientific notation accepted by native decimal controls remains a decimal while fractional integers fail
+  ---
+  duration_ms: 2.580624
+  type: 'test'
+  ...
+# Subtest: numeric drafts without a mounted native editor reject radix and integer exponents as well
+ok 185 - numeric drafts without a mounted native editor reject radix and integer exponents as well
+  ---
+  duration_ms: 2.215761
+  type: 'test'
+  ...
+# Subtest: cashier identifies native POS cash, refunds and missing attribution without exposing raw shift IDs
+ok 186 - cashier identifies native POS cash, refunds and missing attribution without exposing raw shift IDs
+  ---
+  duration_ms: 4.426464
+  type: 'test'
+  ...
+# Subtest: combined filters retain only the matching room and accent-insensitive search includes its zone
+ok 187 - combined filters retain only the matching room and accent-insensitive search includes its zone
+  ---
+  duration_ms: 14.868691
+  type: 'test'
+  ...
+# Subtest: filters survive a new Desk and remain separate for each user and property
+ok 188 - filters survive a new Desk and remain separate for each user and property
+  ---
+  duration_ms: 9.977919
+  type: 'test'
+  ...
+# Subtest: removed metadata, corrupt JSON and denied/full storage cannot block operational Pages
+ok 189 - removed metadata, corrupt JSON and denied/full storage cannot block operational Pages
+  ---
+  duration_ms: 3.189882
+  type: 'test'
+  ...
+# Subtest: operational filters separate occupancy, current/end-exclusive blocks, dirty and inactive rooms
+ok 190 - operational filters separate occupancy, current/end-exclusive blocks, dirty and inactive rooms
+  ---
+  duration_ms: 2.525981
+  type: 'test'
+  ...
+# Subtest: a quota failure uses the latest session value even when an older disk value remains readable
+ok 191 - a quota failure uses the latest session value even when an older disk value remains readable
+  ---
+  duration_ms: 2.440757
+  type: 'test'
+  ...
+# Subtest: Home excludes blocked/inactive/occupied/dirty rooms and exposes only authorized links
+ok 192 - Home excludes blocked/inactive/occupied/dirty rooms and exposes only authorized links
+  ---
+  duration_ms: 17.869527
+  type: 'test'
+  ...
+# Subtest: Home zero is a confirmed count; an error or mismatched response never masquerades as zero
+ok 193 - Home zero is a confirmed count; an error or mismatched response never masquerades as zero
+  ---
+  duration_ms: 2.977053
+  type: 'test'
+  ...
+# Subtest: an old Home success or failure cannot replace the current property view
+ok 194 - an old Home success or failure cannot replace the current property view
+  ---
+  duration_ms: 2.137197
+  type: 'test'
+  ...
+# Subtest: Home cannot query arrival data or navigate to stays for a cleaning-only role
+ok 195 - Home cannot query arrival data or navigate to stays for a cleaning-only role
+  ---
+  duration_ms: 1.839627
+  type: 'test'
+  ...
+# Subtest: Home queue navigation persists the exact property/date/view for the Stays Page and a reload
+ok 196 - Home queue navigation persists the exact property/date/view for the Stays Page and a reload
+  ---
+  duration_ms: 3.38155
+  type: 'test'
+  ...
+# Subtest: late room balance replies are ignored after rerender or property change; network errors do not display zero
+ok 197 - late room balance replies are ignored after rerender or property change; network errors do not display zero
+  ---
+  duration_ms: 3.876037
+  type: 'test'
+  ...
+# Subtest: disabled receipts keep existing-fund refunds available and wire values stable
+ok 198 - disabled receipts keep existing-fund refunds available and wire values stable
+  ---
+  duration_ms: 7.594723
+  type: 'test'
+  ...
+# Subtest: approval options explain the restriction and remain available to an approver
+ok 199 - approval options explain the restriction and remain available to an approver
+  ---
+  duration_ms: 3.033495
+  type: 'test'
+  ...
+# Subtest: portal conversion retains legible request context and selected parties through review without changing its command
+ok 200 - portal conversion retains legible request context and selected parties through review without changing its command
+  ---
+  duration_ms: 6.944974
+  type: 'test'
+  ...
+# Subtest: a missing or foreign cached portal request cannot open a conversion form
+ok 201 - a missing or foreign cached portal request cannot open a conversion form
+  ---
+  duration_ms: 10.2807
+  type: 'test'
+  ...
+# Subtest: quote results recover focus after a disabled button, without stealing focus from another field
+ok 202 - quote results recover focus after a disabled button, without stealing focus from another field
+  ---
+  duration_ms: 5.811138
+  type: 'test'
+  ...
+# Subtest: editing dates while a quote is in flight invalidates its response
+ok 203 - editing dates while a quote is in flight invalidates its response
+  ---
+  duration_ms: 3.663478
+  type: 'test'
+  ...
+# Subtest: an uncertain request unlocks controls and retries the same quote and key
+ok 204 - an uncertain request unlocks controls and retries the same quote and key
+  ---
+  duration_ms: 4.849521
+  type: 'test'
+  ...
+# Subtest: receipt and invoice links honor configured formats, encode identifiers and retain secure new-tab attributes
+ok 205 - receipt and invoice links honor configured formats, encode identifiers and retain secure new-tab attributes
+  ---
+  duration_ms: 10.41887
+  type: 'test'
+  ...
+# Subtest: stay panel offers account and guest-registration printing with guest permission
+ok 206 - stay panel offers account and guest-registration printing with guest permission
+  ---
+  duration_ms: 6.818483
+  type: 'test'
+  ...
+# Subtest: registration and cleaning actions open their real native formats without a save or state change
+ok 207 - registration and cleaning actions open their real native formats without a save or state change
+  ---
+  duration_ms: 1.863976
+  type: 'test'
+  ...
+# Subtest: cashier recent movements retain the accounting reference and offer the configured receipt after reloading
+ok 208 - cashier recent movements retain the accounting reference and offer the configured receipt after reloading
+  ---
+  duration_ms: 11.284668
+  type: 'test'
+  ...
+# Subtest: partial receipt edits only existing order lines and preserves their provenance
+ok 209 - partial receipt edits only existing order lines and preserves their provenance
+  ---
+  duration_ms: 5.898896
+  type: 'test'
+  ...
+# Subtest: billing an empty receipt queue explains the state without opening an unusable form
+ok 210 - billing an empty receipt queue explains the state without opening an unusable form
+  ---
+  duration_ms: 2.425732
+  type: 'test'
+  ...
+# Subtest: fully received orders have no receive action while their invoices are still pending
+ok 211 - fully received orders have no receive action while their invoices are still pending
+  ---
+  duration_ms: 3.074301
+  type: 'test'
+  ...
+# Subtest: refund source shows date, amount and native receipt while preserving its key
+ok 212 - refund source shows date, amount and native receipt while preserving its key
+  ---
+  duration_ms: 5.805176
+  type: 'test'
+  ...
+# Subtest: converted guarantee keeps its application key and explains whether an invoice exists
+ok 213 - converted guarantee keeps its application key and explains whether an invoice exists
+  ---
+  duration_ms: 1.670865
+  type: 'test'
+  ...
+# Subtest: refund labels never filter another workflow source, including card-refund settlement
+ok 214 - refund labels never filter another workflow source, including card-refund settlement
+  ---
+  duration_ms: 1.306443
+  type: 'test'
+  ...
+# Subtest: applied refund review distinguishes original book value and current FX without rendering untrusted HTML
+ok 215 - applied refund review distinguishes original book value and current FX without rendering untrusted HTML
+  ---
+  duration_ms: 3.040868
+  type: 'test'
+  ...
+# Subtest: history presents explicit dated filters in the property zone, without requesting or writing on open
+ok 216 - history presents explicit dated filters in the property zone, without requesting or writing on open
+  ---
+  duration_ms: 5.276469
+  type: 'test'
+  ...
+# Subtest: cleaning and maintenance roles cannot open room history; reporting roles can
+ok 217 - cleaning and maintenance roles cannot open room history; reporting roles can
+  ---
+  duration_ms: 3.348744
+  type: 'test'
+  ...
+# Subtest: timeline escapes all recorded values and hides technical identities behind readable detail summaries
+ok 218 - timeline escapes all recorded values and hides technical identities behind readable detail summaries
+  ---
+  duration_ms: 2.746315
+  type: 'test'
+  ...
+# Subtest: query shows loading, prevents duplicate requests and recovers from a retryable error
+ok 219 - query shows loading, prevents duplicate requests and recovers from a retryable error
+  ---
+  duration_ms: 2.353879
+  type: 'test'
+  ...
+# Subtest: editing dates or view invalidates outstanding success and error replies
+ok 220 - editing dates or view invalidates outstanding success and error replies
+  ---
+  duration_ms: 3.215155
+  type: 'test'
+  ...
+# Subtest: closing a dialog invalidates its request and a newly opened history keeps its own results
+ok 221 - closing a dialog invalidates its request and a newly opened history keeps its own results
+  ---
+  duration_ms: 3.416166
+  type: 'test'
+  ...
+# Subtest: pagination retains accepted dates and sends zero when returning to the first page
+ok 222 - pagination retains accepted dates and sends zero when returning to the first page
+  ---
+  duration_ms: 2.084163
+  type: 'test'
+  ...
+# Subtest: property changes block new queries and discard old replies without showing foreign history
+ok 223 - property changes block new queries and discard old replies without showing foreign history
+  ---
+  duration_ms: 1.748446
+  type: 'test'
+  ...
+# Subtest: mismatched room, view, property, timezone or offset is rejected as an inline query error
+ok 224 - mismatched room, view, property, timezone or offset is rejected as an inline query error
+  ---
+  duration_ms: 6.803276
+  type: 'test'
+  ...
+# Subtest: invalid and inverted dates are rejected inline before a server request and a valid retry succeeds
+ok 225 - invalid and inverted dates are rejected inline before a server request and a valid retry succeeds
+  ---
+  duration_ms: 1.470363
+  type: 'test'
+  ...
+# Subtest: service accounting uses scoped native links and writes only reviewed accounting fields
+ok 226 - service accounting uses scoped native links and writes only reviewed accounting fields
+  ---
+  duration_ms: 5.642859
+  type: 'test'
+  ...
+# Subtest: service setup shows escaped names and saves only mappings/list with the reviewed version
+ok 227 - service setup shows escaped names and saves only mappings/list with the reviewed version
+  ---
+  duration_ms: 6.333567
+  type: 'test'
+  ...
+# Subtest: old service prices cannot overwrite a newer selection or a closed dialog
+ok 228 - old service prices cannot overwrite a newer selection or a closed dialog
+  ---
+  duration_ms: 1.631047
+  type: 'test'
+  ...
+# Subtest: service price details show the visible alias while preserving original item data
+ok 229 - service price details show the visible alias while preserving original item data
+  ---
+  duration_ms: 2.489345
+  type: 'test'
+  ...
+# Subtest: price explanation starts collapsed, distinguishes recorded and reference amounts and escapes every historical string
+ok 230 - price explanation starts collapsed, distinguishes recorded and reference amounts and escapes every historical string
+  ---
+  duration_ms: 4.242587
+  type: 'test'
+  ...
+# Subtest: legacy missing explanation leaves the account usable and recorded-only notes invent no tariff
+ok 231 - legacy missing explanation leaves the account usable and recorded-only notes invent no tariff
+  ---
+  duration_ms: 0.939043
+  type: 'test'
+  ...
+# Subtest: account renders the server explanation in its own charge row while retaining financial and account actions
+ok 232 - account renders the server explanation in its own charge row while retaining financial and account actions
+  ---
+  duration_ms: 5.564841
+  type: 'test'
+  ...
+1..232
+# tests 232
+# suites 0
+# pass 232
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 301.357321
