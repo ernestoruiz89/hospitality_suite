@@ -37,7 +37,7 @@ def normalize(prop, values):
     if hold not in (None,False,True,0,1):
         frappe.throw(frappe._('Revise la opción de retención temporal del borrador'))
     result = dict(mode=mode, hold=bool(hold), rooms=[])
-    for name in ('guest', 'customer', 'channel', 'instructions'):
+    for name in ('guest', 'customer', 'channel', 'instructions', 'travel_agent'):
         result[name] = _text(values.get(name))
     result['channel'] = result['channel'] or 'Recepción'
     if result['guest']:
@@ -46,6 +46,13 @@ def normalize(prop, values):
             frappe.throw(frappe._('El huésped no pertenece al establecimiento'), frappe.PermissionError)
     if result['customer']:
         frappe.get_doc('Customer', result['customer']).check_permission('read')
+    if result['travel_agent']:
+        from hospitality_suite.travel_experiences import agent
+        agent(prop,result['travel_agent'])
+    result['experiences']=values.get('experiences') or []
+    if not isinstance(result['experiences'],list) or len(result['experiences'])>20 or any(not isinstance(row,dict) for row in result['experiences']):
+        frappe.throw(frappe._('Revise las experiencias del borrador'))
+    result['experiences']=[dict(experience=_text(row.get('experience')),quantity=_number(row.get('quantity'))) for row in result['experiences']]
     for name in ('starts_at', 'ends_at'):
         value = _text(values.get(name))
         result[name] = local(to_site(value, prop), prop).isoformat() if value else None
@@ -79,14 +86,15 @@ def values_for(doc, prop):
         hold=bool(metadata.get('hold')), guest=doc.guest, customer=doc.customer,
         starts_at=local(doc.starts_at, prop).isoformat() if doc.starts_at else None,
         ends_at=local(doc.ends_at, prop).isoformat() if doc.ends_at else None,
-        channel=doc.channel, instructions=doc.instructions,
+        channel=doc.channel, instructions=doc.instructions, travel_agent=doc.travel_agent,
+        experiences=metadata.get('experiences',[]),
         rooms=metadata.get('rooms', [dict(category=r.category, room=r.room, people=r.people, extra_beds=r.extra_beds, rate=r.rate) for r in doc.rooms]))
 
 
 def _storage(values):
     # Contact references, dates and notes already have native fields; do not
     # duplicate them inside an opaque payload or an audit event.
-    return canonical({key:values.get(key) for key in ('mode','hold','rooms')})
+    return canonical({key:values.get(key) for key in ('mode','hold','rooms','experiences')})
 
 
 def _changes(before, after):
@@ -109,7 +117,7 @@ def _projection(prop, values):
     return dict(customer=values['customer'], guest=values['guest'],
         starts_at=to_site(values['starts_at'], prop) if values['starts_at'] else None,
         ends_at=to_site(values['ends_at'], prop) if values['ends_at'] else None,
-        channel=values['channel'], instructions=values['instructions'], currency=prop.currency)
+        channel=values['channel'], instructions=values['instructions'],travel_agent=values['travel_agent'],currency=prop.currency)
 
 
 def save(prop, data):
@@ -154,12 +162,16 @@ def confirm(prop, data):
         frappe.throw(frappe._('Revise y acepte la cotización vigente del borrador antes de confirmar'))
     before = values_for(doc, prop)
     status = 'Hold' if values['hold'] else 'Confirmed'
-    doc.update(dict(**_projection(prop, values), status=status, amount=calculation['amount'], draft_data=None,
-        quote_snapshot=canonical(calculation), hold_until=now_datetime()+timedelta(minutes=prop.hold_minutes or 15) if status == 'Hold' else None))
+    from hospitality_suite.travel_experiences import attribution,book_experiences
+    commission=attribution(prop,values['travel_agent'],calculation['amount'])
+    doc.update({**_projection(prop, values), **commission, 'status':status, 'amount':calculation['amount'],
+        'draft_data':None,'quote_snapshot':canonical(calculation),
+        'hold_until':now_datetime()+timedelta(minutes=prop.hold_minutes or 15) if status == 'Hold' else None})
     doc.set('rooms', [dict(category=row['category'], room=row['room'], people=row['people'], extra_beds=row['extra_beds'] or 0,
         rate=line['rules']['name']) for row, line in zip(values['rooms'], calculation['lines'])])
     doc.save()
     operations.allocate_booking(prop, doc, calculation)
+    book_experiences(prop,doc,calculation['experiences'])
     audit(prop, 'Confirm booking draft', doc, details=dict(**_changes(before,values), quote=calculation, status=status))
     return dict(booking=doc.name, status=doc.status, modified=str(doc.modified))
 

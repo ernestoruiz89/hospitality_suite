@@ -15,7 +15,7 @@ from hospitality_suite.security import document, require
 from hospitality_suite.time import to_site
 
 
-def quote_request(prop, data, exclude=None):
+def quote_request(prop, data, exclude=None, *, public=False):
     start, end = to_site(data["starts_at"], prop), to_site(data["ends_at"], prop)
     rooms = data.get("rooms") or [data]
     results = []
@@ -42,8 +42,12 @@ def quote_request(prop, data, exclude=None):
                 result["explanation"].append(frappe._("Cargos estimados por horario: entrada anticipada {0}; salida tardía {1}").format(estimate['early'],estimate['late']))
         results.append(result)
         proposed.append(frappe._dict(category=row["category"], room=row.get("room"), starts_at=start, ends_at=end, buffer_minutes=prop.cleaning_minutes))
-    response = dict(lines=results, amount=str(money(sum(decimal(r["amount"]) for r in results))), currency=prop.currency)
-    response["estimated_total"]=str(money(decimal(response["amount"])+sum(decimal(r.get("timing_estimate",{}).get("early"))+decimal(r.get("timing_estimate",{}).get("late")) for r in results)))
+    from hospitality_suite.travel_experiences import quote_experiences
+    extras=quote_experiences(prop,data.get("experiences"),data.get("customer"),public=public)
+    response = dict(lines=results, amount=str(money(sum(decimal(r["amount"]) for r in results))), currency=prop.currency,
+                    experiences=extras, experiences_total=str(money(sum(decimal(r["amount"]) for r in extras))))
+    response["estimated_total"]=str(money(decimal(response["amount"])+decimal(response["experiences_total"])+
+        sum(decimal(r.get("timing_estimate",{}).get("early"))+decimal(r.get("timing_estimate",{}).get("late")) for r in results)))
     response["acceptance"] = hashlib.sha256(canonical(response).encode()).hexdigest()
     return response
 
@@ -65,12 +69,16 @@ def reserve(prop, data):
     for row, result in zip(data["rooms"], calculation["lines"]):
         row["rate"] = result["rules"]["name"]
     status = "Hold" if data.get("hold") else "Confirmed"
+    from hospitality_suite.travel_experiences import attribution, book_experiences
+    commission=attribution(prop,data.get("travel_agent"),calculation["amount"])
     doc = insert("HS Booking", prop, customer=data["customer"], guest=data.get("guest"),
                  starts_at=to_site(data["starts_at"], prop), ends_at=to_site(data["ends_at"], prop),
                  status=status, rooms=data["rooms"], currency=prop.currency, amount=calculation["amount"],
                  quote_snapshot=canonical(calculation), channel=data.get("channel") or "Recepción", instructions=data.get("instructions"),
+                 **commission,
                  hold_until=now_datetime() + timedelta(minutes=prop.hold_minutes or 15) if status == "Hold" else None)
     allocate_booking(prop, doc, calculation)
+    book_experiences(prop,doc,calculation["experiences"])
     audit(prop, "Reserve", doc, details=calculation)
     return dict(booking=doc.name, status=doc.status, modified=str(doc.modified))
 
@@ -102,6 +110,11 @@ def update_booking(prop, data):
     doc.status, doc.reason = target, data.get("reason")
     if target in ("Cancelled", "No Show"):
         availability.release(booking=doc.name)
+        for name in current_all("HS Experience Order",filters={"property":prop.name,"booking":doc.name,
+                                   "status":["in",["Reserved","Confirmed"]]},pluck="name"):
+            order=locked_doc("HS Experience Order",name)
+            order.status,order.cancel_reason="Cancelled",data["reason"]
+            order.save()
     doc.save()
     audit(prop, target, doc, doc.reason)
     return dict(booking=doc.name, status=doc.status)
@@ -116,7 +129,8 @@ def modification_values(prop,data):
                 ends_at=data.get("ends_at") or local(doc.ends_at,prop).isoformat(),customer=data.get("customer") or doc.customer,
                 guest=data.get("guest") or doc.guest,mode=normalize_mode(data.get("mode") or json.loads(doc.quote_snapshot)["lines"][0].get("stay_type") or json.loads(doc.quote_snapshot)["lines"][0]["rules"]["mode"]),
                 rooms=data.get("rooms") or [dict(category=r.category,room=r.room,people=r.people,extra_beds=r.extra_beds) for r in doc.rooms],
-                channel=data.get("channel") or doc.channel,instructions=data.get("instructions",doc.instructions))
+                channel=data.get("channel") or doc.channel,instructions=data.get("instructions",doc.instructions),
+                travel_agent=data.get("travel_agent",doc.travel_agent))
     if values["customer"]!=doc.customer and current_all("HS Payment",filters={"booking":doc.name,"status":"Posted"}):
         frappe.throw(frappe._("Revierta o concilie los movimientos existentes antes de cambiar el pagador"))
     excluded=current_all("HS Allocation",filters={"booking":doc.name,"status":"Active"},pluck="name")
@@ -133,8 +147,12 @@ def modify_reservation(prop,data):
         frappe.throw(frappe._("Revise y acepte la nueva cotización"))
     before=dict(starts_at=str(doc.starts_at),ends_at=str(doc.ends_at),amount=doc.amount,quote=doc.quote_snapshot)
     availability.release(booking=doc.name)
+    from hospitality_suite.travel_experiences import attribution
+    commission=attribution(prop,values["travel_agent"],calculation["amount"],
+        doc.agent_commission_pct if values["travel_agent"]==doc.travel_agent else None)
     doc.update(dict(starts_at=to_site(values["starts_at"],prop),ends_at=to_site(values["ends_at"],prop),customer=values["customer"],guest=values["guest"],
                     instructions=values["instructions"],channel=values["channel"],amount=calculation["amount"],quote_snapshot=canonical(calculation),reason=data["reason"]))
+    doc.update(commission)
     doc.set("rooms",[dict(category=r["category"],room=r.get("room"),people=r.get("people") or 1,extra_beds=r.get("extra_beds") or 0,rate=q["rules"]["name"]) for r,q in zip(values["rooms"],calculation["lines"])])
     doc.save()
     for row,q in zip(doc.rooms,calculation["lines"]):
@@ -524,6 +542,11 @@ def check_out(prop, data):
     assert_version(stay, data.get("modified"))
     if stay.status != "Active":
         frappe.throw(frappe._("La estancia ya tiene salida registrada"))
+    if frappe.db.exists("HS Laundry Order", {"stay": stay.name, "status": ["in", ["Requested", "Collected", "In Process", "Ready"]]}):
+        frappe.throw(frappe._("Entregue o resuelva la lavandería pendiente antes de registrar salida"))
+    if stay.booking and not frappe.db.exists("HS Stay", {"booking": stay.booking, "status": "Active", "name": ["!=", stay.name]}) and frappe.db.exists(
+            "HS Experience Order", {"booking": stay.booking, "status": ["in", ["Reserved", "Confirmed"]]}):
+        frappe.throw(frappe._("Entregue o cancele las experiencias pendientes antes de la última salida"))
     if prop.checkout_inspection_required and not stay.departure_inspected_by:
         frappe.throw(frappe._("La política requiere una inspección antes de la salida"))
     from hospitality_suite.timing import departure

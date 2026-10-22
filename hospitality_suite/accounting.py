@@ -627,6 +627,22 @@ def sync_document(doc, method=None):
     from hospitality_suite.service import lock_property
     lock_property(prop.name)
     with operation():
+        if doc.doctype == "Sales Invoice" and doc.docstatus == 1 and doc.is_return and doc.return_against:
+            source_stays=current_all("HS Charge",filters={"sales_invoice":doc.return_against,
+                "kind":"Lodging"},pluck="stay")
+            for stay_name in set(source_stays):
+                booking_name=frappe.db.get_value("HS Stay",stay_name,"booking") if stay_name else None
+                if booking_name and frappe.db.get_value("HS Booking",booking_name,"agent_commission_invoice"):
+                    frappe.throw(frappe._("Revierta primero la factura de comisión de la agencia"))
+        if doc.doctype == "Purchase Invoice" and doc.docstatus == 2:
+            booking_name = frappe.db.get_value("HS Booking", {"property": prop.name,
+                "agent_commission_invoice": doc.name}, "name")
+            if booking_name:
+                booking = locked_doc("HS Booking", booking_name)
+                booking.agent_commission_invoice = None
+                booking.save()
+                audit(prop, "Cancel agent commission", booking, doc.get("hs_correction_reason"),
+                      dict(purchase_invoice=doc.name))
         if doc.doctype=='Sales Invoice' and doc.docstatus==1:
             from hospitality_suite.native_pos import validate_posted
             validate_posted(doc)

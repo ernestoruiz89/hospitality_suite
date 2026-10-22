@@ -119,6 +119,14 @@ class ScopedDocument(Document):
             order=frappe.db.get_value("HS Maintenance Order",self.maintenance,["property","until_reopened"],as_dict=True) if self.maintenance else None
             if self.kind!="Maintenance" or not order or order.property!=self.property or not order.until_reopened:
                 frappe.throw(_("Solo un bloqueo de mantenimiento hasta reapertura puede omitir la fecha final"))
+        if self.doctype=="HS Allocation" and self.kind=="Room Block":
+            if not self.room or not self.room_block or not self.ends_at or self.booking or self.stay or self.maintenance:
+                frappe.throw(_("La asignación de bloqueo necesita habitación, origen e intervalo finito"))
+            block=frappe.db.get_value("HS Room Block",self.room_block,["property","company","room","starts_at","ends_at"],as_dict=True)
+            if (not block or (block.property,block.company,block.room)!=(self.property,self.company,self.room)
+                    or get_datetime(self.starts_at)!=get_datetime(block.starts_at)
+                    or get_datetime(self.ends_at)!=get_datetime(block.ends_at)):
+                frappe.throw(_("La asignación no coincide con el bloqueo de habitación"))
         if self.doctype == "HS Property":
             from hospitality_suite.financial_movements import validate_property
             validate_property(self, check_history=True)

@@ -118,6 +118,12 @@
    "options": "JSON"
   },
   {
+   "fieldname": "experiences",
+   "label": "Experiences",
+   "fieldtype": "Code",
+   "options": "JSON"
+  },
+  {
    "fieldname": "request_key",
    "label": "Referencia de solicitud",
    "fieldtype": "Data",
@@ -155,6 +161,7 @@
   "currency",
   "amount",
   "quote_snapshot",
+  "experiences",
   "request_key",
   "payload_hash",
   "booking"

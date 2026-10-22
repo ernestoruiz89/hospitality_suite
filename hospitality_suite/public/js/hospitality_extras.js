@@ -6,7 +6,7 @@
   const pick=(name,label,rows,labelKey="name",required=true)=>f(name,label,"Select",{reqd:required,_hsDataOptions:true,options:[{value:"",label:__("Seleccione…")},...rows.map(r=>({value:r.name,label:r[labelKey]||r.name}))]});
   const originalDialog=Desk.prototype.dialog;
   const button=Desk.prototype.button;
-  const actions={reserve:"reserve",availability:"reserve",walk_in:"stay",extend:"stay",change_room:"stay",folio:"stay",move_charge:"stay",checkout:"stay",guest:"guest",open_shift:"finance",close_shift:"finance",payment:"finance",service:"service",service_status:"service",cleaning:"clean",incident:"incident",linen:"clean",setup:"setup",new_property:"setup",daily_close:"report",portal_convert:"reserve",portal_reject:"reserve",withdrawal:"finance",guarantee:"approve",credit:"approve",billing_party:"setup",inspect_departure:"inspect",policies:"setup",denominations:"setup",adjustment:"approve",maintenance_parts:"maintain",maintenance_evidence:"maintain",incident_evidence:"incident",resolve_incident:"inspect",return_parts:"approve",rework_cleaning:"inspect"};
+  const actions={reserve:"reserve",availability:"reserve",walk_in:"stay",extend:"stay",change_room:"stay",folio:"stay",move_charge:"stay",checkout:"stay",guest:"guest",open_shift:"finance",close_shift:"finance",payment:"finance",service:"service",service_status:"service",cleaning:"clean",incident:"incident",linen:"clean",setup:"setup",new_property:"setup",daily_close:"report",portal_convert:"reserve",portal_reject:"reserve",withdrawal:"finance",guarantee:"approve",credit:"approve",billing_party:"setup",inspect_departure:"inspect",policies:"setup",denominations:"setup",adjustment:"approve",maintenance_parts:"maintain",maintenance_evidence:"maintain",incident_evidence:"incident",resolve_incident:"inspect",return_parts:"approve",rework_cleaning:"inspect",room_block:"block",room_unblock:"block"};
   Desk.prototype.button=function(action,...args){if(actions[action]&&!this.allowed(actions[action]))return "";return button.call(this,action,...args);};
   Desk.prototype.dialog=async function(title,fields,submit,label,size){
     const dialog=await originalDialog.call(this,title,fields,submit,label,size);
@@ -60,19 +60,19 @@
           const left=Math.max(0,(Date.parse(row.starts_at)-rangeStart)/(rangeEnd-rangeStart)*100);
           const right=Math.min(100,(Date.parse(row.ends_at)-rangeStart)/(rangeEnd-rangeStart)*100);
           const action=row.stay?"detail":row.booking?"booking":null;
-          const label=row.kind==="Stay"?__("Estancia"):row.kind==="Maintenance"?__("Mantenimiento"):__("Reserva");
+          const label=row.kind==="Stay"?__("Estancia"):row.kind==="Maintenance"?__("Mantenimiento"):row.kind==="Room Block"?`${__("Bloqueo")} · ${window.hospitality_suite.room_block_reason(row.block_reason)}`:__("Reserva");
           const period=`${this.date(row.starts_at)} → ${this.date(row.ends_at)}`;
           const short=right-left<7.5;
           if(short)compact.push({room:room.room_number,label,period,action,id:row.stay||row.booking});
           const content=!short&&action?this.button(action,`${label} · ${period}`,row.stay||row.booking):`<span>${e(label)} · ${e(period)}</span>`;
-          const tone=row.kind==="Stay"?"is-stay":row.kind==="Maintenance"?"is-maintenance":"is-reservation";
+          const tone=row.kind==="Stay"?"is-stay":row.kind==="Maintenance"?"is-maintenance":row.kind==="Room Block"?"is-block":"is-reservation";
           return `<div class="hs-timeline-bar ${tone}${short?" is-short":""}" title="${e(label)} · ${e(period)}" style="left:${left.toFixed(4)}%;width:${Math.max(0,right-left).toFixed(4)}%;top:${lane*38+4}px">${content}</div>`;
         }).join("");
         const clean=room.cleaning_status?`<small>${e(__(room.cleaning_status))}</small>`:"";
         return `<div class="hs-timeline-row"><div class="hs-timeline-room"><strong>${e(room.room_number)}</strong>${clean}</div><div class="hs-timeline-track" style="--hs-slots:${count};min-height:${Math.max(44,bookings.length*38+8)}px">${bars||`<span class="hs-timeline-empty">${e(__("Sin asignación"))}</span>`}</div></div>`;
       }).join("");
       const ticks=`<div class="hs-timeline-header"><span>${e(__("Habitación"))}</span><div class="hs-timeline-ticks" style="--hs-slots:${count}">${heads.map(head=>`<span>${e(head)}</span>`).join("")}</div></div>`;
-      const legend=`<p class="hs-timeline-legend"><span class="is-reservation">${e(__("Reserva"))}</span><span class="is-stay">${e(__("Estancia"))}</span><span class="is-maintenance">${e(__("Mantenimiento"))}</span><small>${e(__("Una celda sin asignación no confirma disponibilidad. Consulte el período antes de reservar."))}</small></p>`;
+      const legend=`<p class="hs-timeline-legend"><span class="is-reservation">${e(__("Reserva"))}</span><span class="is-stay">${e(__("Estancia"))}</span><span class="is-maintenance">${e(__("Mantenimiento"))}</span><span class="is-block">${e(__("Bloqueo"))}</span><small>${e(__("Una celda sin asignación no confirma disponibilidad. Consulte el período antes de reservar."))}</small></p>`;
       const compactList=compact.length?`<details class="hs-timeline-short" ${compact.length<=5?"open":""}><summary>${e(__("Intervalos breves"))} (${compact.length})</summary><p>${e(__("Las marcas estrechas conservan su duración a escala; abra aquí el detalle de cada intervalo."))}</p>${this.table([__("Habitación"),__("Tipo"),__("Intervalo"),__("Acción")],compact.map(row=>[e(row.room),e(row.label),e(row.period),row.action?this.button(row.action,__("Ver detalle"),row.id):"—"]))}</details>`:"";
       el.find(".hs-calendar").html(`<div class="hs-timeline-scroll"><div class="hs-timeline-chart" role="region" aria-label="${e(__("Calendario por habitación"))}">${ticks}${timeline}</div></div>${legend}${compactList}`);
     }catch(error){if(current())target.html(`<p role="alert">${e(__("No se pudo cargar el calendario. Cambie la fecha o pulse Actualizar para reintentar."))}</p>`);}

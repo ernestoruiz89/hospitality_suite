@@ -56,13 +56,13 @@ def interval_states(prop,category,start,end,inventory):
                       fields=['name','room_number','active','cleaning_status'])
     candidates=set(inventory['candidates']);result=[]
     labels={'Available':frappe._('Disponible en el intervalo'),'Reserved':frappe._('Reservada para el intervalo'),
-        'Occupied':frappe._('Ocupada en el intervalo'),'Blocked':frappe._('Fuera de servicio en el intervalo'),
+        'Occupied':frappe._('Ocupada en el intervalo'),'Blocked':frappe._('Bloqueada en el intervalo'),
         'Buffer':frappe._('Colchón de limpieza'),'Inactive':frappe._('Habitación inactiva'),'Category Full':frappe._('Sin cupo por categoría')}
     for room in sorted(rooms,key=lambda r:(r.room_number.casefold(),r.name)):
         if not room.active:status='Inactive'
         elif room.name in candidates:status='Available' if inventory['available'] else 'Category Full'
         else:
             direct={row.kind for row in allocations if row.room==room.name and overlapping(start,end,row.starts_at,row.ends_at)}
-            status=next((label for kind,label in (('Maintenance','Blocked'),('Stay','Occupied'),('Reservation','Reserved')) if kind in direct),'Buffer')
+            status=next((label for kind,label in (('Maintenance','Blocked'),('Room Block','Blocked'),('Stay','Occupied'),('Reservation','Reserved')) if kind in direct),'Buffer')
         result.append(dict(name=room.name,room_number=room.room_number,status=status,label=labels[status],cleaning_status=room.cleaning_status))
     return result

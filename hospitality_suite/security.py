@@ -9,10 +9,13 @@ ACTIONS = {
     "setup": MANAGERS, "reserve": MANAGERS + ["HS Receptionist"],
     "stay": MANAGERS + ["HS Receptionist"],
     "finance": MANAGERS + ["HS Cashier", "HS Accountant"],
+    "commission": MANAGERS + ["HS Accountant"],
     "petty": [role for role in ROLES if role != "HS Auditor"],
     "clean": MANAGERS + ["HS Housekeeping"], "inspect": MANAGERS,
     "maintain": MANAGERS + ["HS Maintenance"],
+    "block": MANAGERS + ["HS Receptionist"],
     "service": MANAGERS + ["HS Receptionist", "HS Cashier"],
+    "laundry": MANAGERS + ["HS Receptionist", "HS Housekeeping", "HS Accountant"],
     "report": MANAGERS + ["HS Accountant", "HS Auditor"], "approve": MANAGERS[:2],
     "cash_approve": MANAGERS,
     "guest": MANAGERS + ["HS Receptionist"],
@@ -391,6 +394,12 @@ def guard_cancel(doc,method=None):
     prop_name=doc.get("hs_property") or (frappe.db.get_value("HS Stay",doc.hs_stay,"property") if doc.get("hs_stay") else None)
     if prop_name:
         require(prop_name,"approve")
+        if doc.doctype=="Sales Invoice":
+            bookings=frappe.get_all("HS Charge",filters={"sales_invoice":doc.name,"kind":"Lodging"},pluck="stay")
+            for stay_name in set(bookings):
+                booking_name=frappe.db.get_value("HS Stay",stay_name,"booking") if stay_name else None
+                if booking_name and frappe.db.get_value("HS Booking",booking_name,"agent_commission_invoice"):
+                    frappe.throw(frappe._("Revierta primero la factura de comisión de la agencia"))
         if not doc.get("hs_correction_reason"):
             frappe.throw(frappe._("Indique el motivo de corrección antes de cancelar un documento de alojamiento"))
         if doc.doctype=='Sales Invoice' and doc.is_return and doc.return_against and frappe.db.get_value('Sales Invoice',doc.return_against,'is_pos'):

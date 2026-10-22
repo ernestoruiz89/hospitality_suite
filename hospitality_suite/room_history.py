@@ -16,22 +16,25 @@ from hospitality_suite.security import property_document
 from hospitality_suite.time import local, to_site
 
 
-TYPES=('HS Room','HS Booking','HS Stay','HS Cleaning Task','HS Maintenance Order')
+TYPES=('HS Room','HS Booking','HS Stay','HS Cleaning Task','HS Maintenance Order','HS Room Block')
 FIELDS={
     'HS Room':('room_number','category','floor','zone','beds','parking','active','cleaning_status'),
     'HS Booking':('status','starts_at','ends_at','channel','instructions','reason','rooms'),
     'HS Stay':('room','status','starts_at','ends_at','actual_check_in','actual_check_out','reason'),
     'HS Cleaning Task':('room','kind','priority','status','assigned_to','started_at','completed_at','notes'),
     'HS Maintenance Order':('room','title','equipment','starts_at','ends_at','until_reopened','blocks_room','kind','status','assigned_to','notes'),
+    'HS Room Block':('room','reason','starts_at','ends_at','status','note','created_by','released_by','released_on','release_note'),
 }
 def type_labels():
     return {'HS Room':frappe._('Habitación'),'HS Booking':frappe._('Reserva'),'HS Stay':frappe._('Estancia'),
-            'HS Cleaning Task':frappe._('Limpieza'),'HS Maintenance Order':frappe._('Mantenimiento')}
+            'HS Cleaning Task':frappe._('Limpieza'),'HS Maintenance Order':frappe._('Mantenimiento'),
+            'HS Room Block':frappe._('Bloqueo operativo')}
 
 
 def creation_labels():
     return {'HS Room':frappe._('Habitación registrada'),'HS Booking':frappe._('Reserva registrada'),'HS Stay':frappe._('Entrada registrada'),
-            'HS Cleaning Task':frappe._('Tarea de limpieza programada'),'HS Maintenance Order':frappe._('Orden de mantenimiento registrada')}
+            'HS Cleaning Task':frappe._('Tarea de limpieza programada'),'HS Maintenance Order':frappe._('Orden de mantenimiento registrada'),
+            'HS Room Block':frappe._('Bloqueo de habitación registrado')}
 
 
 def object_value(value):
@@ -97,8 +100,8 @@ class History:
         self.room_labels={r.name:r.room_number for r in permitted_all('HS Room',filters={'property':prop.name,'company':prop.company},fields=['name','room_number'])}
         for name,label in self.room_labels.items():self.aliases.setdefault(label,set()).add(name)
         self.categories={r.name:r.category_name for r in permitted_all('HS Category',filters={'property':prop.name,'company':prop.company},fields=['name','category_name'])}
-        self.allocations=permitted_all('HS Allocation',filters={'property':prop.name,'company':prop.company,'room':room.name},fields=['name','room','booking','stay','maintenance','starts_at','ends_at','kind','status'])
-        self.related={dt:{row.get(key) for row in self.allocations if row.get(key)} for dt,key in (('HS Booking','booking'),('HS Stay','stay'),('HS Maintenance Order','maintenance'))}
+        self.allocations=permitted_all('HS Allocation',filters={'property':prop.name,'company':prop.company,'room':room.name},fields=['name','room','booking','stay','maintenance','room_block','starts_at','ends_at','kind','status'])
+        self.related={dt:{row.get(key) for row in self.allocations if row.get(key)} for dt,key in (('HS Booking','booking'),('HS Stay','stay'),('HS Maintenance Order','maintenance'),('HS Room Block','room_block'))}
         self.events=complete('HS Audit Event',{'property':prop.name,'company':prop.company,'source_doctype':['in',list(TYPES)]},
                              ['name','action','actor','occurred_at','source_doctype','source_name','reason','details'],'occurred_at desc,name desc')
         self.boundaries={}
@@ -185,7 +188,7 @@ class History:
         if key=='cleaning_status':
             from hospitality_suite.display_labels import cleaning_label
             return cleaning_label(value)
-        if key in ('status','kind','priority'):return hs_label(value)
+        if key in ('status','kind','priority') or dt=='HS Room Block' and key=='reason':return hs_label(value)
         return str(value)
 
     def fields(self,dt,before,after,*,formatted=False):
@@ -260,7 +263,8 @@ class History:
         from hospitality_suite.housekeeping import maintenance_finished_at
         labels={'Reservation':(frappe._('Reserva registrada'),frappe._('Reserva liberada')),
                 'Stay':(frappe._('Estancia registrada'),frappe._('Asignación de estancia liberada')),
-                'Maintenance':(frappe._('Bloqueo de mantenimiento'),frappe._('Bloqueo finalizado'))}
+                'Maintenance':(frappe._('Bloqueo de mantenimiento'),frappe._('Bloqueo finalizado')),
+                'Room Block':(frappe._('Bloqueo operativo'),frappe._('Bloqueo liberado'))}
         latest={}
         stay_names=list(self.sources[key]['parent'].name for key in self.sources if key[0]=='HS Stay')
         if stay_names:
@@ -282,6 +286,11 @@ class History:
                 order=frappe.get_doc('HS Maintenance Order',row.maintenance) if source else None
                 if order and order.status=='Completed':
                     finished=maintenance_finished_at(order);end=min(end,finished) if end else finished
+            if row.kind=='Room Block' and row.status=='Released' and row.room_block:
+                source=self.sources.get(('HS Room Block',row.room_block))
+                block=source['parent'] if source else None
+                if block and block.status=='Released' and block.released_on:
+                    end=min(end,get_datetime(block.released_on)) if end else get_datetime(block.released_on)
             if end and end<=start:continue
             if start>=self.end or end and end<=self.start:continue
             titles=labels.get(row.kind)

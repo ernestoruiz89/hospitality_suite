@@ -1,0 +1,85 @@
+{
+ "doctype": "DocType",
+ "name": "HS Laundry Order Item",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "hash",
+ "naming_rule": "Random",
+ "fields": [
+  {
+   "fieldname": "laundry_rate",
+   "label": "Tarifa de lavandería",
+   "fieldtype": "Link",
+   "options": "HS Laundry Rate",
+   "reqd": 1
+  },
+  {
+   "fieldname": "garment",
+   "label": "Prenda",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "service_type",
+   "label": "Tipo de servicio",
+   "fieldtype": "Select",
+   "options": "Wash & Iron\nDry Clean\nIron Only",
+   "reqd": 1,
+   "default": "Wash & Iron"
+  },
+  {
+   "fieldname": "item",
+   "label": "Artículo",
+   "fieldtype": "Link",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "quantity",
+   "label": "Cantidad",
+   "fieldtype": "Int",
+   "reqd": 1
+  },
+  {
+   "fieldname": "returned_quantity",
+   "label": "Piezas devueltas",
+   "fieldtype": "Int"
+  },
+  {
+   "fieldname": "rate",
+   "label": "Tarifa",
+   "fieldtype": "Currency",
+   "default": 0
+  },
+  {
+   "fieldname": "amount",
+   "label": "Importe",
+   "fieldtype": "Currency",
+   "default": 0
+  },
+  {
+   "fieldname": "charge",
+   "label": "Cargo",
+   "fieldtype": "Link",
+   "options": "HS Charge"
+  }
+ ],
+ "field_order": [
+  "laundry_rate",
+  "garment",
+  "service_type",
+  "item",
+  "quantity",
+  "returned_quantity",
+  "rate",
+  "amount",
+  "charge"
+ ],
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0,
+ "istable": 1
+}

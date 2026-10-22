@@ -11,6 +11,7 @@ FIELDS={
     'HS Room':('room_number','category','floor','zone','beds','parking','active','cleaning_status'),
     'HS Cleaning Task':('room','kind','priority','status','assigned_to','started_at','completed_at','notes'),
     'HS Maintenance Order':('room','title','equipment','starts_at','ends_at','until_reopened','blocks_room','kind','status','assigned_to','notes'),
+    'HS Room Block':('room','reason','starts_at','ends_at','status','note','created_by','released_by','released_on','release_note'),
     'HS Stay':('status','room','starts_at','ends_at','amount','currency','actual_check_out'),
     'HS Charge':('status','quantity','rate','amount','currency','adjustment_type','applies_to_charge','folio'),
     'HS Payment':('kind','status','amount','currency','base_amount','exchange_rate','method','shift','payment_entry','journal_entry','source_payment','fee_amount','withholding_amount','net_amount'),
@@ -26,7 +27,7 @@ FIELDS={
 def values(doc):
     if not doc or doc.doctype not in FIELDS:return None
     result={field:doc.get(field) for field in FIELDS[doc.doctype]}
-    if doc.doctype in ('HS Room','HS Booking','HS Stay','HS Cleaning Task','HS Maintenance Order'):
+    if doc.doctype in ('HS Room','HS Booking','HS Stay','HS Cleaning Task','HS Maintenance Order','HS Room Block'):
         result.update(property=doc.property,company=doc.company)
     if doc.doctype=='HS Booking':
         result['rooms']=[dict(room=row.room,category=row.category,

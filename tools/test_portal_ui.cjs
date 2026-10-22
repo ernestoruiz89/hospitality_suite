@@ -3,18 +3,23 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const vm=require('node:vm');
-async function fixture(){
- const ids=['property','category','category-info','category-image','stay-mode','request-mode','start','end','quantity','people','name','email','phone','quote','request','form','empty','result','breakdown','zone'];
+async function fixture(experiences=[]){
+ const ids=['property','category','category-info','category-image','stay-mode','request-mode','start','end','quantity','people','name','email','phone','quote','request','form','empty','result','breakdown','zone','experiences','experience-list'];
  const elements=Object.fromEntries(ids.map(id=>['hp-'+id,{value:['quantity','people'].includes(id)?'1':'',hidden:id==='request',disabled:false,handlers:{},options:[],
    addEventListener(event,callback){this.handlers[event]=callback;},add(option){this.options.push(option);if(!this.value)this.value=option.value;},replaceChildren(){this.options=[];this.value='';},removeAttribute(name){delete this[name];}}]));
  elements['hp-form'].elements=ids.filter(id=>!['form','empty','result','breakdown','category-info','category-image','zone'].includes(id)).map(id=>elements['hp-'+id]);
+ elements['hp-experience-list'].children=[];elements['hp-experience-list'].replaceChildren=function(){this.children=[];};
+ elements['hp-experience-list'].append=function(row){this.children.push(row);};
  elements['hp-request-mode'].value='Hold';
- const document={getElementById:id=>elements[id],body:{}};document.activeElement=document.body;
+ const document={getElementById:id=>elements[id],body:{},createTextNode:value=>({textContent:value}),
+  createElement:()=>({children:[],setAttribute(name,value){this[name]=value;},append(...values){this.children.push(...values);},
+   querySelector(selector){for(const value of this.children){if(value.className===selector.slice(1))return value;
+     const found=value.querySelector?.(selector);if(found)return found;}return null;}})};document.activeElement=document.body;
  for(const element of Object.values(elements))element.focus=()=>{document.activeElement=element;};
  const requests=[];let nativeMessages=0,init,quote=async()=>({amount:'1500.00',estimated_total:'1650.00',currency:'NIO',acceptance:'accepted',explanation:['Tarifa de temporada']}),request=async()=>({confirmation_url:'/signed-confirmation'}),redirect;
  const context={__:(value,args)=>typeof value==="string"&&args?value.replace(/\{(\d+)\}/g,(m,n)=>args[n]??m):value,document,$:()=>({length:0}),Option:class{constructor(text,value){this.text=text;this.value=value;}},crypto:{randomUUID:()=> 'stable-request-key'},
   window:{location:{assign:url=>{redirect=url;}}},frappe:{ready:callback=>{init=callback();},call:async({method,args,error_msg})=>{
-   try{return{message:method.endsWith('.catalog')?[{name:'hotel',property_name:'Hotel ficticio',mode:'Mixed',time_zone:'America/Managua',categories:[{name:'standard',category_name:'Estándar',capacity:2,amenities:'Wi-Fi',portal_description:'Vista al jardín',portal_image:'/files/room.png'}]}]:method.endsWith('.quote')?await quote(args):await (async()=>{requests.push(args);return request(args);})()};}
+   try{return{message:method.endsWith('.catalog')?[{name:'hotel',property_name:'Hotel ficticio',mode:'Mixed',time_zone:'America/Managua',categories:[{name:'standard',category_name:'Estándar',capacity:2,amenities:'Wi-Fi',portal_description:'Vista al jardín',portal_image:'/files/room.png'}],experiences}]:method.endsWith('.quote')?await quote(args):await (async()=>{requests.push(args);return request(args);})()};}
    catch(error){if(error.responseJSON?._server_messages&&!error_msg)nativeMessages++;throw error;} // native Website ignores silent
   }}};
  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../hospitality_suite/www/hospitality.js'),'utf8'),context);await init;
@@ -40,6 +45,18 @@ test('portal explains quoted rate and estimated timing costs as text, then clear
  assert.match(f.elements['hp-breakdown'].textContent,/Tarifa de temporada/);
  assert.match(f.elements['hp-breakdown'].textContent,/1650.00 NIO/);
  f.elements['hp-form'].handlers.input();assert.equal(f.elements['hp-breakdown'].textContent,'');
+});
+test('public experience selection is included in the reviewed quote payload',async()=>{
+ const f=await fixture([{name:'tour',experience_name:'Tour seguro',price:'75.00',currency:'NIO'}]);
+ const row=f.elements['hp-experience-list'].children[0];
+ row.querySelector('.hp-experience-choice').checked=true;
+ row.querySelector('.hp-experience-quantity').value='2';
+ f.setQuote(async args=>{assert.deepEqual(JSON.parse(args.data).experiences,[{experience:'tour',quantity:2}]);
+   return{amount:'1500.00',experiences_total:'150.00',estimated_total:'1650.00',currency:'NIO',acceptance:'extra'};});
+ await f.elements['hp-form'].handlers.submit({preventDefault(){}});
+ assert.match(f.elements['hp-breakdown'].textContent,/Experiencias: 150.00 NIO/);
+ await f.elements['hp-request'].handlers.click();
+ assert.deepEqual(JSON.parse(f.requests[0].data).experiences,[{experience:'tour',quantity:2}]);
 });
 test('request without hold is explicit and submitted with the same reviewed mode',async()=>{
  const f=await fixture();f.elements['hp-request-mode'].value='Requested';f.elements['hp-request-mode'].handlers.change();f.elements['hp-form'].handlers.input();

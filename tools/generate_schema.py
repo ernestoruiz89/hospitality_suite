@@ -38,7 +38,7 @@ for name, spec in SCHEMA.items():
         data.update(autoname=DOCUMENT_SERIES[name], naming_rule="Expression (old style)")
     if spec.get("child"):
         data.update(istable=1, permissions=[])
-    titles = {"HS Property":"property_name", "HS Category":"category_name", "HS Room":"room_number", "HS Rate":"title", "HS Guest":"full_name", "HS Payment Method":"mode_of_payment", "HS Folio":"label"}
+    titles = {"HS Property":"property_name", "HS Category":"category_name", "HS Room":"room_number", "HS Rate":"title", "HS Guest":"full_name", "HS Payment Method":"mode_of_payment", "HS Folio":"label", "HS Travel Agent":"agent_name", "HS Experience":"experience_name"}
     if name in titles:
         data.update(title_field=titles[name], search_fields=titles[name], show_title_field_in_link=1)
     write(folder / (slug + ".json"), json.dumps(data, indent=1, ensure_ascii=False) + "\n")
@@ -67,7 +67,7 @@ formats = {"reservation":("HS Booking","HS Confirmación de reserva"),"registrat
            "folio":("HS Stay","HS Cuenta de estancia"),"receipt":("HS Payment","HS Recibo"),
            "shift":("HS Shift","HS Arqueo"),"cleaning":("HS Cleaning Task","HS Orden de limpieza"),
            "maintenance":("HS Maintenance Order","HS Orden de mantenimiento"),"daily_close":("HS Daily Close","HS Cierre diario"),
-           "invoice":("Sales Invoice","HS Factura")}
+           "invoice":("Sales Invoice","HS Factura"),"laundry":("HS Laundry Order","HS Comprobante de lavandería")}
 for source,(dt,name) in formats.items():
     slug="hs_"+source
     data=dict(doctype="Print Format",name=name,doc_type=dt,module="Hospitality Suite",standard="Yes",custom_format=1,

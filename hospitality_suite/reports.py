@@ -109,7 +109,7 @@ def summary(prop, starts_at=None, ends_at=None):
     allocations=current_all("HS Allocation",filters={"property":prop.name},fields=["*"])
     blocked,occupied={},{}
     for row in allocations:
-        if not row.room or row.kind not in ("Stay","Maintenance"):
+        if not row.room or row.kind not in ("Stay","Maintenance","Room Block"):
             continue
         a,b=get_datetime(row.starts_at),get_datetime(row.ends_at) if row.ends_at else end
         if row.kind=="Stay":
@@ -125,14 +125,19 @@ def summary(prop, starts_at=None, ends_at=None):
             if not is_time_mode(mode):
                 continue
         else:
-            if row.status=="Released":
+            if row.kind=="Maintenance" and row.status=="Released":
                 order=locked_doc("HS Maintenance Order",row.maintenance) if row.maintenance else None
                 if order and order.status=="Completed":
                     from hospitality_suite.housekeeping import maintenance_finished_at
                     b=min(b,maintenance_finished_at(order))
+            if row.kind=="Room Block" and row.status=="Released":
+                block=locked_doc("HS Room Block",row.room_block) if row.room_block else None
+                if not block or block.status!="Released" or not block.released_on:
+                    continue
+                b=min(b,get_datetime(block.released_on))
         a,b=max(start,a),min(end,b)
         if a<b:
-            (blocked if row.kind=="Maintenance" else occupied).setdefault(row.room,[]).append((a,b))
+            (occupied if row.kind=="Stay" else blocked).setdefault(row.room,[]).append((a,b))
     seconds=sum(union_seconds(v) for v in occupied.values())
     available=max(0,len(room_names)*(end-start).total_seconds()-sum(union_seconds(v) for v in blocked.values()))
     commercial_rooms=sum(union_seconds(blocked.get(room,[]))<(end-start).total_seconds() for room in room_names)

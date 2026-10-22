@@ -4,7 +4,7 @@ import json
 import frappe
 from frappe.utils import now_datetime
 
-from hospitality_suite import operations, cashier, housekeeping, inventory, accounting, closing, linen, portal,timing,direct_sales,treasury,procurement,privacy,tickets,credit,day_pass,financial_movements
+from hospitality_suite import operations, cashier, housekeeping, inventory, accounting, closing, linen, portal,timing,direct_sales,treasury,procurement,privacy,tickets,credit,day_pass,financial_movements,guest_laundry,room_blocks,travel_experiences
 from hospitality_suite.security import allowed_properties, require, document, ACTIONS, is_system, selected_property
 from hospitality_suite.service import command, insert, audit, canonical
 from hospitality_suite.time import to_site, now_local
@@ -16,6 +16,20 @@ from hospitality_suite import booking_drafts
 from hospitality_suite.inputs import object_payload as payload
 
 COMMANDS = {
+    "travel_agent": ("setup", travel_experiences.save_agent),
+    "experience": ("setup", travel_experiences.save_experience),
+    "experience_order": ("reserve", travel_experiences.order_experience),
+    "experience_status": ("service", travel_experiences.update_order),
+    "agent_commission": ("commission", travel_experiences.settle_commission),
+    "room_block": ("block", room_blocks.create),
+    "room_unblock": ("block", room_blocks.release),
+    "laundry_rate": ("setup", guest_laundry.save_rate),
+    "laundry_request": ("laundry", guest_laundry.request_pickup),
+    "laundry_collect": ("laundry", guest_laundry.collect),
+    "laundry_advance": ("laundry", guest_laundry.advance),
+    "laundry_return": ("laundry", guest_laundry.return_pieces),
+    "laundry_deliver": ("laundry", guest_laundry.deliver),
+    "laundry_cancel": ("laundry", guest_laundry.cancel),
     "ticket": ("ticket", tickets.change),
     "billing_party": ("setup", credit.update),
     'save_booking_draft':('reserve',booking_drafts.save),
@@ -80,13 +94,17 @@ def execute(property_name, action, request_key, data=None):
 
 @frappe.whitelist()
 def preview(property_name, data, action="reserve"):
-    permission="inventory" if action=="purchase_order" else "approve" if action in ("adjust_stock","retire_sensitive","credit_note") else "finance" if action in ("invoice","payment","direct_sale","day_pass_no_room","settle_payment","supplier_payment","finance_post") else "reserve" if action in ("reserve","booking_status","modify_reservation","convert_portal","confirm_booking_draft") else "stay"
+    permission="inventory" if action=="purchase_order" else "approve" if action in ("adjust_stock","retire_sensitive","credit_note") else "commission" if action=="agent_commission" else "finance" if action in ("invoice","payment","direct_sale","day_pass_no_room","settle_payment","supplier_payment","finance_post") else "reserve" if action in ("reserve","booking_status","modify_reservation","convert_portal","confirm_booking_draft","experience_order") else "stay"
     prop = require(property_name, permission)
     with selected_property(prop):
         return _preview(prop,payload(data),action)
 
 
 def _preview(prop,data,action):
+    if action == "experience_order":
+        return travel_experiences.order_quote(prop,data)
+    if action == "agent_commission":
+        return travel_experiences.commission_quote(prop,data)
     if action == "finance_post":
         return financial_movements.financial_quote(prop,data)
     if action == 'confirm_booking_draft':
@@ -206,6 +224,8 @@ def bootstrap(property_name=None):
     if not property_name:
         return result
     prop = require(property_name)
+    if any(may(a) for a in ("reserve","finance","report")):
+        result["travel_experiences"]=travel_experiences.board(prop)
     petty_visible=(may("finance") or may("report") or prop.petty_cash_responsible==frappe.session.user or
                    frappe.db.exists("HS Petty Cash Handover", {"property":prop.name,"status":"Awaiting Acceptance","incoming":frappe.session.user}) or
                    frappe.db.exists("HS Petty Cash Handover", {"property":prop.name,"status":"Awaiting Acceptance","outgoing":frappe.session.user}))
@@ -214,13 +234,19 @@ def bootstrap(property_name=None):
     result["inventory_currency"]=frappe.db.get_value("Company",prop.company,"default_currency")
     result["default_warehouse"]=prop.warehouse
     result["property_now"] = now_local(prop).isoformat()
+    if may("laundry"):
+        result["laundry"] = guest_laundry.board(prop)
+    if may("block"):
+        result["room_blocks"] = room_blocks.board(prop)
     result["print_formats"]=dict(invoice=prop.invoice_print_format or "HS Factura",receipt=prop.receipt_print_format or "HS Recibo")
     result["rooms"] = project("HS Room", prop, ["name", "room_number", "category", "floor", "zone", "cleaning_status", "active", "parking"])
     result["categories"] = project("HS Category", prop, ["name", "category_name", "capacity"])
     # Minimal operational projection is intentionally separate from stay documents.
     active = frappe.get_all("HS Stay", filters={"property": prop.name, "status": "Active"}, fields=["name", "room", "starts_at", "ends_at"])
     result["occupied"] = active
-    result["blocks"] = frappe.get_all("HS Allocation", filters={"property": prop.name, "kind": "Maintenance", "status": "Active"}, fields=["room", "starts_at", "ends_at"])
+    result["blocks"] = frappe.get_all("HS Allocation", filters={"property": prop.name,
+        "kind": ["in", ["Maintenance", "Room Block"]], "status": "Active"},
+        fields=["room", "starts_at", "ends_at", "kind", "room_block"])
     result["rooms"].sort(key=lambda r: r.room_number)
     if may("stay") or may("finance"):
         from hospitality_suite.desk_board import room_arrivals
@@ -512,6 +538,8 @@ def save_setup(property_name, section, data, request_key, expected_modified=None
     }
     allowed["property"] += ["invoice_series","payment_series","invoice_print_format","receipt_print_format"]
     allowed["property"] += ["advance_policy","guarantee_policy","extra_hour_item"]
+    allowed["property"].append("agent_commission_item")
+    allowed["property"].append("expense_account")
     allowed["rate"].append("included_services")
     allowed["payment_method"]+=list(treasury.METHOD_FIELDS)
     allowed["expense_category"]=["label","account","max_amount","active"]
@@ -598,7 +626,7 @@ def calendar(property_name,starts_at,ends_at):
     start,end=to_site(starts_at,prop),to_site(ends_at,prop)
     if end<=start or (end-start).days>31:
         frappe.throw(frappe._("Consulte un intervalo de hasta 31 días"))
-    rows=project("HS Allocation",prop,fields=["name","room","category","starts_at","ends_at","kind","status","booking","stay","maintenance"],
+    rows=project("HS Allocation",prop,fields=["name","room","category","starts_at","ends_at","kind","status","booking","stay","maintenance","room_block"],
                  filters={"starts_at":["<",end]})
     result=[]
     for row in rows:
@@ -607,7 +635,7 @@ def calendar(property_name,starts_at,ends_at):
         row["until_reopened"]=row.kind=="Maintenance" and not row.ends_at
         if not row.ends_at:
             row.ends_at=end
-        if row.status=="Released" and row.kind not in ("Stay","Maintenance"):
+        if row.status=="Released" and row.kind not in ("Stay","Maintenance","Room Block"):
             continue
         if row.status=="Released" and row.kind=="Maintenance":
             order=frappe.get_doc("HS Maintenance Order",row.maintenance) if row.maintenance else None
@@ -616,6 +644,16 @@ def calendar(property_name,starts_at,ends_at):
             row.ends_at=min(frappe.utils.get_datetime(row.ends_at),housekeeping.maintenance_finished_at(order))
             if row.ends_at<=frappe.utils.get_datetime(row.starts_at):
                 continue
+        if row.kind=="Room Block":
+            block=frappe.db.get_value("HS Room Block",{"name":row.room_block,"property":prop.name},
+                                      ["reason","status","released_on"],as_dict=True) if row.room_block else None
+            if not block or (row.status=="Released" and block.status!="Released"):
+                continue
+            row["block_reason"]=block.reason
+            if row.status=="Released":
+                row.ends_at=min(frappe.utils.get_datetime(row.ends_at),frappe.utils.get_datetime(block.released_on))
+                if row.ends_at<=frappe.utils.get_datetime(row.starts_at):
+                    continue
         if row.kind=="Stay" and row.stay:
             stay=frappe.get_doc("HS Stay",row.stay)
             row.starts_at=max(frappe.utils.get_datetime(row.starts_at),frappe.utils.get_datetime(stay.actual_check_in))

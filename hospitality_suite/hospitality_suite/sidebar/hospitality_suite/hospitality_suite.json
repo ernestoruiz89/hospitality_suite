@@ -59,6 +59,13 @@
   {
    "type": "Link",
    "link_type": "Page",
+   "link_to": "hospitality-laundry",
+   "label": "Lavandería",
+   "icon": "shirt"
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
    "link_to": "hospitality-petty-cash",
    "label": "Caja Chica",
    "icon": "hand-coins"
@@ -80,9 +87,30 @@
   {
    "type": "Link",
    "link_type": "Page",
+   "link_to": "hospitality-room-blocks",
+   "label": "Bloqueos de habitaciones",
+   "icon": "lock-keyhole"
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
    "link_to": "hospitality-services",
    "label": "Consumos e inventario",
    "icon": "boxes"
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
+   "link_to": "hospitality-travel-agents",
+   "label": "Agencias de viajes",
+   "icon": "briefcase-business"
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
+   "link_to": "hospitality-experiences",
+   "label": "Experiencias",
+   "icon": "sparkles"
   },
   {
    "type": "Link",

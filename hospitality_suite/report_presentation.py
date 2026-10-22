@@ -30,6 +30,7 @@ PROFILES={
 DATES={"starts_at","ends_at","actual_check_in","actual_check_out","opened_at","closed_at","started_at","completed_at","occurred_at","recorded_at","status_changed_at"}
 TITLES={"HS Booking":"Reserva","HS Stay":"Estancia","HS Folio":"Cuenta","HS Charge":"Cargo","HS Payment":"Movimiento de caja",
         "HS Service Request":"Consumo","HS Shift":"Turno","HS Cleaning Task":"Limpieza","HS Maintenance Order":"Mantenimiento",
+        "HS Room Block":"Bloqueo de habitación",
         "HS Daily Close":"Cierre diario","HS Guest":"Huésped","HS Rate":"Tarifa","HS Room":"Habitación","HS Category":"Categoría",
         "HS Property":"Establecimiento","HS Incident":"Incidencia","HS Equipment":"Equipo","HS Portal Request":"Solicitud web",
         "HS Retention Run":"Retención de datos","Sales Invoice":"Factura de venta","Payment Entry":"Comprobante de pago",
@@ -55,6 +56,7 @@ ACTIONS={
     "Approve data retention":"Retención de datos aprobada","Retire sensitive fields":"Datos sensibles retirados","Dispose retained files":"Archivos vencidos procesados",
     "Retry file disposal":"Reintento de eliminación de archivos","Verified integration event":"Evento de integración verificado",
     "Rate created":"Tarifa creada","Rate changed":"Tarifa modificada",
+    "Room block created":"Habitación bloqueada","Room block released":"Bloqueo de habitación liberado",
     "Cancelled":"Reserva cancelada","No Show":"Reserva sin presentación",
     "Daily close Review":"Cierre revisado","Daily close Closed":"Día cerrado","Daily close Reopened":"Día reabierto",
     "on_submit":"Documento presentado","on_cancel":"Documento anulado","on_update_after_submit":"Documento presentado actualizado","ERP update":"Documento actualizado",

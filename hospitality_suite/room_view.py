@@ -9,7 +9,7 @@ from hospitality_suite.security import is_system, property_document, require, AC
 from hospitality_suite.time import local, now_local, to_site
 
 
-VIEW_ACTIONS = ("stay", "finance", "report", "clean", "maintain", "inspect", "ticket")
+VIEW_ACTIONS = ("stay", "finance", "report", "clean", "maintain", "inspect", "ticket", "block")
 
 
 def _access(property_name):
@@ -25,7 +25,7 @@ def _capabilities(prop):
     can = lambda action: is_system() or bool(roles.intersection(ACTIONS[action]))
     return dict(people=can("stay") or can("finance") or can("report"),
                 account=can("stay") or can("finance"),
-                clean=can("clean"), maintain=can("maintain"), ticket=can("ticket"),
+                clean=can("clean"), maintain=can("maintain"), block=can("block"), ticket=can("ticket"),
                 inspect=can("inspect"), stay=can("stay"),
                 reserve=can("reserve"), history=can("stay") or can("finance") or can("report"),
                 discreet=bool(prop.discreet_mode))
@@ -61,7 +61,8 @@ def _context(prop, can):
                                       starts_at=row.starts_at, ends_at=row.ends_at)
     blocks = {}
     for row in _rows("HS Allocation", prop,
-            ["name", "room", "maintenance", "starts_at", "ends_at"], kind="Maintenance", status="Active"):
+            ["name", "room", "kind", "maintenance", "room_block", "starts_at", "ends_at"],
+            kind=["in", ["Maintenance", "Room Block"]], status="Active"):
         if row.room and get_datetime(row.starts_at) <= now and (not row.ends_at or get_datetime(row.ends_at) > now):
             blocks.setdefault(row.room, row)
     tasks = {}
@@ -111,6 +112,7 @@ def _summary(room, ctx, can, names):
                 category_label=category.category_name if category else room.category,
                 floor=room.floor, zone=room.zone, active=bool(room.active),
                 cleaning_status=room.cleaning_status, occupied=bool(stay), blocked=bool(blocked),
+                block_kind=blocked.kind if blocked else None,
                 arrival=bool(arrival), departure=bool(stay and get_datetime(stay.ends_at) <
                                to_site(datetime.combine(ctx["day"] + timedelta(days=1), time()),
                                        ctx["prop"])),
@@ -182,6 +184,9 @@ def room_snapshot(property_name, room_name):
     tickets = [dict(name=row.name, subject=row.subject, priority=row.priority, status=row.status,
                     assigned_to=row.assigned_to, due_at=local(row.due_at, prop).isoformat() if row.due_at else None)
                for row in ctx["tickets"].get(room.name, [])]
+    blocks = _rows("HS Room Block", prop,
+                   ["name", "reason", "starts_at", "ends_at", "note", "modified"],
+                   room=room.name, status="Active") if can["block"] else []
     details = dict(floor=room.floor, zone=room.zone, beds=room.beds, parking=room.parking,
                    capacity=category.capacity if category else None,
                    max_extra_beds=category.max_extra_beds if category else None,
@@ -190,7 +195,8 @@ def room_snapshot(property_name, room_name):
                    image=category.portal_image if category else None)
     return dict(property=prop.name, room=summary, checked_at=local(ctx["now"], prop).isoformat(),
                 time_zone=prop.time_zone, mode=prop.mode, can=can, current=current,
-                next_arrival=pending, tasks=tasks, maintenance=orders, tickets=tickets, details=details)
+                next_arrival=pending, tasks=tasks, maintenance=orders, room_blocks=blocks,
+                tickets=tickets, details=details)
 
 
 def room_schedule(property_name, room_name, starts_at, ends_at):
@@ -208,7 +214,7 @@ def room_schedule(property_name, room_name, starts_at, ends_at):
     from hospitality_suite.housekeeping import maintenance_finished_at
     rows = []
     for row in _rows("HS Allocation", prop,
-            ["name", "kind", "status", "booking", "stay", "maintenance", "starts_at", "ends_at"],
+            ["name", "kind", "status", "booking", "stay", "maintenance", "room_block", "starts_at", "ends_at"],
             room=room_name, starts_at=["<", end]):
         if row.status == "Released" and row.kind == "Reservation":
             continue
@@ -230,14 +236,25 @@ def room_schedule(property_name, room_name, starts_at, ends_at):
             if not order or order.status != "Completed":
                 continue
             actual_end = min(actual_end, maintenance_finished_at(order))
+        reason = None
+        if row.kind == "Room Block":
+            block = frappe.db.get_value("HS Room Block", {"name": row.room_block, "property": prop.name},
+                                        ["reason", "status", "released_on"], as_dict=True) if row.room_block else None
+            if not block or (row.status == "Released" and block.status != "Released"):
+                continue
+            reason = block.reason
+            if row.status == "Released":
+                actual_end = min(actual_end, get_datetime(block.released_on))
         if actual_end <= start or actual_start >= end or actual_end <= actual_start:
             continue
-        rows.append(dict(kind=row.kind, starts_at=local(max(start, actual_start), prop).isoformat(),
+        rows.append(dict(kind=row.kind, status=row.status, starts_at=local(max(start, actual_start), prop).isoformat(),
                          ends_at=local(min(end, actual_end), prop).isoformat(),
                          until_reopened=bool(row.kind == "Maintenance" and not row.ends_at and row.status == "Active"),
                          stay=row.stay if can["stay"] else None,
                          booking=row.booking if can["reserve"] else None,
-                         maintenance=row.maintenance if can["maintain"] else None))
+                         maintenance=row.maintenance if can["maintain"] else None,
+                         room_block=row.room_block if can["block"] else None,
+                         block_reason=reason))
     rows.sort(key=lambda row: row["starts_at"])
     return dict(property=prop.name, room=room_name, starts_at=local(start, prop).isoformat(),
                 ends_at=local(end, prop).isoformat(), time_zone=prop.time_zone, rows=rows)
@@ -279,7 +296,7 @@ def room_insights(property_name, days=30):
                              active=bool(room.active), usage=[], blocks=[], stays=set(), clean_minutes=[])
              for room in rooms}
     allocations = _rows("HS Allocation", prop,
-        ["name", "room", "kind", "status", "stay", "maintenance", "starts_at", "ends_at"],
+        ["name", "room", "kind", "status", "stay", "maintenance", "room_block", "starts_at", "ends_at"],
         starts_at=["<", end])
     stay_names = {row.stay for row in allocations if row.kind == "Stay" and row.stay}
     stays = {row.name: row for row in _rows("HS Stay", prop,
@@ -288,11 +305,15 @@ def room_insights(property_name, days=30):
                        row.status == "Released" and row.maintenance}
     orders = {row.name: row for row in _rows("HS Maintenance Order", prop,
         ["name", "status", "modified"], name=["in", list(released_orders)])} if released_orders else {}
+    released_blocks = {row.room_block for row in allocations if row.kind == "Room Block" and
+                       row.status == "Released" and row.room_block}
+    blocks = {row.name: row for row in _rows("HS Room Block", prop,
+        ["name", "status", "released_on"], name=["in", list(released_blocks)])} if released_blocks else {}
     from hospitality_suite.housekeeping import maintenance_finished_at
     now = now_datetime()
     for row in allocations:
         target = stats.get(row.room)
-        if not target or row.kind not in ("Stay", "Maintenance"):
+        if not target or row.kind not in ("Stay", "Maintenance", "Room Block"):
             continue
         a = get_datetime(row.starts_at)
         b = get_datetime(row.ends_at) if row.ends_at else end
@@ -308,11 +329,16 @@ def room_insights(property_name, days=30):
                 b = max(b, min(now, end))
             bucket = "usage"
         else:
-            if row.status == "Released":
+            if row.kind == "Maintenance" and row.status == "Released":
                 order = orders.get(row.maintenance)
                 if not order or order.status != "Completed":
                     continue
                 b = min(b, maintenance_finished_at(order))
+            if row.kind == "Room Block" and row.status == "Released":
+                block = blocks.get(row.room_block)
+                if not block or block.status != "Released" or not block.released_on:
+                    continue
+                b = min(b, get_datetime(block.released_on))
             bucket = "blocks"
         a, b = max(a, start), min(b, end)
         if a >= b:
@@ -362,5 +388,5 @@ def room_insights(property_name, days=30):
     return dict(property=prop.name, days=days, mode=prop.mode, time_zone=prop.time_zone,
                 from_date=str(start_day), through_date=str(end_day - timedelta(days=1)),
                 checked_at=local(now, prop).isoformat(),
-                denominator="Horas calendario menos bloqueos de mantenimiento; no descuenta limpieza, inactividad histórica ni restricciones comerciales",
+                denominator="Horas calendario menos bloqueos de mantenimiento y operativos; no descuenta limpieza ni inactividad histórica",
                 revenue_available=False, rooms=result)

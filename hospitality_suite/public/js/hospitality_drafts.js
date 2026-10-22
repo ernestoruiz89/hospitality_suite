@@ -6,9 +6,10 @@
   const pick=(name,label,rows,key,required=false)=>f(name,label,"Select",{reqd:required,_hsDataOptions:true,options:[{value:"",label:__("Seleccione…")},...rows.map(row=>({value:row.name,label:row[key]||row.name}))]});
   const businessError=error=>Boolean(error?._server_messages||error?._error_message||error?.responseJSON?._server_messages||error?.responseJSON?._error_message);
   const copy=value=>JSON.parse(JSON.stringify(value));
-  const valueKeys=["mode","hold","guest","customer","starts_at","ends_at","channel","instructions"];
+  const valueKeys=["mode","hold","guest","customer","starts_at","ends_at","channel","instructions","travel_agent"];
   const rowKeys=["category","room","rate","people","extra_beds"];
-  const clean=values=>({...Object.fromEntries(valueKeys.map(key=>[key,values[key]??null])),rooms:(values.rooms||[]).map(row=>Object.fromEntries(rowKeys.map(key=>[key,row[key]??null])))});
+  const clean=values=>({...Object.fromEntries(valueKeys.map(key=>[key,values[key]??null])),rooms:(values.rooms||[]).map(row=>Object.fromEntries(rowKeys.map(key=>[key,row[key]??null]))),
+    experiences:(values.experiences||[]).map(row=>({experience:row.experience||null,quantity:row.quantity||null}))});
   // A lost response must be resolved with the original payload/key, including
   // when the operator has since changed fields. The second save reuses the ID.
   class DraftSession {
@@ -70,6 +71,10 @@
         f("extra_beds",__("Camas adicionales"),"Int",{default:0}),
         f("rate",__("Tarifa preferida (opcional)"),"Link",{options:"HS Rate",get_query:scope})]}),
       f("channel",__("Canal"),"Data",{default:values.channel||"Recepción"}),
+      {...pick("travel_agent",__("Agencia de viajes (opcional)"),(this.data.travel_experiences?.agents||[]).filter(row=>row.active||row.name===values.travel_agent),"agent_name"),default:values.travel_agent||""},
+      f("experiences",__("Experiencias adicionales"),"Table",{in_place_edit:true,data:copy(values.experiences||[]),fields:[
+        f("experience",__("Experiencia"),"Link",{options:"HS Experience",reqd:1,in_list_view:1,get_query:()=>({filters:{property,active:1}})}),
+        f("quantity",__("Cantidad"),"Int",{reqd:1,default:1,in_list_view:1})]}),
       f("hold",__("Retener temporalmente al aceptar el precio"),"Check",{default:values.hold||0,description:__("Guardar el borrador no inicia la retención.")}),
       f("instructions",__("Solicitudes especiales"),"Small Text",{default:values.instructions||""})];
     const sameProperty=()=>{if(this.property!==property)throw new Error("Property changed");};
@@ -88,8 +93,9 @@
         const request=session.booking?session.review(collected(v)):collected(v);
         const q=await this.call("preview",{property_name:property,action:session.booking?"confirm_booking_draft":"reserve",data:JSON.stringify(request)});
         sameProperty();
-        const key=frappe.utils.get_random(24),held=Boolean(v.hold),lines=q.lines.map(line=>`<li>${esc(line.explanation.join("; "))}</li>`).join("");
-        await this.dialog(__("Revisar cotización"),[f("summary",__("Precio y disponibilidad"),"HTML",{options:`<p>${esc(held?__("Al aceptar se retendrá el cupo temporalmente."):__("Al aceptar se confirmará la reserva."))}</p><h2>${esc(this.amount(q.amount,q.currency))}</h2><ul>${lines}</ul><p>${esc(__("Impuestos y saldo se calculan al facturar."))}</p>`})],async(x,c)=>{
+        const key=frappe.utils.get_random(24),held=Boolean(v.hold),lines=q.lines.map(line=>`<li>${esc(line.explanation.join("; "))}</li>`).join("")+
+          (q.experiences||[]).map(row=>`<li>${esc(row.name)} × ${esc(row.quantity)}: ${esc(this.amount(row.amount,q.currency))}</li>`).join("");
+        await this.dialog(__("Revisar cotización"),[f("summary",__("Precio y disponibilidad"),"HTML",{options:`<p>${esc(held?__("Al aceptar se retendrá el cupo temporalmente."):__("Al aceptar se confirmará la reserva."))}</p><h2>${esc(this.amount(q.amount,q.currency))}</h2><ul>${lines}</ul>${Number(q.experiences_total)>0?`<p>${esc(__("Total estimado con experiencias"))}: ${esc(this.amount(q.estimated_total,q.currency))}</p>`:""}<p>${esc(__("Impuestos y saldo se calculan al facturar."))}</p>`})],async(x,c)=>{
           sameProperty();
           const action=session.booking?"confirm_booking_draft":"reserve";
           const data={...request,...(session.booking?{draft_acceptance:q.draft_acceptance}:{acceptance:q.acceptance})};

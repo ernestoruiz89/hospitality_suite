@@ -1,0 +1,223 @@
+{
+ "doctype": "DocType",
+ "name": "HS Laundry Order",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "LAV-.YYYY.-.#####",
+ "naming_rule": "Expression (old style)",
+ "fields": [
+  {
+   "fieldname": "company",
+   "label": "Compañía",
+   "fieldtype": "Link",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "property",
+   "label": "Establecimiento",
+   "fieldtype": "Link",
+   "options": "HS Property",
+   "reqd": 1
+  },
+  {
+   "fieldname": "stay",
+   "label": "Estancia",
+   "fieldtype": "Link",
+   "options": "HS Stay",
+   "reqd": 1
+  },
+  {
+   "fieldname": "room",
+   "label": "Habitación",
+   "fieldtype": "Link",
+   "options": "HS Room",
+   "reqd": 1
+  },
+  {
+   "fieldname": "folio",
+   "label": "Cuenta de estancia",
+   "fieldtype": "Link",
+   "options": "HS Folio"
+  },
+  {
+   "fieldname": "currency",
+   "label": "Moneda",
+   "fieldtype": "Link",
+   "options": "Currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "status",
+   "label": "Estado",
+   "fieldtype": "Select",
+   "options": "Requested\nCollected\nIn Process\nReady\nDelivered\nCancelled",
+   "reqd": 1,
+   "default": "Requested"
+  },
+  {
+   "fieldname": "express",
+   "label": "Exprés",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "complimentary",
+   "label": "Cortesía",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "notes",
+   "label": "Observaciones",
+   "fieldtype": "Small Text"
+  },
+  {
+   "fieldname": "items",
+   "label": "Items",
+   "fieldtype": "Table",
+   "options": "HS Laundry Order Item"
+  },
+  {
+   "fieldname": "total",
+   "label": "Total",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency"
+  },
+  {
+   "fieldname": "billed_total",
+   "label": "Importe cargado al folio",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency"
+  },
+  {
+   "fieldname": "ready_by",
+   "label": "Entrega prometida",
+   "fieldtype": "Datetime"
+  },
+  {
+   "fieldname": "collected_by",
+   "label": "Recogido por",
+   "fieldtype": "Link",
+   "options": "User"
+  },
+  {
+   "fieldname": "collected_at",
+   "label": "Recogido el",
+   "fieldtype": "Datetime"
+  },
+  {
+   "fieldname": "delivered_by",
+   "label": "Entregado por",
+   "fieldtype": "Link",
+   "options": "User"
+  },
+  {
+   "fieldname": "delivered_at",
+   "label": "Entregado el",
+   "fieldtype": "Datetime"
+  },
+  {
+   "fieldname": "shortage_note",
+   "label": "Motivo de piezas faltantes",
+   "fieldtype": "Small Text"
+  },
+  {
+   "fieldname": "cancel_reason",
+   "label": "Motivo de cancelación",
+   "fieldtype": "Small Text"
+  }
+ ],
+ "field_order": [
+  "company",
+  "property",
+  "stay",
+  "room",
+  "folio",
+  "currency",
+  "status",
+  "express",
+  "complimentary",
+  "notes",
+  "items",
+  "total",
+  "billed_total",
+  "ready_by",
+  "collected_by",
+  "collected_at",
+  "delivered_by",
+  "delivered_at",
+  "shortage_note",
+  "cancel_reason"
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Administrator",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Supervisor",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Receptionist",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Housekeeping",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Accountant",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0
+}

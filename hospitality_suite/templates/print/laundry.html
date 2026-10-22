@@ -1,0 +1,13 @@
+<div class="hs-print">
+  <p class="eyebrow">{{ _("LAVANDERÍA DE HUÉSPEDES") | e }}</p>
+  <h1>{{ frappe.db.get_value("HS Property",doc.property,"property_name") | e }}</h1>
+  <p>{{ doc.name | e }} · {{ _("Habitación") | e }} {{ frappe.db.get_value("HS Room",doc.room,"room_number") | e }} · {{ hs_label(doc.status) | e }}</p>
+  <p>{{ _("Estancia") | e }} {{ doc.stay | e }} · {{ _("Entrega prevista") | e }} {{ hs_date(doc.ready_by,doc.property) | e }}</p>
+  <table><thead><tr><th>{{ _("Prenda") | e }}</th><th>{{ _("Servicio") | e }}</th><th>{{ _("Recogidas") | e }}</th><th>{{ _("Devueltas") | e }}</th><th>{{ _("Tarifa") | e }}</th><th>{{ _("Importe") | e }}</th></tr></thead>
+  <tbody>{% for row in doc.items %}<tr><td>{{ row.garment | e }}</td><td>{{ hs_label(row.service_type) | e }}</td><td>{{ row.quantity | e }}</td><td>{{ (row.returned_quantity or 0) | e }}</td><td>{{ hs_money(row.rate,doc.currency) | e }}</td><td>{{ hs_money(row.amount,doc.currency) | e }}</td></tr>{% endfor %}</tbody></table>
+  <p><strong>{{ _("Cotización") | e }}: {{ hs_money(doc.total,doc.currency) | e }}</strong>{% if doc.status == "Delivered" %} · <strong>{{ _("Cargo al folio") | e }}: {{ hs_money(doc.billed_total,doc.currency) | e }}</strong>{% endif %}</p>
+  {% if doc.complimentary %}<p>{{ _("Cortesía sin cargo") | e }}</p>{% endif %}
+  {% if doc.notes %}<p>{{ _("Observaciones") | e }}: {{ doc.notes | e }}</p>{% endif %}
+  {% if doc.shortage_note %}<p>{{ _("Piezas faltantes") | e }}: {{ doc.shortage_note | e }}</p>{% endif %}
+  {% if doc.cancel_reason %}<p>{{ _("Motivo de cancelación") | e }}: {{ doc.cancel_reason | e }}</p>{% endif %}
+</div>

@@ -14,6 +14,10 @@
   <p>{{ _("Salida:") | e }} {{ confirmation.ends_at.strftime("%d/%m/%Y %H:%M") }}</p>
   <p>{{ _("Zona horaria:") | e }} {{ confirmation.time_zone | e }}</p>
   <p>{{ _("Alojamiento:") | e }} {{ confirmation.amount }} {{ confirmation.currency | e }}</p>
+  {% if confirmation.experiences_total | float > 0 %}
+  <p>{{ _("Experiencias adicionales:") | e }} {{ confirmation.experiences_total }} {{ confirmation.currency | e }}</p>
+  <p>{{ _("Total estimado:") | e }} {{ confirmation.estimated_total }} {{ confirmation.currency | e }}</p>
+  {% endif %}
   <p>{{ _("Esta página no acredita un pago.") | e }}</p>
   {% if confirmation.status in ("Hold", "Requested") %}
   <p>{{ _("Recepción debe confirmar la solicitud, la disponibilidad, el precio y los impuestos aplicables.") | e }}</p>

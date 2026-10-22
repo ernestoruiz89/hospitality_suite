@@ -1,0 +1,224 @@
+{
+ "doctype": "DocType",
+ "name": "HS Experience Order",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "EXPO-.YYYY.-.#####",
+ "naming_rule": "Expression (old style)",
+ "fields": [
+  {
+   "fieldname": "company",
+   "label": "Compañía",
+   "fieldtype": "Link",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "property",
+   "label": "Establecimiento",
+   "fieldtype": "Link",
+   "options": "HS Property",
+   "reqd": 1
+  },
+  {
+   "fieldname": "experience",
+   "label": "Experiencia",
+   "fieldtype": "Link",
+   "options": "HS Experience",
+   "reqd": 1
+  },
+  {
+   "fieldname": "booking",
+   "label": "Reserva",
+   "fieldtype": "Link",
+   "options": "HS Booking"
+  },
+  {
+   "fieldname": "stay",
+   "label": "Estancia",
+   "fieldtype": "Link",
+   "options": "HS Stay"
+  },
+  {
+   "fieldname": "folio",
+   "label": "Cuenta de estancia",
+   "fieldtype": "Link",
+   "options": "HS Folio"
+  },
+  {
+   "fieldname": "customer",
+   "label": "Cliente pagador",
+   "fieldtype": "Link",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "item",
+   "label": "Artículo",
+   "fieldtype": "Link",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "quantity",
+   "label": "Cantidad",
+   "fieldtype": "Int",
+   "reqd": 1,
+   "default": 1
+  },
+  {
+   "fieldname": "participants",
+   "label": "Participantes",
+   "fieldtype": "Int",
+   "reqd": 1,
+   "default": 1
+  },
+  {
+   "fieldname": "scheduled_at",
+   "label": "Fecha y hora de experiencia",
+   "fieldtype": "Datetime"
+  },
+  {
+   "fieldname": "unit_rate",
+   "label": "Precio unitario",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency"
+  },
+  {
+   "fieldname": "currency",
+   "label": "Moneda",
+   "fieldtype": "Link",
+   "options": "Currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amount",
+   "label": "Importe",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "status",
+   "label": "Estado",
+   "fieldtype": "Select",
+   "options": "Reserved\nConfirmed\nDelivered\nCancelled",
+   "reqd": 1,
+   "default": "Reserved"
+  },
+  {
+   "fieldname": "charge",
+   "label": "Cargo",
+   "fieldtype": "Link",
+   "options": "HS Charge"
+  },
+  {
+   "fieldname": "notes",
+   "label": "Observaciones",
+   "fieldtype": "Small Text"
+  },
+  {
+   "fieldname": "cancel_reason",
+   "label": "Motivo de cancelación",
+   "fieldtype": "Small Text"
+  }
+ ],
+ "field_order": [
+  "company",
+  "property",
+  "experience",
+  "booking",
+  "stay",
+  "folio",
+  "customer",
+  "item",
+  "quantity",
+  "participants",
+  "scheduled_at",
+  "unit_rate",
+  "currency",
+  "amount",
+  "status",
+  "charge",
+  "notes",
+  "cancel_reason"
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Administrator",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Supervisor",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Receptionist",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Cashier",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Accountant",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Auditor",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0
+}

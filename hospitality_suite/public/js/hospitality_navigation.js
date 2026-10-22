@@ -5,7 +5,7 @@
   const inactive=room=>room.active===0||room.active===false;
   const blocked=(room,data)=>data.blocks.some(b=>b.room===room.name&&b.starts_at<=data.server_time&&(!b.ends_at||b.ends_at>data.server_time));
   const state=(room,data)=>inactive(room)?"inactive":blocked(room,data)?"blocked":data.occupied.some(s=>s.room===room.name)?"occupied":"vacant";
-  const cleanStates=["Clean","Dirty","Cleaning","Inspection"],states={vacant:__("Sin ocupación"),occupied:__("Ocupada"),blocked:__("Fuera de servicio"),inactive:__("Inactiva")};
+  const cleanStates=["Clean","Dirty","Cleaning","Inspection"],states={vacant:__("Sin ocupación"),occupied:__("Ocupada"),blocked:__("Bloqueada"),inactive:__("Inactiva")};
   const filters=(raw,data)=>{
     const value=raw&&typeof raw==="object"?raw:{};
     return {query:typeof value.query==="string"?value.query.slice(0,120):"",clean:cleanStates.includes(value.clean)?value.clean:"",

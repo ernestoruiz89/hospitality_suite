@@ -23,7 +23,8 @@ def snapshot():
     for prop in properties:
         active_rooms = set(frappe.get_all("HS Room", filters={"property": prop.name, "active": 1}, pluck="name"))
         occupied = {r.room for r in frappe.get_all("HS Stay", filters={"property": prop.name, "status": "Active"}, fields=["room"])} & active_rooms
-        blocked = {r.room for r in frappe.get_all("HS Allocation", filters={"property": prop.name, "kind": "Maintenance", "status": "Active"},
+        blocked = {r.room for r in frappe.get_all("HS Allocation", filters={"property": prop.name,
+                                                    "kind": ["in", ["Maintenance", "Room Block"]], "status": "Active"},
                                                     fields=["room", "starts_at", "ends_at"])
                    if get_datetime(r.starts_at) <= instant and (not r.ends_at or get_datetime(r.ends_at) > instant)} & active_rooms
         tickets = frappe.db.count("HS Guest Ticket", {"property": prop.name, "status": ["in", ["Open", "In Progress"]]})

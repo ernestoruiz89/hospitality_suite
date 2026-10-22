@@ -1,0 +1,164 @@
+{
+ "doctype": "DocType",
+ "name": "HS Experience",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "EXP-.#####",
+ "naming_rule": "Expression (old style)",
+ "fields": [
+  {
+   "fieldname": "company",
+   "label": "Compañía",
+   "fieldtype": "Link",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "property",
+   "label": "Establecimiento",
+   "fieldtype": "Link",
+   "options": "HS Property",
+   "reqd": 1
+  },
+  {
+   "fieldname": "experience_name",
+   "label": "Nombre de experiencia",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "experience_category",
+   "label": "Categoría de experiencia",
+   "fieldtype": "Select",
+   "options": "Spa\nTour\nDining\nActivity\nTransport\nOther",
+   "reqd": 1,
+   "default": "Spa"
+  },
+  {
+   "fieldname": "item",
+   "label": "Artículo",
+   "fieldtype": "Link",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "duration",
+   "label": "Duración",
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "description",
+   "label": "Descripción",
+   "fieldtype": "Small Text"
+  },
+  {
+   "fieldname": "image_url",
+   "label": "Imagen pública",
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "show_on_booking_page",
+   "label": "Mostrar en portal",
+   "fieldtype": "Check",
+   "default": 0
+  },
+  {
+   "fieldname": "active",
+   "label": "Habilitado",
+   "fieldtype": "Check",
+   "default": 1
+  }
+ ],
+ "field_order": [
+  "company",
+  "property",
+  "experience_name",
+  "experience_category",
+  "item",
+  "duration",
+  "description",
+  "image_url",
+  "show_on_booking_page",
+  "active"
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Administrator",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Supervisor",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Receptionist",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Cashier",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Accountant",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Auditor",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0,
+ "title_field": "experience_name",
+ "search_fields": "experience_name",
+ "show_title_field_in_link": 1
+}

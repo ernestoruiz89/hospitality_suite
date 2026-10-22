@@ -59,6 +59,17 @@ def catalog():
         for row in prop["categories"]:
             if row.portal_image not in public:
                 row.portal_image=None
+        from hospitality_suite.travel_experiences import quote_experiences
+        internal_prop=frappe.get_doc("HS Property",prop.name)
+        prop["experiences"]=[]
+        for exp in frappe.get_all("HS Experience",filters={"property":prop.name,"active":1,"show_on_booking_page":1},
+                                  fields=["name","experience_name","experience_category","duration","description","image_url"]):
+            try:
+                quote=quote_experiences(internal_prop,[{"experience":exp.name,"quantity":1}],public=True)[0]
+            except frappe.ValidationError:
+                continue
+            exp["price"],exp["currency"]=quote["rate"],prop.currency
+            prop["experiences"].append(exp)
         result.append(prop)
     return result
 
@@ -90,6 +101,10 @@ def request_values(data):
     if not 1<=count<=10 or not 1<=people<=20:
         frappe.throw(frappe._("Cantidad de habitaciones o personas inválida"))
     values={k:data.get(k) for k in ("full_name","email","phone","starts_at","ends_at","category","mode","quantity","people","acceptance")}
+    extras=data.get("experiences") or []
+    if not isinstance(extras,list) or len(extras)>20 or any(not isinstance(row,dict) for row in extras):
+        frappe.throw(frappe._("Revise las experiencias seleccionadas"))
+    values["experiences"]=[{"experience":row.get("experience"),"quantity":row.get("quantity")} for row in extras]
     values["request_mode"]=request_mode
     return {**values,"rooms":[dict(category=data["category"],people=people) for _ in range(count)]}
 
@@ -97,10 +112,10 @@ def request_values(data):
 @frappe.whitelist(allow_guest=True)
 @rate_limit(limit=30,seconds=60)
 def quote(property_name,data):
-    calculation=operations.quote_request(enabled(property_name),request_values(data))
+    calculation=operations.quote_request(enabled(property_name),request_values(data),public=True)
     # Public explanation is plain text from the same server quote, without
     # exposing internal rate identifiers or guest/account records.
-    return {**{k:calculation[k] for k in ("amount","currency","acceptance","estimated_total")},
+    return {**{k:calculation[k] for k in ("amount","currency","acceptance","estimated_total","experiences_total")},
             "explanation":list(calculation["lines"][0]["explanation"])}
 
 
@@ -136,7 +151,7 @@ def request(property_name,data,request_key):
                 frappe.throw(frappe._("La clave ya fue usada para otra solicitud"))
         else:
             availability.expire_locked(prop)
-            calculation=operations.quote_request(prop,values)
+            calculation=operations.quote_request(prop,values,public=True)
             if calculation["acceptance"]!=values.get("acceptance"):
                 frappe.throw(frappe._("Vuelva a consultar el precio y disponibilidad"))
             doc=frappe.get_doc(dict(doctype="HS Portal Request",property=prop.name,company=prop.company,
@@ -146,7 +161,8 @@ def request(property_name,data,request_key):
                                    mode=values.get("mode") or (prop.mode if prop.mode!="Mixed" else "Hotel"),status=values["request_mode"],
                                    hold_until=now_datetime()+timedelta(minutes=prop.hold_minutes or 15) if values["request_mode"]=="Hold" else None,
                                    request_until=now_datetime()+timedelta(days=1) if values["request_mode"]=="Requested" else None,currency=prop.currency,
-                                   amount=calculation["amount"],quote_snapshot=canonical(calculation),request_key=digest,payload_hash=payload_hash))
+                                   amount=calculation["amount"],quote_snapshot=canonical(calculation),experiences=canonical(values["experiences"]),
+                                   request_key=digest,payload_hash=payload_hash))
             doc.insert(ignore_permissions=True)  # bounded request; no guest/finance/account creation
             if doc.status=="Hold":
                 for row in values["rooms"]:
@@ -166,10 +182,13 @@ def confirmation(token):
     doc=frappe.get_doc(data["doctype"],data["name"])
     prop=enabled(doc.property)
     status="Expired" if doc.status=="Requested" and doc.request_until<=now_datetime() else doc.status
+    quoted=frappe.parse_json(doc.quote_snapshot or "{}")
     return dict(property_name=prop.property_name,status=status,starts_at=local(doc.starts_at,prop),ends_at=local(doc.ends_at,prop),
                 hold_until=local(doc.hold_until,prop) if doc.get("hold_until") else None,
                 request_until=local(doc.request_until,prop) if doc.get("request_until") else None,
-                currency=doc.currency,amount=doc.amount,time_zone=prop.time_zone)
+                currency=doc.currency,amount=doc.amount,time_zone=prop.time_zone,
+                experiences_total=quoted.get("experiences_total") or "0.00",
+                estimated_total=quoted.get("estimated_total") or doc.amount)
 
 
 def link(prop,data):
@@ -192,7 +211,7 @@ def conversion_values(prop,data):
         frappe.throw(frappe._("La solicitud ya no está pendiente"))
     values=dict(starts_at=local(request_doc.starts_at,prop).isoformat(),ends_at=local(request_doc.ends_at,prop).isoformat(),mode=request_doc.mode,
                 customer=data["customer"],guest=data["guest"],rooms=[dict(category=request_doc.category,people=request_doc.people) for _ in range(request_doc.rooms)],
-                channel="Web",acceptance=data.get("acceptance"))
+                channel="Web",experiences=frappe.parse_json(request_doc.experiences or "[]"),acceptance=data.get("acceptance"))
     return request_doc,values
 
 

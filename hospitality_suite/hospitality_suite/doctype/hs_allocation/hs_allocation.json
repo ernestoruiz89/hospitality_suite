@@ -55,7 +55,7 @@
    "fieldname": "kind",
    "label": "Tipo",
    "fieldtype": "Select",
-   "options": "Reservation\nStay\nMaintenance",
+   "options": "Reservation\nStay\nMaintenance\nRoom Block",
    "reqd": 1,
    "default": "Reservation"
   },
@@ -120,6 +120,12 @@
    "label": "Mantenimiento",
    "fieldtype": "Link",
    "options": "HS Maintenance Order"
+  },
+  {
+   "fieldname": "room_block",
+   "label": "Bloqueo de habitación",
+   "fieldtype": "Link",
+   "options": "HS Room Block"
   }
  ],
  "field_order": [
@@ -140,7 +146,8 @@
   "currency",
   "accepted_amount",
   "quote_snapshot",
-  "maintenance"
+  "maintenance",
+  "room_block"
  ],
  "permissions": [
   {

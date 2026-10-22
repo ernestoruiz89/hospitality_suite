@@ -1,0 +1,34 @@
+{
+ "doctype": "Page",
+ "name": "hospitality-travel-agents",
+ "page_name": "hospitality-travel-agents",
+ "title": "Agencias de viajes",
+ "module": "Hospitality Suite",
+ "standard": "Yes",
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "HS Administrator"
+  },
+  {
+   "role": "HS Manager"
+  },
+  {
+   "role": "HS Supervisor"
+  },
+  {
+   "role": "HS Receptionist"
+  },
+  {
+   "role": "HS Cashier"
+  },
+  {
+   "role": "HS Accountant"
+  },
+  {
+   "role": "HS Auditor"
+  }
+ ]
+}

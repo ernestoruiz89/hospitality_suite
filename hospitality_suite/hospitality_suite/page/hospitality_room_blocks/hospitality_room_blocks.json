@@ -1,0 +1,25 @@
+{
+ "doctype": "Page",
+ "name": "hospitality-room-blocks",
+ "page_name": "hospitality-room-blocks",
+ "title": "Bloqueos de habitaciones",
+ "module": "Hospitality Suite",
+ "standard": "Yes",
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "HS Administrator"
+  },
+  {
+   "role": "HS Manager"
+  },
+  {
+   "role": "HS Supervisor"
+  },
+  {
+   "role": "HS Receptionist"
+  }
+ ]
+}

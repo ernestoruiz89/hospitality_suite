@@ -64,6 +64,33 @@
    "default": "Recepción"
   },
   {
+   "fieldname": "travel_agent",
+   "label": "Agencia de viajes",
+   "fieldtype": "Link",
+   "options": "HS Travel Agent"
+  },
+  {
+   "fieldname": "agent_commission_pct",
+   "label": "Comisión de agencia (%)",
+   "fieldtype": "Percent",
+   "read_only": 1
+  },
+  {
+   "fieldname": "agent_commission_estimate",
+   "label": "Comisión estimada",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "agent_commission_invoice",
+   "label": "Factura de comisión",
+   "fieldtype": "Link",
+   "options": "Purchase Invoice",
+   "read_only": 1
+  },
+  {
    "fieldname": "instructions",
    "label": "Instrucciones",
    "fieldtype": "Small Text"
@@ -145,6 +172,10 @@
   "status",
   "hold_until",
   "channel",
+  "travel_agent",
+  "agent_commission_pct",
+  "agent_commission_estimate",
+  "agent_commission_invoice",
   "instructions",
   "rooms",
   "reason",

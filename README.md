@@ -1,6 +1,6 @@
 # Hospitality Suite 0.8.9
 
-Aplicación de alojamiento para **Hotel, Por tiempo y operación Mixta** sobre Frappe/ERPNext. Incluye once Pages para recepción, reservas, estancias, caja, limpieza, mantenimiento, servicios/inventario, huéspedes, gerencia y configuración; nueve roles y 35 DocTypes HS. Los documentos estándar de ERPNext son la autoridad contable y de inventario.
+Aplicación de alojamiento para **Hotel, Por tiempo y operación Mixta** sobre Frappe/ERPNext. Incluye recepción, reservas, estancias, caja, limpieza, lavandería de huéspedes, mantenimiento, bloqueos operativos de habitaciones, agencias de viajes, experiencias, servicios/inventario, huéspedes, gerencia y configuración. Los documentos estándar de ERPNext son la autoridad contable y de inventario. [Flujo de lavandería](docs/LAVANDERIA_HUESPEDES.md) · [Bloqueos de habitaciones](docs/BLOQUEOS_HABITACION.md) · [Agencias y experiencias](docs/AGENCIAS_Y_EXPERIENCIAS.md).
 
 El alcance obligatorio del adjunto está contrastado en las **218 entradas** de la [matriz](docs/AUDITORIA_ESPECIFICACION.md), con [cotejo individual](docs/COTEJO_FINAL.md). La sincronización real con Airbnb/Booking sigue aplazada por instrucción del usuario. Las demás integraciones externas son contratos/adaptadores de referencia con pruebas simuladas, sin proveedores activos.
 

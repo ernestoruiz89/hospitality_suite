@@ -257,6 +257,12 @@
    "options": "Price List"
   },
   {
+   "fieldname": "agent_commission_item",
+   "label": "Artículo de comisión de agencias",
+   "fieldtype": "Link",
+   "options": "Item"
+  },
+  {
    "fieldname": "tax_policy_confirmed",
    "label": "Tratamiento fiscal confirmado",
    "fieldtype": "Check"
@@ -423,6 +429,7 @@
   "day_pass_item",
   "tax_template",
   "price_list",
+  "agent_commission_item",
   "tax_policy_confirmed",
   "brand_name",
   "retention_days",

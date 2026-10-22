@@ -35,6 +35,15 @@ frappe.ready(async()=>{
   function update(){const prop=catalog.find(p=>p.name===el("hp-property").value);el("hp-category").replaceChildren();for(const cat of prop.categories)el("hp-category").add(new Option(cat.category_name,cat.name));
     const modes=prop.mode==="Mixed"?["Hotel","Por tiempo","Day Pass"]:prop.mode==="Por tiempo"?["Por tiempo","Day Pass"]:["Hotel"];
     el("hp-stay-mode").replaceChildren();for(const mode of modes)el("hp-stay-mode").add(new Option(({Hotel:__("Por noche"),"Por tiempo":__("Por tiempo"),"Day Pass":__("Day Pass")})[mode],mode));
+    const list=el("hp-experience-list");list.replaceChildren();
+    el("hp-experiences").hidden=!(prop.experiences||[]).length;
+    for(const exp of prop.experiences||[]){
+      const row=document.createElement("div"),choice=document.createElement("input"),qty=document.createElement("input"),label=document.createElement("label");
+      choice.type="checkbox";choice.value=exp.name;choice.className="hp-experience-choice";
+      qty.type="number";qty.min="1";qty.max="20";qty.value="1";qty.className="hp-experience-quantity";qty.setAttribute("aria-label",__("Cantidad de {0}",[exp.experience_name]));
+      label.append(choice,document.createTextNode(` ${exp.experience_name} · ${exp.price} ${exp.currency}${exp.duration?` · ${exp.duration}`:""}`));
+      row.append(label,qty);list.append(row);
+    }
     categoryInfo();modeInfo();}
   update();el("hp-property").addEventListener("change",update);el("hp-category").addEventListener("change",categoryInfo);el("hp-request-mode").addEventListener("change",modeInfo);
   el("hp-stay-mode").addEventListener("change",()=>{
@@ -45,7 +54,8 @@ frappe.ready(async()=>{
     modeInfo();
   });
   let accepted,values,key,acceptedProperty,revision=0;
-  function data(){return {category:el("hp-category").value,mode:el("hp-stay-mode").value,starts_at:el("hp-start").value,ends_at:el("hp-end").value,quantity:+el("hp-quantity").value,people:+el("hp-people").value,full_name:el("hp-name").value,email:el("hp-email").value,phone:el("hp-phone").value,request_mode:el("hp-request-mode").value};}
+  function data(){return {category:el("hp-category").value,mode:el("hp-stay-mode").value,starts_at:el("hp-start").value,ends_at:el("hp-end").value,quantity:+el("hp-quantity").value,people:+el("hp-people").value,full_name:el("hp-name").value,email:el("hp-email").value,phone:el("hp-phone").value,request_mode:el("hp-request-mode").value,
+    experiences:[...el("hp-experience-list").children].filter(row=>row.querySelector(".hp-experience-choice").checked).map(row=>({experience:row.querySelector(".hp-experience-choice").value,quantity:+row.querySelector(".hp-experience-quantity").value}))};}
   el("hp-form").addEventListener("input",()=>{revision++;accepted=null;el("hp-request").hidden=true;el("hp-breakdown").textContent="";el("hp-result").textContent=__("Consulte nuevamente el precio después de cambiar los datos.");});
   el("hp-form").addEventListener("submit",async(event)=>{
     event.preventDefault();const current=++revision,requested=data(),property=el("hp-property").value;
@@ -57,7 +67,7 @@ frappe.ready(async()=>{
       showResult((requested.request_mode==="Requested"?__("Precio consultado: {0} {1}. La solicitud no reserva cupo; recepción confirmará precio, disponibilidad e impuestos.",[accepted.amount,accepted.currency]):
         __("Alojamiento: {0} {1}. Recepción confirmará las condiciones y los impuestos aplicables.",[accepted.amount,accepted.currency])));
       const explanations=Array.isArray(quote.explanation)?quote.explanation.filter(item=>typeof item==="string").slice(0,8):[];
-      el("hp-breakdown").textContent=[...explanations,quote.estimated_total&&quote.estimated_total!==quote.amount?
+      el("hp-breakdown").textContent=[...explanations,Number(quote.experiences_total)>0?__("Experiencias: {0} {1}.",[quote.experiences_total,quote.currency]):"",quote.estimated_total&&quote.estimated_total!==quote.amount?
         __("Total estimado con cargos de horario: {0} {1}.",[quote.estimated_total,quote.currency]):""].filter(Boolean).join(" · ");
       el("hp-request").hidden=false;
     }catch{if(current===revision){el("hp-breakdown").textContent="";showResult(__("No se encontró disponibilidad o no se pudo consultar. Revise las fechas e intente nuevamente."));}}
