@@ -23,10 +23,11 @@ assert all(re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*',value) for value in [args.ph
 config=json.loads((BENCH/'sites'/SITE/'site_config.json').read_text())
 assert config['db_name']==('hospitality_release' if args.target=='release' else 'hospitality_acceptance') and config.get('allow_tests') and config.get('hospitality_integration_test_site') and config.get('pause_scheduler')
 if args.target=='release':
-    assert args.phase=='release-install'
+    assert args.phase in ['release-install','final-recovery']
     backup=json.loads(Path('/home/frappe/.hospitality-release-install/clean-backup.json').read_text())
     assert backup['site']==SITE and all(hashlib.sha256((BENCH/'sites'/SITE/'private/backups'/name).read_bytes()).hexdigest()==digest for name,digest in backup['files'].items())
-    assert json.loads((ROOT/'docs/evidence/release-install-clean.json').read_text())['no_implicit_demo']
+    clean='f26-clean-install.json' if args.phase=='final-recovery' else 'release-install-clean.json'
+    assert json.loads((ROOT/'docs/evidence'/clean).read_text())['no_implicit_demo']
 else:
     assert (BENCH/f'.hospitality-{args.phase}-upgrade.json').is_file() and (BENCH/f'.hospitality-{args.phase}-ux-baseline.json').is_file()
 output=ROOT/'.local'/args.phase;output.mkdir(exist_ok=True,parents=True)

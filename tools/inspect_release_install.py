@@ -1,4 +1,5 @@
 """Read-only verification of a genuinely empty, independently installed app."""
+import argparse
 from datetime import datetime, timezone
 import hashlib
 import inspect
@@ -18,10 +19,15 @@ from hospitality_suite.schema import SCHEMA, PAGES, ROLES
 ROOT = Path(__file__).resolve().parents[1]
 BENCH = Path('/home/frappe/.hospitality-release-install/benches/hospitality-release-bench')
 SITE = 'hospitality-release.localhost'
-output = ROOT / 'docs/evidence/release-install-clean.json'
+parser=argparse.ArgumentParser()
+parser.add_argument('--receipt',default='release-install-clean.json')
+parser.add_argument('--package',default='release-install-package.json')
+args=parser.parse_args()
+assert all(__import__('re').fullmatch(r'[a-z0-9-]+\.json',name) for name in [args.receipt,args.package])
+output = ROOT / 'docs/evidence' / args.receipt
 assert not output.exists(), 'Preserve the original clean-site check'
 assert Path(sys.executable).parent == BENCH / 'env/bin'
-package = json.loads((ROOT / 'docs/evidence/release-install-package.json').read_text())
+package = json.loads((ROOT / 'docs/evidence' / args.package).read_text())
 installed = BENCH / 'apps/hospitality_suite'
 assert not installed.is_symlink()
 assert Path(hospitality_suite.__file__).resolve().is_relative_to(installed)

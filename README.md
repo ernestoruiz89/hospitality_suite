@@ -6,7 +6,7 @@
 
 PMS nativo para modalidades Hotel, Por tiempo y Hotel y por tiempo. Recepción, caja, limpieza y gerencia trabajan desde once Pages de Desk en español; la contabilidad y el inventario permanecen en ERPNext.
 
-Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. App 0.8.8 con contratos externos de referencia y pruebas simuladas, desactivados por defecto; el objetivo completo sigue activo. Otras versiones no están acreditadas.
+Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. Candidata de entrega **0.8.9**, con aceptación de Pages completada en 0.8.8: 410 nativas/232 JS y 214 de 218 requisitos verificados. Continúa el ensayo final de actualización/recuperación, paquete y entrega. Los contratos externos de referencia están desactivados; la sincronización OTA real está aplazada por el usuario. Otras versiones no están acreditadas. Los apartados de avance anteriores y posteriores son registros históricos con sus propios recuentos.
 
 [Tareas y estados por rol](docs/TAREAS_Y_ESTADOS_POR_ROL.md): **212 V y seis I**, con S00-02/S04-14 acreditados. **221 JS aprobadas**, 22 familias/84 acciones contrastadas y nuevo recorrido real de Mantenimiento/Gerencia/Supervisión con stock/devolución/reapertura. Se corrigen cantidades ambiguas y nombres de repuestos. Las 404 nativas de `be67c92` conservan su alcance histórico y Python sigue idéntico. Quedan estados/secuencias, variantes visuales secundarias y F26/paquete final; OTA aplazada. Los avances siguientes son antecedentes con su propia versión y alcance.
 

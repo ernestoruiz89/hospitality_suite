@@ -1,0 +1,25 @@
+{
+  "action": "snapshot-original",
+  "label": "original-release-backup",
+  "at_utc": "2026-10-22T04:39:33.056327+00:00",
+  "site": "hospitality-release.localhost",
+  "previous_revision": "be67c92d3b22b70f9a4a17d0841eb829a8e38f02",
+  "counts": {
+    "HS Property": 2,
+    "HS Room": 20,
+    "HS Booking": 3,
+    "HS Stay": 0,
+    "HS Charge": 0,
+    "HS Payment": 0,
+    "Sales Invoice": 0,
+    "Payment Entry": 0,
+    "Journal Entry": 0,
+    "GL Entry": 2,
+    "Stock Entry": 1,
+    "Stock Ledger Entry": 1,
+    "File": 2
+  },
+  "original_physical_files": 21,
+  "backup_verified": true,
+  "external_providers_activated": false
+}
