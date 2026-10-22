@@ -44,7 +44,8 @@ def departure(prop,data):
     current=segments[0]
     snapshot=json.loads(current.quote_snapshot or stay.quote_snapshot)
     end=max(now_datetime(),get_datetime(stay.ends_at))
-    if snapshot["rules"]["mode"]=="Motel":
+    from hospitality_suite.mode import is_time_mode
+    if is_time_mode(snapshot["rules"]["mode"]):
         start=to_site(snapshot["start"],prop) if snapshot.get("start") else current.starts_at
         quote=calculate(snapshot["rules"],local(start,prop),local(end,prop),snapshot.get("people",1),extra_beds=snapshot.get("extra_beds",0),precision=snapshot.get("precision",2))
         difference=max(decimal(0),decimal(quote["amount"])-decimal(current.accepted_amount))
@@ -80,9 +81,9 @@ def prepare_departure(prop,data):
     amount=decimal(quote["amount"])
     if amount:
         from hospitality_suite.item_configuration import bound_item,hours_quantity
-        motel=quote["kind"]=="Lodging"
-        item=bound_item(prop,quote["quote"],"extra_hour_item" if motel else "timing_item")
-        hour_rate=decimal(quote["quote"]["rules"].get("extra_hour_rate")) if motel else 0
+        timed=quote["kind"]=="Lodging"
+        item=bound_item(prop,quote["quote"],"extra_hour_item" if timed else "timing_item")
+        hour_rate=decimal(quote["quote"]["rules"].get("extra_hour_rate")) if timed else 0
         charge(prop,stay,folio,item,amount,quote["kind"],"Liquidación de tiempo de estancia",quote["quote"],quantity=hours_quantity(prop,quote["quote"],amount/hour_rate) if hour_rate else 1)
         if quote["kind"]=="Lodging":
             segments=current_all("HS Allocation",filters={"stay":stay.name,"status":"Active"},fields=["name"],order_by="starts_at desc")

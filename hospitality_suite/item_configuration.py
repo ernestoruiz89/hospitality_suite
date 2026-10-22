@@ -20,6 +20,10 @@ def bindings(prop,snapshot=None):
 
 
 def validate_bindings(prop):
+    if prop.get("day_pass_item"):
+        day_pass=frappe.get_doc("Item",prop.day_pass_item)
+        if day_pass.disabled or not day_pass.is_sales_item or day_pass.is_fixed_asset or day_pass.is_stock_item:
+            frappe.throw(frappe._("Day Pass sin habitación requiere un servicio de venta habilitado, sin inventario"))
     for field,label in BINDINGS:
         if prop.get(field):
             item=frappe.get_doc("Item",prop.get(field))
@@ -27,8 +31,8 @@ def validate_bindings(prop):
                 frappe.throw(frappe._("{0}: seleccione un servicio de venta habilitado, sin inventario").format(frappe._(label)))
             if field=="extra_hour_item" and item.name!=prop.lodging_item and frappe.db.get_value("UOM",item.stock_uom,"must_be_whole_number"):
                 frappe.throw(frappe._("El artículo de horas adicionales debe usar una unidad que admita fracciones de hora"))
-    if prop.mode in ("Motel","Mixed") and not prop.get("extra_hour_item") and frappe.db.exists("HS Rate",{"property":prop.name,"mode":"Motel","active":1,"extra_hour_rate":[">",0]}):
-        frappe.throw(frappe._("Configure el artículo para horas adicionales de motel"))
+    if prop.mode in ("Por tiempo","Mixed") and not prop.get("extra_hour_item") and frappe.db.exists("HS Rate",{"property":prop.name,"mode":"Por tiempo","active":1,"extra_hour_rate":[">",0]}):
+        frappe.throw(frappe._("Configure el artículo para horas adicionales por tiempo"))
 
 
 def bound_item(prop,snapshot,field):

@@ -93,25 +93,25 @@ class TestBookingRateAudit(IntegrationTestCase):
             self.prop.mode = 'Mixed'
             self.prop.save()
         for hours in (2, 3, 6, 12, 24):
-            rate = self.rate(mode='Motel', amount=400, block_hours=hours,
+            rate = self.rate(mode='Por tiempo', amount=400, block_hours=hours,
                 extra_hour_rate=120, grace_minutes=10, priority=1)
             start = datetime(2026, 12, 31, 22)
             for minutes, seconds, expected in ((0, 0, '400.00'), (10, 0, '400.00'),
                     (10, 1, '430.00'), (25, 0, '430.00'), (25, 1, '460.00')):
                 end = start + timedelta(hours=hours, minutes=minutes, seconds=seconds)
                 with self.subTest(block=hours, minutes=minutes, seconds=seconds):
-                    self.assertEqual(self.price(start, end, mode='Motel', rate_name=rate.name)['amount'], expected)
-        regular = self.rate(mode='Motel', amount=450, priority=10)
-        night = self.rate(mode='Motel', amount=600, block_hours=12, priority=20,
+                    self.assertEqual(self.price(start, end, mode='Por tiempo', rate_name=rate.name)['amount'], expected)
+        regular = self.rate(mode='Por tiempo', amount=450, priority=10)
+        night = self.rate(mode='Por tiempo', amount=600, block_hours=12, priority=20,
             night_start='21:00:00', night_end='06:00:00')
         for clock, expected in (('20:59:59', regular.name), ('21:00:00', night.name),
                 ('05:59:59', night.name), ('06:00:00', regular.name)):
             start = datetime.fromisoformat('2026-12-31T' + clock)
             with self.subTest(clock=clock):
-                self.assertEqual(self.price(start, start + timedelta(hours=2), mode='Motel')['rules']['name'], expected)
+                self.assertEqual(self.price(start, start + timedelta(hours=2), mode='Por tiempo')['rules']['name'], expected)
 
     def test_active_mode_change_requires_mixed_property_and_accepted_new_price(self):
-        motel_rate = self.rate(category=self.room.category, mode='Motel', amount=450, block_hours=24)
+        motel_rate = self.rate(category=self.room.category, mode='Por tiempo', amount=450, block_hours=24)
         # Keep both operations on the same calendar night even when the suite
         # itself starts in the last minute before midnight.
         self.now = self.now.replace(hour=10, minute=0, second=0)
@@ -120,7 +120,7 @@ class TestBookingRateAudit(IntegrationTestCase):
             entered = self.enter(ends_at=str(self.now + timedelta(days=1)))
         stay = frappe.get_doc('HS Stay', entered['stay'])
         target = frappe.get_doc('HS Room', {'property': self.prop.name, 'room_number': 'H102'})
-        values = dict(stay=stay.name, room=target.name, mode='Motel', folio=entered['folio'],
+        values = dict(stay=stay.name, room=target.name, mode='Por tiempo', folio=entered['folio'],
             modified=str(stay.modified), reason='Cambio explícito de modalidad sintético')
         with self.assertRaisesRegex(frappe.ValidationError, 'no permite esa modalidad'):
             api.preview(self.prop.name, values, 'change_room')
@@ -137,7 +137,7 @@ class TestBookingRateAudit(IntegrationTestCase):
             self.command('change_room', values)
         stay.reload()
         self.assertEqual((stay.status, stay.amount, stay.room), ('Active', 450, target.name))
-        self.assertEqual(json.loads(stay.quote_snapshot)['rules']['mode'], 'Motel')
+        self.assertEqual(json.loads(stay.quote_snapshot)['rules']['mode'], 'Por tiempo')
         segments = frappe.get_all('HS Allocation', filters={'stay': stay.name}, fields=['*'], order_by='creation')
         self.assertEqual(len(segments), 2)
         self.assertEqual(segments[0].ends_at, segments[1].starts_at)

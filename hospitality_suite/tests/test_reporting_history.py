@@ -87,7 +87,7 @@ class TestReportingHistory(IntegrationTestCase):
         from hospitality_suite.service import operation
         with operation():
             frappe.get_doc(dict(doctype='HS Access',property=self.prop.name,company=self.prop.company,user=user)).insert()
-        other=frappe.db.get_value('HS Property',{'property_name':'Motel Luna Demo'})
+        other=frappe.db.get_value('HS Property',{'property_name':'Luna Demo · Por tiempo'})
         foreign=frappe.db.get_value('HS Guest',{'property':other})
         frappe.set_user(user)
         self.assertEqual(api.guest_history(guests[0].name)['total'],2)

@@ -16,7 +16,7 @@ class TestOperations(IntegrationTestCase):
         self.addCleanup(frappe.db.rollback)
         frappe.set_user("Administrator")
         self.prop = frappe.get_doc("HS Property", {"property_name": "Hotel Jardín Demo"})
-        self.motel = frappe.get_doc("HS Property", {"property_name": "Motel Luna Demo"})
+        self.motel = frappe.get_doc("HS Property", {"property_name": "Luna Demo · Por tiempo"})
         self.room = frappe.get_all("HS Room", filters={"property": self.prop.name}, fields=["*"], order_by="room_number")[0]
         self.guest = frappe.get_all("HS Guest", filters={"property": self.prop.name}, fields=["*"])[0]
         self.start = now_datetime().replace(microsecond=0)

@@ -176,7 +176,7 @@ class TestAuditHistory(IntegrationTestCase):
                 actor='Administrator',occurred_at=now_datetime(),business_date=self.prop.business_date,reason='Registro histórico',details='{"identity_number":"NEVER-ECHO-THIS","provider_secret":"NEVER-ECHO-THIS"}')
         before=self.fingerprints();detail=api.audit_detail(self.prop.name,event.name)
         self.assertFalse(detail['historical_values_available']);self.assertNotIn('NEVER-ECHO-THIS',json.dumps(detail));self.assertEqual(self.fingerprints(),before)
-        other=frappe.get_doc('HS Property',{'property_name':'Motel Luna Demo'})
+        other=frappe.get_doc('HS Property',{'property_name':'Luna Demo · Por tiempo'})
         with self.assertRaises(frappe.PermissionError):api.audit_detail(other.name,event.name)
         for account in ('Guest','receptionist@hospitality.example.invalid','housekeeping@hospitality.example.invalid','maintenance@hospitality.example.invalid'):
             frappe.set_user(account)

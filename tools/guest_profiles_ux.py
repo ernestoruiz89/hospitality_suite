@@ -50,7 +50,7 @@ try:
         before=hashes();assert all(before[dt]==value for dt,value in baseline['tables'].items())
         properties={}
         with operation():
-            for key,title,required in [('optional','Motel Luna Demo',0),('required','Hotel Jardín Demo',1)]:
+            for key,title,required in [('optional','Luna Demo · Por tiempo',0),('required','Hotel Jardín Demo',1)]:
                 prop=frappe.get_doc('HS Property',{'property_name':title})
                 if prop.guest_id_required!=required:prop.guest_id_required=required;prop.save()
                 properties[key]=prop.name

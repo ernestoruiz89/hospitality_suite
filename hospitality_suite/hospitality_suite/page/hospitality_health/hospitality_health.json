@@ -1,0 +1,16 @@
+{
+ "doctype": "Page",
+ "name": "hospitality-health",
+ "page_name": "hospitality-health",
+ "title": "Salud del sistema",
+ "module": "Hospitality Suite",
+ "standard": "Yes",
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "HS Administrator"
+  }
+ ]
+}

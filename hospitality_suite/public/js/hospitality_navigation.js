@@ -68,17 +68,26 @@
   };
   Desk.prototype.home_board_access=function(){return this.data.pages.some(p=>p.route==="hospitality-stays")&&(this.allowed("stay")||this.allowed("finance")||this.allowed("report"));};
   Desk.prototype.render_home=function(el){
-    const metrics=[[__("Habitaciones ocupadas"),this.data.occupied.length,__("Estancias activas"),"hospitality-reception"],
-      [__("Limpias sin ocupación ni bloqueo"),this.data.rooms.filter(r=>!inactive(r)&&r.cleaning_status==="Clean"&&state(r,this.data)==="vacant").length,__("Revise fechas antes de asignar"),"hospitality-reception"],
+    const rooms=this.data.rooms||[],counts={vacant:0,occupied:0,blocked:0,inactive:0},occupiedRooms=new Set((this.data.occupied||[]).map(row=>row.room));
+    for(const room of rooms){const status=inactive(room)?"inactive":blocked(room,this.data)?"blocked":occupiedRooms.has(room.name)?"occupied":"vacant";counts[status]++;}
+    const operable=counts.occupied+counts.vacant,ready=rooms.filter(r=>state(r,this.data)==="vacant"&&r.cleaning_status==="Clean").length;
+    const toPrepare=counts.vacant-ready,occupancy=operable?Math.round(counts.occupied/operable*100):0;
+    const segments=[["occupied",__("Ocupadas"),counts.occupied],["ready",__("Listas"),ready],["prepare",__("Por preparar"),toPrepare],
+      ["blocked",__("Bloqueadas"),counts.blocked],["inactive",__("Inactivas"),counts.inactive]];
+    const metrics=[[__("Habitaciones ocupadas"),counts.occupied,__("Estancias activas"),"hospitality-reception"],
+      [__("Limpias sin ocupación ni bloqueo"),ready,__("Revise fechas antes de asignar"),"hospitality-reception"],
       [__("Limpieza pendiente"),this.data.cleaning.filter(t=>t.status!=="Completed").length,__("Habitaciones por preparar"),"hospitality-housekeeping"],
       [__("Mantenimiento pendiente"),this.data.maintenance.filter(t=>t.status!=="Completed").length,__("Órdenes por completar"),"hospitality-maintenance"]];
-    el.html(`<section class="hs-welcome"><div><h2>${e(__("Su jornada de un vistazo"))}</h2><p>${e(__("Revise los pendientes y elija la siguiente tarea."))}</p></div>${this.allowed("reserve")?this.button("reserve",__("Reservar"),"","primary"):""}</section>`+
+    el.html(`<section class="hs-welcome"><div><h2>${e(__("Su jornada de un vistazo"))}</h2><p>${e(__("Panel operativo actual · {0}",[this.prop.property_name||this.property]))}</p></div>${this.allowed("reserve")?this.button("reserve",__("Reservar"),"","primary"):""}</section>`+
+      `<section class="hs-section hs-home-capacity" aria-label="${e(__("Ocupación actual"))}"><div class="hs-home-capacity-head"><div><h2>${e(__("Ocupación actual"))}</h2><p>${e(__("{0} de {1} habitaciones operativas ocupadas",[counts.occupied,operable]))}</p></div><strong>${occupancy}%</strong></div>`+
+      `<div class="hs-home-capacity-bar" role="img" aria-label="${e(__("Distribución de {0} habitaciones",[rooms.length]))}">${rooms.length?segments.map(([key,,value])=>value?`<span class="is-${key}" style="width:${(value/rooms.length*100).toFixed(2)}%"></span>`:"").join(""):""}</div>`+
+      `<div class="hs-home-capacity-legend">${segments.map(([key,label,value])=>`<span><i class="is-${key}" aria-hidden="true"></i>${e(label)} <strong>${value}</strong></span>`).join("")}</div><p class="hs-note">${e(__("La ocupación usa habitaciones activas sin bloqueo; la disponibilidad de fechas se confirma al consultar el intervalo."))}</p></section>`+
       (this.home_board_access()?`<section class="hs-section hs-home-pending" aria-label="${e(__("Llegadas y salidas pendientes"))}"></section>`:"")+
       `<div class="hs-metrics">${metrics.map(([label,value,help,route])=>{const target=this.data.pages.some(p=>p.route===route),tag=target?"a":"article";return `<${tag}${target?` href="/app/${e(route)}"`:""}><span>${e(label)}</span><strong>${value}</strong><small>${e(help)}</small>${target?`<small>${e(__("Abrir vista →"))}</small>`:""}</${tag}>`;}).join("")}</div><section class="hs-section"><h2>${e(__("Accesos para su jornada"))}</h2><div class="hs-shortcuts">${this.data.pages.filter(p=>p.route!==this.route).map(p=>`<a href="/app/${e(p.route)}"><strong>${e(__(p.title))}</strong><span>${e(__("Ver operación →"))}</span></a>`).join("")}</div></section>`);
     this.homeContext={el,property:this.property};if(this.home_board_access())this.load_home_pending();
   };
   Desk.prototype.action_home_queue=function(view){
-    if(!["arrivals","departures"].includes(view)||!this.home_board_access())return;
+    if(!["arrivals","departures","hosted","accounts"].includes(view)||!this.home_board_access())return;
     this.save_preference("stay-board",{view,date:this.calendar_day(),offset:0});frappe.set_route("hospitality-stays");
   };
   Desk.prototype.action_home_pending=function(){return this.load_home_pending();};
@@ -89,8 +98,10 @@
     context.loading=true;target.attr("aria-busy","true").html(`<p role="status">${e(__("Consultando llegadas y salidas…"))}</p>`);
     try{
       const data=await this.call("stay_board",{property_name:property,view:"arrivals",date,offset:0,page_length:1});if(!current())return;
-      if(data?.property!==property||data?.date!==date||data?.view!=="arrivals"||![data?.counts?.arrivals,data?.counts?.departures].every(n=>Number.isInteger(n)&&n>=0))throw Error("Unexpected Home context");
-      target.html(`<h2>${e(__("Por atender"))}</h2><p>${e(__("Pendientes hasta {0} · {1}",[date.split("-").reverse().join("/"),this.prop.time_zone]))}</p><div class="hs-home-queues">${[["arrivals",__("Llegadas pendientes"),__("Ver llegadas")],["departures",__("Salidas pendientes"),__("Ver salidas")]].map(([view,label,action])=>`<article class="${data.counts[view]?"has-pending":""}"><h3>${e(label)}</h3><strong>${data.counts[view]}</strong>${this.button("home_queue",action,view)}</article>`).join("")}</div><p class="hs-note">${e(__("Incluye pendientes de días anteriores y retenciones vigentes. Las llegadas se cuentan por habitación, también las que faltan por asignar."))}</p>${this.button("home_pending",__("Actualizar pendientes"))}`);
+      if(data?.property!==property||data?.date!==date||data?.view!=="arrivals"||!["arrivals","departures","hosted","accounts"].every(key=>Number.isInteger(data?.counts?.[key])&&data.counts[key]>=0))throw Error("Unexpected Home context");
+      const queues=[["arrivals",__("Llegadas pendientes"),__("Ver llegadas")],["departures",__("Salidas pendientes"),__("Ver salidas")],
+        ["hosted",__("Alojados ahora"),__("Ver alojados")],["accounts",__("Cuentas abiertas"),__("Ver cuentas")]];
+      target.html(`<h2>${e(__("Operación de hoy"))}</h2><p>${e(__("Pendientes hasta {0} · {1}",[date.split("-").reverse().join("/"),this.prop.time_zone]))}</p><div class="hs-home-queues">${queues.map(([view,label,action])=>`<article class="${["arrivals","departures"].includes(view)&&data.counts[view]?"has-pending":""}"><h3>${e(label)}</h3><strong>${data.counts[view]}</strong>${this.button("home_queue",action,view)}</article>`).join("")}</div><p class="hs-note">${e(__("Las llegadas y salidas incluyen pendientes anteriores. Las cuentas abiertas se cuentan una vez, incluso si son compartidas."))}</p>${this.button("home_pending",__("Actualizar pendientes"))}`);
     }catch{if(current())target.html(`<div role="alert"><p>${e(__("No se pudieron consultar las llegadas y salidas. Vuelva a intentarlo."))}</p>${this.button("home_pending",__("Reintentar pendientes"))}</div>`);}
     finally{context.loading=false;if(current()){this.homeCheckedAt=this.serverNow();target.attr("aria-busy","false");}}
   };

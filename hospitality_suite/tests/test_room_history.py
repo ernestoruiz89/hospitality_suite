@@ -138,7 +138,7 @@ class TestRoomHistory(IntegrationTestCase):
         text=canonical(data)
         for secret in ('NEVER-EXPOSE-THIS','PRIVATE-IDENTITY','/private/files/secret','identity_number','provider_secret'):self.assertNotIn(secret,text)
         with self.assertRaises(frappe.PermissionError):api.audit_detail(self.prop.name,event.name)
-        other=frappe.db.get_value('HS Property',{'mode':'Motel'});foreign=frappe.db.get_value('HS Room',{'property':other})
+        other=frappe.db.get_value('HS Property',{'mode':'Por tiempo'});foreign=frappe.db.get_value('HS Room',{'property':other})
         with self.assertRaises(frappe.PermissionError):self.history(room=foreign)
         for user in ('housekeeping@hospitality.example.invalid','maintenance@hospitality.example.invalid','Guest'):
             frappe.set_user(user)
@@ -154,7 +154,7 @@ class TestRoomHistory(IntegrationTestCase):
     def test_old_versions_do_not_cross_a_property_boundary(self):
         room=frappe.get_doc('HS Room',self.rooms[9].name);old=room.room_number
         room.floor='PRIVATE-OLD-SCOPE';room.save(ignore_version=False)
-        other=frappe.get_doc('HS Property',{'mode':'Motel'});category=frappe.db.get_value('HS Category',{'property':other.name})
+        other=frappe.get_doc('HS Property',{'mode':'Por tiempo'});category=frappe.db.get_value('HS Category',{'property':other.name})
         room.update(dict(property=other.name,company=other.company,category=category,room_number='TRANSFER-'+uuid.uuid4().hex[:5],floor='3'));room.save(ignore_version=False)
         data=self.history(property_name=other.name,room=room.name)
         text=canonical(data);self.assertNotIn('PRIVATE-OLD-SCOPE',text);self.assertNotIn(old,text)
@@ -163,7 +163,7 @@ class TestRoomHistory(IntegrationTestCase):
     def test_scope_boundary_without_native_version_does_not_reassign_creation_or_prior_changes(self):
         room=frappe.get_doc('HS Room',self.rooms[9].name)
         room.floor='PRIVATE-OLD-SCOPE';room.save(ignore_version=False)
-        other=frappe.get_doc('HS Property',{'mode':'Motel'});category=frappe.db.get_value('HS Category',{'property':other.name})
+        other=frappe.get_doc('HS Property',{'mode':'Por tiempo'});category=frappe.db.get_value('HS Category',{'property':other.name})
         room.update(dict(property=other.name,company=other.company,category=category,room_number='TRANSFER-'+uuid.uuid4().hex[:5],floor='3'));room.save(ignore_version=True)
         data=self.history(property_name=other.name,room=room.name)
         self.assertNotIn('PRIVATE-OLD-SCOPE',canonical(data))

@@ -125,7 +125,7 @@ class TestInvoicePage(IntegrationTestCase):
         frappe.set_user('receptionist@hospitality.example.invalid')
         with self.assertRaises(frappe.PermissionError):self.quote(entered['folio'])
         frappe.set_user('Administrator')
-        motel=frappe.get_doc('HS Property',{'property_name':'Motel Luna Demo'})
+        motel=frappe.get_doc('HS Property',{'property_name':'Luna Demo · Por tiempo'})
         with self.assertRaises(frappe.PermissionError):api.preview(motel.name,dict(folio=entered['folio']),action='invoice')
         self.assertEqual(frappe.db.count('Sales Invoice'),0)
 

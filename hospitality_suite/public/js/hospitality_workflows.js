@@ -5,6 +5,13 @@
   const f=(fieldname,label,fieldtype="Data",extra={})=>({fieldname,label:__(label),fieldtype,...extra});
   const pick=(name,label,rows,labelKey="name",required=true)=>f(name,label,"Select",{reqd:required,_hsDataOptions:true,options:[{value:"",label:__("Seleccione…")},...rows.map(r=>({value:r.name,label:r[labelKey]||r.name}))]});
   const kinds={Payment:__("Cobro"),Advance:__("Anticipo"),Guarantee:__("Garantía"),Refund:__("Devolución"),"Guarantee Refund":__("Devolución de garantía")};
+  const dayPassEnd=value=>{
+    const start=moment(String(value||"").replace(" ","T"));
+    if(!start.isValid())return null;
+    const end=start.clone().add(8,"hours");
+    return (start.isSame(end,"day")?end:start.clone().endOf("day")).format("YYYY-MM-DD HH:mm:ss");
+  };
+  window.hospitality_suite.day_pass_end=dayPassEnd;
   const originalDialog=Desk.prototype.dialog;
   Desk.prototype.dialog=async function(title,fields,...args){
     const choiceLabels={None:__("Sin cargo"),Fixed:__("Importe fijo"),"First Night":__("Primera noche"),Percent:__("Porcentaje"),Mixed:__("Mixto"),Company:__("Empresa"),Agency:__("Agencia"),Individual:__("Persona"),Corrective:__("Correctivo"),Preventive:__("Preventivo")};
@@ -24,11 +31,37 @@
     const rooms=fields.find(df=>df.fieldname==="rooms"&&df.fieldtype==="Table");
     if(rooms&&!rooms.fields.some(df=>df.fieldname==="extra_beds"))rooms.fields.push(f("extra_beds",__("Camas extra"),"Int",{default:0,in_list_view:1}));
     if(fields.some(df=>df.fieldname==="category_name")&&!fields.some(df=>df.fieldname==="max_extra_beds"))fields.push(f("max_extra_beds",__("Camas extra admitidas"),"Int",{default:0}));
-    if(fields.some(df=>df.fieldname==="block_hours"))fields.push(f("included_people",__("Personas incluidas"),"Int",{default:2}),f("additional_person_rate",__("Persona adicional"),"Currency"),f("extra_bed_rate",__("Cama extra"),"Currency"),f("valid_from",__("Vigente desde"),"Date"),f("valid_to",__("Vigente hasta"),"Date"),f("weekdays",__("Días (0=lunes … 6=domingo; vacío=todos)")),f("customer",__("Tarifa negociada para cliente"),"Link",{options:"Customer"}),f("night_start",__("Inicio del paquete nocturno"),"Time"),f("night_end",__("Fin de ventana nocturna"),"Time"));
+    if(fields.some(df=>df.fieldname==="block_hours"))fields.push(f("day_pass",__("Tarifa Day Pass (uso diurno)"),"Check",{default:0,description:__("Disponible solo para modalidad por tiempo. La entrada y salida previstas deben ser el mismo día.")}),f("included_people",__("Personas incluidas"),"Int",{default:2}),f("additional_person_rate",__("Persona adicional"),"Currency"),f("extra_bed_rate",__("Cama extra"),"Currency"),f("valid_from",__("Vigente desde"),"Date"),f("valid_to",__("Vigente hasta"),"Date"),f("weekdays",__("Días (0=lunes … 6=domingo; vacío=todos)")),f("customer",__("Tarifa negociada para cliente"),"Link",{options:"Customer"}),f("night_start",__("Inicio del paquete nocturno"),"Time"),f("night_end",__("Fin de ventana nocturna"),"Time"));
     if(fields.some(df=>df.fieldname==="block_hours"))fields.push(f("included_services",__("Servicios incluidos"),"Table",{in_place_edit:true,fields:[f("item",__("Artículo"),"Link",{options:"Item",reqd:1,in_list_view:1}),f("quantity",__("Cantidad"),"Float",{reqd:1,default:1,in_list_view:1}),f("basis",__("Frecuencia"),"Select",{options:[{value:"Stay",label:__("Una vez por estancia")},{value:"Night",label:__("Por noche (hotel)")}],default:"Stay",reqd:1,in_list_view:1})]}));
+    if(fields.some(df=>df.fieldname==="lodging_item")&&fields.some(df=>df.fieldname==="financial_enabled")&&!fields.some(df=>df.fieldname==="day_pass_item"))fields.push(f("day_pass_item",__("Artículo de Day Pass sin habitación"),"Link",{options:"Item",default:this.prop?.day_pass_item||"",description:__("Servicio sin inventario con precio de venta por persona en la lista de precios.")}));
     if(fields.some(df=>df.fieldname==="stay")&&fields.some(df=>df.fieldname==="item")&&fields.some(df=>df.fieldname==="quantity")&&!fields.some(df=>df.fieldname==="included"))fields.push(f("included",__("Consumir del plan incluido (sin recargo)"),"Check"));
     if(fields.some(df=>df.fieldname==="identity_number")&&!fields.some(df=>df.fieldname==="address_line1"))fields.push(f("address_line1",__("Dirección (opcional)")),f("city",__("Ciudad")),f("country",__("País"),"Link",{options:"Country"}));
-    return originalDialog.call(this,title,fields,...args);
+    const reservation=fields.some(df=>df.fieldname==="rooms")&&fields.some(df=>df.fieldname==="starts_at")&&fields.some(df=>df.fieldname==="ends_at");
+    const mode=reservation&&fields.find(df=>df.fieldname==="mode");
+    if(mode&&["Mixed","Por tiempo"].includes(this.prop?.mode)){
+      mode.options=[...(Array.isArray(mode.options)?mode.options:String(mode.options||"").split("\n")),{value:"Day Pass",label:__("Day Pass")}];
+      mode.read_only=false;
+      mode.description=__("Day Pass ocupa una habitación y requiere salida prevista el mismo día local.");
+    }
+    const dialog=await originalDialog.call(this,title,fields,...args);
+    if(mode&&dialog.fields_dict?.mode&&["Mixed","Por tiempo"].includes(this.prop?.mode)){
+      const update=()=>{if(dialog.get_value("mode")==="Day Pass"){
+        const end=dayPassEnd(dialog.get_value("starts_at"));if(end)dialog.set_value("ends_at",end);
+      }};
+      dialog.fields_dict.mode.$input.on("change.hsDayPass",update);
+      dialog.fields_dict.starts_at?.$input.on("change.hsDayPass",update);
+    }
+    return dialog;
+  };
+  const originalRenderReception=Desk.prototype.render_reception;
+  Desk.prototype.render_reception=function(el){
+    originalRenderReception.call(this,el);
+    if(this.allowed("reserve")&&["Mixed","Por tiempo"].includes(this.prop.mode))el.find(".hs-toolbar").append(this.button("day_pass",__("Day Pass con habitación")));
+    if(this.allowed("finance"))el.find(".hs-toolbar").append(this.button("day_pass_no_room",__("Day Pass sin habitación")));
+  };
+  Desk.prototype.action_day_pass=function(){
+    if(!this.allowed("reserve")||!["Mixed","Por tiempo"].includes(this.prop.mode))return;
+    return this.reservation("",false,{property:this.property,mode:"Day Pass"});
   };
   const oldButton=Desk.prototype.button;
   const originalRender=Desk.prototype.render;
@@ -36,7 +69,7 @@
   Desk.prototype.action_logout=function(){frappe.app.logout();};
   Desk.prototype.invoiceLink=function(name){return name?`<a target="_blank" rel="noopener" href="/printview?doctype=Sales%20Invoice&name=${encodeURIComponent(name)}&format=${encodeURIComponent(this.data.print_formats?.invoice||"HS Factura")}">${e(name)}</a>`:"—";};
   Desk.prototype.receiptLink=function(name){return name?`<a target="_blank" rel="noopener" href="/printview?doctype=HS%20Payment&name=${encodeURIComponent(name)}&format=${encodeURIComponent(this.data.print_formats?.receipt||"HS Recibo")}">${e(__("Ver recibo"))}</a>`:"—";};
-  Desk.prototype.button=function(action,...args){const permission={direct_sale:"finance",return_direct_sale:"approve",schedule_cleaning:"inspect",companions:"guest",portal_settings:"setup"}[action];if(action==="cleaning"&&this.data.cleaning.find(t=>t.name===args[1])?.status==="Inspection"&&!this.allowed("inspect"))return "";return permission&&!this.allowed(permission)?"":oldButton.call(this,action,...args);};
+  Desk.prototype.button=function(action,...args){const permission={direct_sale:"finance",day_pass_no_room:"finance",return_direct_sale:"approve",schedule_cleaning:"inspect",companions:"guest",portal_settings:"setup"}[action];if(action==="cleaning"&&this.data.cleaning.find(t=>t.name===args[1])?.status==="Inspection"&&!this.allowed("inspect"))return "";return permission&&!this.allowed(permission)?"":oldButton.call(this,action,...args);};
   Desk.prototype.action_payment=async function(stayId){
     if(!this.allowed("finance"))return;
     const key=frappe.utils.get_random(24),fields=[pick("stay",__("Estancia"),this.data.stays||[],"name",false),pick("booking",__("Reserva o grupo"),this.data.bookings||[],"name",false),pick("folio",__("Cuenta"),this.data.folios||[],"label",false),pick("shift",__("Turno abierto"),this.data.shifts.filter(s=>s.status==="Open")),pick("method",__("Medio de pago"),this.data.payment_methods.map(m=>({...m,label:`${m.mode_of_payment} · ${m.currency}`})),"label"),f("kind",__("Concepto"),"Select",{reqd:1,default:"Payment",options:Object.entries(kinds).map(([value,label])=>({value,label}))}),f("amount",__("Importe en moneda del medio"),"Currency",{reqd:1}),f("tendered",__("Efectivo recibido (vacío = importe)"),"Currency"),f("reference",__("Referencia bancaria")),f("credit_note",__("Nota de crédito para devolución"),"Link",{options:"Sales Invoice",get_query:()=>({filters:{hs_property:this.property,is_return:1,docstatus:1}})}),pick("source_payment",__("Movimiento original para devolución"),this.data.payments.filter(p=>p.status==="Posted"),"name",false),f("reason",__("Motivo de devolución"),"Small Text")];
@@ -49,13 +82,47 @@
     const ownShift=this.data.shifts.find(s=>s.status==="Open"&&s.cashier===frappe.session.user);if(ownShift)await dialog.set_value("shift",ownShift.name);
   };
   const services=Desk.prototype.render_services;
-  Desk.prototype.render_services=function(el){services.call(this,el);el.find(".hs-toolbar").append(this.button("direct_sale",__("Venta directa")));for(const row of (this.data.services||[]).filter(s=>s.included)){const button=el.find(`[data-act="service_status"][data-id="${row.name}"]`);button.closest("tr").find("td").eq(3).append(`<br><small>${frappe.utils.escape_html(__("Incluido en el plan"))}</small>`);}};
+  Desk.prototype.render_services=function(el){
+    services.call(this,el);
+    el.find(".hs-toolbar").append(this.button("direct_sale",__("Venta directa"))+this.button("day_pass_no_room",__("Day Pass sin habitación")));
+    for(const row of (this.data.services||[]).filter(s=>s.included)){
+      const button=el.find(`[data-act="service_status"][data-id="${row.name}"]`);
+      button.closest("tr").find("td").eq(3).append(`<br><small>${e(__("Incluido en el plan"))}</small>`);
+    }
+    const passes=this.data.day_passes||[],states={Issued:__("Emitido"),Upcoming:__("Próximo"),Active:__("Vigente"),Expired:__("Vencido"),Cancelled:__("Anulado")};
+    if(passes.length)el.append(`<section class="hs-section"><h2>${e(__("Day Pass sin habitación"))}</h2>${this.table([__("Pase"),__("Pagador"),__("Personas"),__("Entrada"),__("Salida"),__("Estado"),__("Acción")],passes.map(pass=>[
+      e(pass.name),e(this.data.customers?.find(row=>row.name===pass.customer)?.customer_name||pass.customer),e(pass.people),e(this.date(pass.starts_at)),e(this.date(pass.ends_at)),e(states[pass.effective_status]||pass.effective_status),
+      pass.status==="Issued"&&this.allowed("approve")?this.button("return_direct_sale",__("Devolver y anular"),pass.service):"—"
+    ]))}</section>`);
+  };
   Desk.prototype.action_direct_sale=async function(){
     const key=frappe.utils.get_random(24);
     return this.dialog(__("Venta directa"),[pick("customer",__("Pagador"),this.data.customers,"customer_name"),this.item_field(__("Artículo"),"sale"),f("quantity",__("Cantidad"),"Float",{reqd:1,default:1}),pick("method",__("Medio de pago"),this.data.payment_methods.map(m=>({...m,label:`${m.mode_of_payment} · ${m.currency}`})),"label"),pick("shift",__("Turno abierto"),this.data.shifts.filter(s=>s.status==="Open")),f("tendered",__("Efectivo recibido (vacío = importe)"),"Currency"),f("reference",__("Referencia bancaria"))],async(values,d)=>{
       const q=await this.call("preview",{property_name:this.property,action:"direct_sale",data:JSON.stringify(values)});
       await this.dialog(__("Confirmar venta"),[f("summary",__("Importe"),"HTML",{options:`<h3>${frappe.utils.escape_html(__("Total con impuestos:"))} ${e(this.amount(q.total,q.currency))}</h3><p>${frappe.utils.escape_html(__("A cobrar:"))} ${e(this.amount(q.payment_amount,q.payment_currency))}</p><p>${frappe.utils.escape_html(__("Tipo de cambio a moneda base:"))} ${e(q.exchange_rate)}</p>`})],async(v,c)=>{const result=await this.mutate("direct_sale",{...values,acceptance:q.acceptance},key);c.hide();d.hide();frappe.msgprint({title:__("Venta registrada"),message:`${e(__("Factura"))} ${e(result.invoice)} · ${e(__("Vuelto"))} ${e(this.amount(result.change,result.currency))}`});},__("Vender y cobrar"));
     },__("Cotizar venta"));
+  };
+  Desk.prototype.action_day_pass_no_room=async function(){
+    if(!this.allowed("finance"))return;
+    if(!this.prop.day_pass_item){frappe.msgprint(__("Configure el artículo de Day Pass sin habitación y su precio de venta antes de emitir pases."));return;}
+    const key=frappe.utils.get_random(24),now=(this.data.property_now||this.data.server_time).slice(0,19).replace("T"," "),end=dayPassEnd(now);
+    const fields=[pick("customer",__("Pagador"),this.data.customers,"customer_name"),pick("guest",__("Huésped (opcional)"),this.data.guests,"full_name",false),
+      f("people",__("Personas"),"Int",{reqd:1,default:1}),f("starts_at",__("Entrada"),"Data",{reqd:1,_hsDateTime:true,default:now}),
+      f("ends_at",__("Salida el mismo día"),"Data",{reqd:1,_hsDateTime:true,default:end}),
+      pick("method",__("Medio de pago"),this.data.payment_methods.map(m=>({...m,label:`${m.mode_of_payment} · ${m.currency}`})),"label"),
+      pick("shift",__("Turno abierto"),this.data.shifts.filter(s=>s.status==="Open")),f("tendered",__("Efectivo recibido (vacío = importe)"),"Currency"),
+      f("reference",__("Referencia bancaria")),f("notes",__("Observaciones"),"Small Text")];
+    const dialog=await this.dialog(__("Day Pass sin habitación"),fields,async(values,d)=>{
+      const q=await this.call("preview",{property_name:this.property,action:"day_pass_no_room",data:JSON.stringify(values)});
+      await this.dialog(__("Confirmar Day Pass"),[f("summary",__("Importe"),"HTML",{options:`<p>${e(__("Acceso para {0} persona(s), sin habitación.",[q.people]))}</p><h3>${e(__("Total con impuestos:"))} ${e(this.amount(q.total,q.currency))}</h3><p>${e(__("A cobrar:"))} ${e(this.amount(q.payment_amount,q.payment_currency))}</p>`})],async(_,confirm)=>{
+        const result=await this.mutate("day_pass_no_room",{...values,acceptance:q.acceptance},key);
+        confirm.hide();d.hide();frappe.msgprint({title:__("Day Pass emitido"),message:`${e(result.day_pass)} · ${e(__("Factura"))} ${e(result.invoice)}`});
+      },__("Cobrar y emitir"));
+    },__("Cotizar Day Pass"));
+    dialog.fields_dict.starts_at.$input.on("change.hsDayPassNoRoom",()=>{
+      const suggested=dayPassEnd(dialog.get_value("starts_at"));if(suggested)dialog.set_value("ends_at",suggested);
+    });
+    return dialog;
   };
   const serviceStatus=Desk.prototype.action_service_status;
   Desk.prototype.action_service_status=async function(id){const service=this.data.services.find(s=>s.name===id);if(service.stay)return serviceStatus.call(this,id);return this.action_return_direct_sale(id);};
@@ -77,7 +144,7 @@
   const management=Desk.prototype.render_management;
   Desk.prototype.render_management=function(el){management.call(this,el);if(this.data.closes?.length)el.append(`<section class="hs-section"><h2>${frappe.utils.escape_html(__("Historial de cierres"))}</h2>${this.table([__("Fecha operativa"),__("Estado"),__("Reporte conservado")],this.data.closes.map(c=>[e(c.business_date),this.badge(c.status),this.button("view_close",__("Ver resumen"),c.name)+this.button("print_close",__("Imprimir cierre"),c.name)]))}</section>`);};
   const booking=Desk.prototype.action_booking;
-  Desk.prototype.action_booking=async function(id){const dialog=await booking.call(this,id);if(dialog)dialog.$wrapper.find(".modal-footer").prepend(`<a class="btn btn-secondary" target="_blank" rel="noopener" href="/printview?doctype=HS%20Booking&name=${encodeURIComponent(id)}&format=${encodeURIComponent("HS Confirmación de reserva")}">${frappe.utils.escape_html(__("Imprimir confirmación"))}</a>`);};
+  Desk.prototype.action_booking=async function(id){const dialog=await booking.call(this,id);if(dialog)dialog.$wrapper.find(".modal-footer").prepend(`<a class="btn btn-secondary" target="_blank" rel="noopener" href="/printview?doctype=HS%20Booking&name=${encodeURIComponent(id)}&format=${encodeURIComponent("HS Confirmación de reserva")}">${frappe.utils.escape_html(__("Imprimir confirmación"))}</a>`);return dialog;};
   Desk.prototype.action_companions=async function(id){const info=await this.call("stay_detail",{name:id}),key=frappe.utils.get_random(24);const rows=this.data.guests.filter(g=>g.name!==info.stay.guest);return this.dialog(__("Acompañantes registrados"),[f("help",__("Ocupación"),"HTML",{options:`<p>${frappe.utils.escape_html(__("Capacidad aceptada:"))} ${e(JSON.parse(info.stay.quote_snapshot).people||1)} ${frappe.utils.escape_html(__("personas, incluido el huésped principal."))}</p>`}),...rows.map((guest,i)=>f("guest_"+i,guest.full_name,"Check",{default:info.stay.guests.some(g=>g.guest===guest.name)?1:0}))],async(v,d)=>{await this.mutate("companions",{stay:id,modified:info.stay.modified,guests:rows.filter((g,i)=>v["guest_"+i]).map(g=>g.name)},key);d.hide();});};
   const incidentRows=function(){return this.table([__("Habitación"),__("Novedad"),__("Descripción"),__("Estado"),__("Resolución / acciones")],(this.data.incidents||[]).map(r=>[e(this.roomName(r.room)),e(r.kind==="Damage"?__("Daño"):r.kind==="Linen"?__("Ropa de cama"):__("Objeto encontrado")),e(r.description),this.badge(r.status),(r.status==="Open"?this.button("incident_evidence",__("Adjuntar evidencia"),r.name)+this.button("resolve_incident",__("Resolver"),r.name):e(r.resolution))+(r.evidence?`<a class="btn btn-secondary" target="_blank" rel="noopener" href="${e(r.evidence)}">${e(__("Ver evidencia"))}</a>`:"")]));};
   const housekeeping=Desk.prototype.render_housekeeping;
@@ -91,7 +158,11 @@
     if(!order||this.allowed("inspect"))fields.push(f("assigned_to",__("Responsable (correo)"),"Data",{default:order?.assigned_to||""}));
     fields.push(f("notes",__("Observaciones"),"Small Text",{default:order?.notes||""}));
     const d=await this.dialog(order?__("Actualizar mantenimiento"):__("Nueva orden de mantenimiento"),fields,async(v,x)=>{await this.mutate("maintenance",{...v,...(order?{order:id,modified:order.modified}:{ends_at:v.until_reopened?null:v.ends_at})},key);x.hide();});
-    if(!order)d.fields_dict.equipment.df.onchange=()=>{const equipment=(this.data.equipment||[]).find(r=>r.name===d.get_value("equipment"));if(equipment){d.set_value("room",equipment.room||"");d.set_value("blocks_room",equipment.room?1:0);}};
+    if(!order){
+      const requested=this.data.rooms.find(r=>r.name===id);
+      if(requested)d.set_value("room",requested.name);
+      d.fields_dict.equipment.df.onchange=()=>{const equipment=(this.data.equipment||[]).find(r=>r.name===d.get_value("equipment"));if(equipment){d.set_value("room",equipment.room||"");d.set_value("blocks_room",equipment.room?1:0);}};
+    }
     return d;
   };
   Desk.prototype.action_maintenance_parts=async function(id){

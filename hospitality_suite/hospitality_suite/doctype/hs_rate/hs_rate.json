@@ -39,9 +39,15 @@
    "fieldname": "mode",
    "label": "Modalidad",
    "fieldtype": "Select",
-   "options": "Hotel\nMotel",
+   "options": "Hotel\nPor tiempo",
    "reqd": 1,
    "default": "Hotel"
+  },
+  {
+   "fieldname": "day_pass",
+   "label": "Tarifa Day Pass (uso diurno)",
+   "fieldtype": "Check",
+   "default": 0
   },
   {
    "fieldname": "currency",
@@ -166,6 +172,7 @@
   "title",
   "category",
   "mode",
+  "day_pass",
   "currency",
   "amount",
   "block_hours",

@@ -124,7 +124,7 @@ Los medios utilizados conservan cuenta, moneda y clasificación para que los arq
 
 Revise el cierre diario antes de confirmar: llegadas pendientes, estancias vencidas, cargos, turnos y diferencias contables. Confirmar avanza la fecha operativa una sola vez por solicitud. Reabrir el último día requiere motivo y autorización. El formato de cierre imprime el snapshot conservado.
 
-Configuración → Políticas y contabilidad → Cargos de alojamiento elige Al ingresar o Por noche para nuevas estancias hoteleras. La cuenta distingue noches programadas, cargos ya generados y saldo total. Preparar cierre del día genera las noches de la fecha operativa y las vencidas; repetir no duplica cargos. Facturar/cobrar o salir liquida también las programadas. La política de una estancia se conserva al extenderla y el motel sigue cobrando por bloque. Los grupos del cierre se despliegan por separado; los que contienen importes aparecen abiertos. Facturar cuenta permite revisar y emitir sin cobrar ni registrar salida, también para importe cero. Véase CARGOS_PERIODICOS.md, FACTURACION_DESDE_PAGES.md y PENDIENTES.md.
+Configuración → Políticas y contabilidad → Cargos de alojamiento elige Al ingresar o Por noche para nuevas estancias hoteleras. La cuenta distingue noches programadas, cargos ya generados y saldo total. Preparar cierre del día genera las noches de la fecha operativa y las vencidas; repetir no duplica cargos. Facturar/cobrar o salir liquida también las programadas. La política de una estancia se conserva al extenderla y la modalidad por tiempo sigue cobrando por bloque. Los grupos del cierre se despliegan por separado; los que contienen importes aparecen abiertos. Facturar cuenta permite revisar y emitir sin cobrar ni registrar salida, también para importe cero. Véase CARGOS_PERIODICOS.md, FACTURACION_DESDE_PAGES.md y PENDIENTES.md.
 
 Configuración → Horarios y penalizaciones define la hora de corte. La fecha operativa D comprende desde ese corte de D hasta el corte de D+1 en la zona del establecimiento, con inicio incluido y fin excluido. Gerencia y el cierre muestran el período real; un día con cambio horario puede durar 23 o 25 horas. El reloj no avanza automáticamente la fecha operativa: el responsable confirma su cierre después de revisar los pendientes. Los informes con fechas explícitas conservan el período elegido.
 
@@ -161,7 +161,7 @@ El listado de reservas muestra huésped y fecha. En modo discreto sustituye el n
 
 «Cancelaciones y no presentaciones» consulta inicialmente la fecha de la decisión o vencimiento, tomada de auditoría. Puede cambiarla a llegada prevista, salida o registro. Muestra motivo, penalización aceptada y factura/estado contable; una penalización anulada no sigue sumando producción. «Arqueos por moneda» separa esperado, contado y diferencia de cada moneda, conservando el snapshot de cierre. En un turno abierto, contado y diferencia permanecen pendientes.
 
-«Productividad de limpieza» resume por responsable tareas pendientes/finalizadas y duración registrada. Tareas por hora usa únicamente finalizadas con duración positiva de inicio a finalización; incluye esperas de inspección y no es una medición de jornada laboral. Gerencia de motel distingue entradas totales de rotaciones por habitación con tiempo comercializable.
+«Productividad de limpieza» resume por responsable tareas pendientes/finalizadas y duración registrada. Tareas por hora usa únicamente finalizadas con duración positiva de inicio a finalización; incluye esperas de inspección y no es una medición de jornada laboral. Gerencia de la modalidad por tiempo distingue entradas totales de rotaciones por habitación con tiempo comercializable.
 
 Las etiquetas y mensajes preparados usan las traducciones nativas de Frappe. Los nombres de huéspedes, artículos, establecimientos y cuentas permanecen como fueron registrados. Los selectores muestran los nombres como texto y conservan la referencia original al confirmar. Esta revisión amplía la preparación de idiomas; no incorpora un paquete completo de otro idioma.
 
@@ -173,13 +173,13 @@ El alta no crea cuentas ni impuestos y conserva finanzas deshabilitadas. Complet
 
 ## Artículos y servicios
 
-En Configuración → Artículos y servicios, seleccione los artículos estándar de alojamiento, horas adicionales de motel y horarios de hotel, junto con la lista de precios de consumos. La tabla superior muestra sus nombres actuales. Los artículos automáticos de alojamiento/tiempo deben estar habilitados para venta y no manejar inventario.
+En Configuración → Artículos y servicios, seleccione los artículos estándar de alojamiento, horas adicionales por tiempo y horarios de hotel, junto con la lista de precios de consumos. La tabla superior muestra sus nombres actuales. Los artículos automáticos de alojamiento/tiempo deben estar habilitados para venta y no manejar inventario.
 
 Si elige un artículo distinto para horas adicionales, su unidad debe representar horas y admitir fracciones (por ejemplo, Hour). Las propiedades migradas que mantienen el mismo artículo de alojamiento conservan una unidad de cargo por registro, con el importe de la fracción aceptada.
 
 Busque un servicio para consultar su precio general vigente y si requiere entrega con inventario. Alimentación, minibar, lavandería de huésped y otros servicios usan Item/Item Price de ERPNext; un precio específico del pagador puede prevalecer. Si cambia la lista, guarde y vuelva a abrir para consultar sus precios. Un precio vencido, futuro o superpuesto no autoriza un consumo.
 
-Las horas adicionales de motel se muestran separadas del alojamiento en la cuenta. Las extensiones y la preparación de salida registran solo el incremento correspondiente. Una asignación nueva no modifica los cargos ya aceptados; las reservas antiguas conservan su tratamiento original.
+Las horas adicionales por tiempo se muestran separadas del alojamiento en la cuenta. Las extensiones y la preparación de salida registran solo el incremento correspondiente. Una asignación nueva no modifica los cargos ya aceptados; las reservas antiguas conservan su tratamiento original.
 
 ## Políticas de anticipos y garantías
 

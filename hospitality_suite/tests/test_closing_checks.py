@@ -89,7 +89,7 @@ class TestClosingChecks(IntegrationTestCase):
         self.assertEqual(groups['Salidas pendientes']['documents'],[pending['stay']]);self.assertEqual(groups['Estancias vencidas']['documents'],[expired['stay']])
         self.assertFalse({at_cutoff['stay'],after['stay']}&{n for g in groups.values() for n in g['documents']})
         self.assertEqual(self.fingerprints(),before)
-        other=frappe.get_doc('HS Property',{'property_name':'Motel Luna Demo'})
+        other=frappe.get_doc('HS Property',{'property_name':'Luna Demo · Por tiempo'})
         self.assertFalse(any(g['type'] in ('Salidas pendientes','Estancias vencidas') for g in closing.blockers(other)))
 
     def test_pending_and_scheduled_charges_and_open_review_shifts_are_listed_with_readable_context(self):

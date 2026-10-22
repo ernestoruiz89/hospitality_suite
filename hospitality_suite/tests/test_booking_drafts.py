@@ -207,7 +207,7 @@ class TestBookingDrafts(IntegrationTestCase):
                 self.draft()
         frappe.set_user('receptionist@hospitality.example.invalid')
         draft = self.draft()
-        foreign = frappe.db.get_value('HS Property',{'property_name':'Motel Luna Demo'})
+        foreign = frappe.db.get_value('HS Property',{'property_name':'Luna Demo · Por tiempo'})
         with self.assertRaises(frappe.PermissionError):
             self.command('save_booking_draft',dict(booking=draft['booking'],modified=draft['modified'],values={}),prop=foreign)
         room = frappe.db.get_value('HS Room',{'property':foreign})

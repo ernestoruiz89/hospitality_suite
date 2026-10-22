@@ -157,7 +157,7 @@ class TestCloseFinancials(IntegrationTestCase):
         self.assertEqual(orphan.business_date_source,"Unknown")
         data=self.finance()
         self.assertEqual([r["name"] for r in data["sources"]["unattributed_movements"]],[orphan.name])
-        motel=frappe.get_doc("HS Property",{"property_name":"Motel Luna Demo"})
+        motel=frappe.get_doc("HS Property",{"property_name":"Luna Demo · Por tiempo"})
         other=snapshot(motel,reports.summary(motel))
         self.assertFalse(other["sources"]["movements"])
         self.assertFalse(other["sources"]["unallocated_advances"])

@@ -6,6 +6,7 @@ import frappe
 from frappe.utils import get_datetime, now_datetime
 
 from hospitality_suite.pricing import decimal, money
+from hospitality_suite.mode import is_time_mode
 from hospitality_suite.security import require
 from hospitality_suite.service import current_all, locked_doc
 
@@ -118,7 +119,7 @@ def summary(prop, starts_at=None, ends_at=None):
             elif stay.actual_check_out:
                 b=min(b,get_datetime(stay.actual_check_out))
             mode=json.loads(row.quote_snapshot or stay.quote_snapshot)["rules"]["mode"]
-            if mode!="Motel":
+            if not is_time_mode(mode):
                 continue
         else:
             if row.status=="Released":
@@ -134,7 +135,8 @@ def summary(prop, starts_at=None, ends_at=None):
     commercial_rooms=sum(union_seconds(blocked.get(room,[]))<(end-start).total_seconds() for room in room_names)
     charges=current_all("HS Charge",filters={"property":prop.name,"status":["!=","Reversed"]},fields=["*"])
     lodging_net=decimal(0)
-    motel_net=decimal(0)
+    time_net=decimal(0)
+    day_pass_net=decimal(0)
     sold_nights=set()
     local_start,local_end=local(start,prop),local(end,prop)
     for charge in charges:
@@ -182,7 +184,10 @@ def summary(prop, starts_at=None, ends_at=None):
                 b=to_site(b,prop)
             overlap=max(0,(min(end,b)-max(start,a)).total_seconds())
             if b>a:
-                motel_net+=net*decimal(overlap)/decimal((b-a).total_seconds())
+                timed_net=net*decimal(overlap)/decimal((b-a).total_seconds())
+                time_net+=timed_net
+                if snapshot["rules"].get("day_pass"):
+                    day_pass_net+=timed_net
     dates=[]
     day=local_start.date()
     while day<local_end.date():
@@ -196,8 +201,16 @@ def summary(prop, starts_at=None, ends_at=None):
             if any(x<b and y>a for x,y in blocked.get(room,[])):
                 blocked_nights+=1
     available_nights=max(0,len(room_names)*len(dates)-blocked_nights)
-    motel_stays=[r for r in stays.values() if json.loads(r.quote_snapshot)["rules"]["mode"]=="Motel" and start<=get_datetime(r.actual_check_in)<end]
-    served=[r for r in stays.values() if json.loads(r.quote_snapshot)["rules"]["mode"]=="Motel" and get_datetime(r.actual_check_in)<end and get_datetime(r.actual_check_out or now_datetime())>start]
+    time_stays=[r for r in stays.values() if is_time_mode(json.loads(r.quote_snapshot)["rules"]["mode"]) and start<=get_datetime(r.actual_check_in)<end]
+    day_pass_stays=[r for r in time_stays if json.loads(r.quote_snapshot)["rules"].get("day_pass")]
+    no_room_passes=[r for r in current_all("HS Day Pass",filters={"property":prop.name,"status":"Issued"},fields=["starts_at","sales_invoice"])
+                    if start<=get_datetime(r.starts_at)<end]
+    no_room_pass_net=decimal(0)
+    for record in no_room_passes:
+        invoice=locked_doc("Sales Invoice",record.sales_invoice)
+        if invoice.docstatus==1 and invoice.currency==prop.currency:
+            no_room_pass_net+=decimal(invoice.net_total)
+    served=[r for r in stays.values() if is_time_mode(json.loads(r.quote_snapshot)["rules"]["mode"]) and get_datetime(r.actual_check_in)<end and get_datetime(r.actual_check_out or now_datetime())>start]
     durations=[max(0,(get_datetime(r.actual_check_out or now_datetime())-get_datetime(r.actual_check_in)).total_seconds()/3600) for r in served]
     from hospitality_suite.report_queries import direct_sales,native_invoice_lines
     production_by_currency={}
@@ -209,16 +222,18 @@ def summary(prop, starts_at=None, ends_at=None):
     production=production_by_currency.get(prop.currency,decimal(0))
     safe=lambda a,b:str(money(decimal(a)/decimal(b))) if b else "0.00"
     return dict(currency=prop.currency,production=str(money(production,currency=prop.currency)),
-                production_by_currency={c:str(money(value,currency=c)) for c,value in sorted(production_by_currency.items())},lodging_production=str(money(lodging_net+motel_net)),
-                hotel_lodging_net=str(money(lodging_net)),motel_lodging_net=str(money(motel_net)),
+                production_by_currency={c:str(money(value,currency=c)) for c,value in sorted(production_by_currency.items())},lodging_production=str(money(lodging_net+time_net)),
+                hotel_lodging_net=str(money(lodging_net)),motel_lodging_net=str(money(time_net)),
+                day_pass_lodging_net=str(money(day_pass_net)),day_passes=len(day_pass_stays),
+                day_pass_no_room_count=len(no_room_passes),day_pass_no_room_net=str(money(no_room_pass_net)),
                 occupied_hours=round(seconds/3600,2),available_hours=round(available/3600,2),
                 utilization=round(seconds/available*100,2) if available else 0,
-                rotations=len(motel_stays),commercial_rooms=commercial_rooms,rotations_per_room=round(len(motel_stays)/commercial_rooms,2) if commercial_rooms else 0,
+                rotations=len(time_stays),commercial_rooms=commercial_rooms,rotations_per_room=round(len(time_stays)/commercial_rooms,2) if commercial_rooms else 0,
                 average_stay_hours=round(sum(durations)/len(durations),2) if durations else 0,
                 room_nights=len(sold_nights),available_room_nights=available_nights,
                 occupancy_percent=round(len(sold_nights)/available_nights*100,2) if available_nights else 0,
                 ADR=safe(lodging_net,len(sold_nights)),RevPAR=safe(lodging_net,available_nights),
-                revenue_per_available_hour=safe(motel_net,decimal(available)/3600),average_ticket=safe(motel_net,len(served)),
+                revenue_per_available_hour=safe(time_net,decimal(available)/3600),average_ticket=safe(time_net,len(served)),
                 starts_at=str(start),ends_at=str(end),mode=prop.mode,time_zone=prop.time_zone,
                 local_starts_at=local(start,prop).isoformat(),local_ends_at=local(end,prop).isoformat(),
                 close_time=window["close_time"] if not starts_at and not ends_at else None,

@@ -159,7 +159,7 @@ else:
             (ROOT/'docs/evidence/permissions-audit-fixture-cleanup.json').write_text(json.dumps(proof,indent=2)+'\n',encoding='utf-8',newline='\n');print(json.dumps(proof))
         elif args.action=='prepare':
             assert not STATE.exists() and not frappe.db.count('HS Booking')
-            before=snapshot();prop=frappe.get_doc('HS Property',{'property_name':'Hotel Jardín Demo'});other=frappe.get_doc('HS Property',{'property_name':'Motel Luna Demo'})
+            before=snapshot();prop=frappe.get_doc('HS Property',{'property_name':'Hotel Jardín Demo'});other=frappe.get_doc('HS Property',{'property_name':'Luna Demo · Por tiempo'})
             guest=frappe.get_doc('HS Guest',{'property':other.name});room=frappe.get_doc('HS Room',{'property':other.name});start=now_datetime().replace(microsecond=0)
             values=dict(guest=guest.name,customer=guest.customer,starts_at=str(start),ends_at=str(start+timedelta(hours=3)),rooms=[dict(category=room.category,room=room.name,people=1)])
             values['acceptance']=api.preview(other.name,values)['acceptance'];name=api.execute(other.name,'reserve',uuid.uuid4().hex,values)['booking']

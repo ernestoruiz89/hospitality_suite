@@ -17,7 +17,7 @@ from hospitality_suite.time import local
 VERSION=1
 OPERATION='demo_scenario_v1'
 KEY='hospitality-fictional-scenario-v1'
-PROPERTIES=(('Hotel Jardín Demo','Hotel','H'),('Motel Luna Demo','Motel','M'))
+PROPERTIES=(('Hotel Jardín Demo','Hotel','H'),('Luna Demo · Por tiempo','Por tiempo','M'))
 
 
 def authorize():

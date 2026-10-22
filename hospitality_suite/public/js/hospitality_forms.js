@@ -136,11 +136,11 @@
       groups=[group(__("Operación"),["brand_name","mode","time_zone","cleaning_minutes"],["inspection_required","discreet_mode","guest_id_required","allow_credit"]),
         group(__("Cargos de alojamiento"),["lodging_charge_policy"]),
         group(__("Cuentas y almacenes"),["cost_center","receivable_account","guarantee_account"],["warehouse","laundry_warehouse","cash_transfer_account"]),
-        group(__("Artículos e impuestos"),["lodging_item","extra_hour_item","timing_item","price_list"],["tax_template","tax_policy_confirmed","financial_enabled"])];
+        group(__("Artículos e impuestos"),["lodging_item","extra_hour_item","day_pass_item","timing_item","price_list"],["tax_template","tax_policy_confirmed","financial_enabled"])];
     }else if(has("block_hours","amount","included_services")){
       kind="rate";title=__("Configurar tarifa");action=__("Guardar tarifa");
-      for(const df of fields.filter(df=>["block_hours","extra_hour_rate","grace_minutes","rounding_minutes","night_start","night_end"].includes(df.fieldname)))df.depends_on??=doc=>doc.mode==="Motel";
-      groups=[group(__("Precio"),["title","category","amount"],["mode","currency","priority","active"]),
+      for(const df of fields.filter(df=>["day_pass","block_hours","extra_hour_rate","grace_minutes","rounding_minutes","night_start","night_end"].includes(df.fieldname)))df.depends_on??=doc=>doc.mode==="Por tiempo";
+      groups=[group(__("Precio"),["title","category","amount","day_pass"],["mode","currency","priority","active"]),
         group(__("Tiempo y personas"),["included_people","additional_person_rate","extra_bed_rate"],["block_hours","extra_hour_rate","grace_minutes","rounding_minutes"]),
         group(__("Vigencia"),["valid_from","valid_to","weekdays"],["customer","night_start","night_end"]),
         group(__("Servicios incluidos"),["included_services"])];
@@ -230,7 +230,7 @@
     for(const tab of dialog.tabs||[])tab.tab_link.find(".nav-link").on("click.hsFormSelection",dialog._hsSyncFormTabs);
     dialog._hsSyncFormTabs();
     if(layout.kind==="rate"){
-      const update=()=>{const label=dialog.get_value("mode")==="Motel"?__("Precio por bloque"):__("Precio por noche");dialog.set_df_property("amount","label",label);dialog.fields_dict.amount.$input?.attr("aria-label",label);};
+      const update=()=>{const label=dialog.get_value("mode")==="Por tiempo"?__("Precio por bloque"):__("Precio por noche");dialog.set_df_property("amount","label",label);dialog.fields_dict.amount.$input?.attr("aria-label",label);};
       dialog.fields_dict.mode.$input.on("change.hsFormRate",update);update();
     }
     if(layout.kind!=="payment")return;

@@ -48,7 +48,7 @@ def prepare():
     assert all(before[dt]==expected for dt,expected in baseline['tables'].items())
     now=now_datetime().replace(microsecond=0)
     fixture={}
-    for mode,title,prefix in [('Hotel','Hotel Jardín Demo','H'),('Motel','Motel Luna Demo','M')]:
+    for mode,title,prefix in [('Hotel','Hotel Jardín Demo','H'),('Por tiempo','Luna Demo · Por tiempo','M')]:
         prop=frappe.get_doc('HS Property',{'property_name':title})
         room=frappe.get_doc('HS Room',{'property':prop.name,'room_number':prefix+'101'})
         guest=frappe.get_doc('HS Guest',{'property':prop.name})
@@ -89,7 +89,7 @@ def inspect():
     assert hashes()==fixture['hashes'],'La consulta no debe modificar negocio ni Version'
     from hospitality_suite.pricing import decimal
     proof=dict(site=SITE,synthetic=True,fixture_source='API',pages_are_read_only=True,tables_unchanged=len(fixture['hashes']),cases={})
-    for mode in ('Hotel','Motel'):
+    for mode in ('Hotel','Por tiempo'):
         case=fixture[mode]
         detail=api.stay_detail(case['stay'])
         # The user's later terminology change adds mode_label to the read model;
@@ -137,7 +137,7 @@ try:
             frappe.conf.host_name='http://127.0.0.1:8089'
             output=ROOT/'output/pdf';output.mkdir(parents=True,exist_ok=True)
             pdfs=[]
-            for mode in ('Hotel','Motel'):
+            for mode in ('Hotel','Por tiempo'):
                 pdf=frappe.get_print('HS Stay',fixture[mode]['stay'],print_format='HS Cuenta de estancia',as_pdf=True)
                 path=output/('cuenta-resumida-'+('hotel' if mode=='Hotel' else 'por-tiempo')+'.pdf');path.write_bytes(pdf)
                 pages=PdfReader(io.BytesIO(pdf)).pages;text=''.join(p.extract_text() or '' for p in pages)

@@ -1,7 +1,8 @@
-"""User terminology without changing persisted values or historical source text."""
+"""User terminology for current records and immutable historical snapshots."""
 import frappe
+from hospitality_suite.mode import LEGACY_TIME_MODE
 
-MODE_LABELS={'Hotel':'Hotel','Motel':'Por tiempo','Mixed':'Hotel y por tiempo'}
+MODE_LABELS={'Hotel':'Hotel','Por tiempo':'Por tiempo',LEGACY_TIME_MODE:'Por tiempo','Mixed':'Hotel y por tiempo','Day Pass':'Day Pass'}
 GENERATED_LABELS={'Horas adicionales de motel':'Horas adicionales por tiempo',
                   'Hora adicional de motel':'Hora adicional por tiempo'}
 

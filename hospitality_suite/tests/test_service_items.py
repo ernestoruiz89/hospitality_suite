@@ -17,7 +17,7 @@ class TestServiceItems(IntegrationTestCase):
         super().setUp()
         self.addCleanup(frappe.db.rollback)
         frappe.set_user('Administrator')
-        self.prop=frappe.get_doc('HS Property',{'property_name':'Motel Luna Demo'})
+        self.prop=frappe.get_doc('HS Property',{'property_name':'Luna Demo · Por tiempo'})
         self.guest=frappe.get_doc('HS Guest',{'property':self.prop.name})
         self.room=frappe.get_doc('HS Room',{'property':self.prop.name,'room_number':'M110'})
         self.hour=self.item('Hora adicional aceptada',uom='Hour')
@@ -48,7 +48,7 @@ class TestServiceItems(IntegrationTestCase):
 
     def test_overtime_is_separate_and_keeps_accepted_article_through_extension_and_departure(self):
         with operation():
-            rate=frappe.get_doc('HS Rate',{'property':self.prop.name,'mode':'Motel'})
+            rate=frappe.get_doc('HS Rate',{'property':self.prop.name,'mode':'Por tiempo'})
             rate.rounding_minutes=15
             rate.grace_minutes=0
             rate.change_reason='Preparación de tarifa sintética para la prueba';rate.save()
@@ -86,7 +86,7 @@ class TestServiceItems(IntegrationTestCase):
 
     def test_mapping_validates_type_before_finance_and_patch_preserves_explicit_choice(self):
         with self.assertRaises(frappe.MandatoryError):
-            frappe.get_doc(dict(doctype='HS Rate',title='Tarifa sin establecimiento',category=self.room.category,mode='Motel',currency='NIO',amount=450,block_hours=3,included_people=1,rounding_minutes=60)).insert()
+            frappe.get_doc(dict(doctype='HS Rate',title='Tarifa sin establecimiento',category=self.room.category,mode='Por tiempo',currency='NIO',amount=450,block_hours=3,included_people=1,rounding_minutes=60)).insert()
         for name in ('HS-DEMO-WATER',):
             with self.assertRaisesRegex(frappe.ValidationError,'sin inventario'):
                 self.configure(extra_hour_item=name)
@@ -101,7 +101,7 @@ class TestServiceItems(IntegrationTestCase):
         self.assertEqual(self.prop.modified,modified)
         self.configure(extra_hour_item=self.prop.lodging_item)
         with operation():
-            rate=frappe.get_doc('HS Rate',{'property':self.prop.name,'mode':'Motel'})
+            rate=frappe.get_doc('HS Rate',{'property':self.prop.name,'mode':'Por tiempo'})
             rate.rounding_minutes=15
             rate.grace_minutes=0
             rate.change_reason='Preparación de tarifa sintética para la prueba';rate.save()
@@ -204,7 +204,7 @@ class TestServiceItems(IntegrationTestCase):
         category=frappe.get_doc(dict(doctype='HS Category',property=self.prop.name,company=self.prop.company,category_name='Económica de prueba',capacity=2)).insert()
         room=frappe.get_doc(dict(doctype='HS Room',property=self.prop.name,company=self.prop.company,room_number='M201',category=category.name,active=1,cleaning_status='Clean')).insert()
         frappe.get_doc(dict(doctype='HS Rate',property=self.prop.name,company=self.prop.company,title='Bloque económico',category=category.name,
-                            mode='Motel',currency='NIO',amount=100,block_hours=6,extra_hour_rate=0,rounding_minutes=60,included_people=2,priority=10,active=1)).insert()
+                            mode='Por tiempo',currency='NIO',amount=100,block_hours=6,extra_hour_rate=0,rounding_minutes=60,included_people=2,priority=10,active=1)).insert()
         doc=frappe.get_doc('HS Stay',stay['stay'])
         clock=doc.starts_at+timedelta(minutes=10)
         values=dict(stay=doc.name,room=room.name,folio=stay['folio'],modified=str(doc.modified),reason='Cambio sintético a menor precio')

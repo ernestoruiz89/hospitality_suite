@@ -6,7 +6,7 @@ Una extensión o cambio de habitación distingue el cargo de diferencia de la co
 
 El cálculo previo a confirmar continúa en la cotización. Al revisar la cuenta, el detalle queda plegado para facilitar la lectura; puede abrirse con teclado. Por solicitud posterior del usuario, desde 0.6.6 el PDF estándar es resumido y no imprime ese desglose; CUENTA_RESUMIDA.md documenta el ajuste. Los PDF/capturas 136–137 conservan la versión anterior 0.6.5: Hotel C$3,800 menos descuento C$100 y Por tiempo C$600 más C$150. Se cambiaron tarifas actuales después de aceptar; los desgloses de pantalla conservaron las reglas originales.
 
-La terminología visible usa «Hotel», «Por tiempo» y «Hotel y por tiempo». Los valores persistidos `Hotel`, `Motel`, `Mixed`, claves de reportes y fórmulas permanecen compatibles. «Motel Luna Demo» es un nombre comercial y no se reescribe. El diccionario de estas etiquetas no acredita por sí solo toda la traducción de la aplicación.
+La terminología visible y los valores nuevos de modalidad usan «Hotel», «Por tiempo» y «Hotel y por tiempo». La migración cambia los campos guardados de `Motel` a `Por tiempo`; los snapshots de tarifas aceptadas conservan su valor histórico y siguen siendo legibles. Las claves de reportes y las fórmulas permanecen compatibles. La sede de demostración se presenta como «Luna Demo · Por tiempo».
 
 ## Consultar y seleccionar una habitación
 

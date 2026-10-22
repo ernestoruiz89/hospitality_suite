@@ -4,7 +4,7 @@
   Desk.prototype.close_summary_html=function(period,blockers=[],{live=false}={}){
     const labels=period.close_review,local=value=>String(value||'').replace(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}:\d{2}).*$/,'$3/$2/$1 $4');
     let html=labels?`<p><strong>${e(__('Fecha operativa'))}: ${e(labels.date_label)}</strong> · ${e(__('Hora de corte'))}: ${e(labels.close_time)}<br>${e(labels.starts_at)} → ${e(labels.ends_at)} · ${e(labels.time_zone)}</p>`:`<p>${e(__("Período operativo:"))} ${e(local(period.local_starts_at))} → ${e(local(period.local_ends_at))} · ${e(period.time_zone||this.prop.time_zone)}</p>`;
-    html+=this.close_blockers_html(blockers);
+    html+=this.close_blockers_html(blockers,{live});
     if(live)html+=`<button type="button" class="btn btn-secondary" data-hs-close-refresh>${e(__('Actualizar revisión'))}</button>`;
     html+=`<p>${e(__("La preparación del cierre genera las noches programadas de esta fecha y las vencidas. Los importes de fechas futuras se muestran por separado. La fecha operativa avanza al confirmar."))}</p>`;
     html+=`<p>${e(__("Indicadores calculados a la hora de cada revisión o cierre."))}</p>`+this.table([__("Indicador"),__("Valor")],[[__("Habitaciones-noche"),e(period.room_nights??"—")],[__("Horas ocupadas"),e(period.occupied_hours??"—")],[__("ADR"),e(period.ADR??"—")+" "+e(period.currency||"")],[__("RevPAR"),e(period.RevPAR??"—")+" "+e(period.currency||"")]]);
@@ -26,10 +26,27 @@
     }
     return html;
   };
-  Desk.prototype.close_blockers_html=function(blockers){
-    return `<section class="hs-close-pending"><h3>${e(__('Pendientes conservados'))}</h3>`+(blockers.length?
-      `<p role="alert">${e(__('Resuelva estos pendientes y actualice la revisión antes de confirmar.'))}</p><div class="hs-close-pending-grid">${blockers.map((group,index)=>`<article><h4>${e(__(group.type))} (${group.documents.length})</h4><p>${e(group.hint||__('Consulte el documento de origen para resolver el pendiente.'))}</p><button type="button" class="btn btn-secondary" data-hs-close-pending="${index}">${e(__('Ver pendientes'))}</button></article>`).join('')}</div>`:
-      `<p>${e(__("Sin pendientes registrados."))}</p>`)+`</section>`;
+  Desk.prototype.close_blockers_html=function(blockers,{live=false}={}){
+    const stages=[
+      [__('Salidas y llegadas'),['Estancias vencidas','Salidas pendientes','Llegadas pendientes']],
+      [__('Caja'),['Turnos sin cerrar']],
+      [__('Cargos de alojamiento y servicios'),['Cargos sin facturar','Cargos nocturnos sin generar']],
+      [__('Conciliación con ERPNext'),['Diferencias entre PMS y ERPNext']]
+    ];
+    const known=new Set(stages.flatMap(([,types])=>types));
+    const remaining=blockers.map(group=>group.type).filter(type=>!known.has(type));
+    if(remaining.length)stages.push([__('Otros pendientes'),remaining]);
+    const cards=stages.map(([title,types],step)=>{
+      const pending=blockers.map((group,index)=>({group,index})).filter(({group})=>types.includes(group.type));
+      const count=pending.reduce((sum,{group})=>sum+group.documents.length,0);
+      return `<li class="hs-close-step ${pending.length?'is-pending':'is-clear'}"><div class="hs-close-step-head"><span class="hs-close-step-number">${step+1}</span><h4>${e(title)}</h4><strong>${e(pending.length?__('Pendiente'):__('Sin pendientes registrados'))}</strong></div>`+
+        (pending.length?`<div class="hs-close-step-groups">${pending.map(({group,index})=>`<div><p><strong>${e(__(group.type))} (${group.documents.length})</strong><br>${e(group.hint||__('Consulte el documento de origen para resolver el pendiente.'))}</p><button type="button" class="btn btn-secondary" data-hs-close-pending="${index}">${e(__('Ver pendientes'))}</button></div>`).join('')}</div>`:
+          `<p>${e(__('Esta revisión no registró pendientes de este paso.'))}</p>`)+`</li>`;
+    }).join('');
+    return `<section class="hs-close-pending"><h3>${e(live?__('Revisión guiada del cierre'):__('Revisión conservada del cierre'))}</h3>`+
+      (blockers.length?`<p role="alert">${e(live?__('Resuelva los pendientes y actualice la revisión antes de confirmar.'):__('Esta ejecución conserva pendientes; consulte su contexto histórico.'))}</p>`:
+        `<p>${e(__('Sin pendientes registrados en esta revisión.'))}</p>`)+
+      `<ol class="hs-close-steps">${cards}</ol></section>`;
   };
   Desk.prototype.bind_close_checks=function(dialog,blockers,live=false){
     const property=this.property;

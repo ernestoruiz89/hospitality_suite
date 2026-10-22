@@ -52,7 +52,7 @@ else:
                 category=suite.name if index in (1,3) else room.category
                 frappe.db.set_value('HS Room',room.name,dict(floor='2' if index in (1,2,3) else '1',category=category,zone='Jardín' if index==1 else '',active=0 if index==5 else 1,cleaning_status='Dirty' if index==3 else 'Clean'))
                 room.category=category
-            other=frappe.get_doc('HS Property',{'mode':'Motel'})
+            other=frappe.get_doc('HS Property',{'mode':'Por tiempo'})
             for room in frappe.get_all('HS Room',filters={'property':other.name},pluck='name'):frappe.db.set_value('HS Room',room,'floor','3')
             call=lambda action,data:api.execute(prop.name,action,uuid.uuid4().hex,data)
             call('schedule_cleaning',dict(room=rooms[3].name,kind='Deep',priority='Normal',notes='Fixture sintético de filtros'))

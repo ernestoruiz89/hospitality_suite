@@ -15,7 +15,7 @@ function fixture(){
   for(const name of ['hospitality.js','hospitality_extras.js'])vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../hospitality_suite/public/js',name),'utf8'),context);
   const desk=Object.create(context.window.hospitality_suite.Desk.prototype);
   Object.assign(desk,{property:'hotel',prop:{mode:'Hotel',time_zone:'America/Managua'},data:{rooms:[{name:'room',room_number:'H101'}],actions:['reserve']},
-    table:(headers,rows)=>JSON.stringify({headers,rows})});
+    table:(headers,rows)=>JSON.stringify({headers,rows}),date:value=>String(value),action_owner:()=> 'review',page_busy:()=>false});
   return {desk,el:{find},nodes,zones,context};
 }
 test('calendar clears the previous range, announces loading and queries an explicit property timezone',async()=>{
@@ -50,4 +50,32 @@ test('weekday headings follow the user language, default to Spanish, and safely 
   const f=fixture();f.desk.call=async()=>[];await f.desk.drawCalendar(f.el,'2026-10-20');assert.match(f.nodes.get('.hs-calendar').htmlValue,/mar /);
   f.context.frappe.boot={lang:'en_US'};await f.desk.drawCalendar(f.el,'2026-10-20');assert.match(f.nodes.get('.hs-calendar').htmlValue,/Tue /);
   f.context.frappe.boot.lang='invalid!';await f.desk.drawCalendar(f.el,'2026-10-20');assert.match(f.nodes.get('.hs-calendar').htmlValue,/mar /);assert.doesNotMatch(f.nodes.get('.hs-calendar').htmlValue,/No se pudo cargar/);
+});
+test('continuous bars keep the booking action and clipped interval without declaring empty slots available',async()=>{
+  const f=fixture();
+  f.desk.call=async()=>[{room:'room',kind:'Reservation',booking:'BOOK-1',starts_at:'2026-10-20T12:00:00-06:00',ends_at:'2026-10-22T12:00:00-06:00'}];
+  await f.desk.drawCalendar(f.el,'2026-10-20');
+  const html=f.nodes.get('.hs-calendar').htmlValue;
+  assert.match(html,/hs-timeline-bar is-reservation/);
+  assert.match(html,/data-act="booking" data-id="BOOK-1"/);
+  assert.match(html,/left:7\.1429%;width:28\.5714%/);
+  assert.match(html,/Una celda sin asignación no confirma disponibilidad/);
+});
+test('hourly motel chart clips a stay that crosses midnight to the selected local day',async()=>{
+  const f=fixture();f.desk.prop.mode='Por tiempo';
+  f.desk.call=async()=>[{room:'room',kind:'Stay',stay:'STAY-1',starts_at:'2026-10-19T23:00:00-06:00',ends_at:'2026-10-20T03:00:00-06:00'}];
+  await f.desk.drawCalendar(f.el,'2026-10-20');
+  const html=f.nodes.get('.hs-calendar').htmlValue;
+  assert.match(html,/hs-timeline-bar is-stay/);
+  assert.match(html,/data-act="detail" data-id="STAY-1"/);
+  assert.match(html,/left:0\.0000%;width:12\.5000%/);
+});
+test('short hotel intervals keep their exact marker and a usable detail action in the list',async()=>{
+  const f=fixture();f.desk.call=async()=>[{room:'room',kind:'Stay',stay:'STAY-SHORT',starts_at:'2026-10-20T09:00:00-06:00',ends_at:'2026-10-20T09:15:00-06:00'}];
+  await f.desk.drawCalendar(f.el,'2026-10-20');
+  const html=f.nodes.get('.hs-calendar').htmlValue;
+  assert.match(html,/hs-timeline-bar is-stay is-short/);
+  assert.match(html,/Intervalos breves/);
+  assert.match(html,/STAY-SHORT/);
+  assert.equal((html.match(/data-act=\\"detail\\"/g)||[]).length,1,'only the list exposes the action for a narrow marker');
 });

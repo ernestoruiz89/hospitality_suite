@@ -36,7 +36,7 @@ class TestFinancialAudit(IntegrationTestCase):
         guest=frappe.get_doc('HS Guest',{'property':prop.name})
         selected=rooms or [self.rooms[0]]
         start=now_datetime().replace(microsecond=0)
-        values=dict(starts_at=str(start),ends_at=str(start+timedelta(hours=3 if prop.mode=='Motel' else 24)),guest=guest.name,customer=guest.customer,
+        values=dict(starts_at=str(start),ends_at=str(start+timedelta(hours=3 if prop.mode=='Por tiempo' else 24)),guest=guest.name,customer=guest.customer,
                     rooms=[dict(room=room.name,category=room.category,people=1) for room in selected])
         values['acceptance']=api.preview(prop.name,values)['acceptance']
         return values
@@ -124,7 +124,7 @@ class TestFinancialAudit(IntegrationTestCase):
     def test_reconciliation_options_and_filters_are_scoped_and_company_selection_narrows_to_the_visit(self):
         own=self.stay()
         self.call('invoice',dict(folio=own['folio']))
-        other=frappe.get_doc('HS Property',{'property_name':'Motel Luna Demo'})
+        other=frappe.get_doc('HS Property',{'property_name':'Luna Demo · Por tiempo'})
         room=frappe.get_doc('HS Room',{'property':other.name})
         visit=api.execute(other.name,'walk_in',uuid.uuid4().hex,self.values([room],other))
         api.execute(other.name,'invoice',uuid.uuid4().hex,dict(folio=visit['folio']))

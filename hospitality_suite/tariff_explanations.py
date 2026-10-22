@@ -4,6 +4,7 @@ from decimal import Decimal, InvalidOperation
 import json
 
 import frappe
+from hospitality_suite.mode import is_time_mode
 
 
 def _number(value):
@@ -61,7 +62,7 @@ def _historical(snapshot,row,result):
     currency=row.get('currency') or snapshot.get('currency') or ''
     mode=rules.get('mode')
     from hospitality_suite.display_labels import MODE_LABELS
-    result['mode_label']=frappe._(MODE_LABELS[mode]) if mode in MODE_LABELS else None
+    result['mode_label']=frappe._('Day Pass') if rules.get('day_pass') else frappe._(MODE_LABELS[mode]) if mode in MODE_LABELS else None
     reference=None
     # Timing/services may carry a lodging rule as context, not as their price.
     if row.get('kind')=='Lodging' and mode=='Hotel' and snapshot.get('nightly'):
@@ -76,8 +77,8 @@ def _historical(snapshot,row,result):
             label=frappe._('Noche del {0} · {1}').format(_date(night['date']),rule.get('title') or frappe._('Tarifa histórica'))
             result['entries'].append(_entry(snapshot,rule,currency,label,night['amount']))
             reference+=_number(night['amount'])
-    elif row.get('kind')=='Lodging' and mode=='Motel':
-        result['title']=frappe._('Bloque y tiempo adicional aceptados')
+    elif row.get('kind')=='Lodging' and is_time_mode(mode):
+        result['title']=frappe._('Day Pass y tiempo adicional aceptados') if rules.get('day_pass') else frappe._('Bloque y tiempo adicional aceptados')
         title=rules.get('title') or frappe._('Tarifa histórica')
         bindings=snapshot.get('charge_items') or {}
         if not isinstance(bindings,dict):

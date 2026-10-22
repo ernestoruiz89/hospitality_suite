@@ -24,6 +24,8 @@ import "./js/hospitality_tariffs.js";
 import "./js/hospitality_guests.js";
 import "./js/hospitality_navigation.js";
 import "./js/hospitality_room_history.js";
+import "./js/hospitality_room_view.js";
 import "./js/hospitality_forms.js";
 import "./js/hospitality_links.js";
 import "./js/hospitality_keyboard.js";
+import "./js/hospitality_operations_dashboard.js";

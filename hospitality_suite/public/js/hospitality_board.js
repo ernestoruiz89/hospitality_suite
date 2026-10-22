@@ -12,14 +12,17 @@
   };
   Desk.prototype.boardRows=function(data){
     const action=row=>this.button("detail",__("Ver estancia"),row.name);
-    if(data.view==="arrivals")return this.table([__("Habitación / categoría"),__("Huésped / pagador"),__("Entrada prevista"),__("Estado"),__("Acción")],data.rows.map(row=>[
-      `${e(row.room_label)}<br><small>${e(row.category_label)}</small>`,`${e(row.guest_label)}<br><small>${e(row.customer_label)}</small>`,e(this.date(row.starts_at)),this.badge(row.status),this.button("booking",__("Gestionar llegada"),row.booking)]));
+    const cleaning=row=>row.cleaning_status?this.badge(row.cleaning_status):`<small>${e(__("Sin habitación asignada"))}</small>`;
+    const account=row=>(row.account_balances||[]).length?(row.account_balances.map(balance=>e(this.amount(balance.outstanding,balance.currency))).join("<br>")+
+      (row.shared_account?`<br><small>${e(__("Cuenta compartida"))}</small>`:"")):`<small>${e(__("Sin cuenta abierta"))}</small>`;
+    if(data.view==="arrivals")return this.table([__("Habitación / categoría"),__("Huésped / pagador"),__("Entrada prevista"),__("Reserva y limpieza"),__("Cuenta"),__("Acción")],data.rows.map(row=>[
+      `${e(row.room_label)}<br><small>${e(row.category_label)}</small>`,`${e(row.guest_label)}<br><small>${e(row.customer_label)}</small>`,e(this.date(row.starts_at)),`${this.badge(row.status)}<br>${cleaning(row)}`,account(row),this.button("booking",__("Gestionar llegada"),row.booking)]));
     if(data.view==="accounts")return this.table([__("Cuenta"),__("Pagador"),__("Habitación / grupo"),__("Saldo total"),__("Acción")],data.rows.map(row=>[
       e(row.label),e(row.customer_label),`${row.shared?e(__("Grupo"))+" · ":""}${e(row.room_label)}`,e(this.amount(row.balance.outstanding,row.currency)),row.detail_stay?this.button("detail",__("Ver cuenta"),row.detail_stay):row.booking?this.button("booking",__("Ver reserva"),row.booking):"—"]));
-    if(data.view==="departures")return this.table([__("Habitación"),__("Huésped"),__("Salida prevista"),__("Acción")],data.rows.map(row=>[
-      e(row.room_label),e(row.guest_label),`${e(this.date(row.ends_at))}${row.ends_at<data.server_time?"<br>"+this.badge(__("Salida vencida")):""}`,action(row)]));
-    return this.table([__("Habitación"),__("Huésped"),__("Entrada prevista"),__("Salida prevista"),__("Estado"),__("Acción")],data.rows.map(row=>[
-      e(row.room_label),e(row.guest_label),e(this.date(row.starts_at)),e(this.date(row.ends_at)),this.badge(row.status),action(row)]));
+    if(data.view==="departures")return this.table([__("Habitación"),__("Huésped"),__("Salida prevista"),__("Limpieza"),__("Cuenta"),__("Acción")],data.rows.map(row=>[
+      e(row.room_label),e(row.guest_label),`${e(this.date(row.ends_at))}${row.ends_at<data.server_time?"<br>"+this.badge(__("Salida vencida")):""}`,cleaning(row),account(row),action(row)]));
+    return this.table([__("Habitación"),__("Huésped"),__("Entrada prevista"),__("Salida prevista"),__("Estado y limpieza"),__("Cuenta"),__("Acción")],data.rows.map(row=>[
+      e(row.room_label),e(row.guest_label),e(this.date(row.starts_at)),e(this.date(row.ends_at)),`${this.badge(row.status)}<br>${cleaning(row)}`,account(row),action(row)]));
   };
   Desk.prototype.render_stays=function(el){
     this.boardSelections??={};

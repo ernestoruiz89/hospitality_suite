@@ -19,11 +19,34 @@ frappe.ready(async()=>{
   if(!catalog.length){el("hp-empty").textContent=__("Las reservas en línea todavía no están habilitadas. Consulte directamente con recepción.");return;}
   el("hp-empty").hidden=true;el("hp-form").hidden=false;
   for(const prop of catalog)el("hp-property").add(new Option(prop.property_name,prop.name));
-  function update(){const prop=catalog.find(p=>p.name===el("hp-property").value);el("hp-category").replaceChildren();for(const cat of prop.categories)el("hp-category").add(new Option(cat.category_name,cat.name));el("hp-zone").textContent=__("Horas locales de {0}. La solicitud conserva cupo temporal hasta la hora indicada en su confirmación.",[prop.time_zone]);}
-  update();el("hp-property").addEventListener("change",update);
+  function categoryInfo(){const prop=catalog.find(p=>p.name===el("hp-property").value),cat=prop?.categories.find(c=>c.name===el("hp-category").value);
+    el("hp-category-info").textContent=cat?[
+      cat.portal_description||"",__("Capacidad: {0} personas por habitación.",[cat.capacity]),cat.amenities?__("Comodidades: {0}",[cat.amenities]):""].filter(Boolean).join(" "):"";
+    const image=el("hp-category-image");image.hidden=!cat?.portal_image;
+    if(cat?.portal_image){image.src=cat.portal_image;image.alt=__("Habitación de categoría {0}",[cat.category_name]);}
+    else image.removeAttribute("src");
+  }
+  function modeInfo(){const prop=catalog.find(p=>p.name===el("hp-property").value),requested=el("hp-request-mode").value==="Requested";
+    const note=requested?__("Horas locales de {0}. Esta solicitud no reserva cupo; recepción debe volver a comprobar disponibilidad y precio antes de confirmarla.",[prop.time_zone]):
+      __("Horas locales de {0}. La solicitud conserva cupo temporal hasta la hora indicada en su confirmación.",[prop.time_zone]);
+    el("hp-zone").textContent=note+(el("hp-stay-mode").value==="Day Pass"?" "+__("Day Pass incluye habitación y requiere salida prevista el mismo día."):"");
+    el("hp-request").textContent=requested?__("Enviar solicitud sin retención"):__("Solicitar confirmación");
+  }
+  function update(){const prop=catalog.find(p=>p.name===el("hp-property").value);el("hp-category").replaceChildren();for(const cat of prop.categories)el("hp-category").add(new Option(cat.category_name,cat.name));
+    const modes=prop.mode==="Mixed"?["Hotel","Por tiempo","Day Pass"]:prop.mode==="Por tiempo"?["Por tiempo","Day Pass"]:["Hotel"];
+    el("hp-stay-mode").replaceChildren();for(const mode of modes)el("hp-stay-mode").add(new Option(({Hotel:__("Por noche"),"Por tiempo":__("Por tiempo"),"Day Pass":__("Day Pass")})[mode],mode));
+    categoryInfo();modeInfo();}
+  update();el("hp-property").addEventListener("change",update);el("hp-category").addEventListener("change",categoryInfo);el("hp-request-mode").addEventListener("change",modeInfo);
+  el("hp-stay-mode").addEventListener("change",()=>{
+    if(el("hp-stay-mode").value==="Day Pass"&&el("hp-start").value){
+      const [date,clock]=el("hp-start").value.split("T"),[hour,minute]=clock.split(":").map(Number),end=Math.min(hour*60+minute+480,1439);
+      el("hp-end").value=`${date}T${String(Math.floor(end/60)).padStart(2,"0")}:${String(end%60).padStart(2,"0")}`;
+    }
+    modeInfo();
+  });
   let accepted,values,key,acceptedProperty,revision=0;
-  function data(){return {category:el("hp-category").value,starts_at:el("hp-start").value,ends_at:el("hp-end").value,quantity:+el("hp-quantity").value,people:+el("hp-people").value,full_name:el("hp-name").value,email:el("hp-email").value,phone:el("hp-phone").value};}
-  el("hp-form").addEventListener("input",()=>{revision++;accepted=null;el("hp-request").hidden=true;el("hp-result").textContent=__("Consulte nuevamente el precio después de cambiar los datos.");});
+  function data(){return {category:el("hp-category").value,mode:el("hp-stay-mode").value,starts_at:el("hp-start").value,ends_at:el("hp-end").value,quantity:+el("hp-quantity").value,people:+el("hp-people").value,full_name:el("hp-name").value,email:el("hp-email").value,phone:el("hp-phone").value,request_mode:el("hp-request-mode").value};}
+  el("hp-form").addEventListener("input",()=>{revision++;accepted=null;el("hp-request").hidden=true;el("hp-breakdown").textContent="";el("hp-result").textContent=__("Consulte nuevamente el precio después de cambiar los datos.");});
   el("hp-form").addEventListener("submit",async(event)=>{
     event.preventDefault();const current=++revision,requested=data(),property=el("hp-property").value;
     accepted=null;el("hp-request").hidden=true;el("hp-quote").disabled=true;
@@ -31,9 +54,13 @@ frappe.ready(async()=>{
       const quote=await call("quote",{property_name:property,data:JSON.stringify(requested)});
       if(current!==revision)return;
       accepted=quote;values=requested;acceptedProperty=property;key=crypto.randomUUID();
-      showResult(__("Alojamiento: {0} {1}. Recepción confirmará las condiciones y los impuestos aplicables.",[accepted.amount,accepted.currency]));
+      showResult((requested.request_mode==="Requested"?__("Precio consultado: {0} {1}. La solicitud no reserva cupo; recepción confirmará precio, disponibilidad e impuestos.",[accepted.amount,accepted.currency]):
+        __("Alojamiento: {0} {1}. Recepción confirmará las condiciones y los impuestos aplicables.",[accepted.amount,accepted.currency])));
+      const explanations=Array.isArray(quote.explanation)?quote.explanation.filter(item=>typeof item==="string").slice(0,8):[];
+      el("hp-breakdown").textContent=[...explanations,quote.estimated_total&&quote.estimated_total!==quote.amount?
+        __("Total estimado con cargos de horario: {0} {1}.",[quote.estimated_total,quote.currency]):""].filter(Boolean).join(" · ");
       el("hp-request").hidden=false;
-    }catch{if(current===revision)showResult(__("No se encontró disponibilidad o no se pudo consultar. Revise las fechas e intente nuevamente."));}
+    }catch{if(current===revision){el("hp-breakdown").textContent="";showResult(__("No se encontró disponibilidad o no se pudo consultar. Revise las fechas e intente nuevamente."));}}
     finally{el("hp-quote").disabled=false;}
   });
   el("hp-request").addEventListener("click",async()=>{

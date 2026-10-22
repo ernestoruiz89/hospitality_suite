@@ -151,7 +151,7 @@ class TestAvailabilitySearch(IntegrationTestCase):
                 self.search(1, ends_at=str(end))
 
     def test_scope_and_roles_are_enforced_without_exposing_other_property_inventory(self):
-        foreign = frappe.db.get_value('HS Property', {'property_name': 'Motel Luna Demo'})
+        foreign = frappe.db.get_value('HS Property', {'property_name': 'Luna Demo · Por tiempo'})
         category = frappe.db.get_value('HS Category', {'property': foreign})
         with self.assertRaises(frappe.PermissionError):
             self.search(1, category=category)
@@ -227,7 +227,7 @@ class TestAvailabilitySearch(IntegrationTestCase):
             self.assertEqual(states[room.name]['status'],'Available');self.assertEqual(states[room.name]['cleaning_status'],cleaning)
 
     def test_interval_projection_omits_guest_booking_financial_and_other_property_data(self):
-        self.assigned();response=self.search();other=frappe.db.get_value('HS Property',{'mode':'Motel'})
+        self.assigned();response=self.search();other=frappe.db.get_value('HS Property',{'mode':'Por tiempo'})
         foreign=set(frappe.get_all('HS Room',filters={'property':other},pluck='name'))
         self.assertFalse(foreign.intersection(row['name'] for row in response['room_states']))
         self.assertTrue(all(set(row)=={'name','room_number','status','label','cleaning_status'} for row in response['room_states']))

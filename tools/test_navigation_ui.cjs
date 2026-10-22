@@ -20,7 +20,7 @@ function fixture(shared=new Map()){
       server_time:'2026-10-20 12:00:00',property_now:'2026-10-20T06:00:00-06:00',actions:['stay','report','reserve'],pages:[{route:'hospitality-home',title:'Inicio'},{route:'hospitality-stays',title:'Estancias'},{route:'hospitality-reception',title:'Recepción'}],cleaning:[],maintenance:[]}});
   return {desk,ns,context,root,nodes,cards,shared};
 }
-const reply=(overrides={})=>({property:'hotel',date:'2026-10-20',view:'arrivals',counts:{arrivals:3,departures:1},...overrides});
+const reply=(overrides={})=>({property:'hotel',date:'2026-10-20',view:'arrivals',counts:{arrivals:3,departures:1,hosted:2,accounts:4},...overrides});
 
 test('combined filters retain only the matching room and accent-insensitive search includes its zone',()=>{
   const f=fixture();f.desk.roomFilters={query:'jardin',clean:'Clean',floor:'2',category:'suite',state:'vacant'};f.desk.filterRooms();
@@ -56,18 +56,20 @@ test('a quota failure uses the latest session value even when an older disk valu
 test('Home excludes blocked/inactive/occupied/dirty rooms and exposes only authorized links',async()=>{
   const f=fixture();f.desk.call=async()=>reply();f.desk.render_home(f.root);await new Promise(setImmediate);
   assert.match(f.root.htmlValue,/Su jornada de un vistazo/);assert.match(f.root.htmlValue,/Limpias sin ocupación ni bloqueo<\/span><strong>1<\/strong>/);
+  assert.match(f.root.htmlValue,/1 de 3 habitaciones operativas ocupadas/);assert.match(f.root.htmlValue,/33%/);
+  assert.match(f.root.htmlValue,/Bloqueadas <strong>1/);assert.match(f.root.htmlValue,/Inactivas <strong>1/);
   assert.doesNotMatch(f.root.htmlValue,/Todo listo/);assert.doesNotMatch(f.root.htmlValue,/href="\/app\/hospitality-housekeeping"/);
-  const pending=f.nodes.get('.hs-home-pending');assert.match(pending.htmlValue,/Llegadas pendientes<\/h3><strong>3/);assert.match(pending.htmlValue,/Ver salidas/);assert.match(pending.htmlValue,/20\/10\/2026/);assert.match(pending.htmlValue,/America\/Managua/);
+  const pending=f.nodes.get('.hs-home-pending');assert.match(pending.htmlValue,/Llegadas pendientes<\/h3><strong>3/);assert.match(pending.htmlValue,/Alojados ahora<\/h3><strong>2/);assert.match(pending.htmlValue,/Cuentas abiertas<\/h3><strong>4/);assert.match(pending.htmlValue,/Ver salidas/);assert.match(pending.htmlValue,/20\/10\/2026/);assert.match(pending.htmlValue,/America\/Managua/);
 });
 test('Home zero is a confirmed count; an error or mismatched response never masquerades as zero',async()=>{
-  const f=fixture();f.desk.homeContext={el:f.root,property:'hotel'};f.desk.call=async()=>reply({counts:{arrivals:0,departures:0}});await f.desk.load_home_pending();
+  const f=fixture();f.desk.homeContext={el:f.root,property:'hotel'};f.desk.call=async()=>reply({counts:{arrivals:0,departures:0,hosted:0,accounts:0}});await f.desk.load_home_pending();
   assert.match(f.nodes.get('.hs-home-pending').htmlValue,/Llegadas pendientes<\/h3><strong>0/);
   f.desk.call=async()=>reply({property:'other'});await f.desk.load_home_pending();assert.match(f.nodes.get('.hs-home-pending').htmlValue,/Reintentar pendientes/);assert.doesNotMatch(f.nodes.get('.hs-home-pending').htmlValue,/<strong>0/);
   f.desk.call=async()=>{throw Error('offline');};await f.desk.load_home_pending();assert.equal(f.nodes.get('.hs-home-pending').attrs['aria-busy'],'false');assert.match(f.nodes.get('.hs-home-pending').htmlValue,/No se pudieron consultar/);
 });
 test('an old Home success or failure cannot replace the current property view',async()=>{
   const f=fixture(),old=deferred(),fresh=deferred();f.desk.homeContext={el:f.root,property:'hotel'};f.desk.call=()=>old.promise;const one=f.desk.load_home_pending();
-  f.desk.homeContext={el:f.root,property:'hotel'};f.desk.call=()=>fresh.promise;const two=f.desk.load_home_pending();old.resolve(reply({counts:{arrivals:99,departures:99}}));await one;
+  f.desk.homeContext={el:f.root,property:'hotel'};f.desk.call=()=>fresh.promise;const two=f.desk.load_home_pending();old.resolve(reply({counts:{arrivals:99,departures:99,hosted:99,accounts:99}}));await one;
   assert.equal(f.nodes.get('.hs-home-pending').attrs['aria-busy'],'true');fresh.resolve(reply());await two;assert.doesNotMatch(f.nodes.get('.hs-home-pending').htmlValue,/99/);
   const late=deferred();f.desk.call=()=>late.promise;const three=f.desk.load_home_pending(),before=f.nodes.get('.hs-home-pending').htmlValue;f.desk.property='hourly';late.reject(Error('late'));await three;assert.equal(f.nodes.get('.hs-home-pending').htmlValue,before);
 });

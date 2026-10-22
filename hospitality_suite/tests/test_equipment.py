@@ -14,7 +14,7 @@ class TestEquipment(IntegrationTestCase):
         self.addCleanup(frappe.db.rollback)
         frappe.set_user("Administrator")
         self.prop=frappe.get_doc("HS Property",{"property_name":"Hotel Jardín Demo"})
-        self.other=frappe.get_doc("HS Property",{"property_name":"Motel Luna Demo"})
+        self.other=frappe.get_doc("HS Property",{"property_name":"Luna Demo · Por tiempo"})
         self.room=frappe.get_doc("HS Room",{"property":self.prop.name})
         self.start=now_datetime()+timedelta(days=60)
         self.end=self.start+timedelta(hours=2)

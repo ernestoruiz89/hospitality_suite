@@ -97,7 +97,7 @@ Las acciones sobre documentos existentes exigen su `modified` actual cuando corr
 
 `service_configuration(property_name,item=None)` requiere configuración. Devuelve `modified`, asignaciones/nombres y lista/moneda; al indicar un artículo de venta habilitado añade su precio general vigente y estado `Priced`, `Missing` o `Ambiguous`. No concede lectura de costos/saldos del catálogo. `save_setup(section="property")` admite `extra_hour_item` junto con los artículos/lista ya existentes y exige `expected_modified`.
 
-Los consumos y ventas consultan la misma selección de Item Price por lista/moneda, vigencia, unidad y pagador. Se rechaza la ausencia o superposición aplicable. Las cotizaciones nuevas conservan `charge_items`; el cálculo de motel conserva `lodging_amount`, `extra_hours_amount` y `extra_hours_quantity`. Las cotizaciones/estancias antiguas pueden carecer de esas claves y mantienen su cargo aceptado. Los importes no se recalculan a partir de nombres ni descripciones traducidas.
+Los consumos y ventas consultan la misma selección de Item Price por lista/moneda, vigencia, unidad y pagador. Se rechaza la ausencia o superposición aplicable. Las cotizaciones nuevas conservan `charge_items`; el cálculo por tiempo conserva `lodging_amount`, `extra_hours_amount` y `extra_hours_quantity`. Las cotizaciones/estancias antiguas pueden carecer de esas claves y mantienen su cargo aceptado. Los importes no se recalculan a partir de nombres ni descripciones traducidas.
 
 ## Políticas y cierre diario
 

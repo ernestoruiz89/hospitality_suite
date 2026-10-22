@@ -44,7 +44,7 @@ class TestTariffExplanations(IntegrationTestCase):
         return frappe.get_doc('HS Rate',{'property':self.prop.name,'category':self.room.category,'mode':self.prop.mode})
 
     def motel(self):
-        self.prop=frappe.get_doc('HS Property',{'property_name':'Motel Luna Demo'})
+        self.prop=frappe.get_doc('HS Property',{'property_name':'Luna Demo · Por tiempo'})
         self.room=frappe.get_doc('HS Room',{'property':self.prop.name,'room_number':'M101'})
         self.guest=frappe.get_doc('HS Guest',{'property':self.prop.name})
 
@@ -270,22 +270,22 @@ class TestTariffExplanations(IntegrationTestCase):
         from frappe.translate import get_translations_from_apps
         self.motel();entered=self.enter(hours=4)
         before=self.fingerprints()
-        self.assertEqual(self.prop.mode,'Motel')
+        self.assertEqual(self.prop.mode,'Por tiempo')
         detail=api.stay_detail(entered['stay'])
-        self.assertEqual(json.loads(detail['stay'].quote_snapshot)['rules']['mode'],'Motel')
+        self.assertEqual(json.loads(detail['stay'].quote_snapshot)['rules']['mode'],'Por tiempo')
         self.assertEqual(detail['stay'].amount,600)
         for row in detail['charges']:
             self.assertEqual(row.pricing['mode_label'],'Por tiempo')
             if row.description=='Horas adicionales de motel':
                 self.assertEqual(row.description_label,'Horas adicionales por tiempo')
-        self.assertEqual(hs_label('Motel'),'Por tiempo');self.assertEqual(hs_label('Mixed'),'Hotel y por tiempo')
-        self.assertEqual(display('mode','Motel'),'Por tiempo');self.assertEqual(label('motel_lodging_net'),'Alojamiento por tiempo neto facturado')
-        self.assertIn('Motel',frappe.get_meta('HS Property').get_field('mode').options.split('\n'))
-        self.assertNotIn('Por tiempo',frappe.get_meta('HS Property').get_field('mode').options.split('\n'))
-        self.assertEqual(get_translations_from_apps('es',['hospitality_suite'])['Motel'],'Por tiempo')
+        self.assertEqual(hs_label('Por tiempo'),'Por tiempo');self.assertEqual(hs_label('Mixed'),'Hotel y por tiempo')
+        self.assertEqual(display('mode','Por tiempo'),'Por tiempo');self.assertEqual(label('motel_lodging_net'),'Alojamiento por tiempo neto facturado')
+        self.assertIn('Por tiempo',frappe.get_meta('HS Property').get_field('mode').options.split('\n'))
+        self.assertNotIn('Motel',frappe.get_meta('HS Property').get_field('mode').options.split('\n'))
+        self.assertEqual(get_translations_from_apps('es',['hospitality_suite'])['Por tiempo'],'Por tiempo')
         from hospitality_suite.reports import summary
         metrics=summary(self.prop)
-        self.assertEqual(metrics['mode'],'Motel')
+        self.assertEqual(metrics['mode'],'Por tiempo')
         self.assertIn('motel_lodging_net',metrics);self.assertIn('occupied_hours',metrics)
         self.assertIn('Por tiempo:',metrics['definitions'])
         self.assertEqual(self.fingerprints(),before)

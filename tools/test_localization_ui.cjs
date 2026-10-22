@@ -64,11 +64,11 @@ test('native operational selects translate labels and preserve values, defaults 
 
 test('Hotel and timed labels preserve persisted codes and conditional mixed-mode choices',()=>{
   const {context,control,input,render}=fixture();
-  const options=context.window.hospitality_suite.mode_options(['Hotel','Motel','Mixed',{value:'',label:'Conservar modalidad'}]);
-  assert.deepEqual(Array.from(options,o=>o.value),['Hotel','Motel','Mixed','']);
+  const options=context.window.hospitality_suite.mode_options(['Hotel','Por tiempo','Mixed',{value:'',label:'Conservar modalidad'}]);
+  assert.deepEqual(Array.from(options,o=>o.value),['Hotel','Por tiempo','Mixed','']);
   assert.deepEqual(Array.from(options,o=>o.label),['Hotel','Por tiempo','Hotel y por tiempo','Conservar modalidad']);
   control.df.options=options;render.call(control);
-  assert.equal(input.options[1].attributes.value,'Motel');assert.equal(input.options[1].textContent,'Por tiempo');
+  assert.equal(input.options[1].attributes.value,'Por tiempo');assert.equal(input.options[1].textContent,'Por tiempo');
 });
 
 test('master-data names are literal text even when matching a translation key or containing markup',async()=>{

@@ -22,7 +22,7 @@ class TestHoldExpiry(IntegrationTestCase):
         guest=frappe.get_doc('HS Guest',{'property':prop.name})
         start=now_datetime().replace(hour=14,minute=0,second=0,microsecond=0)+timedelta(days=80+index*3)
         data=dict(guest=guest.name,customer=guest.customer,hold=1,starts_at=str(start),
-                  ends_at=str(start+timedelta(hours=3 if prop.mode=='Motel' else 24)),
+                  ends_at=str(start+timedelta(hours=3 if prop.mode=='Por tiempo' else 24)),
                   rooms=[dict(room=room.name,category=room.category,people=1)])
         data['acceptance']=api.preview(prop.name,data)['acceptance']
         return api.execute(prop.name,'reserve',uuid.uuid4().hex,data)['booking']
@@ -34,7 +34,7 @@ class TestHoldExpiry(IntegrationTestCase):
             doc.save()
 
     def test_expiry_releases_only_the_requested_property_and_repetition_has_no_effect(self):
-        other=frappe.get_doc('HS Property',{'property_name':'Motel Luna Demo'})
+        other=frappe.get_doc('HS Property',{'property_name':'Luna Demo · Por tiempo'})
         own,foreign=self.hold(self.prop),self.hold(other)
         for name in (own,foreign):
             self.deadline(name,now_datetime()-timedelta(minutes=1))

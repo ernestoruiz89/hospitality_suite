@@ -49,6 +49,12 @@
    "default": 0
   },
   {
+   "fieldname": "credit_days",
+   "label": "Plazo de pago (días)",
+   "fieldtype": "Int",
+   "default": 30
+  },
+  {
    "fieldname": "valid_until",
    "label": "Válido hasta",
    "fieldtype": "Date"
@@ -67,6 +73,7 @@
   "kind",
   "credit_authorized",
   "credit_limit",
+  "credit_days",
   "valid_until",
   "reason"
  ],

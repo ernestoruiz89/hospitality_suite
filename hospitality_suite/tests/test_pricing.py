@@ -8,7 +8,7 @@ from hospitality_suite.reports import union_seconds
 
 class TestPricing(unittest.TestCase):
     def setUp(self):
-        self.rate = dict(mode="Motel", amount="450", currency="NIO", block_hours=3,
+        self.rate = dict(mode="Por tiempo", amount="450", currency="NIO", block_hours=3,
                          extra_hour_rate="150", grace_minutes=10, rounding_minutes=60,
                          included_people=2, additional_person_rate=50)
         self.start = datetime(2026, 12, 31, 23, 0, tzinfo=ZoneInfo("America/Managua"))

@@ -81,7 +81,7 @@ class TestProcurement(IntegrationTestCase):
         self.assertEqual(differences(self.prop),[])
 
     def test_supplier_and_warehouse_cannot_cross_properties(self):
-        other=frappe.get_doc("HS Property",{"property_name":"Motel Luna Demo"})
+        other=frappe.get_doc("HS Property",{"property_name":"Luna Demo · Por tiempo"})
         with self.assertRaises(frappe.ValidationError):
             self.call("purchase_order",dict(supplier=self.vendor,reason="Prueba cruzada",items=[dict(item="HS-DEMO-WATER",quantity=1,rate=10)]),prop=other)
         order=self.order()
@@ -176,7 +176,7 @@ class TestProcurement(IntegrationTestCase):
         self.assertLess(loss[0]["cost"],0)
         self.assertEqual(loss[0]["cost_center"],self.prop.cost_center)
         self.assertEqual(loss[0]["source_doctype"],"Stock Entry")
-        other=frappe.get_doc("HS Property",{"property_name":"Motel Luna Demo"})
+        other=frappe.get_doc("HS Property",{"property_name":"Luna Demo · Por tiempo"})
         self.assertFalse(any(r["source_name"]==loss[0]["source_name"] for r in rows(other,"Movimientos de inventario")))
         q=api.preview(self.prop.name,dict(values,counted_quantity=initial-6),"adjust_stock")
         self.call("move_stock",dict(item="HS-DEMO-WATER",quantity=1,purpose="Transfer",source_warehouse=dest.name,target_warehouse=self.prop.warehouse,reason="Retorno ficticio"))

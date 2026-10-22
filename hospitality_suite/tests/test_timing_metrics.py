@@ -24,13 +24,13 @@ class TestTimingMetrics(IntegrationTestCase):
 
     def enter(self,people=1,starts_at=None):
         start=starts_at or now_datetime().replace(microsecond=0)
-        data=dict(starts_at=str(start),ends_at=str(start+(timedelta(hours=3) if self.prop.mode=="Motel" else timedelta(days=1))),guest=self.guest.name,customer=self.guest.customer,
+        data=dict(starts_at=str(start),ends_at=str(start+(timedelta(hours=3) if self.prop.mode=="Por tiempo" else timedelta(days=1))),guest=self.guest.name,customer=self.guest.customer,
                   rooms=[dict(category=self.room.category,room=self.room.name,people=people)])
         data["acceptance"]=api.preview(self.prop.name,data)["acceptance"]
         return self.call("walk_in",data)
 
     def test_motel_midnight_grace_overtime_and_prepare_retry(self):
-        self.prop=frappe.get_doc("HS Property",{"property_name":"Motel Luna Demo"})
+        self.prop=frappe.get_doc("HS Property",{"property_name":"Luna Demo · Por tiempo"})
         self.room=frappe.get_all("HS Room",filters={"property":self.prop.name,"room_number":"M110"},fields=["*"])[0]
         self.guest=frappe.get_all("HS Guest",filters={"property":self.prop.name},fields=["*"])[0]
         entered=self.enter()
@@ -110,7 +110,7 @@ class TestTimingMetrics(IntegrationTestCase):
             self.call("cleaning",dict(task=task,status="Inspection",modified=str(doc.modified),checklist={"baño":True}))
 
     def test_motel_actual_arrival_hours_and_maintenance_capacity(self):
-        self.prop=frappe.get_doc("HS Property",{"property_name":"Motel Luna Demo"})
+        self.prop=frappe.get_doc("HS Property",{"property_name":"Luna Demo · Por tiempo"})
         self.room=frappe.get_all("HS Room",filters={"property":self.prop.name,"room_number":"M110"},fields=["*"])[0]
         self.guest=frappe.get_all("HS Guest",filters={"property":self.prop.name},fields=["*"])[0]
         entered=self.enter()
@@ -144,7 +144,7 @@ class TestTimingMetrics(IntegrationTestCase):
 
     def test_business_cutoff_clips_motel_hours_and_is_saved_in_close(self):
         from hospitality_suite.time import business_window
-        self.prop=frappe.get_doc("HS Property",{"property_name":"Motel Luna Demo"})
+        self.prop=frappe.get_doc("HS Property",{"property_name":"Luna Demo · Por tiempo"})
         self.room=frappe.get_all("HS Room",filters={"property":self.prop.name,"room_number":"M110"},fields=["*"])[0]
         self.guest=frappe.get_all("HS Guest",filters={"property":self.prop.name},fields=["*"])[0]
         entered=self.enter()

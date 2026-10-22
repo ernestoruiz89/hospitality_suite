@@ -9,6 +9,7 @@ from frappe.utils import get_datetime, now_datetime
 
 from hospitality_suite import availability
 from hospitality_suite.pricing import quote, money, decimal
+from hospitality_suite.mode import is_time_mode, normalize_mode
 from hospitality_suite.service import insert, audit, canonical, assert_version
 from hospitality_suite.security import document, require
 from hospitality_suite.time import to_site
@@ -113,7 +114,7 @@ def modification_values(prop,data):
     from hospitality_suite.time import local
     values=dict(starts_at=data.get("starts_at") or local(doc.starts_at,prop).isoformat(),
                 ends_at=data.get("ends_at") or local(doc.ends_at,prop).isoformat(),customer=data.get("customer") or doc.customer,
-                guest=data.get("guest") or doc.guest,mode=data.get("mode") or json.loads(doc.quote_snapshot)["lines"][0]["rules"]["mode"],
+                guest=data.get("guest") or doc.guest,mode=normalize_mode(data.get("mode") or json.loads(doc.quote_snapshot)["lines"][0].get("stay_type") or json.loads(doc.quote_snapshot)["lines"][0]["rules"]["mode"]),
                 rooms=data.get("rooms") or [dict(category=r.category,room=r.room,people=r.people,extra_beds=r.extra_beds) for r in doc.rooms],
                 channel=data.get("channel") or doc.channel,instructions=data.get("instructions",doc.instructions))
     if values["customer"]!=doc.customer and current_all("HS Payment",filters={"booking":doc.name,"status":"Posted"}):
@@ -242,7 +243,7 @@ def check_in(prop, data,accept_timing=False):
         charge(prop,stay,folio,bound_item(prop,line,"lodging_item"),base,"Lodging","Alojamiento",line)
     if extra:
         from hospitality_suite.item_configuration import hours_quantity
-        charge(prop,stay,folio,bound_item(prop,line,"extra_hour_item"),extra,"Lodging","Horas adicionales de motel",line,
+        charge(prop,stay,folio,bound_item(prop,line,"extra_hour_item"),extra,"Lodging","Horas adicionales por tiempo",line,
                quantity=hours_quantity(prop,line,line["extra_hours_quantity"]))
     if decimal(fees["early"]):
         charge(prop,stay,folio,bound_item(prop,line,"timing_item"),fees["early"],"Service","Entrada anticipada",fees)
@@ -281,6 +282,10 @@ def extension_quote(prop, data):
     from hospitality_suite.pricing import calculate
     from hospitality_suite.time import local
     original = json.loads(current.quote_snapshot or stay.quote_snapshot)
+    if original["rules"].get("day_pass"):
+        from hospitality_suite.time import local
+        if local(end,prop).date()!=local(stay.starts_at,prop).date():
+            frappe.throw(frappe._("La extensión Day Pass debe terminar el mismo día local"))
     if original["rules"]["mode"]=="Hotel":
         calculation=quote(prop,current.category,stay.ends_at,end,original.get("people",1),customer=stay.customer,mode="Hotel",extra_beds=original.get("extra_beds",0))
         from hospitality_suite.pricing import included_services
@@ -325,7 +330,7 @@ def extend(prop, data):
     alloc.accepted_amount=money(decimal(alloc.accepted_amount)+decimal(result["difference"]))
     snapshot=json.loads(alloc.quote_snapshot or stay.quote_snapshot)
     snapshot.update(end=result["end"],amount=str(alloc.accepted_amount))
-    if result["rules"]["mode"]=="Motel":
+    if is_time_mode(result["rules"]["mode"]):
         snapshot.update({key:result[key] for key in ("lodging_amount","extra_hours_amount","extra_hours_quantity","charge_items")})
     if result.get("nightly"):
         snapshot["nightly"]=snapshot.get("nightly",[])+result["nightly"]
@@ -341,9 +346,9 @@ def extend(prop, data):
     scheduled=schedule(prop,stay,folio,result,'extension:'+previous_end,result['difference'])
     if decimal(result["difference"]) and not scheduled:
         from hospitality_suite.item_configuration import bound_item,hours_quantity
-        motel=result["rules"]["mode"]=="Motel"
-        quantity=decimal(result["difference"])/decimal(result["rules"]["extra_hour_rate"]) if motel and decimal(result["rules"].get("extra_hour_rate")) else 1
-        charge(prop,stay,folio,bound_item(prop,result,"extra_hour_item" if motel else "lodging_item"),result["difference"],"Lodging","Extensión de estancia",result,quantity=hours_quantity(prop,result,quantity) if motel else 1)
+        timed=is_time_mode(result["rules"]["mode"])
+        quantity=decimal(result["difference"])/decimal(result["rules"]["extra_hour_rate"]) if timed and decimal(result["rules"].get("extra_hour_rate")) else 1
+        charge(prop,stay,folio,bound_item(prop,result,"extra_hour_item" if timed else "lodging_item"),result["difference"],"Lodging","Extensión de estancia",result,quantity=hours_quantity(prop,result,quantity) if timed else 1)
     audit(prop, "Extend", stay, data.get("reason") or frappe._('Ampliación de la estancia aceptada'), result,before=before)
     return dict(stay=stay.name, amount=result["amount"])
 
@@ -431,8 +436,9 @@ def room_change_quote(prop,data):
     segments=current_all("HS Allocation",filters={"stay":stay.name,"status":"Active"},fields=["*"],order_by="starts_at desc")
     current=segments[0]
     original=json.loads(current.quote_snapshot or stay.quote_snapshot)
-    mode=data.get("mode") or original["rules"]["mode"]
-    if room.category==current.category and mode==original["rules"]["mode"]:
+    current_mode="Day Pass" if original["rules"].get("day_pass") else normalize_mode(original["rules"]["mode"])
+    mode=normalize_mode(data.get("mode") or current_mode)
+    if room.category==current.category and mode==current_mode:
         q=dict(original)
         difference=decimal(0)
         explanation=frappe._("Misma categoría y modalidad: se conserva el importe aceptado.")
@@ -532,14 +538,9 @@ def check_out(prop, data):
             require(prop.name, "approve")
             if not prop.allow_credit or not data.get("credit_reason"):
                 frappe.throw(frappe._("Liquiden el saldo antes de registrar salida o autoricen crédito con motivo"))
-            from frappe.utils import nowdate
             folio=locked_doc("HS Folio",name)
-            grants=current_all("HS Billing Party",filters={"property":prop.name,"customer":folio.customer,"credit_authorized":1},fields=["credit_limit","valid_until"])
-            if not grants or (grants[0].valid_until and str(grants[0].valid_until)<nowdate()):
-                frappe.throw(frappe._("El cliente no tiene autorización de crédito vigente"))
-            invoices=current_all("Sales Invoice",filters={"company":prop.company,"customer":folio.customer,"docstatus":1,"outstanding_amount":[">",0]},fields=["outstanding_amount"])
-            if sum(decimal(r.outstanding_amount) for r in invoices)>decimal(grants[0].credit_limit):
-                frappe.throw(frappe._("El saldo del cliente supera su límite de crédito autorizado"))
+            from hospitality_suite.credit import enforce
+            enforce(prop, folio.customer, data.get("credit_override_reason"))
     guarantee = sum(decimal(p.amount) * (-1 if p.kind in ("Guarantee Refund", "Guarantee Applied") else 1)
                     for p in current_all("HS Payment", filters={"stay": stay.name, "status": "Posted", "kind": ["in", ["Guarantee", "Guarantee Refund", "Guarantee Applied"]]}, fields=["amount", "kind"]))
     if guarantee:

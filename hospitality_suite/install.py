@@ -47,6 +47,8 @@ def after_migrate():
     frappe.db.add_unique("HS Supplier",["property","supplier"],"hs_supplier_unique")
     frappe.db.add_unique("HS Stock Policy",["property","item","warehouse"],"hs_stock_policy_unique")
     frappe.db.add_unique("HS Equipment",["property","equipment_code"],"hs_equipment_unique")
+    frappe.db.add_index("HS Guest Ticket", ["property", "status", "due_at"], "hs_ticket_queue")
+    frappe.db.add_index("HS Ticket Event", ["ticket", "occurred_at"], "hs_ticket_timeline")
     sync_print_formats()
 
 

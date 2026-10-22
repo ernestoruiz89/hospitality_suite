@@ -37,7 +37,7 @@ try:
         assert not FIXTURE.exists(),'Conserve el fixture original'
         before=hashes();assert all(before[dt]==value for dt,value in baseline['tables'].items())
         from hospitality_suite import api
-        prop=frappe.get_doc('HS Property',{'property_name':'Motel Luna Demo'})
+        prop=frappe.get_doc('HS Property',{'property_name':'Luna Demo · Por tiempo'})
         room=frappe.get_doc('HS Room',{'property':prop.name,'room_number':'M101'})
         guest=frappe.get_doc('HS Guest',{'property':prop.name})
         start=now_datetime().replace(microsecond=0)

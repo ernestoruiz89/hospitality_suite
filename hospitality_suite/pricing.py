@@ -66,15 +66,21 @@ def quote(prop, category, starts_at, ends_at, people=1, rate_name=None, customer
         rate["included_services"]=current_all("HS Rate Service",filters={"parent":rate.name,"parenttype":"HS Rate"},fields=["item","quantity","basis"])
     if rate_name:
         rates = [r for r in rates if r.name == rate_name]
-    selected_mode=mode or (prop.mode if prop.mode!="Mixed" else "Hotel")
-    if prop.mode!="Mixed" and selected_mode!=prop.mode:
+    from hospitality_suite.mode import normalize_mode
+    requested_mode=normalize_mode(mode or (prop.mode if prop.mode!="Mixed" else "Hotel"))
+    day_pass=requested_mode=="Day Pass"
+    selected_mode="Por tiempo" if day_pass else requested_mode
+    if requested_mode not in ("Hotel","Por tiempo","Day Pass") or (prop.mode!="Mixed" and selected_mode!=prop.mode):
         frappe.throw(frappe._("El establecimiento no permite esa modalidad"))
-    rates=[r for r in rates if r.mode==selected_mode and (not r.customer or r.customer==customer)]
+    if day_pass and start.date()!=end.date():
+        frappe.throw(frappe._("Day Pass requiere entrada y salida en el mismo día local"))
+    rates=[r for r in rates if r.mode==selected_mode and bool(r.get("day_pass"))==day_pass
+           and (not r.customer or r.customer==customer)]
 
     def choose(day):
         matches=[r for r in rates if (not r.valid_from or r.valid_from<=day) and (not r.valid_to or r.valid_to>=day)
                  and (not r.weekdays or str(day.weekday()) in [d.strip() for d in r.weekdays.split(",")])]
-        if selected_mode=="Motel":
+        if selected_mode=="Por tiempo":
             from frappe.utils import get_time
             def in_window(r):
                 if not r.night_start or not r.night_end:
@@ -89,7 +95,7 @@ def quote(prop, category, starts_at, ends_at, people=1, rate_name=None, customer
             frappe.throw(frappe._("Hay tarifas con la misma prioridad; defina una prioridad inequívoca"))
         return matches[0]
     precision = currency_precision(choose(start.date()).currency)
-    if selected_mode=="Motel":
+    if selected_mode=="Por tiempo":
         result=calculate(choose(start.date()),start,end,int(people),extra_beds=int(extra_beds),precision=int(precision))
     else:
         nightly=[]
@@ -107,6 +113,7 @@ def quote(prop, category, starts_at, ends_at, people=1, rate_name=None, customer
     from hospitality_suite.item_configuration import bindings
     result["charge_items"]=bindings(prop)
     result["people"]=int(people)
+    result["stay_type"]=requested_mode
     result["extra_beds"]=int(extra_beds)
     result["included_services"]=included_services(result)
     result["base_explanation"]=list(result["explanation"])

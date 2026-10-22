@@ -211,7 +211,7 @@ class TestHousekeepingAudit(IntegrationTestCase):
         self.assertEqual({row.kind for row in projection['incidents']},{'Damage','Lost Property'})
 
     def test_multi_property_user_cannot_update_other_property_documents_through_selected_context(self):
-        other=frappe.get_doc('HS Property',{'property_name':'Motel Luna Demo'})
+        other=frappe.get_doc('HS Property',{'property_name':'Luna Demo · Por tiempo'})
         room=frappe.db.get_value('HS Room',{'property':other.name},'name')
         def foreign(action,values):return api.execute(other.name,action,uuid.uuid4().hex,values)
         task=frappe.get_doc('HS Cleaning Task',foreign('schedule_cleaning',dict(room=room,kind='Deep',priority='Normal'))['task'])

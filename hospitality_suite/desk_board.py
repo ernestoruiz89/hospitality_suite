@@ -1,6 +1,7 @@
 """Read-only operational queues. Reservation demand is never current occupancy."""
 from datetime import date as calendar_date, datetime, time, timedelta
 import re
+from decimal import Decimal
 
 import frappe
 from frappe.utils import get_datetime, now_datetime
@@ -62,10 +63,12 @@ def board(property_name,date=None,view='hosted',offset=0,page_length=25):
     folios=permitted_all('HS Folio',filters={**scope,'status':'Open'},fields=['name','label','stay','booking','customer','currency'],order_by='modified desc,name desc')
     queues=dict(hosted=active,arrivals=arrivals,departures=departures,accounts=[dict(row) for row in folios])
     result=page(queues[view],offset,page_length)
-    rooms={r.name:r.room_number for r in permitted_all('HS Room',filters=scope,fields=['name','room_number'])}
+    rooms={r.name:r for r in permitted_all('HS Room',filters=scope,fields=['name','room_number','cleaning_status'])}
     categories={r.name:r.category_name for r in permitted_all('HS Category',filters=scope,fields=['name','category_name'])}
     for row in result['rows']:
-        row['room_label']=rooms.get(row.get('room'),frappe._('Por asignar'))
+        physical_room=rooms.get(row.get('room'))
+        row['room_label']=physical_room.room_number if physical_room else frappe._('Por asignar')
+        row['cleaning_status']=physical_room.cleaning_status if physical_room else None
         if row.get('category'):row['category_label']=categories.get(row['category'],frappe._('Categoría'))
         if row.get('guest'):
             row['guest_label']=frappe._('Huésped registrado') if prop.discreet_mode else frappe.db.get_value('HS Guest',{'name':row['guest'],'property':prop.name},'full_name') or frappe._('Huésped registrado')
@@ -77,8 +80,19 @@ def board(property_name,date=None,view='hosted',offset=0,page_length=25):
             associated=[s for s in stays if s.name==row.get('stay') or (not row.get('stay') and row.get('booking') and s.booking==row['booking'])]
             associated.sort(key=lambda s:(s.status!='Active',s.name))
             row['detail_stay']=associated[0].name if associated else None
-            row['room_label']=', '.join(sorted({rooms.get(s.room,frappe._('Habitación')) for s in associated})) or frappe._('Grupo sin entrada')
+            row['room_label']=', '.join(sorted({rooms[s.room].room_number if s.room in rooms else frappe._('Habitación') for s in associated})) or frappe._('Grupo sin entrada')
             row['shared']=not bool(row.get('stay'))
             row['balance']=folio_balance(row['name'])
+        else:
+            from hospitality_suite.accounting import folio_balance
+            related=[f for f in folios if (f.stay and f.stay==row.get('name')) or
+                     (not f.stay and f.booking and f.booking==row.get('booking'))]
+            by_currency={}
+            for folio in related:
+                balance=folio_balance(folio.name)
+                currency=balance['currency']
+                by_currency[currency]=by_currency.get(currency,Decimal(0))+Decimal(balance['outstanding'])
+            row['account_balances']=[dict(currency=currency,outstanding=str(amount)) for currency,amount in sorted(by_currency.items())]
+            row['shared_account']=any(not folio.stay for folio in related)
     result.update(property=prop.name,date=day,view=view,counts={key:len(rows) for key,rows in queues.items()},server_time=str(now_datetime()))
     return result

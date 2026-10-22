@@ -53,16 +53,27 @@ def verify(token):
 def catalog():
     result=[]
     for prop in frappe.get_all("HS Property",filters={"portal_enabled":1},fields=["name","property_name","mode","time_zone","currency"]):
-        prop["categories"]=frappe.get_all("HS Category",filters={"property":prop.name},fields=["name","category_name","capacity","amenities"])
+        prop["categories"]=frappe.get_all("HS Category",filters={"property":prop.name},fields=["name","category_name","capacity","amenities","portal_description","portal_image"])
+        images=[row.portal_image for row in prop["categories"] if row.portal_image]
+        public=set(frappe.get_all("File",filters={"file_url":["in",images],"is_private":0},pluck="file_url")) if images else set()
+        for row in prop["categories"]:
+            if row.portal_image not in public:
+                row.portal_image=None
         result.append(prop)
     return result
 
 
 def request_values(data):
     data=object_payload(data)
+    from hospitality_suite.mode import normalize_mode
+    if data.get("mode"):
+        data["mode"]=normalize_mode(data["mode"])
     if any(data.get(key) is not None and not isinstance(data[key],str) for key in
-           ("full_name","email","phone","starts_at","ends_at","category","mode","acceptance")):
+           ("full_name","email","phone","starts_at","ends_at","category","mode","acceptance","request_mode")):
         frappe.throw(frappe._("Revise los datos de la solicitud"))
+    request_mode=data.get("request_mode") or "Hold"
+    if request_mode not in ("Hold","Requested"):
+        frappe.throw(frappe._("Seleccione una modalidad de solicitud válida"))
     if len(data.get("phone") or "")>140:
         frappe.throw(frappe._("El teléfono es demasiado largo"))
     try:
@@ -79,6 +90,7 @@ def request_values(data):
     if not 1<=count<=10 or not 1<=people<=20:
         frappe.throw(frappe._("Cantidad de habitaciones o personas inválida"))
     values={k:data.get(k) for k in ("full_name","email","phone","starts_at","ends_at","category","mode","quantity","people","acceptance")}
+    values["request_mode"]=request_mode
     return {**values,"rooms":[dict(category=data["category"],people=people) for _ in range(count)]}
 
 
@@ -86,7 +98,10 @@ def request_values(data):
 @rate_limit(limit=30,seconds=60)
 def quote(property_name,data):
     calculation=operations.quote_request(enabled(property_name),request_values(data))
-    return {k:calculation[k] for k in ("amount","currency","acceptance")}
+    # Public explanation is plain text from the same server quote, without
+    # exposing internal rate identifiers or guest/account records.
+    return {**{k:calculation[k] for k in ("amount","currency","acceptance","estimated_total")},
+            "explanation":list(calculation["lines"][0]["explanation"])}
 
 
 @frappe.whitelist(allow_guest=True,methods=["POST"])
@@ -103,12 +118,21 @@ def request(property_name,data,request_key):
         frappe.throw(frappe._("Nombre o correo demasiado largo"))
     digest=hashlib.sha256((property_name+"|"+request_key).encode()).hexdigest()
     payload_hash=hashlib.sha256(canonical(values).encode()).hexdigest()
+    from hospitality_suite.mode import LEGACY_TIME_MODE, TIME_MODE
+    accepted_hashes={payload_hash}
+    versions=[values]
+    if values.get("mode")==TIME_MODE:
+        versions.append({**values,"mode":LEGACY_TIME_MODE})
+    for version in versions:
+        if values["request_mode"]=="Hold":
+            accepted_hashes.add(hashlib.sha256(canonical({key:value for key,value in version.items() if key!="request_mode"}).encode()).hexdigest())
+        accepted_hashes.add(hashlib.sha256(canonical(version).encode()).hexdigest())
     frappe.db.sql("SELECT name FROM `tabHS Property` WHERE name=%s FOR UPDATE",(prop.name,))
     with operation():
-        old=current_all("HS Portal Request",filters={"request_key":digest},fields=["name","hold_until"])
+        old=current_all("HS Portal Request",filters={"request_key":digest},fields=["name","hold_until","request_until"])
         if old:
             doc=frappe.get_doc("HS Portal Request",old[0].name,for_update=True)
-            if doc.payload_hash!=payload_hash:
+            if doc.payload_hash not in accepted_hashes:
                 frappe.throw(frappe._("La clave ya fue usada para otra solicitud"))
         else:
             availability.expire_locked(prop)
@@ -119,16 +143,20 @@ def request(property_name,data,request_key):
                                    full_name=values["full_name"],email=values["email"],phone=values.get("phone"),
                                    starts_at=to_site(values["starts_at"],prop),ends_at=to_site(values["ends_at"],prop),
                                    category=values["category"],rooms=len(values["rooms"]),people=int(values.get("people") or 1),
-                                   mode=values.get("mode") or (prop.mode if prop.mode!="Mixed" else "Hotel"),status="Hold",
-                                   hold_until=now_datetime()+timedelta(minutes=prop.hold_minutes or 15),currency=prop.currency,
+                                   mode=values.get("mode") or (prop.mode if prop.mode!="Mixed" else "Hotel"),status=values["request_mode"],
+                                   hold_until=now_datetime()+timedelta(minutes=prop.hold_minutes or 15) if values["request_mode"]=="Hold" else None,
+                                   request_until=now_datetime()+timedelta(days=1) if values["request_mode"]=="Requested" else None,currency=prop.currency,
                                    amount=calculation["amount"],quote_snapshot=canonical(calculation),request_key=digest,payload_hash=payload_hash))
             doc.insert(ignore_permissions=True)  # bounded request; no guest/finance/account creation
-            for row in values["rooms"]:
-                insert("HS Allocation",prop,category=row["category"],starts_at=doc.starts_at,ends_at=doc.ends_at,
-                       buffer_minutes=prop.cleaning_minutes,kind="Reservation",status="Active",portal_request=doc.name)
+            if doc.status=="Hold":
+                for row in values["rooms"]:
+                    insert("HS Allocation",prop,category=row["category"],starts_at=doc.starts_at,ends_at=doc.ends_at,
+                           buffer_minutes=prop.cleaning_minutes,kind="Reservation",status="Active",portal_request=doc.name)
             audit(prop,"Portal request",doc)
-    token=sign(dict(doctype="HS Portal Request",name=doc.name,expires=int(time.time())+86400))
-    return dict(status=doc.status,hold_until=str(doc.hold_until),confirmation_url="/hospitality-confirmation?token="+token)
+    token=sign(dict(doctype="HS Portal Request",name=doc.name,expires=int(time.time())+(86400*7 if doc.status=="Requested" else 86400)))
+    return dict(status=doc.status,hold_until=str(doc.hold_until) if doc.hold_until else None,
+                request_until=str(doc.request_until) if doc.request_until else None,
+                confirmation_url="/hospitality-confirmation?token="+token)
 
 
 def confirmation(token):
@@ -137,8 +165,10 @@ def confirmation(token):
         frappe.throw(frappe._("Confirmación inválida"),frappe.PermissionError)
     doc=frappe.get_doc(data["doctype"],data["name"])
     prop=enabled(doc.property)
-    return dict(property_name=prop.property_name,status=doc.status,starts_at=local(doc.starts_at,prop),ends_at=local(doc.ends_at,prop),
+    status="Expired" if doc.status=="Requested" and doc.request_until<=now_datetime() else doc.status
+    return dict(property_name=prop.property_name,status=status,starts_at=local(doc.starts_at,prop),ends_at=local(doc.ends_at,prop),
                 hold_until=local(doc.hold_until,prop) if doc.get("hold_until") else None,
+                request_until=local(doc.request_until,prop) if doc.get("request_until") else None,
                 currency=doc.currency,amount=doc.amount,time_zone=prop.time_zone)
 
 
@@ -152,8 +182,14 @@ def link(prop,data):
 
 def conversion_values(prop,data):
     request_doc=document("HS Portal Request",data["portal_request"],"reserve")
-    if request_doc.status!="Hold" or request_doc.hold_until<=now_datetime():
-        frappe.throw(frappe._("La solicitud ya no conserva una retención vigente"))
+    if request_doc.status=="Hold":
+        if request_doc.hold_until<=now_datetime():
+            frappe.throw(frappe._("La solicitud ya no conserva una retención vigente"))
+    elif request_doc.status=="Requested":
+        if request_doc.request_until<=now_datetime():
+            frappe.throw(frappe._("La solicitud sin retención ya venció"))
+    else:
+        frappe.throw(frappe._("La solicitud ya no está pendiente"))
     values=dict(starts_at=local(request_doc.starts_at,prop).isoformat(),ends_at=local(request_doc.ends_at,prop).isoformat(),mode=request_doc.mode,
                 customer=data["customer"],guest=data["guest"],rooms=[dict(category=request_doc.category,people=request_doc.people) for _ in range(request_doc.rooms)],
                 channel="Web",acceptance=data.get("acceptance"))
@@ -162,9 +198,23 @@ def conversion_values(prop,data):
 
 def convert(prop,data):
     request_doc,values=conversion_values(prop,data)
-    availability.release(portal_request=request_doc.name)
+    if request_doc.status=="Hold":
+        availability.release(portal_request=request_doc.name)
     result=operations.reserve(prop,values)
     request_doc.status,request_doc.booking="Converted",result["booking"]
     request_doc.save()
     audit(prop,"Convert portal request",request_doc)
     return result
+
+
+def reject(prop,data):
+    request_doc=document("HS Portal Request",data["portal_request"],"reserve")
+    reason=data.get("reason")
+    if request_doc.status not in ("Hold","Requested") or not isinstance(reason,str) or not reason.strip() or len(reason)>500:
+        frappe.throw(frappe._("Indique un motivo válido para rechazar la solicitud pendiente"))
+    if request_doc.status=="Hold":
+        availability.release(portal_request=request_doc.name)
+    request_doc.status="Rejected"
+    request_doc.save(ignore_permissions=True)
+    audit(prop,"Reject portal request",request_doc,reason.strip())
+    return dict(portal_request=request_doc.name,status=request_doc.status)

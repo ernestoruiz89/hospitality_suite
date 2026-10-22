@@ -185,7 +185,7 @@ class TestPeriodic(IntegrationTestCase):
         self.assertEqual([row.amount for row in self.rows(entered['stay'])],[1500,2000,1500])
 
     def test_motel_keeps_its_block_charge_with_nightly_property_setting(self):
-        self.prop=frappe.get_doc('HS Property',{'property_name':'Motel Luna Demo'})
+        self.prop=frappe.get_doc('HS Property',{'property_name':'Luna Demo · Por tiempo'})
         self.room=frappe.get_doc('HS Room',{'property':self.prop.name,'room_number':'M101'})
         self.guest=frappe.get_doc('HS Guest',{'property':self.prop.name})
         with operation():self.prop.lodging_charge_policy='Nightly';self.prop.save()

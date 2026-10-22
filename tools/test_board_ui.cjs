@@ -30,6 +30,9 @@ test('operational rows use human labels and escape data while action identities 
   const {desk}=fixture();
   const arrivals=desk.boardRows(response('arrivals',[{room_label:'Por asignar',category_label:'<Doble>',guest_label:'<Ana>',customer_label:'Empresa',starts_at:'2026-10-20 14:00:00',status:'Confirmed',booking:'BOOK-KEY'}]));
   assert.match(arrivals,/&lt;Ana&gt;/);assert.match(arrivals,/&lt;Doble&gt;/);assert(!arrivals.includes('<Ana>'));assert.match(arrivals,/Gestionar llegada/);assert.match(arrivals,/data-id="BOOK-KEY"/);
+  assert.match(arrivals,/Sin habitación asignada/);assert.match(arrivals,/Sin cuenta abierta/);
+  const hosted=desk.boardRows(response('hosted',[{name:'STAY-KEY',room_label:'H101',guest_label:'Ana',starts_at:'2026-10-20 14:00:00',ends_at:'2026-10-21 11:00:00',status:'Active',cleaning_status:'Dirty',shared_account:true,account_balances:[{currency:'NIO',outstanding:'3000.00'}]}]));
+  assert.match(hosted,/Dirty/);assert.match(hosted,/3000.00 NIO/);assert.match(hosted,/Cuenta compartida/);
   const accounts=desk.boardRows(response('accounts',[{label:'Principal',customer_label:'Empresa',room_label:'H101, H102',shared:true,currency:'NIO',balance:{outstanding:'0.00'},detail_stay:'STAY-KEY'}]));
   assert.match(accounts,/Grupo · H101, H102/);assert.match(accounts,/0.00 NIO/);assert.match(accounts,/data-id="STAY-KEY"/);
 });

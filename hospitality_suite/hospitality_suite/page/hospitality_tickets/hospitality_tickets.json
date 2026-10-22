@@ -1,0 +1,31 @@
+{
+ "doctype": "Page",
+ "name": "hospitality-tickets",
+ "page_name": "hospitality-tickets",
+ "title": "Tickets",
+ "module": "Hospitality Suite",
+ "standard": "Yes",
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "HS Administrator"
+  },
+  {
+   "role": "HS Manager"
+  },
+  {
+   "role": "HS Supervisor"
+  },
+  {
+   "role": "HS Receptionist"
+  },
+  {
+   "role": "HS Housekeeping"
+  },
+  {
+   "role": "HS Maintenance"
+  }
+ ]
+}

@@ -22,12 +22,15 @@ def initial_business_date(time_zone,close_time,at=None):
 
 def create_property(values,request_key):
     from hospitality_suite.service import canonical,operation
+    from hospitality_suite.mode import normalize_mode
     from hospitality_suite.time import cutoff_time
     if not is_system():
         frappe.throw(frappe._("Se requiere administración del sistema"),frappe.PermissionError)
     allowed={"property_name","company","mode","currency","time_zone","business_date","close_time"}
     if not isinstance(request_key,str) or not request_key.strip() or len(request_key)>140 or any(k not in allowed for k in values):
         frappe.throw(frappe._("Configuración no válida"))
+    submitted=values
+    values={**values,"mode":normalize_mode(values["mode"])} if "mode" in values else values
     for field in ("property_name","company","currency"):
         if not isinstance(values.get(field),str) or not values[field].strip():
             frappe.throw(frappe._("Indique nombre, compañía y moneda del establecimiento"))
@@ -51,7 +54,7 @@ def create_property(values,request_key):
     # is no HS Property to lock yet; Company is the existing parent resource.
     frappe.get_doc("Company",values["company"],for_update=True).check_permission("read")
     key=hashlib.sha256(f"{frappe.session.user}|{values['company']}|create_property|{request_key}".encode()).hexdigest()
-    digest=hashlib.sha256(canonical(values).encode()).hexdigest()
+    digest=hashlib.sha256(canonical(submitted).encode()).hexdigest()
     prior=frappe.db.sql("SELECT payload_hash,result FROM `tabHS Request` WHERE request_key=%s FOR UPDATE",(key,),as_dict=True)
     if prior:
         if prior[0].payload_hash!=digest:

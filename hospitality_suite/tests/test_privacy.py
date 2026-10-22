@@ -109,7 +109,7 @@ class TestPrivacy(IntegrationTestCase):
         with self.assertRaises(frappe.PermissionError):
             api.execute(self.prop.name,"retire_sensitive",uuid.uuid4().hex,values)
         frappe.set_user("Administrator")
-        other=frappe.get_doc("HS Property",{"property_name":"Motel Luna Demo"})
+        other=frappe.get_doc("HS Property",{"property_name":"Luna Demo · Por tiempo"})
         with self.assertRaises(frappe.PermissionError):
             api.preview(other.name,values,"retire_sensitive")
         main=frappe.get_doc("HS Guest",{"property":self.prop.name,"name":["!=",guest.name]})

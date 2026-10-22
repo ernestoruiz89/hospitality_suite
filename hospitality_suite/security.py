@@ -17,6 +17,7 @@ ACTIONS = {
     "guest": MANAGERS + ["HS Receptionist"],
     "incident": MANAGERS + ["HS Housekeeping","HS Maintenance"],
     "inventory":MANAGERS+["HS Accountant"],
+    "ticket": MANAGERS + ["HS Receptionist", "HS Housekeeping", "HS Maintenance"],
 }
 
 

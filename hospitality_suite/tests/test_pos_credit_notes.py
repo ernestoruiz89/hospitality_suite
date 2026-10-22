@@ -149,7 +149,7 @@ class TestPosCreditNotes(IntegrationTestCase):
         frappe.set_user('supervisor@hospitality.example.invalid')
         with self.assertRaises(frappe.PermissionError):self.review(part)
         frappe.set_user('Administrator')
-        motel=frappe.get_doc('HS Property',{'property_name':'Motel Luna Demo'})
+        motel=frappe.get_doc('HS Property',{'property_name':'Luna Demo · Por tiempo'})
         other=api.execute(motel.name,'open_shift',uuid.uuid4().hex,dict(opening_amount=0))['shift']
         with self.assertRaises(frappe.PermissionError):self.review(dict(part,shift=other))
 

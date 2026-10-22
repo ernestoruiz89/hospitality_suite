@@ -69,7 +69,7 @@ class TestCatalog(IntegrationTestCase):
         self.assertTrue(referenced.disabled)
 
     def test_minimal_role_projection_and_scope_cannot_be_bypassed(self):
-        foreign=frappe.db.get_value("HS Property",{"property_name":"Motel Luna Demo"},"name")
+        foreign=frappe.db.get_value("HS Property",{"property_name":"Luna Demo · Por tiempo"},"name")
         # Give the existing demo role only one property in this rolled-back fixture.
         frappe.db.delete("HS Access",{"user":"housekeeping@hospitality.example.invalid","property":foreign})
         frappe.set_user("housekeeping@hospitality.example.invalid")

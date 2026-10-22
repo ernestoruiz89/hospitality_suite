@@ -45,7 +45,7 @@ test('hotel rates keep people charges while block/hour options are reserved for 
   desk.form_layout(fields);
   for(const name of ['block_hours','extra_hour_rate','night_start','night_end']){
     const field=fields.find(df=>df.fieldname===name);
-    assert.equal(field.depends_on({mode:'Hotel'}),false);assert.equal(field.depends_on({mode:'Motel'}),true);
+    assert.equal(field.depends_on({mode:'Hotel'}),false);assert.equal(field.depends_on({mode:'Por tiempo'}),true);
   }
   assert.equal(fields.find(df=>df.fieldname==='block_hours').default,3);
   assert.equal(fields.find(df=>df.fieldname==='included_people').depends_on,undefined);

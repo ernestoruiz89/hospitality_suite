@@ -38,3 +38,20 @@ test('close groups with amounts open while zero groups retain expandable details
   assert.match(html,/<details class="hs-close-group"><summary>Sin movimientos<\/summary>Devoluciones\|0.00\|NIO<\/details>/);
   assert.match(html,/100.00/);assert.match(html,/20.00/);
 });
+test('guided close preserves the server blocker order and separates live review from saved evidence',()=>{
+  const {desk,period}=fixture();
+  const blockers=[
+    {type:'Diferencias entre PMS y ERPNext',documents:['diff'],hint:'Revisar origen'},
+    {type:'Llegadas pendientes',documents:['booking'],hint:'Registrar entrada'}
+  ];
+  const live=desk.close_summary_html(period,blockers,{live:true});
+  assert.match(live,/Revisión guiada del cierre/);
+  assert.match(live,/data-hs-close-pending="1"/);
+  assert.match(live,/data-hs-close-pending="0"/);
+  assert(live.indexOf('Salidas y llegadas')<live.indexOf('Conciliación con ERPNext'));
+  assert.match(live,/data-hs-close-refresh/);
+  const saved=desk.close_summary_html(period,blockers);
+  assert.match(saved,/Revisión conservada del cierre/);
+  assert.doesNotMatch(saved,/data-hs-close-refresh/);
+  assert.match(saved,/Esta ejecución conserva pendientes/);
+});

@@ -29,8 +29,9 @@ def _number(value):
 def normalize(prop, values):
     if not isinstance(values, dict):
         frappe.throw(frappe._('Revise los datos del borrador'))
-    mode = values.get('mode') or ('Motel' if prop.mode == 'Motel' else 'Hotel')
-    if mode not in ('Hotel', 'Motel') or (prop.mode != 'Mixed' and mode != prop.mode):
+    from hospitality_suite.mode import normalize_mode
+    mode = normalize_mode(values.get('mode') or ('Por tiempo' if prop.mode == 'Por tiempo' else 'Hotel'))
+    if mode not in ('Hotel', 'Por tiempo', 'Day Pass') or (prop.mode != 'Mixed' and ('Por tiempo' if mode=='Day Pass' else mode) != prop.mode):
         frappe.throw(frappe._('El establecimiento no permite esa modalidad'))
     hold = values.get('hold')
     if hold not in (None,False,True,0,1):
@@ -72,8 +73,9 @@ def values_for(doc, prop):
         previous = frappe.parse_json(doc.quote_snapshot)
         lines = previous.get('lines',[]) if isinstance(previous,dict) else []
         if lines:
-            metadata['mode'] = lines[0].get('rules',{}).get('mode')
-    return dict(mode=metadata.get('mode') or ('Motel' if prop.mode == 'Motel' else 'Hotel'),
+            metadata['mode'] = lines[0].get('stay_type') or lines[0].get('rules',{}).get('mode')
+    from hospitality_suite.mode import normalize_mode
+    return dict(mode=normalize_mode(metadata.get('mode') or ('Por tiempo' if prop.mode == 'Por tiempo' else 'Hotel')),
         hold=bool(metadata.get('hold')), guest=doc.guest, customer=doc.customer,
         starts_at=local(doc.starts_at, prop).isoformat() if doc.starts_at else None,
         ends_at=local(doc.ends_at, prop).isoformat() if doc.ends_at else None,

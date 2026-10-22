@@ -25,7 +25,7 @@
    "fieldname": "mode",
    "label": "Modalidad",
    "fieldtype": "Select",
-   "options": "Hotel\nMotel\nMixed",
+   "options": "Hotel\nPor tiempo\nMixed",
    "reqd": 1,
    "default": "Hotel"
   },
@@ -209,6 +209,12 @@
    "options": "Item"
   },
   {
+   "fieldname": "day_pass_item",
+   "label": "Artículo de Day Pass sin habitación",
+   "fieldtype": "Link",
+   "options": "Item"
+  },
+  {
    "fieldname": "tax_template",
    "label": "Plantilla de impuestos",
    "fieldtype": "Link",
@@ -381,6 +387,7 @@
   "cash_transfer_account",
   "lodging_item",
   "extra_hour_item",
+  "day_pass_item",
   "tax_template",
   "price_list",
   "tax_policy_confirmed",

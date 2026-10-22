@@ -52,7 +52,8 @@
     if(prefill&&prefill.property!==this.property)return;
     const property=this.property,prop={...this.prop},existing=info?.draft,room=this.data.rooms.find(row=>row.name===roomId);
     const now=(this.data.property_now||this.data.server_time).slice(0,19).replace("T"," ");
-    const values=existing||{mode:prop.mode==="Motel"?"Motel":"Hotel",starts_at:prefill?.starts_at||now,ends_at:prefill?.ends_at||moment(now).add(prop.mode==="Motel"?3:24,"hours").format("YYYY-MM-DD HH:mm:ss"),channel:"Recepción",rooms:prefill?clean({rooms:prefill.rooms}).rooms:[{category:room?.category,room:roomId||"",people:1,extra_beds:0}]};
+    const starts=prefill?.starts_at||now;
+    const values=existing||{mode:prefill?.mode||(prop.mode==="Por tiempo"?"Por tiempo":"Hotel"),starts_at:starts,ends_at:prefill?.ends_at||(prefill?.mode==="Day Pass"?suite.day_pass_end(starts):moment(now).add(prop.mode==="Por tiempo"?3:24,"hours").format("YYYY-MM-DD HH:mm:ss")),channel:"Recepción",rooms:prefill?.rooms?clean({rooms:prefill.rooms}).rooms:[{category:room?.category,room:roomId||"",people:1,extra_beds:0}]};
     const send=(data,key,p)=>this.call("execute",{property_name:p,action:"save_booking_draft",request_key:key,data:JSON.stringify(data)});
     const session=new DraftSession(property,send,info?.booking.name,info?.booking.modified);
     const scope=()=>({filters:{property}});
@@ -61,7 +62,7 @@
       {...pick("customer",__("Cliente que paga"),this.data.customers,"customer_name",true),default:values.customer||""},
       f("starts_at",__("Entrada ({0})",[prop.time_zone]),"Datetime",{reqd:1,default:wall(values.starts_at)}),
       f("ends_at",__("Salida prevista"),"Datetime",{reqd:1,default:wall(values.ends_at)}),
-      f("mode",__("Modalidad"),"Select",{reqd:1,options:prop.mode==="Mixed"?["Hotel","Motel"]:[prop.mode],default:values.mode}),
+      f("mode",__("Modalidad"),"Select",{reqd:1,options:prop.mode==="Mixed"?["Hotel","Por tiempo"]:[prop.mode],default:values.mode}),
       f("rooms",__("Habitaciones solicitadas"),"Table",{reqd:1,in_place_edit:false,data:copy(values.rooms||[]),fields:[
         f("category",__("Categoría"),"Link",{options:"HS Category",reqd:1,in_list_view:1,get_query:scope}),
         f("room",__("Habitación (opcional)"),"Link",{options:"HS Room",in_list_view:1,get_query:()=>({filters:{property,active:1}})}),

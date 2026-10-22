@@ -27,7 +27,7 @@
   };
   Desk.prototype.action_availability=async function(){
     const property=this.property,now=(this.data.property_now||this.data.server_time).slice(0,19).replace("T"," ");
-    const end=moment(now).add(this.prop.mode==="Motel"?3:24,"hours").format("YYYY-MM-DD HH:mm:ss");
+    const end=moment(now).add(this.prop.mode==="Por tiempo"?3:24,"hours").format("YYYY-MM-DD HH:mm:ss");
     const categories=this.data.categories,fields=[
       field("category",__("Categoría"),"Select",{reqd:1,_hsDataOptions:true,default:categories.length===1?categories[0].name:"",options:[{value:"",label:__("Seleccione…")},...categories.map(r=>({value:r.name,label:r.category_name}))]}),
       field("quantity",__("Cantidad de habitaciones"),"Int",{reqd:1,default:1,_hsBounds:{min:1,integer:true}}),

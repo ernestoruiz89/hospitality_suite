@@ -1,3 +1,5 @@
+import re
+
 import frappe
 from frappe import _
 from frappe.model.document import Document
@@ -96,7 +98,7 @@ class ScopedDocument(Document):
                 from hospitality_suite.security import require
                 require(self.property, "setup")
                 frappe.db.sql("SELECT name FROM `tabHS Property` WHERE name=%s FOR UPDATE",(self.property,))
-            for field in ("room", "category", "booking", "stay", "folio", "rate", "shift", "method", "guest"):
+            for field in ("room", "category", "booking", "stay", "folio", "rate", "shift", "method", "guest", "ticket"):
                 value = self.get(field)
                 df = self.meta.get_field(field)
                 if value and df and df.fieldtype == "Link" and df.options.startswith("HS "):
@@ -179,8 +181,12 @@ class ScopedDocument(Document):
                 frappe.throw(_("Escriba un motivo de tarifa de hasta 1000 caracteres"))
             if previous and values(previous)!=values(self) and not (reason or '').strip():
                 frappe.throw(_("Indique el motivo del cambio de tarifa"))
-            if self.get("property") and prop.financial_enabled and self.mode=="Motel" and self.active and self.extra_hour_rate>0 and not prop.get("extra_hour_item"):
-                frappe.throw(frappe._("Configure el artículo para horas adicionales de motel"))
+            if self.day_pass and self.mode!="Por tiempo":
+                frappe.throw(frappe._("Day Pass requiere una tarifa por tiempo"))
+            if self.day_pass and self.block_hours>24:
+                frappe.throw(frappe._("El bloque Day Pass no puede superar 24 horas"))
+            if self.get("property") and prop.financial_enabled and self.mode=="Por tiempo" and self.active and self.extra_hour_rate>0 and not prop.get("extra_hour_item"):
+                frappe.throw(frappe._("Configure el artículo para horas adicionales por tiempo"))
             if self.amount < 0 or self.block_hours <= 0 or self.rounding_minutes <= 0 or (self.grace_minutes or 0)<0 or any((self.get(field) or 0)<0 for field in ("extra_hour_rate","extra_bed_rate","additional_person_rate")) or self.included_people<1:
                 frappe.throw(_("Revise el precio, bloque y redondeo de la tarifa"))
             if self.valid_from and self.valid_to and self.valid_to<self.valid_from:
@@ -198,8 +204,19 @@ class ScopedDocument(Document):
                 if item.disabled or not item.is_sales_item or item.is_fixed_asset:
                     frappe.throw(frappe._("El servicio incluido debe ser un artículo de venta habilitado"))
                 keys.add((row.item,row.basis))
-        if self.doctype=="HS Category" and (self.capacity<1 or (self.max_extra_beds or 0)<0):
-            frappe.throw(frappe._("Revise la capacidad y las camas extra de la categoría"))
+        if self.doctype=="HS Category":
+            if self.capacity<1 or (self.max_extra_beds or 0)<0:
+                frappe.throw(frappe._("Revise la capacidad y las camas extra de la categoría"))
+            previous=self.get_doc_before_save()
+            if not internal and any((previous.get(field) if previous else None)!=self.get(field) for field in ("portal_description","portal_image")):
+                from hospitality_suite.security import require
+                require(self.property,"setup")
+            if len(self.portal_description or "")>500:
+                frappe.throw(frappe._("La descripción pública admite hasta 500 caracteres"))
+            image=self.portal_image
+            if image and (not isinstance(image,str) or not re.fullmatch(r"/files/[A-Za-z0-9][A-Za-z0-9_.-]{0,180}\.(?:png|jpg|jpeg|webp|gif)",image,re.I)
+                          or not frappe.db.exists("File",{"file_url":image,"is_private":0})):
+                frappe.throw(frappe._("Seleccione una imagen pública existente en /files/"))
         if self.doctype == "HS Room" and not self.is_new():
             old = self.get_doc_before_save()
             if old and old.cleaning_status!=self.cleaning_status and not internal:
@@ -235,8 +252,8 @@ class ScopedDocument(Document):
         if self.doctype=="HS Payment" and self.is_new() and self.kind in ("Payment","Advance","Guarantee","Refund","Guarantee Refund"):
             from hospitality_suite.treasury import method_snapshot
             self.fee_snapshot=frappe.as_json(method_snapshot(frappe.get_doc("HS Payment Method",self.method),refund=self.kind in ("Refund","Guarantee Refund")))
-        if self.doctype=="HS Billing Party" and self.credit_limit<0:
-            frappe.throw(frappe._("El límite de crédito no puede ser negativo"))
+        if self.doctype=="HS Billing Party" and (self.credit_limit<0 or not 0 <= (self.credit_days or 0) <= 365):
+            frappe.throw(frappe._("Revise el límite y el plazo de crédito"))
         if self.doctype=="HS Folio":
             if not self.stay and not self.booking:
                 frappe.throw(frappe._("Una cuenta debe pertenecer a una estancia o reserva grupal"))

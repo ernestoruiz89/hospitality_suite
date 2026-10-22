@@ -105,6 +105,11 @@ def maintenance(prop, data):
             require(prop.name, "inspect")
             availability.release(maintenance=doc.name)
             doc.reopened_by = frappe.session.user
+            if doc.blocks_room and doc.room:
+                from hospitality_suite.service import current_all
+                if not current_all("HS Cleaning Task", filters={"room":doc.room,"status":["!=","Completed"]}):
+                    schedule_cleaning(prop, {"room":doc.room,"kind":"Deep","priority":"High",
+                                             "notes":frappe._("Revisión y limpieza tras reapertura de mantenimiento")})
         doc.status, doc.notes = target, data.get("notes",doc.notes)
         # Evidence shares a protected level with derived costs. Delegate only
         # after role, assignment, version and private-file ownership checks;

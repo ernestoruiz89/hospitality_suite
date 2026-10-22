@@ -53,7 +53,7 @@ def insert(dt, prop, **values):
     doc = frappe.get_doc(dict(doctype=dt, company=prop.company, property=prop.name, **values))
     # Only internal bookkeeping is exempt from native role grants. Operational records
     # use normal Frappe permissions, in addition to action/scope authorization.
-    return doc.insert(ignore_permissions=dt in ("HS Request", "HS Audit Event", "HS Allocation"))
+    return doc.insert(ignore_permissions=dt in ("HS Request", "HS Audit Event", "HS Allocation", "HS Ticket Event"))
 
 
 def audit(prop, action, doc, reason=None, details=None, before=None, values_doc=None, business_date=None):

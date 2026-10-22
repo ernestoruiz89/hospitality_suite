@@ -6,7 +6,7 @@ import frappe
 from hospitality_suite.security import require,property_document
 
 FIELDS={
-    'HS Rate':('title','category','mode','currency','amount','block_hours','extra_hour_rate','grace_minutes','rounding_minutes','included_people','additional_person_rate','extra_bed_rate','priority','valid_from','valid_to','weekdays','night_start','night_end','active','customer'),
+    'HS Rate':('title','category','mode','day_pass','currency','amount','block_hours','extra_hour_rate','grace_minutes','rounding_minutes','included_people','additional_person_rate','extra_bed_rate','priority','valid_from','valid_to','weekdays','night_start','night_end','active','customer'),
     'HS Booking':('status','starts_at','ends_at','amount','currency','fee_amount','fee_invoice','rooms'),
     'HS Room':('room_number','category','floor','zone','beds','parking','active','cleaning_status'),
     'HS Cleaning Task':('room','kind','priority','status','assigned_to','started_at','completed_at','notes'),
@@ -16,6 +16,7 @@ FIELDS={
     'HS Payment':('kind','status','amount','currency','base_amount','exchange_rate','method','shift','payment_entry','journal_entry','source_payment','fee_amount','withholding_amount','net_amount'),
     'HS Shift':('status','currency','opening_amount','expected_amount','counted_amount','difference','closed_at','approved_by'),
     'HS Daily Close':('business_date','status','closed_at','reason'),
+    'HS Billing Party':('customer','kind','credit_authorized','credit_limit','credit_days','valid_until'),
     'Sales Invoice':('docstatus','currency','net_total','total_taxes_and_charges','grand_total','rounded_total','outstanding_amount','is_return','return_against'),
     'Payment Entry':('docstatus','payment_type','paid_from_account_currency','paid_to_account_currency','paid_amount','received_amount','base_paid_amount','base_received_amount'),
     'Journal Entry':('docstatus','voucher_type','total_debit','total_credit'),
@@ -82,7 +83,7 @@ CONTEXT_LABELS={'HS Maintenance Order':{'title':'Trabajo requerido','starts_at':
 LABELS={'rooms':'Habitaciones registradas','room_number':'Número de habitación','floor':'Piso','zone':'Zona','beds':'Camas','parking':'Estacionamiento','cleaning_status':'Estado de limpieza',
     'equipment':'Equipo','until_reopened':'Hasta reapertura autorizada','blocks_room':'Bloquea habitación','assigned_to':'Responsable','started_at':'Inicio registrado','completed_at':'Finalización registrada','notes':'Observaciones',
     'included_services':'Servicios incluidos','denominations':'Arqueo por moneda','financial_totals':'Resumen financiero conservado',
-    'title':'Nombre de tarifa','category':'Categoría','mode':'Modalidad','currency':'Moneda','amount':'Importe','block_hours':'Horas del bloque',
+    'title':'Nombre de tarifa','category':'Categoría','mode':'Modalidad','day_pass':'Tarifa Day Pass','currency':'Moneda','amount':'Importe','block_hours':'Horas del bloque',
     'extra_hour_rate':'Precio de hora adicional','grace_minutes':'Tolerancia (minutos)','rounding_minutes':'Fracción de cobro (minutos)',
     'included_people':'Personas incluidas','additional_person_rate':'Precio de persona adicional','extra_bed_rate':'Precio de cama adicional',
     'priority':'Prioridad','valid_from':'Vigente desde','valid_to':'Vigente hasta','weekdays':'Días de la semana','night_start':'Inicio de paquete nocturno',
@@ -116,7 +117,9 @@ def display_value(prop,dt,field,value,df,state,context):
     if field=='financial_totals':
         return '; '.join(f"{row['currency']} · {frappe._('Facturación')}: {row.get('invoices_total','0')} · {frappe._('Dinero neto recibido')}: {row.get('net_customer_receipts','0')} · {frappe._('Pendiente de cobro')}: {row.get('receivables','0')}" for row in value) or frappe._('Sin movimientos financieros')
     if field=='docstatus':return frappe._({0:'Borrador',1:'Presentado',2:'Anulado'}.get(int(value),str(value)))
-    if field=='mode':return frappe._({'Hotel':'Hotel','Motel':'Por tiempo','Mixed':'Hotel y por tiempo'}.get(value,value))
+    if field=='mode':
+        from hospitality_suite.mode import normalize_mode
+        return frappe._({'Hotel':'Hotel','Por tiempo':'Por tiempo','Mixed':'Hotel y por tiempo','Day Pass':'Day Pass'}.get(normalize_mode(value),value))
     if df and df.fieldtype=='Check':return frappe._('Sí') if value else frappe._('No')
     if df and df.fieldtype=='Select':return hs_label(value)
     if df and df.fieldtype=='Datetime':

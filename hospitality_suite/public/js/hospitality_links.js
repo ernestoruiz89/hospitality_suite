@@ -18,7 +18,7 @@
         description=[category?__("Categoría: {0}",[category]):"",record.active===0?__("Habitación no habilitada"):""].filter(Boolean).join(" · ");
       }
       if(doctype==="HS Rate"&&record){
-        const mode={Hotel:__("Hotel"),Motel:__("Por tiempo"),Mixed:__("Hotel y por tiempo")}[record.mode]||"";
+        const mode={Hotel:__("Hotel"),"Por tiempo":__("Por tiempo"),Mixed:__("Hotel y por tiempo")}[record.mode]||"";
         description=[mode,__("Precio base: {0}",[this.amount(record.amount,record.currency)])].filter(Boolean).join(" · ");
       }
       // Frappe 16 decodes descriptions once before inserting their HTML.

@@ -86,7 +86,8 @@ def invoice_folio(prop, data, *, preview=False):
     booking_name=folio.booking or (stay.booking if stay else None)
     inv = frappe.new_doc("Sales Invoice")
     inv.flags.ignore_permissions=True
-    inv.update(dict(company=prop.company, customer=folio.customer, posting_date=nowdate(), due_date=nowdate(),
+    from hospitality_suite.credit import invoice_due_date
+    inv.update(dict(company=prop.company, customer=folio.customer, posting_date=nowdate(), due_date=invoice_due_date(prop, folio.customer),
                     currency=folio.currency, debit_to=prop.receivable_account, cost_center=prop.cost_center,
                     hs_stay=stay.name if stay else None,hs_booking=booking_name, hs_folio=folio.name, update_stock=0, taxes_and_charges=prop.tax_template))
     inv.party_account_currency=frappe.db.get_value('Account',prop.receivable_account,'account_currency') or frappe.db.get_value('Company',prop.company,'default_currency')

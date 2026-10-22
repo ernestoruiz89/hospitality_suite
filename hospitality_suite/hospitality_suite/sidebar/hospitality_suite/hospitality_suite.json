@@ -22,6 +22,12 @@
   {
    "type": "Link",
    "link_type": "Page",
+   "link_to": "hospitality-tickets",
+   "label": "Tickets"
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
    "link_to": "hospitality-reservations",
    "label": "Reservas"
   },
@@ -72,6 +78,24 @@
    "link_type": "Page",
    "link_to": "hospitality-setup",
    "label": "Configuración"
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
+   "link_to": "hospitality-credit",
+   "label": "Crédito empresarial"
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
+   "link_to": "hospitality-portfolio",
+   "label": "Cartera"
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
+   "link_to": "hospitality-health",
+   "label": "Salud del sistema"
   }
  ]
 }

@@ -197,7 +197,7 @@ test('booking descriptions use people and dates while respecting discreet mode a
 test('report scope changes ignore old options and keep a failed scope unqueryable',async()=>{
   const {desk,context}=fixture();
   vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../hospitality_suite/public/js/hospitality_reporting.js'),'utf8'),context);
-  const metadata=user=>({base:'Auditoría',filters:['user'],companies:['Company'],properties:[{name:'hotel',property_name:'Hotel',company:'Company'},{name:'motel',property_name:'Motel',company:'Company'}],
+  const metadata=user=>({base:'Auditoría',filters:['user'],companies:['Company'],properties:[{name:'hotel',property_name:'Hotel',company:'Company'},{name:'motel',property_name:'Por tiempo',company:'Company'}],
     date_fields:[{value:'occurred_at',label:'Momento'}],date_field:'occurred_at',note:'Source dates',users:[{name:user,full_name:user}]});
   desk.data={property_now:'2026-10-19T10:00:00-06:00'};
   let controls,values,submit,disabled=false,queries=0,notices=0;

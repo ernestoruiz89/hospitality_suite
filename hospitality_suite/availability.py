@@ -109,7 +109,13 @@ def expire_locked(prop):
         doc.save(ignore_permissions=True)
         release(portal_request=name)
         audit(prop,"Portal hold expired",doc)
-    return len(holds)+len(portal)
+    requested=current_all("HS Portal Request",filters={"property":prop.name,"status":"Requested","request_until":["<=",now_datetime()]},pluck="name")
+    for name in requested:
+        doc=locked_doc("HS Portal Request",name)
+        doc.status="Expired"
+        doc.save(ignore_permissions=True)
+        audit(prop,"Portal request expired",doc)
+    return len(holds)+len(portal)+len(requested)
 
 
 def release(**filters):

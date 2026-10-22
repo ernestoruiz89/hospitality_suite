@@ -28,7 +28,7 @@ class TestLanguageReview(IntegrationTestCase):
         before=canonical(frappe.db.sql('SELECT * FROM tabItem ORDER BY name',as_dict=True))
         result=api.catalog_search(self.prop.name,'por tiempo','sale')
         row=next(row for row in result['items'] if row.name=='HS-DEMO-EXTRA-HOUR')
-        self.assertEqual(row.item_name,'Hora adicional de motel');self.assertEqual(row.display_name,'Hora adicional por tiempo')
+        self.assertEqual(row.item_name,'Hora adicional por tiempo');self.assertEqual(row.display_name,'Hora adicional por tiempo')
         boot=api.bootstrap(self.prop.name);self.assertEqual(next(r.display_name for r in boot['items'] if r.name==row.name),row.display_name)
         with operation():self.prop.extra_hour_item=row.name;self.prop.save()
         config=api.service_configuration(self.prop.name,row.name)
@@ -40,6 +40,8 @@ class TestLanguageReview(IntegrationTestCase):
 
     def test_alias_is_limited_to_original_fixture_and_other_master_names_remain_literal(self):
         code='LANG-'+uuid.uuid4().hex[:8]
+        # Historical installations may retain the previous demo Item name.
+        frappe.db.set_value('Item','HS-DEMO-EXTRA-HOUR','item_name','Hora adicional de motel')
         frappe.get_doc(dict(doctype='Item',item_code=code,item_name='Hora adicional de motel',item_group='Services',stock_uom='Nos',is_stock_item=0,is_sales_item=1)).insert()
         self.translate('Hora adicional por tiempo','Heure supplémentaire');self.translate('Hora adicional de motel','NEVER TRANSLATE DATA')
         frappe.local.lang='fr';rows=api.catalog_search(self.prop.name,'motel','sale')['items']

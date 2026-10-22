@@ -74,7 +74,7 @@
    "fieldname": "mode",
    "label": "Modalidad",
    "fieldtype": "Select",
-   "options": "Hotel\nMotel",
+   "options": "Hotel\nPor tiempo\nDay Pass",
    "reqd": 1,
    "default": "Hotel"
   },
@@ -82,13 +82,18 @@
    "fieldname": "status",
    "label": "Estado",
    "fieldtype": "Select",
-   "options": "Hold\nConverted\nExpired\nCancelled",
+   "options": "Hold\nRequested\nConverted\nExpired\nCancelled\nRejected",
    "reqd": 1,
    "default": "Hold"
   },
   {
    "fieldname": "hold_until",
    "label": "Retención hasta",
+   "fieldtype": "Datetime"
+  },
+  {
+   "fieldname": "request_until",
+   "label": "Solicitud hasta",
    "fieldtype": "Datetime"
   },
   {
@@ -146,6 +151,7 @@
   "mode",
   "status",
   "hold_until",
+  "request_until",
   "currency",
   "amount",
   "quote_snapshot",

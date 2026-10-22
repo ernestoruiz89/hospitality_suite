@@ -1,0 +1,28 @@
+{
+ "doctype": "Page",
+ "name": "hospitality-portfolio",
+ "page_name": "hospitality-portfolio",
+ "title": "Cartera",
+ "module": "Hospitality Suite",
+ "standard": "Yes",
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "HS Administrator"
+  },
+  {
+   "role": "HS Manager"
+  },
+  {
+   "role": "HS Supervisor"
+  },
+  {
+   "role": "HS Accountant"
+  },
+  {
+   "role": "HS Auditor"
+  }
+ ]
+}

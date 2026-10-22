@@ -143,7 +143,7 @@ class TestGuestProfiles(IntegrationTestCase):
             with self.assertRaises(frappe.PermissionError):self.update(info,{'full_name':'Forbidden'})
         frappe.set_user('receptionist@hospitality.example.invalid')
         self.assertEqual(api.guest_detail(saved['guest'])['guest'],saved['guest'])
-        other=frappe.get_doc('HS Property',{'property_name':'Motel Luna Demo'})
+        other=frappe.get_doc('HS Property',{'property_name':'Luna Demo · Por tiempo'})
         before=self.hashes()
         with self.assertRaises(frappe.PermissionError):api.update_guest(other.name,info['guest'],info['modified'],{'full_name':'Forbidden'},'Prueba',uuid.uuid4().hex,info['related_versions'])
         self.assertEqual(self.hashes(),before)
@@ -188,7 +188,7 @@ class TestGuestProfiles(IntegrationTestCase):
         self.assertIn(['identity_number','FICTICIA-ANTERIOR','FICTICIA-CORREGIDA'],frappe.parse_json(version.data)['changed'])
 
     def test_delegated_registration_rejects_unregistered_payer_and_forged_crm_links(self):
-        other=frappe.get_doc('HS Property',{'property_name':'Motel Luna Demo'})
+        other=frappe.get_doc('HS Property',{'property_name':'Luna Demo · Por tiempo'})
         foreign=frappe.get_doc('HS Guest',{'property':other.name})
         before=self.hashes()
         with self.assertRaises(frappe.PermissionError):self.create(customer=foreign.customer)

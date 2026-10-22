@@ -25,7 +25,7 @@ try:
     frappe.set_user("Administrator")
     if args.mode=="prepare":
         state=json.loads(state_path.read_text()) if state_path.exists() else {}
-        for mode,label in (("hotel","Hotel Jardín Demo"),("motel","Motel Luna Demo")):
+        for mode,label in (("hotel","Hotel Jardín Demo"),("motel","Luna Demo · Por tiempo")):
             prop=frappe.get_doc("HS Property",{"property_name":label})
             user="transport-"+mode+"@hospitality.example.invalid"
             if not frappe.db.exists("User",user):

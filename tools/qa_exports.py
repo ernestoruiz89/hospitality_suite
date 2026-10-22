@@ -26,7 +26,7 @@ try:
         raise SystemExit("La revisión requiere un sitio sintético con allow_tests")
     frappe.set_user("Administrator")
     from hospitality_suite import api
-    prop=frappe.get_doc("HS Property",{"property_name":"Motel Luna Demo"})
+    prop=frappe.get_doc("HS Property",{"property_name":"Luna Demo · Por tiempo"})
     stay=frappe.db.get_value("HS Stay",{"property":prop.name,"status":"Checked Out"},"name")
     if not stay:
         raise SystemExit("Complete primero un recorrido ficticio de entrada/cobro/salida desde las Pages")

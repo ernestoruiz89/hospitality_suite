@@ -16,7 +16,7 @@ class TestInventoryAudit(IntegrationTestCase):
     def setUp(self):
         super().setUp();self.addCleanup(frappe.db.rollback);frappe.set_user('Administrator')
         self.prop=frappe.get_doc('HS Property',{'property_name':'Hotel Jardín Demo'})
-        self.other=frappe.get_doc('HS Property',{'property_name':'Motel Luna Demo'})
+        self.other=frappe.get_doc('HS Property',{'property_name':'Luna Demo · Por tiempo'})
 
     def tearDown(self):frappe.set_user('Administrator');super().tearDown()
 

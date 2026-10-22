@@ -97,6 +97,10 @@ class TestDeskBoard(IntegrationTestCase):
         self.assertIn(group[0]['detail_stay'],[one['stay'],two['stay']])
         self.assertEqual(group[0]['balance']['outstanding'],'3000.00')
         self.assertEqual(sorted(r['balance']['outstanding'] for r in result['rows']),['0.00','0.00','3000.00'])
+        hosted=self.board('hosted')['rows']
+        self.assertEqual({row['cleaning_status'] for row in hosted},{'Clean'})
+        self.assertTrue(all(row['shared_account'] for row in hosted))
+        self.assertTrue(all(row['account_balances']==[{'currency':'NIO','outstanding':'3000.00'}] for row in hosted))
 
     def test_paging_is_complete_and_invalid_filters_do_not_silently_show_a_different_view(self):
         self.reserve((0,1,2))
@@ -147,7 +151,7 @@ class TestDeskBoard(IntegrationTestCase):
         user='board-'+uuid.uuid4().hex[:8]+'@example.invalid'
         frappe.get_doc(dict(doctype='User',email=user,first_name='Board test',send_welcome_email=0,user_type='System User',roles=[dict(role='HS Receptionist')])).insert()
         with operation():frappe.get_doc(dict(doctype='HS Access',property=self.prop.name,company=self.prop.company,user=user)).insert()
-        other=frappe.db.get_value('HS Property',{'property_name':'Motel Luna Demo'})
+        other=frappe.db.get_value('HS Property',{'property_name':'Luna Demo · Por tiempo'})
         frappe.set_user(user)
         self.assertEqual(self.board()['total'],0)
         with self.assertRaises(frappe.PermissionError):api.stay_board(other)

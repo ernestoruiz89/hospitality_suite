@@ -117,5 +117,10 @@ def return_sale(prop,data):
                    payment_entry=pe.name,sales_invoice=inv.name,service=service.name,reason=data["reason"])
     service.status,service.credit_note="Returned",inv.name
     service.save()
+    for row in current_all("HS Day Pass",filters={"property":prop.name,"service":service.name,"status":"Issued"},fields=["name"]):
+        day_pass=locked_doc("HS Day Pass",row.name)
+        day_pass.status="Cancelled"
+        day_pass.save()
+        audit(prop,"Day Pass cancelled",day_pass,data["reason"],dict(credit_note=inv.name))
     audit(prop,"Return direct sale",service,data["reason"],dict(credit_note=inv.name,payment=payment.name))
     return dict(service=service.name,credit_note=inv.name,payment=payment.name)

@@ -1,0 +1,135 @@
+{
+ "doctype": "DocType",
+ "name": "HS Ticket Event",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "hash",
+ "naming_rule": "Random",
+ "fields": [
+  {
+   "fieldname": "company",
+   "label": "Compañía",
+   "fieldtype": "Link",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "property",
+   "label": "Establecimiento",
+   "fieldtype": "Link",
+   "options": "HS Property",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ticket",
+   "label": "Ticket",
+   "fieldtype": "Link",
+   "options": "HS Guest Ticket",
+   "reqd": 1
+  },
+  {
+   "fieldname": "kind",
+   "label": "Tipo",
+   "fieldtype": "Select",
+   "options": "Created\nAssigned\nStarted\nResolved\nReopened\nCancelled\nNote\nDue Changed",
+   "reqd": 1,
+   "default": "Created"
+  },
+  {
+   "fieldname": "actor",
+   "label": "Usuario de la operación",
+   "fieldtype": "Link",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "occurred_at",
+   "label": "Momento registrado",
+   "fieldtype": "Datetime"
+  },
+  {
+   "fieldname": "note",
+   "label": "Nota",
+   "fieldtype": "Small Text"
+  },
+  {
+   "fieldname": "before_value",
+   "label": "Valor anterior",
+   "fieldtype": "Small Text"
+  },
+  {
+   "fieldname": "after_value",
+   "label": "Valor nuevo",
+   "fieldtype": "Small Text"
+  }
+ ],
+ "field_order": [
+  "company",
+  "property",
+  "ticket",
+  "kind",
+  "actor",
+  "occurred_at",
+  "note",
+  "before_value",
+  "after_value"
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Administrator",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1
+  },
+  {
+   "role": "HS Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1
+  },
+  {
+   "role": "HS Supervisor",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1
+  },
+  {
+   "role": "HS Receptionist",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1
+  },
+  {
+   "role": "HS Housekeeping",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1
+  },
+  {
+   "role": "HS Maintenance",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0
+}

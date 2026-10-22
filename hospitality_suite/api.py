@@ -4,7 +4,7 @@ import json
 import frappe
 from frappe.utils import now_datetime
 
-from hospitality_suite import operations, cashier, housekeeping, inventory, accounting, closing, linen, portal,timing,direct_sales,treasury,procurement,privacy
+from hospitality_suite import operations, cashier, housekeeping, inventory, accounting, closing, linen, portal,timing,direct_sales,treasury,procurement,privacy,tickets,credit,day_pass
 from hospitality_suite.security import allowed_properties, require, document, ACTIONS, is_system, selected_property
 from hospitality_suite.service import command, insert, audit, canonical
 from hospitality_suite.time import to_site, now_local
@@ -16,6 +16,8 @@ from hospitality_suite import booking_drafts
 from hospitality_suite.inputs import object_payload as payload
 
 COMMANDS = {
+    "ticket": ("ticket", tickets.change),
+    "billing_party": ("setup", credit.update),
     'save_booking_draft':('reserve',booking_drafts.save),
     'confirm_booking_draft':('reserve',booking_drafts.confirm),
     'discard_booking_draft':('reserve',booking_drafts.discard),
@@ -35,13 +37,14 @@ COMMANDS = {
     "credit_note": ("approve", accounting.credit_note),
     "apply_guarantee": ("approve", accounting.apply_guarantee),
     "incident": ("incident", linen.incident), "linen": ("clean", linen.move_linen),
-    "convert_portal": ("reserve", portal.convert), "portal_link": ("reserve", portal.link),
+    "convert_portal": ("reserve", portal.convert), "reject_portal": ("reserve", portal.reject), "portal_link": ("reserve", portal.link),
     "withdrawal": ("finance",cashier.withdrawal),
     "modify_reservation": ("reserve",operations.modify_reservation),
     "prepare_departure":("stay",timing.prepare_departure),"inspect_departure":("inspect",timing.inspect_departure),
     "adjustment":("approve",operations.adjustment),
     "schedule_cleaning":("inspect",housekeeping.schedule_cleaning),
     "direct_sale":("finance",direct_sales.sell),"return_direct_sale":("approve",direct_sales.return_sale),
+    "day_pass_no_room":("finance",day_pass.sell_without_room),
     "assign_user":("setup",setup.assign_user),"companions":("guest",operations.companions),
     "cash_expense":("finance",treasury.expense),"settle_payment":("finance",treasury.settle),
     "purchase_order":("inventory",procurement.purchase_order),"receive_purchase":("inventory",procurement.receive_purchase),
@@ -65,7 +68,7 @@ def execute(property_name, action, request_key, data=None):
 
 @frappe.whitelist()
 def preview(property_name, data, action="reserve"):
-    permission="inventory" if action=="purchase_order" else "approve" if action in ("adjust_stock","retire_sensitive","credit_note") else "finance" if action in ("invoice","payment","direct_sale","settle_payment","supplier_payment") else "reserve" if action in ("reserve","booking_status","modify_reservation","convert_portal","confirm_booking_draft") else "stay"
+    permission="inventory" if action=="purchase_order" else "approve" if action in ("adjust_stock","retire_sensitive","credit_note") else "finance" if action in ("invoice","payment","direct_sale","day_pass_no_room","settle_payment","supplier_payment") else "reserve" if action in ("reserve","booking_status","modify_reservation","convert_portal","confirm_booking_draft") else "stay"
     prop = require(property_name, permission)
     with selected_property(prop):
         return _preview(prop,payload(data),action)
@@ -95,6 +98,8 @@ def _preview(prop,data,action):
     if action=="direct_sale":
         require(prop.name,"finance")
         return direct_sales.quote(prop,data)
+    if action=="day_pass_no_room":
+        return day_pass.quote_without_room(prop,data)
     if action=="payment":
         require(prop.name,"finance")
         return accounting.payment_quote(prop,data)
@@ -138,6 +143,38 @@ def stay_board(property_name,date=None,view='hosted',offset=0,page_length=25):
     return board(property_name,date,view,offset,page_length)
 
 
+@frappe.whitelist()
+def ticket_board(property_name,view='open',offset=0,page_length=40):
+    return tickets.board(property_name,view,offset,page_length)
+
+
+@frappe.whitelist()
+def ticket_detail(name,offset=0,page_length=100):
+    return tickets.detail(name,offset,page_length)
+
+
+@frappe.whitelist()
+def credit_overview(property_name,offset=0,page_length=50):
+    return credit.overview(property_name,offset,page_length)
+
+
+@frappe.whitelist()
+def credit_status(property_name,customer,offset=0,page_length=100):
+    return credit.status(property_name,customer,offset,page_length)
+
+
+@frappe.whitelist()
+def portfolio_snapshot():
+    from hospitality_suite.portfolio import snapshot
+    return snapshot()
+
+
+@frappe.whitelist()
+def health_snapshot(property_name):
+    from hospitality_suite.health import snapshot
+    return snapshot(property_name)
+
+
 def project(dt, prop, fields=None, filters=None):
     from hospitality_suite.paging import permitted_all
     return permitted_all(dt, filters={"property": prop.name, **(filters or {})}, fields=fields or ["*"])
@@ -146,7 +183,7 @@ def project(dt, prop, fields=None, filters=None):
 @frappe.whitelist()
 def bootstrap(property_name=None):
     names = allowed_properties()
-    props = frappe.get_all("HS Property", filters={"name": ["in", names]}, fields=["name", "company", "property_name", "brand_name", "mode", "time_zone", "currency", "business_date", "discreet_mode", "inspection_required", "guest_id_required"])
+    props = frappe.get_all("HS Property", filters={"name": ["in", names]}, fields=["name", "company", "property_name", "brand_name", "mode", "day_pass_item", "time_zone", "currency", "business_date", "discreet_mode", "inspection_required", "guest_id_required"])
     roles = frappe.get_roles()
     pages = [dict(route=route, title=title) for route, (title, accepted) in PAGES.items() if is_system() or set(roles).intersection(accepted)]
     result = dict(properties=props, pages=pages, actions=[a for a in ACTIONS if may(a)], server_time=str(now_datetime()))
@@ -172,10 +209,16 @@ def bootstrap(property_name=None):
         result["stays"] = project("HS Stay", prop)
         result["bookings"] = project("HS Booking", prop)
         result["guests"] = project("HS Guest", prop, ["name", "full_name", "customer"])
-        result["rates"] = project("HS Rate", prop, ["name", "title", "category", "mode", "currency", "amount", "block_hours"])
+        result["rates"] = project("HS Rate", prop, ["name", "title", "category", "mode", "day_pass", "currency", "amount", "block_hours"])
         result["folios"] = project("HS Folio", prop)
-        result["portal_requests"] = project("HS Portal Request",prop,filters={"status":"Hold"})
+        result["portal_requests"] = [row for row in project("HS Portal Request",prop,filters={"status":["in",["Hold","Requested"]]})
+                                     if row.status=="Hold" or row.request_until and row.request_until>now_datetime()]
         result["services"] = project("HS Service Request", prop)
+        result["day_passes"] = project("HS Day Pass",prop,["name","customer","guest","people","starts_at","ends_at","status","sales_invoice","service"])
+        for day_pass_record in result["day_passes"]:
+            day_pass_record["effective_status"] = ("Cancelled" if day_pass_record.status=="Cancelled" else
+                "Upcoming" if day_pass_record.starts_at>now_datetime() else
+                "Expired" if day_pass_record.ends_at<=now_datetime() else "Active")
         result["billing_parties"]=project("HS Billing Party",prop)
         customers = set(r.customer for r in result["guests"] + result["folios"] + result["bookings"] + result["billing_parties"] if r.get("customer"))
         result["customers"] = [dict(name=n, customer_name=frappe.db.get_value("Customer", n, "customer_name")) for n in sorted(customers)]
@@ -274,6 +317,12 @@ def stay_detail(name):
 def availability_search(property_name, starts_at, ends_at, category, people=1, quantity=1):
     from hospitality_suite.availability_search import search
     return search(property_name, starts_at, ends_at, category, people, quantity)
+
+
+@frappe.whitelist()
+def rate_calendar(property_name, category, from_date, days=14, mode=None, people=1, hours=3):
+    from hospitality_suite.rate_calendar import view
+    return view(property_name, category, from_date, days, mode, people, hours)
 
 
 @frappe.whitelist()
@@ -421,13 +470,17 @@ def export_report(property_name, report_name, filters=None, file_format="xlsx"):
 @frappe.whitelist(methods=["POST"])
 def save_setup(property_name, section, data, request_key, expected_modified=None):
     values = payload(data)
+    submitted = dict(values)
+    if section in ("property", "rate") and values.get("mode"):
+        from hospitality_suite.mode import normalize_mode
+        values["mode"] = normalize_mode(values["mode"])
     allowed = {
-        "property": ["lodging_charge_policy", "brand_name", "mode", "time_zone", "check_in_time", "check_out_time", "cleaning_minutes", "inspection_required", "discreet_mode", "hold_minutes", "guest_id_required", "allow_credit", "close_time", "retention_days", "portal_enabled", "cost_center", "warehouse", "laundry_warehouse", "receivable_account", "guarantee_account", "cash_transfer_account", "price_list", "lodging_item", "tax_template", "tax_policy_confirmed", "financial_enabled", "cancellation_fee_mode", "cancellation_fee_value", "no_show_fee_mode", "no_show_fee_value", "penalty_item", "early_hour_rate", "late_hour_rate", "schedule_grace_minutes", "schedule_rounding_minutes", "timing_item", "checkout_inspection_required", "checkout_quote_minutes", "cash_denominations"],
+        "property": ["lodging_charge_policy", "brand_name", "mode", "time_zone", "check_in_time", "check_out_time", "cleaning_minutes", "inspection_required", "discreet_mode", "hold_minutes", "guest_id_required", "allow_credit", "close_time", "retention_days", "portal_enabled", "cost_center", "warehouse", "laundry_warehouse", "receivable_account", "guarantee_account", "cash_transfer_account", "price_list", "lodging_item", "day_pass_item", "tax_template", "tax_policy_confirmed", "financial_enabled", "cancellation_fee_mode", "cancellation_fee_value", "no_show_fee_mode", "no_show_fee_value", "penalty_item", "early_hour_rate", "late_hour_rate", "schedule_grace_minutes", "schedule_rounding_minutes", "timing_item", "checkout_inspection_required", "checkout_quote_minutes", "cash_denominations"],
         "room": ["room_number", "category", "floor", "zone", "beds", "parking", "active"],
-        "category": ["category_name", "capacity", "amenities","max_extra_beds"],
-        "rate": ["title", "category", "mode", "currency", "amount", "block_hours", "extra_hour_rate", "grace_minutes", "rounding_minutes", "additional_person_rate", "included_people","extra_bed_rate", "priority", "valid_from", "valid_to", "weekdays", "customer", "night_start","night_end","active"],
+        "category": ["category_name", "capacity", "amenities","max_extra_beds","portal_description","portal_image"],
+        "rate": ["title", "category", "mode", "day_pass", "currency", "amount", "block_hours", "extra_hour_rate", "grace_minutes", "rounding_minutes", "additional_person_rate", "included_people","extra_bed_rate", "priority", "valid_from", "valid_to", "weekdays", "customer", "night_start","night_end","active"],
         "payment_method": ["mode_of_payment", "account", "currency", "reference_required", "is_cash"],
-        "billing_party": ["customer","kind","credit_authorized","credit_limit","valid_until","reason"],
+        "billing_party": ["customer","kind","credit_authorized","credit_limit","credit_days","valid_until","reason"],
     }
     allowed["property"] += ["invoice_series","payment_series","invoice_print_format","receipt_print_format"]
     allowed["property"] += ["advance_policy","guarantee_policy","extra_hour_item"]
@@ -455,7 +508,7 @@ def save_setup(property_name, section, data, request_key, expected_modified=None
             doc = insert(dt, prop, **values)
         if section!='rate':audit(prop, "Setup " + section, doc)
         return dict(name=doc.name)
-    return command(property_name, "setup", request_key, dict(operation="setup_" + section, **values), save)
+    return command(property_name, "setup", request_key, dict(operation="setup_" + section, **submitted), save)
 
 
 @frappe.whitelist()
@@ -570,6 +623,30 @@ def room_balances(property_name):
 def room_history(property_name,room,starts_at,ends_at,view='activity',offset=0,page_length=25):
     from hospitality_suite.room_history import history
     return history(property_name,room,starts_at,ends_at,view,offset,page_length)
+
+
+@frappe.whitelist()
+def room_board_snapshot(property_name):
+    from hospitality_suite.room_view import board_snapshot
+    return board_snapshot(property_name)
+
+
+@frappe.whitelist()
+def room_snapshot(property_name,room):
+    from hospitality_suite.room_view import room_snapshot as snapshot
+    return snapshot(property_name,room)
+
+
+@frappe.whitelist()
+def room_schedule(property_name,room,starts_at,ends_at):
+    from hospitality_suite.room_view import room_schedule as schedule
+    return schedule(property_name,room,starts_at,ends_at)
+
+
+@frappe.whitelist()
+def room_insights(property_name,days=30):
+    from hospitality_suite.room_view import room_insights as insights
+    return insights(property_name,days)
 
 
 @frappe.whitelist()

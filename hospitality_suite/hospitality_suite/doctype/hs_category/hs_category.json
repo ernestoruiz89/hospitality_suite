@@ -44,6 +44,16 @@
    "fieldname": "amenities",
    "label": "Comodidades",
    "fieldtype": "Small Text"
+  },
+  {
+   "fieldname": "portal_description",
+   "label": "Descripción pública",
+   "fieldtype": "Small Text"
+  },
+  {
+   "fieldname": "portal_image",
+   "label": "Imagen pública (/files/...)",
+   "fieldtype": "Data"
   }
  ],
  "field_order": [
@@ -52,7 +62,9 @@
   "category_name",
   "capacity",
   "max_extra_beds",
-  "amenities"
+  "amenities",
+  "portal_description",
+  "portal_image"
  ],
  "permissions": [
   {

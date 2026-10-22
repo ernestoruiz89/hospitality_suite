@@ -1,0 +1,198 @@
+{
+ "doctype": "DocType",
+ "name": "HS Guest Ticket",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "hash",
+ "naming_rule": "Random",
+ "fields": [
+  {
+   "fieldname": "company",
+   "label": "Compañía",
+   "fieldtype": "Link",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "property",
+   "label": "Establecimiento",
+   "fieldtype": "Link",
+   "options": "HS Property",
+   "reqd": 1
+  },
+  {
+   "fieldname": "room",
+   "label": "Habitación",
+   "fieldtype": "Link",
+   "options": "HS Room"
+  },
+  {
+   "fieldname": "stay",
+   "label": "Estancia",
+   "fieldtype": "Link",
+   "options": "HS Stay"
+  },
+  {
+   "fieldname": "subject",
+   "label": "Asunto",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "description",
+   "label": "Descripción",
+   "fieldtype": "Small Text",
+   "reqd": 1
+  },
+  {
+   "fieldname": "category",
+   "label": "Categoría",
+   "fieldtype": "Select",
+   "options": "Guest Request\nHousekeeping\nMaintenance\nComplaint\nOther",
+   "reqd": 1,
+   "default": "Guest Request"
+  },
+  {
+   "fieldname": "priority",
+   "label": "Prioridad",
+   "fieldtype": "Select",
+   "options": "Normal\nHigh\nUrgent",
+   "reqd": 1,
+   "default": "Normal"
+  },
+  {
+   "fieldname": "status",
+   "label": "Estado",
+   "fieldtype": "Select",
+   "options": "Open\nIn Progress\nResolved\nCancelled",
+   "reqd": 1,
+   "default": "Open"
+  },
+  {
+   "fieldname": "assigned_to",
+   "label": "Responsable",
+   "fieldtype": "Link",
+   "options": "User"
+  },
+  {
+   "fieldname": "due_at",
+   "label": "Plazo de atención",
+   "fieldtype": "Datetime"
+  },
+  {
+   "fieldname": "first_response_at",
+   "label": "Primera respuesta",
+   "fieldtype": "Datetime"
+  },
+  {
+   "fieldname": "resolved_at",
+   "label": "Resolución registrada",
+   "fieldtype": "Datetime"
+  },
+  {
+   "fieldname": "resolved_by",
+   "label": "Resuelto por",
+   "fieldtype": "Link",
+   "options": "User"
+  },
+  {
+   "fieldname": "resolution",
+   "label": "Resolución",
+   "fieldtype": "Small Text"
+  },
+  {
+   "fieldname": "reopened_count",
+   "label": "Reaperturas",
+   "fieldtype": "Int",
+   "default": 0
+  }
+ ],
+ "field_order": [
+  "company",
+  "property",
+  "room",
+  "stay",
+  "subject",
+  "description",
+  "category",
+  "priority",
+  "status",
+  "assigned_to",
+  "due_at",
+  "first_response_at",
+  "resolved_at",
+  "resolved_by",
+  "resolution",
+  "reopened_count"
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Administrator",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Supervisor",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Receptionist",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Housekeeping",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Maintenance",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0
+}

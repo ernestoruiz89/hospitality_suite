@@ -80,7 +80,7 @@ class TestNativePos(IntegrationTestCase):
     def test_native_posting_requires_own_open_shift_and_bank_reference(self):
         with self.assertRaises(frappe.ValidationError):
             self.invoice(hs_shift=None).insert()
-        motel=frappe.get_doc("HS Property",{"property_name":"Motel Luna Demo"})
+        motel=frappe.get_doc("HS Property",{"property_name":"Luna Demo · Por tiempo"})
         other=api.execute(motel.name,"open_shift",uuid.uuid4().hex,dict(opening_amount=0))["shift"]
         with self.assertRaises(frappe.ValidationError):
             self.invoice(hs_shift=other).insert()

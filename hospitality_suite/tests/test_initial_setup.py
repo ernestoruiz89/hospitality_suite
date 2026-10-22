@@ -91,19 +91,19 @@ class TestInitialSetup(IntegrationTestCase):
         prop.reload()
         room=frappe.get_all("HS Room",filters={"property":prop.name},fields=["name","category"],order_by="room_number")[0]
         guest=frappe.get_doc("HS Guest",{"property":prop.name})
-        api.save_setup(prop.name,"rate",dict(title="Bloque mixto ficticio",category=room.category,mode="Motel",currency=prop.currency,
+        api.save_setup(prop.name,"rate",dict(title="Bloque mixto ficticio",category=room.category,mode="Por tiempo",currency=prop.currency,
                        amount=450,block_hours=3,rounding_minutes=60,grace_minutes=10,extra_hour_rate=150,included_people=2,priority=100),uuid.uuid4().hex)
         start=now_datetime()+timedelta(days=30)
         values=dict(starts_at=str(start),ends_at=str(start+timedelta(hours=3)),customer=guest.customer,guest=guest.name,
                     rooms=[dict(category=room.category,room=room.name,people=1)])
         hotel=api.preview(prop.name,dict(values,mode="Hotel"))
-        motel=api.preview(prop.name,dict(values,mode="Motel"))
+        motel=api.preview(prop.name,dict(values,mode="Por tiempo"))
         self.assertEqual(hotel["amount"],"1500.00")
         self.assertEqual(hotel["lines"][0]["rules"]["mode"],"Hotel")
         self.assertEqual(motel["amount"],"450.00")
-        self.assertEqual(motel["lines"][0]["rules"]["mode"],"Motel")
-        booked=api.execute(prop.name,"reserve",uuid.uuid4().hex,dict(values,mode="Motel",acceptance=motel["acceptance"]))
+        self.assertEqual(motel["lines"][0]["rules"]["mode"],"Por tiempo")
+        booked=api.execute(prop.name,"reserve",uuid.uuid4().hex,dict(values,mode="Por tiempo",acceptance=motel["acceptance"]))
         snapshot=frappe.parse_json(frappe.db.get_value("HS Booking",booked["booking"],"quote_snapshot"))
-        self.assertEqual(snapshot["lines"][0]["rules"]["mode"],"Motel")
+        self.assertEqual(snapshot["lines"][0]["rules"]["mode"],"Por tiempo")
         with self.assertRaises(frappe.ValidationError):
             api.preview(prop.name,dict(values,mode="Hotel"))

@@ -374,7 +374,7 @@ try:
         print(json.dumps(proof,ensure_ascii=False))
     elif args.action=='inspect':
         from hospitality_suite.pricing import decimal
-        prop=frappe.get_doc('HS Property',{'property_name':'Motel Luna Demo'})
+        prop=frappe.get_doc('HS Property',{'property_name':'Luna Demo · Por tiempo'})
         assert prop.extra_hour_item=='HS-DEMO-EXTRA-HOUR'
         rows=frappe.get_all('HS Stay',filters={'property':prop.name},fields=['name','amount','room','quote_snapshot'])
         assert len(rows)==1 and decimal(rows[0].amount)==600

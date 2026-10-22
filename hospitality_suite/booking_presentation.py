@@ -20,7 +20,7 @@ def summary(booking, prop):
     except (ValueError, TypeError):
         snapshot = {}
     lines = snapshot.get('lines', []) if isinstance(snapshot, dict) else []
-    modes = list(dict.fromkeys(line['rules'].get('mode') for line in (lines or [])
+    modes = list(dict.fromkeys(line.get('stay_type') or ('Day Pass' if line['rules'].get('day_pass') else line['rules'].get('mode')) for line in (lines or [])
                               if isinstance(line, dict) and isinstance(line.get('rules'), dict)))
     modes = [MODE_LABELS[mode] for mode in modes if mode in MODE_LABELS]
     allocations = frappe.get_all('HS Allocation', filters={'property': prop.name, 'booking': booking.name},

@@ -15,7 +15,7 @@ class TestPermissionsAudit(IntegrationTestCase):
     def setUp(self):
         super().setUp(); self.addCleanup(frappe.db.rollback); frappe.set_user('Administrator')
         self.prop=frappe.get_doc('HS Property',{'property_name':'Hotel Jardín Demo'})
-        self.other=frappe.get_doc('HS Property',{'property_name':'Motel Luna Demo'})
+        self.other=frappe.get_doc('HS Property',{'property_name':'Luna Demo · Por tiempo'})
 
     def tearDown(self):
         frappe.set_user('Administrator'); super().tearDown()
@@ -126,11 +126,11 @@ class TestPermissionsAudit(IntegrationTestCase):
             self.rejected(lambda:self.call(self.prop,'booking_status',dict(booking=name,status='Cancelled',reason='Referencia inválida')))
 
     def test_all_nine_roles_advertise_only_authorized_actions_and_enforce_them_before_handlers(self):
-        managers={'setup','reserve','stay','finance','clean','inspect','maintain','service','report','approve','cash_approve','guest','incident','inventory'}
+        managers={'setup','reserve','stay','finance','clean','inspect','maintain','service','report','approve','cash_approve','guest','incident','inventory','ticket'}
         matrix={
             'administrator':managers,'manager':managers,'supervisor':managers-{'approve'},
-            'receptionist':{'reserve','stay','service','guest'},'cashier':{'finance','service'},
-            'housekeeping':{'clean','incident'},'maintenance':{'maintain','incident'},
+            'receptionist':{'reserve','stay','service','guest','ticket'},'cashier':{'finance','service'},
+            'housekeeping':{'clean','incident','ticket'},'maintenance':{'maintain','incident','ticket'},
             'accountant':{'finance','report','inventory'},'auditor':{'report'}}
         for account,actions in matrix.items():
             with self.subTest(role=account):

@@ -94,7 +94,7 @@ def seed():
                             item_group="Products", stock_uom="Nos", is_stock_item=1, is_sales_item=1,
                             valuation_rate=10, item_defaults=[dict(company=company.name, income_account=company.default_income_account)])).insert()
     if not frappe.db.exists("Item","HS-DEMO-EXTRA-HOUR"):
-        frappe.get_doc(dict(doctype="Item",item_code="HS-DEMO-EXTRA-HOUR",item_name="Hora adicional de motel",item_group="Services",
+        frappe.get_doc(dict(doctype="Item",item_code="HS-DEMO-EXTRA-HOUR",item_name="Hora adicional por tiempo",item_group="Services",
                             stock_uom="Hour",is_stock_item=0,is_sales_item=1,item_defaults=[dict(company=company.name,income_account=company.default_income_account)])).insert()
     else:
         extra_item=frappe.get_doc("Item","HS-DEMO-EXTRA-HOUR")
@@ -129,12 +129,12 @@ def seed():
         frappe.get_doc(dict(doctype="Currency Exchange", date=nowdate(), from_currency="USD", to_currency="NIO", exchange_rate=36.6243, for_selling=1, for_buying=1)).insert()
     result = []
     with operation():
-        for mode, property_name, prefix in [("Hotel", "Hotel Jardín Demo", "H"), ("Motel", "Motel Luna Demo", "M")]:
+        for mode, property_name, prefix in [("Hotel", "Hotel Jardín Demo", "H"), ("Por tiempo", "Luna Demo · Por tiempo", "M")]:
             prop_name = frappe.db.get_value("HS Property", {"property_name": property_name})
             if not prop_name:
                 prop = frappe.get_doc(dict(doctype="HS Property", property_name=property_name, company=company.name, mode=mode,
                                            time_zone="America/Managua", business_date=nowdate(), currency="NIO", cleaning_minutes=30,
-                                           inspection_required=1, discreet_mode=mode=="Motel", hold_minutes=15,
+                                           inspection_required=1, discreet_mode=mode=="Por tiempo", hold_minutes=15,
                                            cost_center=company.cost_center, warehouse=warehouse, receivable_account=company.default_receivable_account,
                                            guarantee_account=guarantee, lodging_item="HS-DEMO-LODGING",extra_hour_item="HS-DEMO-EXTRA-HOUR", tax_policy_confirmed=1, financial_enabled=1)).insert()
             else:
@@ -151,7 +151,7 @@ def seed():
                 if not frappe.db.exists("HS Room", {"property": prop.name, "room_number": number}):
                     frappe.get_doc(dict(doctype="HS Room", property=prop.name, company=company.name, room_number=number,
                                         category=cat_name, floor="1" if i <= 5 else "2", zone="Jardín" if i<=5 else "Patio",
-                                        beds=1, parking=str(i) if mode=="Motel" else None, active=1, cleaning_status="Clean")).insert()
+                                        beds=1, parking=str(i) if mode=="Por tiempo" else None, active=1, cleaning_status="Clean")).insert()
             if not frappe.db.exists("HS Rate", {"property": prop.name}):
                 frappe.get_doc(dict(doctype="HS Rate", property=prop.name, company=company.name, title="Noche estándar" if mode=="Hotel" else "Bloque de 3 horas",
                                     category=cat_name, mode=mode, currency="NIO", amount=1500 if mode=="Hotel" else 450,
