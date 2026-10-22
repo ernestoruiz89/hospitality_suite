@@ -11,103 +11,120 @@
    "type": "Link",
    "link_type": "Page",
    "link_to": "hospitality-home",
-   "label": "Inicio"
+   "label": "Inicio",
+   "icon": "layout-dashboard"
   },
   {
    "type": "Link",
    "link_type": "Page",
    "link_to": "hospitality-reception",
-   "label": "Recepción"
+   "label": "Recepción",
+   "icon": "concierge-bell"
   },
   {
    "type": "Link",
    "link_type": "Page",
    "link_to": "hospitality-tickets",
-   "label": "Tickets"
+   "label": "Tickets",
+   "icon": "tickets"
   },
   {
    "type": "Link",
    "link_type": "Page",
    "link_to": "hospitality-reservations",
-   "label": "Reservas"
+   "label": "Reservas",
+   "icon": "calendar-days"
   },
   {
    "type": "Link",
    "link_type": "Page",
    "link_to": "hospitality-stays",
-   "label": "Estancias"
+   "label": "Estancias",
+   "icon": "bed-double"
   },
   {
    "type": "Link",
    "link_type": "Page",
    "link_to": "hospitality-cashier",
-   "label": "Caja"
+   "label": "Caja",
+   "icon": "wallet"
   },
   {
    "type": "Link",
    "link_type": "Page",
    "link_to": "hospitality-housekeeping",
-   "label": "Limpieza"
+   "label": "Limpieza",
+   "icon": "broom-sparkles"
   },
   {
    "type": "Link",
    "link_type": "Page",
    "link_to": "hospitality-petty-cash",
-   "label": "Caja Chica"
+   "label": "Caja Chica",
+   "icon": "hand-coins"
   },
   {
    "type": "Link",
    "link_type": "Page",
    "link_to": "hospitality-treasury",
-   "label": "Otros movimientos"
+   "label": "Otros movimientos",
+   "icon": "landmark"
   },
   {
    "type": "Link",
    "link_type": "Page",
    "link_to": "hospitality-maintenance",
-   "label": "Mantenimiento"
+   "label": "Mantenimiento",
+   "icon": "wrench"
   },
   {
    "type": "Link",
    "link_type": "Page",
    "link_to": "hospitality-services",
-   "label": "Consumos e inventario"
+   "label": "Consumos e inventario",
+   "icon": "boxes"
   },
   {
    "type": "Link",
    "link_type": "Page",
    "link_to": "hospitality-guests",
-   "label": "Clientes y huéspedes"
+   "label": "Clientes y huéspedes",
+   "icon": "users-round"
   },
   {
    "type": "Link",
    "link_type": "Page",
    "link_to": "hospitality-management",
-   "label": "Gerencia"
+   "label": "Gerencia",
+   "icon": "chart-no-axes-combined"
   },
   {
    "type": "Link",
    "link_type": "Page",
    "link_to": "hospitality-setup",
-   "label": "Configuración"
+   "label": "Configuración",
+   "icon": "settings"
   },
   {
    "type": "Link",
    "link_type": "Page",
    "link_to": "hospitality-credit",
-   "label": "Crédito empresarial"
+   "label": "Crédito empresarial",
+   "icon": "credit-card"
   },
   {
    "type": "Link",
    "link_type": "Page",
    "link_to": "hospitality-portfolio",
-   "label": "Cartera"
+   "label": "Cartera",
+   "icon": "file-chart-line"
   },
   {
    "type": "Link",
    "link_type": "Page",
    "link_to": "hospitality-health",
-   "label": "Salud del sistema"
+   "label": "Salud del sistema",
+   "icon": "heart-pulse"
   }
  ]
 }

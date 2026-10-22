@@ -37,6 +37,12 @@ def allowed_properties(user=None):
     return [r.property for r in rows if frappe.db.get_value("HS Property", r.property, "company") == r.company]
 
 
+def app_permission():
+    """Expose the Frappe 16 app tile only to Suite users with a visible property."""
+    user = frappe.session.user
+    return user != "Guest" and (is_system(user) or bool(set(frappe.get_roles(user)).intersection(ROLES) and allowed_properties(user)))
+
+
 def require(property_name, action=None):
     if frappe.session.user == "Guest" or property_name not in allowed_properties():
         frappe.throw(_("No tiene acceso a este establecimiento"), frappe.PermissionError)

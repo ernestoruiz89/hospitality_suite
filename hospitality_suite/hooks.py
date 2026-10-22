@@ -7,6 +7,16 @@ app_description = "Administración de hoteles y alojamiento por tiempo"
 app_email = ""
 app_license = "MIT"
 required_apps = ["erpnext"]
+app_logo_url = "/assets/hospitality_suite/images/hospitality-suite.svg"
+app_home = "/desk/hospitality-suite/hospitality-home"
+add_to_apps_screen = [{
+    "name": app_name,
+    "logo": app_logo_url,
+    "title": app_title,
+    "route": app_home,
+    "has_permission": "hospitality_suite.security.app_permission",
+    "sequence_id": 10,
+}]
 app_include_js = ["hospitality.bundle.js"]
 app_include_css = ["hospitality.bundle.css"]
 after_install = "hospitality_suite.install.after_install"

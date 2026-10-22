@@ -8,7 +8,7 @@ from hospitality_suite import operations, cashier, housekeeping, inventory, acco
 from hospitality_suite.security import allowed_properties, require, document, ACTIONS, is_system, selected_property
 from hospitality_suite.service import command, insert, audit, canonical
 from hospitality_suite.time import to_site, now_local
-from hospitality_suite.schema import PAGES
+from hospitality_suite.schema import PAGES, PAGE_ICONS
 from hospitality_suite import setup
 from hospitality_suite import service_accounting
 from hospitality_suite import periodic
@@ -199,7 +199,7 @@ def bootstrap(property_name=None):
     names = allowed_properties()
     props = frappe.get_all("HS Property", filters={"name": ["in", names]}, fields=["name", "company", "property_name", "brand_name", "mode", "day_pass_item", "time_zone", "currency", "business_date", "discreet_mode", "inspection_required", "guest_id_required"])
     roles = frappe.get_roles()
-    pages = [dict(route=route, title=title) for route, (title, accepted) in PAGES.items() if is_system() or set(roles).intersection(accepted)]
+    pages = [dict(route=route, title=title, icon=PAGE_ICONS[route]) for route, (title, accepted) in PAGES.items() if is_system() or set(roles).intersection(accepted)]
     result = dict(properties=props, pages=pages, actions=[a for a in ACTIONS if may(a)], server_time=str(now_datetime()))
     result["can_create_property"]=is_system()
     result["system_timezone"] = frappe.utils.get_system_timezone()

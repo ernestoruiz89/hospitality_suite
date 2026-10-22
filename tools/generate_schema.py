@@ -5,7 +5,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from hospitality_suite.schema import SCHEMA, MANAGERS, PAGES
+from hospitality_suite.schema import SCHEMA, MANAGERS, PAGES, PAGE_ICONS
 from hospitality_suite.document_naming import DOCUMENT_SERIES
 
 
@@ -59,7 +59,7 @@ for folder in ["hospitality_suite/hospitality_suite", "hospitality_suite/hospita
     write(ROOT / folder / "__init__.py", "")
 sidebar = dict(doctype="Sidebar", name="Hospitality Suite", title="Hospitality Suite", module="Hospitality Suite",
                app="hospitality_suite", standard=1, header_icon="hotel", items=[
-                   dict(type="Link", link_type="Page", link_to=route, label=title)
+                   dict(type="Link", link_type="Page", link_to=route, label=title, icon=PAGE_ICONS[route])
                    for route, (title, roles) in PAGES.items()])
 write(ROOT / "hospitality_suite/hospitality_suite/sidebar/hospitality_suite/hospitality_suite.json",
       json.dumps(sidebar, indent=1, ensure_ascii=False) + "\n")

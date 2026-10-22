@@ -258,3 +258,25 @@ PAGES = {
     "hospitality-portfolio": ("Cartera", MANAGERS+["HS Accountant","HS Auditor"]),
     "hospitality-health": ("Salud del sistema", ["HS Administrator"]),
 }
+
+# Frappe 16 Lucide icon names. Keep native Sidebar fixtures and the Suite menu
+# on the same route-to-icon mapping.
+PAGE_ICONS = {
+    "hospitality-home": "layout-dashboard",
+    "hospitality-reception": "concierge-bell",
+    "hospitality-tickets": "tickets",
+    "hospitality-reservations": "calendar-days",
+    "hospitality-stays": "bed-double",
+    "hospitality-cashier": "wallet",
+    "hospitality-housekeeping": "broom-sparkles",
+    "hospitality-petty-cash": "hand-coins",
+    "hospitality-treasury": "landmark",
+    "hospitality-maintenance": "wrench",
+    "hospitality-services": "boxes",
+    "hospitality-guests": "users-round",
+    "hospitality-management": "chart-no-axes-combined",
+    "hospitality-setup": "settings",
+    "hospitality-credit": "credit-card",
+    "hospitality-portfolio": "file-chart-line",
+    "hospitality-health": "heart-pulse",
+}
