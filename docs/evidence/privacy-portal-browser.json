@@ -1,0 +1,4762 @@
+{
+  "scope": "Synthetic acceptance only. Housekeeping, Manager and Receptionist use Pages; helper ages only new fixtures and injects one filesystem fault.",
+  "events": [
+    {
+      "label": "housekeeping-first-incident-created",
+      "at": "2026-10-22T03:54:13.484Z",
+      "backdrops": [],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "incident",
+          "disabled": false,
+          "text": "Registrar novedad"
+        },
+        {
+          "action": "linen",
+          "disabled": false,
+          "text": "Ropa de cama"
+        },
+        {
+          "action": "incident_evidence",
+          "disabled": false,
+          "text": "Adjuntar evidencia"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        }
+      ],
+      "evidence_links": [],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "disabled": false,
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "disabled": false,
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Limpieza\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nhousekeeping@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nLimpieza\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nPreparar habitaciones\n\nInicie la tarea, complete la revisión y solicite inspección.\n\n0 pendientes\nRegistrar novedad\nRopa de cama\n✓\nLas habitaciones están al día\n\nLa información se actualiza al registrar movimientos.\n\nDaños y objetos encontrados\nHabitación\tNovedad\tDescripción\tEstado\tResolución / acciones\nH101\tObjeto encontrado\tObjeto sintético para retención de aceptación\tAbierto\tAdjuntar evidencia\nHora de referencia del servidor: 2026-10-21 21:54:07.722304 · NIO\nOperación confirmada",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-housekeeping"
+    },
+    {
+      "label": "housekeeping-pdf-private-locked",
+      "at": "2026-10-22T03:54:39.092Z",
+      "backdrops": [
+        "modal-backdrop fade show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "incident",
+          "disabled": false,
+          "text": "Registrar novedad"
+        },
+        {
+          "action": "linen",
+          "disabled": false,
+          "text": "Ropa de cama"
+        },
+        {
+          "action": "incident_evidence",
+          "disabled": false,
+          "text": "Adjuntar evidencia"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Subir"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal fade show hs-keyboard-dialog",
+          "title": "Subir",
+          "visible": true
+        }
+      ],
+      "evidence_links": [],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "disabled": false,
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "disabled": false,
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "checked": true,
+          "invalid": null,
+          "label": null,
+          "value": "on"
+        }
+      ],
+      "text": "Limpieza\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nhousekeeping@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nLimpieza\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nPreparar habitaciones\n\nInicie la tarea, complete la revisión y solicite inspección.\n\n0 pendientes\nRegistrar novedad\nRopa de cama\n✓\nLas habitaciones están al día\n\nLa información se actualiza al registrar movimientos.\n\nDaños y objetos encontrados\nHabitación\tNovedad\tDescripción\tEstado\tResolución / acciones\nH101\tObjeto encontrado\tObjeto sintético para retención de aceptación\tAbierto\tAdjuntar evidencia\nHora de referencia del servidor: 2026-10-21 21:54:07.722304 · NIO\nSubir\nevidencia-retencion-ficticia.pdf\n1.85K\nPrivado\nSubir",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-housekeeping"
+    },
+    {
+      "label": "housekeeping-pdf-attached",
+      "at": "2026-10-22T03:54:50.689Z",
+      "backdrops": [],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "incident",
+          "disabled": false,
+          "text": "Registrar novedad"
+        },
+        {
+          "action": "linen",
+          "disabled": false,
+          "text": "Ropa de cama"
+        },
+        {
+          "action": "incident_evidence",
+          "disabled": false,
+          "text": "Adjuntar evidencia"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        }
+      ],
+      "evidence_links": [
+        {
+          "label": "Ver evidencia",
+          "url": "/private/files/evidencia-retencion-ficticia.pdf"
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "disabled": false,
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "disabled": false,
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Limpieza\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nhousekeeping@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nLimpieza\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nPreparar habitaciones\n\nInicie la tarea, complete la revisión y solicite inspección.\n\n0 pendientes\nRegistrar novedad\nRopa de cama\n✓\nLas habitaciones están al día\n\nLa información se actualiza al registrar movimientos.\n\nDaños y objetos encontrados\nHabitación\tNovedad\tDescripción\tEstado\tResolución / acciones\nH101\tObjeto encontrado\tObjeto sintético para retención de aceptación\tAbierto\tAdjuntar evidenciaVer evidencia\nHora de referencia del servidor: 2026-10-21 21:54:40.127813 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-housekeeping"
+    },
+    {
+      "label": "housekeeping-two-private-attachments",
+      "at": "2026-10-22T03:55:33.964Z",
+      "backdrops": [],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "incident",
+          "disabled": false,
+          "text": "Registrar novedad"
+        },
+        {
+          "action": "linen",
+          "disabled": false,
+          "text": "Ropa de cama"
+        },
+        {
+          "action": "incident_evidence",
+          "disabled": false,
+          "text": "Adjuntar evidencia"
+        },
+        {
+          "action": "incident_evidence",
+          "disabled": false,
+          "text": "Adjuntar evidencia"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        }
+      ],
+      "evidence_links": [
+        {
+          "label": "Ver evidencia",
+          "url": "/private/files/evidencia-control-ficticia.txt"
+        },
+        {
+          "label": "Ver evidencia",
+          "url": "/private/files/evidencia-retencion-ficticia.pdf"
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "disabled": false,
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "disabled": false,
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Limpieza\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nhousekeeping@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nLimpieza\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nPreparar habitaciones\n\nInicie la tarea, complete la revisión y solicite inspección.\n\n0 pendientes\nRegistrar novedad\nRopa de cama\n✓\nLas habitaciones están al día\n\nLa información se actualiza al registrar movimientos.\n\nDaños y objetos encontrados\nHabitación\tNovedad\tDescripción\tEstado\tResolución / acciones\nH102\tObjeto encontrado\tObjeto de control que se conserva en aceptación\tAbierto\tAdjuntar evidenciaVer evidencia\nH101\tObjeto encontrado\tObjeto sintético para retención de aceptación\tAbierto\tAdjuntar evidenciaVer evidencia\nHora de referencia del servidor: 2026-10-21 21:55:08.876623 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-housekeeping"
+    },
+    {
+      "label": "housekeeping-private-control-opened",
+      "at": "2026-10-22T03:56:03.084Z",
+      "url": "http://hospitality-acceptance.localhost:8089/private/files/evidencia-control-ficticia.txt",
+      "text": "Evidencia sintética de control. Este archivo debe conservarse cuando se revise únicamente la otra novedad.\n"
+    },
+    {
+      "label": "manager-recent-evidence-not-eligible",
+      "at": "2026-10-22T03:57:44.353Z",
+      "backdrops": [
+        "modal-backdrop fade show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Conciliación →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Disponibilidad →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Facturas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cuentas pendientes →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Reservas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Estancias →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Producción →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cobros →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Liquidaciones →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Egresos →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Turnos →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Limpieza →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Mantenimiento →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Inventario →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Movimientos de inventario →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Auditoría →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Llegadas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Salidas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Huéspedes alojados →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cancelaciones y no presentaciones →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Descuentos y cortesías →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Anticipos y garantías →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Productividad de limpieza →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Arqueos por moneda →"
+        },
+        {
+          "action": "daily_close",
+          "disabled": false,
+          "text": "Preparar cierre del día"
+        },
+        {
+          "action": "retention",
+          "disabled": false,
+          "text": "Revisar datos vencidos"
+        }
+      ],
+      "dialogs": [],
+      "evidence_links": [],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "disabled": false,
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "disabled": false,
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Gerencia\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nGerencia\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nHabitaciones-noche ocupadas\n0\nADR\nC$ 0.00\nRevPAR\nC$ 0.00\nProducción alojamiento\nC$ 0.00\n\nPeríodo operativo: 2026-10-19T06:00:00-06:00 → 2026-10-20T06:00:00-06:00 · America/Managua\n\nHotel: noches comercializadas de estancias con entrada registrada, únicas por habitación y fecha; ADR=alojamiento neto facturado/noches, RevPAR=neto/noches disponibles. Por tiempo: horas reales unidas por habitación; rotaciones/habitación=entradas/habitaciones con alguna hora comercializable; ingreso neto/hora disponible. Ingreso de líneas de facturas presentadas, distribuido al período de servicio; excluye impuestos, otros servicios, anticipos y garantías. Cortesías ocupan con ingreso cero; bloqueos restan capacidad; denominador cero=0. Producción operativa se muestra separada por moneda.\n\nReportes y conciliación\nConciliación →\nDisponibilidad →\nFacturas →\nCuentas pendientes →\nReservas →\nEstancias →\nProducción →\nCobros →\nLiquidaciones →\nEgresos →\nTurnos →\nLimpieza →\nMantenimiento →\nInventario →\nMovimientos de inventario →\nAuditoría →\nLlegadas →\nSalidas →\nHuéspedes alojados →\nCancelaciones y no presentaciones →\nDescuentos y cortesías →\nAnticipos y garantías →\nProductividad de limpieza →\nArqueos por moneda →\nAuditoría nocturna\n\nPrepare los cargos nocturnos de la fecha y revise llegadas, salidas, cuentas y turnos antes de confirmar el cierre.\n\nPreparar cierre del día\nRetención de datos sensibles\n\nRevise los documentos vencidos antes de retirar identificaciones o evidencias. Los archivos se eliminan después de confirmar la transacción.\n\nRevisar datos vencidos\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 21:57:43.288818 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-management"
+    },
+    {
+      "label": "manager-recent-evidence-preserved-message",
+      "at": "2026-10-22T03:57:49.459Z",
+      "backdrops": [
+        "modal-backdrop fade show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Conciliación →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Disponibilidad →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Facturas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cuentas pendientes →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Reservas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Estancias →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Producción →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cobros →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Liquidaciones →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Egresos →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Turnos →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Limpieza →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Mantenimiento →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Inventario →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Movimientos de inventario →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Auditoría →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Llegadas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Salidas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Huéspedes alojados →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cancelaciones y no presentaciones →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Descuentos y cortesías →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Anticipos y garantías →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Productividad de limpieza →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Arqueos por moneda →"
+        },
+        {
+          "action": "daily_close",
+          "disabled": false,
+          "text": "Preparar cierre del día"
+        },
+        {
+          "action": "retention",
+          "disabled": false,
+          "text": "Revisar datos vencidos"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal fade show hs-keyboard-dialog",
+          "title": "Mensaje",
+          "visible": true
+        }
+      ],
+      "evidence_links": [],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "disabled": false,
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "disabled": false,
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Gerencia\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nGerencia\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nHabitaciones-noche ocupadas\n0\nADR\nC$ 0.00\nRevPAR\nC$ 0.00\nProducción alojamiento\nC$ 0.00\n\nPeríodo operativo: 2026-10-19T06:00:00-06:00 → 2026-10-20T06:00:00-06:00 · America/Managua\n\nHotel: noches comercializadas de estancias con entrada registrada, únicas por habitación y fecha; ADR=alojamiento neto facturado/noches, RevPAR=neto/noches disponibles. Por tiempo: horas reales unidas por habitación; rotaciones/habitación=entradas/habitaciones con alguna hora comercializable; ingreso neto/hora disponible. Ingreso de líneas de facturas presentadas, distribuido al período de servicio; excluye impuestos, otros servicios, anticipos y garantías. Cortesías ocupan con ingreso cero; bloqueos restan capacidad; denominador cero=0. Producción operativa se muestra separada por moneda.\n\nReportes y conciliación\nConciliación →\nDisponibilidad →\nFacturas →\nCuentas pendientes →\nReservas →\nEstancias →\nProducción →\nCobros →\nLiquidaciones →\nEgresos →\nTurnos →\nLimpieza →\nMantenimiento →\nInventario →\nMovimientos de inventario →\nAuditoría →\nLlegadas →\nSalidas →\nHuéspedes alojados →\nCancelaciones y no presentaciones →\nDescuentos y cortesías →\nAnticipos y garantías →\nProductividad de limpieza →\nArqueos por moneda →\nAuditoría nocturna\n\nPrepare los cargos nocturnos de la fecha y revise llegadas, salidas, cuentas y turnos antes de confirmar el cierre.\n\nPreparar cierre del día\nRetención de datos sensibles\n\nRevise los documentos vencidos antes de retirar identificaciones o evidencias. Los archivos se eliminan después de confirmar la transacción.\n\nRevisar datos vencidos\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 21:57:43.288818 · NIO\nMensaje\nNo hay identificaciones o evidencias elegibles. Los documentos con actividad vigente y los adjuntos recientes se conservan.",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-management"
+    },
+    {
+      "label": "manager-ambiguous-candidate-labels-before",
+      "at": "2026-10-22T04:00:37.885Z",
+      "backdrops": [
+        "modal-backdrop show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Conciliación →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Disponibilidad →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Facturas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cuentas pendientes →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Reservas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Estancias →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Producción →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cobros →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Liquidaciones →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Egresos →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Turnos →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Limpieza →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Mantenimiento →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Inventario →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Movimientos de inventario →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Auditoría →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Llegadas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Salidas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Huéspedes alojados →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cancelaciones y no presentaciones →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Descuentos y cortesías →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Anticipos y garantías →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Productividad de limpieza →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Arqueos por moneda →"
+        },
+        {
+          "action": "daily_close",
+          "disabled": false,
+          "text": "Preparar cierre del día"
+        },
+        {
+          "action": "retention",
+          "disabled": false,
+          "text": "Revisar datos vencidos"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Revisar alcance"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal fade",
+          "title": "Mensaje",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show",
+          "title": "Revisar datos vencidos",
+          "visible": true
+        }
+      ],
+      "evidence_links": [],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "disabled": false,
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "disabled": false,
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": "Documento a revisar",
+          "name": "target",
+          "options": [
+            {
+              "disabled": false,
+              "label": "Seleccione…",
+              "value": ""
+            },
+            {
+              "disabled": false,
+              "label": "Evidencia de novedad · Novedad cerrada · 3 adjunto(s)",
+              "value": "0"
+            },
+            {
+              "disabled": false,
+              "label": "Evidencia de novedad · Novedad cerrada · 2 adjunto(s)",
+              "value": "1"
+            }
+          ],
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Motivo de la revisión",
+          "name": "reason",
+          "value": ""
+        }
+      ],
+      "text": "Gerencia\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nGerencia\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nHabitaciones-noche ocupadas\n0\nADR\nC$ 0.00\nRevPAR\nC$ 0.00\nProducción alojamiento\nC$ 0.00\n\nPeríodo operativo: 2026-10-19T06:00:00-06:00 → 2026-10-20T06:00:00-06:00 · America/Managua\n\nHotel: noches comercializadas de estancias con entrada registrada, únicas por habitación y fecha; ADR=alojamiento neto facturado/noches, RevPAR=neto/noches disponibles. Por tiempo: horas reales unidas por habitación; rotaciones/habitación=entradas/habitaciones con alguna hora comercializable; ingreso neto/hora disponible. Ingreso de líneas de facturas presentadas, distribuido al período de servicio; excluye impuestos, otros servicios, anticipos y garantías. Cortesías ocupan con ingreso cero; bloqueos restan capacidad; denominador cero=0. Producción operativa se muestra separada por moneda.\n\nReportes y conciliación\nConciliación →\nDisponibilidad →\nFacturas →\nCuentas pendientes →\nReservas →\nEstancias →\nProducción →\nCobros →\nLiquidaciones →\nEgresos →\nTurnos →\nLimpieza →\nMantenimiento →\nInventario →\nMovimientos de inventario →\nAuditoría →\nLlegadas →\nSalidas →\nHuéspedes alojados →\nCancelaciones y no presentaciones →\nDescuentos y cortesías →\nAnticipos y garantías →\nProductividad de limpieza →\nArqueos por moneda →\nAuditoría nocturna\n\nPrepare los cargos nocturnos de la fecha y revise llegadas, salidas, cuentas y turnos antes de confirmar el cierre.\n\nPreparar cierre del día\nRetención de datos sensibles\n\nRevise los documentos vencidos antes de retirar identificaciones o evidencias. Los archivos se eliminan después de confirmar la transacción.\n\nRevisar datos vencidos\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 21:57:43.288818 · NIO\nRevisar datos vencidos\n\nRetención: 365 días · Límite: 21/10/2025 00:00.\n\nSe muestran hasta 50 candidatos. El proceso conserva nombres, contactos y documentos contables.\n\nDocumento a revisar\nSeleccione…\nEvidencia de novedad · Novedad cerrada · 3 adjunto(s)\nEvidencia de novedad · Novedad cerrada · 2 adjunto(s)\ntarget\nMotivo de la revisión\nreason\nRevisar alcance",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-management"
+    },
+    {
+      "label": "manager-ambiguous-candidates-ready",
+      "at": "2026-10-22T04:00:44.853Z",
+      "backdrops": [
+        "modal-backdrop show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Conciliación →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Disponibilidad →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Facturas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cuentas pendientes →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Reservas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Estancias →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Producción →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cobros →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Liquidaciones →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Egresos →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Turnos →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Limpieza →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Mantenimiento →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Inventario →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Movimientos de inventario →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Auditoría →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Llegadas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Salidas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Huéspedes alojados →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cancelaciones y no presentaciones →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Descuentos y cortesías →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Anticipos y garantías →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Productividad de limpieza →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Arqueos por moneda →"
+        },
+        {
+          "action": "daily_close",
+          "disabled": false,
+          "text": "Preparar cierre del día"
+        },
+        {
+          "action": "retention",
+          "disabled": false,
+          "text": "Revisar datos vencidos"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Revisar alcance"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal fade",
+          "title": "Mensaje",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show",
+          "title": "Revisar datos vencidos",
+          "visible": true
+        }
+      ],
+      "evidence_links": [],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "disabled": false,
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "disabled": false,
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": "Documento a revisar",
+          "name": "target",
+          "options": [
+            {
+              "disabled": false,
+              "label": "Seleccione…",
+              "value": ""
+            },
+            {
+              "disabled": false,
+              "label": "Evidencia de novedad · Novedad cerrada · 3 adjunto(s)",
+              "value": "0"
+            },
+            {
+              "disabled": false,
+              "label": "Evidencia de novedad · Novedad cerrada · 2 adjunto(s)",
+              "value": "1"
+            }
+          ],
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Motivo de la revisión",
+          "name": "reason",
+          "value": ""
+        }
+      ],
+      "text": "Gerencia\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nGerencia\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nHabitaciones-noche ocupadas\n0\nADR\nC$ 0.00\nRevPAR\nC$ 0.00\nProducción alojamiento\nC$ 0.00\n\nPeríodo operativo: 2026-10-19T06:00:00-06:00 → 2026-10-20T06:00:00-06:00 · America/Managua\n\nHotel: noches comercializadas de estancias con entrada registrada, únicas por habitación y fecha; ADR=alojamiento neto facturado/noches, RevPAR=neto/noches disponibles. Por tiempo: horas reales unidas por habitación; rotaciones/habitación=entradas/habitaciones con alguna hora comercializable; ingreso neto/hora disponible. Ingreso de líneas de facturas presentadas, distribuido al período de servicio; excluye impuestos, otros servicios, anticipos y garantías. Cortesías ocupan con ingreso cero; bloqueos restan capacidad; denominador cero=0. Producción operativa se muestra separada por moneda.\n\nReportes y conciliación\nConciliación →\nDisponibilidad →\nFacturas →\nCuentas pendientes →\nReservas →\nEstancias →\nProducción →\nCobros →\nLiquidaciones →\nEgresos →\nTurnos →\nLimpieza →\nMantenimiento →\nInventario →\nMovimientos de inventario →\nAuditoría →\nLlegadas →\nSalidas →\nHuéspedes alojados →\nCancelaciones y no presentaciones →\nDescuentos y cortesías →\nAnticipos y garantías →\nProductividad de limpieza →\nArqueos por moneda →\nAuditoría nocturna\n\nPrepare los cargos nocturnos de la fecha y revise llegadas, salidas, cuentas y turnos antes de confirmar el cierre.\n\nPreparar cierre del día\nRetención de datos sensibles\n\nRevise los documentos vencidos antes de retirar identificaciones o evidencias. Los archivos se eliminan después de confirmar la transacción.\n\nRevisar datos vencidos\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 21:57:43.288818 · NIO\nRevisar datos vencidos\n\nRetención: 365 días · Límite: 21/10/2025 00:00.\n\nSe muestran hasta 50 candidatos. El proceso conserva nombres, contactos y documentos contables.\n\nDocumento a revisar\nSeleccione…\nEvidencia de novedad · Novedad cerrada · 3 adjunto(s)\nEvidencia de novedad · Novedad cerrada · 2 adjunto(s)\ntarget\nMotivo de la revisión\nreason\nRevisar alcance",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-management"
+    },
+    {
+      "label": "manager-candidates-identifiable-final",
+      "at": "2026-10-22T04:02:38.882Z",
+      "backdrops": [
+        "modal-backdrop show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Conciliación →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Disponibilidad →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Facturas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cuentas pendientes →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Reservas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Estancias →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Producción →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cobros →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Liquidaciones →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Egresos →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Turnos →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Limpieza →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Mantenimiento →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Inventario →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Movimientos de inventario →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Auditoría →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Llegadas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Salidas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Huéspedes alojados →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cancelaciones y no presentaciones →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Descuentos y cortesías →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Anticipos y garantías →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Productividad de limpieza →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Arqueos por moneda →"
+        },
+        {
+          "action": "daily_close",
+          "disabled": false,
+          "text": "Preparar cierre del día"
+        },
+        {
+          "action": "retention",
+          "disabled": false,
+          "text": "Revisar datos vencidos"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Revisar alcance"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal fade",
+          "title": "Mensaje",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Revisar datos vencidos",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show",
+          "title": "Revisar datos vencidos",
+          "visible": true
+        }
+      ],
+      "evidence_links": [],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "disabled": false,
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "disabled": false,
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": "Documento a revisar",
+          "name": "target",
+          "options": [
+            {
+              "disabled": false,
+              "label": "Seleccione…",
+              "value": ""
+            },
+            {
+              "disabled": false,
+              "label": "Evidencia de novedad · Novedad · INC-2026-00001 · Habitación H101 · 3 adjunto(s)",
+              "value": "0"
+            },
+            {
+              "disabled": false,
+              "label": "Evidencia de novedad · Novedad · INC-2026-00002 · Habitación H102 · 2 adjunto(s)",
+              "value": "1"
+            }
+          ],
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Motivo de la revisión",
+          "name": "reason",
+          "value": ""
+        }
+      ],
+      "text": "Gerencia\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nGerencia\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nHabitaciones-noche ocupadas\n0\nADR\nC$ 0.00\nRevPAR\nC$ 0.00\nProducción alojamiento\nC$ 0.00\n\nPeríodo operativo: 2026-10-19T06:00:00-06:00 → 2026-10-20T06:00:00-06:00 · America/Managua\n\nHotel: noches comercializadas de estancias con entrada registrada, únicas por habitación y fecha; ADR=alojamiento neto facturado/noches, RevPAR=neto/noches disponibles. Por tiempo: horas reales unidas por habitación; rotaciones/habitación=entradas/habitaciones con alguna hora comercializable; ingreso neto/hora disponible. Ingreso de líneas de facturas presentadas, distribuido al período de servicio; excluye impuestos, otros servicios, anticipos y garantías. Cortesías ocupan con ingreso cero; bloqueos restan capacidad; denominador cero=0. Producción operativa se muestra separada por moneda.\n\nReportes y conciliación\nConciliación →\nDisponibilidad →\nFacturas →\nCuentas pendientes →\nReservas →\nEstancias →\nProducción →\nCobros →\nLiquidaciones →\nEgresos →\nTurnos →\nLimpieza →\nMantenimiento →\nInventario →\nMovimientos de inventario →\nAuditoría →\nLlegadas →\nSalidas →\nHuéspedes alojados →\nCancelaciones y no presentaciones →\nDescuentos y cortesías →\nAnticipos y garantías →\nProductividad de limpieza →\nArqueos por moneda →\nAuditoría nocturna\n\nPrepare los cargos nocturnos de la fecha y revise llegadas, salidas, cuentas y turnos antes de confirmar el cierre.\n\nPreparar cierre del día\nRetención de datos sensibles\n\nRevise los documentos vencidos antes de retirar identificaciones o evidencias. Los archivos se eliminan después de confirmar la transacción.\n\nRevisar datos vencidos\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 21:57:43.288818 · NIO\nRevisar datos vencidos\n\nRetención: 365 días · Límite: 21/10/2025 00:00.\n\nSe muestran hasta 50 candidatos. El proceso conserva nombres, contactos y documentos contables.\n\nDocumento a revisar\nSeleccione…\nEvidencia de novedad · Novedad · INC-2026-00001 · Habitación H101 · 3 adjunto(s)\nEvidencia de novedad · Novedad · INC-2026-00002 · Habitación H102 · 2 adjunto(s)\ntarget\nMotivo de la revisión\nreason\nRevisar alcance",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-management"
+    },
+    {
+      "label": "manager-retention-reason-required",
+      "at": "2026-10-22T04:02:51.628Z",
+      "backdrops": [
+        "modal-backdrop show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Conciliación →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Disponibilidad →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Facturas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cuentas pendientes →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Reservas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Estancias →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Producción →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cobros →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Liquidaciones →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Egresos →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Turnos →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Limpieza →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Mantenimiento →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Inventario →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Movimientos de inventario →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Auditoría →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Llegadas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Salidas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Huéspedes alojados →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cancelaciones y no presentaciones →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Descuentos y cortesías →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Anticipos y garantías →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Productividad de limpieza →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Arqueos por moneda →"
+        },
+        {
+          "action": "daily_close",
+          "disabled": false,
+          "text": "Preparar cierre del día"
+        },
+        {
+          "action": "retention",
+          "disabled": false,
+          "text": "Revisar datos vencidos"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Revisar alcance"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal fade",
+          "title": "Mensaje",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Revisar datos vencidos",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show",
+          "title": "Revisar datos vencidos",
+          "visible": true
+        }
+      ],
+      "evidence_links": [],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "disabled": false,
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "disabled": false,
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": "Documento a revisar",
+          "name": "target",
+          "options": [
+            {
+              "disabled": false,
+              "label": "Seleccione…",
+              "value": ""
+            },
+            {
+              "disabled": false,
+              "label": "Evidencia de novedad · Novedad · INC-2026-00001 · Habitación H101 · 3 adjunto(s)",
+              "value": "0"
+            },
+            {
+              "disabled": false,
+              "label": "Evidencia de novedad · Novedad · INC-2026-00002 · Habitación H102 · 2 adjunto(s)",
+              "value": "1"
+            }
+          ],
+          "value": "0"
+        },
+        {
+          "invalid": "true",
+          "label": "Motivo de la revisión",
+          "name": "reason",
+          "value": ""
+        }
+      ],
+      "text": "Gerencia\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nGerencia\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nHabitaciones-noche ocupadas\n0\nADR\nC$ 0.00\nRevPAR\nC$ 0.00\nProducción alojamiento\nC$ 0.00\n\nPeríodo operativo: 2026-10-19T06:00:00-06:00 → 2026-10-20T06:00:00-06:00 · America/Managua\n\nHotel: noches comercializadas de estancias con entrada registrada, únicas por habitación y fecha; ADR=alojamiento neto facturado/noches, RevPAR=neto/noches disponibles. Por tiempo: horas reales unidas por habitación; rotaciones/habitación=entradas/habitaciones con alguna hora comercializable; ingreso neto/hora disponible. Ingreso de líneas de facturas presentadas, distribuido al período de servicio; excluye impuestos, otros servicios, anticipos y garantías. Cortesías ocupan con ingreso cero; bloqueos restan capacidad; denominador cero=0. Producción operativa se muestra separada por moneda.\n\nReportes y conciliación\nConciliación →\nDisponibilidad →\nFacturas →\nCuentas pendientes →\nReservas →\nEstancias →\nProducción →\nCobros →\nLiquidaciones →\nEgresos →\nTurnos →\nLimpieza →\nMantenimiento →\nInventario →\nMovimientos de inventario →\nAuditoría →\nLlegadas →\nSalidas →\nHuéspedes alojados →\nCancelaciones y no presentaciones →\nDescuentos y cortesías →\nAnticipos y garantías →\nProductividad de limpieza →\nArqueos por moneda →\nAuditoría nocturna\n\nPrepare los cargos nocturnos de la fecha y revise llegadas, salidas, cuentas y turnos antes de confirmar el cierre.\n\nPreparar cierre del día\nRetención de datos sensibles\n\nRevise los documentos vencidos antes de retirar identificaciones o evidencias. Los archivos se eliminan después de confirmar la transacción.\n\nRevisar datos vencidos\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 21:57:43.288818 · NIO\nRevisar datos vencidos\n\nRevise los campos indicados antes de continuar.\n\nRetención: 365 días · Límite: 21/10/2025 00:00.\n\nSe muestran hasta 50 candidatos. El proceso conserva nombres, contactos y documentos contables.\n\nDocumento a revisar\nSeleccione…\nEvidencia de novedad · Novedad · INC-2026-00001 · Habitación H101 · 3 adjunto(s)\nEvidencia de novedad · Novedad · INC-2026-00002 · Habitación H102 · 2 adjunto(s)\ntarget\nMotivo de la revisión\nreason\n\nComplete Motivo de la revisión.\n\nRevisar alcance",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-management"
+    },
+    {
+      "label": "manager-retention-acknowledgement-required",
+      "at": "2026-10-22T04:03:00.609Z",
+      "backdrops": [
+        "modal-backdrop show",
+        "modal-backdrop show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Conciliación →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Disponibilidad →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Facturas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cuentas pendientes →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Reservas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Estancias →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Producción →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cobros →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Liquidaciones →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Egresos →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Turnos →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Limpieza →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Mantenimiento →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Inventario →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Movimientos de inventario →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Auditoría →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Llegadas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Salidas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Huéspedes alojados →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cancelaciones y no presentaciones →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Descuentos y cortesías →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Anticipos y garantías →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Productividad de limpieza →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Arqueos por moneda →"
+        },
+        {
+          "action": "daily_close",
+          "disabled": false,
+          "text": "Preparar cierre del día"
+        },
+        {
+          "action": "retention",
+          "disabled": false,
+          "text": "Revisar datos vencidos"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Revisar alcance"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Eliminar datos revisados"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal fade",
+          "title": "Mensaje",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Revisar datos vencidos",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show hs-form-suspended",
+          "title": "Revisar datos vencidos",
+          "visible": true
+        },
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show",
+          "title": "Confirmar retención revisada",
+          "visible": true
+        }
+      ],
+      "evidence_links": [],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "disabled": false,
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "disabled": false,
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": "Documento a revisar",
+          "name": "target",
+          "options": [
+            {
+              "disabled": false,
+              "label": "Seleccione…",
+              "value": ""
+            },
+            {
+              "disabled": false,
+              "label": "Evidencia de novedad · Novedad · INC-2026-00001 · Habitación H101 · 3 adjunto(s)",
+              "value": "0"
+            },
+            {
+              "disabled": false,
+              "label": "Evidencia de novedad · Novedad · INC-2026-00002 · Habitación H102 · 2 adjunto(s)",
+              "value": "1"
+            }
+          ],
+          "value": "0"
+        },
+        {
+          "invalid": null,
+          "label": "Motivo de la revisión",
+          "name": "reason",
+          "value": "Retirar únicamente la evidencia sintética de H101; conservar íntegramente H102"
+        },
+        {
+          "checked": false,
+          "invalid": "true",
+          "label": "Confirmo la eliminación de estos datos sensibles",
+          "name": "confirm",
+          "value": "on"
+        }
+      ],
+      "text": "Gerencia\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nGerencia\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nHabitaciones-noche ocupadas\n0\nADR\nC$ 0.00\nRevPAR\nC$ 0.00\nProducción alojamiento\nC$ 0.00\n\nPeríodo operativo: 2026-10-19T06:00:00-06:00 → 2026-10-20T06:00:00-06:00 · America/Managua\n\nHotel: noches comercializadas de estancias con entrada registrada, únicas por habitación y fecha; ADR=alojamiento neto facturado/noches, RevPAR=neto/noches disponibles. Por tiempo: horas reales unidas por habitación; rotaciones/habitación=entradas/habitaciones con alguna hora comercializable; ingreso neto/hora disponible. Ingreso de líneas de facturas presentadas, distribuido al período de servicio; excluye impuestos, otros servicios, anticipos y garantías. Cortesías ocupan con ingreso cero; bloqueos restan capacidad; denominador cero=0. Producción operativa se muestra separada por moneda.\n\nReportes y conciliación\nConciliación →\nDisponibilidad →\nFacturas →\nCuentas pendientes →\nReservas →\nEstancias →\nProducción →\nCobros →\nLiquidaciones →\nEgresos →\nTurnos →\nLimpieza →\nMantenimiento →\nInventario →\nMovimientos de inventario →\nAuditoría →\nLlegadas →\nSalidas →\nHuéspedes alojados →\nCancelaciones y no presentaciones →\nDescuentos y cortesías →\nAnticipos y garantías →\nProductividad de limpieza →\nArqueos por moneda →\nAuditoría nocturna\n\nPrepare los cargos nocturnos de la fecha y revise llegadas, salidas, cuentas y turnos antes de confirmar el cierre.\n\nPreparar cierre del día\nRetención de datos sensibles\n\nRevise los documentos vencidos antes de retirar identificaciones o evidencias. Los archivos se eliminan después de confirmar la transacción.\n\nRevisar datos vencidos\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 21:57:43.288818 · NIO\nConfirmar retención revisada\n\nRevise los campos indicados antes de continuar.\n\nEvidencia de novedad: Novedad · INC-2026-00001 · Habitación H101\n\nReferencia: INC-2026-00001\n\nEvidencia\n\nAdjuntos privados: 3. Se retirarán también las versiones de esos campos y los comentarios automáticos de adjuntos. Esta eliminación no se puede deshacer desde la aplicación.\n\nConfirmo la eliminación de estos datos sensibles\n\nconfirm\n\nMarque esta casilla para continuar.\n\nEliminar datos revisados",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-management"
+    },
+    {
+      "label": "manager-retention-preview-cancelled",
+      "at": "2026-10-22T04:03:13.340Z",
+      "backdrops": [
+        "modal-backdrop show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Conciliación →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Disponibilidad →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Facturas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cuentas pendientes →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Reservas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Estancias →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Producción →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cobros →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Liquidaciones →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Egresos →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Turnos →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Limpieza →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Mantenimiento →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Inventario →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Movimientos de inventario →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Auditoría →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Llegadas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Salidas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Huéspedes alojados →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cancelaciones y no presentaciones →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Descuentos y cortesías →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Anticipos y garantías →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Productividad de limpieza →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Arqueos por moneda →"
+        },
+        {
+          "action": "daily_close",
+          "disabled": false,
+          "text": "Preparar cierre del día"
+        },
+        {
+          "action": "retention",
+          "disabled": false,
+          "text": "Revisar datos vencidos"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Revisar alcance"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal fade",
+          "title": "Mensaje",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Revisar datos vencidos",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show",
+          "title": "Revisar datos vencidos",
+          "visible": true
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Confirmar retención revisada",
+          "visible": false
+        }
+      ],
+      "evidence_links": [],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "disabled": false,
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "disabled": false,
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": "Documento a revisar",
+          "name": "target",
+          "options": [
+            {
+              "disabled": false,
+              "label": "Seleccione…",
+              "value": ""
+            },
+            {
+              "disabled": false,
+              "label": "Evidencia de novedad · Novedad · INC-2026-00001 · Habitación H101 · 3 adjunto(s)",
+              "value": "0"
+            },
+            {
+              "disabled": false,
+              "label": "Evidencia de novedad · Novedad · INC-2026-00002 · Habitación H102 · 2 adjunto(s)",
+              "value": "1"
+            }
+          ],
+          "value": "0"
+        },
+        {
+          "invalid": null,
+          "label": "Motivo de la revisión",
+          "name": "reason",
+          "value": "Retirar únicamente la evidencia sintética de H101; conservar íntegramente H102"
+        }
+      ],
+      "text": "Gerencia\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nGerencia\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nHabitaciones-noche ocupadas\n0\nADR\nC$ 0.00\nRevPAR\nC$ 0.00\nProducción alojamiento\nC$ 0.00\n\nPeríodo operativo: 2026-10-19T06:00:00-06:00 → 2026-10-20T06:00:00-06:00 · America/Managua\n\nHotel: noches comercializadas de estancias con entrada registrada, únicas por habitación y fecha; ADR=alojamiento neto facturado/noches, RevPAR=neto/noches disponibles. Por tiempo: horas reales unidas por habitación; rotaciones/habitación=entradas/habitaciones con alguna hora comercializable; ingreso neto/hora disponible. Ingreso de líneas de facturas presentadas, distribuido al período de servicio; excluye impuestos, otros servicios, anticipos y garantías. Cortesías ocupan con ingreso cero; bloqueos restan capacidad; denominador cero=0. Producción operativa se muestra separada por moneda.\n\nReportes y conciliación\nConciliación →\nDisponibilidad →\nFacturas →\nCuentas pendientes →\nReservas →\nEstancias →\nProducción →\nCobros →\nLiquidaciones →\nEgresos →\nTurnos →\nLimpieza →\nMantenimiento →\nInventario →\nMovimientos de inventario →\nAuditoría →\nLlegadas →\nSalidas →\nHuéspedes alojados →\nCancelaciones y no presentaciones →\nDescuentos y cortesías →\nAnticipos y garantías →\nProductividad de limpieza →\nArqueos por moneda →\nAuditoría nocturna\n\nPrepare los cargos nocturnos de la fecha y revise llegadas, salidas, cuentas y turnos antes de confirmar el cierre.\n\nPreparar cierre del día\nRetención de datos sensibles\n\nRevise los documentos vencidos antes de retirar identificaciones o evidencias. Los archivos se eliminan después de confirmar la transacción.\n\nRevisar datos vencidos\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 21:57:43.288818 · NIO\nRevisar datos vencidos\n\nRetención: 365 días · Límite: 21/10/2025 00:00.\n\nSe muestran hasta 50 candidatos. El proceso conserva nombres, contactos y documentos contables.\n\nDocumento a revisar\nSeleccione…\nEvidencia de novedad · Novedad · INC-2026-00001 · Habitación H101 · 3 adjunto(s)\nEvidencia de novedad · Novedad · INC-2026-00002 · Habitación H102 · 2 adjunto(s)\ntarget\nMotivo de la revisión\nreason\nRevisar alcance",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-management"
+    },
+    {
+      "label": "manager-retention-approved",
+      "at": "2026-10-22T04:03:55.741Z",
+      "backdrops": [
+        "modal-backdrop show",
+        "modal-backdrop show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": "reload",
+          "disabled": true,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": true,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "report",
+          "disabled": true,
+          "text": "Conciliación →"
+        },
+        {
+          "action": "report",
+          "disabled": true,
+          "text": "Disponibilidad →"
+        },
+        {
+          "action": "report",
+          "disabled": true,
+          "text": "Facturas →"
+        },
+        {
+          "action": "report",
+          "disabled": true,
+          "text": "Cuentas pendientes →"
+        },
+        {
+          "action": "report",
+          "disabled": true,
+          "text": "Reservas →"
+        },
+        {
+          "action": "report",
+          "disabled": true,
+          "text": "Estancias →"
+        },
+        {
+          "action": "report",
+          "disabled": true,
+          "text": "Producción →"
+        },
+        {
+          "action": "report",
+          "disabled": true,
+          "text": "Cobros →"
+        },
+        {
+          "action": "report",
+          "disabled": true,
+          "text": "Liquidaciones →"
+        },
+        {
+          "action": "report",
+          "disabled": true,
+          "text": "Egresos →"
+        },
+        {
+          "action": "report",
+          "disabled": true,
+          "text": "Turnos →"
+        },
+        {
+          "action": "report",
+          "disabled": true,
+          "text": "Limpieza →"
+        },
+        {
+          "action": "report",
+          "disabled": true,
+          "text": "Mantenimiento →"
+        },
+        {
+          "action": "report",
+          "disabled": true,
+          "text": "Inventario →"
+        },
+        {
+          "action": "report",
+          "disabled": true,
+          "text": "Movimientos de inventario →"
+        },
+        {
+          "action": "report",
+          "disabled": true,
+          "text": "Auditoría →"
+        },
+        {
+          "action": "report",
+          "disabled": true,
+          "text": "Llegadas →"
+        },
+        {
+          "action": "report",
+          "disabled": true,
+          "text": "Salidas →"
+        },
+        {
+          "action": "report",
+          "disabled": true,
+          "text": "Huéspedes alojados →"
+        },
+        {
+          "action": "report",
+          "disabled": true,
+          "text": "Cancelaciones y no presentaciones →"
+        },
+        {
+          "action": "report",
+          "disabled": true,
+          "text": "Descuentos y cortesías →"
+        },
+        {
+          "action": "report",
+          "disabled": true,
+          "text": "Anticipos y garantías →"
+        },
+        {
+          "action": "report",
+          "disabled": true,
+          "text": "Productividad de limpieza →"
+        },
+        {
+          "action": "report",
+          "disabled": true,
+          "text": "Arqueos por moneda →"
+        },
+        {
+          "action": "daily_close",
+          "disabled": true,
+          "text": "Preparar cierre del día"
+        },
+        {
+          "action": "retention",
+          "disabled": true,
+          "text": "Revisar datos vencidos"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Revisar alcance"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": true,
+          "text": "Eliminar datos revisados"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal fade",
+          "title": "Mensaje",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Revisar datos vencidos",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show hs-form-suspended",
+          "title": "Revisar datos vencidos",
+          "visible": true
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Confirmar retención revisada",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show",
+          "title": "Confirmar retención revisada",
+          "visible": true
+        }
+      ],
+      "evidence_links": [],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "disabled": false,
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "disabled": false,
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": "Documento a revisar",
+          "name": "target",
+          "options": [
+            {
+              "disabled": false,
+              "label": "Seleccione…",
+              "value": ""
+            },
+            {
+              "disabled": false,
+              "label": "Evidencia de novedad · Novedad · INC-2026-00001 · Habitación H101 · 3 adjunto(s)",
+              "value": "0"
+            },
+            {
+              "disabled": false,
+              "label": "Evidencia de novedad · Novedad · INC-2026-00002 · Habitación H102 · 2 adjunto(s)",
+              "value": "1"
+            }
+          ],
+          "value": "0"
+        },
+        {
+          "invalid": null,
+          "label": "Motivo de la revisión",
+          "name": "reason",
+          "value": "Retirar únicamente la evidencia sintética de H101; conservar íntegramente H102"
+        },
+        {
+          "checked": true,
+          "invalid": null,
+          "label": "Confirmo la eliminación de estos datos sensibles",
+          "name": "confirm",
+          "value": "on"
+        }
+      ],
+      "text": "Gerencia\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nGerencia\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nHabitaciones-noche ocupadas\n0\nADR\nC$ 0.00\nRevPAR\nC$ 0.00\nProducción alojamiento\nC$ 0.00\n\nPeríodo operativo: 2026-10-19T06:00:00-06:00 → 2026-10-20T06:00:00-06:00 · America/Managua\n\nHotel: noches comercializadas de estancias con entrada registrada, únicas por habitación y fecha; ADR=alojamiento neto facturado/noches, RevPAR=neto/noches disponibles. Por tiempo: horas reales unidas por habitación; rotaciones/habitación=entradas/habitaciones con alguna hora comercializable; ingreso neto/hora disponible. Ingreso de líneas de facturas presentadas, distribuido al período de servicio; excluye impuestos, otros servicios, anticipos y garantías. Cortesías ocupan con ingreso cero; bloqueos restan capacidad; denominador cero=0. Producción operativa se muestra separada por moneda.\n\nReportes y conciliación\nConciliación →\nDisponibilidad →\nFacturas →\nCuentas pendientes →\nReservas →\nEstancias →\nProducción →\nCobros →\nLiquidaciones →\nEgresos →\nTurnos →\nLimpieza →\nMantenimiento →\nInventario →\nMovimientos de inventario →\nAuditoría →\nLlegadas →\nSalidas →\nHuéspedes alojados →\nCancelaciones y no presentaciones →\nDescuentos y cortesías →\nAnticipos y garantías →\nProductividad de limpieza →\nArqueos por moneda →\nAuditoría nocturna\n\nPrepare los cargos nocturnos de la fecha y revise llegadas, salidas, cuentas y turnos antes de confirmar el cierre.\n\nPreparar cierre del día\nRetención de datos sensibles\n\nRevise los documentos vencidos antes de retirar identificaciones o evidencias. Los archivos se eliminan después de confirmar la transacción.\n\nRevisar datos vencidos\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 21:57:43.288818 · NIO\nConfirmar retención revisada\n\nProcesando… Espere la respuesta antes de volver a confirmar.\n\nEvidencia de novedad: Novedad · INC-2026-00001 · Habitación H101\n\nReferencia: INC-2026-00001\n\nEvidencia\n\nAdjuntos privados: 3. Se retirarán también las versiones de esos campos y los comentarios automáticos de adjuntos. Esta eliminación no se puede deshacer desde la aplicación.\n\nConfirmo la eliminación de estos datos sensibles\n\nconfirm\nEliminar datos revisados",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-management"
+    },
+    {
+      "label": "manager-retention-queued-message",
+      "at": "2026-10-22T04:04:25.171Z",
+      "backdrops": [
+        "modal-backdrop fade show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Conciliación →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Disponibilidad →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Facturas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cuentas pendientes →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Reservas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Estancias →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Producción →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cobros →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Liquidaciones →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Egresos →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Turnos →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Limpieza →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Mantenimiento →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Inventario →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Movimientos de inventario →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Auditoría →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Llegadas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Salidas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Huéspedes alojados →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cancelaciones y no presentaciones →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Descuentos y cortesías →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Anticipos y garantías →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Productividad de limpieza →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Arqueos por moneda →"
+        },
+        {
+          "action": "daily_close",
+          "disabled": false,
+          "text": "Preparar cierre del día"
+        },
+        {
+          "action": "retention",
+          "disabled": false,
+          "text": "Revisar datos vencidos"
+        },
+        {
+          "action": "retry_retention",
+          "disabled": false,
+          "text": "Reintentar eliminación"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal fade show hs-keyboard-dialog",
+          "title": "Mensaje",
+          "visible": true
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Revisar datos vencidos",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Revisar datos vencidos",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Confirmar retención revisada",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Confirmar retención revisada",
+          "visible": false
+        }
+      ],
+      "evidence_links": [],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "disabled": false,
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "disabled": false,
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Gerencia\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nGerencia\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nHabitaciones-noche ocupadas\n0\nADR\nC$ 0.00\nRevPAR\nC$ 0.00\nProducción alojamiento\nC$ 0.00\n\nPeríodo operativo: 2026-10-19T06:00:00-06:00 → 2026-10-20T06:00:00-06:00 · America/Managua\n\nHotel: noches comercializadas de estancias con entrada registrada, únicas por habitación y fecha; ADR=alojamiento neto facturado/noches, RevPAR=neto/noches disponibles. Por tiempo: horas reales unidas por habitación; rotaciones/habitación=entradas/habitaciones con alguna hora comercializable; ingreso neto/hora disponible. Ingreso de líneas de facturas presentadas, distribuido al período de servicio; excluye impuestos, otros servicios, anticipos y garantías. Cortesías ocupan con ingreso cero; bloqueos restan capacidad; denominador cero=0. Producción operativa se muestra separada por moneda.\n\nReportes y conciliación\nConciliación →\nDisponibilidad →\nFacturas →\nCuentas pendientes →\nReservas →\nEstancias →\nProducción →\nCobros →\nLiquidaciones →\nEgresos →\nTurnos →\nLimpieza →\nMantenimiento →\nInventario →\nMovimientos de inventario →\nAuditoría →\nLlegadas →\nSalidas →\nHuéspedes alojados →\nCancelaciones y no presentaciones →\nDescuentos y cortesías →\nAnticipos y garantías →\nProductividad de limpieza →\nArqueos por moneda →\nAuditoría nocturna\n\nPrepare los cargos nocturnos de la fecha y revise llegadas, salidas, cuentas y turnos antes de confirmar el cierre.\n\nPreparar cierre del día\nRetención de datos sensibles\n\nRevise los documentos vencidos antes de retirar identificaciones o evidencias. Los archivos se eliminan después de confirmar la transacción.\n\nRevisar datos vencidos\nEjecución\tAprobación\tEstado\tArchivos\tAcción\nRET-2026-00001\t21/10/2026 22:03\tFallida\tPendientes: 0 · Eliminados: 2 · Compartidos: 0 · Fallidos: 1\nRevise los archivos pendientes; el reintento automático está limitado a tres intentos.\tReintentar eliminación\nHora de referencia del servidor: 2026-10-21 22:04:02.686180 · NIO\nMensaje\nDatos sensibles retirados; los archivos están en la cola de eliminación. Revise su estado aquí.",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-management"
+    },
+    {
+      "label": "manager-retention-failed-three-attempts-visible",
+      "at": "2026-10-22T04:04:35.512Z",
+      "backdrops": [],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Conciliación →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Disponibilidad →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Facturas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cuentas pendientes →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Reservas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Estancias →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Producción →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cobros →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Liquidaciones →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Egresos →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Turnos →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Limpieza →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Mantenimiento →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Inventario →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Movimientos de inventario →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Auditoría →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Llegadas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Salidas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Huéspedes alojados →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cancelaciones y no presentaciones →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Descuentos y cortesías →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Anticipos y garantías →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Productividad de limpieza →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Arqueos por moneda →"
+        },
+        {
+          "action": "daily_close",
+          "disabled": false,
+          "text": "Preparar cierre del día"
+        },
+        {
+          "action": "retention",
+          "disabled": false,
+          "text": "Revisar datos vencidos"
+        },
+        {
+          "action": "retry_retention",
+          "disabled": false,
+          "text": "Reintentar eliminación"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal fade",
+          "title": "Mensaje",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Revisar datos vencidos",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Revisar datos vencidos",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Confirmar retención revisada",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Confirmar retención revisada",
+          "visible": false
+        }
+      ],
+      "evidence_links": [],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "disabled": false,
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "disabled": false,
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Gerencia\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nGerencia\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nHabitaciones-noche ocupadas\n0\nADR\nC$ 0.00\nRevPAR\nC$ 0.00\nProducción alojamiento\nC$ 0.00\n\nPeríodo operativo: 2026-10-19T06:00:00-06:00 → 2026-10-20T06:00:00-06:00 · America/Managua\n\nHotel: noches comercializadas de estancias con entrada registrada, únicas por habitación y fecha; ADR=alojamiento neto facturado/noches, RevPAR=neto/noches disponibles. Por tiempo: horas reales unidas por habitación; rotaciones/habitación=entradas/habitaciones con alguna hora comercializable; ingreso neto/hora disponible. Ingreso de líneas de facturas presentadas, distribuido al período de servicio; excluye impuestos, otros servicios, anticipos y garantías. Cortesías ocupan con ingreso cero; bloqueos restan capacidad; denominador cero=0. Producción operativa se muestra separada por moneda.\n\nReportes y conciliación\nConciliación →\nDisponibilidad →\nFacturas →\nCuentas pendientes →\nReservas →\nEstancias →\nProducción →\nCobros →\nLiquidaciones →\nEgresos →\nTurnos →\nLimpieza →\nMantenimiento →\nInventario →\nMovimientos de inventario →\nAuditoría →\nLlegadas →\nSalidas →\nHuéspedes alojados →\nCancelaciones y no presentaciones →\nDescuentos y cortesías →\nAnticipos y garantías →\nProductividad de limpieza →\nArqueos por moneda →\nAuditoría nocturna\n\nPrepare los cargos nocturnos de la fecha y revise llegadas, salidas, cuentas y turnos antes de confirmar el cierre.\n\nPreparar cierre del día\nRetención de datos sensibles\n\nRevise los documentos vencidos antes de retirar identificaciones o evidencias. Los archivos se eliminan después de confirmar la transacción.\n\nRevisar datos vencidos\nEjecución\tAprobación\tEstado\tArchivos\tAcción\nRET-2026-00001\t21/10/2026 22:03\tFallida\tPendientes: 0 · Eliminados: 2 · Compartidos: 0 · Fallidos: 1\nRevise los archivos pendientes; el reintento automático está limitado a tres intentos.\tReintentar eliminación\nHora de referencia del servidor: 2026-10-21 22:04:02.686180 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-management"
+    },
+    {
+      "label": "manager-retention-retry-reason-required",
+      "at": "2026-10-22T04:05:35.897Z",
+      "backdrops": [
+        "modal-backdrop show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Conciliación →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Disponibilidad →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Facturas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cuentas pendientes →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Reservas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Estancias →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Producción →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cobros →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Liquidaciones →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Egresos →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Turnos →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Limpieza →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Mantenimiento →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Inventario →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Movimientos de inventario →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Auditoría →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Llegadas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Salidas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Huéspedes alojados →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cancelaciones y no presentaciones →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Descuentos y cortesías →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Anticipos y garantías →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Productividad de limpieza →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Arqueos por moneda →"
+        },
+        {
+          "action": "daily_close",
+          "disabled": false,
+          "text": "Preparar cierre del día"
+        },
+        {
+          "action": "retention",
+          "disabled": false,
+          "text": "Revisar datos vencidos"
+        },
+        {
+          "action": "retry_retention",
+          "disabled": false,
+          "text": "Reintentar eliminación"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Encolar reintento"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal fade",
+          "title": "Mensaje",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Revisar datos vencidos",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Revisar datos vencidos",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Confirmar retención revisada",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Confirmar retención revisada",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show",
+          "title": "Reintentar archivos pendientes",
+          "visible": true
+        }
+      ],
+      "evidence_links": [],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "disabled": false,
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "disabled": false,
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": "true",
+          "label": "Corrección realizada / motivo",
+          "name": "reason",
+          "value": ""
+        }
+      ],
+      "text": "Gerencia\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nGerencia\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nHabitaciones-noche ocupadas\n0\nADR\nC$ 0.00\nRevPAR\nC$ 0.00\nProducción alojamiento\nC$ 0.00\n\nPeríodo operativo: 2026-10-19T06:00:00-06:00 → 2026-10-20T06:00:00-06:00 · America/Managua\n\nHotel: noches comercializadas de estancias con entrada registrada, únicas por habitación y fecha; ADR=alojamiento neto facturado/noches, RevPAR=neto/noches disponibles. Por tiempo: horas reales unidas por habitación; rotaciones/habitación=entradas/habitaciones con alguna hora comercializable; ingreso neto/hora disponible. Ingreso de líneas de facturas presentadas, distribuido al período de servicio; excluye impuestos, otros servicios, anticipos y garantías. Cortesías ocupan con ingreso cero; bloqueos restan capacidad; denominador cero=0. Producción operativa se muestra separada por moneda.\n\nReportes y conciliación\nConciliación →\nDisponibilidad →\nFacturas →\nCuentas pendientes →\nReservas →\nEstancias →\nProducción →\nCobros →\nLiquidaciones →\nEgresos →\nTurnos →\nLimpieza →\nMantenimiento →\nInventario →\nMovimientos de inventario →\nAuditoría →\nLlegadas →\nSalidas →\nHuéspedes alojados →\nCancelaciones y no presentaciones →\nDescuentos y cortesías →\nAnticipos y garantías →\nProductividad de limpieza →\nArqueos por moneda →\nAuditoría nocturna\n\nPrepare los cargos nocturnos de la fecha y revise llegadas, salidas, cuentas y turnos antes de confirmar el cierre.\n\nPreparar cierre del día\nRetención de datos sensibles\n\nRevise los documentos vencidos antes de retirar identificaciones o evidencias. Los archivos se eliminan después de confirmar la transacción.\n\nRevisar datos vencidos\nEjecución\tAprobación\tEstado\tArchivos\tAcción\nRET-2026-00001\t21/10/2026 22:03\tFallida\tPendientes: 0 · Eliminados: 2 · Compartidos: 0 · Fallidos: 1\nRevise los archivos pendientes; el reintento automático está limitado a tres intentos.\tReintentar eliminación\nHora de referencia del servidor: 2026-10-21 22:04:02.686180 · NIO\nReintentar archivos pendientes\n\nRevise los campos indicados antes de continuar.\n\nCorrección realizada / motivo\nreason\n\nComplete Corrección realizada / motivo.\n\nEncolar reintento",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-management"
+    },
+    {
+      "label": "manager-retention-completed-visible",
+      "at": "2026-10-22T04:07:22.509Z",
+      "backdrops": [],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Conciliación →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Disponibilidad →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Facturas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cuentas pendientes →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Reservas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Estancias →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Producción →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cobros →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Liquidaciones →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Egresos →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Turnos →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Limpieza →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Mantenimiento →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Inventario →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Movimientos de inventario →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Auditoría →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Llegadas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Salidas →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Huéspedes alojados →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Cancelaciones y no presentaciones →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Descuentos y cortesías →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Anticipos y garantías →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Productividad de limpieza →"
+        },
+        {
+          "action": "report",
+          "disabled": false,
+          "text": "Arqueos por moneda →"
+        },
+        {
+          "action": "daily_close",
+          "disabled": false,
+          "text": "Preparar cierre del día"
+        },
+        {
+          "action": "retention",
+          "disabled": false,
+          "text": "Revisar datos vencidos"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal fade",
+          "title": "Mensaje",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Revisar datos vencidos",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Revisar datos vencidos",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Confirmar retención revisada",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Confirmar retención revisada",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Reintentar archivos pendientes",
+          "visible": false
+        }
+      ],
+      "evidence_links": [],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "disabled": false,
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "disabled": false,
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Gerencia\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nGerencia\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nHabitaciones-noche ocupadas\n0\nADR\nC$ 0.00\nRevPAR\nC$ 0.00\nProducción alojamiento\nC$ 0.00\n\nPeríodo operativo: 2026-10-19T06:00:00-06:00 → 2026-10-20T06:00:00-06:00 · America/Managua\n\nHotel: noches comercializadas de estancias con entrada registrada, únicas por habitación y fecha; ADR=alojamiento neto facturado/noches, RevPAR=neto/noches disponibles. Por tiempo: horas reales unidas por habitación; rotaciones/habitación=entradas/habitaciones con alguna hora comercializable; ingreso neto/hora disponible. Ingreso de líneas de facturas presentadas, distribuido al período de servicio; excluye impuestos, otros servicios, anticipos y garantías. Cortesías ocupan con ingreso cero; bloqueos restan capacidad; denominador cero=0. Producción operativa se muestra separada por moneda.\n\nReportes y conciliación\nConciliación →\nDisponibilidad →\nFacturas →\nCuentas pendientes →\nReservas →\nEstancias →\nProducción →\nCobros →\nLiquidaciones →\nEgresos →\nTurnos →\nLimpieza →\nMantenimiento →\nInventario →\nMovimientos de inventario →\nAuditoría →\nLlegadas →\nSalidas →\nHuéspedes alojados →\nCancelaciones y no presentaciones →\nDescuentos y cortesías →\nAnticipos y garantías →\nProductividad de limpieza →\nArqueos por moneda →\nAuditoría nocturna\n\nPrepare los cargos nocturnos de la fecha y revise llegadas, salidas, cuentas y turnos antes de confirmar el cierre.\n\nPreparar cierre del día\nRetención de datos sensibles\n\nRevise los documentos vencidos antes de retirar identificaciones o evidencias. Los archivos se eliminan después de confirmar la transacción.\n\nRevisar datos vencidos\nEjecución\tAprobación\tEstado\tArchivos\tAcción\nRET-2026-00001\t21/10/2026 22:03\tCompletada\tPendientes: 0 · Eliminados: 3 · Compartidos: 0 · Fallidos: 0\t—\nHora de referencia del servidor: 2026-10-21 22:05:40.636856 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-management"
+    },
+    {
+      "label": "manager-selected-evidence-removed-control-retained",
+      "at": "2026-10-22T04:07:45.972Z",
+      "backdrops": [],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "incident",
+          "disabled": false,
+          "text": "Registrar novedad"
+        },
+        {
+          "action": "linen",
+          "disabled": false,
+          "text": "Ropa de cama"
+        },
+        {
+          "action": "schedule_cleaning",
+          "disabled": false,
+          "text": "Programar limpieza"
+        }
+      ],
+      "dialogs": [],
+      "evidence_links": [
+        {
+          "label": "Ver evidencia",
+          "url": "/private/files/evidencia-control-ficticia.txt"
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "disabled": false,
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "disabled": false,
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Limpieza\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nLimpieza\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nPreparar habitaciones\n\nInicie la tarea, complete la revisión y solicite inspección.\n\n0 pendientes\nRegistrar novedad\nRopa de cama\nProgramar limpieza\n✓\nLas habitaciones están al día\n\nLa información se actualiza al registrar movimientos.\n\nDaños y objetos encontrados\nHabitación\tNovedad\tDescripción\tEstado\tResolución / acciones\nH102\tObjeto encontrado\tObjeto de control que se conserva en aceptación\tResuelto\tObjeto de control entregado; su evidencia debe conservarse en la revisión parcialVer evidencia\nH101\tObjeto encontrado\tObjeto sintético para retención de aceptación\tResuelto\tObjeto sintético entregado, constancia de aceptación verificada\nHora de referencia del servidor: 2026-10-21 22:07:45.651358 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-housekeeping"
+    },
+    {
+      "label": "manager-portal-enabled",
+      "at": "2026-10-22T04:09:11.279Z",
+      "backdrops": [
+        "modal-backdrop fade show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "1. Políticas y contabilidad →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "2. Categorías →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "3. Habitaciones →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "4. Tarifas →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "5. Medios de pago →"
+        },
+        {
+          "action": "billing_party",
+          "disabled": false,
+          "text": "6. Empresas, agencias y crédito"
+        },
+        {
+          "action": "policies",
+          "disabled": false,
+          "text": "7. Horarios y penalizaciones"
+        },
+        {
+          "action": "denominations",
+          "disabled": false,
+          "text": "8. Denominaciones de caja"
+        },
+        {
+          "action": "document_settings",
+          "disabled": false,
+          "text": "9. Series y formatos"
+        },
+        {
+          "action": "expense_category",
+          "disabled": false,
+          "text": "11. Categorías de gasto"
+        },
+        {
+          "action": "stock_policy",
+          "disabled": false,
+          "text": "12. Clasificación y mínimos"
+        },
+        {
+          "action": "equipment",
+          "disabled": false,
+          "text": "13. Equipos y activos"
+        },
+        {
+          "action": "retention_policy",
+          "disabled": false,
+          "text": "14. Retención de datos"
+        },
+        {
+          "action": "portal_settings",
+          "disabled": false,
+          "text": "15. Portal de reservas"
+        },
+        {
+          "action": "payment_policies",
+          "disabled": false,
+          "text": "16. Anticipos y garantías"
+        },
+        {
+          "action": "service_items",
+          "disabled": false,
+          "text": "17. Artículos y servicios"
+        },
+        {
+          "action": "service_accounting",
+          "disabled": false,
+          "text": "18. Contabilidad por servicio"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "No"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Si"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Reservas en línea",
+          "visible": false
+        },
+        {
+          "classes": "modal fade show",
+          "title": "Confirmar",
+          "visible": true
+        }
+      ],
+      "evidence_links": [],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "disabled": false,
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            },
+            {
+              "disabled": false,
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Configuración\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nConfiguración\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nHotel Jardín Demo\nMotel Luna Demo\nActualizar\nCerrar sesión\nConfigure la operación paso a paso\n\nLas cuentas e impuestos se seleccionan explícitamente de ERPNext.\n\n1. Políticas y contabilidad →\n2. Categorías →\n3. Habitaciones →\n4. Tarifas →\n5. Medios de pago →\n6. Empresas, agencias y crédito\n7. Horarios y penalizaciones\n8. Denominaciones de caja\n9. Series y formatos\n11. Categorías de gasto\n12. Clasificación y mínimos\n13. Equipos y activos\n14. Retención de datos\n15. Portal de reservas\n16. Anticipos y garantías\n17. Artículos y servicios\n18. Contabilidad por servicio\nConfiguración actual\n\n10 habitaciones · 1 categorías · 1 tarifas\n\nHora de referencia del servidor: 2026-10-21 22:09:12.711025 · NIO\nConfirmar\n\n¿Seguro que quieres cerrar sesión?\n\nNo\n \nSi",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-setup"
+    },
+    {
+      "label": "manager-logged-out-before-public-request",
+      "at": "2026-10-22T04:09:21.305Z",
+      "backdrops": [
+        "modal-backdrop fade show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "1. Políticas y contabilidad →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "2. Categorías →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "3. Habitaciones →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "4. Tarifas →"
+        },
+        {
+          "action": "setup",
+          "disabled": false,
+          "text": "5. Medios de pago →"
+        },
+        {
+          "action": "billing_party",
+          "disabled": false,
+          "text": "6. Empresas, agencias y crédito"
+        },
+        {
+          "action": "policies",
+          "disabled": false,
+          "text": "7. Horarios y penalizaciones"
+        },
+        {
+          "action": "denominations",
+          "disabled": false,
+          "text": "8. Denominaciones de caja"
+        },
+        {
+          "action": "document_settings",
+          "disabled": false,
+          "text": "9. Series y formatos"
+        },
+        {
+          "action": "expense_category",
+          "disabled": false,
+          "text": "11. Categorías de gasto"
+        },
+        {
+          "action": "stock_policy",
+          "disabled": false,
+          "text": "12. Clasificación y mínimos"
+        },
+        {
+          "action": "equipment",
+          "disabled": false,
+          "text": "13. Equipos y activos"
+        },
+        {
+          "action": "retention_policy",
+          "disabled": false,
+          "text": "14. Retención de datos"
+        },
+        {
+          "action": "portal_settings",
+          "disabled": false,
+          "text": "15. Portal de reservas"
+        },
+        {
+          "action": "payment_policies",
+          "disabled": false,
+          "text": "16. Anticipos y garantías"
+        },
+        {
+          "action": "service_items",
+          "disabled": false,
+          "text": "17. Artículos y servicios"
+        },
+        {
+          "action": "service_accounting",
+          "disabled": false,
+          "text": "18. Contabilidad por servicio"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "No"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Si"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Reservas en línea",
+          "visible": false
+        },
+        {
+          "classes": "modal fade hs-keyboard-dialog",
+          "title": "Confirmar",
+          "visible": true
+        }
+      ],
+      "evidence_links": [],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "disabled": false,
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            },
+            {
+              "disabled": false,
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Configuración\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nConfiguración\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nHotel Jardín Demo\nMotel Luna Demo\nActualizar\nCerrar sesión\nConfigure la operación paso a paso\n\nLas cuentas e impuestos se seleccionan explícitamente de ERPNext.\n\n1. Políticas y contabilidad →\n2. Categorías →\n3. Habitaciones →\n4. Tarifas →\n5. Medios de pago →\n6. Empresas, agencias y crédito\n7. Horarios y penalizaciones\n8. Denominaciones de caja\n9. Series y formatos\n11. Categorías de gasto\n12. Clasificación y mínimos\n13. Equipos y activos\n14. Retención de datos\n15. Portal de reservas\n16. Anticipos y garantías\n17. Artículos y servicios\n18. Contabilidad por servicio\nConfiguración actual\n\n10 habitaciones · 1 categorías · 1 tarifas\n\nHora de referencia del servidor: 2026-10-21 22:09:12.711025 · NIO\nConfirmar\n\n¿Seguro que quieres cerrar sesión?\n\nNo\n \nSi",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-setup"
+    },
+    {
+      "label": "reception-guest-creation-submitted",
+      "at": "2026-10-22T04:12:40.829Z",
+      "backdrops": [
+        "modal-backdrop show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "guest",
+          "disabled": false,
+          "text": "Registrar huésped"
+        },
+        {
+          "action": "guest_edit",
+          "disabled": false,
+          "text": "Actualizar datos"
+        },
+        {
+          "action": "guest_history",
+          "disabled": false,
+          "text": "Ver historial"
+        },
+        {
+          "action": "guest_edit",
+          "disabled": false,
+          "text": "Actualizar datos"
+        },
+        {
+          "action": "guest_history",
+          "disabled": false,
+          "text": "Ver historial"
+        },
+        {
+          "action": "guest_edit",
+          "disabled": false,
+          "text": "Actualizar datos"
+        },
+        {
+          "action": "guest_history",
+          "disabled": false,
+          "text": "Ver historial"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Datos principales"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Datos adicionales"
+        },
+        {
+          "action": null,
+          "disabled": true,
+          "text": "Registrar huésped"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show",
+          "title": "Registrar huésped",
+          "visible": true
+        }
+      ],
+      "evidence_links": [],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "disabled": false,
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            },
+            {
+              "disabled": false,
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": "Nombre completo",
+          "name": "full_name",
+          "value": "Visitante de portal de aceptación"
+        },
+        {
+          "invalid": null,
+          "label": "Teléfono (opcional)",
+          "name": "phone",
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Correo (opcional)",
+          "name": "email",
+          "value": "visitante-portal@hospitality.example.invalid"
+        }
+      ],
+      "text": "Clientes y huéspedes\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nreceptionist@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nClientes y huéspedes\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nHotel Jardín Demo\nMotel Luna Demo\nActualizar\nCerrar sesión\nClientes y huéspedes\n\nEste establecimiento no exige identificación. Registre únicamente los datos necesarios.\n\nRegistrar huésped\nNombre\tCliente pagador\tAcciones\nHuésped ficticio H3\tCliente ficticio H3\tActualizar datosVer historial\nHuésped ficticio H2\tCliente ficticio H2\tActualizar datosVer historial\nHuésped ficticio H1\tCliente ficticio H1\tActualizar datosVer historial\nHora de referencia del servidor: 2026-10-21 22:12:03.285743 · NIO\nRegistrar huésped\n\nProcesando… Espere la respuesta antes de volver a confirmar.\n\nDatos principales\nDatos adicionales\n\nEste establecimiento no exige identificación. Registre únicamente los datos necesarios.\n\nNombre completo\nfull_name\nTeléfono (opcional)\nphone\nCorreo (opcional)\ncorreo electrónico\nRegistrar huésped",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-guests"
+    },
+    {
+      "label": "reception-portal-review-before",
+      "at": "2026-10-22T04:12:58.135Z",
+      "backdrops": [
+        "modal-backdrop show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S72HFEVH.js"
+      ],
+      "buttons": [
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "reserve",
+          "disabled": false,
+          "text": "Reservar"
+        },
+        {
+          "action": "availability",
+          "disabled": false,
+          "text": "Buscar disponibilidad"
+        },
+        {
+          "action": "portal_convert",
+          "disabled": false,
+          "text": "Revisar solicitud"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Cotizar"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show",
+          "title": "Confirmar solicitud del portal",
+          "visible": true
+        }
+      ],
+      "evidence_links": [],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "disabled": false,
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            },
+            {
+              "disabled": false,
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "checked": false,
+          "invalid": null,
+          "label": null,
+          "value": "on"
+        },
+        {
+          "invalid": "false",
+          "label": null,
+          "value": "2026-10-21"
+        },
+        {
+          "invalid": null,
+          "label": "Huésped registrado",
+          "name": "guest",
+          "options": [
+            {
+              "disabled": false,
+              "label": "Seleccione…",
+              "value": ""
+            },
+            {
+              "disabled": false,
+              "label": "Visitante de portal de aceptación",
+              "value": "HUE-00001"
+            },
+            {
+              "disabled": false,
+              "label": "Huésped ficticio H3",
+              "value": "qmk1364h0r"
+            },
+            {
+              "disabled": false,
+              "label": "Huésped ficticio H2",
+              "value": "qmkoid9g2g"
+            },
+            {
+              "disabled": false,
+              "label": "Huésped ficticio H1",
+              "value": "qmkn8jnvhg"
+            }
+          ],
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Cliente pagador",
+          "name": "customer",
+          "options": [
+            {
+              "disabled": false,
+              "label": "Seleccione…",
+              "value": ""
+            },
+            {
+              "disabled": false,
+              "label": "Cliente ficticio H1",
+              "value": "Cliente ficticio H1"
+            },
+            {
+              "disabled": false,
+              "label": "Cliente ficticio H2",
+              "value": "Cliente ficticio H2"
+            },
+            {
+              "disabled": false,
+              "label": "Cliente ficticio H3",
+              "value": "Cliente ficticio H3"
+            },
+            {
+              "disabled": false,
+              "label": "Visitante de portal de aceptación",
+              "value": "Visitante de portal de aceptación"
+            }
+          ],
+          "value": ""
+        }
+      ],
+      "text": "Reservas\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nreceptionist@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nReservas\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nHotel Jardín Demo\nMotel Luna Demo\nActualizar\nCerrar sesión\nReservas vigentes\n\nReservas individuales y grupales; las retenciones liberan cupo al vencer.\n\n Mostrar historial\nReservar\nBuscar disponibilidad\n✓\nNo hay reservas confirmadas ni retenciones vigentes.\n\nLa información se actualiza al registrar movimientos.\n\nCalendario por habitación\nFecha del calendario\nHabitación\tmié 21/10\tjue 22/10\tvie 23/10\tsáb 24/10\tdom 25/10\tlun 26/10\tmar 27/10\nH101\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH102\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH103\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH104\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH105\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH106\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH107\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH108\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH109\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH110\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nPor asignar\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nSolicitudes del portal\nSolicitante\tFechas\tImporte\tAcción\nVisitante de portal de aceptación\t05/11/2026 14:00\n06/11/2026 12:00\tC$ 3,000.00\tRevisar solicitud\nHora de referencia del servidor: 2026-10-21 22:12:45.364763 · NIO\nConfirmar solicitud del portal\nHuésped registrado\nSeleccione…\nVisitante de portal de aceptación\nHuésped ficticio H3\nHuésped ficticio H2\nHuésped ficticio H1\nguest\nCliente pagador\nSeleccione…\nCliente ficticio H1\nCliente ficticio H2\nCliente ficticio H3\nVisitante de portal de aceptación\ncustomer\nCotizar",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-reservations"
+    },
+    {
+      "label": "reception-portal-context-final",
+      "at": "2026-10-22T04:16:22.331Z",
+      "backdrops": [
+        "modal-backdrop show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.WNYHCSFG.js"
+      ],
+      "buttons": [
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "reserve",
+          "disabled": false,
+          "text": "Reservar"
+        },
+        {
+          "action": "availability",
+          "disabled": false,
+          "text": "Buscar disponibilidad"
+        },
+        {
+          "action": "portal_convert",
+          "disabled": false,
+          "text": "Revisar solicitud"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Revisar reserva"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show",
+          "title": "Revisar solicitud del portal",
+          "visible": true
+        }
+      ],
+      "evidence_links": [],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "disabled": false,
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            },
+            {
+              "disabled": false,
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "checked": false,
+          "invalid": null,
+          "label": null,
+          "value": "on"
+        },
+        {
+          "invalid": "false",
+          "label": null,
+          "value": "2026-10-21"
+        },
+        {
+          "invalid": null,
+          "label": "Huésped registrado",
+          "name": "guest",
+          "options": [
+            {
+              "disabled": false,
+              "label": "Seleccione…",
+              "value": ""
+            },
+            {
+              "disabled": false,
+              "label": "Visitante de portal de aceptación",
+              "value": "HUE-00001"
+            },
+            {
+              "disabled": false,
+              "label": "Huésped ficticio H3",
+              "value": "qmk1364h0r"
+            },
+            {
+              "disabled": false,
+              "label": "Huésped ficticio H2",
+              "value": "qmkoid9g2g"
+            },
+            {
+              "disabled": false,
+              "label": "Huésped ficticio H1",
+              "value": "qmkn8jnvhg"
+            }
+          ],
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Cliente pagador",
+          "name": "customer",
+          "options": [
+            {
+              "disabled": false,
+              "label": "Seleccione…",
+              "value": ""
+            },
+            {
+              "disabled": false,
+              "label": "Cliente ficticio H1",
+              "value": "Cliente ficticio H1"
+            },
+            {
+              "disabled": false,
+              "label": "Cliente ficticio H2",
+              "value": "Cliente ficticio H2"
+            },
+            {
+              "disabled": false,
+              "label": "Cliente ficticio H3",
+              "value": "Cliente ficticio H3"
+            },
+            {
+              "disabled": false,
+              "label": "Visitante de portal de aceptación",
+              "value": "Visitante de portal de aceptación"
+            }
+          ],
+          "value": ""
+        }
+      ],
+      "text": "Reservas\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nreceptionist@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nReservas\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nHotel Jardín Demo\nMotel Luna Demo\nActualizar\nCerrar sesión\nReservas vigentes\n\nReservas individuales y grupales; las retenciones liberan cupo al vencer.\n\n Mostrar historial\nReservar\nBuscar disponibilidad\n✓\nNo hay reservas confirmadas ni retenciones vigentes.\n\nLa información se actualiza al registrar movimientos.\n\nCalendario por habitación\nFecha del calendario\nHabitación\tmié 21/10\tjue 22/10\tvie 23/10\tsáb 24/10\tdom 25/10\tlun 26/10\tmar 27/10\nH101\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH102\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH103\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH104\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH105\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH106\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH107\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH108\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH109\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH110\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nPor asignar\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nSolicitudes del portal\nSolicitante\tFechas\tImporte\tAcción\nVisitante de portal de aceptación\t05/11/2026 14:00\n06/11/2026 12:00\tC$ 3,000.00\tRevisar solicitud\nHora de referencia del servidor: 2026-10-21 22:16:23.645823 · NIO\nRevisar solicitud del portal\nVisitante de portal de aceptación\n\nEstándar · 2 habitaciones · 2 personas por habitación\n\nEntrada: 05/11/2026 14:00\nSalida: 06/11/2026 12:00\nAmerica/Managua\n\nCupo conservado hasta: 21/10/2026 22:26\n\nAlojamiento consultado: C$ 3,000.00\n\nHuésped registrado\nSeleccione…\nVisitante de portal de aceptación\nHuésped ficticio H3\nHuésped ficticio H2\nHuésped ficticio H1\nguest\nCliente pagador\nSeleccione…\nCliente ficticio H1\nCliente ficticio H2\nCliente ficticio H3\nVisitante de portal de aceptación\ncustomer\nRevisar reserva",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-reservations"
+    },
+    {
+      "label": "reception-portal-price-review",
+      "at": "2026-10-22T04:16:44.420Z",
+      "backdrops": [
+        "modal-backdrop show",
+        "modal-backdrop show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.WNYHCSFG.js"
+      ],
+      "buttons": [
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "reserve",
+          "disabled": false,
+          "text": "Reservar"
+        },
+        {
+          "action": "availability",
+          "disabled": false,
+          "text": "Buscar disponibilidad"
+        },
+        {
+          "action": "portal_convert",
+          "disabled": false,
+          "text": "Revisar solicitud"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Revisar reserva"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Confirmar reserva"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show hs-form-suspended",
+          "title": "Revisar solicitud del portal",
+          "visible": true
+        },
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show",
+          "title": "Confirmar reserva del portal",
+          "visible": true
+        }
+      ],
+      "evidence_links": [],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "disabled": false,
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            },
+            {
+              "disabled": false,
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "checked": false,
+          "invalid": null,
+          "label": null,
+          "value": "on"
+        },
+        {
+          "invalid": "false",
+          "label": null,
+          "value": "2026-10-21"
+        },
+        {
+          "invalid": null,
+          "label": "Huésped registrado",
+          "name": "guest",
+          "options": [
+            {
+              "disabled": false,
+              "label": "Seleccione…",
+              "value": ""
+            },
+            {
+              "disabled": false,
+              "label": "Visitante de portal de aceptación",
+              "value": "HUE-00001"
+            },
+            {
+              "disabled": false,
+              "label": "Huésped ficticio H3",
+              "value": "qmk1364h0r"
+            },
+            {
+              "disabled": false,
+              "label": "Huésped ficticio H2",
+              "value": "qmkoid9g2g"
+            },
+            {
+              "disabled": false,
+              "label": "Huésped ficticio H1",
+              "value": "qmkn8jnvhg"
+            }
+          ],
+          "value": "HUE-00001"
+        },
+        {
+          "invalid": null,
+          "label": "Cliente pagador",
+          "name": "customer",
+          "options": [
+            {
+              "disabled": false,
+              "label": "Seleccione…",
+              "value": ""
+            },
+            {
+              "disabled": false,
+              "label": "Cliente ficticio H1",
+              "value": "Cliente ficticio H1"
+            },
+            {
+              "disabled": false,
+              "label": "Cliente ficticio H2",
+              "value": "Cliente ficticio H2"
+            },
+            {
+              "disabled": false,
+              "label": "Cliente ficticio H3",
+              "value": "Cliente ficticio H3"
+            },
+            {
+              "disabled": false,
+              "label": "Visitante de portal de aceptación",
+              "value": "Visitante de portal de aceptación"
+            }
+          ],
+          "value": "Visitante de portal de aceptación"
+        }
+      ],
+      "text": "Reservas\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nreceptionist@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nReservas\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nHotel Jardín Demo\nMotel Luna Demo\nActualizar\nCerrar sesión\nReservas vigentes\n\nReservas individuales y grupales; las retenciones liberan cupo al vencer.\n\n Mostrar historial\nReservar\nBuscar disponibilidad\n✓\nNo hay reservas confirmadas ni retenciones vigentes.\n\nLa información se actualiza al registrar movimientos.\n\nCalendario por habitación\nFecha del calendario\nHabitación\tmié 21/10\tjue 22/10\tvie 23/10\tsáb 24/10\tdom 25/10\tlun 26/10\tmar 27/10\nH101\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH102\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH103\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH104\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH105\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH106\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH107\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH108\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH109\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH110\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nPor asignar\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nSolicitudes del portal\nSolicitante\tFechas\tImporte\tAcción\nVisitante de portal de aceptación\t05/11/2026 14:00\n06/11/2026 12:00\tC$ 3,000.00\tRevisar solicitud\nHora de referencia del servidor: 2026-10-21 22:16:23.645823 · NIO\nConfirmar reserva del portal\nVisitante de portal de aceptación\n\nEstándar · 2 habitaciones · 2 personas por habitación\n\nEntrada: 05/11/2026 14:00\nSalida: 06/11/2026 12:00\nAmerica/Managua\n\nHuésped: Visitante de portal de aceptación\nPagador: Visitante de portal de aceptación\n\nTotal de alojamiento: C$ 3,000.00\n\nSe confirmará la reserva con habitaciones por asignar. No se registra un cobro ni una entrada.\n\nConfirmar reserva",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-reservations"
+    },
+    {
+      "label": "reception-portal-review-cancelled-draft-retained",
+      "at": "2026-10-22T04:16:55.160Z",
+      "backdrops": [
+        "modal-backdrop show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.WNYHCSFG.js"
+      ],
+      "buttons": [
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "reserve",
+          "disabled": false,
+          "text": "Reservar"
+        },
+        {
+          "action": "availability",
+          "disabled": false,
+          "text": "Buscar disponibilidad"
+        },
+        {
+          "action": "portal_convert",
+          "disabled": false,
+          "text": "Revisar solicitud"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Revisar reserva"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show",
+          "title": "Revisar solicitud del portal",
+          "visible": true
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Confirmar reserva del portal",
+          "visible": false
+        }
+      ],
+      "evidence_links": [],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "disabled": false,
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            },
+            {
+              "disabled": false,
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "checked": false,
+          "invalid": null,
+          "label": null,
+          "value": "on"
+        },
+        {
+          "invalid": "false",
+          "label": null,
+          "value": "2026-10-21"
+        },
+        {
+          "invalid": null,
+          "label": "Huésped registrado",
+          "name": "guest",
+          "options": [
+            {
+              "disabled": false,
+              "label": "Seleccione…",
+              "value": ""
+            },
+            {
+              "disabled": false,
+              "label": "Visitante de portal de aceptación",
+              "value": "HUE-00001"
+            },
+            {
+              "disabled": false,
+              "label": "Huésped ficticio H3",
+              "value": "qmk1364h0r"
+            },
+            {
+              "disabled": false,
+              "label": "Huésped ficticio H2",
+              "value": "qmkoid9g2g"
+            },
+            {
+              "disabled": false,
+              "label": "Huésped ficticio H1",
+              "value": "qmkn8jnvhg"
+            }
+          ],
+          "value": "HUE-00001"
+        },
+        {
+          "invalid": null,
+          "label": "Cliente pagador",
+          "name": "customer",
+          "options": [
+            {
+              "disabled": false,
+              "label": "Seleccione…",
+              "value": ""
+            },
+            {
+              "disabled": false,
+              "label": "Cliente ficticio H1",
+              "value": "Cliente ficticio H1"
+            },
+            {
+              "disabled": false,
+              "label": "Cliente ficticio H2",
+              "value": "Cliente ficticio H2"
+            },
+            {
+              "disabled": false,
+              "label": "Cliente ficticio H3",
+              "value": "Cliente ficticio H3"
+            },
+            {
+              "disabled": false,
+              "label": "Visitante de portal de aceptación",
+              "value": "Visitante de portal de aceptación"
+            }
+          ],
+          "value": "Visitante de portal de aceptación"
+        }
+      ],
+      "text": "Reservas\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nreceptionist@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nReservas\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nHotel Jardín Demo\nMotel Luna Demo\nActualizar\nCerrar sesión\nReservas vigentes\n\nReservas individuales y grupales; las retenciones liberan cupo al vencer.\n\n Mostrar historial\nReservar\nBuscar disponibilidad\n✓\nNo hay reservas confirmadas ni retenciones vigentes.\n\nLa información se actualiza al registrar movimientos.\n\nCalendario por habitación\nFecha del calendario\nHabitación\tmié 21/10\tjue 22/10\tvie 23/10\tsáb 24/10\tdom 25/10\tlun 26/10\tmar 27/10\nH101\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH102\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH103\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH104\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH105\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH106\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH107\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH108\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH109\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH110\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nPor asignar\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nSolicitudes del portal\nSolicitante\tFechas\tImporte\tAcción\nVisitante de portal de aceptación\t05/11/2026 14:00\n06/11/2026 12:00\tC$ 3,000.00\tRevisar solicitud\nHora de referencia del servidor: 2026-10-21 22:16:23.645823 · NIO\nRevisar solicitud del portal\nVisitante de portal de aceptación\n\nEstándar · 2 habitaciones · 2 personas por habitación\n\nEntrada: 05/11/2026 14:00\nSalida: 06/11/2026 12:00\nAmerica/Managua\n\nCupo conservado hasta: 21/10/2026 22:26\n\nAlojamiento consultado: C$ 3,000.00\n\nHuésped registrado\nSeleccione…\nVisitante de portal de aceptación\nHuésped ficticio H3\nHuésped ficticio H2\nHuésped ficticio H1\nguest\nCliente pagador\nSeleccione…\nCliente ficticio H1\nCliente ficticio H2\nCliente ficticio H3\nVisitante de portal de aceptación\ncustomer\nRevisar reserva",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-reservations"
+    },
+    {
+      "label": "reception-portal-conversion-submitted",
+      "at": "2026-10-22T04:17:11.824Z",
+      "backdrops": [
+        "modal-backdrop show",
+        "modal-backdrop show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.WNYHCSFG.js"
+      ],
+      "buttons": [
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": "reload",
+          "disabled": true,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": true,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "reserve",
+          "disabled": true,
+          "text": "Reservar"
+        },
+        {
+          "action": "availability",
+          "disabled": true,
+          "text": "Buscar disponibilidad"
+        },
+        {
+          "action": "portal_convert",
+          "disabled": true,
+          "text": "Revisar solicitud"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Revisar reserva"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": true,
+          "text": "Confirmar reserva"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show hs-form-suspended",
+          "title": "Revisar solicitud del portal",
+          "visible": true
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Confirmar reserva del portal",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show",
+          "title": "Confirmar reserva del portal",
+          "visible": true
+        }
+      ],
+      "evidence_links": [],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "disabled": false,
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            },
+            {
+              "disabled": false,
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "checked": false,
+          "invalid": null,
+          "label": null,
+          "value": "on"
+        },
+        {
+          "invalid": "false",
+          "label": null,
+          "value": "2026-10-21"
+        },
+        {
+          "invalid": null,
+          "label": "Huésped registrado",
+          "name": "guest",
+          "options": [
+            {
+              "disabled": false,
+              "label": "Seleccione…",
+              "value": ""
+            },
+            {
+              "disabled": false,
+              "label": "Visitante de portal de aceptación",
+              "value": "HUE-00001"
+            },
+            {
+              "disabled": false,
+              "label": "Huésped ficticio H3",
+              "value": "qmk1364h0r"
+            },
+            {
+              "disabled": false,
+              "label": "Huésped ficticio H2",
+              "value": "qmkoid9g2g"
+            },
+            {
+              "disabled": false,
+              "label": "Huésped ficticio H1",
+              "value": "qmkn8jnvhg"
+            }
+          ],
+          "value": "HUE-00001"
+        },
+        {
+          "invalid": null,
+          "label": "Cliente pagador",
+          "name": "customer",
+          "options": [
+            {
+              "disabled": false,
+              "label": "Seleccione…",
+              "value": ""
+            },
+            {
+              "disabled": false,
+              "label": "Cliente ficticio H1",
+              "value": "Cliente ficticio H1"
+            },
+            {
+              "disabled": false,
+              "label": "Cliente ficticio H2",
+              "value": "Cliente ficticio H2"
+            },
+            {
+              "disabled": false,
+              "label": "Cliente ficticio H3",
+              "value": "Cliente ficticio H3"
+            },
+            {
+              "disabled": false,
+              "label": "Visitante de portal de aceptación",
+              "value": "Visitante de portal de aceptación"
+            }
+          ],
+          "value": "Visitante de portal de aceptación"
+        }
+      ],
+      "text": "Reservas\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nreceptionist@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nReservas\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nHotel Jardín Demo\nMotel Luna Demo\nActualizar\nCerrar sesión\nReservas vigentes\n\nReservas individuales y grupales; las retenciones liberan cupo al vencer.\n\n Mostrar historial\nReservar\nBuscar disponibilidad\n✓\nNo hay reservas confirmadas ni retenciones vigentes.\n\nLa información se actualiza al registrar movimientos.\n\nCalendario por habitación\nFecha del calendario\nHabitación\tmié 21/10\tjue 22/10\tvie 23/10\tsáb 24/10\tdom 25/10\tlun 26/10\tmar 27/10\nH101\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH102\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH103\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH104\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH105\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH106\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH107\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH108\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH109\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH110\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nPor asignar\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nSolicitudes del portal\nSolicitante\tFechas\tImporte\tAcción\nVisitante de portal de aceptación\t05/11/2026 14:00\n06/11/2026 12:00\tC$ 3,000.00\tRevisar solicitud\nHora de referencia del servidor: 2026-10-21 22:16:23.645823 · NIO\nConfirmar reserva del portal\n\nProcesando… Espere la respuesta antes de volver a confirmar.\n\nVisitante de portal de aceptación\n\nEstándar · 2 habitaciones · 2 personas por habitación\n\nEntrada: 05/11/2026 14:00\nSalida: 06/11/2026 12:00\nAmerica/Managua\n\nHuésped: Visitante de portal de aceptación\nPagador: Visitante de portal de aceptación\n\nTotal de alojamiento: C$ 3,000.00\n\nSe confirmará la reserva con habitaciones por asignar. No se registra un cobro ni una entrada.\n\nConfirmar reserva",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-reservations"
+    },
+    {
+      "label": "reception-converted-booking-detail",
+      "at": "2026-10-22T04:18:11.011Z",
+      "backdrops": [
+        "modal-backdrop show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.WNYHCSFG.js"
+      ],
+      "buttons": [
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "reserve",
+          "disabled": false,
+          "text": "Reservar"
+        },
+        {
+          "action": "availability",
+          "disabled": false,
+          "text": "Buscar disponibilidad"
+        },
+        {
+          "action": "booking",
+          "disabled": false,
+          "text": "Ver reserva"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Continuar"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Revisar solicitud del portal",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Confirmar reserva del portal",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Confirmar reserva del portal",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show",
+          "title": "Gestionar reserva",
+          "visible": true
+        }
+      ],
+      "evidence_links": [],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "options": [
+            {
+              "disabled": false,
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            },
+            {
+              "disabled": false,
+              "label": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "checked": false,
+          "invalid": null,
+          "label": null,
+          "value": "on"
+        },
+        {
+          "invalid": "false",
+          "label": null,
+          "value": "2026-10-21"
+        },
+        {
+          "invalid": null,
+          "label": "Acción",
+          "name": "status",
+          "options": [
+            {
+              "disabled": false,
+              "label": "Registrar entrada",
+              "value": "Check In"
+            },
+            {
+              "disabled": false,
+              "label": "Modificar reserva",
+              "value": "Modify"
+            },
+            {
+              "disabled": false,
+              "label": "Cancelar reserva",
+              "value": "Cancelled"
+            },
+            {
+              "disabled": false,
+              "label": "No presentada",
+              "value": "No Show"
+            }
+          ],
+          "value": ""
+        }
+      ],
+      "text": "Reservas\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nreceptionist@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nReservas\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nHotel Jardín Demo\nMotel Luna Demo\nActualizar\nCerrar sesión\nReservas vigentes\n\nReservas individuales y grupales; las retenciones liberan cupo al vencer.\n\n Mostrar historial\nReservar\nBuscar disponibilidad\nReserva\tLlegada / salida\tCanal\tEstado\tImporte\tAcciones\nVisitante de portal de aceptación · 05/11/2026 14:00\t05/11/2026 14:00\n06/11/2026 12:00\tWeb\tConfirmada\tC$ 3,000.00\tVer reserva\nCalendario por habitación\nFecha del calendario\nHabitación\tmié 21/10\tjue 22/10\tvie 23/10\tsáb 24/10\tdom 25/10\tlun 26/10\tmar 27/10\nH101\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH102\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH103\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH104\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH105\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH106\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH107\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH108\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH109\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nH110\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nPor asignar\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\tSin asignación\nHora de referencia del servidor: 2026-10-21 22:17:13.167864 · NIO\nGestionar reserva\nResumen de la reserva\nConfirmada\nNúmero de reserva\nRES-2026-00001\nHuésped principal\nVisitante de portal de aceptación\nCliente que paga\nVisitante de portal de aceptación\nEntrada reservada\n05/11/2026 14:00\nSalida reservada\n06/11/2026 12:00\nModalidad\nHotel\nCanal\nWeb\nImporte de la reserva\nC$ 3,000.00\n\nEste importe corresponde al alojamiento reservado. Consulte la cuenta para ver consumos, ajustes, impuestos, pagos y saldo actual.\n\nHabitación solicitada 1 · Por asignar\n\nEstándar · Personas: 2 · Camas adicionales: 0\n\nHabitación solicitada 2 · Por asignar\n\nEstándar · Personas: 2 · Camas adicionales: 0\n\nAcciones disponibles\nAcción\nRegistrar entrada\nModificar reserva\nCancelar reserva\nNo presentada\nstatus\nImprimir confirmación\nContinuar",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-reservations"
+    },
+    {
+      "label": "reception-logged-out",
+      "at": "2026-10-22T04:18:30.956Z",
+      "backdrops": [],
+      "bundle": [],
+      "buttons": [
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Continuar"
+        }
+      ],
+      "dialogs": [],
+      "evidence_links": [],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "value": ""
+        }
+      ],
+      "text": "Iniciar Sesión\n\n¡Bienvenido! Por favor, inicia sesión para continuar.\n\nCorreo electrónico\nContraseña\n\n¿Olvidaste la contraseña?\n\nContinuar\nIniciar sesión con enlace de correo",
+      "url": "http://hospitality-acceptance.localhost:8089/login?redirect-to=%2Fdesk%2Fhospitality-suite%2Fhospitality-reservations"
+    }
+  ]
+}

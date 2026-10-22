@@ -220,3 +220,25 @@ class TestPrivacy(IntegrationTestCase):
             self.assertFalse(doc.evidence)
             self.assertEqual(doc.status,"Resolved" if action=="incident" else "Completed")
             self.assertTrue(doc.resolution if action=="incident" else doc.notes)
+
+    def test_candidate_labels_identify_closed_incidents_without_exposing_their_description(self):
+        rooms=frappe.get_all('HS Room',filters={'property':self.prop.name},fields=['name','room_number'],order_by='room_number',limit=2)
+        selected=[]
+        for room in rooms:
+            name=api.execute(self.prop.name,'incident',uuid.uuid4().hex,dict(room=room.name,kind='Lost Property',
+                description='Detalle de custodia que no debe copiarse al selector'))['incident']
+            doc=frappe.get_doc('HS Incident',name)
+            file=save_file('etiqueta-'+uuid.uuid4().hex+'.txt',uuid.uuid4().hex.encode(),doc.doctype,doc.name,is_private=1)
+            api.execute(self.prop.name,'incident',uuid.uuid4().hex,dict(incident=doc.name,modified=str(doc.modified),evidence=file.file_url))
+            doc.reload()
+            api.execute(self.prop.name,'incident',uuid.uuid4().hex,dict(incident=doc.name,modified=str(doc.modified),resolve=True,resolution='Entrega sintética'))
+            doc.reload();self.age(doc)
+            for attached in privacy.files_for(doc):self.age(frappe.get_doc('File',attached.name),creation=self.old)
+            selected.append((doc.name,room.room_number))
+        frappe.set_user('manager@hospitality.example.invalid')
+        targets={row['name']:row for row in api.retention_candidates(self.prop.name)['targets']}
+        labels=[targets[name]['label'] for name,_ in selected]
+        self.assertEqual(len(set(labels)),2)
+        for name,room in selected:
+            self.assertIn(name,targets[name]['label']);self.assertIn(room,targets[name]['label'])
+            self.assertNotIn('Detalle de custodia',targets[name]['label'])

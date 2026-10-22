@@ -56,6 +56,7 @@ class TestPortal(IntegrationTestCase):
             html=page.get_html()
             self.assertIn("Solicitud recibida; pendiente de confirmación manual",html)
             self.assertIn("Esta página no acredita un pago",html)
+            self.assertIn("Recepción debe confirmar la solicitud",html)
             self.assertIn("Cupo conservado hasta",html)
             self.assertIn(result["hold_until"].strftime("%d/%m/%Y %H:%M"),html)
             self.assertNotIn(data["email"],html)
@@ -78,3 +79,18 @@ class TestPortal(IntegrationTestCase):
         self.assertTrue(converted["booking"])
         self.assertEqual(frappe.db.count("HS Allocation",{"portal_request":request_doc.name,"status":"Active"}),0)
         self.assertEqual(frappe.db.count("HS Allocation",{"booking":converted["booking"],"status":"Active"}),2)
+        frappe.set_user("Guest")
+        previous_form=frappe.local.form_dict
+        try:
+            frappe.local.form_dict=frappe._dict(token=token)
+            html=TemplatePage("hospitality-confirmation").get_html()
+            self.assertIn("Solicitud convertida en reserva",html)
+            self.assertIn("Esta página no acredita un pago",html)
+            self.assertIn("Para cambios o consultas",html)
+            self.assertNotIn("Recepción debe confirmar la solicitud",html)
+            self.assertNotIn("Cupo conservado hasta",html)
+            self.assertNotIn(data["email"],html)
+            self.assertNotIn(data["full_name"],html)
+        finally:
+            frappe.set_user("Administrator")
+            frappe.local.form_dict=previous_form

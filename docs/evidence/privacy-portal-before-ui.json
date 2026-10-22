@@ -1,0 +1,42 @@
+{
+  "label": "before-ui",
+  "at_utc": "2026-10-22T03:52:07.068087+00:00",
+  "mutation": false,
+  "fixture_origin": "All incident/attachment/resolution/approval/request/conversion business records originate in UI. QA helper only observes, ages the two new closed incidents/files, and injects/repairs one filesystem fault.",
+  "counts": {
+    "HS Incident": 0,
+    "HS Retention Run": 0,
+    "File": 2,
+    "HS Guest": 6,
+    "HS Portal Request": 0,
+    "HS Booking": 0,
+    "HS Allocation": 0,
+    "HS Stay": 0,
+    "HS Charge": 0,
+    "HS Payment": 0,
+    "HS Shift": 0,
+    "Sales Invoice": 0,
+    "Payment Entry": 0,
+    "Journal Entry": 0
+  },
+  "incidents": [],
+  "runs": [],
+  "candidates": {
+    "enabled": true,
+    "retention_days": 365,
+    "cutoff": "2025-10-21 00:00:00",
+    "targets": [],
+    "more_possible": false
+  },
+  "portal_requests": [],
+  "bookings": [],
+  "allocations": [],
+  "audit": [],
+  "file_docs": [],
+  "file_state": {
+    "original_files": 741,
+    "new_QA_files": 0,
+    "fault_injected": false,
+    "repaired": false
+  }
+}

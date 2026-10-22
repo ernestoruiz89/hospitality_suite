@@ -111,7 +111,13 @@ def candidates(prop):
             doc=locked_doc(dt,name)
             files=files_for(doc)
             if eligible(prop,doc,cutoff,files):
-                result.append(dict(doctype=dt,name=name,modified=str(doc.modified),label=doc.get("full_name") or doc.get("title") or "Novedad cerrada",fields=[f for f in fields if doc.get(f)],file_count=len(files)))
+                label=doc.get("full_name") or doc.get("title") or frappe._("Novedad")
+                if dt!="HS Guest":
+                    label=frappe._("{0} · {1}").format(label,doc.name)
+                    if doc.get("room"):
+                        room=frappe.db.get_value("HS Room",doc.room,"room_number")
+                        label=frappe._("{0} · Habitación {1}").format(label,room or frappe._("registrada"))
+                result.append(dict(doctype=dt,name=name,modified=str(doc.modified),label=label,fields=[f for f in fields if doc.get(f)],file_count=len(files)))
                 if len(result)==50:
                     return dict(enabled=True,retention_days=days,cutoff=str(cutoff),targets=result,more_possible=True)
     return dict(enabled=True,retention_days=days,cutoff=str(cutoff),targets=result,more_possible=False)

@@ -1,0 +1,7 @@
+First phase-verifier run stopped at verify_privacy_portal.py line 71:
+AssertionError: expected substring 'Is a directory' in a failed file's last_error.
+
+Inspection of the recorded outbox and privacy.py confirmed the intended safe
+error contract: 'IsADirectoryError errno=21'. It excludes file paths and PII.
+The verifier was corrected to assert that exact recorded type/errno contract.
+No business code, scenario data or native-test results changed for this repair.

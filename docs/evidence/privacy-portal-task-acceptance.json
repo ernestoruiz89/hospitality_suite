@@ -1,0 +1,988 @@
+{
+  "reviewed_at_utc": "2026-10-22T04:31:51.108206+00:00",
+  "source": "task-state-crosswalk.json",
+  "scope": "Accumulated operational GUI acceptance plus current 410 native/232 JS. Historical runs retain their original scope; 84 bindings are not 84 new GUI runs.",
+  "handler_count": 84,
+  "task_families": [
+    {
+      "id": "T01",
+      "task": "Navegación y recuperación",
+      "roles": "Todos",
+      "actions": [
+        "owner",
+        "reload",
+        "logout",
+        "clear_room_filters",
+        "home_queue",
+        "home_pending"
+      ],
+      "bindings": {
+        "owner": {
+          "file": "hospitality_suite/public/js/hospitality.js",
+          "line": 136
+        },
+        "reload": {
+          "file": "hospitality_suite/public/js/hospitality.js",
+          "line": 351
+        },
+        "logout": {
+          "file": "hospitality_suite/public/js/hospitality_workflows.js",
+          "line": 36
+        },
+        "clear_room_filters": {
+          "file": "hospitality_suite/public/js/hospitality_navigation.js",
+          "line": 35
+        },
+        "home_queue": {
+          "file": "hospitality_suite/public/js/hospitality_navigation.js",
+          "line": 80
+        },
+        "home_pending": {
+          "file": "hospitality_suite/public/js/hospitality_navigation.js",
+          "line": 84
+        }
+      },
+      "historical_native_classes": {
+        "TestDeskBoard": 9,
+        "TestPermissionsAudit": 12
+      },
+      "evidence": [
+        "docs/INICIO_Y_FILTROS.md",
+        "docs/ACTIVIDAD_Y_RECUPERACION_PAGES.md",
+        "docs/TIEMPO_REAL_SITIOS_LOCALES.md"
+      ],
+      "acceptance_scope": "Inicio, filtros, accesos por rol y recuperación de la Page; no hay formulario técnico obligatorio.",
+      "evidence_sha256": {
+        "docs/INICIO_Y_FILTROS.md": "f35ed1f3cba1ff2d33d6bde3d2fc073db8887755bdbc0cd95d43263ba9a4edf5",
+        "docs/ACTIVIDAD_Y_RECUPERACION_PAGES.md": "75de66165b82ce9ba32215d7fafb0563b2310bf92036223ddabe5573d8492821",
+        "docs/TIEMPO_REAL_SITIOS_LOCALES.md": "02738308e20b31d769e268f55a3bae5103d73da43ab4284f4902b321f68ad1a8"
+      }
+    },
+    {
+      "id": "T02",
+      "task": "Huéspedes y acompañantes",
+      "roles": "Recepción / Gerencia",
+      "actions": [
+        "guest",
+        "guest_edit",
+        "guest_history",
+        "companions"
+      ],
+      "bindings": {
+        "guest": {
+          "file": "hospitality_suite/public/js/hospitality_guests.js",
+          "line": 35
+        },
+        "guest_edit": {
+          "file": "hospitality_suite/public/js/hospitality_guests.js",
+          "line": 36
+        },
+        "guest_history": {
+          "file": "hospitality_suite/public/js/hospitality_reporting.js",
+          "line": 42
+        },
+        "companions": {
+          "file": "hospitality_suite/public/js/hospitality_workflows.js",
+          "line": 81
+        }
+      },
+      "historical_native_classes": {
+        "TestGuestProfiles": 12
+      },
+      "evidence": [
+        "docs/GESTION_HUESPEDES.md",
+        "docs/TECLADO_Y_FOCO.md"
+      ],
+      "acceptance_scope": "Registro y edición de huésped, acompañantes e historial mediante diálogos y resultados legibles.",
+      "evidence_sha256": {
+        "docs/GESTION_HUESPEDES.md": "a5fa8b837d5a3cffe8f18d023df83048462c0e2ba7ad392276cf43f3019aa9e8",
+        "docs/TECLADO_Y_FOCO.md": "67c86f6f910c2fb82b000132af73b3c971a6a71c2d4d49fd7f73366a9fcfb599"
+      }
+    },
+    {
+      "id": "T03",
+      "task": "Disponibilidad",
+      "roles": "Recepción",
+      "actions": [
+        "availability"
+      ],
+      "bindings": {
+        "availability": {
+          "file": "hospitality_suite/public/js/hospitality_availability.js",
+          "line": 28
+        }
+      },
+      "historical_native_classes": {
+        "TestAvailabilitySearch": 14
+      },
+      "evidence": [
+        "docs/DISPONIBILIDAD_VISIBLE.md",
+        "docs/SELECTORES_Y_RESERVA_MANUAL.md"
+      ],
+      "acceptance_scope": "Consulta por cantidad y fechas; tarjeta pasa habitación y fechas a la reserva, sin guardar por consultar.",
+      "evidence_sha256": {
+        "docs/DISPONIBILIDAD_VISIBLE.md": "cec441d24c8087dcf011b37b7a9003cf6938ca99724c71651cfc77cb9af1d684",
+        "docs/SELECTORES_Y_RESERVA_MANUAL.md": "c655b18546ee1b0da0efbebaa949eb896af45d37563153db71cdcea23251e63e"
+      }
+    },
+    {
+      "id": "T04",
+      "task": "Reservas",
+      "roles": "Recepción",
+      "actions": [
+        "reserve",
+        "booking",
+        "booking_edit"
+      ],
+      "bindings": {
+        "reserve": {
+          "file": "hospitality_suite/public/js/hospitality.js",
+          "line": 366
+        },
+        "booking": {
+          "file": "hospitality_suite/public/js/hospitality_drafts.js",
+          "line": 43
+        },
+        "booking_edit": {
+          "file": "hospitality_suite/public/js/hospitality_extras.js",
+          "line": 77
+        }
+      },
+      "historical_native_classes": {
+        "TestBookingDrafts": 12,
+        "TestBookingRateAudit": 7,
+        "TestHoldExpiry": 2
+      },
+      "evidence": [
+        "docs/BORRADORES_DE_RESERVA.md",
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md",
+        "docs/TECLADO_Y_FOCO.md"
+      ],
+      "acceptance_scope": "Cotización, borrador, confirmación y acciones desde el detalle de reserva.",
+      "evidence_sha256": {
+        "docs/BORRADORES_DE_RESERVA.md": "2faf6f5f80a63db0f64d746c4b45fd441704f00a3ba157934d50869082e32134",
+        "docs/AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md": "28ae1e61084e23e47e17b7cb139a05a33db29bd4b92eefa75959bb778100eff0",
+        "docs/TECLADO_Y_FOCO.md": "67c86f6f910c2fb82b000132af73b3c971a6a71c2d4d49fd7f73366a9fcfb599"
+      }
+    },
+    {
+      "id": "T05",
+      "task": "Entrada, estancia y salida",
+      "roles": "Recepción",
+      "actions": [
+        "walk_in",
+        "detail",
+        "extend",
+        "change_room",
+        "checkout",
+        "inspect_departure"
+      ],
+      "bindings": {
+        "walk_in": {
+          "file": "hospitality_suite/public/js/hospitality.js",
+          "line": 367
+        },
+        "detail": {
+          "file": "hospitality_suite/public/js/hospitality_workflows.js",
+          "line": 72
+        },
+        "extend": {
+          "file": "hospitality_suite/public/js/hospitality.js",
+          "line": 381
+        },
+        "change_room": {
+          "file": "hospitality_suite/public/js/hospitality_extras.js",
+          "line": 124
+        },
+        "checkout": {
+          "file": "hospitality_suite/public/js/hospitality_extras.js",
+          "line": 85
+        },
+        "inspect_departure": {
+          "file": "hospitality_suite/public/js/hospitality_extras.js",
+          "line": 92
+        }
+      },
+      "historical_native_classes": {
+        "TestLifecycle": 9,
+        "TestOperations": 10,
+        "TestRoleAcceptance": 1
+      },
+      "evidence": [
+        "docs/ACEPTACION_Y_DEMOSTRACION.md",
+        "docs/ESTANCIAS_Y_LLEGADAS.md",
+        "docs/TECLADO_Y_FOCO.md"
+      ],
+      "acceptance_scope": "Recorrido completo de entrada, consumo, extensión, liquidación y salida desde Pages; cambio/inspección tienen diálogos propios.",
+      "evidence_sha256": {
+        "docs/ACEPTACION_Y_DEMOSTRACION.md": "13da6f66c1f9f15f79458cf2578110abdff7367dbc48b692255f1daf0da90a8e",
+        "docs/ESTANCIAS_Y_LLEGADAS.md": "640e116c84ba190f2f95afe25604168a98922cee2591a885e7c17d9c4140d281",
+        "docs/TECLADO_Y_FOCO.md": "67c86f6f910c2fb82b000132af73b3c971a6a71c2d4d49fd7f73366a9fcfb599"
+      }
+    },
+    {
+      "id": "T06",
+      "task": "Historial de habitación",
+      "roles": "Recepción / Gerencia",
+      "actions": [
+        "room_history"
+      ],
+      "bindings": {
+        "room_history": {
+          "file": "hospitality_suite/public/js/hospitality_room_history.js",
+          "line": 24
+        }
+      },
+      "historical_native_classes": {
+        "TestRoomHistory": 13
+      },
+      "evidence": [
+        "docs/HISTORIAL_HABITACIONES.md"
+      ],
+      "acceptance_scope": "Rango, paginación y detalle de operaciones sin acceder al formulario interno.",
+      "evidence_sha256": {
+        "docs/HISTORIAL_HABITACIONES.md": "9987b40d68afa3fbf3dbbe487ac2fa08e03c58545d556c4c4460c8dee38c3af0"
+      }
+    },
+    {
+      "id": "T07",
+      "task": "Cuentas y ajustes",
+      "roles": "Recepción / Caja / Gerencia",
+      "actions": [
+        "folio",
+        "move_charge",
+        "billing_party",
+        "adjustment"
+      ],
+      "bindings": {
+        "folio": {
+          "file": "hospitality_suite/public/js/hospitality.js",
+          "line": 384
+        },
+        "move_charge": {
+          "file": "hospitality_suite/public/js/hospitality.js",
+          "line": 385
+        },
+        "billing_party": {
+          "file": "hospitality_suite/public/js/hospitality_extras.js",
+          "line": 133
+        },
+        "adjustment": {
+          "file": "hospitality_suite/public/js/hospitality_extras.js",
+          "line": 142
+        }
+      },
+      "historical_native_classes": {
+        "TestFinance": 22,
+        "TestFinancialAudit": 8
+      },
+      "evidence": [
+        "docs/CUENTA_RESUMIDA.md",
+        "docs/AUDITORIA_CAJA_CONTABILIDAD.md",
+        "docs/EXPLICACION_TARIFA_HISTORICA.md"
+      ],
+      "acceptance_scope": "Cuenta, responsables y cargos se revisan desde paneles/diálogos; los movimientos se ejecutan en servidor.",
+      "evidence_sha256": {
+        "docs/CUENTA_RESUMIDA.md": "c592ac8fa4be2deecae39405bd59c9efe39b8c1d945c5c7b15f9082469ab4671",
+        "docs/AUDITORIA_CAJA_CONTABILIDAD.md": "4c47a5fd36eaa7245b1da644bfda80ed222daf673a751d6b0564952e90bc5cb8",
+        "docs/EXPLICACION_TARIFA_HISTORICA.md": "50552eb593f8588c32d9568ffb23986db2d9afc8560797f689a152f02666fa50"
+      }
+    },
+    {
+      "id": "T08",
+      "task": "Facturación y notas de crédito",
+      "roles": "Caja / Contabilidad / Gerencia",
+      "actions": [
+        "invoice",
+        "credit"
+      ],
+      "bindings": {
+        "invoice": {
+          "file": "hospitality_suite/public/js/hospitality_invoicing.js",
+          "line": 4
+        },
+        "credit": {
+          "file": "hospitality_suite/public/js/hospitality_credits.js",
+          "line": 18
+        }
+      },
+      "historical_native_classes": {
+        "TestInvoicePage": 9,
+        "TestPosCreditNotes": 17
+      },
+      "evidence": [
+        "docs/FACTURACION_DESDE_PAGES.md",
+        "docs/AUDITORIA_NOTAS_POS.md"
+      ],
+      "acceptance_scope": "Emitir factura y nota de crédito usa revisión propia y documentos estándar creados por API, sin formulario técnico obligatorio.",
+      "evidence_sha256": {
+        "docs/FACTURACION_DESDE_PAGES.md": "5b033623527f9f4852abd96b8bf6ae88f3a82278ed5e2391c0ddc5d7f8427135",
+        "docs/AUDITORIA_NOTAS_POS.md": "5d2a2abff80e125bd8834f7c7c01aee16915c2a425841fe4b345a239c1626dbb"
+      }
+    },
+    {
+      "id": "T09",
+      "task": "Turnos",
+      "roles": "Caja",
+      "actions": [
+        "open_shift",
+        "close_shift"
+      ],
+      "bindings": {
+        "open_shift": {
+          "file": "hospitality_suite/public/js/hospitality.js",
+          "line": 386
+        },
+        "close_shift": {
+          "file": "hospitality_suite/public/js/hospitality_extras.js",
+          "line": 136
+        }
+      },
+      "historical_native_classes": {
+        "TestFinance": 22,
+        "TestRoleFlow": 1
+      },
+      "evidence": [
+        "docs/ACEPTACION_Y_DEMOSTRACION.md",
+        "docs/TECLADO_Y_FOCO.md",
+        "docs/VALIDACION_FORMULARIOS.md"
+      ],
+      "acceptance_scope": "Apertura, cobro, arqueo por denominación y cierre de turno comprobados con Caja.",
+      "evidence_sha256": {
+        "docs/ACEPTACION_Y_DEMOSTRACION.md": "13da6f66c1f9f15f79458cf2578110abdff7367dbc48b692255f1daf0da90a8e",
+        "docs/TECLADO_Y_FOCO.md": "67c86f6f910c2fb82b000132af73b3c971a6a71c2d4d49fd7f73366a9fcfb599",
+        "docs/VALIDACION_FORMULARIOS.md": "eb6a8a866f2dcc2037fa9808654ad62a76355c8a4632eed2ab04a2205babd7e4"
+      }
+    },
+    {
+      "id": "T10",
+      "task": "Cobros, anticipos y garantías",
+      "roles": "Caja / Gerencia",
+      "actions": [
+        "payment",
+        "guarantee"
+      ],
+      "bindings": {
+        "payment": {
+          "file": "hospitality_suite/public/js/hospitality_workflows.js",
+          "line": 40
+        },
+        "guarantee": {
+          "file": "hospitality_suite/public/js/hospitality_extras.js",
+          "line": 123
+        }
+      },
+      "historical_native_classes": {
+        "TestFinance": 22,
+        "TestAppliedRefunds": 6,
+        "TestGuaranteeRefunds": 5
+      },
+      "evidence": [
+        "docs/AUDITORIA_DEVOLUCIONES.md",
+        "docs/AUDITORIA_GARANTIAS_APLICADAS.md",
+        "docs/TECLADO_Y_FOCO.md"
+      ],
+      "acceptance_scope": "Cobro y devolución con revisión; aplicación de garantía autorizada conserva el documento estándar.",
+      "evidence_sha256": {
+        "docs/AUDITORIA_DEVOLUCIONES.md": "d8c4b491def20cd1261f9ae0639fbf563866e5bf63d05c04f7fc0bed1bc13caf",
+        "docs/AUDITORIA_GARANTIAS_APLICADAS.md": "ff65113eb066a6188819759e52548a01d954ec091c6d9476ade4b2405f7f7fd1",
+        "docs/TECLADO_Y_FOCO.md": "67c86f6f910c2fb82b000132af73b3c971a6a71c2d4d49fd7f73366a9fcfb599"
+      }
+    },
+    {
+      "id": "T11",
+      "task": "Tesorería y egresos",
+      "roles": "Caja / Contabilidad / Gerencia",
+      "actions": [
+        "withdrawal",
+        "cash_expense",
+        "settlement",
+        "supplier_payment"
+      ],
+      "bindings": {
+        "withdrawal": {
+          "file": "hospitality_suite/public/js/hospitality_extras.js",
+          "line": 122
+        },
+        "cash_expense": {
+          "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+          "line": 33
+        },
+        "settlement": {
+          "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+          "line": 34
+        },
+        "supplier_payment": {
+          "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+          "line": 38
+        }
+      },
+      "historical_native_classes": {
+        "TestTreasury": 6,
+        "TestProcurement": 5
+      },
+      "evidence": [
+        "docs/AUDITORIA_CAJA_CONTABILIDAD.md",
+        "docs/CONTABILIDAD.md",
+        "docs/TESORERIA_Y_COMPRAS_DESDE_PAGES.md"
+      ],
+      "acceptance_scope": "Egreso rechazado/corregido, entrega y liquidaciones parciales desde Pages con Gerencia, Caja y Contabilidad; conservación del recorrido histórico.",
+      "evidence_sha256": {
+        "docs/AUDITORIA_CAJA_CONTABILIDAD.md": "4c47a5fd36eaa7245b1da644bfda80ed222daf673a751d6b0564952e90bc5cb8",
+        "docs/CONTABILIDAD.md": "d5a495c87cd048f42964b6d93b6114273a8772730f6019bdc724f47b7096b687",
+        "docs/TESORERIA_Y_COMPRAS_DESDE_PAGES.md": "17ce7a2311d20079537f7cf22029b82400f241f6c01dc2fd2388d660f061f919"
+      }
+    },
+    {
+      "id": "T12",
+      "task": "Venta directa",
+      "roles": "Caja / Gerencia",
+      "actions": [
+        "direct_sale",
+        "return_direct_sale"
+      ],
+      "bindings": {
+        "direct_sale": {
+          "file": "hospitality_suite/public/js/hospitality_workflows.js",
+          "line": 53
+        },
+        "return_direct_sale": {
+          "file": "hospitality_suite/public/js/hospitality_workflows.js",
+          "line": 62
+        }
+      },
+      "historical_native_classes": {
+        "TestDirectSales": 2,
+        "TestNativePos": 6,
+        "TestPosCreditNotes": 17
+      },
+      "evidence": [
+        "docs/AUDITORIA_CAJA_POS.md",
+        "docs/AUDITORIA_NOTAS_POS.md",
+        "docs/AUDITORIA_RECIBOS_POS.md"
+      ],
+      "acceptance_scope": "Venta directa y devolución autorizada reutilizan documentos de ERPNext mediante acciones de la Page.",
+      "evidence_sha256": {
+        "docs/AUDITORIA_CAJA_POS.md": "5c72a655d5af8c5d6422b074afdf504b6302df811732c14953c3777128b4abf6",
+        "docs/AUDITORIA_NOTAS_POS.md": "5d2a2abff80e125bd8834f7c7c01aee16915c2a425841fe4b345a239c1626dbb",
+        "docs/AUDITORIA_RECIBOS_POS.md": "c2f959661992600043f817d7ce288fec33f69d99d32454006211759e273f9bec"
+      }
+    },
+    {
+      "id": "T13",
+      "task": "Consumos",
+      "roles": "Recepción / Caja / Gerencia",
+      "actions": [
+        "service",
+        "service_status"
+      ],
+      "bindings": {
+        "service": {
+          "file": "hospitality_suite/public/js/hospitality.js",
+          "line": 391
+        },
+        "service_status": {
+          "file": "hospitality_suite/public/js/hospitality_inventory.js",
+          "line": 39
+        }
+      },
+      "historical_native_classes": {
+        "TestInventoryAudit": 8,
+        "TestServiceItems": 7
+      },
+      "evidence": [
+        "docs/AUDITORIA_INVENTARIO_SERVICIOS.md",
+        "docs/AUDITORIA_SERVICIOS.md",
+        "docs/ACEPTACION_Y_DEMOSTRACION.md"
+      ],
+      "acceptance_scope": "Solicitud, preparación, entrega y devolución; una entrega genera un cargo y una salida estándar.",
+      "evidence_sha256": {
+        "docs/AUDITORIA_INVENTARIO_SERVICIOS.md": "334fa84544d9186a67e7230bd5c1f44ee53153dcabf453e2cdb636de7eaa6297",
+        "docs/AUDITORIA_SERVICIOS.md": "cba2b94086eb110d9fdd70c8a36a2f2714ee1ccadf077a9d422bba21c3093f1d",
+        "docs/ACEPTACION_Y_DEMOSTRACION.md": "13da6f66c1f9f15f79458cf2578110abdff7367dbc48b692255f1daf0da90a8e"
+      }
+    },
+    {
+      "id": "T14",
+      "task": "Limpieza y ropa",
+      "roles": "Limpieza / Supervisión",
+      "actions": [
+        "cleaning",
+        "schedule_cleaning",
+        "rework_cleaning",
+        "linen"
+      ],
+      "bindings": {
+        "cleaning": {
+          "file": "hospitality_suite/public/js/hospitality_housekeeping.js",
+          "line": 20
+        },
+        "schedule_cleaning": {
+          "file": "hospitality_suite/public/js/hospitality_workflows.js",
+          "line": 65
+        },
+        "rework_cleaning": {
+          "file": "hospitality_suite/public/js/hospitality_housekeeping.js",
+          "line": 29
+        },
+        "linen": {
+          "file": "hospitality_suite/public/js/hospitality_extras.js",
+          "line": 110
+        }
+      },
+      "historical_native_classes": {
+        "TestHousekeepingAudit": 14,
+        "TestMaintenanceLinen": 4
+      },
+      "evidence": [
+        "docs/AUDITORIA_LIMPIEZA_MANTENIMIENTO.md",
+        "docs/TECLADO_Y_FOCO.md",
+        "docs/ROPA_Y_POLITICAS_DESDE_PAGES.md"
+      ],
+      "acceptance_scope": "Limpieza/checklist/inspección/liberación históricos; envío, recepción, pérdida y reposición de ropa desde Pages con dos roles y ledger estándar.",
+      "evidence_sha256": {
+        "docs/AUDITORIA_LIMPIEZA_MANTENIMIENTO.md": "4efd7916a8195827352fcdc481cd99b65f301d9790a27f4e9b958d64d8ae5365",
+        "docs/TECLADO_Y_FOCO.md": "67c86f6f910c2fb82b000132af73b3c971a6a71c2d4d49fd7f73366a9fcfb599",
+        "docs/ROPA_Y_POLITICAS_DESDE_PAGES.md": "f1edb9d85df824df1ddd697307ab60b5b630dce89fe77f555ee0584e585873e8"
+      }
+    },
+    {
+      "id": "T15",
+      "task": "Mantenimiento",
+      "roles": "Mantenimiento / Gerencia / Supervisión",
+      "actions": [
+        "maintenance",
+        "maintenance_parts",
+        "return_parts",
+        "maintenance_evidence"
+      ],
+      "bindings": {
+        "maintenance": {
+          "file": "hospitality_suite/public/js/hospitality_workflows.js",
+          "line": 88
+        },
+        "maintenance_parts": {
+          "file": "hospitality_suite/public/js/hospitality_workflows.js",
+          "line": 97
+        },
+        "return_parts": {
+          "file": "hospitality_suite/public/js/hospitality_workflows.js",
+          "line": 105
+        },
+        "maintenance_evidence": {
+          "file": "hospitality_suite/public/js/hospitality_workflows.js",
+          "line": 109
+        }
+      },
+      "historical_native_classes": {
+        "TestMaintenanceLinen": 4,
+        "TestEquipment": 3,
+        "TestHousekeepingAudit": 14
+      },
+      "evidence": [
+        "docs/AUDITORIA_LIMPIEZA_MANTENIMIENTO.md",
+        "docs/TECLADO_Y_FOCO.md",
+        "docs/TAREAS_Y_ESTADOS_POR_ROL.md",
+        "docs/VENTANAS_Y_EVIDENCIAS_PRIVADAS.md"
+      ],
+      "acceptance_scope": "Creación/inicio/repuestos/devolución/completar/reabrir con tres roles; adjunto privado cargado por técnico y consultado sin ampliar permiso sobre costos.",
+      "evidence_sha256": {
+        "docs/AUDITORIA_LIMPIEZA_MANTENIMIENTO.md": "4efd7916a8195827352fcdc481cd99b65f301d9790a27f4e9b958d64d8ae5365",
+        "docs/TECLADO_Y_FOCO.md": "67c86f6f910c2fb82b000132af73b3c971a6a71c2d4d49fd7f73366a9fcfb599",
+        "docs/TAREAS_Y_ESTADOS_POR_ROL.md": "6f864d0454b88789ba6e5a84cd12ee92fc7edbe848e12d326a4eb530a89215db",
+        "docs/VENTANAS_Y_EVIDENCIAS_PRIVADAS.md": "00e4c6396a46b1a15edf3fa732f85095480635bd39c8eb535a1958c82d4578e7"
+      }
+    },
+    {
+      "id": "T16",
+      "task": "Novedades",
+      "roles": "Limpieza / Mantenimiento / Gerencia",
+      "actions": [
+        "incident",
+        "incident_evidence",
+        "resolve_incident"
+      ],
+      "bindings": {
+        "incident": {
+          "file": "hospitality_suite/public/js/hospitality_extras.js",
+          "line": 109
+        },
+        "incident_evidence": {
+          "file": "hospitality_suite/public/js/hospitality_workflows.js",
+          "line": 110
+        },
+        "resolve_incident": {
+          "file": "hospitality_suite/public/js/hospitality_workflows.js",
+          "line": 111
+        }
+      },
+      "historical_native_classes": {
+        "TestMaintenanceLinen": 4,
+        "TestHousekeepingAudit": 14
+      },
+      "evidence": [
+        "docs/AUDITORIA_LIMPIEZA_MANTENIMIENTO.md",
+        "docs/TAREAS_Y_ESTADOS_POR_ROL.md",
+        "docs/RETENCION_Y_PORTAL_DESDE_PAGES.md"
+      ],
+      "acceptance_scope": "Novedades registradas, dos evidencias privadas cargadas y consultadas, y resoluciones documentadas desde Pages con Limpieza/Gerencia.",
+      "evidence_sha256": {
+        "docs/AUDITORIA_LIMPIEZA_MANTENIMIENTO.md": "4efd7916a8195827352fcdc481cd99b65f301d9790a27f4e9b958d64d8ae5365",
+        "docs/TAREAS_Y_ESTADOS_POR_ROL.md": "6f864d0454b88789ba6e5a84cd12ee92fc7edbe848e12d326a4eb530a89215db",
+        "docs/RETENCION_Y_PORTAL_DESDE_PAGES.md": "e9bc69c5412110dbe60dc398abad786edb8b0c239eddd4929cd0757907ba4ec7"
+      }
+    },
+    {
+      "id": "T17",
+      "task": "Reportes, auditoría y cierre",
+      "roles": "Gerencia / Contabilidad / Auditoría",
+      "actions": [
+        "report",
+        "daily_close",
+        "view_close",
+        "view_audit"
+      ],
+      "bindings": {
+        "report": {
+          "file": "hospitality_suite/public/js/hospitality_reporting.js",
+          "line": 43
+        },
+        "daily_close": {
+          "file": "hospitality_suite/public/js/hospitality_close.js",
+          "line": 54
+        },
+        "view_close": {
+          "file": "hospitality_suite/public/js/hospitality_close.js",
+          "line": 65
+        },
+        "view_audit": {
+          "file": "hospitality_suite/public/js/hospitality_audit.js",
+          "line": 5
+        }
+      },
+      "historical_native_classes": {
+        "TestReportDimensions": 13,
+        "TestAuditHistory": 10,
+        "TestClosingChecks": 8
+      },
+      "evidence": [
+        "docs/BITACORA_Y_CIERRES.md",
+        "docs/FECHA_Y_PENDIENTES_CIERRE.md",
+        "docs/TECLADO_Y_FOCO.md"
+      ],
+      "acceptance_scope": "Consultas, exportación, detalle de auditoría y preparación/cierre desde Pages, con trazabilidad de documentos estándar.",
+      "evidence_sha256": {
+        "docs/BITACORA_Y_CIERRES.md": "8338ea5ef6b379bec9fb1f3c1eb1a818e1e87b3ebb6dc436ade4123a17c57db8",
+        "docs/FECHA_Y_PENDIENTES_CIERRE.md": "16f816ea9173329530d133103eb5122153f45f84e77c4d05ef95a2a1fc06c10a",
+        "docs/TECLADO_Y_FOCO.md": "67c86f6f910c2fb82b000132af73b3c971a6a71c2d4d49fd7f73366a9fcfb599"
+      }
+    },
+    {
+      "id": "T18",
+      "task": "Configuración",
+      "roles": "Administración / Gerencia",
+      "actions": [
+        "setup",
+        "new_property",
+        "policies",
+        "denominations",
+        "portal_settings",
+        "document_settings",
+        "assign_user",
+        "equipment",
+        "expense_category",
+        "stock_policy",
+        "retention_policy",
+        "payment_policies",
+        "service_items",
+        "service_accounting"
+      ],
+      "bindings": {
+        "setup": {
+          "file": "hospitality_suite/public/js/hospitality.js",
+          "line": 396
+        },
+        "new_property": {
+          "file": "hospitality_suite/public/js/hospitality.js",
+          "line": 397
+        },
+        "policies": {
+          "file": "hospitality_suite/public/js/hospitality_extras.js",
+          "line": 134
+        },
+        "denominations": {
+          "file": "hospitality_suite/public/js/hospitality_extras.js",
+          "line": 135
+        },
+        "portal_settings": {
+          "file": "hospitality_suite/public/js/hospitality_workflows.js",
+          "line": 68
+        },
+        "document_settings": {
+          "file": "hospitality_suite/public/js/hospitality_workflows.js",
+          "line": 69
+        },
+        "assign_user": {
+          "file": "hospitality_suite/public/js/hospitality_workflows.js",
+          "line": 70
+        },
+        "equipment": {
+          "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+          "line": 42
+        },
+        "expense_category": {
+          "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+          "line": 43
+        },
+        "stock_policy": {
+          "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+          "line": 44
+        },
+        "retention_policy": {
+          "file": "hospitality_suite/public/js/hospitality_privacy.js",
+          "line": 19
+        },
+        "payment_policies": {
+          "file": "hospitality_suite/public/js/hospitality_policies.js",
+          "line": 11
+        },
+        "service_items": {
+          "file": "hospitality_suite/public/js/hospitality_items.js",
+          "line": 6
+        },
+        "service_accounting": {
+          "file": "hospitality_suite/public/js/hospitality_service_accounting.js",
+          "line": 7
+        }
+      },
+      "historical_native_classes": {
+        "TestInitialSetup": 4,
+        "TestSetupReporting": 5,
+        "TestPaymentPolicies": 6,
+        "TestServiceAccounting": 6,
+        "TestPrivacy": 8
+      },
+      "evidence": [
+        "docs/INSTALACION_LIMPIA.md",
+        "docs/UX_FORMULARIOS.md",
+        "docs/TECLADO_Y_FOCO.md",
+        "docs/AUDITORIA_CONTABILIDAD_SERVICIOS.md",
+        "docs/ROPA_Y_POLITICAS_DESDE_PAGES.md"
+      ],
+      "acceptance_scope": "Primer establecimiento/categoría/tarifa y configuración histórica; lavandería, clasificación/mínimos, penalizaciones y efecto de anticipos/garantías recorridos en Pages. Portal habilitado solo en aceptación y restaurado.",
+      "evidence_sha256": {
+        "docs/INSTALACION_LIMPIA.md": "2c7e89cae5caeac82a1f7a0745f569a328282b78712a1ffb3cdc65dc284ee5b4",
+        "docs/UX_FORMULARIOS.md": "1d268b2f960b59ed613a23b3786df7acd9f926791bf6026e3f80c1c772237cca",
+        "docs/TECLADO_Y_FOCO.md": "67c86f6f910c2fb82b000132af73b3c971a6a71c2d4d49fd7f73366a9fcfb599",
+        "docs/AUDITORIA_CONTABILIDAD_SERVICIOS.md": "61f9e8e4347a5a7d4283652ab76f9cc9428f46b2ce733deb9377c96f840eb07c",
+        "docs/ROPA_Y_POLITICAS_DESDE_PAGES.md": "f1edb9d85df824df1ddd697307ab60b5b630dce89fe77f555ee0584e585873e8"
+      }
+    },
+    {
+      "id": "T19",
+      "task": "Compras y movimientos de inventario",
+      "roles": "Gerencia / Contabilidad",
+      "actions": [
+        "register_supplier",
+        "create_warehouse",
+        "purchase_order",
+        "receive_purchase",
+        "purchase_invoice",
+        "move_stock",
+        "adjust_stock"
+      ],
+      "bindings": {
+        "register_supplier": {
+          "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+          "line": 49
+        },
+        "create_warehouse": {
+          "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+          "line": 50
+        },
+        "purchase_order": {
+          "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+          "line": 51
+        },
+        "receive_purchase": {
+          "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+          "line": 52
+        },
+        "purchase_invoice": {
+          "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+          "line": 53
+        },
+        "move_stock": {
+          "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+          "line": 54
+        },
+        "adjust_stock": {
+          "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+          "line": 55
+        }
+      },
+      "historical_native_classes": {
+        "TestProcurement": 5,
+        "TestInventoryAudit": 8
+      },
+      "evidence": [
+        "docs/AUDITORIA_INVENTARIO_SERVICIOS.md",
+        "docs/CONTABILIDAD.md",
+        "docs/TESORERIA_Y_COMPRAS_DESDE_PAGES.md"
+      ],
+      "acceptance_scope": "Pedido y recepción parcial 2+4, facturas/pagos, traslado y conteo desde Pages con documentos estándar, corrección y ledger conciliado.",
+      "evidence_sha256": {
+        "docs/AUDITORIA_INVENTARIO_SERVICIOS.md": "334fa84544d9186a67e7230bd5c1f44ee53153dcabf453e2cdb636de7eaa6297",
+        "docs/CONTABILIDAD.md": "d5a495c87cd048f42964b6d93b6114273a8772730f6019bdc724f47b7096b687",
+        "docs/TESORERIA_Y_COMPRAS_DESDE_PAGES.md": "17ce7a2311d20079537f7cf22029b82400f241f6c01dc2fd2388d660f061f919"
+      }
+    },
+    {
+      "id": "T20",
+      "task": "Retención de datos",
+      "roles": "Gerencia autorizada",
+      "actions": [
+        "retention",
+        "retry_retention"
+      ],
+      "bindings": {
+        "retention": {
+          "file": "hospitality_suite/public/js/hospitality_privacy.js",
+          "line": 11
+        },
+        "retry_retention": {
+          "file": "hospitality_suite/public/js/hospitality_privacy.js",
+          "line": 16
+        }
+      },
+      "historical_native_classes": {
+        "TestPrivacy": 8,
+        "TestSecurityRecovery": 7
+      },
+      "evidence": [
+        "docs/OPERACION.md",
+        "docs/AUDITORIA_SEGURIDAD.md",
+        "docs/RETENCION_Y_PORTAL_DESDE_PAGES.md"
+      ],
+      "acceptance_scope": "Conservación de adjuntos recientes, selección identificable, motivo/acuse obligatorios, cancelación sin efecto, eliminación parcial fallida y reintento real con conservación del control.",
+      "evidence_sha256": {
+        "docs/OPERACION.md": "5e6a6a96ea96fa191871a2fb741473f47eaf9f61cea99a408c7b50a394b1162c",
+        "docs/AUDITORIA_SEGURIDAD.md": "a3cfd26d685476ccfbc70af1c1ba47e84445ec4098a4c3789605bc95beaa1f76",
+        "docs/RETENCION_Y_PORTAL_DESDE_PAGES.md": "e9bc69c5412110dbe60dc398abad786edb8b0c239eddd4929cd0757907ba4ec7"
+      }
+    },
+    {
+      "id": "T21",
+      "task": "Solicitudes del portal",
+      "roles": "Recepción",
+      "actions": [
+        "portal_convert"
+      ],
+      "bindings": {
+        "portal_convert": {
+          "file": "hospitality_suite/public/js/hospitality_extras.js",
+          "line": 93
+        }
+      },
+      "historical_native_classes": {
+        "TestPortal": 2
+      },
+      "evidence": [
+        "docs/MANUAL.md",
+        "docs/API.md",
+        "docs/RETENCION_Y_PORTAL_DESDE_PAGES.md"
+      ],
+      "acceptance_scope": "Solicitud anónima de dos habitaciones, invalidación de cotización, retención temporal, registro de huésped, revisión/cancelación y conversión manual con Recepción; dos asignaciones activas y confirmación pública actualizada, sin cobro/entrada.",
+      "evidence_sha256": {
+        "docs/MANUAL.md": "f546bb87b6c53446cd0014b59ef9301264f09234d2edcb54e83ab73d2a95feda",
+        "docs/API.md": "2fd2f51f29eec1434cebc2a6025a3f09c8f529669091ec2eb33afd2e604a4974",
+        "docs/RETENCION_Y_PORTAL_DESDE_PAGES.md": "e9bc69c5412110dbe60dc398abad786edb8b0c239eddd4929cd0757907ba4ec7"
+      }
+    },
+    {
+      "id": "T22",
+      "task": "Impresiones",
+      "roles": "Según permiso de la operación",
+      "actions": [
+        "print_shift",
+        "print_stay",
+        "print_registration",
+        "print_cleaning",
+        "print_close",
+        "print_maintenance"
+      ],
+      "bindings": {
+        "print_shift": {
+          "file": "hospitality_suite/public/js/hospitality.js",
+          "line": 395
+        },
+        "print_stay": {
+          "file": "hospitality_suite/public/js/hospitality_workflows.js",
+          "line": 73
+        },
+        "print_registration": {
+          "file": "hospitality_suite/public/js/hospitality_workflows.js",
+          "line": 74
+        },
+        "print_cleaning": {
+          "file": "hospitality_suite/public/js/hospitality_workflows.js",
+          "line": 75
+        },
+        "print_close": {
+          "file": "hospitality_suite/public/js/hospitality_workflows.js",
+          "line": 76
+        },
+        "print_maintenance": {
+          "file": "hospitality_suite/public/js/hospitality_workflows.js",
+          "line": 114
+        }
+      },
+      "historical_native_classes": {
+        "TestPrintDelivery": 6
+      },
+      "evidence": [
+        "docs/IMPRESIONES_OPERATIVAS.md"
+      ],
+      "acceptance_scope": "Accesos desde Pages a nueve formatos con cinco roles; los documentos de ese ensayo fueron fixture API, no creación GUI.",
+      "evidence_sha256": {
+        "docs/IMPRESIONES_OPERATIVAS.md": "cff3a31398ba0f8d5e407570d265c267d41826e16a32c428b97f11e1ac2a952f"
+      }
+    }
+  ],
+  "current_sources_sha256": {
+    "hospitality_suite/public/hospitality.bundle.js": "34ae0ede1e1ac47ee338caa843e210cc4a632688fb5828d608291d551a18cfeb",
+    "hospitality_suite/public/js/hospitality.js": "f744f36f9409742e8985cc8cf5fa26f5ea278628b574795a84e4201949675070",
+    "hospitality_suite/public/js/hospitality_booking_summary.js": "1182ae3bc761d16f1a11d61bd135c789eb22773ec66fa0cdc3b0102814d5c1a0",
+    "hospitality_suite/public/js/hospitality_extras.js": "3fabac94e1e3039f0bbbd95f1a73234902f6a9ff88956f15301b87cf94e259bf",
+    "hospitality_suite/public/js/hospitality_workflows.js": "f7d50ef3d9b01f74e41c77dd43d33a8c37e267d4fd2e83889c9d0b9a31d7998f",
+    "hospitality_suite/public/js/hospitality_housekeeping.js": "c5d781e7de93da1eec4e4cd58c6b766377f9745c3284dd11d4db5e9eb5c3c585",
+    "hospitality_suite/public/js/hospitality_finance_stock.js": "387b67b571e709c76427463b3207bfa61a10ca95e5fc30f82ed8e63f25469159",
+    "hospitality_suite/public/js/hospitality_inventory.js": "4f2eb95f32489fb59f735f53f8f25842978144b3e29b3a1502bb3b4391990870",
+    "hospitality_suite/public/js/hospitality_privacy.js": "3434eac9e3dc2e5853ed7eee79bb4aeb11f99d966e629fc775bca979c54da9f3",
+    "hospitality_suite/public/js/hospitality_reporting.js": "c02e21bc321928e042244270f4f1ea13f94953d68f1800f2f00d3ff45d074e10",
+    "hospitality_suite/public/js/hospitality_audit.js": "f793eb9230cb73eacb0bd035912190c97c5f2656c6f892a58f429ce9a67b9bf5",
+    "hospitality_suite/public/js/hospitality_policies.js": "c0ee04fe29d30041ae8a075bdf4e5a703f60c2cbdf04dd206c8b4278c1b8cd31",
+    "hospitality_suite/public/js/hospitality_close.js": "14c9768dc862522b5ba51c4951a1e9e16e742e12041067ea63e0e5b65d7f51b4",
+    "hospitality_suite/public/js/hospitality_catalog.js": "b2fd0ae7206f9cc3abbeee7a43dcfaeebf2b7c48c7189bc4da778933ad4e1c24",
+    "hospitality_suite/public/js/hospitality_items.js": "be6d83abfac59b0ff26f19eb3e9a4762c150ad298425866a0537e8ab59bbb92c",
+    "hospitality_suite/public/js/hospitality_pos.js": "a7972d77e1863771afb99993cf07205021dc68fcd52538e038e228f8e999a0a5",
+    "hospitality_suite/public/js/hospitality_refunds.js": "eacad992cf82a42f2f165ac54651d63e52b55c31b5ba3e81fda4325a6eedabd3",
+    "hospitality_suite/public/js/hospitality_credits.js": "352ef4e56aca6687bba3cec6da4a19a4c56c4fc0c791c5b06852c0981e98dde2",
+    "hospitality_suite/public/js/hospitality_service_accounting.js": "d677d85bb1666add6959a4897df57bdfdb1fc91effa34359fcb0a9063b5e419e",
+    "hospitality_suite/public/js/hospitality_invoicing.js": "421d6552267660407e89a08e9849d0a73842309d9cc6aaa97674f104d404a983",
+    "hospitality_suite/public/js/hospitality_board.js": "9c27d7c12cfa80abff2db501e9dfd6a897b813878dcd9b474cfe53af8d34d361",
+    "hospitality_suite/public/js/hospitality_availability.js": "840f4394ad01c8c0545159d428604cff1401a0f6d8d6323feeea2d9f42b9ede7",
+    "hospitality_suite/public/js/hospitality_drafts.js": "1bb26dda43241d8785eddd303dd816cd4a4a1a95f993672c00f20757a36526b7",
+    "hospitality_suite/public/js/hospitality_tariffs.js": "be7db5bcf1347dffddc467a000b2c35fcb5e8bd6329fea5163e4af14ff210472",
+    "hospitality_suite/public/js/hospitality_guests.js": "c8bb0c6dc850169c17edc3876fd1d2cac8cbb1e96aafea05907f21241194287e",
+    "hospitality_suite/public/js/hospitality_navigation.js": "fbcb136c8b528396a68dc5047c8c2649c239e60a61689635c7f5cfa0183f1d7c",
+    "hospitality_suite/public/js/hospitality_room_history.js": "aed988939600db21643dbfdc70b3b031c1dc3025196cc2be68f8eb62a8673a94",
+    "hospitality_suite/public/js/hospitality_forms.js": "8d796c0526d0bb70525c5c86d31ab9db2038d77133990d1a01eae11e3112d4aa",
+    "hospitality_suite/public/js/hospitality_links.js": "25727ad5e02d923729e52bfbd8d5cf35db91879c158689cd49092412d1a4d1f4",
+    "hospitality_suite/public/js/hospitality_keyboard.js": "b6111aabc03f57576a017b21f25b9f20222051f763bb7c705a88a75bc228890e"
+  },
+  "native_tests": 410,
+  "javascript_tests": 232,
+  "final_F26_complete": false,
+  "ota_sync_deferred_by_user": true
+}

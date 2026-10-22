@@ -91,10 +91,18 @@
   };
   Desk.prototype.action_inspect_departure=async function(id){const key=frappe.utils.get_random(24);return this.dialog(__("Inspeccionar salida"),[f("notes",__("Revisión, minibar y daños"),"Small Text",{reqd:1})],async(v,d)=>{await this.mutate("inspect_departure",{stay:id,...v},key);d.hide();});};
   Desk.prototype.action_portal_convert=async function(id){
-    const key=frappe.utils.get_random(24);return this.dialog(__("Confirmar solicitud del portal"),[pick("guest",__("Huésped registrado"),this.data.guests,"full_name"),pick("customer",__("Cliente pagador"),this.data.customers,"customer_name")],async(v,d)=>{
-      const data={...v,portal_request:id},q=await this.call("preview",{property_name:this.property,action:"convert_portal",data:JSON.stringify(data)});
-      await this.dialog(__("Revisar cotización"),[f("summary",__("Alojamiento"),"HTML",{options:`<h2>${e(this.amount(q.amount,q.currency))}</h2>`})],async(x,c)=>{await this.mutate("convert_portal",{...data,acceptance:q.acceptance},key);c.hide();d.hide();},__("Confirmar reserva"));
-    },__("Cotizar"));
+    const property=this.property,request=(this.data.portal_requests||[]).find(row=>row.name===id);
+    if(!request||request.property!==property){frappe.msgprint(__("Actualice las solicitudes del portal antes de revisar."));return;}
+    const key=frappe.utils.get_random(24),category=(this.data.categories||[]).find(row=>row.name===request.category)?.category_name||__("Categoría registrada");
+    const rooms=+request.rooms===1?__("1 habitación"):__("{0} habitaciones",[request.rooms]);
+    const people=+request.people===1?__("1 persona por habitación"):__("{0} personas por habitación",[request.people]);
+    const context=`<h3>${e(request.full_name)}</h3><p>${e(category)} · ${e(rooms)} · ${e(people)}</p><p>${e(__("Entrada"))}: ${e(this.date(request.starts_at))}<br>${e(__("Salida"))}: ${e(this.date(request.ends_at))}<br>${e(this.prop.time_zone)}</p>`;
+    const same=()=>{if(this.property!==property)throw Error("Property changed");};
+    return this.dialog(__("Revisar solicitud del portal"),[f("portal_summary",__("Solicitud recibida"),"HTML",{options:`${context}<p>${e(__("Cupo conservado hasta"))}: ${e(this.date(request.hold_until))}</p><p>${e(__("Alojamiento consultado"))}: <strong>${e(this.amount(request.amount,request.currency))}</strong></p>`}),pick("guest",__("Huésped registrado"),this.data.guests,"full_name"),pick("customer",__("Cliente pagador"),this.data.customers,"customer_name")],async(v,d)=>{
+      same();const data={...v,portal_request:id},q=await this.call("preview",{property_name:property,action:"convert_portal",data:JSON.stringify(data)});same();
+      const customer=this.data.customers.find(row=>row.name===v.customer)?.customer_name||__("Cliente registrado");
+      await this.dialog(__("Confirmar reserva del portal"),[f("summary",__("Reserva a confirmar"),"HTML",{options:`${context}<p>${e(__("Huésped"))}: ${e(this.guestName(v.guest))}<br>${e(__("Pagador"))}: ${e(customer)}</p><h2>${e(__("Total de alojamiento"))}: ${e(this.amount(q.amount,q.currency))}</h2><p>${e(__("Se confirmará la reserva con habitaciones por asignar. No se registra un cobro ni una entrada."))}</p>`})],async(x,c)=>{same();await this.mutate("convert_portal",{...data,acceptance:q.acceptance},key);c.hide();d.hide();},__("Confirmar reserva"));
+    },__("Revisar reserva"));
   };
   const cleaning=Desk.prototype.render_housekeeping;
   Desk.prototype.render_housekeeping=function(el){cleaning.call(this,el);if(this.allowed("clean"))el.find(".hs-toolbar").append(this.button("incident",__("Registrar novedad"))+this.button("linen",__("Ropa de cama")));};

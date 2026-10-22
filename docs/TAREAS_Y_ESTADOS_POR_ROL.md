@@ -1,5 +1,7 @@
 # Tareas operativas y estados por rol
 
+[RETENCION_Y_PORTAL_DESDE_PAGES.md](RETENCION_Y_PORTAL_DESDE_PAGES.md) cierra **S04-20** mediante la aceptación acumulada de 22 familias y el recorrido final de retención/reintento, adjuntos privados y portal anónimo → Recepción. Tres mejoras de claridad, **410 nativas (378 integración/32 unitarias) y 232 JS aprobadas**, 29 observaciones Desk y diez públicas. Se restauraron los datos y los 741 archivos originales; los artefactos nuevos se conservaron fuera del sitio. **214 V/cuatro I**: S00-01/S01-12/S19-07/S19-08 dependen de F26 (actualización/recuperación coordinadas de código/base/archivos), paquete actualizado y entrega. OTA aplazada. Los apartados posteriores son antecedentes con sus recuentos históricos.
+
 Complemento posterior: [TESORERIA_Y_COMPRAS_DESDE_PAGES.md](TESORERIA_Y_COMPRAS_DESDE_PAGES.md) aporta el recorrido T11/T19 con tres roles, 407 nativas/225 JS y corrección del conteo de Gerencia. 212 V/seis I; la evidencia siguiente conserva su alcance histórico.
 
 Complemento posterior: [VENTANAS_Y_EVIDENCIAS_PRIVADAS.md](VENTANAS_Y_EVIDENCIAS_PRIVADAS.md) resuelve la observación de clic inmediato que se registra abajo y revisa adjuntos privados con técnico/Supervisión. 405 nativas y 222 JS actuales; 212 V/seis I, sin cierre general de aceptación secundaria. El texto siguiente documenta la fase anterior y sus 404 nativas históricas.

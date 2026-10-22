@@ -1,0 +1,169 @@
+{
+  "label": "candidate-labels-fixed",
+  "at_utc": "2026-10-22T04:02:10.117008+00:00",
+  "mutation": false,
+  "fixture_origin": "All incident/attachment/resolution/approval/request/conversion business records originate in UI. QA helper only observes, ages the two new closed incidents/files, and injects/repairs one filesystem fault.",
+  "counts": {
+    "HS Incident": 2,
+    "HS Retention Run": 0,
+    "File": 7,
+    "HS Guest": 6,
+    "HS Portal Request": 0,
+    "HS Booking": 0,
+    "HS Allocation": 0,
+    "HS Stay": 0,
+    "HS Charge": 0,
+    "HS Payment": 0,
+    "HS Shift": 0,
+    "Sales Invoice": 0,
+    "Payment Entry": 0,
+    "Journal Entry": 0
+  },
+  "incidents": [
+    {
+      "name": "INC-2026-00001",
+      "property": "qmbjb0i1qc",
+      "room": "qmf5ju94js",
+      "kind": "Lost Property",
+      "description": "Objeto sintético para retención de aceptación",
+      "status": "Resolved",
+      "evidence": "/private/files/evidencia-retencion-ficticia.pdf",
+      "resolution": "Objeto sintético entregado, constancia de aceptación verificada",
+      "owner": "housekeeping@hospitality.example.invalid",
+      "resolved_by": "manager@hospitality.example.invalid",
+      "modified": "2025-09-16 21:59:43.813833"
+    },
+    {
+      "name": "INC-2026-00002",
+      "property": "qmbjb0i1qc",
+      "room": "qmf24e5qke",
+      "kind": "Lost Property",
+      "description": "Objeto de control que se conserva en aceptación",
+      "status": "Resolved",
+      "evidence": "/private/files/evidencia-control-ficticia.txt",
+      "resolution": "Objeto de control entregado; su evidencia debe conservarse en la revisión parcial",
+      "owner": "housekeeping@hospitality.example.invalid",
+      "resolved_by": "manager@hospitality.example.invalid",
+      "modified": "2025-09-16 21:59:43.813833"
+    }
+  ],
+  "runs": [],
+  "candidates": {
+    "enabled": true,
+    "retention_days": 365,
+    "cutoff": "2025-10-21 00:00:00",
+    "targets": [
+      {
+        "doctype": "HS Incident",
+        "name": "INC-2026-00001",
+        "modified": "2025-09-16 21:59:43.813833",
+        "label": "Novedad · INC-2026-00001 · Habitación H101",
+        "fields": [
+          "evidence"
+        ],
+        "file_count": 3
+      },
+      {
+        "doctype": "HS Incident",
+        "name": "INC-2026-00002",
+        "modified": "2025-09-16 21:59:43.813833",
+        "label": "Novedad · INC-2026-00002 · Habitación H102",
+        "fields": [
+          "evidence"
+        ],
+        "file_count": 2
+      }
+    ],
+    "more_possible": false
+  },
+  "portal_requests": [],
+  "bookings": [],
+  "allocations": [],
+  "audit": [
+    {
+      "action": "Record incident",
+      "actor": "housekeeping@hospitality.example.invalid",
+      "source_doctype": "HS Incident",
+      "source_name": "INC-2026-00001",
+      "reason": null
+    },
+    {
+      "action": "Incident evidence",
+      "actor": "housekeeping@hospitality.example.invalid",
+      "source_doctype": "HS Incident",
+      "source_name": "INC-2026-00001",
+      "reason": null
+    },
+    {
+      "action": "Record incident",
+      "actor": "housekeeping@hospitality.example.invalid",
+      "source_doctype": "HS Incident",
+      "source_name": "INC-2026-00002",
+      "reason": null
+    },
+    {
+      "action": "Incident evidence",
+      "actor": "housekeeping@hospitality.example.invalid",
+      "source_doctype": "HS Incident",
+      "source_name": "INC-2026-00002",
+      "reason": null
+    },
+    {
+      "action": "Resolve incident",
+      "actor": "manager@hospitality.example.invalid",
+      "source_doctype": "HS Incident",
+      "source_name": "INC-2026-00001",
+      "reason": "Objeto sintético entregado, constancia de aceptación verificada"
+    },
+    {
+      "action": "Resolve incident",
+      "actor": "manager@hospitality.example.invalid",
+      "source_doctype": "HS Incident",
+      "source_name": "INC-2026-00002",
+      "reason": "Objeto de control entregado; su evidencia debe conservarse en la revisión parcial"
+    }
+  ],
+  "file_docs": [
+    {
+      "name": "602164bccf",
+      "file_url": "/private/files/evidencia-retencion-ficticia54ddd8.pdf",
+      "is_private": 1,
+      "attached_to_name": "INC-2026-00001",
+      "owner": "manager@hospitality.example.invalid"
+    },
+    {
+      "name": "92bd645951",
+      "file_url": "/private/files/evidencia-control-ficticia.txt",
+      "is_private": 1,
+      "attached_to_name": "INC-2026-00002",
+      "owner": "housekeeping@hospitality.example.invalid"
+    },
+    {
+      "name": "bd65161e96",
+      "file_url": "/private/files/evidencia-retencion-ficticia54ddd8.pdf",
+      "is_private": 1,
+      "attached_to_name": "INC-2026-00001",
+      "owner": "housekeeping@hospitality.example.invalid"
+    },
+    {
+      "name": "db76073e49",
+      "file_url": "/private/files/evidencia-control-ficticia.txt",
+      "is_private": 1,
+      "attached_to_name": "INC-2026-00002",
+      "owner": "housekeeping@hospitality.example.invalid"
+    },
+    {
+      "name": "e5b7ce89ae",
+      "file_url": "/private/files/evidencia-retencion-ficticia.pdf",
+      "is_private": 1,
+      "attached_to_name": "INC-2026-00001",
+      "owner": "housekeeping@hospitality.example.invalid"
+    }
+  ],
+  "file_state": {
+    "original_files": 741,
+    "new_QA_files": 3,
+    "fault_injected": true,
+    "repaired": false
+  }
+}

@@ -1,0 +1,583 @@
+{
+  "scope": "Local public portal, genuinely anonymous after manager/receptionist logout; query tokens intentionally excluded.",
+  "events": [
+    {
+      "label": "portal-disabled-before-opt-in-manager-session",
+      "at": "2026-10-22T04:08:59.504Z",
+      "buttons": [],
+      "confirmation_token_present": false,
+      "inputs": [],
+      "text": "Inicio\nM\n\nRESERVAS EN LÍNEA\n\nPrepare su próxima estancia\n\nConsulte disponibilidad y solicite confirmación a recepción. No se realizan cobros en esta página.\n\nLas reservas en línea todavía no están habilitadas. Consulte directamente con recepción.\nDesarrollado por ERPNext",
+      "url": "http://hospitality-acceptance.localhost:8089/hospitality",
+      "viewport": {
+        "height": 720,
+        "width": 1280
+      }
+    },
+    {
+      "label": "portal-enabled-anonymous-form",
+      "at": "2026-10-22T04:09:22.175Z",
+      "buttons": [
+        {
+          "disabled": false,
+          "text": "Consultar disponibilidad y precio"
+        }
+      ],
+      "confirmation_token_present": false,
+      "inputs": [
+        {
+          "id": "hp-property",
+          "invalid": null,
+          "options": [
+            {
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "valid": true,
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "id": "hp-category",
+          "invalid": null,
+          "options": [
+            {
+              "label": "Estándar",
+              "value": "qmcbb8qlvg"
+            }
+          ],
+          "valid": true,
+          "value": "qmcbb8qlvg"
+        },
+        {
+          "id": "hp-start",
+          "invalid": null,
+          "valid": false,
+          "value": ""
+        },
+        {
+          "id": "hp-end",
+          "invalid": null,
+          "valid": false,
+          "value": ""
+        },
+        {
+          "id": "hp-quantity",
+          "invalid": null,
+          "valid": true,
+          "value": "1"
+        },
+        {
+          "id": "hp-people",
+          "invalid": null,
+          "valid": true,
+          "value": "1"
+        },
+        {
+          "id": "hp-name",
+          "invalid": null,
+          "valid": false,
+          "value": ""
+        },
+        {
+          "id": "hp-email",
+          "invalid": null,
+          "valid": false,
+          "value": ""
+        },
+        {
+          "id": "hp-phone",
+          "invalid": null,
+          "valid": true,
+          "value": ""
+        }
+      ],
+      "text": "Inicio\nIniciar sesión\n\nRESERVAS EN LÍNEA\n\nPrepare su próxima estancia\n\nConsulte disponibilidad y solicite confirmación a recepción. No se realizan cobros en esta página.\n\nEstablecimiento\nHotel Jardín Demo\nCategoría\nEstándar\nEntrada\nSalida\nHabitaciones\nPersonas por habitación\nNombre\nCorreo para la confirmación\nTeléfono (opcional)\nConsultar disponibilidad y precio\n\nHoras locales de America/Managua. La solicitud conserva cupo temporal hasta la hora indicada en su confirmación.\n\nDesarrollado por ERPNext",
+      "url": "http://hospitality-acceptance.localhost:8089/hospitality",
+      "viewport": {
+        "height": 720,
+        "width": 1280
+      }
+    },
+    {
+      "label": "portal-one-room-quote",
+      "at": "2026-10-22T04:10:24.571Z",
+      "buttons": [
+        {
+          "disabled": false,
+          "text": "Consultar disponibilidad y precio"
+        },
+        {
+          "disabled": false,
+          "text": "Solicitar confirmación"
+        }
+      ],
+      "confirmation_token_present": false,
+      "inputs": [
+        {
+          "id": "hp-property",
+          "invalid": null,
+          "options": [
+            {
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "valid": true,
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "id": "hp-category",
+          "invalid": null,
+          "options": [
+            {
+              "label": "Estándar",
+              "value": "qmcbb8qlvg"
+            }
+          ],
+          "valid": true,
+          "value": "qmcbb8qlvg"
+        },
+        {
+          "id": "hp-start",
+          "invalid": null,
+          "valid": true,
+          "value": "2026-11-05T14:00"
+        },
+        {
+          "id": "hp-end",
+          "invalid": null,
+          "valid": true,
+          "value": "2026-11-06T12:00"
+        },
+        {
+          "id": "hp-quantity",
+          "invalid": null,
+          "valid": true,
+          "value": "1"
+        },
+        {
+          "id": "hp-people",
+          "invalid": null,
+          "valid": true,
+          "value": "2"
+        },
+        {
+          "id": "hp-name",
+          "invalid": null,
+          "valid": true,
+          "value": "Visitante de portal de aceptación"
+        },
+        {
+          "id": "hp-email",
+          "invalid": null,
+          "valid": true,
+          "value": "<redacted>"
+        },
+        {
+          "id": "hp-phone",
+          "invalid": null,
+          "valid": true,
+          "value": ""
+        }
+      ],
+      "text": "Inicio\nIniciar sesión\n\nRESERVAS EN LÍNEA\n\nPrepare su próxima estancia\n\nConsulte disponibilidad y solicite confirmación a recepción. No se realizan cobros en esta página.\n\nEstablecimiento\nHotel Jardín Demo\nCategoría\nEstándar\nEntrada\nSalida\nHabitaciones\nPersonas por habitación\nNombre\nCorreo para la confirmación\nTeléfono (opcional)\nConsultar disponibilidad y precio\nAlojamiento: 1500.00 NIO. Recepción confirmará las condiciones y los impuestos aplicables.\nSolicitar confirmación\n\nHoras locales de America/Managua. La solicitud conserva cupo temporal hasta la hora indicada en su confirmación.\n\nDesarrollado por ERPNext",
+      "url": "http://hospitality-acceptance.localhost:8089/hospitality",
+      "viewport": {
+        "height": 720,
+        "width": 1280
+      }
+    },
+    {
+      "label": "portal-one-room-price-ready",
+      "at": "2026-10-22T04:10:32.692Z",
+      "buttons": [
+        {
+          "disabled": false,
+          "text": "Consultar disponibilidad y precio"
+        },
+        {
+          "disabled": false,
+          "text": "Solicitar confirmación"
+        }
+      ],
+      "confirmation_token_present": false,
+      "inputs": [
+        {
+          "id": "hp-property",
+          "invalid": null,
+          "options": [
+            {
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "valid": true,
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "id": "hp-category",
+          "invalid": null,
+          "options": [
+            {
+              "label": "Estándar",
+              "value": "qmcbb8qlvg"
+            }
+          ],
+          "valid": true,
+          "value": "qmcbb8qlvg"
+        },
+        {
+          "id": "hp-start",
+          "invalid": null,
+          "valid": true,
+          "value": "2026-11-05T14:00"
+        },
+        {
+          "id": "hp-end",
+          "invalid": null,
+          "valid": true,
+          "value": "2026-11-06T12:00"
+        },
+        {
+          "id": "hp-quantity",
+          "invalid": null,
+          "valid": true,
+          "value": "1"
+        },
+        {
+          "id": "hp-people",
+          "invalid": null,
+          "valid": true,
+          "value": "2"
+        },
+        {
+          "id": "hp-name",
+          "invalid": null,
+          "valid": true,
+          "value": "Visitante de portal de aceptación"
+        },
+        {
+          "id": "hp-email",
+          "invalid": null,
+          "valid": true,
+          "value": "<redacted>"
+        },
+        {
+          "id": "hp-phone",
+          "invalid": null,
+          "valid": true,
+          "value": ""
+        }
+      ],
+      "text": "Inicio\nIniciar sesión\n\nRESERVAS EN LÍNEA\n\nPrepare su próxima estancia\n\nConsulte disponibilidad y solicite confirmación a recepción. No se realizan cobros en esta página.\n\nEstablecimiento\nHotel Jardín Demo\nCategoría\nEstándar\nEntrada\nSalida\nHabitaciones\nPersonas por habitación\nNombre\nCorreo para la confirmación\nTeléfono (opcional)\nConsultar disponibilidad y precio\nAlojamiento: 1500.00 NIO. Recepción confirmará las condiciones y los impuestos aplicables.\nSolicitar confirmación\n\nHoras locales de America/Managua. La solicitud conserva cupo temporal hasta la hora indicada en su confirmación.\n\nDesarrollado por ERPNext",
+      "url": "http://hospitality-acceptance.localhost:8089/hospitality",
+      "viewport": {
+        "height": 720,
+        "width": 1280
+      }
+    },
+    {
+      "label": "portal-edited-quote-invalidated",
+      "at": "2026-10-22T04:10:33.032Z",
+      "buttons": [
+        {
+          "disabled": false,
+          "text": "Consultar disponibilidad y precio"
+        }
+      ],
+      "confirmation_token_present": false,
+      "inputs": [
+        {
+          "id": "hp-property",
+          "invalid": null,
+          "options": [
+            {
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "valid": true,
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "id": "hp-category",
+          "invalid": null,
+          "options": [
+            {
+              "label": "Estándar",
+              "value": "qmcbb8qlvg"
+            }
+          ],
+          "valid": true,
+          "value": "qmcbb8qlvg"
+        },
+        {
+          "id": "hp-start",
+          "invalid": null,
+          "valid": true,
+          "value": "2026-11-05T14:00"
+        },
+        {
+          "id": "hp-end",
+          "invalid": null,
+          "valid": true,
+          "value": "2026-11-06T12:00"
+        },
+        {
+          "id": "hp-quantity",
+          "invalid": null,
+          "valid": true,
+          "value": "2"
+        },
+        {
+          "id": "hp-people",
+          "invalid": null,
+          "valid": true,
+          "value": "2"
+        },
+        {
+          "id": "hp-name",
+          "invalid": null,
+          "valid": true,
+          "value": "Visitante de portal de aceptación"
+        },
+        {
+          "id": "hp-email",
+          "invalid": null,
+          "valid": true,
+          "value": "<redacted>"
+        },
+        {
+          "id": "hp-phone",
+          "invalid": null,
+          "valid": true,
+          "value": ""
+        }
+      ],
+      "text": "Inicio\nIniciar sesión\n\nRESERVAS EN LÍNEA\n\nPrepare su próxima estancia\n\nConsulte disponibilidad y solicite confirmación a recepción. No se realizan cobros en esta página.\n\nEstablecimiento\nHotel Jardín Demo\nCategoría\nEstándar\nEntrada\nSalida\nHabitaciones\nPersonas por habitación\nNombre\nCorreo para la confirmación\nTeléfono (opcional)\nConsultar disponibilidad y precio\nConsulte nuevamente el precio después de cambiar los datos.\n\nHoras locales de America/Managua. La solicitud conserva cupo temporal hasta la hora indicada en su confirmación.\n\nDesarrollado por ERPNext",
+      "url": "http://hospitality-acceptance.localhost:8089/hospitality",
+      "viewport": {
+        "height": 720,
+        "width": 1280
+      }
+    },
+    {
+      "label": "portal-two-room-price-ready",
+      "at": "2026-10-22T04:10:52.009Z",
+      "buttons": [
+        {
+          "disabled": false,
+          "text": "Consultar disponibilidad y precio"
+        },
+        {
+          "disabled": false,
+          "text": "Solicitar confirmación"
+        }
+      ],
+      "confirmation_token_present": false,
+      "inputs": [
+        {
+          "id": "hp-property",
+          "invalid": null,
+          "options": [
+            {
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "valid": true,
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "id": "hp-category",
+          "invalid": null,
+          "options": [
+            {
+              "label": "Estándar",
+              "value": "qmcbb8qlvg"
+            }
+          ],
+          "valid": true,
+          "value": "qmcbb8qlvg"
+        },
+        {
+          "id": "hp-start",
+          "invalid": null,
+          "valid": true,
+          "value": "2026-11-05T14:00"
+        },
+        {
+          "id": "hp-end",
+          "invalid": null,
+          "valid": true,
+          "value": "2026-11-06T12:00"
+        },
+        {
+          "id": "hp-quantity",
+          "invalid": null,
+          "valid": true,
+          "value": "2"
+        },
+        {
+          "id": "hp-people",
+          "invalid": null,
+          "valid": true,
+          "value": "2"
+        },
+        {
+          "id": "hp-name",
+          "invalid": null,
+          "valid": true,
+          "value": "Visitante de portal de aceptación"
+        },
+        {
+          "id": "hp-email",
+          "invalid": null,
+          "valid": true,
+          "value": "<redacted>"
+        },
+        {
+          "id": "hp-phone",
+          "invalid": null,
+          "valid": true,
+          "value": ""
+        }
+      ],
+      "text": "Inicio\nIniciar sesión\n\nRESERVAS EN LÍNEA\n\nPrepare su próxima estancia\n\nConsulte disponibilidad y solicite confirmación a recepción. No se realizan cobros en esta página.\n\nEstablecimiento\nHotel Jardín Demo\nCategoría\nEstándar\nEntrada\nSalida\nHabitaciones\nPersonas por habitación\nNombre\nCorreo para la confirmación\nTeléfono (opcional)\nConsultar disponibilidad y precio\nAlojamiento: 3000.00 NIO. Recepción confirmará las condiciones y los impuestos aplicables.\nSolicitar confirmación\n\nHoras locales de America/Managua. La solicitud conserva cupo temporal hasta la hora indicada en su confirmación.\n\nDesarrollado por ERPNext",
+      "url": "http://hospitality-acceptance.localhost:8089/hospitality",
+      "viewport": {
+        "height": 720,
+        "width": 1280
+      }
+    },
+    {
+      "label": "portal-request-submitted",
+      "at": "2026-10-22T04:11:09.953Z",
+      "buttons": [
+        {
+          "disabled": true,
+          "text": "Consultar disponibilidad y precio"
+        },
+        {
+          "disabled": true,
+          "text": "Solicitar confirmación"
+        }
+      ],
+      "confirmation_token_present": false,
+      "inputs": [
+        {
+          "id": "hp-property",
+          "invalid": null,
+          "options": [
+            {
+              "label": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "valid": true,
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "id": "hp-category",
+          "invalid": null,
+          "options": [
+            {
+              "label": "Estándar",
+              "value": "qmcbb8qlvg"
+            }
+          ],
+          "valid": true,
+          "value": "qmcbb8qlvg"
+        },
+        {
+          "id": "hp-start",
+          "invalid": null,
+          "valid": true,
+          "value": "2026-11-05T14:00"
+        },
+        {
+          "id": "hp-end",
+          "invalid": null,
+          "valid": true,
+          "value": "2026-11-06T12:00"
+        },
+        {
+          "id": "hp-quantity",
+          "invalid": null,
+          "valid": true,
+          "value": "2"
+        },
+        {
+          "id": "hp-people",
+          "invalid": null,
+          "valid": true,
+          "value": "2"
+        },
+        {
+          "id": "hp-name",
+          "invalid": null,
+          "valid": true,
+          "value": "Visitante de portal de aceptación"
+        },
+        {
+          "id": "hp-email",
+          "invalid": null,
+          "valid": true,
+          "value": "<redacted>"
+        },
+        {
+          "id": "hp-phone",
+          "invalid": null,
+          "valid": true,
+          "value": ""
+        }
+      ],
+      "text": "Inicio\nIniciar sesión\n\nRESERVAS EN LÍNEA\n\nPrepare su próxima estancia\n\nConsulte disponibilidad y solicite confirmación a recepción. No se realizan cobros en esta página.\n\nEstablecimiento\nHotel Jardín Demo\nCategoría\nEstándar\nEntrada\nSalida\nHabitaciones\nPersonas por habitación\nNombre\nCorreo para la confirmación\nTeléfono (opcional)\nConsultar disponibilidad y precio\nAlojamiento: 3000.00 NIO. Recepción confirmará las condiciones y los impuestos aplicables.\nSolicitar confirmación\n\nHoras locales de America/Managua. La solicitud conserva cupo temporal hasta la hora indicada en su confirmación.\n\nDesarrollado por ERPNext",
+      "url": "http://hospitality-acceptance.localhost:8089/hospitality",
+      "viewport": {
+        "height": 720,
+        "width": 1280
+      }
+    },
+    {
+      "label": "portal-public-hold-confirmation",
+      "at": "2026-10-22T04:11:39.163Z",
+      "buttons": [],
+      "confirmation_token_present": true,
+      "inputs": [],
+      "text": "Inicio\nIniciar sesión\n\nCONFIRMACIÓN DE ALOJAMIENTO\n\nHotel Jardín Demo\n\nEstado: Solicitud recibida; pendiente de confirmación manual\n\nCupo conservado hasta: 21/10/2026 22:26\n\nEntrada: 05/11/2026 14:00\n\nSalida: 06/11/2026 12:00\n\nZona horaria: America/Managua\n\nAlojamiento: 3000.0 NIO\n\nEsta página no acredita un pago. Recepción debe confirmar la solicitud y los impuestos y condiciones aplicables.\n\nDesarrollado por ERPNext",
+      "url": "http://hospitality-acceptance.localhost:8089/hospitality-confirmation",
+      "viewport": {
+        "height": 720,
+        "width": 1280
+      }
+    },
+    {
+      "label": "portal-public-after-reception-confirmation",
+      "at": "2026-10-22T04:18:31.531Z",
+      "buttons": [],
+      "confirmation_token_present": true,
+      "inputs": [],
+      "text": "Inicio\nIniciar sesión\n\nCONFIRMACIÓN DE ALOJAMIENTO\n\nHotel Jardín Demo\n\nEstado: Solicitud convertida en reserva\n\nEntrada: 05/11/2026 14:00\n\nSalida: 06/11/2026 12:00\n\nZona horaria: America/Managua\n\nAlojamiento: 3000.0 NIO\n\nEsta página no acredita un pago. Recepción debe confirmar la solicitud y los impuestos y condiciones aplicables.\n\nDesarrollado por ERPNext",
+      "url": "http://hospitality-acceptance.localhost:8089/hospitality-confirmation",
+      "viewport": {
+        "height": 720,
+        "width": 1280
+      }
+    },
+    {
+      "label": "converted-confirmation-instructions-corrected",
+      "at": "2026-10-22T04:23:48.943Z",
+      "buttons": [],
+      "confirmation_token_present": true,
+      "inputs": [],
+      "text": "Inicio\nIniciar sesión\n\nCONFIRMACIÓN DE ALOJAMIENTO\n\nHotel Jardín Demo\n\nEstado: Solicitud convertida en reserva\n\nEntrada: 05/11/2026 14:00\n\nSalida: 06/11/2026 12:00\n\nZona horaria: America/Managua\n\nAlojamiento: 3000.0 NIO\n\nEsta página no acredita un pago.\n\nPara cambios o consultas sobre las condiciones e impuestos, contacte con recepción.\n\nDesarrollado por ERPNext",
+      "url": "http://hospitality-acceptance.localhost:8089/hospitality-confirmation",
+      "viewport": {
+        "height": 720,
+        "width": 1280
+      }
+    }
+  ]
+}

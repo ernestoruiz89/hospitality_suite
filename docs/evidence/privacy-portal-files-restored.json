@@ -1,0 +1,8 @@
+{
+  "original_physical_files": 741,
+  "all_original_bytes_preserved": true,
+  "native_artifacts_preserved_outside_site": 13,
+  "tree_sha256": "5e1ed3ba7eae4a20e0462d93394e890f64820af75c5f68d5547c8d1b7fc94d67",
+  "baseline_sha256": "d23194a63d01b0a7a722b9f079f5899687a536bc38f20c4f55dff8f4fb071939",
+  "successful_native_run_sha256": "b2bdf2959ecb1404beae1ddcb1257220a79a92bc0903fe0430e76c6971dd4f4c"
+}

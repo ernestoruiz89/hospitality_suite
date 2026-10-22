@@ -16,10 +16,10 @@ SITE='hospitality-acceptance.localhost'
 TARGET=BENCH/'sites'/SITE
 parser=argparse.ArgumentParser()
 parser.add_argument('action',choices=['before','after','cleanup','verify'])
-parser.add_argument('--phase',choices=['secondary-finance','secondary-flows'],required=True)
+parser.add_argument('--phase',choices=['secondary-finance','secondary-flows','privacy-portal'],required=True)
 parser.add_argument('--run-label',default='native-full-1')
 args=parser.parse_args()
-expected_tests={'secondary-finance':407,'secondary-flows':409}[args.phase]
+expected_tests={'secondary-finance':407,'secondary-flows':409,'privacy-portal':410}[args.phase]
 assert args.run_label in ['native-full-1','native-full-2','native-full-3']
 BASE=BENCH/f'.hospitality-{args.phase}-ux-baseline.json'
 STATE=BENCH/f'.hospitality-{args.phase}-native-files.json'

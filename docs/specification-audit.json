@@ -32,9 +32,12 @@
         "docs/PANEL_ESTANCIA_Y_ESTADOS.md",
         "docs/evidence/stay-panel-verification.json",
         "docs/ROPA_Y_POLITICAS_DESDE_PAGES.md",
-        "docs/evidence/secondary-flows-verification.json"
+        "docs/evidence/secondary-flows-verification.json",
+        "docs/RETENCION_Y_PORTAL_DESDE_PAGES.md",
+        "docs/evidence/privacy-portal-task-acceptance.json",
+        "docs/evidence/privacy-portal-verification.json"
       ],
-      "remaining": "T14 ropa y T18 políticas/configuración añadidos a la aceptación de Pages, con tres roles, 409 nativas/230 JS y restauración estricta. Continúan S04-20: retención/reintento, otros adjuntos privados y conversión del portal; después F26, paquete actualizado y entrega. 213 V/cinco I; objetivo completo aún no acreditado."
+      "remaining": "Aceptación de Pages completada con la colección acumulada de 22 familias, retención/reintento y portal comprobados, 410 nativas/232 JS. Continúan F26: actualización y recuperación coordinadas de código/base/archivos, paquete final actualizado y entrega. 214 V/cuatro I; la instalación independiente previa no incluye las últimas correcciones. OTA real aplazada por el usuario."
     },
     {
       "id": "S00-02",
@@ -350,9 +353,12 @@
         "docs/PANEL_ESTANCIA_Y_ESTADOS.md",
         "docs/evidence/stay-panel-verification.json",
         "docs/ROPA_Y_POLITICAS_DESDE_PAGES.md",
-        "docs/evidence/secondary-flows-verification.json"
+        "docs/evidence/secondary-flows-verification.json",
+        "docs/RETENCION_Y_PORTAL_DESDE_PAGES.md",
+        "docs/evidence/privacy-portal-task-acceptance.json",
+        "docs/evidence/privacy-portal-verification.json"
       ],
-      "remaining": "Continuar hasta cerrar retención/reintento, otros adjuntos y conversión del portal S04-20, además de F26/paquete/entrega. Ropa y las políticas recorridas quedan acreditadas con tres roles, 409 nativas/230 JS; no se reduce el alcance obligatorio."
+      "remaining": "Aceptación de Pages completada con la colección acumulada de 22 familias, retención/reintento y portal comprobados, 410 nativas/232 JS. Continúan F26: actualización y recuperación coordinadas de código/base/archivos, paquete final actualizado y entrega. 214 V/cuatro I; la instalación independiente previa no incluye las últimas correcciones. OTA real aplazada por el usuario."
     },
     {
       "id": "S01-13",
@@ -1218,7 +1224,10 @@
         "docs/PANEL_ESTANCIA_Y_ESTADOS.md",
         "docs/evidence/stay-panel-verification.json",
         "docs/ROPA_Y_POLITICAS_DESDE_PAGES.md",
-        "docs/evidence/secondary-flows-verification.json"
+        "docs/evidence/secondary-flows-verification.json",
+        "docs/RETENCION_Y_PORTAL_DESDE_PAGES.md",
+        "docs/evidence/privacy-portal-task-acceptance.json",
+        "docs/evidence/privacy-portal-verification.json"
       ],
       "remaining": ""
     },
@@ -1331,7 +1340,7 @@
       "line": 76,
       "kind": "enumerated",
       "requirement": "- Prueba los flujos completos desde estas páginas, no solamente desde formularios de administrador.",
-      "status": "I",
+      "status": "V",
       "implementation": [
         "hospitality_suite/public/js/hospitality.js",
         "hospitality_suite/public/js/hospitality_workflows.js",
@@ -1365,9 +1374,12 @@
         "docs/PANEL_ESTANCIA_Y_ESTADOS.md",
         "docs/evidence/stay-panel-verification.json",
         "docs/ROPA_Y_POLITICAS_DESDE_PAGES.md",
-        "docs/evidence/secondary-flows-verification.json"
+        "docs/evidence/secondary-flows-verification.json",
+        "docs/RETENCION_Y_PORTAL_DESDE_PAGES.md",
+        "docs/evidence/privacy-portal-task-acceptance.json",
+        "docs/evidence/privacy-portal-verification.json"
       ],
-      "remaining": "T11/T19 conservan la aceptación previa. Se añaden T14: envío/recepción/pérdida/reposición de ropa con Limpieza/Gerencia y ledger; T18: lavandería/clasificación/mínimos, penalizaciones y efecto de anticipos/garantías en Caja. 409 nativas/230 JS actuales. Completar retención/reintento, otros adjuntos privados y conversión del portal; no se atribuyen todas las variantes a estos 26 eventos de escritorio."
+      "remaining": ""
     },
     {
       "id": "S05-01",
@@ -5222,9 +5234,12 @@
         "docs/PANEL_ESTANCIA_Y_ESTADOS.md",
         "docs/evidence/stay-panel-verification.json",
         "docs/ROPA_Y_POLITICAS_DESDE_PAGES.md",
-        "docs/evidence/secondary-flows-verification.json"
+        "docs/evidence/secondary-flows-verification.json",
+        "docs/RETENCION_Y_PORTAL_DESDE_PAGES.md",
+        "docs/evidence/privacy-portal-task-acceptance.json",
+        "docs/evidence/privacy-portal-verification.json"
       ],
-      "remaining": "Completar S04-20 (retención/reintento, otros adjuntos y portal) y F26 con recuperación coordinada de código/base/archivos, paquete actualizado y entrega. La instalación independiente previa no incluye las últimas correcciones. 409 nativas/230 JS y restauración actual no sustituyen F26."
+      "remaining": "Aceptación de Pages completada con la colección acumulada de 22 familias, retención/reintento y portal comprobados, 410 nativas/232 JS. Continúan F26: actualización y recuperación coordinadas de código/base/archivos, paquete final actualizado y entrega. 214 V/cuatro I; la instalación independiente previa no incluye las últimas correcciones. OTA real aplazada por el usuario."
     },
     {
       "id": "S19-08",
@@ -5256,9 +5271,12 @@
         "docs/PANEL_ESTANCIA_Y_ESTADOS.md",
         "docs/evidence/stay-panel-verification.json",
         "docs/ROPA_Y_POLITICAS_DESDE_PAGES.md",
-        "docs/evidence/secondary-flows-verification.json"
+        "docs/evidence/secondary-flows-verification.json",
+        "docs/RETENCION_Y_PORTAL_DESDE_PAGES.md",
+        "docs/evidence/privacy-portal-task-acceptance.json",
+        "docs/evidence/privacy-portal-verification.json"
       ],
-      "remaining": "Cerrar los otros recorridos secundarios y fase 7/F26, paquete actualizado y entrega. ROPA_Y_POLITICAS_DESDE_PAGES.md acredita T14/variantes T18 y la corrección de penalizaciones con 409 nativas/230 JS, sin atribuir al tramo la entrega completa."
+      "remaining": "Aceptación de Pages completada con la colección acumulada de 22 familias, retención/reintento y portal comprobados, 410 nativas/232 JS. Continúan F26: actualización y recuperación coordinadas de código/base/archivos, paquete final actualizado y entrega. 214 V/cuatro I; la instalación independiente previa no incluye las últimas correcciones. OTA real aplazada por el usuario."
     },
     {
       "id": "S19-09",
