@@ -1,0 +1,246 @@
+{
+ "doctype": "DocType",
+ "name": "HS Petty Cash Rendition",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "hash",
+ "naming_rule": "Random",
+ "fields": [
+  {
+   "fieldname": "company",
+   "label": "Compañía",
+   "fieldtype": "Link",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "property",
+   "label": "Establecimiento",
+   "fieldtype": "Link",
+   "options": "HS Property",
+   "reqd": 1
+  },
+  {
+   "fieldname": "responsible",
+   "label": "Responsable",
+   "fieldtype": "Link",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "expenses",
+   "label": "Gastos incluidos",
+   "fieldtype": "Code",
+   "options": "JSON"
+  },
+  {
+   "fieldname": "currency",
+   "label": "Moneda",
+   "fieldtype": "Link",
+   "options": "Currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "expense_total",
+   "label": "Total de gastos aprobables",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency"
+  },
+  {
+   "fieldname": "expected_cash",
+   "label": "Efectivo esperado",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency"
+  },
+  {
+   "fieldname": "counted_cash",
+   "label": "Efectivo contado",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency"
+  },
+  {
+   "fieldname": "variance",
+   "label": "Diferencia de arqueo",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency"
+  },
+  {
+   "fieldname": "explanation",
+   "label": "Explicación de diferencia",
+   "fieldtype": "Small Text"
+  },
+  {
+   "fieldname": "status",
+   "label": "Estado",
+   "fieldtype": "Select",
+   "options": "Submitted\nReturned\nApproved\nPartially Reimbursed\nReimbursed",
+   "reqd": 1,
+   "default": "Submitted"
+  },
+  {
+   "fieldname": "submitted_by",
+   "label": "Presentado por",
+   "fieldtype": "Link",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "submitted_at",
+   "label": "Presentado el",
+   "fieldtype": "Datetime"
+  },
+  {
+   "fieldname": "reviewed_by",
+   "label": "Revisado por",
+   "fieldtype": "Link",
+   "options": "User"
+  },
+  {
+   "fieldname": "reviewed_at",
+   "label": "Revisado el",
+   "fieldtype": "Datetime"
+  },
+  {
+   "fieldname": "approved_business_date",
+   "label": "Fecha operativa de aprobación",
+   "fieldtype": "Date"
+  },
+  {
+   "fieldname": "review_note",
+   "label": "Nota de revisión",
+   "fieldtype": "Small Text"
+  },
+  {
+   "fieldname": "variance_journal",
+   "label": "Asiento de diferencia",
+   "fieldtype": "Link",
+   "options": "Journal Entry"
+  },
+  {
+   "fieldname": "variance_account",
+   "label": "Cuenta de diferencia",
+   "fieldtype": "Link",
+   "options": "Account"
+  }
+ ],
+ "field_order": [
+  "company",
+  "property",
+  "responsible",
+  "expenses",
+  "currency",
+  "expense_total",
+  "expected_cash",
+  "counted_cash",
+  "variance",
+  "explanation",
+  "status",
+  "submitted_by",
+  "submitted_at",
+  "reviewed_by",
+  "reviewed_at",
+  "approved_business_date",
+  "review_note",
+  "variance_journal",
+  "variance_account"
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Administrator",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Supervisor",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Receptionist",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Cashier",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Housekeeping",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Maintenance",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Accountant",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Auditor",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0
+}

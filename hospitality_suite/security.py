@@ -9,6 +9,7 @@ ACTIONS = {
     "setup": MANAGERS, "reserve": MANAGERS + ["HS Receptionist"],
     "stay": MANAGERS + ["HS Receptionist"],
     "finance": MANAGERS + ["HS Cashier", "HS Accountant"],
+    "petty": [role for role in ROLES if role != "HS Auditor"],
     "clean": MANAGERS + ["HS Housekeeping"], "inspect": MANAGERS,
     "maintain": MANAGERS + ["HS Maintenance"],
     "service": MANAGERS + ["HS Receptionist", "HS Cashier"],
@@ -94,19 +95,32 @@ def property_document(prop,dt,name,action=None):
 
 
 def has_scope_permission(doc, user=None, permission_type=None, **kwargs):
+    user = user or frappe.session.user
     prop = doc.name if doc.doctype == "HS Property" else doc.get("property")
     if not prop or prop not in allowed_properties(user):
         return False
+    if doc.doctype in ("HS Petty Cash Expense", "HS Petty Cash Rendition", "HS Petty Cash Handover") and not is_system(user) and not set(frappe.get_roles(user)).intersection(ACTIONS["finance"] + ACTIONS["report"]):
+        if doc.doctype == "HS Petty Cash Handover":
+            return user in (doc.outgoing, doc.incoming)
+        return user == doc.responsible or user == frappe.db.get_value("HS Property", prop, "petty_cash_responsible")
     return True  # Controller hooks can restrict; native role permissions still apply.
 
 
 def scope_query(dt, user=None):
+    user = user or frappe.session.user
     props = allowed_properties(user)
     if not props:
         return "1=0"
     field = "name" if dt == "HS Property" else "property"
     names = ",".join(frappe.db.escape(v) for v in props)
-    return f"`tab{dt}`.`{field}` IN ({names})"
+    rule=f"`tab{dt}`.`{field}` IN ({names})"
+    if dt in ("HS Petty Cash Expense", "HS Petty Cash Rendition", "HS Petty Cash Handover") and not is_system(user) and not set(frappe.get_roles(user)).intersection(ACTIONS["finance"] + ACTIONS["report"]):
+        escaped=frappe.db.escape(user)
+        if dt == "HS Petty Cash Handover":
+            rule+=f" AND (`tab{dt}`.`outgoing`={escaped} OR `tab{dt}`.`incoming`={escaped})"
+        else:
+            rule+=f" AND (`tab{dt}`.`responsible`={escaped} OR EXISTS(SELECT name FROM `tabHS Property` p WHERE p.name=`tab{dt}`.`property` AND p.petty_cash_responsible={escaped}))"
+    return rule
 
 
 for _dt in SCOPED:
@@ -168,6 +182,8 @@ def file_permission(doc,user=None,permission_type=None,**kwargs):
             actions={"HS Guest":["guest","finance","report"],"HS Maintenance Order":["maintain","inspect","report"],"HS Incident":["incident","inspect","report"]}.get(dt)
             if actions and not any(roles.intersection(ACTIONS[action]) for action in actions):
                 return False
+        if dt in ("HS Petty Cash Expense", "HS Petty Cash Rendition", "HS Petty Cash Handover") and not has_scope_permission(frappe.get_doc(dt,name),user,permission_type):
+            return False
     if dt in STANDARD_SCOPED and not standard_permission(frappe.get_doc(dt,name),user,permission_type):
         return False
     if dt in ("Customer","Supplier","Contact","Address") and not party_permission(frappe.get_doc(dt,name),user):
@@ -184,7 +200,6 @@ def file_query(user=None):
         return ""
     from hospitality_suite.schema import SCHEMA
     roles=set(frappe.get_roles(user))
-    props=",".join(frappe.db.escape(p) for p in allowed_properties(user)) or "NULL"
     targets=",".join(frappe.db.escape(dt) for dt in SCOPED)
     branches=[]
     for dt in SCOPED:
@@ -193,8 +208,7 @@ def file_query(user=None):
         actions={"HS Guest":["guest","finance","report"],"HS Maintenance Order":["maintain","inspect","report"],"HS Incident":["incident","inspect","report"]}.get(dt)
         if actions and not any(roles.intersection(ACTIONS[a]) for a in actions):
             continue
-        field="name" if dt=="HS Property" else "property"
-        branches.append(f"(`tabFile`.attached_to_doctype={frappe.db.escape(dt)} AND EXISTS(SELECT name FROM `tab{dt}` WHERE name=`tabFile`.attached_to_name AND `{field}` IN ({props})))")
+        branches.append(f"(`tabFile`.attached_to_doctype={frappe.db.escape(dt)} AND EXISTS(SELECT name FROM `tab{dt}` WHERE name=`tabFile`.attached_to_name AND ({scope_query(dt,user)})))")
     conditions=[f"(COALESCE(`tabFile`.attached_to_doctype,'') NOT IN ({targets}) OR ({' OR '.join(branches) or '1=0'}))"]
     for dt in STANDARD_SCOPED:
         rule=standard_query(dt,user)
@@ -381,6 +395,39 @@ def guard_cancel(doc,method=None):
             originals=frappe.get_all("HS Payment",filters={field:doc.name,"status":"Posted"},pluck="name")
             if originals and frappe.db.exists("HS Payment",{"source_payment":["in",originals],"status":"Posted"}):
                 frappe.throw(frappe._("Revierta primero las aplicaciones, devoluciones o liquidaciones dependientes de este movimiento"))
+        if doc.doctype == "Journal Entry":
+            from hospitality_suite.pricing import decimal
+            from hospitality_suite.financial_movements import balance
+            for movement in frappe.get_all("HS Treasury Movement", filters={"journal_entry": doc.name, "status": "Posted"}, fields=["name", "kind", "rendition"]):
+                row = frappe.get_doc("HS Treasury Movement", movement.name)
+                if str(row.business_date) != str(frappe.db.get_value("HS Property", prop_name, "business_date")):
+                    frappe.throw(frappe._("No revierta movimientos financieros de una fecha operativa cerrada"))
+                if row.shift and frappe.db.get_value("HS Shift", row.shift, "status") != "Open":
+                    frappe.throw(frappe._("No revierta movimientos de un turno cerrado"))
+                if movement.kind in ("Initial Fund", "Replenishment") and balance(frappe.get_doc("HS Property", prop_name)) < decimal(row.amount):
+                    frappe.throw(frappe._("La reversión dejaría Caja Chica con saldo negativo"))
+                if row.shift and movement.kind in ("Other Income", "Loan Received", "Capital Contribution"):
+                    from hospitality_suite.cashier import expected
+                    shift = frappe.get_doc("HS Shift", row.shift)
+                    if decimal(expected(shift).get(row.currency, 0)) < decimal(row.amount):
+                        frappe.throw(frappe._("La reversión dejaría el turno sin efectivo suficiente"))
+                if movement.kind in ("Loan Received", "Capital Contribution") and frappe.db.exists("HS Treasury Movement", {"source_movement": movement.name, "status": ["!=", "Cancelled"]}):
+                    frappe.throw(frappe._("Revierta primero las devoluciones vinculadas a esta entrada"))
+                if movement.kind == "Initial Fund" and frappe.db.exists("HS Petty Cash Expense", {"property": prop_name, "status": "Posted"}):
+                    frappe.throw(frappe._("Revierta primero los gastos del fondo inicial"))
+            expense = frappe.db.get_value("HS Petty Cash Expense", {"journal_entry": doc.name, "status": "Posted"}, ["name", "rendition", "business_date"], as_dict=True)
+            if expense and str(expense.business_date) != str(frappe.db.get_value("HS Property", prop_name, "business_date")):
+                frappe.throw(frappe._("No revierta gastos de Caja Chica de una fecha operativa cerrada"))
+            if expense and expense.rendition and frappe.db.get_value("HS Petty Cash Rendition", expense.rendition, "status") not in ("Returned",):
+                frappe.throw(frappe._("Devuelva la rendición antes de revertir este gasto"))
+            variance = frappe.db.get_value("HS Petty Cash Rendition", {"variance_journal": doc.name}, ["name", "variance", "status", "approved_business_date"], as_dict=True)
+            if variance:
+                if str(variance.approved_business_date) != str(frappe.db.get_value("HS Property", prop_name, "business_date")):
+                    frappe.throw(frappe._("No revierta diferencias de una fecha operativa cerrada"))
+                if decimal(variance.variance) > 0 and balance(frappe.get_doc("HS Property", prop_name)) < decimal(variance.variance):
+                    frappe.throw(frappe._("La reversión del sobrante dejaría Caja Chica negativa"))
+            if frappe.db.exists("HS Petty Cash Rendition", {"variance_journal": doc.name, "status": ["in", ["Partially Reimbursed", "Reimbursed"]]}):
+                frappe.throw(frappe._("Revierta primero las reposiciones antes de cancelar el ajuste"))
 
 
 def reference_reconciliation(doc,original):

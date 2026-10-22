@@ -104,7 +104,34 @@
    "write": 1
   },
   {
+   "role": "HS Receptionist",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
    "role": "HS Cashier",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Housekeeping",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Maintenance",
    "read": 1,
    "report": 1,
    "export": 0,

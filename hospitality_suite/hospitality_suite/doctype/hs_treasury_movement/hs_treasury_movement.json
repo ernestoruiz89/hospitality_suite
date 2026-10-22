@@ -1,0 +1,232 @@
+{
+ "doctype": "DocType",
+ "name": "HS Treasury Movement",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "hash",
+ "naming_rule": "Random",
+ "fields": [
+  {
+   "fieldname": "company",
+   "label": "Compañía",
+   "fieldtype": "Link",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "property",
+   "label": "Establecimiento",
+   "fieldtype": "Link",
+   "options": "HS Property",
+   "reqd": 1
+  },
+  {
+   "fieldname": "kind",
+   "label": "Tipo",
+   "fieldtype": "Select",
+   "options": "Initial Fund\nReplenishment\nOther Income\nLoan Received\nLoan Repayment\nCapital Contribution\nCapital Withdrawal",
+   "reqd": 1,
+   "default": "Initial Fund"
+  },
+  {
+   "fieldname": "concept",
+   "label": "Concepto",
+   "fieldtype": "Link",
+   "options": "HS Treasury Concept"
+  },
+  {
+   "fieldname": "concept_label",
+   "label": "Concepto original",
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "source_movement",
+   "label": "Entrada original",
+   "fieldtype": "Link",
+   "options": "HS Treasury Movement"
+  },
+  {
+   "fieldname": "rendition",
+   "label": "Rendición",
+   "fieldtype": "Link",
+   "options": "HS Petty Cash Rendition"
+  },
+  {
+   "fieldname": "shift",
+   "label": "Turno",
+   "fieldtype": "Link",
+   "options": "HS Shift"
+  },
+  {
+   "fieldname": "method",
+   "label": "Medio de pago",
+   "fieldtype": "Link",
+   "options": "HS Payment Method"
+  },
+  {
+   "fieldname": "cash_account",
+   "label": "Cuenta de Caja o banco",
+   "fieldtype": "Link",
+   "options": "Account"
+  },
+  {
+   "fieldname": "counter_account",
+   "label": "Cuenta de contrapartida",
+   "fieldtype": "Link",
+   "options": "Account",
+   "reqd": 1
+  },
+  {
+   "fieldname": "currency",
+   "label": "Moneda",
+   "fieldtype": "Link",
+   "options": "Currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amount",
+   "label": "Importe",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency"
+  },
+  {
+   "fieldname": "business_date",
+   "label": "Fecha operativa",
+   "fieldtype": "Date"
+  },
+  {
+   "fieldname": "reference",
+   "label": "Referencia",
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "reason",
+   "label": "Motivo",
+   "fieldtype": "Small Text"
+  },
+  {
+   "fieldname": "status",
+   "label": "Estado",
+   "fieldtype": "Select",
+   "options": "Pending Approval\nApproved\nPosted\nCancelled",
+   "reqd": 1,
+   "default": "Pending Approval"
+  },
+  {
+   "fieldname": "requested_by",
+   "label": "Solicitado por",
+   "fieldtype": "Link",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "approved_by",
+   "label": "Aprobado por",
+   "fieldtype": "Link",
+   "options": "User"
+  },
+  {
+   "fieldname": "approved_at",
+   "label": "Aprobación registrada",
+   "fieldtype": "Datetime"
+  },
+  {
+   "fieldname": "journal_entry",
+   "label": "Asiento contable",
+   "fieldtype": "Link",
+   "options": "Journal Entry"
+  }
+ ],
+ "field_order": [
+  "company",
+  "property",
+  "kind",
+  "concept",
+  "concept_label",
+  "source_movement",
+  "rendition",
+  "shift",
+  "method",
+  "cash_account",
+  "counter_account",
+  "currency",
+  "amount",
+  "business_date",
+  "reference",
+  "reason",
+  "status",
+  "requested_by",
+  "approved_by",
+  "approved_at",
+  "journal_entry"
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Administrator",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Supervisor",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Cashier",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Accountant",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Auditor",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0
+}

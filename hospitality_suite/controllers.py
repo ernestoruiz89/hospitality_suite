@@ -120,6 +120,8 @@ class ScopedDocument(Document):
             if self.kind!="Maintenance" or not order or order.property!=self.property or not order.until_reopened:
                 frappe.throw(_("Solo un bloqueo de mantenimiento hasta reapertura puede omitir la fecha final"))
         if self.doctype == "HS Property":
+            from hospitality_suite.financial_movements import validate_property
+            validate_property(self, check_history=True)
             from hospitality_suite.service_accounting import validate_configuration
             validate_configuration(self)
             from hospitality_suite.time import cutoff_time
@@ -246,6 +248,9 @@ class ScopedDocument(Document):
             self.currency=frappe.db.get_value("Company",self.company,"default_currency")
             if account.company!=self.company or account.is_group or account.root_type!="Expense" or account.account_currency!=self.currency or self.max_amount<0:
                 frappe.throw(frappe._("Configure una cuenta de gasto de la compañía en moneda base y un límite no negativo"))
+        if self.doctype=="HS Treasury Concept":
+            from hospitality_suite.financial_movements import validate_concept
+            validate_concept(self)
         if self.doctype=="HS Equipment":
             from hospitality_suite.equipment import validate_equipment
             validate_equipment(self)

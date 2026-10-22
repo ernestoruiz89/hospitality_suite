@@ -1,0 +1,200 @@
+{
+ "doctype": "DocType",
+ "name": "HS Petty Cash Handover",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "hash",
+ "naming_rule": "Random",
+ "fields": [
+  {
+   "fieldname": "company",
+   "label": "Compañía",
+   "fieldtype": "Link",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "property",
+   "label": "Establecimiento",
+   "fieldtype": "Link",
+   "options": "HS Property",
+   "reqd": 1
+  },
+  {
+   "fieldname": "outgoing",
+   "label": "Responsable saliente",
+   "fieldtype": "Link",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "incoming",
+   "label": "Responsable entrante",
+   "fieldtype": "Link",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "requested_by",
+   "label": "Solicitado por",
+   "fieldtype": "Link",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "expected_cash",
+   "label": "Efectivo esperado",
+   "fieldtype": "Currency",
+   "default": 0
+  },
+  {
+   "fieldname": "counted_cash",
+   "label": "Efectivo contado",
+   "fieldtype": "Currency",
+   "default": 0
+  },
+  {
+   "fieldname": "reason",
+   "label": "Motivo",
+   "fieldtype": "Small Text"
+  },
+  {
+   "fieldname": "status",
+   "label": "Estado",
+   "fieldtype": "Select",
+   "options": "Awaiting Acceptance\nCompleted\nCancelled",
+   "reqd": 1,
+   "default": "Awaiting Acceptance"
+  },
+  {
+   "fieldname": "outgoing_accepted",
+   "label": "Aceptado por saliente",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "incoming_accepted",
+   "label": "Aceptado por entrante",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "requested_at",
+   "label": "Solicitado el",
+   "fieldtype": "Datetime"
+  },
+  {
+   "fieldname": "completed_at",
+   "label": "Finalización registrada",
+   "fieldtype": "Datetime"
+  }
+ ],
+ "field_order": [
+  "company",
+  "property",
+  "outgoing",
+  "incoming",
+  "requested_by",
+  "expected_cash",
+  "counted_cash",
+  "reason",
+  "status",
+  "outgoing_accepted",
+  "incoming_accepted",
+  "requested_at",
+  "completed_at"
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Administrator",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Supervisor",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Receptionist",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Cashier",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Housekeeping",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Maintenance",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Accountant",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Auditor",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0
+}

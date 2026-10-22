@@ -4,7 +4,7 @@ import json
 import frappe
 from frappe.utils import now_datetime
 
-from hospitality_suite import operations, cashier, housekeeping, inventory, accounting, closing, linen, portal,timing,direct_sales,treasury,procurement,privacy,tickets,credit,day_pass
+from hospitality_suite import operations, cashier, housekeeping, inventory, accounting, closing, linen, portal,timing,direct_sales,treasury,procurement,privacy,tickets,credit,day_pass,financial_movements
 from hospitality_suite.security import allowed_properties, require, document, ACTIONS, is_system, selected_property
 from hospitality_suite.service import command, insert, audit, canonical
 from hospitality_suite.time import to_site, now_local
@@ -53,6 +53,18 @@ COMMANDS = {
     "register_supplier":("inventory",procurement.register_supplier),
     "create_warehouse":("inventory",procurement.create_warehouse),"stock_policy":("setup",procurement.stock_policy),
     "retire_sensitive":("approve",privacy.retire),"retry_retention":("approve",privacy.retry),
+    "petty_fund": ("finance", financial_movements.fund_transfer),
+    "petty_expense": ("petty", financial_movements.petty_expense),
+    "petty_correct": ("petty", financial_movements.correct_expense),
+    "petty_rendition": ("petty", financial_movements.submit_rendition),
+    "petty_review": ("approve", financial_movements.review_rendition),
+    "petty_handover": ("approve", financial_movements.request_handover),
+    "petty_accept": ("petty", financial_movements.accept_handover),
+    "finance_request": ("finance", financial_movements.financing_request),
+    "finance_approve": ("approve", financial_movements.approve_financing),
+    "finance_post": ("finance", financial_movements.post_financial),
+    "finance_reverse": ("approve", financial_movements.reverse),
+    "finance_concept": ("setup", financial_movements.update_concept),
 }
 
 
@@ -68,13 +80,15 @@ def execute(property_name, action, request_key, data=None):
 
 @frappe.whitelist()
 def preview(property_name, data, action="reserve"):
-    permission="inventory" if action=="purchase_order" else "approve" if action in ("adjust_stock","retire_sensitive","credit_note") else "finance" if action in ("invoice","payment","direct_sale","day_pass_no_room","settle_payment","supplier_payment") else "reserve" if action in ("reserve","booking_status","modify_reservation","convert_portal","confirm_booking_draft") else "stay"
+    permission="inventory" if action=="purchase_order" else "approve" if action in ("adjust_stock","retire_sensitive","credit_note") else "finance" if action in ("invoice","payment","direct_sale","day_pass_no_room","settle_payment","supplier_payment","finance_post") else "reserve" if action in ("reserve","booking_status","modify_reservation","convert_portal","confirm_booking_draft") else "stay"
     prop = require(property_name, permission)
     with selected_property(prop):
         return _preview(prop,payload(data),action)
 
 
 def _preview(prop,data,action):
+    if action == "finance_post":
+        return financial_movements.financial_quote(prop,data)
     if action == 'confirm_booking_draft':
         return booking_drafts.preview(prop,data)
     if action=='invoice':
@@ -192,6 +206,11 @@ def bootstrap(property_name=None):
     if not property_name:
         return result
     prop = require(property_name)
+    petty_visible=(may("finance") or may("report") or prop.petty_cash_responsible==frappe.session.user or
+                   frappe.db.exists("HS Petty Cash Handover", {"property":prop.name,"status":"Awaiting Acceptance","incoming":frappe.session.user}) or
+                   frappe.db.exists("HS Petty Cash Handover", {"property":prop.name,"status":"Awaiting Acceptance","outgoing":frappe.session.user}))
+    if not petty_visible:
+        result["pages"]=[p for p in result["pages"] if p["route"]!="hospitality-petty-cash"]
     result["inventory_currency"]=frappe.db.get_value("Company",prop.company,"default_currency")
     result["default_warehouse"]=prop.warehouse
     result["property_now"] = now_local(prop).isoformat()
@@ -236,12 +255,21 @@ def bootstrap(property_name=None):
         from hospitality_suite.native_pos import movements
         result["native_pos"]=[{**row,"amount":str(row["amount"])} for row in movements(prop.name)]
         result["expense_categories"]=project("HS Expense Category",prop)
+        result["treasury_concepts"]=project("HS Treasury Concept",prop)
+        result["treasury_movements"]=project("HS Treasury Movement",prop)
         result["suppliers"]=project("HS Supplier",prop)
         result["purchase_orders"]=frappe.get_list("Purchase Order",filters={"hs_property":prop.name,"docstatus":1,"status":["not in",["Closed","Cancelled","Completed"]]},fields=["name","supplier","currency","grand_total","schedule_date"],limit=500)
         for order in result["purchase_orders"]:
             order["items"]=[dict(name=r.name,item=r.item_code,quantity=r.qty,received_quantity=r.received_qty,rate=r.rate) for r in frappe.get_doc("Purchase Order",order.name).items]
         result["purchase_receipts"]=frappe.get_list("Purchase Receipt",filters={"hs_property":prop.name,"docstatus":1,"per_billed":["<",100],"is_return":0},fields=["name","supplier","currency","grand_total"],limit=500)
         result["purchase_invoices"]=frappe.get_list("Purchase Invoice",filters={"hs_property":prop.name,"docstatus":1,"outstanding_amount":[">",0],"is_return":0},fields=["name","supplier","currency","outstanding_amount","bill_no"],limit=500)
+    if petty_visible:
+        result["petty_cash"]=financial_movements.fund_view(prop)
+        result["petty_expenses"]=project("HS Petty Cash Expense",prop)
+        result["petty_renditions"]=project("HS Petty Cash Rendition",prop)
+        result["petty_handovers"]=project("HS Petty Cash Handover",prop)
+        if "expense_categories" not in result:
+            result["expense_categories"]=project("HS Expense Category",prop)
     if any(may(a) for a in ("inventory","clean","maintain","report","service")):
         result["warehouses"]=[dict(name=n,warehouse_name=frappe.db.get_value("Warehouse",n,"warehouse_name")) for n in procurement.warehouses(prop)]
     result["cleaning"] = project("HS Cleaning Task", prop, ["name", "room", "kind", "status", "priority", "assigned_to", "modified", "checklist", "notes","started_at","completed_at","inspected_by"])
@@ -475,7 +503,7 @@ def save_setup(property_name, section, data, request_key, expected_modified=None
         from hospitality_suite.mode import normalize_mode
         values["mode"] = normalize_mode(values["mode"])
     allowed = {
-        "property": ["lodging_charge_policy", "brand_name", "mode", "time_zone", "check_in_time", "check_out_time", "cleaning_minutes", "inspection_required", "discreet_mode", "hold_minutes", "guest_id_required", "allow_credit", "close_time", "retention_days", "portal_enabled", "cost_center", "warehouse", "laundry_warehouse", "receivable_account", "guarantee_account", "cash_transfer_account", "price_list", "lodging_item", "day_pass_item", "tax_template", "tax_policy_confirmed", "financial_enabled", "cancellation_fee_mode", "cancellation_fee_value", "no_show_fee_mode", "no_show_fee_value", "penalty_item", "early_hour_rate", "late_hour_rate", "schedule_grace_minutes", "schedule_rounding_minutes", "timing_item", "checkout_inspection_required", "checkout_quote_minutes", "cash_denominations"],
+        "property": ["lodging_charge_policy", "brand_name", "mode", "time_zone", "check_in_time", "check_out_time", "cleaning_minutes", "inspection_required", "discreet_mode", "hold_minutes", "guest_id_required", "allow_credit", "close_time", "retention_days", "portal_enabled", "cost_center", "warehouse", "laundry_warehouse", "receivable_account", "guarantee_account", "cash_transfer_account", "petty_cash_account", "petty_cash_responsible", "petty_cash_overage_account", "petty_cash_shortage_account", "price_list", "lodging_item", "day_pass_item", "tax_template", "tax_policy_confirmed", "financial_enabled", "cancellation_fee_mode", "cancellation_fee_value", "no_show_fee_mode", "no_show_fee_value", "penalty_item", "early_hour_rate", "late_hour_rate", "schedule_grace_minutes", "schedule_rounding_minutes", "timing_item", "checkout_inspection_required", "checkout_quote_minutes", "cash_denominations"],
         "room": ["room_number", "category", "floor", "zone", "beds", "parking", "active"],
         "category": ["category_name", "capacity", "amenities","max_extra_beds","portal_description","portal_image"],
         "rate": ["title", "category", "mode", "day_pass", "currency", "amount", "block_hours", "extra_hour_rate", "grace_minutes", "rounding_minutes", "additional_person_rate", "included_people","extra_bed_rate", "priority", "valid_from", "valid_to", "weekdays", "customer", "night_start","night_end","active"],
@@ -487,6 +515,7 @@ def save_setup(property_name, section, data, request_key, expected_modified=None
     allowed["rate"].append("included_services")
     allowed["payment_method"]+=list(treasury.METHOD_FIELDS)
     allowed["expense_category"]=["label","account","max_amount","active"]
+    allowed["treasury_concept"]=["label","nature","account","active"]
     allowed["supplier"]=["supplier","active"]
     allowed["equipment"]=["equipment_code","label","room","asset","active","instructions"]
     if "included_services" in values:
@@ -504,7 +533,7 @@ def save_setup(property_name, section, data, request_key, expected_modified=None
             prop.save()
             doc = prop
         else:
-            dt = {"room": "HS Room", "category": "HS Category", "rate": "HS Rate", "payment_method": "HS Payment Method","billing_party":"HS Billing Party","expense_category":"HS Expense Category","supplier":"HS Supplier","equipment":"HS Equipment"}[section]
+            dt = {"room": "HS Room", "category": "HS Category", "rate": "HS Rate", "payment_method": "HS Payment Method","billing_party":"HS Billing Party","expense_category":"HS Expense Category","treasury_concept":"HS Treasury Concept","supplier":"HS Supplier","equipment":"HS Equipment"}[section]
             doc = insert(dt, prop, **values)
         if section!='rate':audit(prop, "Setup " + section, doc)
         return dict(name=doc.name)

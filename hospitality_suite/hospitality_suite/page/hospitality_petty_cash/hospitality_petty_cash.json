@@ -1,0 +1,40 @@
+{
+ "doctype": "Page",
+ "name": "hospitality-petty-cash",
+ "page_name": "hospitality-petty-cash",
+ "title": "Caja Chica",
+ "module": "Hospitality Suite",
+ "standard": "Yes",
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "HS Administrator"
+  },
+  {
+   "role": "HS Manager"
+  },
+  {
+   "role": "HS Supervisor"
+  },
+  {
+   "role": "HS Receptionist"
+  },
+  {
+   "role": "HS Cashier"
+  },
+  {
+   "role": "HS Housekeeping"
+  },
+  {
+   "role": "HS Maintenance"
+  },
+  {
+   "role": "HS Accountant"
+  },
+  {
+   "role": "HS Auditor"
+  }
+ ]
+}

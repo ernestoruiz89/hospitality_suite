@@ -233,6 +233,16 @@ En Consumos e inventario, Actualizar ofrece acciones según el estado del servic
 
 En Existencias por ubicación seleccione el almacén. Disponible, Mínimo, Cantidad a reponer y Reponer corresponden a esa ubicación. Una consulta en curso muestra carga y un error permite reintentar. Los activos muestran Registro de activos, con cantidades/mínimos no aplicables. Los mínimos y la clasificación se configuran desde Configuración → Clasificación y mínimos, usando Item Reorder estándar.
 
+## Caja Chica y otros movimientos financieros
+
+Gerencia configura en cada establecimiento una cuenta exclusiva de Caja Chica, responsable activo y cuentas de ingreso por sobrante y gasto por faltante. Hasta completar las cuatro opciones, Caja Chica permanece inactiva. Desde **Caja Chica**, Caja entrega una sola vez el fondo inicial desde un turno abierto en moneda base. El responsable asignado registra cada gasto con categoría existente, beneficiario, concepto y referencia escrita del comprobante; el archivo es opcional. El desembolso reduce el saldo inmediatamente y respeta el límite de la categoría.
+
+El responsable presenta la rendición con conteo físico. La presentación fija gastos, saldo esperado y diferencia. Gerencia, con un usuario distinto, puede devolverla para corregir datos descriptivos y presentarla otra vez, o aprobarla. Un sobrante o faltante justificado se contabiliza con las cuentas ya configuradas. Para corregir importe o cuenta, Gerencia revierte el asiento con motivo y se registra un nuevo gasto. Caja repone desde un turno abierto todo o parte de los gastos aprobados aún pendientes. El faltante nunca amplía el importe reponible. El traspaso de responsable exige arqueo sin diferencia y aceptación de ambos usuarios.
+
+En **Otros movimientos**, Gerencia configura conceptos activos de ingreso sin factura, préstamo o capital con su cuenta de ingreso, pasivo o patrimonio. Caja/Contabilidad puede registrar otro ingreso de inmediato después de revisar el asiento. Un préstamo, aporte, devolución de principal o retiro requiere solicitud y aprobación previa por otro usuario. Caja necesita turno abierto y efectivo disponible para salidas; banco requiere cuenta bancaria en moneda base y referencia. Las devoluciones quedan enlazadas a su entrada original y no superan su principal pendiente. Intereses, impuestos y operaciones que requieren factura se registran en ERPNext.
+
+Gerencia puede consultar **Caja Chica**, **Rendiciones de Caja Chica** y **Movimientos financieros** en Reportes. El arqueo considera entradas y salidas de efectivo; el cierre conserva las fuentes y totales de Caja Chica y financiación por separado de producción y cobros de huéspedes.
+
 ## Resolver pendientes del cierre — 0.7.5
 
 La fecha operativa permanece fija hasta confirmar el cierre. El período va desde la hora de corte de esa fecha hasta el corte del día siguiente, sin incluir ese último instante. Configure la hora en Configuración → Horarios y políticas; use 00:00 para medianoche. Cambiar el corte no avanza la fecha ni cambia resúmenes guardados.

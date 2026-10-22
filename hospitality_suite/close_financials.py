@@ -1,5 +1,6 @@
 """Captured financial totals with explicit periods, currencies and native sources."""
 from collections import defaultdict
+from decimal import Decimal
 
 import frappe
 from frappe.utils import getdate
@@ -10,7 +11,10 @@ from hospitality_suite.service import current_all
 
 METRICS=("production","invoices_net","invoices_tax","invoices_total","credit_notes_total","rounding_adjustment",
          "payable_billed","payments","advances","guarantees","refunds","guarantee_refunds","guarantees_applied","pos_collections","pos_refunds",
-         "net_customer_receipts","pending_charges","scheduled_charges","receivables","customer_credits","unallocated_advances","guarantees_held")
+         "net_customer_receipts","pending_charges","scheduled_charges","receivables","customer_credits","unallocated_advances","guarantees_held",
+         "petty_initial","petty_replenishment","petty_expenses","petty_overage","petty_shortage",
+         "other_income","loans_received","loans_repaid","capital_contributed","capital_withdrawn",
+         "treasury_cash_in","treasury_cash_out","treasury_bank_in","treasury_bank_out")
 
 GROUPS=(
     ("Producción operativa",(("production","Importe de cargos y ventas registrados"),)),
@@ -19,6 +23,13 @@ GROUPS=(
     ("Movimientos de clientes por fecha operativa",(("payments","Cobros de facturas"),("advances","Anticipos recibidos"),("guarantees","Garantías recibidas"),
         ("refunds","Devoluciones de cobros y anticipos"),("guarantee_refunds","Garantías devueltas"),("pos_collections","Cobros POS nativos, netos de vuelto"),("pos_refunds","Devoluciones POS nativas"),("net_customer_receipts","Dinero recibido de clientes, neto de devoluciones"),
         ("guarantees_applied","Garantías aplicadas, sin nuevo ingreso de dinero"))),
+    ("Caja Chica por fecha operativa",(("petty_initial","Fondo inicial entregado"),("petty_replenishment","Reposiciones entregadas"),
+        ("petty_expenses","Desembolsos contabilizados"),("petty_overage","Sobrantes aprobados"),("petty_shortage","Faltantes aprobados"))),
+    ("Otros movimientos, separados de ventas y cobros",(("other_income","Otros ingresos sin factura"),
+        ("loans_received","Préstamos recibidos"),("loans_repaid","Principal de préstamos devuelto"),
+        ("capital_contributed","Aportes de capital"),("capital_withdrawn","Retiros de capital"),
+        ("treasury_cash_in","Entradas de efectivo"),("treasury_cash_out","Salidas de efectivo"),
+        ("treasury_bank_in","Entradas bancarias"),("treasury_bank_out","Salidas bancarias"))),
     ("Saldos capturados al ejecutar",(("pending_charges","Cargos pendientes de facturar"),("scheduled_charges","Alojamiento programado, aún sin generar"),("receivables","Facturas pendientes de cobro, en moneda de la cuenta"),
         ("customer_credits","Créditos pendientes a favor de clientes, en moneda de la cuenta"),("unallocated_advances","Anticipos por aplicar, en moneda de la cuenta"),("guarantees_held","Garantías disponibles, en moneda original")))
 )
@@ -31,7 +42,8 @@ def display_groups():
 def snapshot(prop,operational):
     day=getdate(prop.business_date)
     totals=defaultdict(lambda:{key:decimal(0) for key in METRICS})
-    sources=dict(invoices=[],movements=[],native_pos=[],pending_charges=[],scheduled_charges=[],receivables=[],unallocated_advances=[],guarantees=[],unattributed_movements=[])
+    sources=dict(invoices=[],movements=[],native_pos=[],pending_charges=[],scheduled_charges=[],receivables=[],unallocated_advances=[],guarantees=[],
+                 petty_expenses=[],petty_variances=[],treasury_movements=[],unattributed_movements=[])
     for currency,amount in operational.get("production_by_currency",{}).items():
         totals[currency]["production"]=decimal(amount)
     invoices=current_all("Sales Invoice",filters={"hs_property":prop.name,"company":prop.company,"docstatus":1},
@@ -98,6 +110,31 @@ def snapshot(prop,operational):
             if held:
                 totals[row.currency]["guarantees_held"]+=held
                 sources["guarantees"].append(dict(source=row.name,currency=row.currency,available=str(held),journal_entry=row.journal_entry))
+    petty_keys={"Initial Fund":"petty_initial","Replenishment":"petty_replenishment","Other Income":"other_income",
+                "Loan Received":"loans_received","Loan Repayment":"loans_repaid","Capital Contribution":"capital_contributed",
+                "Capital Withdrawal":"capital_withdrawn"}
+    for row in current_all("HS Treasury Movement", filters={"property":prop.name,"status":"Posted"}, fields=["name","kind","concept","concept_label","source_movement","rendition","cash_account","counter_account","currency","amount","business_date","shift","journal_entry"]):
+        if not row.business_date:
+            sources["unattributed_movements"].append(dict(row))
+        elif getdate(row.business_date)==day:
+            amount=decimal(row.amount)
+            totals[row.currency][petty_keys[row.kind]]+=amount
+            if row.kind not in ("Initial Fund","Replenishment"):
+                channel="cash" if row.shift else "bank"
+                direction="in" if row.kind in ("Other Income","Loan Received","Capital Contribution") else "out"
+                totals[row.currency][f"treasury_{channel}_{direction}"]+=amount
+            sources["treasury_movements"].append(dict(row,property=prop.name))
+    for row in current_all("HS Petty Cash Expense",filters={"property":prop.name,"status":"Posted"},
+                           fields=["name","category","category_label","beneficiary","concept","receipt_reference","expense_account","petty_account","currency","amount","business_date","journal_entry","rendition"]):
+        if row.business_date and getdate(row.business_date)==day:
+            totals[row.currency]["petty_expenses"]+=decimal(row.amount)
+            sources["petty_expenses"].append(dict(row,property=prop.name))
+    for row in current_all("HS Petty Cash Rendition",filters={"property":prop.name,"status":["in",["Approved","Partially Reimbursed","Reimbursed"]]},
+                           fields=["name","variance","variance_account","variance_journal","currency","approved_business_date","responsible"]):
+        if row.variance_journal and row.approved_business_date and getdate(row.approved_business_date)==day:
+            key="petty_overage" if decimal(row.variance)>0 else "petty_shortage"
+            totals[row.currency][key]+=abs(decimal(row.variance))
+            sources["petty_variances"].append(dict(row,property=prop.name))
     advances=current_all("Payment Entry",filters={"hs_property":prop.name,"company":prop.company,"docstatus":1,"party_type":"Customer","payment_type":"Receive","unallocated_amount":[">",0]},
                          fields=["name","paid_from_account_currency","unallocated_amount"])
     for row in advances:
@@ -116,7 +153,18 @@ def snapshot(prop,operational):
         currencies.append(dict(currency=currency,precision=currency_precision(currency),**{key:str(money(value,currency=currency)) for key,value in current.items()}))
     for records in sources.values():
         records.sort(key=lambda r:(r.get("name") or r.get("source") or "",r.get("currency") or "",r.get("account") or ""))
+    treasury_breakdown=defaultdict(lambda:Decimal(0))
+    petty_breakdown=defaultdict(lambda:Decimal(0))
+    for row in sources["treasury_movements"]:
+        key=(row["property"],row["kind"],row.get("concept_label") or "",row["counter_account"],row["cash_account"],row["currency"],"Cash" if row["shift"] else "Bank" if row["cash_account"] else "Petty Cash")
+        treasury_breakdown[key]+=decimal(row["amount"])
+    for row in sources["petty_expenses"]:
+        key=(row["property"],row["category"],row.get("category_label") or "",row["expense_account"],row["petty_account"],row["currency"])
+        petty_breakdown[key]+=decimal(row["amount"])
+    breakdown=dict(
+        treasury=[dict(property=k[0],kind=k[1],concept=k[2],counter_account=k[3],cash_account=k[4],currency=k[5],channel=k[6],amount=str(money(v,currency=k[5]))) for k,v in sorted(treasury_breakdown.items())],
+        petty_expenses=[dict(property=k[0],category=k[1],category_label=k[2],expense_account=k[3],petty_account=k[4],currency=k[5],amount=str(money(v,currency=k[5]))) for k,v in sorted(petty_breakdown.items())])
     from hospitality_suite.time import now_local
-    return dict(version=1,captured_at=now_local(prop).isoformat(),business_date=str(day),posting_date=str(day),
+    return dict(version=2,property=prop.name,captured_at=now_local(prop).isoformat(),business_date=str(day),posting_date=str(day),
                 movement_basis="HS Payment.business_date; native POS: immutable on_submit audit business_date",invoice_basis="Sales Invoice.posting_date",balance_basis="Outstanding amounts captured at execution, all posting dates",
-                currencies=currencies,sources=sources)
+                currencies=currencies,sources=sources,breakdown=breakdown)

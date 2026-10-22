@@ -32,6 +32,11 @@ def expected(shift):
             continue
         sign = -1 if row.kind in ("Refund", "Guarantee Refund", "Withdrawal","Expense","Supplier Payment") else 1
         amounts[row.currency] = amounts.get(row.currency, decimal(0)) + decimal(row.amount) * sign
+    for row in current_all("HS Treasury Movement", filters={"shift": shift.name, "status": "Posted"}, fields=["amount", "kind", "currency", "method"]):
+        if not row.method or not frappe.db.get_value("HS Payment Method", row.method, "is_cash"):
+            continue
+        sign = 1 if row.kind in ("Other Income", "Loan Received", "Capital Contribution") else -1
+        amounts[row.currency] = amounts.get(row.currency, decimal(0)) + decimal(row.amount) * sign
     from hospitality_suite.native_pos import movements
     for row in movements(shift.property,shift.name):
         if row["mapped"] and row["is_cash"]:

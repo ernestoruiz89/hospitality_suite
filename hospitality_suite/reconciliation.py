@@ -27,6 +27,8 @@ def unmatched_cash(prop,shift=None):
                 continue
             if current_all("HS Payment",filters={field:name,"status":"Posted"},pluck="name"):
                 continue
+            if dt == "Journal Entry" and current_all("HS Treasury Movement",filters={"journal_entry":name,"status":"Posted"},pluck="name"):
+                continue
             native=locked_doc(dt,name)
             movements={}
             if dt=="Payment Entry":
@@ -98,6 +100,10 @@ def rows(prop,filters=None,limit=1000):
         shift=row.get("shift") or row.get("hs_shift") or (row.name if row.get("doctype")=="HS Shift" or row.get("cashier") else None)
         shift_matches=invoice in invoices if invoice and invoices is not None else not filters.get("shift") or shift==filters["shift"]
         return (not filters.get("from_date") or date>=filters["from_date"]) and (not filters.get("to_date") or date<=filters["to_date"]) and shift_matches and visit_matches(row)
+    if prop.get("petty_cash_account") and not filters.get("shift") and not filters.get("stay"):
+        from hospitality_suite.financial_movements import balance, ledger_balance, base
+        record("Petty cash ledger", prop.name, prop.petty_cash_account, balance(prop), ledger_balance(prop),
+               base(prop), "Saldo operativo contra mayor exclusivo de Caja Chica")
     charges=current_all("HS Charge",filters={"property":prop.name,"status":"Invoiced"},fields=["*"])
     seen=set()
     for charge in charges:
@@ -147,6 +153,26 @@ def rows(prop,filters=None,limit=1000):
             record("Settlement fee",payment.name,name,money(decimal(payment.fee_amount)*decimal(payment.exchange_rate),currency=base_currency),posted(policy.get("fee_account"),base=True),base_currency,"Comisión contabilizada como gasto")
             record("Settlement withholding",payment.name,name,money(decimal(payment.withholding_amount)*decimal(payment.exchange_rate),currency=base_currency),posted(policy.get("withholding_account"),base=True),base_currency,"Retención contabilizada como activo")
             record("Settlement clearing",payment.name,name,payment.clearing_base_amount,posted(frappe.db.get_value("HS Payment Method",payment.method,"account"),base=True,credit=not outgoing),base_currency,"Liquidación de la valoración histórica del movimiento")
+    for movement in current_all("HS Treasury Movement", filters={"property": prop.name, "status": "Posted"}, fields=["*"]):
+        if not selected(movement, "business_date"):
+            continue
+        native = locked_doc("Journal Entry", movement.journal_entry) if movement.journal_entry and frappe.db.exists("Journal Entry", movement.journal_entry) else None
+        actual = decimal(0)
+        if native and native.docstatus == 1 and native.hs_property == prop.name and native.hs_shift == movement.shift:
+            actual = abs(sum(decimal(line.debit_in_account_currency)-decimal(line.credit_in_account_currency)
+                             for line in native.accounts if line.account == movement.counter_account))
+        record("Treasury movement", movement.name, movement.journal_entry, movement.amount, actual,
+               movement.currency, "Contrapartida financiera y asiento vigentes", payment_kind=movement.kind)
+    for expense in current_all("HS Petty Cash Expense", filters={"property": prop.name, "status": "Posted"}, fields=["*"]):
+        if not selected(expense, "business_date"):
+            continue
+        native = locked_doc("Journal Entry", expense.journal_entry) if expense.journal_entry and frappe.db.exists("Journal Entry", expense.journal_entry) else None
+        actual = decimal(0)
+        if native and native.docstatus == 1 and native.hs_property == prop.name:
+            actual = sum(decimal(line.debit_in_account_currency)-decimal(line.credit_in_account_currency)
+                         for line in native.accounts if line.account == expense.expense_account)
+        record("Petty cash expense", expense.name, expense.journal_entry, expense.amount, actual,
+               expense.currency, "Gasto desembolsado y asiento vigentes")
     for native in unmatched_cash(prop,filters.get("shift")):
         source=frappe._dict(native)
         if filters.get("stay"):

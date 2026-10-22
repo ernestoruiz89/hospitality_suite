@@ -18,6 +18,13 @@
         html+=finance.currencies.length?this.table([__("Concepto"),__("Importe"),__("Moneda")],finance.currencies.flatMap(row=>group.metrics.map(metric=>[e(metric.label),e(row[metric.key]),e(row.currency)]))):this.empty(__("Sin movimientos ni saldos para mostrar."));
         html+='</details>';
       }
+      const breakdown=finance.breakdown||{};
+      if((breakdown.treasury||[]).length)html+=`<details class="hs-close-group" open><summary>${e(__("Movimientos por concepto, cuenta y establecimiento"))}</summary>`+
+        this.table([__("Establecimiento"),__("Concepto"),__("Contrapartida"),__("Caja / banco"),__("Importe")],
+          breakdown.treasury.map(row=>[e(row.property),e(row.concept||this.data.report_values?.[row.kind]||row.kind),e(row.counter_account),e(row.cash_account),e(this.amount(row.amount,row.currency))]))+`</details>`;
+      if((breakdown.petty_expenses||[]).length)html+=`<details class="hs-close-group"><summary>${e(__("Gastos menores por categoría y cuenta"))}</summary>`+
+        this.table([__("Establecimiento"),__("Categoría"),__("Cuenta de gasto"),__("Caja Chica"),__("Importe")],
+          breakdown.petty_expenses.map(row=>[e(row.property),e(row.category_label||row.category),e(row.expense_account),e(row.petty_account),e(this.amount(row.amount,row.currency))]))+`</details>`;
       if(finance.sources.unattributed_movements.length)html+=`<p role="alert">${e(__("Hay {0} movimientos históricos sin fecha operativa acreditada; revise sus documentos de origen.",[finance.sources.unattributed_movements.length]))}</p>`;
     }else html+=`<p>${e(__("Este cierre histórico no conserva el resumen financiero ampliado."))}</p>`;
     if(period.audit_review){

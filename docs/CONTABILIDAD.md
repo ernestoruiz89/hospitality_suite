@@ -68,6 +68,21 @@ Los mínimos se almacenan en Item Reorder por almacén. HS Stock Policy solo cla
 
 Cancelar o devolver exige autorización y motivo. Una corrección posterior al cierre conserva el arqueo original; Conciliación compara el esperado actual con ese snapshot y muestra la diferencia para revisión. No se eliminan registros para ocultarla.
 
+## Caja Chica y financiación sin factura
+
+Todos los importes de este módulo usan la moneda base de la compañía y `Journal Entry` presentado por ERPNext. La cuenta de Caja Chica es exclusiva del establecimiento y debe comenzar sin movimientos. Cada gasto copia la cuenta de su `HS Expense Category`; cada movimiento financiero copia la cuenta y el nombre del concepto usados al solicitar o contabilizar. Cambiar la configuración solo afecta movimientos futuros. La conciliación compara el saldo operativo de Caja Chica con su mayor.
+
+| Operación | Débito | Crédito |
+| --- | --- | --- |
+| Fondo inicial o reposición | Caja Chica | Caja del turno |
+| Desembolso menor | Gasto de la categoría | Caja Chica |
+| Sobrante aprobado | Caja Chica | Ingreso por sobrante configurado |
+| Faltante aprobado | Gasto por faltante configurado | Caja Chica |
+| Otro ingreso, préstamo o aporte | Caja o banco | Ingreso, pasivo o patrimonio del concepto |
+| Devolución de préstamo o retiro de aporte | Pasivo o patrimonio original | Caja o banco |
+
+Las reposiciones suman únicamente gastos de rendiciones aprobadas y no contabilizan el gasto otra vez. `HS Treasury Movement` documenta fondo, reposición, ingreso y financiación; `HS Petty Cash Expense` documenta cada gasto; `HS Petty Cash Rendition` congela el arqueo. Una reversión autorizada cancela el asiento nativo y cambia el estado operativo. No se revierte un origen con devoluciones dependientes, un gasto de rendición no devuelta, ni movimientos de fecha o turno cerrados. La financiación conserva principal pendiente por cada entrada; el interés se registra aparte en ERPNext.
+
 ## Conciliación e indicadores
 
 Conciliación compara cargos/ajustes con líneas de facturas presentadas, movimientos HS con sus documentos vigentes y efectivo actual con arqueos conservados. Las diferencias tienen origen y documento explícitos y bloquean el cierre diario. La Page pagina 50 filas; las consultas autorizadas y las exportaciones examinan el conjunto completo, sin el antiguo límite de 1 000.

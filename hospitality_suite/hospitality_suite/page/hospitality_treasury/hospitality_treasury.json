@@ -1,0 +1,31 @@
+{
+ "doctype": "Page",
+ "name": "hospitality-treasury",
+ "page_name": "hospitality-treasury",
+ "title": "Otros movimientos",
+ "module": "Hospitality Suite",
+ "standard": "Yes",
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "HS Administrator"
+  },
+  {
+   "role": "HS Manager"
+  },
+  {
+   "role": "HS Supervisor"
+  },
+  {
+   "role": "HS Cashier"
+  },
+  {
+   "role": "HS Accountant"
+  },
+  {
+   "role": "HS Auditor"
+  }
+ ]
+}

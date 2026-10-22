@@ -25,6 +25,9 @@ DATES = {
     "Cobros": [("creation","Registro"),("business_date","Fecha operativa")],
     "Liquidaciones": [("creation","Registro"),("business_date","Fecha operativa")],
     "Egresos": [("creation","Registro"),("business_date","Fecha operativa")],
+    "Caja Chica": [("business_date","Fecha operativa"),("creation","Registro")],
+    "Rendiciones de Caja Chica": [("submitted_at","Presentación"),("creation","Registro")],
+    "Movimientos financieros": [("business_date","Fecha operativa"),("creation","Registro")],
     "Turnos": [("opened_at", "Apertura"), ("closed_at", "Cierre"), ("creation", "Registro")],
     "Limpieza": [("creation", "Registro"), ("started_at", "Inicio"), ("completed_at", "Finalización")],
     "Mantenimiento": [("starts_at", "Inicio previsto"), ("ends_at", "Fin previsto"), ("completed_at", "Finalización real"), ("creation", "Registro")],
@@ -33,7 +36,7 @@ DATES = {
     "Conciliación": [("source_date", "Fecha de origen (operativa / contable / registro)")],
 }
 DIMENSIONAL = {"Reservas", "Estancias", "Producción", "Facturas", "Cuentas pendientes", "Cobros", "Inventario", "Limpieza", "Mantenimiento"}
-SHIFTED = {"Cobros", "Liquidaciones", "Egresos", "Facturas", "Turnos", "Conciliación"}
+SHIFTED = {"Cobros", "Liquidaciones", "Egresos", "Movimientos financieros", "Facturas", "Turnos", "Conciliación"}
 
 
 def metadata(report):
@@ -50,7 +53,7 @@ def metadata(report):
         keys += ["shift"]
     if base == "Conciliación":
         keys += ["stay"]
-    if base in {"Cobros", "Liquidaciones", "Egresos"}:
+    if base in {"Cobros", "Liquidaciones", "Egresos", "Movimientos financieros"}:
         keys += ["method", "kind"]
     if base == "Movimientos de inventario":
         keys += ["item", "warehouse", "purpose"]

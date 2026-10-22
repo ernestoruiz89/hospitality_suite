@@ -23,6 +23,16 @@
   {% else %}<tr><td colspan="3">{{ _('Sin movimientos ni saldos para mostrar.') | e }}</td></tr>{% endfor %}</tbody></table>
   </div>
   {% endfor %}
+  {% if financial.get('breakdown') %}
+  <h2>{{ _('Otros movimientos por concepto, cuenta y establecimiento') | e }}</h2>
+  <table><thead><tr><th>{{ _('Establecimiento') | e }}</th><th>{{ _('Concepto') | e }}</th><th>{{ _('Contrapartida') | e }}</th><th>{{ _('Caja / banco') | e }}</th><th>{{ _('Importe') | e }}</th></tr></thead><tbody>
+  {% for row in financial.breakdown.treasury %}<tr><td>{{ row.property | e }}</td><td>{{ (row.concept or hs_label(row.kind)) | e }}</td><td>{{ row.counter_account | e }}</td><td>{{ row.cash_account | e }}</td><td>{{ row.amount | e }} {{ row.currency | e }}</td></tr>{% else %}<tr><td colspan="5">{{ _('Sin otros movimientos') | e }}</td></tr>{% endfor %}
+  </tbody></table>
+  <h2>{{ _('Gastos de Caja Chica por categoría y cuenta') | e }}</h2>
+  <table><thead><tr><th>{{ _('Establecimiento') | e }}</th><th>{{ _('Categoría') | e }}</th><th>{{ _('Gasto') | e }}</th><th>{{ _('Caja Chica') | e }}</th><th>{{ _('Importe') | e }}</th></tr></thead><tbody>
+  {% for row in financial.breakdown.petty_expenses %}<tr><td>{{ row.property | e }}</td><td>{{ (row.category_label or row.category) | e }}</td><td>{{ row.expense_account | e }}</td><td>{{ row.petty_account | e }}</td><td>{{ row.amount | e }} {{ row.currency | e }}</td></tr>{% else %}<tr><td colspan="5">{{ _('Sin gastos de Caja Chica') | e }}</td></tr>{% endfor %}
+  </tbody></table>
+  {% endif %}
   {% if financial.sources.unattributed_movements %}<p>{{ _('Movimientos históricos sin fecha operativa acreditada:') | e }} {{ financial.sources.unattributed_movements | length }}. {{ _('Revise sus documentos de origen.') | e }}</p>{% endif %}
   <p class="muted">{{ _('Captura financiera:') | e }} {{ financial.captured_at | e }}</p>
   {% else %}<p>{{ _('Este cierre histórico no conserva el resumen financiero ampliado.') | e }}</p>{% endif %}

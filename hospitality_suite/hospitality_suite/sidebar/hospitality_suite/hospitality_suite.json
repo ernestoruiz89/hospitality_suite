@@ -52,6 +52,18 @@
   {
    "type": "Link",
    "link_type": "Page",
+   "link_to": "hospitality-petty-cash",
+   "label": "Caja Chica"
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
+   "link_to": "hospitality-treasury",
+   "label": "Otros movimientos"
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
    "link_to": "hospitality-maintenance",
    "label": "Mantenimiento"
   },

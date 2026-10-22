@@ -1,0 +1,235 @@
+{
+ "doctype": "DocType",
+ "name": "HS Petty Cash Expense",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "hash",
+ "naming_rule": "Random",
+ "fields": [
+  {
+   "fieldname": "company",
+   "label": "Compañía",
+   "fieldtype": "Link",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "property",
+   "label": "Establecimiento",
+   "fieldtype": "Link",
+   "options": "HS Property",
+   "reqd": 1
+  },
+  {
+   "fieldname": "category",
+   "label": "Categoría",
+   "fieldtype": "Link",
+   "options": "HS Expense Category",
+   "reqd": 1
+  },
+  {
+   "fieldname": "category_label",
+   "label": "Categoría original",
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "responsible",
+   "label": "Responsable",
+   "fieldtype": "Link",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "beneficiary",
+   "label": "Beneficiario",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "concept",
+   "label": "Concepto",
+   "fieldtype": "Small Text",
+   "reqd": 1
+  },
+  {
+   "fieldname": "receipt_reference",
+   "label": "Referencia del comprobante",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "receipt_file",
+   "label": "Comprobante adjunto",
+   "fieldtype": "Attach"
+  },
+  {
+   "fieldname": "business_date",
+   "label": "Fecha operativa",
+   "fieldtype": "Date"
+  },
+  {
+   "fieldname": "currency",
+   "label": "Moneda",
+   "fieldtype": "Link",
+   "options": "Currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amount",
+   "label": "Importe",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "expense_account",
+   "label": "Cuenta de gastos",
+   "fieldtype": "Link",
+   "options": "Account",
+   "reqd": 1
+  },
+  {
+   "fieldname": "petty_account",
+   "label": "Cuenta de Caja Chica",
+   "fieldtype": "Link",
+   "options": "Account",
+   "reqd": 1
+  },
+  {
+   "fieldname": "journal_entry",
+   "label": "Asiento contable",
+   "fieldtype": "Link",
+   "options": "Journal Entry",
+   "reqd": 1
+  },
+  {
+   "fieldname": "rendition",
+   "label": "Rendición",
+   "fieldtype": "Link",
+   "options": "HS Petty Cash Rendition"
+  },
+  {
+   "fieldname": "status",
+   "label": "Estado",
+   "fieldtype": "Select",
+   "options": "Posted\nCancelled",
+   "reqd": 1,
+   "default": "Posted"
+  }
+ ],
+ "field_order": [
+  "company",
+  "property",
+  "category",
+  "category_label",
+  "responsible",
+  "beneficiary",
+  "concept",
+  "receipt_reference",
+  "receipt_file",
+  "business_date",
+  "currency",
+  "amount",
+  "expense_account",
+  "petty_account",
+  "journal_entry",
+  "rendition",
+  "status"
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Administrator",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Supervisor",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Receptionist",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Cashier",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Housekeeping",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Maintenance",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Accountant",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Auditor",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0
+}

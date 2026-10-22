@@ -22,6 +22,12 @@ LABELS.update(invoice_number="Número de factura",account_label="Cuenta",recorde
 LABELS.update(base_currency="Moneda base")
 LABELS.update(status_changed_at="Cancelación / no presentación",penalty_amount="Penalización aceptada",fee_status="Estado de penalización",fee_invoice="Factura de penalización")
 LABELS.update(tasks="Tareas",pending_tasks="Pendientes",completed_tasks="Finalizadas",timed_tasks="Finalizadas con duración",average_minutes="Duración media (min)",tasks_per_recorded_hour="Tareas/hora registrada")
+LABELS.update(responsible="Responsable",beneficiary="Beneficiario",concept="Concepto",concept_label="Concepto original",category_label="Categoría original",
+              receipt_reference="Comprobante",petty_account="Cuenta de Caja Chica",rendition="Rendición",
+              expense_total="Gastos rendidos",expected_cash="Efectivo esperado",counted_cash="Efectivo contado",
+              variance="Diferencia",variance_account="Cuenta de diferencia",variance_journal="Asiento de diferencia",
+              submitted_at="Presentación",reviewed_at="Aprobación / devolución",source_movement="Entrada original",
+              cash_account="Cuenta de Caja o banco",counter_account="Cuenta de contrapartida")
 NUMBERS={"amount","quantity","grand_total","outstanding_amount","base_amount","expected_amount","counted_amount","difference","cost","expected","actual","pending","outstanding","fee_amount","withholding_amount","net_amount"}
 NUMBERS.add("balance_quantity")
 NUMBERS.update({"duration_minutes","total_rooms","available_capacity","clean_candidates"})
@@ -30,6 +36,7 @@ NUMBERS.update({"pending_amount","records"})
 NUMBERS.add("penalty_amount")
 TASK_METRICS={"tasks","pending_tasks","completed_tasks","timed_tasks","average_minutes","tasks_per_recorded_hour"}
 NUMBERS.update(TASK_METRICS)
+NUMBERS.update({"expense_total","expected_cash","counted_cash","variance"})
 MONEY_FIELDS=NUMBERS-{"quantity","duration_minutes","total_rooms","available_capacity","clean_candidates","balance_quantity","records"}-TASK_METRICS
 
 

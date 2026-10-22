@@ -126,12 +126,12 @@ class TestPermissionsAudit(IntegrationTestCase):
             self.rejected(lambda:self.call(self.prop,'booking_status',dict(booking=name,status='Cancelled',reason='Referencia inválida')))
 
     def test_all_nine_roles_advertise_only_authorized_actions_and_enforce_them_before_handlers(self):
-        managers={'setup','reserve','stay','finance','clean','inspect','maintain','service','report','approve','cash_approve','guest','incident','inventory','ticket'}
+        managers={'setup','reserve','stay','finance','petty','clean','inspect','maintain','service','report','approve','cash_approve','guest','incident','inventory','ticket'}
         matrix={
             'administrator':managers,'manager':managers,'supervisor':managers-{'approve'},
-            'receptionist':{'reserve','stay','service','guest','ticket'},'cashier':{'finance','service'},
-            'housekeeping':{'clean','incident','ticket'},'maintenance':{'maintain','incident','ticket'},
-            'accountant':{'finance','report','inventory'},'auditor':{'report'}}
+            'receptionist':{'reserve','stay','service','guest','ticket','petty'},'cashier':{'finance','service','petty'},
+            'housekeeping':{'clean','incident','ticket','petty'},'maintenance':{'maintain','incident','ticket','petty'},
+            'accountant':{'finance','report','inventory','petty'},'auditor':{'report'}}
         for account,actions in matrix.items():
             with self.subTest(role=account):
                 frappe.set_user(account+'@hospitality.example.invalid')

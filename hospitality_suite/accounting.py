@@ -678,6 +678,26 @@ def sync_document(doc, method=None):
                 payment_doc = locked_doc("HS Payment", name)
                 payment_doc.status = "Cancelled"
                 payment_doc.save(ignore_permissions=True)
+            if doc.doctype == "Journal Entry":
+                for name in current_all("HS Treasury Movement", filters={"journal_entry": doc.name}, pluck="name"):
+                    movement = locked_doc("HS Treasury Movement", name)
+                    movement.status = "Cancelled"
+                    movement.save(ignore_permissions=True)
+                    if movement.kind == "Replenishment" and movement.rendition:
+                        rendition = locked_doc("HS Petty Cash Rendition", movement.rendition)
+                        total = sum(decimal(r.amount) for r in current_all("HS Treasury Movement", filters={"rendition": rendition.name, "kind": "Replenishment", "status": "Posted"}, fields=["amount"]))
+                        rendition.status = "Approved" if total == 0 else "Partially Reimbursed"
+                        rendition.save(ignore_permissions=True)
+                for name in current_all("HS Petty Cash Expense", filters={"journal_entry": doc.name}, pluck="name"):
+                    expense = locked_doc("HS Petty Cash Expense", name)
+                    expense.status = "Cancelled"
+                    expense.save(ignore_permissions=True)
+                for name in current_all("HS Petty Cash Rendition", filters={"variance_journal": doc.name}, pluck="name"):
+                    rendition = locked_doc("HS Petty Cash Rendition", name)
+                    rendition.status = "Returned"
+                    rendition.variance_journal = None
+                    rendition.variance_account = None
+                    rendition.save(ignore_permissions=True)
         if doc.doctype == "Payment Entry" and doc.party_type in ("Customer","Supplier") and doc.docstatus == 1 and not frappe.db.exists("HS Payment", {"payment_entry": doc.name}) and not getattr(frappe.local, "hs_posting", False):
             account = doc.paid_to if doc.payment_type == "Receive" else doc.paid_from
             method_filters={"property":prop.name,"account":account}

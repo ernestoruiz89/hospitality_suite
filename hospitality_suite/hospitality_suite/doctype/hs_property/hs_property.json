@@ -197,6 +197,35 @@
    "permlevel": 1
   },
   {
+   "fieldname": "petty_cash_account",
+   "label": "Cuenta exclusiva de Caja Chica",
+   "fieldtype": "Link",
+   "options": "Account",
+   "unique": 1,
+   "permlevel": 1
+  },
+  {
+   "fieldname": "petty_cash_responsible",
+   "label": "Responsable de Caja Chica",
+   "fieldtype": "Link",
+   "options": "User",
+   "permlevel": 1
+  },
+  {
+   "fieldname": "petty_cash_overage_account",
+   "label": "Ingreso por sobrante de Caja Chica",
+   "fieldtype": "Link",
+   "options": "Account",
+   "permlevel": 1
+  },
+  {
+   "fieldname": "petty_cash_shortage_account",
+   "label": "Gasto por faltante de Caja Chica",
+   "fieldtype": "Link",
+   "options": "Account",
+   "permlevel": 1
+  },
+  {
    "fieldname": "lodging_item",
    "label": "Artículo de alojamiento",
    "fieldtype": "Link",
@@ -385,6 +414,10 @@
   "receivable_account",
   "guarantee_account",
   "cash_transfer_account",
+  "petty_cash_account",
+  "petty_cash_responsible",
+  "petty_cash_overage_account",
+  "petty_cash_shortage_account",
   "lodging_item",
   "extra_hour_item",
   "day_pass_item",
