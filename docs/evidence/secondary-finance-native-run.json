@@ -1,0 +1,25 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "command": [
+    "/home/frappe/.local/bin/bench",
+    "--site",
+    "hospitality-acceptance.localhost",
+    "run-tests",
+    "--app",
+    "hospitality_suite",
+    "--junit-xml-output",
+    "/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/.local/secondary-finance/native-full-1.raw.xml"
+  ],
+  "exit_code": 0,
+  "tests": 407,
+  "integration": 375,
+  "unit": 32,
+  "raw_log_sha256": "d7737cd86cde1e8e5d22e90780ed3392578155a6adb916982d15178d75f17cd1",
+  "raw_concatenated_xml_sha256": "eb1f03452f67ceb49156f2ae160cc6604ec202e1b555aecee91aba9aaf394074",
+  "source_xml_documents": 2,
+  "all_cases_preserved": true,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "external_providers_activated": false
+}

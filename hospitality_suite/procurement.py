@@ -291,6 +291,7 @@ def adjust_stock(prop,data):
     if not category.active:
         frappe.throw(frappe._("Seleccione una categoría de gasto activa"))
     doc=frappe.new_doc("Stock Reconciliation")
+    doc.flags.hs_count_reviewed=True
     doc.update(dict(company=prop.company,purpose="Stock Reconciliation",expense_account=category.account,cost_center=prop.cost_center))
     doc.append("items",dict(item_code=q["item"],warehouse=q["warehouse"],qty=float(decimal(q["counted_quantity"])),valuation_rate=float(decimal(q["valuation_rate"]))))
     post_standard(doc,prop)

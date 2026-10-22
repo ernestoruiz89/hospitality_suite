@@ -26,9 +26,11 @@
         "docs/TAREAS_Y_ESTADOS_POR_ROL.md",
         "docs/evidence/task-state-crosswalk.json",
         "docs/VENTANAS_Y_EVIDENCIAS_PRIVADAS.md",
-        "docs/evidence/secondary-acceptance-verification.json"
+        "docs/evidence/secondary-acceptance-verification.json",
+        "docs/TESORERIA_Y_COMPRAS_DESDE_PAGES.md",
+        "docs/evidence/secondary-finance-verification.json"
       ],
-      "remaining": "Paquete/instalación limpia y operación habitual mediante Pages acreditados. Completar estados/reglas S04-16, variantes visuales secundarias S04-20 y F26/paquete/entrega S19-07/S19-08. VENTANAS_Y_EVIDENCIAS_PRIVADAS.md corrige secuencias y adjuntos concretos con 405 nativas/222 JS, sin cierre general: 212 V y seis I."
+      "remaining": "T11/T19 acreditados con tres roles desde Pages, 407 nativas/225 JS y conservación estricta. Continúan S04-16 (activación rápida desde panel de estancia), S04-20 (otros recorridos secundarios) y F26/paquete/entrega S19-07/S19-08. 212 V/seis I; objetivo completo aún no acreditado."
     },
     {
       "id": "S00-02",
@@ -338,9 +340,11 @@
         "docs/TAREAS_Y_ESTADOS_POR_ROL.md",
         "docs/evidence/task-state-crosswalk.json",
         "docs/VENTANAS_Y_EVIDENCIAS_PRIVADAS.md",
-        "docs/evidence/secondary-acceptance-verification.json"
+        "docs/evidence/secondary-acceptance-verification.json",
+        "docs/TESORERIA_Y_COMPRAS_DESDE_PAGES.md",
+        "docs/evidence/secondary-finance-verification.json"
       ],
-      "remaining": "Continuar hasta cerrar reglas/estados S04-16, variantes secundarias S04-20 y recuperación/entrega final S19-07/S19-08. Secuencias rápidas y adjuntos de mantenimiento/novedades de este recorrido corregidos y probados; 212 V/seis I conserva el alcance completo pendiente."
+      "remaining": "Continuar hasta cerrar activación/preparación rápida desde panel de estancia S04-16, otros recorridos secundarios S04-20 y F26/entrega final. Tesorería/compras/movimientos T11/T19 revisados con Gerencia/Caja/Contabilidad, 407 nativas/225 JS. No se reduce el alcance restante."
     },
     {
       "id": "S01-13",
@@ -1154,7 +1158,8 @@
         "hospitality_suite/public/hospitality.bundle.css",
         "hospitality_suite/public/js/hospitality_workflows.js",
         "hospitality_suite/public/js/hospitality_links.js",
-        "hospitality_suite/public/js/hospitality_drafts.js"
+        "hospitality_suite/public/js/hospitality_drafts.js",
+        "hospitality_suite/public/js/hospitality_finance_stock.js"
       ],
       "evidence": [
         "docs/AUDITORIA_PAGES_HABITACIONES.md",
@@ -1199,9 +1204,11 @@
         "docs/TAREAS_Y_ESTADOS_POR_ROL.md",
         "docs/evidence/task-state-crosswalk.json",
         "docs/VENTANAS_Y_EVIDENCIAS_PRIVADAS.md",
-        "docs/evidence/secondary-acceptance-verification.json"
+        "docs/evidence/secondary-acceptance-verification.json",
+        "docs/TESORERIA_Y_COMPRAS_DESDE_PAGES.md",
+        "docs/evidence/secondary-finance-verification.json"
       ],
-      "remaining": "Secuencia rápida de cierre/apertura resuelta: fondo nativo interceptaba clic, corregido con animate:false y seis ciclos emparejados. 405 nativas/222 JS y adjuntos privados verificados. Completar reglas específicas y estados de búsquedas/vistas secundarias de la colección finita; no se declara completo todo el conjunto."
+      "remaining": "Estados comunes, validación y secuencia entre formularios acreditados; T11/T19 añade vacíos específicos, límite rechazado/corrección, cancelación de revisión sin movimiento y filas numéricas. Queda contrastar activación rápida desde el panel de estancia: su ruta directa difiere del coordinador de Page. Es una comprobación pendiente, no una doble operación reproducida. 407 nativas/225 JS actuales."
     },
     {
       "id": "S04-17",
@@ -1315,7 +1322,8 @@
       "status": "I",
       "implementation": [
         "hospitality_suite/public/js/hospitality.js",
-        "hospitality_suite/public/js/hospitality_workflows.js"
+        "hospitality_suite/public/js/hospitality_workflows.js",
+        "hospitality_suite/public/js/hospitality_finance_stock.js"
       ],
       "evidence": [
         "docs/AUDITORIA_PAGES_HABITACIONES.md",
@@ -1339,9 +1347,11 @@
         "docs/TAREAS_Y_ESTADOS_POR_ROL.md",
         "docs/evidence/task-state-crosswalk.json",
         "docs/VENTANAS_Y_EVIDENCIAS_PRIVADAS.md",
-        "docs/evidence/secondary-acceptance-verification.json"
+        "docs/evidence/secondary-acceptance-verification.json",
+        "docs/TESORERIA_Y_COMPRAS_DESDE_PAGES.md",
+        "docs/evidence/secondary-finance-verification.json"
       ],
-      "remaining": "Mantenimiento/novedades: técnico adjunta evidencia privada y Supervisión consulta, resuelve y completa/libera desde Pages; enlaces conservados. Completar variantes visuales secundarias de tesorería/egresos, compras/movimientos, ropa, políticas/otros adjuntos, retención/reintento y conversión del portal. El fixture API y los dos roles de escritorio no equivalen a la aceptación de todas las variantes."
+      "remaining": "T11/T19 completados desde Pages con tres roles: egreso/entrega/liquidaciones parciales, proveedor/almacén/orden/recepciones 2+4/facturas/pagos, traslado/consumo/conteo autorizado. Completar aceptación secundaria de ropa de cama, políticas/otros adjuntos, retención/reintento y conversión del portal. 407 nativas/225 JS y 48 observaciones no equivalen a todos esos recorridos."
     },
     {
       "id": "S05-01",
@@ -5190,9 +5200,11 @@
         "docs/TAREAS_Y_ESTADOS_POR_ROL.md",
         "docs/evidence/task-state-crosswalk.json",
         "docs/VENTANAS_Y_EVIDENCIAS_PRIVADAS.md",
-        "docs/evidence/secondary-acceptance-verification.json"
+        "docs/evidence/secondary-acceptance-verification.json",
+        "docs/TESORERIA_Y_COMPRAS_DESDE_PAGES.md",
+        "docs/evidence/secondary-finance-verification.json"
       ],
-      "remaining": "Completar S04-16/S04-20 y F26 con recuperación coordinada de código, base y archivos, paquete final y revisión de entrega. Instalación independiente previa acreditada; su paquete no incluye las correcciones posteriores de interfaz y evidencia privada. 405 nativas/222 JS actuales no sustituyen F26."
+      "remaining": "Completar S04-16/S04-20 y F26 con recuperación coordinada de código/base/archivos, paquete final y revisión de entrega. Instalación independiente previa acreditada; su paquete aún no contiene las correcciones posteriores, incluido conteo de Gerencia. 407 nativas/225 JS y restauración estricta actuales no sustituyen F26."
     },
     {
       "id": "S19-08",
@@ -5218,9 +5230,11 @@
         "docs/TAREAS_Y_ESTADOS_POR_ROL.md",
         "docs/evidence/task-state-crosswalk.json",
         "docs/VENTANAS_Y_EVIDENCIAS_PRIVADAS.md",
-        "docs/evidence/secondary-acceptance-verification.json"
+        "docs/evidence/secondary-acceptance-verification.json",
+        "docs/TESORERIA_Y_COMPRAS_DESDE_PAGES.md",
+        "docs/evidence/secondary-finance-verification.json"
       ],
-      "remaining": "Cerrar variantes secundarias/estados S04-16/S04-20 y fase 7/F26, manteniendo fuentes y evidencia diferenciadas. VENTANAS_Y_EVIDENCIAS_PRIVADAS.md aporta un tramo comprobado con 405 nativas/222 JS y restauración estricta, sin atribuirle todas las variantes ni la entrega completa."
+      "remaining": "Cerrar activación rápida del panel/otros recorridos secundarios y fase 7/F26, manteniendo fuentes y evidencia diferenciadas. TESORERIA_Y_COMPRAS_DESDE_PAGES.md acredita T11/T19 y cuatro correcciones con 407 nativas/225 JS; no se atribuye a ese tramo la entrega completa."
     },
     {
       "id": "S19-09",

@@ -16,6 +16,26 @@ class DeferredRetentionFile:
 
 
 class ScopedERPNotifications:
+    def remove_items_with_no_change(self):
+        if not (self.doctype=='Stock Reconciliation' and self.flags.get('hs_count_reviewed') and getattr(frappe.local,'hs_operation',False)
+                and getattr(frappe.local,'hs_posting',False)):
+            return super().remove_items_with_no_change()
+        from hospitality_suite.security import require
+        if getattr(frappe.local,'hs_selected_property',None)!=(self.hs_property,self.company):
+            frappe.throw(_('El conteo no pertenece al establecimiento seleccionado'),frappe.PermissionError)
+        require(self.hs_property,'approve')
+        # ERPNext's native difference calculation calls a whitelisted balance
+        # reader that checks general Stock Reconciliation write access even for
+        # this delegated command. Delegate only this read/calculation; insert,
+        # submit, ledger writes and audit still run as the approving actor.
+        # Do not call set_user: it also replaces the request SID/data/form_dict.
+        actor=frappe.session.user
+        try:
+            frappe.session.user='Administrator'
+            return super().remove_items_with_no_change()
+        finally:
+            frappe.session.user=actor
+
     def validate_against_voucher_outstanding(self):
         if not (self.doctype=='Sales Invoice' and self.is_return and self.flags.get('hs_credit_reviewed') and getattr(frappe.local,'hs_operation',False) and getattr(frappe.local,'hs_posting',False)):
             return super().validate_against_voucher_outstanding()

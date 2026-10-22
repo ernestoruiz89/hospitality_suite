@@ -1,0 +1,8 @@
+{
+  "stage": "completed-read-only-checkpoint",
+  "initial_error": "frappe.has_permission wrapper does not accept print_logs",
+  "correction": "Use the native frappe.permissions.has_permission function inspected for this signature",
+  "business_mutation": false,
+  "fixture_repeated": false,
+  "successful_UI_adjustment_repeated": false
+}

@@ -1,5 +1,11 @@
 # Siguiente fase del objetivo activo
 
+## Después de tesorería y compras
+
+[TESORERIA_Y_COMPRAS_DESDE_PAGES.md](TESORERIA_Y_COMPRAS_DESDE_PAGES.md) acredita el recorrido secundario T11/T19 con Gerencia, Caja y Contabilidad: egreso/límite/corrección, entrega, liquidaciones parciales, compra 2+4, facturas/pagos y movimiento/conteo. Se corrigen filas y acciones de recepción innecesarias, facturación vacía y permiso nativo del conteo sin conceder escritura general. **407 nativas (375 integración/32 unitarias) y 225 JS aprobadas**, 48 observaciones de escritorio. Datos restaurados y 741 archivos originales conservados. **212 V/seis I**: quedan activación rápida desde el panel de estancia, otros recorridos secundarios y F26/paquete/entrega. OTA aplazada. Los registros anteriores son históricos.
+
+Siguiente comprobación concreta de S04-16: doble activación/preparación desde el panel de estancia, cuya ruta llama directamente a los manejadores. No se presenta todavía como defecto reproducido. S04-20: ropa de cama, políticas/otros adjuntos, retención/reintento y conversión del portal; T11/T19 ya tienen el recorrido actual. Después, recuperación coordinada de código/base/archivos F26 y paquete final con estos cambios. S00-01/S01-12/S19-07/S19-08 dependen del cierre completo. No activar sincronización OTA.
+
 ## Después de la revisión de ventanas y adjuntos
 
 [VENTANAS_Y_EVIDENCIAS_PRIVADAS.md](VENTANAS_Y_EVIDENCIAS_PRIVADAS.md) aporta evidencia parcial a S04-16/S04-20: causa del clic perdido demostrada y corregida, adjunto privado del técnico conservado sin ampliar permisos de costos, y consulta de evidencia de novedades abiertas/resueltas. **405 nativas (373 integración/32 unitarias) y 222 JS aprobadas**, dos roles reales y dieciocho observaciones de escritorio. Aceptación restaurada, principal conservado y 741 archivos físicos originales idénticos. **212 V y seis I**: siguen reglas/estados y variantes secundarias, F26 y paquete/entrega final. Los registros anteriores conservan su alcance histórico; OTA sigue aplazada.

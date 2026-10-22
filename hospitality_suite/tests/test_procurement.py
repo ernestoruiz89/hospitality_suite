@@ -1,7 +1,9 @@
 import uuid
+from unittest.mock import patch
 
 import frappe
 from frappe.tests import IntegrationTestCase
+from frappe.permissions import has_permission
 
 from hospitality_suite import api
 from hospitality_suite.service import operation
@@ -88,6 +90,69 @@ class TestProcurement(IntegrationTestCase):
         unrelated=frappe.get_doc(dict(doctype="Warehouse",warehouse_name="No asignado "+uuid.uuid4().hex[:6],company=self.prop.company)).insert()
         with self.assertRaises(frappe.PermissionError):
             self.call("purchase_order",dict(supplier=self.vendor,warehouse=unrelated.name,reason="No debe acceder",items=[dict(item="HS-DEMO-WATER",quantity=1,rate=10)]))
+
+    def test_manager_count_delegates_only_native_balance_calculation_and_preserves_actor(self):
+        from erpnext.stock.doctype.stock_reconciliation import stock_reconciliation as native
+        category=self.category()
+        initial=self.stock()
+        frappe.set_user('manager@hospitality.example.invalid')
+        self.assertFalse(has_permission('Stock Reconciliation','write',print_logs=False))
+        request=(frappe.session.user,frappe.session.sid,frappe.session.data,frappe.local.form_dict)
+        values=dict(item='HS-DEMO-WATER',counted_quantity=initial-1,category=category,reason='Conteo ficticio por gerencia')
+        values['acceptance']=api.preview(self.prop.name,values,'adjust_stock')['acceptance']
+        balance_actors=[]
+        validation_actors=[]
+        balance=native.get_stock_balance_for
+        validate=native.StockReconciliation.validate_data
+        def read_balance(*args,**kwargs):
+            balance_actors.append(frappe.session.user)
+            return balance(*args,**kwargs)
+        def validate_data(doc):
+            validation_actors.append(frappe.session.user)
+            return validate(doc)
+        key=uuid.uuid4().hex
+        with patch.object(native,'get_stock_balance_for',read_balance),patch.object(native.StockReconciliation,'validate_data',validate_data):
+            result=self.call('adjust_stock',values,key)
+            self.assertEqual(self.call('adjust_stock',values,key),result)
+        self.assertTrue(balance_actors)
+        self.assertEqual(set(balance_actors),{'Administrator'})
+        self.assertEqual(set(validation_actors),{request[0]})
+        self.assertEqual((frappe.session.user,frappe.session.sid),request[:2])
+        self.assertIs(frappe.session.data,request[2])
+        self.assertIs(frappe.local.form_dict,request[3])
+        self.assertFalse(has_permission('Stock Reconciliation','write',print_logs=False))
+        doc=frappe.get_doc('Stock Reconciliation',result['stock_reconciliation'])
+        self.assertEqual((doc.owner,doc.modified_by,doc.docstatus),(request[0],request[0],1))
+        self.assertEqual(self.stock(),initial-1)
+        for doctype in ['GL Entry','Stock Ledger Entry']:
+            rows=frappe.get_all(doctype,filters={'voucher_type':doc.doctype,'voucher_no':doc.name},fields=['owner'])
+            self.assertTrue(rows)
+            self.assertEqual({row.owner for row in rows},{request[0]})
+        with self.assertRaises(frappe.PermissionError):
+            native.get_stock_balance_for('HS-DEMO-WATER',self.prop.warehouse,doc.posting_date,doc.posting_time)
+
+    def test_failed_delegated_count_restores_request_and_accountant_cannot_approve(self):
+        from erpnext.stock.doctype.stock_reconciliation import stock_reconciliation as native
+        category=self.category()
+        initial=self.stock()
+        frappe.set_user('manager@hospitality.example.invalid')
+        values=dict(item='HS-DEMO-WATER',counted_quantity=initial-1,category=category,reason='Error sintético de consulta')
+        values['acceptance']=api.preview(self.prop.name,values,'adjust_stock')['acceptance']
+        request=(frappe.session.user,frappe.session.sid,frappe.session.data,frappe.local.form_dict)
+        counts={dt:frappe.db.count(dt) for dt in ['Stock Reconciliation','GL Entry','Stock Ledger Entry','HS Request']}
+        with patch.object(native,'get_stock_balance_for',side_effect=frappe.ValidationError('Fallo sintético de saldo')) as balance:
+            with self.assertRaises(frappe.ValidationError):
+                self.call('adjust_stock',values)
+            self.assertEqual(balance.call_count,1)
+            self.assertEqual((frappe.session.user,frappe.session.sid),request[:2])
+            self.assertIs(frappe.session.data,request[2])
+            self.assertIs(frappe.local.form_dict,request[3])
+            frappe.set_user('accountant@hospitality.example.invalid')
+            with self.assertRaises(frappe.PermissionError):
+                self.call('adjust_stock',values)
+            self.assertEqual(balance.call_count,1)
+        self.assertEqual(self.stock(),initial)
+        self.assertEqual({dt:frappe.db.count(dt) for dt in counts},counts)
 
     def test_stock_transfer_cleaning_loss_replacement_and_count_adjustment(self):
         category=self.category()

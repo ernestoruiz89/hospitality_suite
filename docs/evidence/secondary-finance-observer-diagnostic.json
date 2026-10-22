@@ -1,0 +1,8 @@
+{
+  "stage": "final-evidence-reader",
+  "initial_error": "KeyError: name on an unrelated Page selector",
+  "cause": "The DOM collector omits undefined field names on selectors outside native form fields",
+  "correction": "Use optional field-name access while retaining the exact quantity/value/aria-invalid and retained-amount assertions",
+  "application_changed": false,
+  "business_flows_repeated": false
+}
