@@ -1,5 +1,7 @@
 # Actualización y recuperación final
 
+Estado de cierre **0.8.9: 218 V, cero I/P/R** del alcance obligatorio acordado. [COTEJO_FINAL.md](COTEJO_FINAL.md) conserva el contraste original por entrada y [ENTREGA_FINAL.md](ENTREGA_FINAL.md) reúne acceso, paquetes y guías. 410 nativas/232 JS, instalación limpia y recuperación F26 acreditadas; datos/archivos originales preservados. Las integraciones externas opcionales y OTA real aplazada se distinguen en [ESTADO_Y_EVIDENCIAS_ENTREGA.md](ESTADO_Y_EVIDENCIAS_ENTREGA.md). Los apartados posteriores son antecedentes con sus propios recuentos y límites.
+
 **F26 verificado**: actualización 0.8.8 → 0.8.9, fallo controlado, recuperación coordinada de código/base/archivos y segundo despliegue. Instalación limpia de la candidata y **410 nativas/232 JS aprobadas**. Los cuatro requisitos generales siguen abiertos por el paquete definitivo, auditoría final y entrega. OTA real continúa aplazada por el usuario.
 
 ## Destino, versiones y copia con datos

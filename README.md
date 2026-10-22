@@ -1,132 +1,44 @@
-# Hospitality Suite
+# Hospitality Suite 0.8.9
 
-Para volver a iniciar el sitio de pruebas ya instalado después de reiniciar Windows/WSL, ejecute desde PowerShell en este repositorio:
+Aplicación de alojamiento para **Hotel, Por tiempo y operación Mixta** sobre Frappe/ERPNext. Incluye once Pages para recepción, reservas, estancias, caja, limpieza, mantenimiento, servicios/inventario, huéspedes, gerencia y configuración; nueve roles y 35 DocTypes HS. Los documentos estándar de ERPNext son la autoridad contable y de inventario.
+
+El alcance obligatorio del adjunto está contrastado en las **218 entradas** de la [matriz](docs/AUDITORIA_ESPECIFICACION.md), con [cotejo individual](docs/COTEJO_FINAL.md). La sincronización real con Airbnb/Booking sigue aplazada por instrucción del usuario. Las demás integraciones externas son contratos/adaptadores de referencia con pruebas simuladas, sin proveedores activos.
+
+## Probar el sitio ya instalado en WSL
+
+Desde PowerShell en este repositorio:
 
 ```powershell
 .\tools\start_local_hotel.ps1
 ```
 
-El lanzador verifica los alias dentro de WSL, reutiliza los procesos gestionados existentes y comprueba HTTP 200/pong desde ese mismo contexto. Muestra la dirección de [Reservas](http://hospitality.localhost:8086/desk/hospitality-suite/hospitality-reservations). No instala la app ni carga demostración. [Prueba del lanzador](docs/evidence/f26-launcher.json).
+Abra [Reservas](http://hospitality.localhost:8086/desk/hospitality-suite/hospitality-reservations). El lanzador restablece solo los alias locales nombrados, reutiliza procesos gestionados y comprueba HTTP 200/pong dentro de WSL. No instala ni reinicia la demostración. Las cuentas por rol permanecen en `sites/hospitality.localhost/private/hospitality-demo-users.json` del bench, fuera de Git/paquetes. [Entrega y artefactos](docs/ENTREGA_FINAL.md).
 
-[ACTUALIZACION_Y_RECUPERACION_FINAL.md](docs/ACTUALIZACION_Y_RECUPERACION_FINAL.md) acredita **F26** sobre 0.8.9: actualización, fallo controlado, respaldo del estado fallido, recuperación coordinada de código/base/archivos y segundo despliegue, con las 72 tablas/1,246 filas y archivos originales idénticos. Instalación limpia actual: 35 DocTypes/11 Pages/9 roles/9 formatos/6 patches, **410 nativas y 232 JS aprobadas**. Sitios del principal actualizados sin perder datos; destino original/21 archivos restablecidos, 14 archivos del escenario nativo archivados y servicios temporales apagados. **214 V/cuatro I**: quedan paquete definitivo, auditoría de cierre y entrega S00-01/S01-12/S19-07/S19-08. OTA aplazada. Los apartados posteriores son antecedentes con su propio alcance.
+## Entorno acreditado
 
-[TESORERIA_Y_COMPRAS_DESDE_PAGES.md](docs/TESORERIA_Y_COMPRAS_DESDE_PAGES.md) acredita el recorrido secundario T11/T19 con Gerencia, Caja y Contabilidad: egreso/límite/corrección, entrega, liquidaciones parciales, compra 2+4, facturas/pagos y movimiento/conteo. Se corrigen filas y acciones de recepción innecesarias, facturación vacía y permiso nativo del conteo sin conceder escritura general. **407 nativas (375 integración/32 unitarias) y 225 JS aprobadas**, 48 observaciones de escritorio. Datos restaurados y 741 archivos originales conservados. **212 V/seis I**: quedan activación rápida desde el panel de estancia, otros recorridos secundarios y F26/paquete/entrega. OTA aplazada. Los registros anteriores son históricos.
+Frappe **16.52.0**, ERPNext **16.51.1**, Python **3.14.6**, Node **24.18.0**, MariaDB **10.11.14**, Ubuntu 24.04/WSL2; commits y rutas en [la evidencia de entorno](docs/evidence/f26-candidate-environment.json). Otras versiones no están acreditadas. HRMS es opcional y no estaba instalado. PDF requiere `wkhtmltopdf` con Qt parcheado; un renderer incompatible se rechaza con un error claro.
 
-[VENTANAS_Y_EVIDENCIAS_PRIVADAS.md](docs/VENTANAS_Y_EVIDENCIAS_PRIVADAS.md) aporta evidencia parcial a S04-16/S04-20: causa del clic perdido demostrada y corregida, adjunto privado del técnico conservado sin ampliar permisos de costos, y consulta de evidencia de novedades abiertas/resueltas. **405 nativas (373 integración/32 unitarias) y 222 JS aprobadas**, dos roles reales y dieciocho observaciones de escritorio. Aceptación restaurada, principal conservado y 741 archivos físicos originales idénticos. **212 V y seis I**: siguen reglas/estados y variantes secundarias, F26 y paquete/entrega final. Los registros anteriores conservan su alcance histórico; OTA sigue aplazada.
+La app declara sus dependencias Bench en `pyproject.toml`, usa JS/CSS y controles nativos de Frappe, y no modifica el núcleo. [Arquitectura y decisiones](docs/ARQUITECTURA.md).
 
-PMS nativo para modalidades Hotel, Por tiempo y Hotel y por tiempo. Recepción, caja, limpieza y gerencia trabajan desde once Pages de Desk en español; la contabilidad y el inventario permanecen en ERPNext.
+## Instalación con Bench
 
-Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. App **0.8.9**, con aceptación de Pages, instalación limpia y recuperación coordinada acreditadas: 410 nativas/232 JS y 214 de 218 requisitos verificados. Falta el paquete definitivo y la auditoría/entrega final. Los contratos externos de referencia están desactivados; OTA real sigue aplazada por el usuario. Otras versiones no están acreditadas. Los apartados históricos conservan sus versiones y recuentos.
-
-[Tareas y estados por rol](docs/TAREAS_Y_ESTADOS_POR_ROL.md): **212 V y seis I**, con S00-02/S04-14 acreditados. **221 JS aprobadas**, 22 familias/84 acciones contrastadas y nuevo recorrido real de Mantenimiento/Gerencia/Supervisión con stock/devolución/reapertura. Se corrigen cantidades ambiguas y nombres de repuestos. Las 404 nativas de `be67c92` conservan su alcance histórico y Python sigue idéntico. Quedan estados/secuencias, variantes visuales secundarias y F26/paquete final; OTA aplazada. Los avances siguientes son antecedentes con su propia versión y alcance.
-
-[Paquete e instalación limpia](docs/INSTALACION_LIMPIA.md): distribución fuente/wheel contrastados, bench/Python/Redis/base propios y primer hotel creado desde la Page después del asistente nativo de ERPNext. **404 nativas y 215 JS aprobadas**, dos carreras reales con un ganador cada una y rechazo del helper en el principal. Se conservan los siete fallos iniciales de preparación y la repetición corregida. S18-01/S19-02 pasan a V: **210 V y ocho I**, con aceptación transversal y recuperación final F26 pendientes. Datos de los sitios anteriores conservados; OTA aplazada.
-
-[Validación numérica](docs/VALIDACION_NUMERICA.md), revisión posterior sobre 0.8.8: evita guardar capacidad 1.5 como 1 y comprueba los borradores de filas antes del parseo. **215 JS aprobadas**, Gerencia/Recepción reales, sitio aislado restaurado y consulta principal con tarjetas verde/rojo sin texto redundante. El backend no cambia; las 404 nativas de `fb8c022` son evidencia histórica. La matriz mantiene **208 V/diez I**; aceptación transversal, paquete/instalación y F26 pendientes, OTA aplazada.
-
-[Contraste de fases y acciones](docs/REVISION_FASES_Y_ACCIONES.md), sobre el mismo código 0.8.8: entorno/metadatos revisados ahora, 84 manejadores y dos grupos dinámicos resueltos; fuentes y recorridos históricos contrastados con las 404 nativas/210 JS ejecutadas en `fb8c022`. No es una repetición visual ni de esas baterías. Seis entradas de fases quedan V y seis generales/finales pasan a I con comprobaciones concretas: **208 V, diez I, cero R; diez sin cierre**. Permanecen aceptación global por rol/estado, paquete/instalación limpia y ensayo final F26. OTA aplazada.
-
-[Contratos de proveedores](docs/CONTRATOS_PROVEEDORES.md), 0.8.8: adaptadores de referencia para pagos, correo/WhatsApp y cerraduras, más normalización entrante de canales sin publicar disponibilidad. **404 nativas (372 integración/32 unitarias) y 210 JS aprobadas**; dieciocho casos nuevos de contrato con red prohibida. No son conectores comerciales ni se activa ningún proveedor. S14-05/S14-07 quedan V para preparación/simulación; **202 V, cuatro I y doce R: dieciséis sin cierre**. Airbnb/Booking continúa aplazado. Datos/archivos conservados y ambos sitios actualizados; F26 pendiente.
-
-[Impresiones y artefactos nativos](docs/IMPRESIONES_OPERATIVAS.md), 0.8.7: nueve formatos desde Pages, cinco roles y limpieza móvil. Se verifican 35 DocTypes, 11 Pages, 28 APIs, permisos, hooks, seis patches y formatos instalados en ambos sitios. **386 nativas y 210 JS aprobadas**. Se corrigen nombres, redondeo presentado y botones de modal que quedaban deshabilitados. S18-02/S18-03 pasan a V; **200 V, seis I y doce R: dieciocho sin cierre**. OTA aplazada y F26 pendiente.
-
-El desarrollo continúa: [matriz de requisitos](docs/REQUISITOS.md), [auditoría punto por punto](docs/AUDITORIA_ESPECIFICACION.md), [registro de avance](docs/AVANCE.md) y [arquitectura](docs/ARQUITECTURA.md). No se declara listo para producción mientras existan pendientes obligatorios.
-
-[Selectores y reserva manual](docs/SELECTORES_Y_RESERVA_MANUAL.md), 0.8.6: categorías, habitaciones y tarifas por nombres, con datos útiles y filtros/permisos nativos. Detalle de habitación accesible, edición numérica conservada y vacío específico junto a borradores. **203 JS aprobadas** y catorce eventos de Recepción en ambas propiedades; la pérdida de personas detectada se corrige y repite antes de confirmar. Una reserva conserva sus claves y dos personas al guardar/retomar/confirmar. La matriz mantiene **198 V, seis I y catorce R: veinte sin cierre**, con reglas/estados/tareas secundarios y ensayo final pendientes. OTA aplazada.
-
-[Actividad y recuperación](docs/ACTIVIDAD_Y_RECUPERACION_PAGES.md), 0.8.5: aviso de preparación junto al botón en móvil, estados de actualización/guardado y controles bloqueados hasta terminar. Error sintético recuperado sin repetir reserva. **196 JS aprobadas**, 21 eventos iniciales y tres de regresión final tras restaurar; los 380 casos nativos de 0.8.2 siguen como antecedente. [Estado de entrega](docs/ESTADO_Y_EVIDENCIAS_ENTREGA.md) acredita evidencias/lista S18-11/S18-12: **198 V, 6 I y 14 R; veinte entradas sin cierre**. Selector manual con códigos, precisión del vacío de reservas, tareas secundarias y ensayo final siguen pendientes. OTA aplazada.
-
-[Disponibilidad visual y límites](docs/DISPONIBILIDAD_VISUAL_Y_LIMITES.md), 0.8.4: tarjetas verdes disponibles y rojas sin disponibilidad, con estado escrito y motivo. Pulsar una disponible conserva habitación/fechas; prueba con una reserva real ficticia y móvil sin desbordamiento. Cantidad/personas inválidas se explican junto al campo antes del parseo y la consulta. **191 JS aprobadas**; la batería nativa de 380 casos de 0.8.2 se conserva como antecedente. S04-16 mantiene revisión del conjunto y dos observaciones de contexto de acciones. **22 entradas sin cierre**, OTA aplazada y F26 pendiente.
-
-[Caja y contabilidad](docs/AUDITORIA_CAJA_CONTABILIDAD.md): conciliación por estancia/turno, cuentas grupales completas y filtros más compactos. 294 pruebas nativas y 80 JS aprobadas. Resultados de esa fase en su auditoría. El PDF habitual de cuenta mantiene la [presentación resumida](docs/CUENTA_RESUMIDA.md).
-
-[Limpieza y mantenimiento](docs/AUDITORIA_LIMPIEZA_MANTENIMIENTO.md): bloqueo hasta reapertura, inspección y correcciones explícitas. 307 nativas y 85 JS aprobadas. Matriz: 157 V, 14 I y 47 R; 61 entradas sin cierre.
-
-[Permisos y aislamiento](docs/AUDITORIA_SEGURIDAD.md): contexto validado en servidor, JSON acotado y 19 comprobaciones HTTP. 319 nativas aprobadas. Estado de esa fase: **166 V, 15 I y 37 R; 52 entradas sin cierre**.
-
-[Bitácora y cierres](docs/BITACORA_Y_CIERRES.md): cambios legibles, valores históricos y resumen por ejecución. **329 nativas y 95 JS aprobadas**. Estado de esa fase: **170 V, 14 I y 34 R; 48 entradas sin cierre**.
-
-[Inventario y servicios](docs/AUDITORIA_INVENTARIO_SERVICIOS.md): entregas/devoluciones conciliadas, consultas por ubicación y acciones claras por estado. **337 nativas y 101 JS aprobadas**. Estado de esa fase: **179 V, 14 I y 25 R; 39 entradas sin cierre**.
-
-[Aceptación y demostración](docs/ACEPTACION_Y_DEMOSTRACION.md): un usuario con roles explícitos de recepción/caja reserva, ingresa, entrega un consumo, extiende, cobra y registra salida desde Pages. Limpieza/Supervisión liberan; Contabilidad rastrea factura/pago y Gerencia contrasta C$ 3,030.00. Generador operativo repetible, con reservas y consumos ficticios en dos establecimientos. **373 nativas y 136 JS aprobadas** en esa fase. Estado de esa fase: **188 V, 8 I y 22 R; 30 entradas sin cierre**.
-
-[Idioma y etiquetas](docs/IDIOMA_Y_ETIQUETAS.md): campos y enlaces en español, estados por contexto y catálogo con nombres claros. **379 nativas y 142 JS aprobadas** en 0.8.1. Estado al cerrar esa fase: **189 V, 7 I y 22 R; 29 entradas sin cierre**. Datos originales conservados, con Version de metadatos y caché nativa documentadas.
-
-[Teclado y foco](docs/TECLADO_Y_FOCO.md) acredita S04-17: nueve roles, escritorio/móvil y portal, con **380 nativas y 174 JS aprobadas**. Precio conservado, tablas sin filas implícitas, checklist y retorno de foco; Enter respeta No/Sí y el portal anuncia su resultado. La [revisión de entregables](docs/ENTREGABLES_Y_REVISION.md) acredita también las guías S18-06 a S18-09, además de diagramas y matriz: **196 V, 6 I y 16 R; 22 entradas sin cierre**. Las tareas/formularios secundarios, contratos y recuperación final mantienen su verificación propia.
-
-[Validación de formularios](docs/VALIDACION_FORMULARIOS.md), 0.8.3: mensajes junto al campo y fila, corrección sin perder valores, rangos de fechas y nombre conservado al cambiar rápidamente de pestaña. **183 JS aprobadas** y recorrido con Administración/Caja, incluido móvil y arqueo cero. La batería nativa de 380 casos corresponde a 0.8.2; no se vuelve a presentar como una ejecución de 0.8.3. S04-16 y el conjunto de tareas secundarias siguen abiertos, con límites numéricos y una incidencia de salida de sesión por revisar. La matriz mantiene 22 entradas sin cierre.
-
-[Historial de habitaciones](docs/HISTORIAL_HABITACIONES.md) conserva la fase 0.7.8: operaciones, cambios de datos y períodos por rango; valores plegados, paginación y permisos por establecimiento. **365 nativas y 136 JS aprobadas** en esa fase. Recepción comprueba cancelación, limpieza, cambio de habitación, bloqueos, tres páginas y móvil.
-
-[Estados por intervalo](docs/ESTADOS_POR_INTERVALO.md) conserva la fase 0.7.7: contraste plegado de habitaciones para sus fechas, limpieza actual y llegadas/salidas con texto; calendario con contexto, validación e idioma. **352 nativas y 126 JS aprobadas** en esa fase, con catorce nativas dirigidas finales.
-
-[Inicio y filtros de Recepción](docs/INICIO_Y_FILTROS.md) conserva la fase 0.7.6: llegadas/salidas accionables y preferencias por usuario/establecimiento, con 117 JS y nueve nativas dirigidas de esa fase.
-
-[Fecha y pendientes del cierre](docs/FECHA_Y_PENDIENTES_CIERRE.md) conserva la fase 0.7.5: corte explícito, pendientes y acciones para resolver el cierre; su batería completa de 345 nativas se mantiene como evidencia anterior.
-
-## Instalación en Bench
-
-ERPNext debe estar instalado antes. La instalación normal no crea compañías, cuentas, impuestos, habitaciones ni datos de demostración. HRMS es opcional.
-
-En un sitio nuevo, complete primero el asistente inicial de ERPNext con su idioma, zona horaria y compañía, sin activar datos de demostración. Después abra `/desk/hospitality-suite/hospitality-home`: el PMS muestra «Prepare su primer establecimiento» y permite crearlo desde su propio diálogo. Configure categorías, habitaciones, tarifas y contabilidad antes de operar. La instalación y este primer arranque se han probado en un bench independiente; el contenido de demostración/pruebas se carga explícitamente después.
+Use un bench de desarrollo/pruebas con las versiones anteriores de Frappe y ERPNext instaladas. Obtenga un clon del repositorio Git local de este proyecto; el archivo de repositorio tar.gz es un archivo fuente sin historial Git.
 
 ```sh
-cd /ruta/al/bench
-bench get-app hospitality_suite /ruta/al/repositorio/Hotel
+bench get-app hospitality_suite /ruta/al/repositorio-git
+bench new-site hotel.localhost --install-app erpnext
 bench --site hotel.localhost install-app hospitality_suite
 bench --site hotel.localhost migrate
 bench build --app hospitality_suite
-bench --site hotel.localhost clear-cache
 ```
 
-Se requieren Redis, MariaDB, worker, scheduler y Socket.IO de Frappe. Los PDF usan el motor wkhtmltopdf del entorno. No se modifica el núcleo.
+Si el sitio ya existe con ERPNext, omita `new-site`. Inicie los procesos de desarrollo con `bench start` y abra la Page `hospitality-home`. La instalación no crea compañía, habitaciones ni operaciones ficticias: complete primero el asistente nativo de ERPNext y cree el primer establecimiento desde Inicio. Configure modalidad/zona/moneda/fecha/corte, habitaciones/categorías/tarifas, impuestos, cuentas/centros de costo/almacenes, medios de pago, políticas, series/formatos y usuarios antes de habilitar operaciones financieras.
 
-## Sitio de WSL creado para esta tarea
-
-Bench separado: `/home/frappe/benches/hospitality-bench`. Sitio operativo de demostración: [Recepción local](http://hospitality.localhost:8086/app/hospitality-reception). La batería usa `hospitality-acceptance.localhost`, restaurado a su base sin operaciones antes de ejecutarla. El sitio histórico `hospitality-clean.localhost` está en cuarentena con su respaldo de diagnóstico; no se reutiliza para estas pruebas.
-
-Desde PowerShell:
-
-```powershell
-wsl -d Ubuntu-24.04 -u root -- python3 /mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/tools/configure_local_hosts.py
-wsl -d Ubuntu-24.04 -u frappe -- python3 /mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/tools/run_dev.py
-```
-
-El primer comando añade únicamente los alias de demostración y aceptación a `127.0.0.1` dentro de WSL. Es repetible, conserva las líneas existentes y rechaza direcciones conflictivas. El navegador puede resolver `*.localhost` aunque WSL no lo haga; el servidor de tiempo real también necesita esa resolución para autenticar. WSL puede regenerar `/etc/hosts` al reiniciar: `run_dev.py` comprueba los alias antes de arrancar y pide repetir la configuración si faltan. Use `configure_local_hosts.py --check` como usuario frappe para verificar sin escribir. [Prueba con los dos nombres reales](docs/TIEMPO_REAL_SITIOS_LOCALES.md).
-
-El script solo arranca el bench aislado, reutiliza puertos activos y deja PID/registros en `.hospitality-run`. Tras cambiar Python, ejecute el mismo comando con `--restart-web` y, si cambian hooks/jobs, `--restart-worker`; el servidor administrado usa `--noreload`. No es un despliegue de producción. Las credenciales se conservan únicamente en los archivos privados del bench/sitio descritos en `docs/AVANCE.md`; no están en Git.
-
-PDF requiere wkhtmltopdf con Qt parcheado. En este bench, `tools/bootstrap_pdf_runtime.py` se ejecuta con `env/bin/python` de Frappe y extrae el paquete oficial dentro de `.runtime`, sin reemplazar el binario del sistema. Después reinicie web/worker mediante run_dev. Versión probada: 0.12.6.1; detalles y comandos en OPERACION.md.
-
-`tools/bootstrap_wsl.py` documenta la creación inicial de la base y el sitio, rechaza bases existentes y permite otra base `hospitality_*` para un sitio `hospitality-*.localhost`. No reutilizarlo sobre sitios ajenos.
-
-## Configuración y operación
-
-Abra Configuración con un administrador de sistema o rol autorizado. Seleccione compañía, moneda y zona; cree categorías, habitaciones, tarifas, medios de pago y políticas. El asistente valida cuentas, almacenes y centro de costo antes de habilitar finanzas. Revise expresamente impuestos, identificación, crédito y formatos de factura para la instalación.
-
-[Estancias](docs/ESTANCIAS_Y_LLEGADAS.md) separa alojados, llegadas, salidas y cuentas abiertas, con conteos y paginación. Recepción muestra la próxima llegada pendiente y abre la reserva existente; una reserva futura conserva su diferencia con la ocupación actual. La cabecera móvil y las fichas del tablero se compactan para mostrar antes datos y acciones.
-
-Los formularios extensos se dividen en pestañas por tarea, con acción visible y adaptación móvil. Reserva/entrada revisa el precio antes de confirmar; caja distingue revisar/confirmar cobro, anticipo, garantía o devolución. [UX y evidencia de formularios](docs/UX_FORMULARIOS.md).
-
-La política de [cargos por noche](docs/CARGOS_PERIODICOS.md) conserva importes aceptados, separa programados/generados y evita duplicados al repetir la auditoría. La actualización mantiene Al ingresar para datos existentes. [Facturar cuenta](docs/FACTURACION_DESDE_PAGES.md) permite revisar y emitir una factura, incluido importe cero, conservando la estancia activa y sin registrar un cobro.
-
-El usuario necesita roles HS y un registro HS Access por establecimiento/compañía. El asistente concede únicamente roles HS; la administración de cuentas de acceso y los roles ERPNext adicionales siguen los mecanismos estándar de Frappe. Un recepcionista que también cobra puede combinar HS Receptionist y HS Cashier.
-
-[Reservas y precio histórico](docs/EXPLICACION_TARIFA_HISTORICA.md): la cuenta explica la tarifa aceptada, Ver reserva muestra un resumen completo y las habitaciones disponibles abren la reserva con datos preseleccionados. Los nuevos documentos usan [series legibles](docs/SERIES_DOCUMENTALES.md), conservando los identificadores anteriores.
-
-La [gestión de huéspedes](docs/GESTION_HUESPEDES.md) permite corregir la misma ficha con motivo, prioriza la identificación según la política y conserva los documentos estándar y referencias existentes.
-
-El [contador de recepción](docs/CONTADOR_Y_RELOJ.md) conserva el vencimiento al recargar y al cambiar el reloj del equipo; es orientativo y no modifica los cargos.
-
-La [caducidad de retenciones](docs/TRABAJOS_Y_REINTENTOS.md) limita los reintentos transitorios del worker, conserva el rollback y registra los fallos con recuperación estándar.
-
-El [PDF de cuenta resumido](docs/CUENTA_RESUMIDA.md) presenta cargos, movimientos y saldo, omitiendo fórmulas y secciones vacías; el cálculo histórico se consulta en pantalla.
-
-Consulte el [manual por rol](docs/MANUAL.md), [tratamiento contable](docs/CONTABILIDAD.md) y [operación técnica](docs/OPERACION.md) y [contratos API](docs/API.md).
+Recepción y Caja tienen permisos separados; una misma persona puede reservar y cobrar con ambos roles explícitamente asignados a su sede. Limpieza no recibe inspección o permisos financieros por defecto. La marca comercial y las políticas se configuran por establecimiento.
 
 ## Demostración explícita
 
-Solo en un sitio de pruebas, habilite `hospitality_allow_demo` y ejecute:
+Solo en un sitio de pruebas designado:
 
 ```sh
 bench --site hotel.localhost set-config allow_tests true
@@ -135,55 +47,40 @@ bench --site hotel.localhost execute hospitality_suite.demo.seed
 bench --site hotel.localhost execute hospitality_suite.demo_scenario.build
 ```
 
-Crea datos ficticios: Hotel y Por tiempo con diez habitaciones cada uno, huéspedes, precios, existencias de muestra y usuarios por rol. El escenario operativo deja una reserva futura, una estancia y un consumo entregado por establecimiento; usa movimientos nativos de stock y no hace cobros. Repetir conserva las referencias y el trabajo posterior. Requiere los establecimientos ficticios originales y rechaza reservas, estancias, cargos, caja o consumos ajenos al primer recorrido. Las contraseñas aleatorias quedan en `sites/<sitio>/private/hospitality-demo-users.json`, modo 600. Ambas cargas son explícitas y están separadas de la instalación normal. Use un sitio distinto y vacío para la batería; vea [aceptación y límites](docs/ACEPTACION_Y_DEMOSTRACION.md).
+Se crean dos establecimientos ficticios de diez habitaciones, tarifas, huéspedes, stock y usuarios por rol. El escenario añade reservas, estancias y consumos mediante documentos estándar, sin cobros. Repetir conserva las referencias y el trabajo posterior; rechaza datos ajenos al primer escenario. Las contraseñas quedan en el archivo privado del sitio, modo 600. [Alcance y aceptación](docs/ACEPTACION_Y_DEMOSTRACION.md). No reutilice la demostración ocupada como sitio vacío de integración.
 
 ## Construcción, migración y pruebas
 
-Los JSON nativos están versionados. Si se cambia `schema.py` o una plantilla de impresión:
+Los JSON nativos están versionados. Si cambia `schema.py` o una plantilla de impresión, genere los metadatos con `python3 tools/generate_schema.py`, ejecute `bench --site hotel.localhost migrate` y `bench build --app hospitality_suite`. Para actualizar/restaurar una instalación, siga [OPERACION.md](docs/OPERACION.md); volver solo al código anterior no restaura base ni archivos.
+
+La batería nativa exige un sitio desechable sin operaciones, Redis disponible y designación explícita. Instale la dependencia de pruebas y pause el scheduler antes de preparar ese sitio:
 
 ```sh
-python3 tools/generate_schema.py
-cd /ruta/al/bench
-bench --site hotel.localhost migrate
-bench build --app hospitality_suite
+bench pip install -e "apps/hospitality_suite[test]"
+bench --site hotel-test.localhost set-config allow_tests true
+bench --site hotel-test.localhost set-config hospitality_integration_test_site true
+bench --site hotel-test.localhost set-config pause_scheduler true
+bench --site hotel-test.localhost run-tests --app hospitality_suite --junit-xml-output /ruta/pruebas.xml
 ```
 
-La batería requiere un sitio desechable identificado como pruebas y `allow_tests`. Para generar JUnit, instale la dependencia opcional con `bench pip install -e "apps/hospitality_suite[test]"`:
+`before_tests` valida la protección y carga explícitamente el fixture. Frappe 16 produce dos documentos XML, integración y unitarias; consérvelos y normalice con `python3 tools/normalize_junit.py /ruta/pruebas.xml /ruta/pruebas-normalizadas.xml` desde el repositorio. Revise casos/fallos/errores/omisiones además del código de salida.
+
+Las pruebas JS sin servidor se ejecutan desde el repositorio con:
 
 ```sh
-bench --site hospitality-acceptance.localhost set-config allow_tests true
-bench --site hospitality-acceptance.localhost set-config hospitality_integration_test_site true
-bench --site hospitality-acceptance.localhost set-config pause_scheduler true
-bench --site hospitality-acceptance.localhost run-tests --app hospitality_suite
+HOSPITALITY_FRAPPE_ROOT=/ruta/al/bench/apps/frappe node tools/run_ui_tests.cjs
 ```
 
-Para conservar JUnit, sustituya la última línea por `bench --site hospitality-acceptance.localhost run-tests --app hospitality_suite --junit-xml-output /ruta/absoluta/pruebas.xml`. En la versión probada Frappe añade un documento XML por cohorte; conserve la salida original y genere un archivo único para CI con `python3 tools/normalize_junit.py /ruta/pruebas.xml /ruta/pruebas-normalizadas.xml` desde el repositorio. El normalizador cuenta los casos, errores y fallos sin cambiar sus resultados. Un final de proceso correcto no sustituye revisar esos resultados.
+Última batería: **410 nativas (378 integración/32 unitarias) y 232 JS (229 Desk/tres portal)**, sin fallos ni omisiones, desde el Python/clon del bench independiente sobre 0.8.9. [JUnit](docs/evidence/final-recovery-native-tests.xml), [recibo](docs/evidence/final-recovery-native-run.json), [JS](docs/evidence/f26-js-run.json). El transporte, las carreras reales, el worker y los recorridos GUI están documentados por separado; no se presentan los 232 casos JS como pruebas de navegador.
 
-`before_tests` exige Redis y un sitio designado sin operaciones; carga explícitamente dos establecimientos, veinte habitaciones y apertura de stock ficticia. Cada caso revierte sus movimientos. El ejemplo usa aceptación en WSL; para otro destino instale un sitio desechable equivalente y pause su scheduler. Conserve respaldo inicial. Última batería completa: **410 aprobadas**, 378 de integración y 32 unitarias, en el Python/clon independientes de `hospitality-release.localhost`, app 0.8.9 (`977adb2`): [JUnit](docs/evidence/final-recovery-native-tests.xml), [recibo](docs/evidence/final-recovery-native-run.json). Pasaron también [232 JS](docs/evidence/f26-js-tests-tap.log), con los controles del Frappe independiente. Los resultados anteriores y las incidencias de preparación conservan sus registros históricos. Los seis escenarios con worker real de TRABAJOS_Y_REINTENTOS.md mantienen el alcance de aquella fase.
+Los helpers de concurrencia requieren sitio de integración designado, scheduler pausado y respaldo. Usan conexiones/commits reales y dejan anulaciones auditadas; no se ejecutan sobre un cliente con operaciones. [Ensayo de instalación y recuperación](docs/ACTUALIZACION_Y_RECUPERACION_FINAL.md).
 
-La fase histórica 0.7.1 acredita **307 pruebas nativas y 85 JS**, con trece casos nuevos de limpieza, bloqueos y contexto de establecimiento. La matriz de aquella fase registraba 157 V, 14 I, 0 P y 47 R. Los sitios históricos conservan su alcance; la demostración principal contiene operaciones y rechaza los helpers de integración. Los dos casos de concurrencia usan conexiones y commits reales, requieren un sitio designado sin operaciones y scheduler pausado, cancelan sus reservas con auditoría y se ejecutan aparte con respaldo/restauración:
+## Guías, alcance e integraciones
 
-```sh
-bench --site hospitality-acceptance.localhost execute hospitality_suite.tests.concurrency.verify
-bench --site hospitality-acceptance.localhost execute hospitality_suite.tests.concurrency.verify_category
-```
+- [Entrega y artefactos](docs/ENTREGA_FINAL.md).
+- [Manual por rol](docs/MANUAL.md), [contabilidad/conciliación](docs/CONTABILIDAD.md) y [operación/respaldos](docs/OPERACION.md).
+- [Modelo, estados y flujos](docs/MODELO_ESTADOS_Y_FLUJOS.md) y [API](docs/API.md).
+- [Funciones completadas, límites e integraciones externas](docs/ESTADO_Y_EVIDENCIAS_ENTREGA.md).
+- [Historial de fases](docs/AVANCE.md); sus recuentos/versiones son antecedentes, no el estado vigente.
 
-Las pruebas JS sin servidor cubren transporte, edición numérica, catálogo, traducción/presentación, políticas, cierre, servicios, POS, devoluciones, notas de crédito, formularios, foco/teclado, historial y portal: **171 de Desk y tres del portal**. Ejecute las 174 con:
-
-```sh
-node tools/run_ui_tests.cjs
-```
-
-Los ensayos reales de sesiones, corte y respuesta perdida se describen en docs/OPERACION.md. Los recorridos de navegador se documentan por separado en la matriz y la evidencia.
-
-Los helpers de concurrencia están limitados al sitio sintético y conservan anulaciones auditadas. No son pruebas que deban ejecutarse contra clientes reales.
-
-`tools/qa_exports.py` genera las impresiones y exportaciones reales del recorrido ficticio. `qa_pdf.py` y `qa_workbook.mjs` las inspeccionan sin modificar su contenido; requieren las dependencias de QA. La evidencia está en `docs/evidence/` y los archivos de revisión locales en `output/`.
-
-## Alcance y límites actuales
-
-El núcleo incluye disponibilidad serializada, snapshots tarifarios, grupos, folios, facturación, anticipos/garantías reales, caja, servicios/stock y limpieza. Las Pages permiten órdenes/recepciones/facturas de compra, pago a proveedor, egresos documentados, clasificación/mínimos, traslados/consumos/conteos y liquidación bancaria con comisiones/retenciones. Se verificaron circuitos de motel y hotel, y compra/pago/liquidación desde las Pages con datos ficticios.
-
-La retención de identificaciones y evidencias requiere revisión de gerencia y una política por establecimiento; los archivos se eliminan mediante outbox después del commit. Su alcance y recuperación están en docs/OPERACION.md.
-
-La matriz distingue lo implementado de lo probado y lo pendiente. Mantenimiento, planes incluidos, portal Guest, grupos, consumos y existencias móviles ya tienen recorridos de navegador. Continúan la aceptación integral por roles y formularios secundarios, el contraste restante y la recuperación final de despliegue. Pasarelas, canales, mensajería y cerraduras solo tienen contratos; no hay proveedor real configurado ni pagos simulados como liquidados.
+Los proveedores de pagos, correo/WhatsApp y cerraduras requieren selección, documentación, credenciales y aceptación específica antes de operar. Ninguna simulación contabiliza pagos ni confirma entregas/aperturas físicas. [Contratos](docs/CONTRATOS_PROVEEDORES.md). No se habilita sincronización real de canales. La entrega se verifica en desarrollo/pruebas y no certifica configuraciones o proveedores distintos del entorno acreditado.

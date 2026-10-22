@@ -1,67 +1,45 @@
-# Estado de entrega y evidencias — revisión 21/10/2026
+# Estado de entrega y evidencias — 0.8.9
 
-Estado actual: [TESORERIA_Y_COMPRAS_DESDE_PAGES.md](TESORERIA_Y_COMPRAS_DESDE_PAGES.md) acredita el recorrido secundario T11/T19 con Gerencia, Caja y Contabilidad: egreso/límite/corrección, entrega, liquidaciones parciales, compra 2+4, facturas/pagos y movimiento/conteo. Se corrigen filas y acciones de recepción innecesarias, facturación vacía y permiso nativo del conteo sin conceder escritura general. **407 nativas (375 integración/32 unitarias) y 225 JS aprobadas**, 48 observaciones de escritorio. Datos restaurados y 741 archivos originales conservados. **212 V/seis I**: quedan activación rápida desde el panel de estancia, otros recorridos secundarios y F26/paquete/entrega. OTA aplazada. Los registros anteriores son históricos.
+El alcance obligatorio se contrasta en **218 requisitos**, con implementación y evidencia individual en [la matriz](AUDITORIA_ESPECIFICACION.md) y [el cotejo final](COTEJO_FINAL.md). La entrega conserva el objetivo completo y los ajustes de interfaz. La sincronización real con Airbnb/Booking permanece aplazada por instrucción expresa del usuario.
 
-Estado actual: [VENTANAS_Y_EVIDENCIAS_PRIVADAS.md](VENTANAS_Y_EVIDENCIAS_PRIVADAS.md) aporta evidencia parcial a S04-16/S04-20: causa del clic perdido demostrada y corregida, adjunto privado del técnico conservado sin ampliar permisos de costos, y consulta de evidencia de novedades abiertas/resueltas. **405 nativas (373 integración/32 unitarias) y 222 JS aprobadas**, dos roles reales y dieciocho observaciones de escritorio. Aceptación restaurada, principal conservado y 741 archivos físicos originales idénticos. **212 V y seis I**: siguen reglas/estados y variantes secundarias, F26 y paquete/entrega final. Los registros anteriores conservan su alcance histórico; OTA sigue aplazada.
+## Funciones completadas
 
-Estado actual: [tareas y estados por rol](TAREAS_Y_ESTADOS_POR_ROL.md), **212 V y seis I**. S00-02/S04-14 quedan acreditados; las variantes visuales secundarias y estados/secuencias S04-16/S04-20, así como F26/entrega S19-07/S19-08, permanecen abiertos junto a las dos entradas del objetivo global. **221 JS aprobadas**, tres roles/23 observaciones y restauración estricta. Las 404 nativas de la instalación independiente son históricas, con fuentes Python actuales idénticas. El paquete `3a8d0bf` todavía no incluye las dos correcciones de interfaz de esta revisión; debe regenerarse en la entrega final. Los registros que siguen conservan su fecha, versión y alcance histórico; no describen otro pase actual ni acreditan terminación.
-
-Última fase: [paquete e instalación limpia](INSTALACION_LIMPIA.md), con **404 nativas y 215 JS aprobadas**, dos carreras reales, primer hotel creado desde la Page y datos anteriores conservados. S18-01/S19-02 pasan a V; **210 V y ocho I**. No se acredita todavía la aceptación transversal ni la recuperación final F26. Los registros que siguen conservan su versión y alcance histórico.
-
-Última revisión: [validación numérica](VALIDACION_NUMERICA.md), con **215 JS aprobadas**, Gerencia/Recepción reales y restauración del sitio aislado. Se corrige capacidad 1.5 guardada como 1 y se protegen borradores de filas; las tarjetas conservan textos breves y colores. El backend no cambia: las **404 nativas de `fb8c022` son evidencia histórica**, sin nueva batería nativa completa. La matriz conserva **208 V/diez I**; no se acredita la aceptación transversal ni la entrega final.
-
-La app continúa en desarrollo. Esta lista diferencia funciones completadas con evidencia individual, limitaciones verificadas y trabajo externo pendiente. La [auditoría original](AUDITORIA_ESPECIFICACION.md) mantiene las mismas 218 entradas, texto y huella. **208 V, diez I, cero P y cero R: diez entradas sin cierre**. V acredita solo el texto de su entrada; la entrega completa y la aptitud para producción siguen sin acreditarse. [Contraste de fases y acciones](REVISION_FASES_Y_ACCIONES.md) identifica la evidencia histórica reutilizada y las comprobaciones de lectura actuales; no es un recorrido visual nuevo.
-
-## Funciones completadas con evidencia individual
-
-| Área | Función acreditada | Evidencia de alcance y condiciones |
+| Área | Entregado y probado | Evidencia principal |
 |---|---|---|
-| Reservas | Cupo por cantidad, intervalos y concurrencia; borradores persistentes y confirmación con precio aceptado | [Disponibilidad](DISPONIBILIDAD_POR_CANTIDAD.md), [borradores](BORRADORES_DE_RESERVA.md), [auditoría de reservas/estancias](AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md) |
-| Estancias | Llegadas, salidas, cuentas y grupos; extensiones/cambios con precio y asignaciones conservadas | [Tablero](ESTANCIAS_Y_LLEGADAS.md), [tarifa histórica](EXPLICACION_TARIFA_HISTORICA.md), entradas V individuales de S06/S07 |
-| Caja y contabilidad | Cobros, anticipos, garantías, devoluciones, liquidaciones y conciliación mediante documentos nativos | [Auditoría de Caja/Contabilidad](AUDITORIA_CAJA_CONTABILIDAD.md), [facturación desde Pages](FACTURACION_DESDE_PAGES.md), [configuración contable](CONTABILIDAD.md) |
-| Limpieza y mantenimiento | Checklist, inspección separada, bloqueo hasta reapertura, conflictos y trazabilidad | [Auditoría de limpieza/mantenimiento](AUDITORIA_LIMPIEZA_MANTENIMIENTO.md) |
-| Servicios e inventario | Preparación/entrega/devolución única, stock y ERPNext nativo; funcionamiento sin HRMS | [Auditoría de servicios/inventario](AUDITORIA_INVENTARIO_SERVICIOS.md) |
-| Cierre y bitácora | Fecha/corte explícitos, pendientes, resumen congelado y excepciones conservadas | [Fecha y cierre](FECHA_Y_PENDIENTES_CIERRE.md), [bitácora](BITACORA_Y_CIERRES.md) |
-| Seguimiento | Historial de habitación, reloj del servidor y recuperación de trabajos | [Historial](HISTORIAL_HABITACIONES.md), [contador](CONTADOR_Y_RELOJ.md), [trabajos/reintentos](TRABAJOS_Y_REINTENTOS.md) |
-| Acceso e interfaz | Roles/establecimientos, idioma, teclado/foco, disponibilidad visual y selectores por nombres | [Seguridad](AUDITORIA_SEGURIDAD.md), [idioma](IDIOMA_Y_ETIQUETAS.md), [teclado](TECLADO_Y_FOCO.md), [disponibilidad visual](DISPONIBILIDAD_VISUAL_Y_LIMITES.md), [reserva manual](SELECTORES_Y_RESERVA_MANUAL.md) |
-| Portal opcional | Solicitud/confirmación por token y aceptación con datos ficticios | [Aceptación/demostración](ACEPTACION_Y_DEMOSTRACION.md), [API](API.md) |
-| Documentación | Modelo/estados, matriz y guías por rol, instalación, contabilidad y operación | [Revisión de entregables](ENTREGABLES_Y_REVISION.md) |
-| Artefactos e impresiones | DocTypes/controladores, Pages, APIs, permisos, hooks, fixtures explícitos, patches y nueve formatos, con acceso desde cinco roles | [Impresiones operativas](IMPRESIONES_OPERATIVAS.md) |
-| Preparación de integraciones | Contratos y adaptadores de referencia de pagos, correo/WhatsApp y cerraduras; canal entrante sin publicación. Simulaciones sin red, sin proveedores operativos | [Contratos y límites](CONTRATOS_PROVEEDORES.md) |
+| Recepción/reservas | Disponibilidad por fechas/cantidad, cupo físico o categoría, grupos, borradores/holds, cotización, entrada, extensión/cambio y salida | [Aceptación real](ACEPTACION_Y_DEMOSTRACION.md), [tarifas/reservas](AUDITORIA_RESERVAS_TARIFAS_ESTANCIAS.md), [tareas](TAREAS_Y_ESTADOS_POR_ROL.md) |
+| Caja/contabilidad | Turno, pagos/FX/vuelto, anticipos/garantías, facturas/notas/devoluciones, gastos/liquidaciones y conciliación con ERPNext | [Caja/contabilidad](AUDITORIA_CAJA_CONTABILIDAD.md), [devoluciones](AUDITORIA_DEVOLUCIONES.md), [tesorería](TESORERIA_Y_COMPRAS_DESDE_PAGES.md) |
+| Limpieza/mantenimiento | Móvil, checklist e inspección, bloqueos/equipos/repuestos, novedades/evidencias y ropa | [Limpieza](AUDITORIA_LIMPIEZA_MANTENIMIENTO.md), [ropa](ROPA_Y_POLITICAS_DESDE_PAGES.md), [evidencias](VENTANAS_Y_EVIDENCIAS_PRIVADAS.md) |
+| Servicios/inventario | Solicitud/preparación/entrega/devolución, POS nativo, compras/movimientos/conteos, mínimos y activos sin doble stock | [Inventario](AUDITORIA_INVENTARIO_SERVICIOS.md), [compras](TESORERIA_Y_COMPRAS_DESDE_PAGES.md) |
+| Gestión y cierre | Reportes filtrables/exportables, KPI por noches/horas, origen nativo, fecha/corte, resúmenes congelados y recuperación | [Contabilidad](CONTABILIDAD.md), [cierres](FECHA_Y_PENDIENTES_CIERRE.md), [bitácora](BITACORA_Y_CIERRES.md) |
+| Acceso y UX | Nueve roles/sedes, once Pages, nombres/series, formularios agrupados, teclado/móvil, estados/reintento y tiempo real | [Seguridad](AUDITORIA_SEGURIDAD.md), [teclado](TECLADO_Y_FOCO.md), [tareas](TAREAS_Y_ESTADOS_POR_ROL.md), [tiempo real](TIEMPO_REAL_SITIOS_LOCALES.md) |
+| Portal y retención | Portal desactivado por defecto, solicitud/hold/token y conversión manual; revisión/retención privada con fallo y reintento | [Recorrido completo](RETENCION_Y_PORTAL_DESDE_PAGES.md) |
+| Impresión/documentación | Nueve formatos, cuenta concisa y explicación histórica en pantalla, modelo/estados y guías en español | [Impresiones](IMPRESIONES_OPERATIVAS.md), [cuenta](CUENTA_RESUMIDA.md), [entregables](ENTREGABLES_Y_REVISION.md) |
+| Instalación/recuperación | Paquetes comparados, instalación limpia actual, actualización 0.8.8→0.8.9, fallo, recuperación de código/base/archivos y segundo despliegue | [F26](ACTUALIZACION_Y_RECUPERACION_FINAL.md), [entrega](ENTREGA_FINAL.md) |
 
-La tabla agrupa funciones acreditadas; no convierte en V las revisiones generales de todas las tareas, formularios o entregables. Las condiciones financieras y permisos siguen dependiendo de la configuración real de cada establecimiento.
+## Evidencia actual y alcance
 
-## Limitaciones y trabajo pendiente verificados
+**410 pruebas nativas: 378 integración/32 unitarias**, sin errores/fallos/omisiones, y **232 JS: 229 Desk/tres portal**, desde el bench independiente con app 0.8.9. [JUnit](evidence/final-recovery-native-tests.xml), [salida](evidence/final-recovery-native-tests.log), [JS](evidence/f26-js-run.json). Instalación actual: 35 DocTypes, once Pages, nueve roles, nueve formatos, seis patches y 28 APIs contra fuentes. [Metadatos](evidence/f26-clean-install.json).
 
-| Estado | Alcance pendiente | Referencia |
+Los recorridos GUI y sus fixtures se describen por fase. Se conserva la aceptación completa de recepción/caja/limpieza/supervisión/contabilidad/gerencia y las variantes de compras, ropa, mantenimiento, privacidad y portal. El inventario de 84 manejadores y las pruebas JS no se convierten en 84 nuevas ejecuciones GUI. Los fallos previos de producto, supuestos corregidos de pruebas y límites de los recorridos se conservan en sus documentos originales.
+
+El ensayo F26 conserva 72 tablas/1,246 filas y los archivos de la copia del principal tras actualización, recuperación y segundo despliegue. El destino original y sus 21 archivos vuelven a su estado anterior; catorce archivos del escenario nativo se archivan fuera del sitio. Principal y aceptación registran 0.8.9 y conservan sus datos; los procesos temporales quedan apagados. [Verificación](evidence/f26-verification.json).
+
+## Límites verificados de esta entrega
+
+- Entorno acreditado: Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, Node 24.18.0 y MariaDB 10.11.14 en Ubuntu 24.04/WSL2. Otras versiones requieren su propia aceptación.
+- La instalación no carga demostración. La batería necesita sitio designado sin operaciones y scheduler pausado; no se debe ejecutar en el sitio ocupado de demostración ni producción.
+- Impuestos, identificación, cuentas, políticas y autorizaciones se configuran por implementación; los datos actuales son ficticios. HRMS es opcional y no estaba instalado.
+- Sin cobros desconectados. Los roles de recepción/caja son separados y se combinan solamente cuando se autoriza a una persona. El portal confirma manualmente y su página no acredita pago.
+- PDF requiere Qt parcheado. Workers/scheduler y aliases locales deben estar activos; el lanzador de WSL verifica el sitio existente después de reinicios.
+- Las evidencias no certifican un entorno productivo ajeno ni la seguridad de proveedores externos.
+
+## Integraciones externas pendientes de proveedor/acceso
+
+| Familia | Entregado | Pendiente antes de operar |
 |---|---|---|
-| I | S00-02/S04-14/S04-20: contrastar las tareas habituales y secundarias del conjunto de roles/Pages | [Matriz](REQUISITOS.md) y [siguiente fase](PENDIENTES.md) |
-| I | S04-16: demás reglas por campo y estados de búsquedas/vistas secundarias, con contraste del conjunto; 0.8.6 resuelve selectores técnicos, vacío junto a borradores y captura numérica del editor expandido | [Validación](VALIDACION_FORMULARIOS.md), [actividad/recuperación](ACTIVIDAD_Y_RECUPERACION_PAGES.md), [reserva manual](SELECTORES_Y_RESERVA_MANUAL.md) |
-| Observación abierta | Algunos clics inmediatos durante el cierre visual de un diálogo no abren la siguiente acción; después de desaparecer la capa nativa sí continúa | Recorrido de actividad/recuperación, sin atribuir una causa completa ni afirmar una solución total |
-| I | S00-01/S01-12: completar aceptación transversal y entrega antes de declarar íntegro el alcance | Contraste de fases con los diez pendientes explícitos |
-| I | S18-01/S19-02: comprobar paquete/dependencias/construcción, instalación limpia y primer arranque de la versión final | La estructura/código/metadatos existen; migrate de sitios existentes no reemplaza ese ensayo |
-| I | S19-07/S19-08: terminar aceptación y ensayo/entrega final, conservando registro por fase y resultados reales de acciones | S19-01/S19-03/S19-04/S19-05/S19-06/S19-09 quedan V con el alcance descrito en REVISION_FASES_Y_ACCIONES.md |
-| Ensayo final | F26/S19-07: instalación, actualización y reversión de la versión final; las restauraciones de fixtures no lo sustituyen | [Operación](OPERACION.md) y matriz |
+| Pasarela | Contrato/adaptador de referencia, intención pendiente, firma/caducidad/idempotencia y simulación sin contabilización | Proveedor, documentación, credenciales y aceptación de pagos/liquidación/conciliación reales |
+| Correo/WhatsApp | Contrato de destinatario/plantilla/enlace firmado, respuesta y pruebas sin red | Proveedor, remitente/plantillas, acceso/credenciales y prueba real de entrega |
+| Cerraduras | Vigencia/revocación acotadas y pruebas simuladas sin códigos de acceso exportados | Equipo/proveedor, documentación, acceso y aceptación física |
+| Airbnb/Booking/canales | Contrato y normalizador entrante de solo lectura; publicar disponibilidad rechaza | **Sincronización real aplazada por el usuario. No implementada ni activada.** |
 
-## Integraciones externas pendientes
-
-| Familia | Entregado actualmente | Lo que falta antes de operar |
-|---|---|---|
-| Pasarela de pago | Contrato y adaptador ejecutable del protocolo de referencia, pruebas de intención/firma/reintento y recibos mínimos; nunca contabiliza dinero | Seleccionar proveedor real, documentación, credenciales y pruebas; adaptar y validar liquidación, referencias y conciliación. Ninguna pasarela real activada |
-| Correo / WhatsApp | Adaptador de referencia con destinatario/plantilla/enlace, respuesta sin afirmar entrega y simulaciones sin red | Seleccionar proveedor real, documentación, credenciales, remitente/plantillas y aceptación específica; no hay envío externo activado |
-| Cerraduras | Adaptador de referencia para vigencia/revocación, respuestas validadas y simulación sin hardware | Seleccionar dispositivo/proveedor real, documentación, acceso de pruebas y credenciales; no hay apertura física activada |
-| Airbnb / Booking y otros canales | Contrato y normalizador entrante de solo lectura; publicar disponibilidad siempre rechaza | **Sincronización aplazada por instrucción del usuario. No implementarla ni activarla ahora.** No es un bloqueo de credenciales de esta fase |
-
-Las simulaciones son pruebas identificadas; no se ofrecen como integraciones operativas. Los secretos del entorno local permanecen en archivos privados y no forman parte de las evidencias públicas.
-
-## Evidencias realmente ejecutadas — S18-11
-
-- Última fase 0.8.8: **404 nativas, 372 integración/32 unitarias, y 210 JS, 207 Desk/tres portal**. [JUnit](evidence/provider-contracts-native-tests.xml), [log nativo](evidence/provider-contracts-native-tests.log), [JS](evidence/provider-contracts-js-tests.log), [límites y ausencia de activación](evidence/provider-contracts-boundaries.json) e [inventario instalado](evidence/provider-contracts-native-artifacts.json). Dieciocho casos nuevos simulan contratos con red prohibida. S14-05/S14-07 acreditan preparación, no proveedores comerciales ni sincronización de canales. No se cambia frontend ni se repite recorrido visual/PDF; las evidencias visuales anteriores conservan su alcance. [Detalle](CONTRATOS_PROVEEDORES.md).
-- Fase 0.8.7 conservada: **386 nativas, 372 integración/catorce puras, y 210 JS, 207 Desk/tres portal**. [JUnit](evidence/print-delivery-native-tests.xml), [salida nativa](evidence/print-delivery-native-tests.log), [JS](evidence/print-delivery-js-tests.log), [inventario nativo](evidence/print-delivery-native-artifacts.json), [PDF reales](evidence/print-delivery-pdfs.json) y [22 eventos de navegador](evidence/print-delivery-browser.json). Cinco roles consultan las nueve impresiones; el fixture se prepara por API, sin atribuir su creación a la UI. Se corrige el botón de cuenta deshabilitado y su reinserción tardía; 331/332 son defectos conservados. Diez páginas PDF revisadas, cuenta concisa y limpieza móvil efectiva de 390 px. [Detalle de alcance](IMPRESIONES_OPERATIVAS.md).
-- Fase 0.8.6 conservada: **203 pruebas JavaScript, 200 Desk/tres portal**, catorce eventos de Recepción en ambas propiedades, escritorio/móvil. El recorrido detecta y corrige etiquetas de fila y pérdida de personas antes de confirmar; conserva evidencias anteriores y repetición final. [Resultados](evidence/friendly-links-js-tests.log), [traza](evidence/friendly-links-browser.json), [borrador corregido](evidence/friendly-links-draft-ui.json), [confirmación](evidence/friendly-links-confirmed-ui.json), capturas 307–319. Las 309/311 documentan defectos anteriores a la corrección, no aceptación final. El recorrido de guardado/confirmación corresponde a P3YHSTYY. La versión definitiva DYBXC4MH añade codificación de descripciones con regresión unitaria y comprobaciones de solo lectura de [selectores](evidence/friendly-links-final-presentation.json) y [disponibilidad verde/rojo](evidence/friendly-links-final-colors.json); no se atribuye a ella una repetición completa del recorrido.
-- Fase 0.8.5 conservada: **196 JS**, 21 eventos iniciales y tres de regresión final tras restaurar; demoras de ocho segundos/503 sintéticos explícitos. [Traza inicial](evidence/page-activity-browser.json), [traza final](evidence/page-activity-final-browser.json), [resultado de fase](evidence/page-activity-verification.json). La limitación de selector/vacío de las capturas 298/305 queda resuelta en 0.8.6. La 301 motivó la corrección contextual 305; las observaciones históricas conservan su alcance.
-- Regresión histórica de **beac44d / 0.8.2: 380 casos**, 366 de integración y catorce puros, sin fallo/error/omitidos en [JUnit](evidence/keyboard-review-native-tests.xml) y [salida original](evidence/keyboard-review-native-tests.log). Entre 0.8.2 y 0.8.6 el Python de producción solo cambia versión; esa batería no se volvió a ejecutar en esas fases de frontend. 0.8.7 incorpora el helper de texto impreso y ejecuta la batería completa de 386 casos indicada arriba. La evidencia histórica no prueba por sí misma el frontend nuevo.
-- La fase anterior de colores conserva 191 JS y once capturas, con H101 reservada y H105 ocupada en rojo; [verificación 0.8.4](evidence/action-context-verification.json). Las pruebas y capturas históricas conservan su versión, condiciones y alcance.
-- La [verificación de entrega](evidence/delivery-status-review.json) vincula hashes, versiones/alcance, entradas V/I/R y cada referencia de esta lista. No ejecuta UI ni altera datos. La verificación de fase acredita restauración y conservación de datos/archivos, no la entrega productiva completa.
-
-S18-11 acredita la entrega de evidencias de pruebas realmente realizadas. S18-12 acredita esta lista diferenciada. S18-02/S18-03 acreditan los artefactos e impresiones revisados en 0.8.7. S18-01/S19-02 acreditan el paquete y la instalación independiente de 0.8.8. Permanecen ocho entradas abiertas; el objetivo completo sigue activo.
+[CONTRATOS_PROVEEDORES.md](CONTRATOS_PROVEEDORES.md) delimita las simulaciones. Estos pendientes opcionales se separan del núcleo obligatorio; no se presentan como conectores comerciales activos ni como bloqueos ocultos del núcleo.

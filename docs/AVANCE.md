@@ -1,5 +1,7 @@
 # Registro de implementación
 
+Estado de cierre **0.8.9: 218 V, cero I/P/R** del alcance obligatorio acordado. [COTEJO_FINAL.md](COTEJO_FINAL.md) conserva el contraste original por entrada y [ENTREGA_FINAL.md](ENTREGA_FINAL.md) reúne acceso, paquetes y guías. 410 nativas/232 JS, instalación limpia y recuperación F26 acreditadas; datos/archivos originales preservados. Las integraciones externas opcionales y OTA real aplazada se distinguen en [ESTADO_Y_EVIDENCIAS_ENTREGA.md](ESTADO_Y_EVIDENCIAS_ENTREGA.md). Los apartados posteriores son antecedentes con sus propios recuentos y límites.
+
 [ACTUALIZACION_Y_RECUPERACION_FINAL.md](ACTUALIZACION_Y_RECUPERACION_FINAL.md) acredita **F26** sobre 0.8.9: actualización, fallo controlado, respaldo del estado fallido, recuperación coordinada de código/base/archivos y segundo despliegue, con las 72 tablas/1,246 filas y archivos originales idénticos. Instalación limpia actual: 35 DocTypes/11 Pages/9 roles/9 formatos/6 patches, **410 nativas y 232 JS aprobadas**. Sitios del principal actualizados sin perder datos; destino original/21 archivos restablecidos, 14 archivos del escenario nativo archivados y servicios temporales apagados. **214 V/cuatro I**: quedan paquete definitivo, auditoría de cierre y entrega S00-01/S01-12/S19-07/S19-08. OTA aplazada. Los apartados posteriores son antecedentes con su propio alcance.
 
 ## Tesorería y compras desde Pages — 0.8.8

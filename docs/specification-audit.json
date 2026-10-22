@@ -9,7 +9,7 @@
       "line": 6,
       "kind": "clause",
       "requirement": "Tu tarea es DISEÑAR, PROGRAMAR, INTEGRAR Y PROBAR una aplicación completa e instalable para administrar hoteles, moteles y establecimientos mixtos. Trabaja directamente sobre el repositorio y entorno disponibles. Entrega código funcional, no solamente recomendaciones, pantallas de demostración o una descripción del sistema.",
-      "status": "I",
+      "status": "V",
       "implementation": [
         "README.md",
         "pyproject.toml",
@@ -39,9 +39,13 @@
         "docs/ACTUALIZACION_Y_RECUPERACION_FINAL.md",
         "docs/evidence/f26-verification.json",
         "docs/evidence/f26-clean-install.json",
-        "docs/evidence/final-recovery-native-tests.xml"
+        "docs/evidence/final-recovery-native-tests.xml",
+        "docs/COTEJO_FINAL.md",
+        "docs/ENTREGA_FINAL.md",
+        "docs/evidence/completion-preflight-review.json",
+        "docs/evidence/completion-code-package.json"
       ],
-      "remaining": "F26 verificado: actualización 0.8.8→0.8.9, fallo controlado, respaldo fallido, recuperación coordinada de código/base/archivos y segundo despliegue; instalación limpia actual, 410 nativas/232 JS, datos/archivos preservados y principal actualizado. Quedan paquete definitivo con la documentación/evidencias actuales, auditoría integral de cierre y entrega. 214 V/cuatro I; OTA real aplazada por el usuario."
+      "remaining": ""
     },
     {
       "id": "S00-02",
@@ -334,7 +338,7 @@
       "line": 23,
       "kind": "enumerated",
       "requirement": "- Implementa por etapas, pero continúa hasta cubrir el alcance obligatorio. No te detengas después del esquema de DocTypes o de la primera pantalla.",
-      "status": "I",
+      "status": "V",
       "implementation": [
         "README.md",
         "pyproject.toml",
@@ -364,9 +368,13 @@
         "docs/ACTUALIZACION_Y_RECUPERACION_FINAL.md",
         "docs/evidence/f26-verification.json",
         "docs/evidence/f26-clean-install.json",
-        "docs/evidence/final-recovery-native-tests.xml"
+        "docs/evidence/final-recovery-native-tests.xml",
+        "docs/COTEJO_FINAL.md",
+        "docs/ENTREGA_FINAL.md",
+        "docs/evidence/completion-preflight-review.json",
+        "docs/evidence/completion-code-package.json"
       ],
-      "remaining": "F26 verificado: actualización 0.8.8→0.8.9, fallo controlado, respaldo fallido, recuperación coordinada de código/base/archivos y segundo despliegue; instalación limpia actual, 410 nativas/232 JS, datos/archivos preservados y principal actualizado. Quedan paquete definitivo con la documentación/evidencias actuales, auditoría integral de cierre y entrega. 214 V/cuatro I; OTA real aplazada por el usuario."
+      "remaining": ""
     },
     {
       "id": "S01-13",
@@ -5231,7 +5239,7 @@
       "line": 292,
       "kind": "phase",
       "requirement": "Fase 7: pruebas completas, correcciones, instalación limpia, documentación y entrega.",
-      "status": "I",
+      "status": "V",
       "implementation": [
         "README.md",
         "docs/OPERACION.md",
@@ -5261,9 +5269,13 @@
         "docs/ACTUALIZACION_Y_RECUPERACION_FINAL.md",
         "docs/evidence/f26-verification.json",
         "docs/evidence/f26-clean-install.json",
-        "docs/evidence/final-recovery-native-tests.xml"
+        "docs/evidence/final-recovery-native-tests.xml",
+        "docs/COTEJO_FINAL.md",
+        "docs/ENTREGA_FINAL.md",
+        "docs/evidence/completion-preflight-review.json",
+        "docs/evidence/completion-code-package.json"
       ],
-      "remaining": "F26 verificado: actualización 0.8.8→0.8.9, fallo controlado, respaldo fallido, recuperación coordinada de código/base/archivos y segundo despliegue; instalación limpia actual, 410 nativas/232 JS, datos/archivos preservados y principal actualizado. Quedan paquete definitivo con la documentación/evidencias actuales, auditoría integral de cierre y entrega. 214 V/cuatro I; OTA real aplazada por el usuario."
+      "remaining": ""
     },
     {
       "id": "S19-08",
@@ -5272,7 +5284,7 @@
       "line": 294,
       "kind": "clause",
       "requirement": "En cada fase implementa y verifica el flujo correspondiente. Mantén un registro de avance para continuar sin perder decisiones. No reduzcas el alcance obligatorio a un MVP sin indicarlo y acordarlo. No presentes pantallas con botones sin acción como funcionalidades terminadas.",
-      "status": "I",
+      "status": "V",
       "implementation": [
         "docs/AVANCE.md",
         "docs/REQUISITOS.md",
@@ -5302,9 +5314,13 @@
         "docs/ACTUALIZACION_Y_RECUPERACION_FINAL.md",
         "docs/evidence/f26-verification.json",
         "docs/evidence/f26-clean-install.json",
-        "docs/evidence/final-recovery-native-tests.xml"
+        "docs/evidence/final-recovery-native-tests.xml",
+        "docs/COTEJO_FINAL.md",
+        "docs/ENTREGA_FINAL.md",
+        "docs/evidence/completion-preflight-review.json",
+        "docs/evidence/completion-code-package.json"
       ],
-      "remaining": "F26 verificado: actualización 0.8.8→0.8.9, fallo controlado, respaldo fallido, recuperación coordinada de código/base/archivos y segundo despliegue; instalación limpia actual, 410 nativas/232 JS, datos/archivos preservados y principal actualizado. Quedan paquete definitivo con la documentación/evidencias actuales, auditoría integral de cierre y entrega. 214 V/cuatro I; OTA real aplazada por el usuario."
+      "remaining": ""
     },
     {
       "id": "S19-09",

@@ -1,5 +1,7 @@
 # Paquete e instalación limpia en WSL
 
+Estado de cierre **0.8.9: 218 V, cero I/P/R** del alcance obligatorio acordado. [COTEJO_FINAL.md](COTEJO_FINAL.md) conserva el contraste original por entrada y [ENTREGA_FINAL.md](ENTREGA_FINAL.md) reúne acceso, paquetes y guías. 410 nativas/232 JS, instalación limpia y recuperación F26 acreditadas; datos/archivos originales preservados. Las integraciones externas opcionales y OTA real aplazada se distinguen en [ESTADO_Y_EVIDENCIAS_ENTREGA.md](ESTADO_Y_EVIDENCIAS_ENTREGA.md). Los apartados posteriores son antecedentes con sus propios recuentos y límites.
+
 Revisión del 21/10/2026, app 0.8.8. Se construye y verifica el paquete y se instala en un bench independiente del que contiene la demostración. Este ensayo acredita S18-01 y completa la instalación que faltaba en S19-02; la aceptación transversal de tareas/estados y la recuperación final F26 continúan pendientes.
 
 ## Código, dependencias y artefactos

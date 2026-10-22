@@ -1,0 +1,1436 @@
+{
+  "scope": "Product Python including patches; excludes tests and development tools",
+  "limitation": "Static inventory plus manual review, not a proof of every possible runtime path.",
+  "manual_review": {
+    "native_posting": "accounting.post_standard inserts/submits standard documents; callers construct fixed voucher types.",
+    "dynamic_documents": "service.insert callers use HS operational types; setup sections/actions are fixed mappings; portal confirmation is read-only and checks its two allowed types.",
+    "reconciliation": "Payment Reconciliation and native cancellation controllers own ledger allocations/reversals.",
+    "other_writes": "Guest CRM, configuration, privacy files and HS patches do not write ledgers."
+  },
+  "files": [
+    {
+      "path": "hospitality_suite/__init__.py",
+      "sha256": "51a0406f992ae7392023b871322897746a3b897eb3befe09797e5b26cb4c3c81"
+    },
+    {
+      "path": "hospitality_suite/accounting.py",
+      "sha256": "3fe5fa22b16c24e85cc432276bf9fcdbce84afd855862be8dc2947356da0129b"
+    },
+    {
+      "path": "hospitality_suite/api.py",
+      "sha256": "5403990a23900406e916a8b8be93510c8865f304bae7d573c874fad3ecda8e03"
+    },
+    {
+      "path": "hospitality_suite/audit_trail.py",
+      "sha256": "a384fe5263b67374251f14233da9a76adab3028718c7840f78961cf32c344cfa"
+    },
+    {
+      "path": "hospitality_suite/availability.py",
+      "sha256": "54689474e326494c080235dd2057170505c50da8ecca650e1e0a3fbf68afc62a"
+    },
+    {
+      "path": "hospitality_suite/availability_search.py",
+      "sha256": "81f57f98927b4fe24f1f4493aa1dd54d5dfc4c68779a9d441bc1479c604cd3b6"
+    },
+    {
+      "path": "hospitality_suite/booking_drafts.py",
+      "sha256": "4c36f912cdcf00a9c5b330f0865eb608f75c4033f1a9a7f37663ee13caba4b08"
+    },
+    {
+      "path": "hospitality_suite/booking_presentation.py",
+      "sha256": "a28369d56ac737ddc2eaa034e34c29ad8e6d68ace083e795ca565de34031226e"
+    },
+    {
+      "path": "hospitality_suite/cashier.py",
+      "sha256": "9b4d5f31841dc4d0673684efb9263c8612a0dbf8dd9a8c335a4992399456ef1e"
+    },
+    {
+      "path": "hospitality_suite/catalog.py",
+      "sha256": "dea2c21b8faf1c8fcc149a02fb583b996d9782041ea779692cbe7011daebbfe1"
+    },
+    {
+      "path": "hospitality_suite/close_checks.py",
+      "sha256": "cf0fafa2c4b39d5308f4dba5992a2974bc2702f2f1365b14e2f6a808a2cae1e7"
+    },
+    {
+      "path": "hospitality_suite/close_financials.py",
+      "sha256": "990b26901d4897a2586b7a840dafec137eb6b8a5a1a9d42a9ebcc50f0b51551b"
+    },
+    {
+      "path": "hospitality_suite/closing.py",
+      "sha256": "bc6d27b11fe7e76e6e7ac9c0d7f6afc676bbc146650399a71d9194312d1fe804"
+    },
+    {
+      "path": "hospitality_suite/controllers.py",
+      "sha256": "a8a0dc327e11353e51f7ad8fa0acecf09b869af9e36348b7eaa28bd1d6423412"
+    },
+    {
+      "path": "hospitality_suite/demo.py",
+      "sha256": "92b6b5811b0d7586e9839347c1ff3c52113a2c646dbc669308054ca1a3395f35"
+    },
+    {
+      "path": "hospitality_suite/demo_scenario.py",
+      "sha256": "6d6268d7787bff5050df75733e0b5e972e7fe5848db8aca696d19278fb1eddc7"
+    },
+    {
+      "path": "hospitality_suite/desk_board.py",
+      "sha256": "25717b9e3f8ef618b0a1535cb03c7e8aa4579bd109239ab9d78e23b78819a168"
+    },
+    {
+      "path": "hospitality_suite/direct_sales.py",
+      "sha256": "9772796ecf9083e3905964766b3e751cd1340e1501b66e862f09ab3b9b15b509"
+    },
+    {
+      "path": "hospitality_suite/display_labels.py",
+      "sha256": "e7b48a6a69450bedcc26412007c75b552119526d9bb73f0ad29c6ac018ac3c14"
+    },
+    {
+      "path": "hospitality_suite/document_naming.py",
+      "sha256": "2290d736f1ee00568b6d5db7b29b0c7e48a12305b3dd36077a519ce63f79ebb0"
+    },
+    {
+      "path": "hospitality_suite/equipment.py",
+      "sha256": "df17379a23fa5e78eb0d810142788b18458c500ae6b5779ce9c396fd6c1b3029"
+    },
+    {
+      "path": "hospitality_suite/guest_profiles.py",
+      "sha256": "52757e488475693208afc9b1c18e81003c448177036221c0455d96618b141d1e"
+    },
+    {
+      "path": "hospitality_suite/hooks.py",
+      "sha256": "bd4d82bc2d2e87c29da9ea2668c5a16ba28111dc711f92139399c2e89fef9d47"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_access/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_access/hs_access.py",
+      "sha256": "18b6699c40ad89aece9a7981ef792435b1895ada3aac4719cb6e218406a73182"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_allocation/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_allocation/hs_allocation.py",
+      "sha256": "b9a3a2a12375d8aae4fb8d73ed0ac4b1e93f2eac714cb35cacfe8bfee6c6533a"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_audit_event/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_audit_event/hs_audit_event.py",
+      "sha256": "3ae4780755a527c3245006ffcfe335f7b5e3167c1255ffc68f88494f0139944a"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_billing_party/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_billing_party/hs_billing_party.py",
+      "sha256": "0339996805e47adac40ad05a3753a81dbe8a865bd51c848789da20ad37e282c6"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_booking/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_booking/hs_booking.py",
+      "sha256": "e42d4b42783add8d4bcffb3ff37a89ae220c85c17db614340c804a4bdb828db0"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_booking_room/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_booking_room/hs_booking_room.py",
+      "sha256": "72cd8d340142e5a6a6ab96b45019130a07f4cbf9dfcb3df9535fe27c1ca40fb8"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_category/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_category/hs_category.py",
+      "sha256": "f6cbf39f155a7354859d531cd52b9be6d5b72ee42eea716ccfae8b2bce69bf4b"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_charge/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_charge/hs_charge.py",
+      "sha256": "8482b733c8e888c82546cfdce0245424b50ff58b8f5da948e399b4e3205a66ed"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_cleaning_task/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_cleaning_task/hs_cleaning_task.py",
+      "sha256": "ac638f9affc3c7759390ea43e3f84e27188aafe6178bb11dbec7ceaffe2a572d"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_daily_close/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_daily_close/hs_daily_close.py",
+      "sha256": "3bd74de156acb564a5d9af0ed11068c8cf0faaa6131f708f3c9cff2597d87143"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_equipment/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_equipment/hs_equipment.py",
+      "sha256": "e9c60a3595200227330b6f341e5b5b500bbdb8b86fcd78a13a71a3376466f9b3"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_expense_category/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_expense_category/hs_expense_category.py",
+      "sha256": "c89bff57d76584df8eb1524e44bca509eaea8dbffea02374fa27c63bae218555"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_folio/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_folio/hs_folio.py",
+      "sha256": "af382d89c1847fe605760dc3821493887fa2063670244adaf81a2b82a44a7a81"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_guest/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_guest/hs_guest.py",
+      "sha256": "e492d7202a1ef4a47ee772872bbefe301b520fa1a657922055f2ac774ae80861"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_incident/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_incident/hs_incident.py",
+      "sha256": "1ed8b5979e5c883e04afca6de7f40928f899622a7f1f29800adab2fab06bcc84"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_integration_event/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_integration_event/hs_integration_event.py",
+      "sha256": "8bbbed3aeb187d759a68a0c43d17c4919c280beb6b4daafd8a5346a1e70dc179"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_maintenance_order/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_maintenance_order/hs_maintenance_order.py",
+      "sha256": "a7c2c804713c5a468ebc9cec2dceca15228630085b8b13fe10a046e4c2df0795"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_maintenance_part/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_maintenance_part/hs_maintenance_part.py",
+      "sha256": "741d05da2f383df64100d68f88066af58263b3150719923cac2ec1a9dc0c53fd"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_payment/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_payment/hs_payment.py",
+      "sha256": "506b4f7ba480b6ae9ab3b9a265657bd0fe4655fb5e5b01bd1a1cd0d7132ad125"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_payment_method/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_payment_method/hs_payment_method.py",
+      "sha256": "1d687dc1fb38cba151b2e34e98ae16b509d8f9feb92a3e89e531aaf2db0cba5c"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_portal_request/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_portal_request/hs_portal_request.py",
+      "sha256": "6764c4dfef28e69fb47b6c9005a6ec9f763125842f2b024221c3cd045cee11fc"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_property/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_property/hs_property.py",
+      "sha256": "c75645c33c912ef54730c552d6f3a93f1ef050b178e00202af8d75e37f81133e"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_rate/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_rate/hs_rate.py",
+      "sha256": "c44b5a0706d2f811650b3bc9886e0a175e8f39a7e972448ae35cf7b3b5234875"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_rate_service/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_rate_service/hs_rate_service.py",
+      "sha256": "b335c904a6073d09ddbd90d259d4d585bf1683a553730206e0739febc698662c"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_request/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_request/hs_request.py",
+      "sha256": "8918a0ad285471e6292fcd2d0138b4410fc6b20f64fb45a9590b8cf38adc03f3"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_retention_file/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_retention_file/hs_retention_file.py",
+      "sha256": "53956e56728e2a5ce8334289fd76df3d52a383b34437e323bd37468133868dfc"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_retention_run/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_retention_run/hs_retention_run.py",
+      "sha256": "b615f9a553c0a55dd1c9cc038a9d0f3fd57b8a731d0e9e8b3da0a3fbf06258f4"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_room/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_room/hs_room.py",
+      "sha256": "7024713079f185fcae2e6ed67342630ca2ef05717b72ff79d72a78ea8d1d9c31"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_service_account/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_service_account/hs_service_account.py",
+      "sha256": "f2b0fbb2affd85c73bcccc32464982d886519d80badded0ab0811b7aeec752dc"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_service_request/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_service_request/hs_service_request.py",
+      "sha256": "6fffc7a6c41c5a6653023cf1eb4bb3663974110343fb749cbf41346d049a6b9e"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_shift/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_shift/hs_shift.py",
+      "sha256": "ee540bee041caccd209a714c56c0be567e204443dff4f7c515b852997797c66b"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_stay/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_stay/hs_stay.py",
+      "sha256": "de20523c5b48d347b6f321f1fcabed22fcec9bbca173b4ebf746404ffdffb945"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_stay_guest/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_stay_guest/hs_stay_guest.py",
+      "sha256": "21e660363597882e112df728e4241e3b19228405367419bcf6b59b28705cda73"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_stock_policy/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_stock_policy/hs_stock_policy.py",
+      "sha256": "8fc578379a4b05f9a57570dbe014964e3255c871ef837b99f7138626a120781d"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_supplier/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/doctype/hs_supplier/hs_supplier.py",
+      "sha256": "294f75194ed17240a6f7f5da3fd4bd0d5d4c42b9ddd7c80dad38fb6d2665c350"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/page/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/page/hospitality_cashier/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/page/hospitality_guests/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/page/hospitality_home/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/page/hospitality_housekeeping/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/page/hospitality_maintenance/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/page/hospitality_management/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/page/hospitality_reception/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/page/hospitality_reservations/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/page/hospitality_services/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/page/hospitality_setup/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/hospitality_suite/page/hospitality_stays/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/housekeeping.py",
+      "sha256": "47903d5a3dba07d47a1031494d88551b930b551e352c480d6d48c5ec607b2d7a"
+    },
+    {
+      "path": "hospitality_suite/i18n.py",
+      "sha256": "8784554070e34d99a8df80edfe9134940e3e0ec6428680f7ba678726fea4400f"
+    },
+    {
+      "path": "hospitality_suite/inputs.py",
+      "sha256": "92a8b6bb77a139577ba890123cd2ea5ee51990e595469fec1ef7c45e3f8ce8ba"
+    },
+    {
+      "path": "hospitality_suite/install.py",
+      "sha256": "ccf98c331fbda1d84c43d9a9ee0a5b74bab8ae00aa06231af4e0199cef1afb97"
+    },
+    {
+      "path": "hospitality_suite/integrations.py",
+      "sha256": "a5d0d48c7e6d72ad1cecd8a5de990121d69d833d527740f02f656de17cb8d195"
+    },
+    {
+      "path": "hospitality_suite/inventory.py",
+      "sha256": "05970cedbe8fbac53659edc33fde87f4bd5a9678aaceccf00da7ca8bc4abd5c1"
+    },
+    {
+      "path": "hospitality_suite/item_configuration.py",
+      "sha256": "76d0316c4e06611ea33470593bb7608bc05c6dbfce3702659dec8abc649412ca"
+    },
+    {
+      "path": "hospitality_suite/jobs.py",
+      "sha256": "0549ddb56ccc473986d7a288ba95fbc16f2d52dc69ebb7fb80e2c275de0fcdaa"
+    },
+    {
+      "path": "hospitality_suite/linen.py",
+      "sha256": "4c0736ac9f28e57f30b8231327714012cc53dbe48b8ce750fde6f89c6ab8345c"
+    },
+    {
+      "path": "hospitality_suite/native_pos.py",
+      "sha256": "1b9011c339bcc7ec27d9c2de88237f79bf12ed755d28db891e14fe7976088c4d"
+    },
+    {
+      "path": "hospitality_suite/operations.py",
+      "sha256": "de88eea65a4c34819d5f37bc8feb99f2694691ed8cd9863b35d8953b5df8f7d3"
+    },
+    {
+      "path": "hospitality_suite/paging.py",
+      "sha256": "914b893607bb411e09bd91971bac2cc094587e940d16689c15877f426e0eee0d"
+    },
+    {
+      "path": "hospitality_suite/patches/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/patches/v0_1/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/patches/v0_1/backfill_allocation_rates.py",
+      "sha256": "a8c0cb077031a9c4b0299f122fc4a29cbe9c21b48148d277d30a2247c248ad32"
+    },
+    {
+      "path": "hospitality_suite/patches/v0_1/backfill_booking_lines.py",
+      "sha256": "0c2327c39f973b59a0f08bb0a7f8dadd17d4caedf303abd02fab2dadbd07d9c7"
+    },
+    {
+      "path": "hospitality_suite/patches/v0_3/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/patches/v0_3/default_payment_policies.py",
+      "sha256": "c369cc521b9d0cc66649560a542ae940c078c2750ab8c8c2a101cb218c2173ba"
+    },
+    {
+      "path": "hospitality_suite/patches/v0_3/payment_business_dates.py",
+      "sha256": "b9fdd0399ab37480300e8433ce876f5645018b99d55760dc30cb659dca80604b"
+    },
+    {
+      "path": "hospitality_suite/patches/v0_4/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/patches/v0_4/default_extra_hour_item.py",
+      "sha256": "a5a343852179401780b312076dc3a32ea4d2a035b2b95e776ba109ab269bd5d1"
+    },
+    {
+      "path": "hospitality_suite/patches/v0_5/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hospitality_suite/patches/v0_5/minimal_integration_receipts.py",
+      "sha256": "f3ec2e45baa956ebbb37d36f169bcfe08466a6d0db931a65cffdcba398e8e4a3"
+    },
+    {
+      "path": "hospitality_suite/payment_policies.py",
+      "sha256": "c3bd32195eeff93d3da902cc37f935062abcbbdb882e00474580d367d3d719e7"
+    },
+    {
+      "path": "hospitality_suite/periodic.py",
+      "sha256": "bbb58360c5b9396b1e02d0b4728ae32a391cbb3bfd4558b31080e796d2c4ca15"
+    },
+    {
+      "path": "hospitality_suite/portal.py",
+      "sha256": "39d99d8bfe0cb8a56655bbada135f3694ea147d25a72a1e3b8366b1a7ed53799"
+    },
+    {
+      "path": "hospitality_suite/pos_returns.py",
+      "sha256": "5dbe0c32b781118f04c8dd5ee5c1f0763170d5260066230bb8310026d83f59a4"
+    },
+    {
+      "path": "hospitality_suite/pricing.py",
+      "sha256": "e14aeca381b106bb3c4450ddacdd718e20c6732df6c45b17abe1869682d9cec4"
+    },
+    {
+      "path": "hospitality_suite/printing.py",
+      "sha256": "f2873bde14896def615cf1a36e90dd1fcf181cdce3120b07876cf7d347914d85"
+    },
+    {
+      "path": "hospitality_suite/privacy.py",
+      "sha256": "b9e68d99cc75a6ae656a2f4614fde69f5892fd3d1826463e8e65c08f53bc52a9"
+    },
+    {
+      "path": "hospitality_suite/procurement.py",
+      "sha256": "b4019726d09c38b41b84711558fbbda30d77c28e987d7a8fb49e6c5731ce2a3c"
+    },
+    {
+      "path": "hospitality_suite/provider_adapters.py",
+      "sha256": "34cf233107585c33cdb9b4137dd51042d20331e0328365b7d15b43dbacafda84"
+    },
+    {
+      "path": "hospitality_suite/reconciliation.py",
+      "sha256": "df4834441a90d510b629a01d40d14c67be1c0477a6e44aeaf164396c6451f65d"
+    },
+    {
+      "path": "hospitality_suite/refunds.py",
+      "sha256": "c22c9aa00d861bd52f0c35398a061902abb653cdc146cb7d7f4833e4b62e50b1"
+    },
+    {
+      "path": "hospitality_suite/report_formatting.py",
+      "sha256": "440164be9a86054232f4384412336c41c89cbc68b6a3f609093369ef6fecb407"
+    },
+    {
+      "path": "hospitality_suite/report_presentation.py",
+      "sha256": "57e25c2bfbf6c4fe37a7d292d4804c086d3926e4069cee031cbfca4692d8ed10"
+    },
+    {
+      "path": "hospitality_suite/report_queries.py",
+      "sha256": "346eeea0c91c14888f6b54a78950137e8ce686a48abbe78c72cbb131f0b02c21"
+    },
+    {
+      "path": "hospitality_suite/reports.py",
+      "sha256": "5d30742c3d09de0ce27f0fa1a2c104fc41a08ee372b51f04e5b8d3542d639a40"
+    },
+    {
+      "path": "hospitality_suite/room_history.py",
+      "sha256": "fc0a415928e9ece280dc12392937e3d6962f10871b9de1b230500b1ddfb9fa81"
+    },
+    {
+      "path": "hospitality_suite/schema.py",
+      "sha256": "fb02ba3531d56b053739bd3c93e2ad827d9a5f11cd0eb49962633108f84b21b2"
+    },
+    {
+      "path": "hospitality_suite/schema_labels.py",
+      "sha256": "a40592f1e585b5b7574cac64923ceccf2d5b19149f4859ce239210083baa4dd1"
+    },
+    {
+      "path": "hospitality_suite/security.py",
+      "sha256": "cdfb44bacf86da383976fe02616e12d8e8b960d454ce714a0e002dc8305b5062"
+    },
+    {
+      "path": "hospitality_suite/service.py",
+      "sha256": "c4f5a45021fd5a9e75d68f9d8da4fe9351cd09bab7e45a950d97246819d45654"
+    },
+    {
+      "path": "hospitality_suite/service_accounting.py",
+      "sha256": "f851ef6caeeff0cc9fdcd9139dcfe3e04f537baff2da035b058151c5303d60e1"
+    },
+    {
+      "path": "hospitality_suite/setup.py",
+      "sha256": "695f06e880ea809437264368cee8093f1b42220d016c5fc3b8890b414fa36e1f"
+    },
+    {
+      "path": "hospitality_suite/tariff_explanations.py",
+      "sha256": "922c0cff334e3b8d098858698e9c8a0efc6d5b589689a510ac0fe9b85a83bb3a"
+    },
+    {
+      "path": "hospitality_suite/time.py",
+      "sha256": "2285aee0b6c670dc5754d9e778e87c804fde950c60a17ab1ac8cdc1d9ed9c9af"
+    },
+    {
+      "path": "hospitality_suite/timing.py",
+      "sha256": "4e5bfda379176c4416f2f195fb0fd990df4a496279ddb37696feb4eae64a5fc4"
+    },
+    {
+      "path": "hospitality_suite/translation_messages.py",
+      "sha256": "d515af5a72908acd53a431fa1bf96e5039ee0256f3b53f06637d6470ebd29c04"
+    },
+    {
+      "path": "hospitality_suite/treasury.py",
+      "sha256": "8611d8f765526d503e9b8c7c41d42ec3a8a583db67cad641a878dad4eb02f1dc"
+    },
+    {
+      "path": "hospitality_suite/www/hospitality.py",
+      "sha256": "f81d3db4a7dcbeca48af7b469ff6565d5a48eeabf8a70a2d8e84cd13520fdd23"
+    },
+    {
+      "path": "hospitality_suite/www/hospitality_confirmation.py",
+      "sha256": "72cff3323370a24be8980d0b6916525cb76efaa5dd5f6c9e77844395aebaa237"
+    }
+  ],
+  "ledger_references": [
+    {
+      "path": "hospitality_suite/hooks.py",
+      "line": 40,
+      "review": "Permisos de lectura y condiciones de consulta."
+    },
+    {
+      "path": "hospitality_suite/hooks.py",
+      "line": 41,
+      "review": "Permisos de lectura y condiciones de consulta."
+    },
+    {
+      "path": "hospitality_suite/hooks.py",
+      "line": 49,
+      "review": "Permisos de lectura y condiciones de consulta."
+    },
+    {
+      "path": "hospitality_suite/install.py",
+      "line": 34,
+      "review": "Concede lectura de GL Entry; no crea movimientos."
+    },
+    {
+      "path": "hospitality_suite/install.py",
+      "line": 33,
+      "review": "Concede lectura de GL Entry; no crea movimientos."
+    },
+    {
+      "path": "hospitality_suite/native_pos.py",
+      "line": 71,
+      "review": "Lee GL Entry vigente para el efectivo POS neto."
+    },
+    {
+      "path": "hospitality_suite/pos_returns.py",
+      "line": 19,
+      "review": "Lee GL Entry para identificar medios del documento original."
+    },
+    {
+      "path": "hospitality_suite/reports.py",
+      "line": 68,
+      "review": "Lee Stock Ledger Entry para reportes de inventario."
+    },
+    {
+      "path": "hospitality_suite/security.py",
+      "line": 512,
+      "review": "Condiciones de lectura y permisos por documento de origen."
+    },
+    {
+      "path": "hospitality_suite/security.py",
+      "line": 414,
+      "review": "Condiciones de lectura y permisos por documento de origen."
+    },
+    {
+      "path": "hospitality_suite/security.py",
+      "line": 414,
+      "review": "Condiciones de lectura y permisos por documento de origen."
+    },
+    {
+      "path": "hospitality_suite/translation_messages.py",
+      "line": 615,
+      "review": "Textos del diccionario de traducción."
+    },
+    {
+      "path": "hospitality_suite/translation_messages.py",
+      "line": 1430,
+      "review": "Textos del diccionario de traducción."
+    },
+    {
+      "path": "hospitality_suite/treasury.py",
+      "line": 105,
+      "review": "Lee GL Entry para recuperar la valoración histórica de compensación."
+    }
+  ],
+  "native_document_constructors": [
+    {
+      "path": "hospitality_suite/accounting.py",
+      "line": 87,
+      "call": "frappe.new_doc(\"Sales Invoice\")"
+    },
+    {
+      "path": "hospitality_suite/accounting.py",
+      "line": 185,
+      "call": "frappe.new_doc(\"Payment Reconciliation\")"
+    },
+    {
+      "path": "hospitality_suite/accounting.py",
+      "line": 211,
+      "call": "frappe.new_doc(\"Sales Invoice\")"
+    },
+    {
+      "path": "hospitality_suite/accounting.py",
+      "line": 314,
+      "call": "frappe.new_doc(\"Journal Entry\")"
+    },
+    {
+      "path": "hospitality_suite/accounting.py",
+      "line": 364,
+      "call": "frappe.new_doc(\"Sales Invoice\")"
+    },
+    {
+      "path": "hospitality_suite/accounting.py",
+      "line": 490,
+      "call": "frappe.new_doc(\"Journal Entry\")"
+    },
+    {
+      "path": "hospitality_suite/accounting.py",
+      "line": 515,
+      "call": "frappe.new_doc(\"Journal Entry\")"
+    },
+    {
+      "path": "hospitality_suite/accounting.py",
+      "line": 551,
+      "call": "frappe.new_doc(\"Payment Entry\")"
+    },
+    {
+      "path": "hospitality_suite/api.py",
+      "line": 561,
+      "call": "frappe.get_doc(\"HS Stay\",stay.name)"
+    },
+    {
+      "path": "hospitality_suite/api.py",
+      "line": 214,
+      "call": "frappe.get_doc(\"HS Maintenance Order\",order.name)"
+    },
+    {
+      "path": "hospitality_suite/api.py",
+      "line": 538,
+      "call": "frappe.get_doc(\"HS Stay\",row.stay)"
+    },
+    {
+      "path": "hospitality_suite/api.py",
+      "line": 531,
+      "call": "frappe.get_doc(\"HS Maintenance Order\",row.maintenance)"
+    },
+    {
+      "path": "hospitality_suite/api.py",
+      "line": 199,
+      "call": "frappe.get_doc(\"Purchase Order\",order.name)"
+    },
+    {
+      "path": "hospitality_suite/booking_drafts.py",
+      "line": 47,
+      "call": "frappe.get_doc('Customer', result['customer'])"
+    },
+    {
+      "path": "hospitality_suite/cashier.py",
+      "line": 101,
+      "call": "frappe.new_doc(\"Journal Entry\")"
+    },
+    {
+      "path": "hospitality_suite/controllers.py",
+      "line": 89,
+      "call": "frappe.get_doc(\"HS Property\", self.property,for_update=internal)"
+    },
+    {
+      "path": "hospitality_suite/controllers.py",
+      "line": 213,
+      "call": "frappe.get_doc(\"Account\", self.account)"
+    },
+    {
+      "path": "hospitality_suite/controllers.py",
+      "line": 228,
+      "call": "frappe.get_doc(\"Account\",self.account)"
+    },
+    {
+      "path": "hospitality_suite/controllers.py",
+      "line": 197,
+      "call": "frappe.get_doc(\"Item\",row.item)"
+    },
+    {
+      "path": "hospitality_suite/controllers.py",
+      "line": 237,
+      "call": "frappe.get_doc(\"HS Payment Method\",self.method)"
+    },
+    {
+      "path": "hospitality_suite/demo.py",
+      "line": 17,
+      "call": "frappe.get_doc(\"HS Property\",{\"property_name\":\"Hotel Jardín Demo\"})"
+    },
+    {
+      "path": "hospitality_suite/demo.py",
+      "line": 56,
+      "call": "frappe.get_doc(\"HS Property\",{\"property_name\":\"Hotel Jardín Demo\"})"
+    },
+    {
+      "path": "hospitality_suite/demo.py",
+      "line": 76,
+      "call": "frappe.get_doc(\"System Settings\")"
+    },
+    {
+      "path": "hospitality_suite/demo.py",
+      "line": 84,
+      "call": "frappe.get_doc(\"Company\", company_name)"
+    },
+    {
+      "path": "hospitality_suite/demo.py",
+      "line": 81,
+      "call": "frappe.get_doc(dict(doctype=\"Company\", company_name=company_name, abbr=\"HSD\", country=\"Nicaragua\",\n                                     default_currency=\"NIO\", chart_of_accounts=\"Standard\", enable_perpetual_inventory=1))"
+    },
+    {
+      "path": "hospitality_suite/demo.py",
+      "line": 100,
+      "call": "frappe.get_doc(\"Item\",\"HS-DEMO-EXTRA-HOUR\")"
+    },
+    {
+      "path": "hospitality_suite/demo.py",
+      "line": 188,
+      "call": "frappe.get_doc(dict(doctype=\"Stock Entry\", stock_entry_type=\"Material Receipt\", company=company.name,\n                                        set_posting_time=1, posting_date=nowdate(), posting_time=\"00:00:00\",\n                                        items=[dict(item_code=\"HS-DEMO-WATER\", qty=100, t_warehouse=warehouse, basic_rate=10)]))"
+    },
+    {
+      "path": "hospitality_suite/demo.py",
+      "line": 30,
+      "call": "frappe.get_doc(dict(doctype=\"Mode of Payment\",mode_of_payment=\"Tarjeta demo\",type=\"Bank\"))"
+    },
+    {
+      "path": "hospitality_suite/demo.py",
+      "line": 38,
+      "call": "frappe.get_doc(dict(doctype=\"Item\",item_code=\"HS-DEMO-LINEN\",item_name=\"Sábana de demostración\",item_group=\"Products\",stock_uom=\"Nos\",is_stock_item=1,is_sales_item=0,is_purchase_item=1))"
+    },
+    {
+      "path": "hospitality_suite/demo.py",
+      "line": 86,
+      "call": "frappe.get_doc(dict(doctype=\"Fiscal Year\", year=str(nowdate()[:4]), year_start_date=nowdate()[:4] + \"-01-01\",\n                            year_end_date=nowdate()[:4] + \"-12-31\"))"
+    },
+    {
+      "path": "hospitality_suite/demo.py",
+      "line": 89,
+      "call": "frappe.get_doc(dict(doctype=\"Item\", item_code=\"HS-DEMO-LODGING\", item_name=\"Alojamiento (demostración)\",\n                            item_group=\"Services\", stock_uom=\"Nos\", is_stock_item=0, is_sales_item=1,\n                            item_defaults=[dict(company=company.name, income_account=company.default_income_account)]))"
+    },
+    {
+      "path": "hospitality_suite/demo.py",
+      "line": 93,
+      "call": "frappe.get_doc(dict(doctype=\"Item\", item_code=\"HS-DEMO-WATER\", item_name=\"Agua minibar (demostración)\",\n                            item_group=\"Products\", stock_uom=\"Nos\", is_stock_item=1, is_sales_item=1,\n                            valuation_rate=10, item_defaults=[dict(company=company.name, income_account=company.default_income_account)]))"
+    },
+    {
+      "path": "hospitality_suite/demo.py",
+      "line": 97,
+      "call": "frappe.get_doc(dict(doctype=\"Item\",item_code=\"HS-DEMO-EXTRA-HOUR\",item_name=\"Hora adicional de motel\",item_group=\"Services\",\n                            stock_uom=\"Hour\",is_stock_item=0,is_sales_item=1,item_defaults=[dict(company=company.name,income_account=company.default_income_account)]))"
+    },
+    {
+      "path": "hospitality_suite/demo.py",
+      "line": 106,
+      "call": "frappe.get_doc(dict(doctype=\"Price List\", price_list_name=price_list, selling=1, currency=\"NIO\", enabled=1))"
+    },
+    {
+      "path": "hospitality_suite/demo.py",
+      "line": 111,
+      "call": "frappe.get_doc(dict(doctype=\"Item Price\", item_code=\"HS-DEMO-WATER\", price_list=price_list, price_list_rate=30, currency=\"NIO\"))"
+    },
+    {
+      "path": "hospitality_suite/demo.py",
+      "line": 126,
+      "call": "frappe.get_doc(dict(doctype=\"Mode of Payment\", mode_of_payment=\"Efectivo demo\", type=\"Cash\",\n                            accounts=[dict(company=company.name, default_account=cash)]))"
+    },
+    {
+      "path": "hospitality_suite/demo.py",
+      "line": 129,
+      "call": "frappe.get_doc(dict(doctype=\"Currency Exchange\", date=nowdate(), from_currency=\"USD\", to_currency=\"NIO\", exchange_rate=36.6243, for_selling=1, for_buying=1))"
+    },
+    {
+      "path": "hospitality_suite/demo.py",
+      "line": 141,
+      "call": "frappe.get_doc(\"HS Property\", prop_name)"
+    },
+    {
+      "path": "hospitality_suite/demo.py",
+      "line": 22,
+      "call": "frappe.get_doc(dict(doctype=\"Account\",company=prop.company,account_name=label,root_type=root,account_type=kind,\n                                   parent_account=frappe.db.get_value(\"Account\",{\"company\":prop.company,\"root_type\":root,\"is_group\":1},\"name\"),account_currency=prop.currency))"
+    },
+    {
+      "path": "hospitality_suite/demo.py",
+      "line": 33,
+      "call": "frappe.get_doc(dict(doctype=\"HS Payment Method\",property=prop.name,company=prop.company,mode_of_payment=\"Tarjeta demo\",account=clearing,currency=prop.currency,\n                                is_cash=0,reference_required=1,fee_percent=3,fee_fixed=2,fee_account=fee,withholding_percent=1,withholding_account=retained,settlement_account=bank))"
+    },
+    {
+      "path": "hospitality_suite/demo.py",
+      "line": 36,
+      "call": "frappe.get_doc(dict(doctype=\"HS Expense Category\",property=prop.name,company=prop.company,label=\"Gasto menor demo\",account=expense,max_amount=100,active=1))"
+    },
+    {
+      "path": "hospitality_suite/demo.py",
+      "line": 60,
+      "call": "frappe.get_doc(dict(doctype=\"Customer\",customer_name=label,customer_type=\"Company\",customer_group=\"Individual\",territory=\"Nicaragua\"))"
+    },
+    {
+      "path": "hospitality_suite/demo.py",
+      "line": 115,
+      "call": "frappe.get_doc(dict(doctype=\"Account\", company=company.name, account_name=\"Garantías de huéspedes demo\",\n                                        parent_account=parent, root_type=\"Liability\", account_type=\"\", account_currency=\"NIO\"))"
+    },
+    {
+      "path": "hospitality_suite/demo.py",
+      "line": 123,
+      "call": "frappe.get_doc(dict(doctype=\"Warehouse\",warehouse_name=\"Stores\",company=company.name,\n                                      parent_warehouse=parent,is_group=0))"
+    },
+    {
+      "path": "hospitality_suite/demo.py",
+      "line": 175,
+      "call": "frappe.get_doc(dict(doctype=\"User\", email=email, first_name=role.replace(\"HS \", \"\"), send_welcome_email=0,\n                                               language=\"es\",time_zone=\"America/Managua\", user_type=\"System User\", new_password=password, roles=[dict(role=role)]))"
+    },
+    {
+      "path": "hospitality_suite/demo.py",
+      "line": 45,
+      "call": "frappe.get_doc(dict(doctype=\"HS Supplier\",property=prop.name,company=prop.company,supplier=vendor,active=1))"
+    },
+    {
+      "path": "hospitality_suite/demo.py",
+      "line": 135,
+      "call": "frappe.get_doc(dict(doctype=\"HS Property\", property_name=property_name, company=company.name, mode=mode,\n                                           time_zone=\"America/Managua\", business_date=nowdate(), currency=\"NIO\", cleaning_minutes=30,\n                                           inspection_required=1, discreet_mode=mode==\"Motel\", hold_minutes=15,\n                                           cost_center=company.cost_center, warehouse=warehouse, receivable_account=company.default_receivable_account,\n                                           guarantee_account=guarantee, lodging_item=\"HS-DEMO-LODGING\",extra_hour_item=\"HS-DEMO-EXTRA-HOUR\", tax_policy_confirmed=1, financial_enabled=1))"
+    },
+    {
+      "path": "hospitality_suite/demo.py",
+      "line": 156,
+      "call": "frappe.get_doc(dict(doctype=\"HS Rate\", property=prop.name, company=company.name, title=\"Noche estándar\" if mode==\"Hotel\" else \"Bloque de 3 horas\",\n                                    category=cat_name, mode=mode, currency=\"NIO\", amount=1500 if mode==\"Hotel\" else 450,\n                                    block_hours=3, extra_hour_rate=150, grace_minutes=10, rounding_minutes=60,\n                                    included_people=2, priority=10, active=1))"
+    },
+    {
+      "path": "hospitality_suite/demo.py",
+      "line": 161,
+      "call": "frappe.get_doc(dict(doctype=\"HS Payment Method\", property=prop.name, company=company.name,\n                                    mode_of_payment=\"Efectivo demo\", account=cash, currency=\"NIO\", is_cash=1))"
+    },
+    {
+      "path": "hospitality_suite/demo.py",
+      "line": 147,
+      "call": "frappe.get_doc(dict(doctype=\"HS Category\", property=prop.name, company=company.name,\n                                               category_name=\"Estándar\", capacity=3, amenities=\"Wi-Fi, baño privado, aire acondicionado\"))"
+    },
+    {
+      "path": "hospitality_suite/demo.py",
+      "line": 152,
+      "call": "frappe.get_doc(dict(doctype=\"HS Room\", property=prop.name, company=company.name, room_number=number,\n                                        category=cat_name, floor=\"1\" if i <= 5 else \"2\", zone=\"Jardín\" if i<=5 else \"Patio\",\n                                        beds=1, parking=str(i) if mode==\"Motel\" else None, active=1, cleaning_status=\"Clean\"))"
+    },
+    {
+      "path": "hospitality_suite/demo.py",
+      "line": 169,
+      "call": "frappe.get_doc(dict(doctype=\"HS Guest\", property=prop.name, company=company.name,\n                                        full_name=full_name, customer=customer_name, email=f\"guest-{prefix.lower()}{i}@example.invalid\"))"
+    },
+    {
+      "path": "hospitality_suite/demo.py",
+      "line": 185,
+      "call": "frappe.get_doc(dict(doctype=\"HS Access\", user=email, company=prop.company, property=prop.name))"
+    },
+    {
+      "path": "hospitality_suite/demo.py",
+      "line": 168,
+      "call": "frappe.get_doc(dict(doctype=\"Customer\", customer_name=customer_name, customer_type=\"Individual\", customer_group=\"Individual\", territory=\"Nicaragua\"))"
+    },
+    {
+      "path": "hospitality_suite/demo_scenario.py",
+      "line": 50,
+      "call": "frappe.get_doc('HS Guest',{'property':prop.name,'full_name':'Huésped ficticio '+prefix+'1'})"
+    },
+    {
+      "path": "hospitality_suite/demo_scenario.py",
+      "line": 64,
+      "call": "frappe.get_doc('HS Service Request',service['service'])"
+    },
+    {
+      "path": "hospitality_suite/demo_scenario.py",
+      "line": 96,
+      "call": "frappe.get_doc('HS Property',{'property_name':label})"
+    },
+    {
+      "path": "hospitality_suite/direct_sales.py",
+      "line": 24,
+      "call": "frappe.new_doc(\"Sales Invoice\")"
+    },
+    {
+      "path": "hospitality_suite/direct_sales.py",
+      "line": 70,
+      "call": "frappe.new_doc(\"Payment Entry\")"
+    },
+    {
+      "path": "hospitality_suite/direct_sales.py",
+      "line": 103,
+      "call": "frappe.new_doc(\"Payment Entry\")"
+    },
+    {
+      "path": "hospitality_suite/guest_profiles.py",
+      "line": 37,
+      "call": "frappe.get_doc(dt,name,for_update=bool(getattr(frappe.local,'hs_operation',False)))"
+    },
+    {
+      "path": "hospitality_suite/guest_profiles.py",
+      "line": 124,
+      "call": "frappe.get_doc(dict(doctype='Contact',links=links(guest)))"
+    },
+    {
+      "path": "hospitality_suite/guest_profiles.py",
+      "line": 127,
+      "call": "frappe.get_doc(dict(doctype='Address',address_title=cleaned['full_name'],address_type='Personal',\n                                    **{field:cleaned[field] for field in ADDRESS},links=links(guest)))"
+    },
+    {
+      "path": "hospitality_suite/guest_profiles.py",
+      "line": 155,
+      "call": "frappe.get_doc(dict(doctype='Contact',links=links(guest)))"
+    },
+    {
+      "path": "hospitality_suite/guest_profiles.py",
+      "line": 119,
+      "call": "frappe.get_doc(dict(doctype='Customer',customer_name=cleaned['full_name'],customer_type='Individual',\n                                     customer_group=group,territory=territory))"
+    },
+    {
+      "path": "hospitality_suite/guest_profiles.py",
+      "line": 167,
+      "call": "frappe.get_doc(dict(doctype='Address',address_title=cleaned['full_name'],address_type='Personal',\n                                        **{field:cleaned[field] for field in ADDRESS},links=links(guest)))"
+    },
+    {
+      "path": "hospitality_suite/housekeeping.py",
+      "line": 49,
+      "call": "frappe.get_doc(\"HS Room\", task.room)"
+    },
+    {
+      "path": "hospitality_suite/housekeeping.py",
+      "line": 189,
+      "call": "frappe.new_doc(\"Stock Entry\")"
+    },
+    {
+      "path": "hospitality_suite/install.py",
+      "line": 84,
+      "call": "frappe.get_doc(\"Account\", prop.receivable_account)"
+    },
+    {
+      "path": "hospitality_suite/install.py",
+      "line": 85,
+      "call": "frappe.get_doc(\"Account\", prop.guarantee_account)"
+    },
+    {
+      "path": "hospitality_suite/install.py",
+      "line": 60,
+      "call": "frappe.get_doc('Print Format',source['name'])"
+    },
+    {
+      "path": "hospitality_suite/install.py",
+      "line": 81,
+      "call": "frappe.get_doc(prop.meta.get_field(field).options, value)"
+    },
+    {
+      "path": "hospitality_suite/install.py",
+      "line": 12,
+      "call": "frappe.get_doc(dict(doctype=\"Role\", role_name=role, desk_access=1))"
+    },
+    {
+      "path": "hospitality_suite/integrations.py",
+      "line": 104,
+      "call": "frappe.get_doc(\"HS Property\",config[\"property\"])"
+    },
+    {
+      "path": "hospitality_suite/integrations.py",
+      "line": 110,
+      "call": "frappe.get_doc(dict(doctype=\"HS Integration Event\",property=prop.name,company=prop.company,\n                                   provider=provider,event_id=identity,status=\"Received\",attempts=0,payload=receipt))"
+    },
+    {
+      "path": "hospitality_suite/inventory.py",
+      "line": 14,
+      "call": "frappe.new_doc(\"Stock Entry\")"
+    },
+    {
+      "path": "hospitality_suite/item_configuration.py",
+      "line": 38,
+      "call": "frappe.get_doc(\"Item\",name)"
+    },
+    {
+      "path": "hospitality_suite/item_configuration.py",
+      "line": 86,
+      "call": "frappe.get_doc(\"Item\",item)"
+    },
+    {
+      "path": "hospitality_suite/item_configuration.py",
+      "line": 25,
+      "call": "frappe.get_doc(\"Item\",prop.get(field))"
+    },
+    {
+      "path": "hospitality_suite/linen.py",
+      "line": 39,
+      "call": "frappe.get_doc(\"Warehouse\",prop.laundry_warehouse)"
+    },
+    {
+      "path": "hospitality_suite/linen.py",
+      "line": 42,
+      "call": "frappe.get_doc(\"Item\",data[\"item\"])"
+    },
+    {
+      "path": "hospitality_suite/linen.py",
+      "line": 49,
+      "call": "frappe.new_doc(\"Stock Entry\")"
+    },
+    {
+      "path": "hospitality_suite/native_pos.py",
+      "line": 23,
+      "call": "frappe.get_doc(\"HS Shift\",doc.hs_shift,for_update=True)"
+    },
+    {
+      "path": "hospitality_suite/patches/v0_1/backfill_allocation_rates.py",
+      "line": 7,
+      "call": "frappe.get_doc(\"HS Allocation\",name)"
+    },
+    {
+      "path": "hospitality_suite/patches/v0_1/backfill_allocation_rates.py",
+      "line": 14,
+      "call": "frappe.get_doc(\"HS Booking\",doc.booking)"
+    },
+    {
+      "path": "hospitality_suite/patches/v0_1/backfill_booking_lines.py",
+      "line": 6,
+      "call": "frappe.get_doc(\"HS Booking\",name)"
+    },
+    {
+      "path": "hospitality_suite/patches/v0_5/minimal_integration_receipts.py",
+      "line": 37,
+      "call": "frappe.get_doc(\"HS Property\",row.property)"
+    },
+    {
+      "path": "hospitality_suite/patches/v0_5/minimal_integration_receipts.py",
+      "line": 39,
+      "call": "frappe.get_doc(\"HS Integration Event\",row.name)"
+    },
+    {
+      "path": "hospitality_suite/portal.py",
+      "line": 21,
+      "call": "frappe.get_doc(\"HS Property\",name)"
+    },
+    {
+      "path": "hospitality_suite/portal.py",
+      "line": 138,
+      "call": "frappe.get_doc(data[\"doctype\"],data[\"name\"])"
+    },
+    {
+      "path": "hospitality_suite/portal.py",
+      "line": 110,
+      "call": "frappe.get_doc(\"HS Portal Request\",old[0].name,for_update=True)"
+    },
+    {
+      "path": "hospitality_suite/portal.py",
+      "line": 118,
+      "call": "frappe.get_doc(dict(doctype=\"HS Portal Request\",property=prop.name,company=prop.company,\n                                   full_name=values[\"full_name\"],email=values[\"email\"],phone=values.get(\"phone\"),\n                                   starts_at=to_site(values[\"starts_at\"],prop),ends_at=to_site(values[\"ends_at\"],prop),\n                                   category=values[\"category\"],rooms=len(values[\"rooms\"]),people=int(values.get(\"people\") or 1),\n                                   mode=values.get(\"mode\") or (prop.mode if prop.mode!=\"Mixed\" else \"Hotel\"),status=\"Hold\",\n                                   hold_until=now_datetime()+timedelta(minutes=prop.hold_minutes or 15),currency=prop.currency,\n                                   amount=calculation[\"amount\"],quote_snapshot=canonical(calculation),request_key=digest,payload_hash=payload_hash))"
+    },
+    {
+      "path": "hospitality_suite/pos_returns.py",
+      "line": 189,
+      "call": "frappe.new_doc('Journal Entry')"
+    },
+    {
+      "path": "hospitality_suite/privacy.py",
+      "line": 205,
+      "call": "frappe.get_doc(dict(doctype=\"File\",name=row.source_file,file_name=row.file_url.rsplit(\"/\",1)[-1],is_private=1,file_url=row.file_url,thumbnail_url=row.thumbnail_url,content_hash=row.content_hash))"
+    },
+    {
+      "path": "hospitality_suite/procurement.py",
+      "line": 37,
+      "call": "frappe.get_doc(dict(doctype=\"Warehouse\",warehouse_name=data[\"warehouse_name\"],company=prop.company,is_group=0,hs_property=prop.name))"
+    },
+    {
+      "path": "hospitality_suite/procurement.py",
+      "line": 83,
+      "call": "frappe.get_doc(dict(doctype=\"Supplier\",supplier_name=data[\"supplier_name\"],supplier_type=\"Company\",\n                               supplier_group=frappe.db.get_value(\"Supplier Group\",{\"is_group\":0},\"name\") or \"All Supplier Groups\"))"
+    },
+    {
+      "path": "hospitality_suite/procurement.py",
+      "line": 101,
+      "call": "frappe.new_doc(\"Purchase Order\")"
+    },
+    {
+      "path": "hospitality_suite/procurement.py",
+      "line": 146,
+      "call": "frappe.new_doc(\"Purchase Receipt\")"
+    },
+    {
+      "path": "hospitality_suite/procurement.py",
+      "line": 181,
+      "call": "frappe.new_doc(\"Purchase Invoice\")"
+    },
+    {
+      "path": "hospitality_suite/procurement.py",
+      "line": 224,
+      "call": "frappe.new_doc(\"Payment Entry\")"
+    },
+    {
+      "path": "hospitality_suite/procurement.py",
+      "line": 252,
+      "call": "frappe.new_doc(\"Stock Entry\")"
+    },
+    {
+      "path": "hospitality_suite/procurement.py",
+      "line": 293,
+      "call": "frappe.new_doc(\"Stock Reconciliation\")"
+    },
+    {
+      "path": "hospitality_suite/report_queries.py",
+      "line": 227,
+      "call": "frappe.get_doc(\"Sales Invoice\", name)"
+    },
+    {
+      "path": "hospitality_suite/report_queries.py",
+      "line": 434,
+      "call": "frappe.get_doc(\"HS Shift\",source.name)"
+    },
+    {
+      "path": "hospitality_suite/report_queries.py",
+      "line": 357,
+      "call": "frappe.get_doc(dt, source.name)"
+    },
+    {
+      "path": "hospitality_suite/room_history.py",
+      "line": 282,
+      "call": "frappe.get_doc('HS Maintenance Order',row.maintenance)"
+    },
+    {
+      "path": "hospitality_suite/security.py",
+      "line": 43,
+      "call": "frappe.get_doc(\"HS Property\", property_name)"
+    },
+    {
+      "path": "hospitality_suite/security.py",
+      "line": 78,
+      "call": "frappe.get_doc(dt, name, for_update=bool(getattr(frappe.local, \"hs_operation\", False)))"
+    },
+    {
+      "path": "hospitality_suite/security.py",
+      "line": 117,
+      "call": "frappe.get_doc(\"Asset\",doc.attached_to_name)"
+    },
+    {
+      "path": "hospitality_suite/security.py",
+      "line": 124,
+      "call": "frappe.get_doc(doc.attached_to_doctype,doc.attached_to_name)"
+    },
+    {
+      "path": "hospitality_suite/security.py",
+      "line": 131,
+      "call": "frappe.get_doc(doc.attached_to_doctype,doc.attached_to_name)"
+    },
+    {
+      "path": "hospitality_suite/security.py",
+      "line": 272,
+      "call": "frappe.get_doc(\"HS Stay\", doc.hs_stay)"
+    },
+    {
+      "path": "hospitality_suite/security.py",
+      "line": 149,
+      "call": "frappe.get_doc(\"File\",files[0])"
+    },
+    {
+      "path": "hospitality_suite/security.py",
+      "line": 170,
+      "call": "frappe.get_doc(dt,name)"
+    },
+    {
+      "path": "hospitality_suite/security.py",
+      "line": 172,
+      "call": "frappe.get_doc(dt,name)"
+    },
+    {
+      "path": "hospitality_suite/security.py",
+      "line": 176,
+      "call": "frappe.get_doc(\"Asset\",name)"
+    },
+    {
+      "path": "hospitality_suite/service.py",
+      "line": 31,
+      "call": "frappe.get_doc(\"HS Property\", name, for_update=True)"
+    },
+    {
+      "path": "hospitality_suite/service.py",
+      "line": 36,
+      "call": "frappe.get_doc(dt,name,**kwargs,for_update=bool(getattr(frappe.local,\"hs_operation\",False)))"
+    },
+    {
+      "path": "hospitality_suite/service.py",
+      "line": 53,
+      "call": "frappe.get_doc(dict(doctype=dt, company=prop.company, property=prop.name, **values))"
+    },
+    {
+      "path": "hospitality_suite/service_accounting.py",
+      "line": 23,
+      "call": "frappe.get_doc('Cost Center' if field=='cost_center' else 'Account',name)"
+    },
+    {
+      "path": "hospitality_suite/setup.py",
+      "line": 88,
+      "call": "frappe.get_doc(\"User\",email)"
+    },
+    {
+      "path": "hospitality_suite/setup.py",
+      "line": 52,
+      "call": "frappe.get_doc(\"Company\",values[\"company\"],for_update=True)"
+    },
+    {
+      "path": "hospitality_suite/setup.py",
+      "line": 64,
+      "call": "frappe.get_doc(dict(doctype=\"HS Property\",**{k:v for k,v in values.items() if k not in {\"time_zone\",\"close_time\",\"business_date\"}},\n                                    time_zone=time_zone,close_time=close_time,\n                                    business_date=business_date or initial_business_date(time_zone,close_time)))"
+    },
+    {
+      "path": "hospitality_suite/setup.py",
+      "line": 95,
+      "call": "frappe.get_doc(dict(doctype=\"User\",email=email,first_name=data[\"first_name\"],send_welcome_email=0,\n                                user_type=\"System User\",language=\"es\",time_zone=prop.time_zone,\n                                roles=[dict(role=r) for r in roles]))"
+    },
+    {
+      "path": "hospitality_suite/treasury.py",
+      "line": 68,
+      "call": "frappe.new_doc(\"Journal Entry\")"
+    },
+    {
+      "path": "hospitality_suite/treasury.py",
+      "line": 125,
+      "call": "frappe.new_doc(\"Journal Entry\")"
+    }
+  ],
+  "sql": [
+    {
+      "path": "hospitality_suite/controllers.py",
+      "line": 98,
+      "query": "'SELECT name FROM `tabHS Property` WHERE name=%s FOR UPDATE'"
+    },
+    {
+      "path": "hospitality_suite/controllers.py",
+      "line": 208,
+      "query": "\"SELECT name FROM `tabHS Allocation` WHERE room=%s AND status='Active' FOR UPDATE\""
+    },
+    {
+      "path": "hospitality_suite/equipment.py",
+      "line": 49,
+      "query": "'SELECT name FROM `tabHS Property` WHERE name=%s FOR UPDATE'"
+    },
+    {
+      "path": "hospitality_suite/integrations.py",
+      "line": 105,
+      "query": "'SELECT name FROM `tabHS Property` WHERE name=%s FOR UPDATE'"
+    },
+    {
+      "path": "hospitality_suite/portal.py",
+      "line": 106,
+      "query": "'SELECT name FROM `tabHS Property` WHERE name=%s FOR UPDATE'"
+    },
+    {
+      "path": "hospitality_suite/service.py",
+      "line": 30,
+      "query": "'SELECT name FROM `tabHS Property` WHERE name=%s FOR UPDATE'"
+    },
+    {
+      "path": "hospitality_suite/service.py",
+      "line": 73,
+      "query": "'SELECT payload_hash,result FROM `tabHS Request` WHERE request_key=%s FOR UPDATE'"
+    },
+    {
+      "path": "hospitality_suite/setup.py",
+      "line": 55,
+      "query": "'SELECT payload_hash,result FROM `tabHS Request` WHERE request_key=%s FOR UPDATE'"
+    }
+  ],
+  "direct_database_calls": [
+    {
+      "path": "hospitality_suite/demo.py",
+      "line": 194,
+      "call": "frappe.db.set_value(\"Installed Application\", app, \"is_setup_complete\", 1)"
+    },
+    {
+      "path": "hospitality_suite/patches/v0_1/backfill_allocation_rates.py",
+      "line": 19,
+      "call": "frappe.db.set_value(\"HS Allocation\",name,dict(rate=snapshot[\"rules\"][\"name\"],currency=snapshot[\"currency\"],\n                                                          accepted_amount=snapshot[\"amount\"],quote_snapshot=json.dumps(snapshot,default=str)),update_modified=False)"
+    },
+    {
+      "path": "hospitality_suite/patches/v0_1/backfill_booking_lines.py",
+      "line": 15,
+      "call": "frappe.db.set_value(\"HS Allocation\",allocation.name,\"booking_room\",row.name,update_modified=False)"
+    },
+    {
+      "path": "hospitality_suite/patches/v0_3/default_payment_policies.py",
+      "line": 9,
+      "call": "frappe.db.set_value(\"HS Property\",row.name,field,\"Manual\",update_modified=False)"
+    },
+    {
+      "path": "hospitality_suite/patches/v0_3/payment_business_dates.py",
+      "line": 28,
+      "call": "frappe.db.set_value(\"HS Payment\",row.name,values,update_modified=False)"
+    },
+    {
+      "path": "hospitality_suite/patches/v0_4/default_extra_hour_item.py",
+      "line": 8,
+      "call": "frappe.db.set_value(\"HS Property\",row.name,\"extra_hour_item\",row.lodging_item,update_modified=False)"
+    },
+    {
+      "path": "hospitality_suite/patches/v0_5/minimal_integration_receipts.py",
+      "line": 35,
+      "call": "frappe.db.set_value(\"HS Integration Event\",row.name,changes,update_modified=False)"
+    },
+    {
+      "path": "hospitality_suite/patches/v0_5/minimal_integration_receipts.py",
+      "line": 32,
+      "call": "frappe.db.set_value(\"Version\",version.name,\"data\",canonical(data),update_modified=False)"
+    }
+  ]
+}

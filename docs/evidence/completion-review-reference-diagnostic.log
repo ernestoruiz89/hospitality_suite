@@ -1,0 +1,5 @@
+The first completion-review invocation stopped at a nonexistent supplementary
+documentation filename in its new review plan. Existing canonical implementation
+and evidence references were not changed. The plan was corrected to reference
+AUDITORIA_CONTABILIDAD_SERVICIOS.md, CONTABILIDAD.md and the actual recorded worker
+receipt. No application code, requirement text or test assertion was changed.
