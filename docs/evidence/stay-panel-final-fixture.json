@@ -1,0 +1,11 @@
+{
+  "origin": "Native API fixture only: one H101 stay, one lodging charge; no UI creation attributed.",
+  "stay": {
+    "stay": "EST-2026-00001",
+    "folio": "CTA-2026-00001",
+    "room": "qmf5ju94js"
+  },
+  "tables": 72,
+  "physical_files": 741,
+  "business_date": "2026-10-19"
+}

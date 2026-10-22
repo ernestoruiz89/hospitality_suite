@@ -27,6 +27,62 @@ function activityFixture(){
   return{...f,state};
 }
 
+async function stayPanelFixture(){
+  const f=activityFixture(),dialogs=[];
+  f.desk.allowed=()=>true;f.desk.roomName=()=> 'H101';f.desk.guestName=()=> 'Huésped ficticio';
+  f.desk.date=String;f.desk.badge=String;f.desk.table=()=> '';f.desk.amount=String;
+  f.desk.call=async()=>({stay:{name:'original-stay',room:'room',guest:'guest',status:'Active'},folios:[],charges:[]});
+  f.context.$=node=>({data:key=>node[key],is:()=>true});
+  f.context.frappe.ui={Dialog:class{
+    constructor(options){this.options=options;this.callbacks={};this.$wrapper={on:(event,selector,callback)=>{this.callbacks[event]=callback;return this.$wrapper;}};dialogs.push(this);}
+    show(){this.display=true;}hide(){this.display=false;}
+  }};
+  return{...f,dialogs,open:()=>f.desk.action_detail('original-stay'),event:{currentTarget:{act:'invoice',id:'original-stay'}}};
+}
+
+test('queued stay-panel activations prepare one child action through the Page coordinator',async()=>{
+  const f=await stayPanelFixture(),request=deferred();let reads=0,opened=0;
+  f.desk.action_invoice=async id=>{assert.equal(id,'original-stay');reads++;await request.promise;opened++;};
+  const panel=await f.open(),first=panel.callbacks.click(f.event),second=panel.callbacks.click(f.event);
+  try{
+    assert.equal(reads,1,'queued events must not create two independent financial forms');
+    assert.equal(f.state.disabled,true);assert.equal(f.desk.actionPending,true);
+  }finally{request.resolve();await Promise.all([first,second]);}
+  assert.equal(opened,1);assert.equal(f.state.disabled,false);assert.equal(f.desk.actionPending,false);
+});
+
+test('stay-panel transport errors recover once and a reopened panel permits a deliberate retry',async()=>{
+  const f=await stayPanelFixture(),notices=[];let attempts=0;
+  f.context.frappe.msgprint=message=>notices.push(message);
+  f.desk.action_invoice=async()=>{attempts++;if(attempts===1)throw Error('synthetic read interruption');};
+  const panel=await f.open();
+  await assert.doesNotReject(()=>panel.callbacks.click(f.event));
+  assert.equal(notices.length,1);assert.equal(f.desk.actionPending,false);assert.equal(f.state.disabled,false);
+  const retry=await f.open();await retry.callbacks.click(f.event);
+  assert.equal(attempts,2);assert.equal(notices.length,1);
+});
+
+test('an offline stay panel remains open and its native close has no fading overlay',async()=>{
+  const f=await stayPanelFixture();let opened=0;f.desk.action_invoice=async()=>opened++;
+  const panel=await f.open();assert.equal(panel.options.animate,false);
+  f.context.navigator.onLine=false;await panel.callbacks.click(f.event);
+  assert.equal(opened,0);assert.equal(panel.display,true);
+});
+
+test('stay-panel preparation remains announced outside the hidden panel and clears on success or failure',async()=>{
+  for(const fail of [false,true]){
+    const f=await stayPanelFixture(),request=deferred(),visible=[];let adjacent=0;
+    f.context.document={querySelectorAll:()=>[],body:{appendChild:node=>visible.push(node)},createElement:()=>({classList:{add(){}},setAttribute(){},remove(){visible.splice(visible.indexOf(this),1);}})};
+    f.context.frappe.msgprint=()=>{};
+    Object.assign(f.event.currentTarget,{isConnected:true,closest:selector=>selector==='.hs-stay-panel',insertAdjacentElement:()=>adjacent++});
+    f.desk.action_invoice=async()=>{await request.promise;if(fail)throw Error('synthetic interrupted detail');};
+    const panel=await f.open(),pending=panel.callbacks.click(f.event);
+    assert.equal(panel.display,false);assert.equal(visible.length,1);assert.equal(adjacent,0);
+    assert.match(visible[0].textContent,/Preparando acción/);
+    request.resolve();await pending;assert.equal(visible.length,0);assert.equal(f.state.disabled,false);
+  }
+});
+
 test('page activity covers a committed operation through its refresh, including actions appended after render',async()=>{
   const {desk,state}=activityFixture(),execute=deferred(),refresh=deferred(),refreshStarted=deferred();let calls=0,opened=0;
   desk.call=method=>{calls++;if(method==='execute')return execute.promise;refreshStarted.resolve();return refresh.promise;};desk.action_reserve=async()=>opened++;

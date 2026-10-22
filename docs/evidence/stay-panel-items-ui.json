@@ -1,0 +1,34 @@
+{
+  "site": "hospitality-acceptance.localhost",
+  "at_utc": "2026-10-22T03:06:49.154405+00:00",
+  "native_application": true,
+  "core_files_modified": false,
+  "fixture_created_by": "Native API",
+  "inspector_mutations": false,
+  "protected_tables_unchanged": 72,
+  "physical_files_unchanged": 741,
+  "financial_commands_from_UI": 0,
+  "stay_detail_statuses": [
+    "200",
+    "200",
+    "200",
+    "503",
+    "200",
+    "200",
+    "200",
+    "200"
+  ],
+  "transport_events": [
+    {
+      "mode": "slow-stay-detail",
+      "path": "/api/method/hospitality_suite.api.stay_detail",
+      "delay_seconds": 8
+    },
+    {
+      "mode": "failed-stay-detail",
+      "path": "/api/method/hospitality_suite.api.stay_detail",
+      "delay_seconds": 0
+    }
+  ],
+  "http_500": 0
+}

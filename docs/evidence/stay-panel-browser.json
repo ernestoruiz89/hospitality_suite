@@ -1,0 +1,1801 @@
+{
+  "role": "HS Manager",
+  "viewport": "desktop",
+  "native_fixture": true,
+  "events": [
+    {
+      "label": "initial-manager-stays",
+      "at": "2026-10-22T03:04:27.600Z",
+      "backdrops": [],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.XTS2SDXX.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "label": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "label": "Cerrar sesión"
+        },
+        {
+          "action": "walk_in",
+          "disabled": false,
+          "label": "Registrar entrada inmediata"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Alojados · 1"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Llegadas · 0"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Salidas · 0"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Cuentas abiertas · 1"
+        }
+      ],
+      "dialogs": [],
+      "inputs": [
+        {
+          "invalid": null,
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "value": "2026-10-20"
+        }
+      ],
+      "text": "Estancias\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nEstancias\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nRegistrar entrada inmediata\nAlojados · 1\nLlegadas · 0\nSalidas · 0\nCuentas abiertas · 1\n\nLlegadas y salidas hasta 2026-10-20 · America/Managua\n\nConsultar pendientes hasta\nFecha calendario local. La fecha operativa se conserva.\n\nSalidas pendientes hasta esa fecha, también atrasadas.\n\n✓\nNo hay salidas pendientes hasta esa fecha.\n\nLa información se actualiza al registrar movimientos.\n\nMostrando 0–0 de 0\nHora de referencia del servidor: 2026-10-21 21:04:20.797692 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-stays"
+    },
+    {
+      "label": "native-stay-panel",
+      "at": "2026-10-22T03:04:54.030Z",
+      "backdrops": [
+        "modal-backdrop show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.XTS2SDXX.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "label": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "label": "Cerrar sesión"
+        },
+        {
+          "action": "walk_in",
+          "disabled": false,
+          "label": "Registrar entrada inmediata"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Alojados · 1"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Llegadas · 0"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Salidas · 0"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Cuentas abiertas · 1"
+        },
+        {
+          "action": "detail",
+          "disabled": false,
+          "label": "Ver estancia"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": ""
+        },
+        {
+          "action": "service",
+          "disabled": false,
+          "label": "Agregar consumo"
+        },
+        {
+          "action": "inspect_departure",
+          "disabled": false,
+          "label": "Inspeccionar salida"
+        },
+        {
+          "action": "extend",
+          "disabled": false,
+          "label": "Extender estancia"
+        },
+        {
+          "action": "change_room",
+          "disabled": false,
+          "label": "Cambiar habitación"
+        },
+        {
+          "action": "folio",
+          "disabled": false,
+          "label": "Separar cuenta"
+        },
+        {
+          "action": "companions",
+          "disabled": false,
+          "label": "Acompañantes"
+        },
+        {
+          "action": "adjustment",
+          "disabled": false,
+          "label": "Descuento o cortesía"
+        },
+        {
+          "action": "invoice",
+          "disabled": false,
+          "label": "Facturar cuenta"
+        },
+        {
+          "action": "payment",
+          "disabled": false,
+          "label": "Cobrar"
+        },
+        {
+          "action": "checkout",
+          "disabled": false,
+          "label": "Registrar salida"
+        },
+        {
+          "action": "print_stay",
+          "disabled": false,
+          "label": "Imprimir cuenta"
+        },
+        {
+          "action": "print_registration",
+          "disabled": false,
+          "label": "Imprimir registro de huésped"
+        },
+        {
+          "action": "move_charge",
+          "disabled": false,
+          "label": "Cambiar cuenta"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal show hs-keyboard-dialog hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": true
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Estancias\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nEstancias\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nRegistrar entrada inmediata\nAlojados · 1\nLlegadas · 0\nSalidas · 0\nCuentas abiertas · 1\n\nLlegadas y salidas hasta 2026-10-20 · America/Managua\n\nEstancias activas ahora.\n\nHabitación\tHuésped\tEntrada prevista\tSalida prevista\tEstado\tAcción\nH101\tHuésped ficticio H3\t21/10/2026 21:03\t22/10/2026 21:03\tAlojado\tVer estancia\nMostrando 1–1 de 1\nHora de referencia del servidor: 2026-10-21 21:04:20.797692 · NIO\nHabitación H101 · Huésped ficticio H3\n\n21/10/2026 21:03 → 22/10/2026 21:03 Alojado\n\nAgregar consumo\nInspeccionar salida\nExtender estancia\nCambiar habitación\nSeparar cuenta\nAcompañantes\nDescuento o cortesía\nFacturar cuenta\nCobrar\nRegistrar salida\nImprimir cuenta\nImprimir registro de huésped\nCuentas y saldos\nCuenta\tPagador\tProgramado, sin generar\tSaldo total\nCuenta principal\tCliente ficticio H3\tC$ 0.00\tC$ 1,500.00\nCargos\nDescripción\tCuenta\tImporte\tEstado\tAcción\nAlojamiento\nVer cálculo del precio\n\tCuenta principal\tC$ 1,500.00\tPendiente\tCambiar cuenta",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-stays"
+    },
+    {
+      "label": "slow-child-preparation",
+      "at": "2026-10-22T03:05:06.947Z",
+      "backdrops": [],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.XTS2SDXX.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": true,
+          "label": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": true,
+          "label": "Cerrar sesión"
+        },
+        {
+          "action": "walk_in",
+          "disabled": true,
+          "label": "Registrar entrada inmediata"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Alojados · 1"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Llegadas · 0"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Salidas · 0"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Cuentas abiertas · 1"
+        },
+        {
+          "action": "detail",
+          "disabled": true,
+          "label": "Ver estancia"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Estancias\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nEstancias\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nRegistrar entrada inmediata\nAlojados · 1\nLlegadas · 0\nSalidas · 0\nCuentas abiertas · 1\n\nLlegadas y salidas hasta 2026-10-20 · America/Managua\n\nEstancias activas ahora.\n\nHabitación\tHuésped\tEntrada prevista\tSalida prevista\tEstado\tAcción\nH101\tHuésped ficticio H3\t21/10/2026 21:03\t22/10/2026 21:03\tAlojado\tVer estancia\nMostrando 1–1 de 1\nHora de referencia del servidor: 2026-10-21 21:04:20.797692 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-stays"
+    },
+    {
+      "label": "one-child-form-ready",
+      "at": "2026-10-22T03:05:15.756Z",
+      "backdrops": [
+        "modal-backdrop show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.XTS2SDXX.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "label": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "label": "Cerrar sesión"
+        },
+        {
+          "action": "walk_in",
+          "disabled": false,
+          "label": "Registrar entrada inmediata"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Alojados · 1"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Llegadas · 0"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Salidas · 0"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Cuentas abiertas · 1"
+        },
+        {
+          "action": "detail",
+          "disabled": false,
+          "label": "Ver estancia"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Revisar factura"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show",
+          "title": "Facturar cuenta",
+          "visible": true
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "name": "folio",
+          "value": "CTA-2026-00001"
+        }
+      ],
+      "text": "Estancias\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nEstancias\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nRegistrar entrada inmediata\nAlojados · 1\nLlegadas · 0\nSalidas · 0\nCuentas abiertas · 1\n\nLlegadas y salidas hasta 2026-10-20 · America/Managua\n\nEstancias activas ahora.\n\nHabitación\tHuésped\tEntrada prevista\tSalida prevista\tEstado\tAcción\nH101\tHuésped ficticio H3\t21/10/2026 21:03\t22/10/2026 21:03\tAlojado\tVer estancia\nMostrando 1–1 de 1\nHora de referencia del servidor: 2026-10-21 21:04:20.797692 · NIO\nFacturar cuenta\n\nSe emitirá una factura de ERPNext. La estancia permanece activa y no se registra un cobro.\n\nIncluye todas las noches programadas y cargos pendientes de la cuenta elegida.\n\nCuenta que desea facturar\nSeleccione…\nCuenta principal · Habitación H101\nfolio\nRevisar factura",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-stays"
+    },
+    {
+      "label": "reopened-panel-before-interruption",
+      "at": "2026-10-22T03:05:25.029Z",
+      "backdrops": [
+        "modal-backdrop show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.XTS2SDXX.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "label": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "label": "Cerrar sesión"
+        },
+        {
+          "action": "walk_in",
+          "disabled": false,
+          "label": "Registrar entrada inmediata"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Alojados · 1"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Llegadas · 0"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Salidas · 0"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Cuentas abiertas · 1"
+        },
+        {
+          "action": "detail",
+          "disabled": false,
+          "label": "Ver estancia"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": ""
+        },
+        {
+          "action": "service",
+          "disabled": false,
+          "label": "Agregar consumo"
+        },
+        {
+          "action": "inspect_departure",
+          "disabled": false,
+          "label": "Inspeccionar salida"
+        },
+        {
+          "action": "extend",
+          "disabled": false,
+          "label": "Extender estancia"
+        },
+        {
+          "action": "change_room",
+          "disabled": false,
+          "label": "Cambiar habitación"
+        },
+        {
+          "action": "folio",
+          "disabled": false,
+          "label": "Separar cuenta"
+        },
+        {
+          "action": "companions",
+          "disabled": false,
+          "label": "Acompañantes"
+        },
+        {
+          "action": "adjustment",
+          "disabled": false,
+          "label": "Descuento o cortesía"
+        },
+        {
+          "action": "invoice",
+          "disabled": false,
+          "label": "Facturar cuenta"
+        },
+        {
+          "action": "payment",
+          "disabled": false,
+          "label": "Cobrar"
+        },
+        {
+          "action": "checkout",
+          "disabled": false,
+          "label": "Registrar salida"
+        },
+        {
+          "action": "print_stay",
+          "disabled": false,
+          "label": "Imprimir cuenta"
+        },
+        {
+          "action": "print_registration",
+          "disabled": false,
+          "label": "Imprimir registro de huésped"
+        },
+        {
+          "action": "move_charge",
+          "disabled": false,
+          "label": "Cambiar cuenta"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Facturar cuenta",
+          "visible": false
+        },
+        {
+          "classes": "modal show hs-keyboard-dialog hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": true
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Estancias\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nEstancias\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nRegistrar entrada inmediata\nAlojados · 1\nLlegadas · 0\nSalidas · 0\nCuentas abiertas · 1\n\nLlegadas y salidas hasta 2026-10-20 · America/Managua\n\nEstancias activas ahora.\n\nHabitación\tHuésped\tEntrada prevista\tSalida prevista\tEstado\tAcción\nH101\tHuésped ficticio H3\t21/10/2026 21:03\t22/10/2026 21:03\tAlojado\tVer estancia\nMostrando 1–1 de 1\nHora de referencia del servidor: 2026-10-21 21:04:20.797692 · NIO\nHabitación H101 · Huésped ficticio H3\n\n21/10/2026 21:03 → 22/10/2026 21:03 Alojado\n\nAgregar consumo\nInspeccionar salida\nExtender estancia\nCambiar habitación\nSeparar cuenta\nAcompañantes\nDescuento o cortesía\nFacturar cuenta\nCobrar\nRegistrar salida\nImprimir cuenta\nImprimir registro de huésped\nCuentas y saldos\nCuenta\tPagador\tProgramado, sin generar\tSaldo total\nCuenta principal\tCliente ficticio H3\tC$ 0.00\tC$ 1,500.00\nCargos\nDescripción\tCuenta\tImporte\tEstado\tAcción\nAlojamiento\nVer cálculo del precio\n\tCuenta principal\tC$ 1,500.00\tPendiente\tCambiar cuenta",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-stays"
+    },
+    {
+      "label": "interrupted-child-recovered",
+      "at": "2026-10-22T03:05:36.015Z",
+      "backdrops": [
+        "modal-backdrop fade show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.XTS2SDXX.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "label": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "label": "Cerrar sesión"
+        },
+        {
+          "action": "walk_in",
+          "disabled": false,
+          "label": "Registrar entrada inmediata"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Alojados · 1"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Llegadas · 0"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Salidas · 0"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Cuentas abiertas · 1"
+        },
+        {
+          "action": "detail",
+          "disabled": false,
+          "label": "Ver estancia"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": ""
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Facturar cuenta",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal fade show hs-keyboard-dialog",
+          "title": "No se completó la acción",
+          "visible": true
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Estancias\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nEstancias\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nRegistrar entrada inmediata\nAlojados · 1\nLlegadas · 0\nSalidas · 0\nCuentas abiertas · 1\n\nLlegadas y salidas hasta 2026-10-20 · America/Managua\n\nEstancias activas ahora.\n\nHabitación\tHuésped\tEntrada prevista\tSalida prevista\tEstado\tAcción\nH101\tHuésped ficticio H3\t21/10/2026 21:03\t22/10/2026 21:03\tAlojado\tVer estancia\nMostrando 1–1 de 1\nHora de referencia del servidor: 2026-10-21 21:04:20.797692 · NIO\nNo se completó la acción\nRevise los datos y vuelva a intentarlo. No confirme el movimiento hasta recibir respuesta del servidor.",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-stays"
+    },
+    {
+      "label": "error-dismissed-ready",
+      "at": "2026-10-22T03:05:41.510Z",
+      "backdrops": [],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.XTS2SDXX.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "label": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "label": "Cerrar sesión"
+        },
+        {
+          "action": "walk_in",
+          "disabled": false,
+          "label": "Registrar entrada inmediata"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Alojados · 1"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Llegadas · 0"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Salidas · 0"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Cuentas abiertas · 1"
+        },
+        {
+          "action": "detail",
+          "disabled": false,
+          "label": "Ver estancia"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Facturar cuenta",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal fade",
+          "title": "No se completó la acción",
+          "visible": false
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Estancias\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nEstancias\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nRegistrar entrada inmediata\nAlojados · 1\nLlegadas · 0\nSalidas · 0\nCuentas abiertas · 1\n\nLlegadas y salidas hasta 2026-10-20 · America/Managua\n\nEstancias activas ahora.\n\nHabitación\tHuésped\tEntrada prevista\tSalida prevista\tEstado\tAcción\nH101\tHuésped ficticio H3\t21/10/2026 21:03\t22/10/2026 21:03\tAlojado\tVer estancia\nMostrando 1–1 de 1\nHora de referencia del servidor: 2026-10-21 21:04:20.797692 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-stays"
+    },
+    {
+      "label": "deliberate-retry-ready",
+      "at": "2026-10-22T03:05:46.253Z",
+      "backdrops": [
+        "modal-backdrop show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.XTS2SDXX.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "label": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "label": "Cerrar sesión"
+        },
+        {
+          "action": "walk_in",
+          "disabled": false,
+          "label": "Registrar entrada inmediata"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Alojados · 1"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Llegadas · 0"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Salidas · 0"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Cuentas abiertas · 1"
+        },
+        {
+          "action": "detail",
+          "disabled": false,
+          "label": "Ver estancia"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Revisar factura"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Facturar cuenta",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal fade",
+          "title": "No se completó la acción",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show",
+          "title": "Facturar cuenta",
+          "visible": true
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "name": "folio",
+          "value": "CTA-2026-00001"
+        }
+      ],
+      "text": "Estancias\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nEstancias\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nRegistrar entrada inmediata\nAlojados · 1\nLlegadas · 0\nSalidas · 0\nCuentas abiertas · 1\n\nLlegadas y salidas hasta 2026-10-20 · America/Managua\n\nEstancias activas ahora.\n\nHabitación\tHuésped\tEntrada prevista\tSalida prevista\tEstado\tAcción\nH101\tHuésped ficticio H3\t21/10/2026 21:03\t22/10/2026 21:03\tAlojado\tVer estancia\nMostrando 1–1 de 1\nHora de referencia del servidor: 2026-10-21 21:04:20.797692 · NIO\nFacturar cuenta\n\nSe emitirá una factura de ERPNext. La estancia permanece activa y no se registra un cobro.\n\nIncluye todas las noches programadas y cargos pendientes de la cuenta elegida.\n\nCuenta que desea facturar\nSeleccione…\nCuenta principal · Habitación H101\nfolio\nRevisar factura",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-stays"
+    },
+    {
+      "label": "invoice-preview-only",
+      "at": "2026-10-22T03:05:49.855Z",
+      "backdrops": [
+        "modal-backdrop show",
+        "modal-backdrop show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.XTS2SDXX.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "label": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "label": "Cerrar sesión"
+        },
+        {
+          "action": "walk_in",
+          "disabled": false,
+          "label": "Registrar entrada inmediata"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Alojados · 1"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Llegadas · 0"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Salidas · 0"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Cuentas abiertas · 1"
+        },
+        {
+          "action": "detail",
+          "disabled": false,
+          "label": "Ver estancia"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Revisar factura"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Emitir factura"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Facturar cuenta",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal fade",
+          "title": "No se completó la acción",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show hs-form-suspended",
+          "title": "Facturar cuenta",
+          "visible": true
+        },
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show",
+          "title": "Revisar factura",
+          "visible": true
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "name": "folio",
+          "value": "CTA-2026-00001"
+        }
+      ],
+      "text": "Estancias\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nEstancias\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nRegistrar entrada inmediata\nAlojados · 1\nLlegadas · 0\nSalidas · 0\nCuentas abiertas · 1\n\nLlegadas y salidas hasta 2026-10-20 · America/Managua\n\nEstancias activas ahora.\n\nHabitación\tHuésped\tEntrada prevista\tSalida prevista\tEstado\tAcción\nH101\tHuésped ficticio H3\t21/10/2026 21:03\t22/10/2026 21:03\tAlojado\tVer estancia\nMostrando 1–1 de 1\nHora de referencia del servidor: 2026-10-21 21:04:20.797692 · NIO\nRevisar factura\n\nCuenta principal · Cliente ficticio H3\n\nFecha contable: 2026-10-21\n\nTotal a facturar: C$ 1,500.00\n\nNeto: C$ 1,500.00 · Impuestos: C$ 0.00\n\nConcepto\tImporte\nAnticipos y garantías por aplicar\tC$ 0.00\nSaldo de la nueva factura\tC$ 1,500.00\n\nAlojamiento programado incluido: C$ 0.00\n\nEmitir la factura no agrega un nuevo movimiento de dinero ni registra la salida.\n\nEmitir factura",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-stays"
+    },
+    {
+      "label": "invoice-preview-ready",
+      "at": "2026-10-22T03:05:59.109Z",
+      "backdrops": [
+        "modal-backdrop show",
+        "modal-backdrop show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.XTS2SDXX.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "label": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "label": "Cerrar sesión"
+        },
+        {
+          "action": "walk_in",
+          "disabled": false,
+          "label": "Registrar entrada inmediata"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Alojados · 1"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Llegadas · 0"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Salidas · 0"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Cuentas abiertas · 1"
+        },
+        {
+          "action": "detail",
+          "disabled": false,
+          "label": "Ver estancia"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Revisar factura"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Emitir factura"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Facturar cuenta",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal fade",
+          "title": "No se completó la acción",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show hs-form-suspended",
+          "title": "Facturar cuenta",
+          "visible": true
+        },
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show",
+          "title": "Revisar factura",
+          "visible": true
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "name": "folio",
+          "value": "CTA-2026-00001"
+        }
+      ],
+      "text": "Estancias\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nEstancias\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nRegistrar entrada inmediata\nAlojados · 1\nLlegadas · 0\nSalidas · 0\nCuentas abiertas · 1\n\nLlegadas y salidas hasta 2026-10-20 · America/Managua\n\nEstancias activas ahora.\n\nHabitación\tHuésped\tEntrada prevista\tSalida prevista\tEstado\tAcción\nH101\tHuésped ficticio H3\t21/10/2026 21:03\t22/10/2026 21:03\tAlojado\tVer estancia\nMostrando 1–1 de 1\nHora de referencia del servidor: 2026-10-21 21:04:20.797692 · NIO\nRevisar factura\n\nCuenta principal · Cliente ficticio H3\n\nFecha contable: 2026-10-21\n\nTotal a facturar: C$ 1,500.00\n\nNeto: C$ 1,500.00 · Impuestos: C$ 0.00\n\nConcepto\tImporte\nAnticipos y garantías por aplicar\tC$ 0.00\nSaldo de la nueva factura\tC$ 1,500.00\n\nAlojamiento programado incluido: C$ 0.00\n\nEmitir la factura no agrega un nuevo movimiento de dinero ni registra la salida.\n\nEmitir factura",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-stays"
+    },
+    {
+      "label": "preview-cancelled-draft-retained",
+      "at": "2026-10-22T03:06:04.756Z",
+      "backdrops": [
+        "modal-backdrop show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.XTS2SDXX.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "label": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "label": "Cerrar sesión"
+        },
+        {
+          "action": "walk_in",
+          "disabled": false,
+          "label": "Registrar entrada inmediata"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Alojados · 1"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Llegadas · 0"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Salidas · 0"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Cuentas abiertas · 1"
+        },
+        {
+          "action": "detail",
+          "disabled": false,
+          "label": "Ver estancia"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Revisar factura"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Facturar cuenta",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal fade",
+          "title": "No se completó la acción",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show",
+          "title": "Facturar cuenta",
+          "visible": true
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Revisar factura",
+          "visible": false
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "name": "folio",
+          "value": "CTA-2026-00001"
+        }
+      ],
+      "text": "Estancias\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nEstancias\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nRegistrar entrada inmediata\nAlojados · 1\nLlegadas · 0\nSalidas · 0\nCuentas abiertas · 1\n\nLlegadas y salidas hasta 2026-10-20 · America/Managua\n\nEstancias activas ahora.\n\nHabitación\tHuésped\tEntrada prevista\tSalida prevista\tEstado\tAcción\nH101\tHuésped ficticio H3\t21/10/2026 21:03\t22/10/2026 21:03\tAlojado\tVer estancia\nMostrando 1–1 de 1\nHora de referencia del servidor: 2026-10-21 21:04:20.797692 · NIO\nFacturar cuenta\n\nSe emitirá una factura de ERPNext. La estancia permanece activa y no se registra un cobro.\n\nIncluye todas las noches programadas y cargos pendientes de la cuenta elegida.\n\nCuenta que desea facturar\nSeleccione…\nCuenta principal · Habitación H101\nfolio\nRevisar factura",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-stays"
+    },
+    {
+      "label": "invoice-draft-closed",
+      "at": "2026-10-22T03:06:05.476Z",
+      "backdrops": [],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.XTS2SDXX.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "label": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "label": "Cerrar sesión"
+        },
+        {
+          "action": "walk_in",
+          "disabled": false,
+          "label": "Registrar entrada inmediata"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Alojados · 1"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Llegadas · 0"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Salidas · 0"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Cuentas abiertas · 1"
+        },
+        {
+          "action": "detail",
+          "disabled": false,
+          "label": "Ver estancia"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Facturar cuenta",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal fade",
+          "title": "No se completó la acción",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Facturar cuenta",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Revisar factura",
+          "visible": false
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Estancias\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nEstancias\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nRegistrar entrada inmediata\nAlojados · 1\nLlegadas · 0\nSalidas · 0\nCuentas abiertas · 1\n\nLlegadas y salidas hasta 2026-10-20 · America/Managua\n\nEstancias activas ahora.\n\nHabitación\tHuésped\tEntrada prevista\tSalida prevista\tEstado\tAcción\nH101\tHuésped ficticio H3\t21/10/2026 21:03\t22/10/2026 21:03\tAlojado\tVer estancia\nMostrando 1–1 de 1\nHora de referencia del servidor: 2026-10-21 21:04:20.797692 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-stays"
+    },
+    {
+      "label": "cached-child-extension-ready",
+      "at": "2026-10-22T03:06:14.751Z",
+      "backdrops": [
+        "modal-backdrop show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.XTS2SDXX.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "label": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "label": "Cerrar sesión"
+        },
+        {
+          "action": "walk_in",
+          "disabled": false,
+          "label": "Registrar entrada inmediata"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Alojados · 1"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Llegadas · 0"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Salidas · 0"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Cuentas abiertas · 1"
+        },
+        {
+          "action": "detail",
+          "disabled": false,
+          "label": "Ver estancia"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Cotizar extensión"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Facturar cuenta",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal fade",
+          "title": "No se completó la acción",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Facturar cuenta",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Revisar factura",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show",
+          "title": "Extender estancia",
+          "visible": true
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "name": "ends_at",
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "name": "folio",
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "name": "reason",
+          "value": ""
+        }
+      ],
+      "text": "Estancias\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nEstancias\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nRegistrar entrada inmediata\nAlojados · 1\nLlegadas · 0\nSalidas · 0\nCuentas abiertas · 1\n\nLlegadas y salidas hasta 2026-10-20 · America/Managua\n\nEstancias activas ahora.\n\nHabitación\tHuésped\tEntrada prevista\tSalida prevista\tEstado\tAcción\nH101\tHuésped ficticio H3\t21/10/2026 21:03\t22/10/2026 21:03\tAlojado\tVer estancia\nMostrando 1–1 de 1\nHora de referencia del servidor: 2026-10-21 21:04:20.797692 · NIO\nExtender estancia\nNueva salida\nends_at\nCuenta para la extensión\nSeleccione…\nCuenta principal · Habitación H101\nfolio\nObservaciones\nreason\nCotizar extensión",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-stays"
+    },
+    {
+      "label": "extension-inline-validation",
+      "at": "2026-10-22T03:06:22.927Z",
+      "backdrops": [
+        "modal-backdrop show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.XTS2SDXX.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "label": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "label": "Cerrar sesión"
+        },
+        {
+          "action": "walk_in",
+          "disabled": false,
+          "label": "Registrar entrada inmediata"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Alojados · 1"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Llegadas · 0"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Salidas · 0"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Cuentas abiertas · 1"
+        },
+        {
+          "action": "detail",
+          "disabled": false,
+          "label": "Ver estancia"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Cotizar extensión"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Facturar cuenta",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal fade",
+          "title": "No se completó la acción",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Facturar cuenta",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Revisar factura",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show",
+          "title": "Extender estancia",
+          "visible": true
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": "true",
+          "name": "ends_at",
+          "value": ""
+        },
+        {
+          "invalid": "true",
+          "name": "folio",
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "name": "reason",
+          "value": ""
+        }
+      ],
+      "text": "Estancias\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nEstancias\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nRegistrar entrada inmediata\nAlojados · 1\nLlegadas · 0\nSalidas · 0\nCuentas abiertas · 1\n\nLlegadas y salidas hasta 2026-10-20 · America/Managua\n\nEstancias activas ahora.\n\nHabitación\tHuésped\tEntrada prevista\tSalida prevista\tEstado\tAcción\nH101\tHuésped ficticio H3\t21/10/2026 21:03\t22/10/2026 21:03\tAlojado\tVer estancia\nMostrando 1–1 de 1\nHora de referencia del servidor: 2026-10-21 21:04:20.797692 · NIO\nExtender estancia\n\nRevise los campos indicados antes de continuar.\n\nNueva salida\nends_at\n\nComplete Nueva salida.\n\nCuenta para la extensión\nSeleccione…\nCuenta principal · Habitación H101\nfolio\n\nComplete Cuenta para la extensión.\n\nObservaciones\nreason\nCotizar extensión",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-stays"
+    },
+    {
+      "label": "all-panel-forms-closed",
+      "at": "2026-10-22T03:06:23.744Z",
+      "backdrops": [],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.XTS2SDXX.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "label": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "label": "Cerrar sesión"
+        },
+        {
+          "action": "walk_in",
+          "disabled": false,
+          "label": "Registrar entrada inmediata"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Alojados · 1"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Llegadas · 0"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Salidas · 0"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Cuentas abiertas · 1"
+        },
+        {
+          "action": "detail",
+          "disabled": false,
+          "label": "Ver estancia"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Facturar cuenta",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal fade",
+          "title": "No se completó la acción",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Facturar cuenta",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Revisar factura",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Extender estancia",
+          "visible": false
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Estancias\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nEstancias\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nRegistrar entrada inmediata\nAlojados · 1\nLlegadas · 0\nSalidas · 0\nCuentas abiertas · 1\n\nLlegadas y salidas hasta 2026-10-20 · America/Managua\n\nEstancias activas ahora.\n\nHabitación\tHuésped\tEntrada prevista\tSalida prevista\tEstado\tAcción\nH101\tHuésped ficticio H3\t21/10/2026 21:03\t22/10/2026 21:03\tAlojado\tVer estancia\nMostrando 1–1 de 1\nHora de referencia del servidor: 2026-10-21 21:04:20.797692 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-stays"
+    },
+    {
+      "label": "final-panel-actions-ready",
+      "at": "2026-10-22T03:06:31.646Z",
+      "backdrops": [
+        "modal-backdrop show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.XTS2SDXX.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "label": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "label": "Cerrar sesión"
+        },
+        {
+          "action": "walk_in",
+          "disabled": false,
+          "label": "Registrar entrada inmediata"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Alojados · 1"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Llegadas · 0"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Salidas · 0"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Cuentas abiertas · 1"
+        },
+        {
+          "action": "detail",
+          "disabled": false,
+          "label": "Ver estancia"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "label": ""
+        },
+        {
+          "action": "service",
+          "disabled": false,
+          "label": "Agregar consumo"
+        },
+        {
+          "action": "inspect_departure",
+          "disabled": false,
+          "label": "Inspeccionar salida"
+        },
+        {
+          "action": "extend",
+          "disabled": false,
+          "label": "Extender estancia"
+        },
+        {
+          "action": "change_room",
+          "disabled": false,
+          "label": "Cambiar habitación"
+        },
+        {
+          "action": "folio",
+          "disabled": false,
+          "label": "Separar cuenta"
+        },
+        {
+          "action": "companions",
+          "disabled": false,
+          "label": "Acompañantes"
+        },
+        {
+          "action": "adjustment",
+          "disabled": false,
+          "label": "Descuento o cortesía"
+        },
+        {
+          "action": "invoice",
+          "disabled": false,
+          "label": "Facturar cuenta"
+        },
+        {
+          "action": "payment",
+          "disabled": false,
+          "label": "Cobrar"
+        },
+        {
+          "action": "checkout",
+          "disabled": false,
+          "label": "Registrar salida"
+        },
+        {
+          "action": "print_stay",
+          "disabled": false,
+          "label": "Imprimir cuenta"
+        },
+        {
+          "action": "print_registration",
+          "disabled": false,
+          "label": "Imprimir registro de huésped"
+        },
+        {
+          "action": "move_charge",
+          "disabled": false,
+          "label": "Cambiar cuenta"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Facturar cuenta",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal fade",
+          "title": "No se completó la acción",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Facturar cuenta",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Revisar factura",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Extender estancia",
+          "visible": false
+        },
+        {
+          "classes": "modal show hs-keyboard-dialog hs-stay-panel",
+          "title": "Habitación H101 · Huésped ficticio H3",
+          "visible": true
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Estancias\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nEstancias\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nRegistrar entrada inmediata\nAlojados · 1\nLlegadas · 0\nSalidas · 0\nCuentas abiertas · 1\n\nLlegadas y salidas hasta 2026-10-20 · America/Managua\n\nEstancias activas ahora.\n\nHabitación\tHuésped\tEntrada prevista\tSalida prevista\tEstado\tAcción\nH101\tHuésped ficticio H3\t21/10/2026 21:03\t22/10/2026 21:03\tAlojado\tVer estancia\nMostrando 1–1 de 1\nHora de referencia del servidor: 2026-10-21 21:04:20.797692 · NIO\nHabitación H101 · Huésped ficticio H3\n\n21/10/2026 21:03 → 22/10/2026 21:03 Alojado\n\nAgregar consumo\nInspeccionar salida\nExtender estancia\nCambiar habitación\nSeparar cuenta\nAcompañantes\nDescuento o cortesía\nFacturar cuenta\nCobrar\nRegistrar salida\nImprimir cuenta\nImprimir registro de huésped\nCuentas y saldos\nCuenta\tPagador\tProgramado, sin generar\tSaldo total\nCuenta principal\tCliente ficticio H3\tC$ 0.00\tC$ 1,500.00\nCargos\nDescripción\tCuenta\tImporte\tEstado\tAcción\nAlojamiento\nVer cálculo del precio\n\tCuenta principal\tC$ 1,500.00\tPendiente\tCambiar cuenta",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-stays"
+    },
+    {
+      "label": "manager-logged-out",
+      "at": "2026-10-22T03:06:39.298Z",
+      "backdrops": [],
+      "bundle": [],
+      "buttons": [
+        {
+          "action": null,
+          "disabled": false,
+          "label": "Continuar"
+        }
+      ],
+      "dialogs": [],
+      "inputs": [
+        {
+          "invalid": null,
+          "value": ""
+        }
+      ],
+      "text": "Iniciar Sesión\n\n¡Bienvenido! Por favor, inicia sesión para continuar.\n\nCorreo electrónico\nContraseña\n\n¿Olvidaste la contraseña?\n\nContinuar\nIniciar sesión con enlace de correo",
+      "url": "http://hospitality-acceptance.localhost:8089/login?redirect-to=%2Fdesk%2Fhospitality-suite%2Fhospitality-stays"
+    }
+  ]
+}

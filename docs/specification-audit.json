@@ -28,9 +28,11 @@
         "docs/VENTANAS_Y_EVIDENCIAS_PRIVADAS.md",
         "docs/evidence/secondary-acceptance-verification.json",
         "docs/TESORERIA_Y_COMPRAS_DESDE_PAGES.md",
-        "docs/evidence/secondary-finance-verification.json"
+        "docs/evidence/secondary-finance-verification.json",
+        "docs/PANEL_ESTANCIA_Y_ESTADOS.md",
+        "docs/evidence/stay-panel-verification.json"
       ],
-      "remaining": "T11/T19 acreditados con tres roles desde Pages, 407 nativas/225 JS y conservación estricta. Continúan S04-16 (activación rápida desde panel de estancia), S04-20 (otros recorridos secundarios) y F26/paquete/entrega S19-07/S19-08. 212 V/seis I; objetivo completo aún no acreditado."
+      "remaining": "S04-16 acreditado con el contrato compartido y la corrección/repetición del panel. 213 V/cinco I. Continúan S04-20 (ropa de cama, políticas/otros adjuntos, retención/reintento y conversión del portal), F26, paquete actualizado y entrega. Objetivo completo aún no acreditado."
     },
     {
       "id": "S00-02",
@@ -342,9 +344,11 @@
         "docs/VENTANAS_Y_EVIDENCIAS_PRIVADAS.md",
         "docs/evidence/secondary-acceptance-verification.json",
         "docs/TESORERIA_Y_COMPRAS_DESDE_PAGES.md",
-        "docs/evidence/secondary-finance-verification.json"
+        "docs/evidence/secondary-finance-verification.json",
+        "docs/PANEL_ESTANCIA_Y_ESTADOS.md",
+        "docs/evidence/stay-panel-verification.json"
       ],
-      "remaining": "Continuar hasta cerrar activación/preparación rápida desde panel de estancia S04-16, otros recorridos secundarios S04-20 y F26/entrega final. Tesorería/compras/movimientos T11/T19 revisados con Gerencia/Caja/Contabilidad, 407 nativas/225 JS. No se reduce el alcance restante."
+      "remaining": "Continuar hasta cerrar S04-20 y F26/paquete/entrega final. S04-16 queda V tras revisar los seis estados y la ruta omitida del panel. 229 JS actuales y 407 nativas históricas con Python idéntico; no se reduce el alcance restante."
     },
     {
       "id": "S01-13",
@@ -1148,7 +1152,7 @@
       "line": 72,
       "kind": "enumerated",
       "requirement": "- Estado vacío, carga, error, éxito, validación junto al campo y prevención de doble envío.",
-      "status": "I",
+      "status": "V",
       "implementation": [
         "hospitality_suite/public/js/hospitality.js",
         "hospitality_suite/public/js/hospitality_forms.js",
@@ -1206,9 +1210,11 @@
         "docs/VENTANAS_Y_EVIDENCIAS_PRIVADAS.md",
         "docs/evidence/secondary-acceptance-verification.json",
         "docs/TESORERIA_Y_COMPRAS_DESDE_PAGES.md",
-        "docs/evidence/secondary-finance-verification.json"
+        "docs/evidence/secondary-finance-verification.json",
+        "docs/PANEL_ESTANCIA_Y_ESTADOS.md",
+        "docs/evidence/stay-panel-verification.json"
       ],
-      "remaining": "Estados comunes, validación y secuencia entre formularios acreditados; T11/T19 añade vacíos específicos, límite rechazado/corrección, cancelación de revisión sin movimiento y filas numéricas. Queda contrastar activación rápida desde el panel de estancia: su ruta directa difiere del coordinador de Page. Es una comprobación pendiente, no una doble operación reproducida. 407 nativas/225 JS actuales."
+      "remaining": ""
     },
     {
       "id": "S04-17",
@@ -1349,9 +1355,11 @@
         "docs/VENTANAS_Y_EVIDENCIAS_PRIVADAS.md",
         "docs/evidence/secondary-acceptance-verification.json",
         "docs/TESORERIA_Y_COMPRAS_DESDE_PAGES.md",
-        "docs/evidence/secondary-finance-verification.json"
+        "docs/evidence/secondary-finance-verification.json",
+        "docs/PANEL_ESTANCIA_Y_ESTADOS.md",
+        "docs/evidence/stay-panel-verification.json"
       ],
-      "remaining": "T11/T19 completados desde Pages con tres roles: egreso/entrega/liquidaciones parciales, proveedor/almacén/orden/recepciones 2+4/facturas/pagos, traslado/consumo/conteo autorizado. Completar aceptación secundaria de ropa de cama, políticas/otros adjuntos, retención/reintento y conversión del portal. 407 nativas/225 JS y 48 observaciones no equivalen a todos esos recorridos."
+      "remaining": "T11/T19 conservan su aceptación de tres roles. Panel de estancia y sus estados compartidos corregidos/probados en escritorio con Gerencia, sin comandos financieros. Completar ropa de cama, políticas/otros adjuntos, retención/reintento y conversión del portal. 229 JS y el contrato de estados no sustituyen esos recorridos completos."
     },
     {
       "id": "S05-01",
@@ -5202,9 +5210,11 @@
         "docs/VENTANAS_Y_EVIDENCIAS_PRIVADAS.md",
         "docs/evidence/secondary-acceptance-verification.json",
         "docs/TESORERIA_Y_COMPRAS_DESDE_PAGES.md",
-        "docs/evidence/secondary-finance-verification.json"
+        "docs/evidence/secondary-finance-verification.json",
+        "docs/PANEL_ESTANCIA_Y_ESTADOS.md",
+        "docs/evidence/stay-panel-verification.json"
       ],
-      "remaining": "Completar S04-16/S04-20 y F26 con recuperación coordinada de código/base/archivos, paquete final y revisión de entrega. Instalación independiente previa acreditada; su paquete aún no contiene las correcciones posteriores, incluido conteo de Gerencia. 407 nativas/225 JS y restauración estricta actuales no sustituyen F26."
+      "remaining": "Completar S04-20 y F26 con recuperación coordinada de código/base/archivos, paquete actualizado y entrega. Instalación independiente previa acreditada; su paquete aún no incluye las correcciones posteriores. S04-16 acreditado, 229 JS actuales y 407 nativas históricas con Python idéntico no sustituyen F26."
     },
     {
       "id": "S19-08",
@@ -5232,9 +5242,11 @@
         "docs/VENTANAS_Y_EVIDENCIAS_PRIVADAS.md",
         "docs/evidence/secondary-acceptance-verification.json",
         "docs/TESORERIA_Y_COMPRAS_DESDE_PAGES.md",
-        "docs/evidence/secondary-finance-verification.json"
+        "docs/evidence/secondary-finance-verification.json",
+        "docs/PANEL_ESTANCIA_Y_ESTADOS.md",
+        "docs/evidence/stay-panel-verification.json"
       ],
-      "remaining": "Cerrar activación rápida del panel/otros recorridos secundarios y fase 7/F26, manteniendo fuentes y evidencia diferenciadas. TESORERIA_Y_COMPRAS_DESDE_PAGES.md acredita T11/T19 y cuatro correcciones con 407 nativas/225 JS; no se atribuye a ese tramo la entrega completa."
+      "remaining": "Cerrar los otros recorridos secundarios y fase 7/F26, paquete actualizado y entrega. PANEL_ESTANCIA_Y_ESTADOS.md acredita los seis estados compartidos, dos escenarios reales delimitados y cuatro regresiones; no se atribuye al tramo la entrega completa."
     },
     {
       "id": "S19-09",

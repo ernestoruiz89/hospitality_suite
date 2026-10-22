@@ -17,11 +17,13 @@ import time
 BENCH=Path('/home/frappe/benches/hospitality-bench');SITE='hospitality-acceptance.localhost'
 ROOT=Path(__file__).resolve().parents[1];STATE=BENCH/'.hospitality-run'
 parser=argparse.ArgumentParser();parser.add_argument('action',choices=['start','serve','stop','mode','inspect','inspect-final'])
-parser.add_argument('--mode',choices=['normal','slow-bootstrap','failed-bootstrap','slow-booking'],default='normal');args=parser.parse_args()
+parser.add_argument('--phase',choices=['page-activity','stay-panel'],default='page-activity')
+parser.add_argument('--mode',choices=['normal','slow-bootstrap','failed-bootstrap','slow-booking','slow-stay-detail','failed-stay-detail'],default='normal');args=parser.parse_args()
 config=json.loads((BENCH/'sites'/SITE/'site_config.json').read_text())
 assert config['db_name']=='hospitality_acceptance' and config.get('pause_scheduler') and config.get('hospitality_integration_test_site') and config.get('allow_tests')
-assert (BENCH/'.hospitality-page-activity-ux-baseline.json').is_file()
-pidfile=STATE/'page-activity-web.pid';log=STATE/'page-activity-web.log';control=STATE/'page-activity-transport.json'
+assert (BENCH/f'.hospitality-{args.phase}-ux-baseline.json').is_file()
+assert args.phase=='page-activity' or args.action not in ['inspect','inspect-final']
+pidfile=STATE/f'{args.phase}-web.pid';log=STATE/f'{args.phase}-web.log';control=STATE/f'{args.phase}-transport.json'
 def mode(value):
     data=dict(mode=value,remaining=0 if value=='normal' else 1)
     control.write_text(json.dumps(data));control.chmod(0o600)
@@ -31,7 +33,7 @@ if args.action=='start':
     mode('normal')
     with log.open('ab') as stream:
         log.chmod(0o600)
-        process=subprocess.Popen([str(BENCH/'env/bin/python'),str(Path(__file__).resolve()),'serve'],cwd=BENCH/'sites',stdin=subprocess.DEVNULL,stdout=stream,stderr=subprocess.STDOUT,start_new_session=True,env={**os.environ,'DEV_SERVER':'true'})
+        process=subprocess.Popen([str(BENCH/'env/bin/python'),str(Path(__file__).resolve()),'serve','--phase',args.phase],cwd=BENCH/'sites',stdin=subprocess.DEVNULL,stdout=stream,stderr=subprocess.STDOUT,start_new_session=True,env={**os.environ,'DEV_SERVER':'true'})
     pidfile.write_text(str(process.pid));print('Isolated native UX server started on 127.0.0.1:8089')
 elif args.action=='stop':
     if pidfile.exists():
@@ -39,7 +41,13 @@ elif args.action=='stop':
         if process.exists():
             command=(process/'cmdline').read_bytes().decode(errors='replace')
             assert 'page_activity_ux.py' in command and 'serve' in command and (process/'cwd').resolve()==BENCH/'sites'
+            if args.phase!='page-activity':assert ('--phase\x00'+args.phase+'\x00') in command
             os.kill(int(process.name),signal.SIGTERM)
+    for _ in range(100):
+        with socket.socket() as connection:
+            if connection.connect_ex(('127.0.0.1',8089))!=0:break
+        time.sleep(.1)
+    else:raise AssertionError('The managed UX server did not release port 8089')
     print('Isolated UX server stopped')
 elif args.action=='mode':print(json.dumps(mode(args.mode)))
 elif args.action=='serve':
@@ -52,12 +60,12 @@ elif args.action=='serve':
         selected=None
         with lock:
             data=json.loads(control.read_text())
-            target='booking_detail' if data['mode']=='slow-booking' else 'bootstrap'
+            target='stay_detail' if data['mode'].endswith('stay-detail') else 'booking_detail' if data['mode']=='slow-booking' else 'bootstrap'
             if data['remaining'] and environ.get('PATH_INFO')=='/api/method/hospitality_suite.api.'+target and environ.get('REQUEST_METHOD')=='POST':
                 selected=data['mode'];data['remaining']-=1;control.write_text(json.dumps(data))
         if selected:
-            print('SYNTHETIC_TRANSPORT '+json.dumps(dict(mode=selected,path=environ['PATH_INFO'],delay_seconds=0 if selected=='failed-bootstrap' else 8)),flush=True)
-            if selected=='failed-bootstrap':
+            print('SYNTHETIC_TRANSPORT '+json.dumps(dict(mode=selected,path=environ['PATH_INFO'],delay_seconds=0 if selected.startswith('failed-') else 8)),flush=True)
+            if selected.startswith('failed-'):
                 start_response('503 Service Unavailable',[('Content-Type','application/json')]);return [b'{"message":"Synthetic QA transport interruption"}']
             time.sleep(8)
         return native(environ,start_response)

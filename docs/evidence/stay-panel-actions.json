@@ -1,0 +1,2206 @@
+{
+  "scope": "Static literal action/RPC bindings in explicit bundle load order; dynamic bindings listed for review, no UI replay and no behavioral completion claim.",
+  "sources_sha256": {
+    "hospitality_suite/public/hospitality.bundle.js": "34ae0ede1e1ac47ee338caa843e210cc4a632688fb5828d608291d551a18cfeb",
+    "hospitality_suite/public/js/hospitality.js": "f744f36f9409742e8985cc8cf5fa26f5ea278628b574795a84e4201949675070",
+    "hospitality_suite/public/js/hospitality_booking_summary.js": "1182ae3bc761d16f1a11d61bd135c789eb22773ec66fa0cdc3b0102814d5c1a0",
+    "hospitality_suite/public/js/hospitality_extras.js": "f24b4c606fc7440cc04139d1092f5eabd071c68ed0229d8de04ecca3a2de55ab",
+    "hospitality_suite/public/js/hospitality_workflows.js": "f7d50ef3d9b01f74e41c77dd43d33a8c37e267d4fd2e83889c9d0b9a31d7998f",
+    "hospitality_suite/public/js/hospitality_housekeeping.js": "c5d781e7de93da1eec4e4cd58c6b766377f9745c3284dd11d4db5e9eb5c3c585",
+    "hospitality_suite/public/js/hospitality_finance_stock.js": "387b67b571e709c76427463b3207bfa61a10ca95e5fc30f82ed8e63f25469159",
+    "hospitality_suite/public/js/hospitality_inventory.js": "4f2eb95f32489fb59f735f53f8f25842978144b3e29b3a1502bb3b4391990870",
+    "hospitality_suite/public/js/hospitality_privacy.js": "3434eac9e3dc2e5853ed7eee79bb4aeb11f99d966e629fc775bca979c54da9f3",
+    "hospitality_suite/public/js/hospitality_reporting.js": "c02e21bc321928e042244270f4f1ea13f94953d68f1800f2f00d3ff45d074e10",
+    "hospitality_suite/public/js/hospitality_audit.js": "f793eb9230cb73eacb0bd035912190c97c5f2656c6f892a58f429ce9a67b9bf5",
+    "hospitality_suite/public/js/hospitality_policies.js": "c0ee04fe29d30041ae8a075bdf4e5a703f60c2cbdf04dd206c8b4278c1b8cd31",
+    "hospitality_suite/public/js/hospitality_close.js": "14c9768dc862522b5ba51c4951a1e9e16e742e12041067ea63e0e5b65d7f51b4",
+    "hospitality_suite/public/js/hospitality_catalog.js": "b2fd0ae7206f9cc3abbeee7a43dcfaeebf2b7c48c7189bc4da778933ad4e1c24",
+    "hospitality_suite/public/js/hospitality_items.js": "be6d83abfac59b0ff26f19eb3e9a4762c150ad298425866a0537e8ab59bbb92c",
+    "hospitality_suite/public/js/hospitality_pos.js": "a7972d77e1863771afb99993cf07205021dc68fcd52538e038e228f8e999a0a5",
+    "hospitality_suite/public/js/hospitality_refunds.js": "eacad992cf82a42f2f165ac54651d63e52b55c31b5ba3e81fda4325a6eedabd3",
+    "hospitality_suite/public/js/hospitality_credits.js": "352ef4e56aca6687bba3cec6da4a19a4c56c4fc0c791c5b06852c0981e98dde2",
+    "hospitality_suite/public/js/hospitality_service_accounting.js": "d677d85bb1666add6959a4897df57bdfdb1fc91effa34359fcb0a9063b5e419e",
+    "hospitality_suite/public/js/hospitality_invoicing.js": "421d6552267660407e89a08e9849d0a73842309d9cc6aaa97674f104d404a983",
+    "hospitality_suite/public/js/hospitality_board.js": "9c27d7c12cfa80abff2db501e9dfd6a897b813878dcd9b474cfe53af8d34d361",
+    "hospitality_suite/public/js/hospitality_availability.js": "840f4394ad01c8c0545159d428604cff1401a0f6d8d6323feeea2d9f42b9ede7",
+    "hospitality_suite/public/js/hospitality_drafts.js": "1bb26dda43241d8785eddd303dd816cd4a4a1a95f993672c00f20757a36526b7",
+    "hospitality_suite/public/js/hospitality_tariffs.js": "be7db5bcf1347dffddc467a000b2c35fcb5e8bd6329fea5163e4af14ff210472",
+    "hospitality_suite/public/js/hospitality_guests.js": "c8bb0c6dc850169c17edc3876fd1d2cac8cbb1e96aafea05907f21241194287e",
+    "hospitality_suite/public/js/hospitality_navigation.js": "fbcb136c8b528396a68dc5047c8c2649c239e60a61689635c7f5cfa0183f1d7c",
+    "hospitality_suite/public/js/hospitality_room_history.js": "aed988939600db21643dbfdc70b3b031c1dc3025196cc2be68f8eb62a8673a94",
+    "hospitality_suite/public/js/hospitality_forms.js": "c833121c88947575250c09fa03ec9ec75f9ec997676b503cc13794fa3a0973f6",
+    "hospitality_suite/public/js/hospitality_links.js": "25727ad5e02d923729e52bfbd8d5cf35db91879c158689cd49092412d1a4d1f4",
+    "hospitality_suite/public/js/hospitality_keyboard.js": "b6111aabc03f57576a017b21f25b9f20222051f763bb7c705a88a75bc228890e"
+  },
+  "load_order": [
+    "hospitality.js",
+    "hospitality_booking_summary.js",
+    "hospitality_extras.js",
+    "hospitality_workflows.js",
+    "hospitality_housekeeping.js",
+    "hospitality_finance_stock.js",
+    "hospitality_inventory.js",
+    "hospitality_privacy.js",
+    "hospitality_reporting.js",
+    "hospitality_audit.js",
+    "hospitality_policies.js",
+    "hospitality_close.js",
+    "hospitality_catalog.js",
+    "hospitality_items.js",
+    "hospitality_pos.js",
+    "hospitality_refunds.js",
+    "hospitality_credits.js",
+    "hospitality_service_accounting.js",
+    "hospitality_invoicing.js",
+    "hospitality_board.js",
+    "hospitality_availability.js",
+    "hospitality_drafts.js",
+    "hospitality_tariffs.js",
+    "hospitality_guests.js",
+    "hospitality_navigation.js",
+    "hospitality_room_history.js",
+    "hospitality_forms.js",
+    "hospitality_links.js",
+    "hospitality_keyboard.js"
+  ],
+  "handler_count": 84,
+  "handlers": {
+    "owner": [
+      {
+        "file": "hospitality_suite/public/js/hospitality.js",
+        "line": 136
+      }
+    ],
+    "reload": [
+      {
+        "file": "hospitality_suite/public/js/hospitality.js",
+        "line": 351
+      }
+    ],
+    "guest": [
+      {
+        "file": "hospitality_suite/public/js/hospitality.js",
+        "line": 352
+      },
+      {
+        "file": "hospitality_suite/public/js/hospitality_guests.js",
+        "line": 35
+      }
+    ],
+    "guest_history": [
+      {
+        "file": "hospitality_suite/public/js/hospitality.js",
+        "line": 353
+      },
+      {
+        "file": "hospitality_suite/public/js/hospitality_reporting.js",
+        "line": 42
+      }
+    ],
+    "reserve": [
+      {
+        "file": "hospitality_suite/public/js/hospitality.js",
+        "line": 366
+      }
+    ],
+    "walk_in": [
+      {
+        "file": "hospitality_suite/public/js/hospitality.js",
+        "line": 367
+      }
+    ],
+    "booking": [
+      {
+        "file": "hospitality_suite/public/js/hospitality.js",
+        "line": 368
+      },
+      {
+        "file": "hospitality_suite/public/js/hospitality_extras.js",
+        "line": 52
+      },
+      {
+        "file": "hospitality_suite/public/js/hospitality_workflows.js",
+        "line": 80
+      },
+      {
+        "file": "hospitality_suite/public/js/hospitality_drafts.js",
+        "line": 43
+      }
+    ],
+    "detail": [
+      {
+        "file": "hospitality_suite/public/js/hospitality.js",
+        "line": 374
+      },
+      {
+        "file": "hospitality_suite/public/js/hospitality_workflows.js",
+        "line": 72
+      }
+    ],
+    "extend": [
+      {
+        "file": "hospitality_suite/public/js/hospitality.js",
+        "line": 381
+      }
+    ],
+    "change_room": [
+      {
+        "file": "hospitality_suite/public/js/hospitality.js",
+        "line": 382
+      },
+      {
+        "file": "hospitality_suite/public/js/hospitality_extras.js",
+        "line": 116
+      }
+    ],
+    "checkout": [
+      {
+        "file": "hospitality_suite/public/js/hospitality.js",
+        "line": 383
+      },
+      {
+        "file": "hospitality_suite/public/js/hospitality_extras.js",
+        "line": 85
+      }
+    ],
+    "folio": [
+      {
+        "file": "hospitality_suite/public/js/hospitality.js",
+        "line": 384
+      }
+    ],
+    "move_charge": [
+      {
+        "file": "hospitality_suite/public/js/hospitality.js",
+        "line": 385
+      }
+    ],
+    "open_shift": [
+      {
+        "file": "hospitality_suite/public/js/hospitality.js",
+        "line": 386
+      }
+    ],
+    "close_shift": [
+      {
+        "file": "hospitality_suite/public/js/hospitality.js",
+        "line": 387
+      },
+      {
+        "file": "hospitality_suite/public/js/hospitality_extras.js",
+        "line": 128
+      }
+    ],
+    "payment": [
+      {
+        "file": "hospitality_suite/public/js/hospitality.js",
+        "line": 388
+      },
+      {
+        "file": "hospitality_suite/public/js/hospitality_workflows.js",
+        "line": 40
+      }
+    ],
+    "cleaning": [
+      {
+        "file": "hospitality_suite/public/js/hospitality.js",
+        "line": 389
+      },
+      {
+        "file": "hospitality_suite/public/js/hospitality_housekeeping.js",
+        "line": 20
+      }
+    ],
+    "maintenance": [
+      {
+        "file": "hospitality_suite/public/js/hospitality.js",
+        "line": 390
+      },
+      {
+        "file": "hospitality_suite/public/js/hospitality_workflows.js",
+        "line": 88
+      }
+    ],
+    "service": [
+      {
+        "file": "hospitality_suite/public/js/hospitality.js",
+        "line": 391
+      }
+    ],
+    "service_status": [
+      {
+        "file": "hospitality_suite/public/js/hospitality.js",
+        "line": 392
+      },
+      {
+        "file": "hospitality_suite/public/js/hospitality_workflows.js",
+        "line": 61
+      },
+      {
+        "file": "hospitality_suite/public/js/hospitality_inventory.js",
+        "line": 39
+      }
+    ],
+    "report": [
+      {
+        "file": "hospitality_suite/public/js/hospitality.js",
+        "line": 393
+      },
+      {
+        "file": "hospitality_suite/public/js/hospitality_extras.js",
+        "line": 103
+      },
+      {
+        "file": "hospitality_suite/public/js/hospitality_reporting.js",
+        "line": 43
+      }
+    ],
+    "daily_close": [
+      {
+        "file": "hospitality_suite/public/js/hospitality.js",
+        "line": 394
+      },
+      {
+        "file": "hospitality_suite/public/js/hospitality_close.js",
+        "line": 54
+      }
+    ],
+    "print_shift": [
+      {
+        "file": "hospitality_suite/public/js/hospitality.js",
+        "line": 395
+      }
+    ],
+    "setup": [
+      {
+        "file": "hospitality_suite/public/js/hospitality.js",
+        "line": 396
+      }
+    ],
+    "new_property": [
+      {
+        "file": "hospitality_suite/public/js/hospitality.js",
+        "line": 397
+      }
+    ],
+    "booking_edit": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_extras.js",
+        "line": 77
+      }
+    ],
+    "inspect_departure": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_extras.js",
+        "line": 92
+      }
+    ],
+    "portal_convert": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_extras.js",
+        "line": 93
+      }
+    ],
+    "incident": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_extras.js",
+        "line": 101
+      }
+    ],
+    "linen": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_extras.js",
+        "line": 102
+      }
+    ],
+    "withdrawal": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_extras.js",
+        "line": 114
+      }
+    ],
+    "guarantee": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_extras.js",
+        "line": 115
+      }
+    ],
+    "billing_party": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_extras.js",
+        "line": 125
+      }
+    ],
+    "policies": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_extras.js",
+        "line": 126
+      }
+    ],
+    "denominations": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_extras.js",
+        "line": 127
+      }
+    ],
+    "adjustment": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_extras.js",
+        "line": 134
+      }
+    ],
+    "logout": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_workflows.js",
+        "line": 36
+      }
+    ],
+    "direct_sale": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_workflows.js",
+        "line": 53
+      }
+    ],
+    "return_direct_sale": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_workflows.js",
+        "line": 62
+      }
+    ],
+    "schedule_cleaning": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_workflows.js",
+        "line": 65
+      }
+    ],
+    "portal_settings": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_workflows.js",
+        "line": 68
+      }
+    ],
+    "document_settings": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_workflows.js",
+        "line": 69
+      }
+    ],
+    "assign_user": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_workflows.js",
+        "line": 70
+      }
+    ],
+    "print_stay": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_workflows.js",
+        "line": 73
+      }
+    ],
+    "print_registration": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_workflows.js",
+        "line": 74
+      }
+    ],
+    "print_cleaning": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_workflows.js",
+        "line": 75
+      }
+    ],
+    "print_close": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_workflows.js",
+        "line": 76
+      }
+    ],
+    "companions": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_workflows.js",
+        "line": 81
+      }
+    ],
+    "maintenance_parts": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_workflows.js",
+        "line": 97
+      }
+    ],
+    "return_parts": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_workflows.js",
+        "line": 105
+      }
+    ],
+    "maintenance_evidence": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_workflows.js",
+        "line": 109
+      }
+    ],
+    "incident_evidence": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_workflows.js",
+        "line": 110
+      }
+    ],
+    "resolve_incident": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_workflows.js",
+        "line": 111
+      }
+    ],
+    "print_maintenance": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_workflows.js",
+        "line": 114
+      }
+    ],
+    "rework_cleaning": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_housekeeping.js",
+        "line": 29
+      }
+    ],
+    "cash_expense": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+        "line": 33
+      }
+    ],
+    "settlement": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+        "line": 34
+      }
+    ],
+    "supplier_payment": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+        "line": 38
+      }
+    ],
+    "equipment": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+        "line": 42
+      }
+    ],
+    "expense_category": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+        "line": 43
+      }
+    ],
+    "stock_policy": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+        "line": 44
+      }
+    ],
+    "register_supplier": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+        "line": 49
+      }
+    ],
+    "create_warehouse": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+        "line": 50
+      }
+    ],
+    "purchase_order": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+        "line": 51
+      }
+    ],
+    "receive_purchase": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+        "line": 52
+      }
+    ],
+    "purchase_invoice": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+        "line": 53
+      }
+    ],
+    "move_stock": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+        "line": 54
+      }
+    ],
+    "adjust_stock": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+        "line": 55
+      }
+    ],
+    "retention": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_privacy.js",
+        "line": 11
+      }
+    ],
+    "retry_retention": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_privacy.js",
+        "line": 16
+      }
+    ],
+    "retention_policy": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_privacy.js",
+        "line": 19
+      }
+    ],
+    "view_audit": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_audit.js",
+        "line": 5
+      }
+    ],
+    "payment_policies": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_policies.js",
+        "line": 11
+      }
+    ],
+    "view_close": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_close.js",
+        "line": 65
+      }
+    ],
+    "service_items": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_items.js",
+        "line": 6
+      }
+    ],
+    "credit": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_credits.js",
+        "line": 18
+      }
+    ],
+    "service_accounting": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_service_accounting.js",
+        "line": 7
+      }
+    ],
+    "invoice": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_invoicing.js",
+        "line": 4
+      }
+    ],
+    "availability": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_availability.js",
+        "line": 28
+      }
+    ],
+    "guest_edit": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_guests.js",
+        "line": 36
+      }
+    ],
+    "clear_room_filters": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_navigation.js",
+        "line": 35
+      }
+    ],
+    "home_queue": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_navigation.js",
+        "line": 80
+      }
+    ],
+    "home_pending": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_navigation.js",
+        "line": 84
+      }
+    ],
+    "room_history": [
+      {
+        "file": "hospitality_suite/public/js/hospitality_room_history.js",
+        "line": 24
+      }
+    ]
+  },
+  "effective_handlers": {
+    "owner": {
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 136
+    },
+    "reload": {
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 351
+    },
+    "guest": {
+      "file": "hospitality_suite/public/js/hospitality_guests.js",
+      "line": 35
+    },
+    "guest_history": {
+      "file": "hospitality_suite/public/js/hospitality_reporting.js",
+      "line": 42
+    },
+    "reserve": {
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 366
+    },
+    "walk_in": {
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 367
+    },
+    "booking": {
+      "file": "hospitality_suite/public/js/hospitality_drafts.js",
+      "line": 43
+    },
+    "detail": {
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 72
+    },
+    "extend": {
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 381
+    },
+    "change_room": {
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 116
+    },
+    "checkout": {
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 85
+    },
+    "folio": {
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 384
+    },
+    "move_charge": {
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 385
+    },
+    "open_shift": {
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 386
+    },
+    "close_shift": {
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 128
+    },
+    "payment": {
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 40
+    },
+    "cleaning": {
+      "file": "hospitality_suite/public/js/hospitality_housekeeping.js",
+      "line": 20
+    },
+    "maintenance": {
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 88
+    },
+    "service": {
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 391
+    },
+    "service_status": {
+      "file": "hospitality_suite/public/js/hospitality_inventory.js",
+      "line": 39
+    },
+    "report": {
+      "file": "hospitality_suite/public/js/hospitality_reporting.js",
+      "line": 43
+    },
+    "daily_close": {
+      "file": "hospitality_suite/public/js/hospitality_close.js",
+      "line": 54
+    },
+    "print_shift": {
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 395
+    },
+    "setup": {
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 396
+    },
+    "new_property": {
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 397
+    },
+    "booking_edit": {
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 77
+    },
+    "inspect_departure": {
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 92
+    },
+    "portal_convert": {
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 93
+    },
+    "incident": {
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 101
+    },
+    "linen": {
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 102
+    },
+    "withdrawal": {
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 114
+    },
+    "guarantee": {
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 115
+    },
+    "billing_party": {
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 125
+    },
+    "policies": {
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 126
+    },
+    "denominations": {
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 127
+    },
+    "adjustment": {
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 134
+    },
+    "logout": {
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 36
+    },
+    "direct_sale": {
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 53
+    },
+    "return_direct_sale": {
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 62
+    },
+    "schedule_cleaning": {
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 65
+    },
+    "portal_settings": {
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 68
+    },
+    "document_settings": {
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 69
+    },
+    "assign_user": {
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 70
+    },
+    "print_stay": {
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 73
+    },
+    "print_registration": {
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 74
+    },
+    "print_cleaning": {
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 75
+    },
+    "print_close": {
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 76
+    },
+    "companions": {
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 81
+    },
+    "maintenance_parts": {
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 97
+    },
+    "return_parts": {
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 105
+    },
+    "maintenance_evidence": {
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 109
+    },
+    "incident_evidence": {
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 110
+    },
+    "resolve_incident": {
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 111
+    },
+    "print_maintenance": {
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 114
+    },
+    "rework_cleaning": {
+      "file": "hospitality_suite/public/js/hospitality_housekeeping.js",
+      "line": 29
+    },
+    "cash_expense": {
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 33
+    },
+    "settlement": {
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 34
+    },
+    "supplier_payment": {
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 38
+    },
+    "equipment": {
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 42
+    },
+    "expense_category": {
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 43
+    },
+    "stock_policy": {
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 44
+    },
+    "register_supplier": {
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 49
+    },
+    "create_warehouse": {
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 50
+    },
+    "purchase_order": {
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 51
+    },
+    "receive_purchase": {
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 52
+    },
+    "purchase_invoice": {
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 53
+    },
+    "move_stock": {
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 54
+    },
+    "adjust_stock": {
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 55
+    },
+    "retention": {
+      "file": "hospitality_suite/public/js/hospitality_privacy.js",
+      "line": 11
+    },
+    "retry_retention": {
+      "file": "hospitality_suite/public/js/hospitality_privacy.js",
+      "line": 16
+    },
+    "retention_policy": {
+      "file": "hospitality_suite/public/js/hospitality_privacy.js",
+      "line": 19
+    },
+    "view_audit": {
+      "file": "hospitality_suite/public/js/hospitality_audit.js",
+      "line": 5
+    },
+    "payment_policies": {
+      "file": "hospitality_suite/public/js/hospitality_policies.js",
+      "line": 11
+    },
+    "view_close": {
+      "file": "hospitality_suite/public/js/hospitality_close.js",
+      "line": 65
+    },
+    "service_items": {
+      "file": "hospitality_suite/public/js/hospitality_items.js",
+      "line": 6
+    },
+    "credit": {
+      "file": "hospitality_suite/public/js/hospitality_credits.js",
+      "line": 18
+    },
+    "service_accounting": {
+      "file": "hospitality_suite/public/js/hospitality_service_accounting.js",
+      "line": 7
+    },
+    "invoice": {
+      "file": "hospitality_suite/public/js/hospitality_invoicing.js",
+      "line": 4
+    },
+    "availability": {
+      "file": "hospitality_suite/public/js/hospitality_availability.js",
+      "line": 28
+    },
+    "guest_edit": {
+      "file": "hospitality_suite/public/js/hospitality_guests.js",
+      "line": 36
+    },
+    "clear_room_filters": {
+      "file": "hospitality_suite/public/js/hospitality_navigation.js",
+      "line": 35
+    },
+    "home_queue": {
+      "file": "hospitality_suite/public/js/hospitality_navigation.js",
+      "line": 80
+    },
+    "home_pending": {
+      "file": "hospitality_suite/public/js/hospitality_navigation.js",
+      "line": 84
+    },
+    "room_history": {
+      "file": "hospitality_suite/public/js/hospitality_room_history.js",
+      "line": 24
+    }
+  },
+  "buttons": [
+    {
+      "name": "reload",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 129,
+      "source": "literal HTML attribute"
+    },
+    {
+      "name": "reload",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 149
+    },
+    {
+      "name": "new_property",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 151
+    },
+    {
+      "name": "reserve",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 196
+    },
+    {
+      "name": "reserve",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 200
+    },
+    {
+      "name": "walk_in",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 200
+    },
+    {
+      "name": "detail",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 205
+    },
+    {
+      "name": "booking",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 205
+    },
+    {
+      "name": "reserve",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 205
+    },
+    {
+      "name": "booking",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 235
+    },
+    {
+      "name": "booking",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 236
+    },
+    {
+      "name": "reserve",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 237
+    },
+    {
+      "name": "availability",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 237
+    },
+    {
+      "name": "walk_in",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 239
+    },
+    {
+      "name": "detail",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 239
+    },
+    {
+      "name": "open_shift",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 243
+    },
+    {
+      "name": "payment",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 243
+    },
+    {
+      "name": "close_shift",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 243
+    },
+    {
+      "name": "print_shift",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 243
+    },
+    {
+      "name": "cleaning",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 245
+    },
+    {
+      "name": "maintenance",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 246
+    },
+    {
+      "name": "maintenance",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 246
+    },
+    {
+      "name": "service",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 247
+    },
+    {
+      "name": "service_status",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 247
+    },
+    {
+      "name": "guest",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 248
+    },
+    {
+      "name": "guest_edit",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 248
+    },
+    {
+      "name": "guest_history",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 248
+    },
+    {
+      "name": "report",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 249,
+      "source": "literal HTML attribute"
+    },
+    {
+      "name": "daily_close",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 249
+    },
+    {
+      "name": "new_property",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 250
+    },
+    {
+      "name": "setup",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 250,
+      "source": "literal HTML attribute"
+    },
+    {
+      "name": "move_charge",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 378
+    },
+    {
+      "name": "detail",
+      "file": "hospitality_suite/public/js/hospitality_booking_summary.js",
+      "line": 7
+    },
+    {
+      "name": "portal_convert",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 24
+    },
+    {
+      "name": "incident",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 100
+    },
+    {
+      "name": "linen",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 100
+    },
+    {
+      "name": "withdrawal",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 113
+    },
+    {
+      "name": "guarantee",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 113
+    },
+    {
+      "name": "credit",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 113
+    },
+    {
+      "name": "billing_party",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 124
+    },
+    {
+      "name": "policies",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 124
+    },
+    {
+      "name": "denominations",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 124
+    },
+    {
+      "name": "logout",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 35
+    },
+    {
+      "name": "direct_sale",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 52
+    },
+    {
+      "name": "service_status",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 52,
+      "source": "literal HTML attribute"
+    },
+    {
+      "name": "schedule_cleaning",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 64
+    },
+    {
+      "name": "document_settings",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 67
+    },
+    {
+      "name": "assign_user",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 67
+    },
+    {
+      "name": "print_stay",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 72
+    },
+    {
+      "name": "print_registration",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 72
+    },
+    {
+      "name": "view_close",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 78
+    },
+    {
+      "name": "print_close",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 78
+    },
+    {
+      "name": "incident_evidence",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 82
+    },
+    {
+      "name": "resolve_incident",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 82
+    },
+    {
+      "name": "maintenance",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 86
+    },
+    {
+      "name": "incident",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 86
+    },
+    {
+      "name": "maintenance",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 86
+    },
+    {
+      "name": "maintenance_parts",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 86
+    },
+    {
+      "name": "maintenance_evidence",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 86
+    },
+    {
+      "name": "return_parts",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 102
+    },
+    {
+      "name": "print_maintenance",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 113
+    },
+    {
+      "name": "cleaning",
+      "file": "hospitality_suite/public/js/hospitality_housekeeping.js",
+      "line": 15
+    },
+    {
+      "name": "rework_cleaning",
+      "file": "hospitality_suite/public/js/hospitality_housekeeping.js",
+      "line": 16
+    },
+    {
+      "name": "print_cleaning",
+      "file": "hospitality_suite/public/js/hospitality_housekeeping.js",
+      "line": 17
+    },
+    {
+      "name": "cash_expense",
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 26
+    },
+    {
+      "name": "supplier_payment",
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 26
+    },
+    {
+      "name": "settlement",
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 26
+    },
+    {
+      "name": "expense_category",
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 41
+    },
+    {
+      "name": "stock_policy",
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 41
+    },
+    {
+      "name": "equipment",
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 41
+    },
+    {
+      "name": "purchase_order",
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 46
+    },
+    {
+      "name": "purchase_invoice",
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 46
+    },
+    {
+      "name": "move_stock",
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 46
+    },
+    {
+      "name": "adjust_stock",
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 46
+    },
+    {
+      "name": "register_supplier",
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 46
+    },
+    {
+      "name": "create_warehouse",
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 46
+    },
+    {
+      "name": "receive_purchase",
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 47
+    },
+    {
+      "name": "retention",
+      "file": "hospitality_suite/public/js/hospitality_privacy.js",
+      "line": 10
+    },
+    {
+      "name": "retry_retention",
+      "file": "hospitality_suite/public/js/hospitality_privacy.js",
+      "line": 10
+    },
+    {
+      "name": "retention_policy",
+      "file": "hospitality_suite/public/js/hospitality_privacy.js",
+      "line": 18
+    },
+    {
+      "name": "portal_settings",
+      "file": "hospitality_suite/public/js/hospitality_privacy.js",
+      "line": 18
+    },
+    {
+      "name": "payment_policies",
+      "file": "hospitality_suite/public/js/hospitality_policies.js",
+      "line": 9
+    },
+    {
+      "name": "service_items",
+      "file": "hospitality_suite/public/js/hospitality_items.js",
+      "line": 5
+    },
+    {
+      "name": "service_accounting",
+      "file": "hospitality_suite/public/js/hospitality_service_accounting.js",
+      "line": 6
+    },
+    {
+      "name": "detail",
+      "file": "hospitality_suite/public/js/hospitality_board.js",
+      "line": 14
+    },
+    {
+      "name": "booking",
+      "file": "hospitality_suite/public/js/hospitality_board.js",
+      "line": 16
+    },
+    {
+      "name": "detail",
+      "file": "hospitality_suite/public/js/hospitality_board.js",
+      "line": 18
+    },
+    {
+      "name": "booking",
+      "file": "hospitality_suite/public/js/hospitality_board.js",
+      "line": 18
+    },
+    {
+      "name": "walk_in",
+      "file": "hospitality_suite/public/js/hospitality_board.js",
+      "line": 27
+    },
+    {
+      "name": "reload",
+      "file": "hospitality_suite/public/js/hospitality_board.js",
+      "line": 56
+    },
+    {
+      "name": "clear_room_filters",
+      "file": "hospitality_suite/public/js/hospitality_navigation.js",
+      "line": 54
+    },
+    {
+      "name": "clear_room_filters",
+      "file": "hospitality_suite/public/js/hospitality_navigation.js",
+      "line": 57
+    },
+    {
+      "name": "reserve",
+      "file": "hospitality_suite/public/js/hospitality_navigation.js",
+      "line": 75
+    },
+    {
+      "name": "home_queue",
+      "file": "hospitality_suite/public/js/hospitality_navigation.js",
+      "line": 93
+    },
+    {
+      "name": "home_pending",
+      "file": "hospitality_suite/public/js/hospitality_navigation.js",
+      "line": 93
+    },
+    {
+      "name": "home_pending",
+      "file": "hospitality_suite/public/js/hospitality_navigation.js",
+      "line": 94
+    },
+    {
+      "name": "room_history",
+      "file": "hospitality_suite/public/js/hospitality_room_history.js",
+      "line": 11
+    }
+  ],
+  "rpc": [
+    {
+      "name": "bootstrap",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 115
+    },
+    {
+      "name": "bootstrap",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 118
+    },
+    {
+      "name": "bootstrap",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 119
+    },
+    {
+      "name": "execute",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 348
+    },
+    {
+      "name": "create_guest",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 352
+    },
+    {
+      "name": "preview",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 360
+    },
+    {
+      "name": "stay_detail",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 375
+    },
+    {
+      "name": "stay_detail",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 381
+    },
+    {
+      "name": "preview",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 381
+    },
+    {
+      "name": "report",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 393
+    },
+    {
+      "name": "configuration",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 396
+    },
+    {
+      "name": "save_setup",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 396
+    },
+    {
+      "name": "create_property",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 397
+    },
+    {
+      "name": "calendar",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 33
+    },
+    {
+      "name": "booking_detail",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 53
+    },
+    {
+      "name": "preview",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 67
+    },
+    {
+      "name": "preview",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 70
+    },
+    {
+      "name": "booking_detail",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 78
+    },
+    {
+      "name": "preview",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 81
+    },
+    {
+      "name": "stay_detail",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 86
+    },
+    {
+      "name": "preview",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 86
+    },
+    {
+      "name": "preview",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 95
+    },
+    {
+      "name": "report",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 104
+    },
+    {
+      "name": "stay_detail",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 117
+    },
+    {
+      "name": "preview",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 119
+    },
+    {
+      "name": "save_setup",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 125
+    },
+    {
+      "name": "configuration",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 126
+    },
+    {
+      "name": "save_setup",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 126
+    },
+    {
+      "name": "configuration",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 127
+    },
+    {
+      "name": "save_setup",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 127
+    },
+    {
+      "name": "stay_detail",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 134
+    },
+    {
+      "name": "preview",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 44
+    },
+    {
+      "name": "preview",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 56
+    },
+    {
+      "name": "configuration",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 68
+    },
+    {
+      "name": "save_setup",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 68
+    },
+    {
+      "name": "configuration",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 69
+    },
+    {
+      "name": "setup_options",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 69
+    },
+    {
+      "name": "save_setup",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 69
+    },
+    {
+      "name": "setup_options",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 70
+    },
+    {
+      "name": "stay_detail",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 81
+    },
+    {
+      "name": "preview",
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 36
+    },
+    {
+      "name": "preview",
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 39
+    },
+    {
+      "name": "save_setup",
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 42
+    },
+    {
+      "name": "save_setup",
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 43
+    },
+    {
+      "name": "preview",
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 51
+    },
+    {
+      "name": "preview",
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 55
+    },
+    {
+      "name": "inventory_status",
+      "file": "hospitality_suite/public/js/hospitality_inventory.js",
+      "line": 26
+    },
+    {
+      "name": "retention_candidates",
+      "file": "hospitality_suite/public/js/hospitality_privacy.js",
+      "line": 11
+    },
+    {
+      "name": "preview",
+      "file": "hospitality_suite/public/js/hospitality_privacy.js",
+      "line": 13
+    },
+    {
+      "name": "configuration",
+      "file": "hospitality_suite/public/js/hospitality_privacy.js",
+      "line": 19
+    },
+    {
+      "name": "save_setup",
+      "file": "hospitality_suite/public/js/hospitality_privacy.js",
+      "line": 19
+    },
+    {
+      "name": "report_options",
+      "file": "hospitality_suite/public/js/hospitality_reporting.js",
+      "line": 44
+    },
+    {
+      "name": "report_options",
+      "file": "hospitality_suite/public/js/hospitality_reporting.js",
+      "line": 63
+    },
+    {
+      "name": "audit_detail",
+      "file": "hospitality_suite/public/js/hospitality_audit.js",
+      "line": 6
+    },
+    {
+      "name": "configuration",
+      "file": "hospitality_suite/public/js/hospitality_policies.js",
+      "line": 12
+    },
+    {
+      "name": "save_setup",
+      "file": "hospitality_suite/public/js/hospitality_policies.js",
+      "line": 19
+    },
+    {
+      "name": "catalog_search",
+      "file": "hospitality_suite/public/js/hospitality_catalog.js",
+      "line": 32
+    },
+    {
+      "name": "service_configuration",
+      "file": "hospitality_suite/public/js/hospitality_items.js",
+      "line": 7
+    },
+    {
+      "name": "save_setup",
+      "file": "hospitality_suite/public/js/hospitality_items.js",
+      "line": 16
+    },
+    {
+      "name": "service_configuration",
+      "file": "hospitality_suite/public/js/hospitality_items.js",
+      "line": 25
+    },
+    {
+      "name": "preview",
+      "file": "hospitality_suite/public/js/hospitality_credits.js",
+      "line": 31
+    },
+    {
+      "name": "preview",
+      "file": "hospitality_suite/public/js/hospitality_credits.js",
+      "line": 37
+    },
+    {
+      "name": "service_accounting_configuration",
+      "file": "hospitality_suite/public/js/hospitality_service_accounting.js",
+      "line": 8
+    },
+    {
+      "name": "stay_detail",
+      "file": "hospitality_suite/public/js/hospitality_invoicing.js",
+      "line": 6
+    },
+    {
+      "name": "preview",
+      "file": "hospitality_suite/public/js/hospitality_invoicing.js",
+      "line": 14
+    },
+    {
+      "name": "stay_board",
+      "file": "hospitality_suite/public/js/hospitality_board.js",
+      "line": 47
+    },
+    {
+      "name": "availability_search",
+      "file": "hospitality_suite/public/js/hospitality_availability.js",
+      "line": 49
+    },
+    {
+      "name": "booking_detail",
+      "file": "hospitality_suite/public/js/hospitality_drafts.js",
+      "line": 47
+    },
+    {
+      "name": "execute",
+      "file": "hospitality_suite/public/js/hospitality_drafts.js",
+      "line": 56
+    },
+    {
+      "name": "preview",
+      "file": "hospitality_suite/public/js/hospitality_drafts.js",
+      "line": 88
+    },
+    {
+      "name": "guest_detail",
+      "file": "hospitality_suite/public/js/hospitality_guests.js",
+      "line": 39
+    },
+    {
+      "name": "room_balances",
+      "file": "hospitality_suite/public/js/hospitality_navigation.js",
+      "line": 65
+    },
+    {
+      "name": "stay_board",
+      "file": "hospitality_suite/public/js/hospitality_navigation.js",
+      "line": 91
+    },
+    {
+      "name": "room_history",
+      "file": "hospitality_suite/public/js/hospitality_room_history.js",
+      "line": 65
+    }
+  ],
+  "mutations": [
+    {
+      "name": "walk_in",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 363
+    },
+    {
+      "name": "reserve",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 363
+    },
+    {
+      "name": "check_in",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 372
+    },
+    {
+      "name": "booking_status",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 372
+    },
+    {
+      "name": "extend",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 381
+    },
+    {
+      "name": "change_room",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 382
+    },
+    {
+      "name": "check_out",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 383
+    },
+    {
+      "name": "create_folio",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 384
+    },
+    {
+      "name": "move_charge",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 385
+    },
+    {
+      "name": "open_shift",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 386
+    },
+    {
+      "name": "close_shift",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 387
+    },
+    {
+      "name": "payment",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 388
+    },
+    {
+      "name": "cleaning",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 389
+    },
+    {
+      "name": "maintenance",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 390
+    },
+    {
+      "name": "request_service",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 391
+    },
+    {
+      "name": "update_service",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 392
+    },
+    {
+      "name": "daily_close",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 394
+    },
+    {
+      "name": "daily_close",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 394
+    },
+    {
+      "name": "check_in",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 68
+    },
+    {
+      "name": "booking_status",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 71
+    },
+    {
+      "name": "check_in",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 73
+    },
+    {
+      "name": "booking_status",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 73
+    },
+    {
+      "name": "modify_reservation",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 82
+    },
+    {
+      "name": "prepare_departure",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 89
+    },
+    {
+      "name": "check_out",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 90
+    },
+    {
+      "name": "inspect_departure",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 92
+    },
+    {
+      "name": "convert_portal",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 96
+    },
+    {
+      "name": "incident",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 101
+    },
+    {
+      "name": "linen",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 102
+    },
+    {
+      "name": "withdrawal",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 114
+    },
+    {
+      "name": "apply_guarantee",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 115
+    },
+    {
+      "name": "change_room",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 120
+    },
+    {
+      "name": "close_shift",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 132
+    },
+    {
+      "name": "adjustment",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 134
+    },
+    {
+      "name": "payment",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 46
+    },
+    {
+      "name": "direct_sale",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 57
+    },
+    {
+      "name": "return_direct_sale",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 62
+    },
+    {
+      "name": "schedule_cleaning",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 65
+    },
+    {
+      "name": "assign_user",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 70
+    },
+    {
+      "name": "companions",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 81
+    },
+    {
+      "name": "maintenance",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 93
+    },
+    {
+      "name": "maintenance_parts",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 100
+    },
+    {
+      "name": "maintenance_parts",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 105
+    },
+    {
+      "name": "incident",
+      "file": "hospitality_suite/public/js/hospitality_workflows.js",
+      "line": 111
+    },
+    {
+      "name": "cleaning",
+      "file": "hospitality_suite/public/js/hospitality_housekeeping.js",
+      "line": 26
+    },
+    {
+      "name": "cleaning",
+      "file": "hospitality_suite/public/js/hospitality_housekeeping.js",
+      "line": 32
+    },
+    {
+      "name": "cash_expense",
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 33
+    },
+    {
+      "name": "settle_payment",
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 36
+    },
+    {
+      "name": "supplier_payment",
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 39
+    },
+    {
+      "name": "stock_policy",
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 44
+    },
+    {
+      "name": "register_supplier",
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 49
+    },
+    {
+      "name": "create_warehouse",
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 50
+    },
+    {
+      "name": "purchase_order",
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 51
+    },
+    {
+      "name": "receive_purchase",
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 52
+    },
+    {
+      "name": "purchase_invoice",
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 53
+    },
+    {
+      "name": "move_stock",
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 54
+    },
+    {
+      "name": "adjust_stock",
+      "file": "hospitality_suite/public/js/hospitality_finance_stock.js",
+      "line": 55
+    },
+    {
+      "name": "update_service",
+      "file": "hospitality_suite/public/js/hospitality_inventory.js",
+      "line": 53
+    },
+    {
+      "name": "retire_sensitive",
+      "file": "hospitality_suite/public/js/hospitality_privacy.js",
+      "line": 14
+    },
+    {
+      "name": "retry_retention",
+      "file": "hospitality_suite/public/js/hospitality_privacy.js",
+      "line": 16
+    },
+    {
+      "name": "daily_close",
+      "file": "hospitality_suite/public/js/hospitality_close.js",
+      "line": 56
+    },
+    {
+      "name": "daily_close",
+      "file": "hospitality_suite/public/js/hospitality_close.js",
+      "line": 58
+    },
+    {
+      "name": "credit_note",
+      "file": "hospitality_suite/public/js/hospitality_credits.js",
+      "line": 24
+    },
+    {
+      "name": "service_accounting",
+      "file": "hospitality_suite/public/js/hospitality_service_accounting.js",
+      "line": 23
+    },
+    {
+      "name": "invoice",
+      "file": "hospitality_suite/public/js/hospitality_invoicing.js",
+      "line": 25
+    },
+    {
+      "name": "discard_booking_draft",
+      "file": "hospitality_suite/public/js/hospitality_drafts.js",
+      "line": 118
+    }
+  ],
+  "dynamic_bindings": [
+    {
+      "kind": "computed_button",
+      "file": "hospitality_suite/public/js/hospitality.js",
+      "line": 378,
+      "resolved_actions": [
+        "service",
+        "inspect_departure",
+        "extend",
+        "change_room",
+        "folio",
+        "companions",
+        "adjustment",
+        "invoice",
+        "payment",
+        "checkout"
+      ],
+      "source": "this.button(a,l,s.name,a===\"checkout\"?\"primary\":\"secondary\")"
+    },
+    {
+      "kind": "computed_button",
+      "file": "hospitality_suite/public/js/hospitality_extras.js",
+      "line": 46,
+      "resolved_actions": [
+        "detail",
+        "booking"
+      ],
+      "source": "this.button(action,text,r.stay||r.booking)"
+    }
+  ],
+  "unbound_literal_actions": [],
+  "unresolved_dynamic_buttons": 0
+}

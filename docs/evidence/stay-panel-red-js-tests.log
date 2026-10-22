@@ -1,0 +1,258 @@
+TAP version 13
+# Subtest: queued stay-panel activations prepare one child action through the Page coordinator
+not ok 1 - queued stay-panel activations prepare one child action through the Page coordinator
+  ---
+  duration_ms: 13.877107
+  type: 'test'
+  location: '/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/tools/test_desk_transport.cjs:43:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    queued events must not create two independent financial forms
+
+    2 !== 1
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 2
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/tools/test_desk_transport.cjs:48:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3)
+  ...
+# Subtest: stay-panel transport errors recover once and a reopened panel permits a deliberate retry
+not ok 2 - stay-panel transport errors recover once and a reopened panel permits a deliberate retry
+  ---
+  duration_ms: 10.092531
+  type: 'test'
+  location: '/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/tools/test_desk_transport.cjs:54:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Got unwanted rejection.
+    Actual message: "synthetic read interruption"
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  actual:
+  error: 'synthetic read interruption'
+  stack: |-
+    f.desk.action_invoice (/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/tools/test_desk_transport.cjs:57:68)
+    Object.click (evalmachine.<anonymous>:377:205)
+    /mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/tools/test_desk_transport.cjs:59:50
+    waitForActual (node:assert:632:21)
+    strict.doesNotReject (node:assert:789:39)
+    TestContext.<anonymous> (/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/tools/test_desk_transport.cjs:59:16)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  operator: 'doesNotReject'
+  stack: |-
+    async TestContext.<anonymous> (/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/tools/test_desk_transport.cjs:59:3)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: an offline stay panel remains open and its native close has no fading overlay
+not ok 3 - an offline stay panel remains open and its native close has no fading overlay
+  ---
+  duration_ms: 9.178283
+  type: 'test'
+  location: '/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/tools/test_desk_transport.cjs:65:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+
+    + undefined
+    - false
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/tools/test_desk_transport.cjs:67:37)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: page activity covers a committed operation through its refresh, including actions appended after render
+ok 4 - page activity covers a committed operation through its refresh, including actions appended after render
+  ---
+  duration_ms: 6.488207
+  type: 'test'
+  ...
+# Subtest: double activation of an asynchronous detail opens once and a pending invalidation runs after the action ends
+ok 5 - double activation of an asynchronous detail opens once and a pending invalidation runs after the action ends
+  ---
+  duration_ms: 5.096388
+  type: 'test'
+  ...
+# Subtest: buttons created inside a native dialog while an action is pending unlock when that action finishes and follow offline recovery
+ok 6 - buttons created inside a native dialog while an action is pending unlock when that action finishes and follow offline recovery
+  ---
+  duration_ms: 5.188505
+  type: 'test'
+  ...
+# Subtest: a Page activity update affects its own dialog actions and does not unlock another Page or native dialog controls
+ok 7 - a Page activity update affects its own dialog actions and does not unlock another Page or native dialog controls
+  ---
+  duration_ms: 4.477122
+  type: 'test'
+  ...
+# Subtest: native HTML reinsertion after action completion uses current activity rather than the stale disabled markup
+ok 8 - native HTML reinsertion after action completion uses current activity rather than the stale disabled markup
+  ---
+  duration_ms: 5.83771
+  type: 'test'
+  ...
+# Subtest: action preparation is announced next to the clicked control and its local status is removed on completion or failure
+ok 9 - action preparation is announced next to the clicked control and its local status is removed on completion or failure
+  ---
+  duration_ms: 5.370083
+  type: 'test'
+  ...
+# Subtest: an action failure restores enabled controls, keeps one native error and permits a deliberate retry
+ok 10 - an action failure restores enabled controls, keeps one native error and permits a deliberate retry
+  ---
+  duration_ms: 20.110624
+  type: 'test'
+  ...
+# Subtest: only the latest load releases the page and invalidations arriving during a load are not lost
+ok 11 - only the latest load releases the page and invalidations arriving during a load are not lost
+  ---
+  duration_ms: 16.950704
+  type: 'test'
+  ...
+# Subtest: booking descriptions use people and dates while respecting discreet mode and preserving keys
+ok 12 - booking descriptions use people and dates while respecting discreet mode and preserving keys
+  ---
+  duration_ms: 24.015093
+  type: 'test'
+  ...
+# Subtest: report scope changes ignore old options and keep a failed scope unqueryable
+ok 13 - report scope changes ignore old options and keep a failed scope unqueryable
+  ---
+  duration_ms: 23.434259
+  type: 'test'
+  ...
+# Subtest: an older success cannot overwrite a newer property response
+ok 14 - an older success cannot overwrite a newer property response
+  ---
+  duration_ms: 11.898029
+  type: 'test'
+  ...
+# Subtest: reconciliation submits opaque visit keys with readable labels and clears them on scope changes
+ok 15 - reconciliation submits opaque visit keys with readable labels and clears them on scope changes
+  ---
+  duration_ms: 14.35832
+  type: 'test'
+  ...
+# Subtest: an old failure cannot clear busy or replace a newer result with an error
+ok 16 - an old failure cannot clear busy or replace a newer result with an error
+  ---
+  duration_ms: 8.241922
+  type: 'test'
+  ...
+# Subtest: an invalidation during a failed mutation is refreshed once the request ends
+ok 17 - an invalidation during a failed mutation is refreshed once the request ends
+  ---
+  duration_ms: 9.295655
+  type: 'test'
+  ...
+# Subtest: dialog keeps numeric edits across row refreshes and leaves untouched hidden rows alone
+ok 18 - dialog keeps numeric edits across row refreshes and leaves untouched hidden rows alone
+  ---
+  duration_ms: 10.198735
+  type: 'test'
+  ...
+# Subtest: a required checklist blocks submission and requests error focus while zero amounts and draft saves remain valid
+ok 19 - a required checklist blocks submission and requests error focus while zero amounts and draft saves remain valid
+  ---
+  duration_ms: 6.670524
+  type: 'test'
+  ...
+# Subtest: the common dialog validates before native submission and retains one in-flight request for a safe retry
+ok 20 - the common dialog validates before native submission and retains one in-flight request for a safe retry
+  ---
+  duration_ms: 24.405924
+  type: 'test'
+  ...
+# Subtest: numeric bounds stop an original decimal draft before native parsing can silently turn it into a valid integer
+ok 21 - numeric bounds stop an original decimal draft before native parsing can silently turn it into a valid integer
+  ---
+  duration_ms: 27.335053
+  type: 'test'
+  ...
+# Subtest: expanded row edits survive native refresh and collapse without a stale inline editor overwriting them
+ok 22 - expanded row edits survive native refresh and collapse without a stale inline editor overwriting them
+  ---
+  duration_ms: 9.019912
+  type: 'test'
+  ...
+# Subtest: row integer drafts survive collapse and cannot be truncated by confirmation or a partial save
+ok 23 - row integer drafts survive collapse and cannot be truncated by confirmation or a partial save
+  ---
+  duration_ms: 16.431506
+  type: 'test'
+  ...
+# Subtest: dependency reads keep a just-typed required price and its caret before native blur, including zero
+ok 24 - dependency reads keep a just-typed required price and its caret before native blur, including zero
+  ---
+  duration_ms: 10.236285
+  type: 'test'
+  ...
+# Subtest: a required checkbox keeps its just-selected state while a native message retains focus
+ok 25 - a required checkbox keeps its just-selected state while a native message retains focus
+  ---
+  duration_ms: 10.116497
+  type: 'test'
+  ...
+# Subtest: a fast field or tab change cannot erase a required name before native debounced commit
+ok 26 - a fast field or tab change cannot erase a required name before native debounced commit
+  ---
+  duration_ms: 10.209532
+  type: 'test'
+  ...
+# Subtest: native dependency changes to hidden, disabled or replaced controls are preserved
+ok 27 - native dependency changes to hidden, disabled or replaced controls are preserved
+  ---
+  duration_ms: 7.513623
+  type: 'test'
+  ...
+# Subtest: native read errors remain errors and leave the active draft intact
+ok 28 - native read errors remain errors and leave the active draft intact
+  ---
+  duration_ms: 6.875836
+  type: 'test'
+  ...
+# Subtest: a partly arrived group exposes its remaining numbered request and valid actions
+ok 29 - a partly arrived group exposes its remaining numbered request and valid actions
+  ---
+  duration_ms: 31.939278
+  type: 'test'
+  ...
+# Subtest: partial dialog submission bypasses required-field checks and still captures typed numeric values
+ok 30 - partial dialog submission bypasses required-field checks and still captures typed numeric values
+  ---
+  duration_ms: 8.286438
+  type: 'test'
+  ...
+# Subtest: a native business rejection keeps its server message; a lost response gets recovery guidance
+ok 31 - a native business rejection keeps its server message; a lost response gets recovery guidance
+  ---
+  duration_ms: 5.997362
+  type: 'test'
+  ...
+# Subtest: property wall-clock controls preserve native single-digit hours
+ok 32 - property wall-clock controls preserve native single-digit hours
+  ---
+  duration_ms: 7.083587
+  type: 'test'
+  ...
+1..32
+# tests 32
+# suites 0
+# pass 29
+# fail 3
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 512.28063
