@@ -106,7 +106,10 @@ def maintenance(prop, data):
             availability.release(maintenance=doc.name)
             doc.reopened_by = frappe.session.user
         doc.status, doc.notes = target, data.get("notes",doc.notes)
-        doc.save()
+        # Evidence shares a protected level with derived costs. Delegate only
+        # after role, assignment, version and private-file ownership checks;
+        # costs/parts are never copied from this command's input.
+        doc.save(ignore_permissions=bool(data.get("evidence")))
     else:
         from hospitality_suite.service import current_all
         equipment=property_document(prop,"HS Equipment",data["equipment"],"maintain") if data.get("equipment") else None

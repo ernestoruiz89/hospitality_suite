@@ -1,5 +1,9 @@
 # Registro de implementación
 
+## Ventanas y adjuntos privados — 0.8.8
+
+[VENTANAS_Y_EVIDENCIAS_PRIVADAS.md](VENTANAS_Y_EVIDENCIAS_PRIVADAS.md) aporta evidencia parcial a S04-16/S04-20: causa del clic perdido demostrada y corregida, adjunto privado del técnico conservado sin ampliar permisos de costos, y consulta de evidencia de novedades abiertas/resueltas. **405 nativas (373 integración/32 unitarias) y 222 JS aprobadas**, dos roles reales y dieciocho observaciones de escritorio. Aceptación restaurada, principal conservado y 741 archivos físicos originales idénticos. **212 V y seis I**: siguen reglas/estados y variantes secundarias, F26 y paquete/entrega final. Los registros anteriores conservan su alcance histórico; OTA sigue aplazada.
+
 ## Tareas por rol y acciones operativas — 0.8.8
 
 [TAREAS_Y_ESTADOS_POR_ROL.md](TAREAS_Y_ESTADOS_POR_ROL.md) cierra S00-02/S04-14: 22 familias relacionan las 84 acciones con sus Pages, roles y evidencia, sin convertir enlaces en recorridos GUI. Nuevo flujo de técnico/Gerencia/Supervisión: orden, inicio, repuestos 10→8→10, devolución nativa, objeto encontrado/resuelto y H101 reabierta. Se corrigen cantidades interpretadas de modo distinto por Frappe y nombres de repuesto. **221 JS aprobadas**, tres roles y 23 observaciones; 404 nativas históricas con Python idéntico. Restauración estricta: principal 72/1246/dos archivos; aceptación 71/185 y 72/250 con Version. **212 V y seis I**; siguen variantes visuales secundarias/estados/secuencias rápidas, F26 y paquete final. La observación de clic inmediato tras cerrar un diálogo permanece abierta. OTA aplazada.

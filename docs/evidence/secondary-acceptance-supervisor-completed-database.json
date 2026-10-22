@@ -1,0 +1,149 @@
+{
+  "observed_at_utc": "2026-10-22T01:52:02.419492+00:00",
+  "label": "supervisor-completed",
+  "site": "hospitality-acceptance.localhost",
+  "fixture_origin": "Native fixture: four accounts, one payment mode, two Item/opening Stock Entries, H110 maintenance and H101 stay. Subsequent secondary commands must be submitted through role Pages.",
+  "database_mutation": false,
+  "fixture": {
+    "property": "qmbjb0i1qc",
+    "company": "Alojamiento Demostración",
+    "warehouse": "Stores - HSD",
+    "accounts": {
+      "expense": "Gasto de aceptación secundaria - HSD",
+      "clearing": "Compensación de aceptación secundaria - HSD",
+      "bank": "Banco de aceptación secundaria - HSD",
+      "withholding": "Retención de aceptación secundaria - HSD"
+    },
+    "card_mode": "Tarjeta de aceptación secundaria",
+    "items": {
+      "HS-UX-PART-SEC": {
+        "label": "Válvula de aceptación secundaria",
+        "receipt": "MAT-STE-2026-00002",
+        "quantity": 10,
+        "unit_rate": 20
+      },
+      "HS-UX-LINEN-SEC": {
+        "label": "Sábana de aceptación secundaria",
+        "receipt": "MAT-STE-2026-00003",
+        "quantity": 10,
+        "unit_rate": 50
+      }
+    },
+    "maintenance": {
+      "order": "MAN-2026-00001",
+      "status": "Open"
+    },
+    "stay": {
+      "stay": "EST-2026-00001",
+      "folio": "CTA-2026-00001",
+      "room": "qmf5ju94js"
+    },
+    "origin": "Native fixture: four accounts, one payment mode, two Item/opening Stock Entries, H110 maintenance and H101 stay. Subsequent secondary commands must be submitted through role Pages."
+  },
+  "counts": {
+    "HS Booking": 1,
+    "HS Stay": 1,
+    "HS Charge": 1,
+    "HS Payment": 0,
+    "HS Shift": 0,
+    "HS Maintenance Order": 1,
+    "HS Incident": 1,
+    "HS Retention Run": 0,
+    "Sales Invoice": 0,
+    "Payment Entry": 0,
+    "Journal Entry": 0,
+    "Purchase Order": 0,
+    "Purchase Receipt": 0,
+    "Purchase Invoice": 0,
+    "Stock Entry": 3,
+    "Stock Reconciliation": 0,
+    "GL Entry": 6,
+    "File": 7
+  },
+  "stock": [
+    {
+      "item_code": "HS-DEMO-WATER",
+      "warehouse": "Stores - HSD",
+      "actual_qty": 100.0,
+      "valuation_rate": 10.0
+    },
+    {
+      "item_code": "HS-UX-LINEN-SEC",
+      "warehouse": "Stores - HSD",
+      "actual_qty": 10.0,
+      "valuation_rate": 50.0
+    },
+    {
+      "item_code": "HS-UX-PART-SEC",
+      "warehouse": "Stores - HSD",
+      "actual_qty": 10.0,
+      "valuation_rate": 20.0
+    }
+  ],
+  "payments": [],
+  "maintenance": [
+    {
+      "name": "MAN-2026-00001",
+      "title": "Orden de apoyo a aceptación secundaria",
+      "status": "Completed",
+      "evidence": "/private/files/secondary-acceptance-evidence.txt",
+      "modified": "2026-10-21 19:51:43.718299",
+      "modified_by": "supervisor@hospitality.example.invalid"
+    }
+  ],
+  "incidents": [
+    {
+      "name": "INC-2026-00001",
+      "kind": "Damage",
+      "description": "Daño sintético en luminaria de H110; solo para aceptación temporal.",
+      "status": "Resolved",
+      "evidence": "/private/files/secondary-incident-evidence.txt",
+      "owner": "maintenance@hospitality.example.invalid",
+      "resolved_by": "supervisor@hospitality.example.invalid",
+      "resolution": "Supervisión revisó la evidencia sintética; reparación comprobada en esta prueba temporal."
+    }
+  ],
+  "private_attachments": [
+    {
+      "name": "1f0551b9ea",
+      "file_name": "secondary-incident-evidence.txt",
+      "file_url": "/private/files/secondary-incident-evidence.txt",
+      "owner": "maintenance@hospitality.example.invalid",
+      "attached_to_doctype": "HS Incident",
+      "attached_to_name": "INC-2026-00001"
+    },
+    {
+      "name": "f2d460b0ce",
+      "file_name": "secondary-incident-evidence.txt",
+      "file_url": "/private/files/secondary-incident-evidence.txt",
+      "owner": "maintenance@hospitality.example.invalid",
+      "attached_to_doctype": "HS Incident",
+      "attached_to_name": "INC-2026-00001"
+    },
+    {
+      "name": "69eca97b86",
+      "file_name": "secondary-acceptance-evidence.txt",
+      "file_url": "/private/files/secondary-acceptance-evidence.txt",
+      "owner": "maintenance@hospitality.example.invalid",
+      "attached_to_doctype": "HS Maintenance Order",
+      "attached_to_name": "MAN-2026-00001"
+    },
+    {
+      "name": "f5ef41758a",
+      "file_name": "secondary-acceptance-evidence.txt",
+      "file_url": "/private/files/secondary-acceptance-evidence.txt",
+      "owner": "maintenance@hospitality.example.invalid",
+      "attached_to_doctype": "HS Maintenance Order",
+      "attached_to_name": "MAN-2026-00001"
+    },
+    {
+      "name": "d50e2a608a",
+      "file_name": "secondary-acceptance-evidence.txt",
+      "file_url": "/private/files/secondary-acceptance-evidence.txt",
+      "owner": "maintenance@hospitality.example.invalid",
+      "attached_to_doctype": "HS Maintenance Order",
+      "attached_to_name": "MAN-2026-00001"
+    }
+  ],
+  "source_sha256": "7b3d927cf1545c8ce6fceeefae30524e634e510cab2d62fa189ffce6f80964c0"
+}

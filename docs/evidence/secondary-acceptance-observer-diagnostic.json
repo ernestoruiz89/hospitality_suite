@@ -1,0 +1,8 @@
+{
+  "stage": "final-evidence-observer",
+  "initial_assumption": "Closed native dialogs were expected to be removed from the DOM",
+  "observation": "Frappe retains two hidden dialog elements with visible=false; no modal backdrop remains",
+  "correction": "Assert no visible dialogs and no backdrops, retaining the completion and evidence assertions",
+  "application_changed": false,
+  "business_flow_repeated": false
+}

@@ -1,0 +1,10 @@
+{
+  "stage": "prepare",
+  "result": "Fixture creation committed; subsequent read-only observation failed",
+  "native_error": "Unknown column 'cashier' in 'SELECT'",
+  "cause": "The new checkpoint reader requested a field absent from HS Payment",
+  "correction": "Read standard owner instead, and serialize checkpoints before committing future preparations",
+  "fixture_repeated": false,
+  "recovery": "Run checkpoint --label prepared against the already-created fixture; do not run prepare again",
+  "application_changed_for_diagnostic": false
+}

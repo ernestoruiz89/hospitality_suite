@@ -1,5 +1,11 @@
 # Siguiente fase del objetivo activo
 
+## Después de la revisión de ventanas y adjuntos
+
+[VENTANAS_Y_EVIDENCIAS_PRIVADAS.md](VENTANAS_Y_EVIDENCIAS_PRIVADAS.md) aporta evidencia parcial a S04-16/S04-20: causa del clic perdido demostrada y corregida, adjunto privado del técnico conservado sin ampliar permisos de costos, y consulta de evidencia de novedades abiertas/resueltas. **405 nativas (373 integración/32 unitarias) y 222 JS aprobadas**, dos roles reales y dieciocho observaciones de escritorio. Aceptación restaurada, principal conservado y 741 archivos físicos originales idénticos. **212 V y seis I**: siguen reglas/estados y variantes secundarias, F26 y paquete/entrega final. Los registros anteriores conservan su alcance histórico; OTA sigue aplazada.
+
+Prioridad siguiente: completar variantes de tesorería/egresos, compras y movimientos, ropa de cama, políticas/otros adjuntos, retención/reintento y conversión del portal, junto con sus estados y validaciones. La secuencia Cerrar repuestos → Registrar novedad y los adjuntos de mantenimiento/novedades de este recorrido quedan corregidos y probados. No se cierran S04-16/S04-20 por esa parte aislada. S00-01/S01-12 dependen de finalizar el conjunto; S19-07/S19-08 conservan F26/paquete y entrega. Los apartados siguientes son antecedentes.
+
 ## Después de la revisión de tareas por rol
 
 [TAREAS_Y_ESTADOS_POR_ROL.md](TAREAS_Y_ESTADOS_POR_ROL.md) acredita S00-02/S04-14; **212 V y seis I**: S00-01/S01-12/S04-16/S04-20/S19-07/S19-08. La colección finita identifica las variantes visuales restantes de tesorería, compras/movimientos, ropa, retención, conversión del portal, políticas y adjuntos. Prioridad inmediata: reproducir la secuencia Cerrar repuestos → Registrar novedad cuyo primer clic no abrió el nuevo diálogo; resolver los estados/reglas restantes y completar esas variantes. Después F26 y paquete final incluyendo las dos correcciones de interfaz actuales. **221 JS** y recorrido de tres roles aprobados; se conservan 404 nativas históricas con Python idéntico, datos/archivos restaurados y OTA aplazada. Los apartados siguientes son antecedentes.

@@ -1,0 +1,85 @@
+{
+  "observed_at_utc": "2026-10-22T01:16:57.717308+00:00",
+  "label": "prepared",
+  "site": "hospitality-acceptance.localhost",
+  "fixture_origin": "Native fixture: four accounts, one payment mode, two Item/opening Stock Entries, H110 maintenance and H101 stay. Subsequent secondary commands must be submitted through role Pages.",
+  "database_mutation": false,
+  "fixture": {
+    "property": "qmbjb0i1qc",
+    "company": "Alojamiento Demostración",
+    "warehouse": "Stores - HSD",
+    "accounts": {
+      "expense": "Gasto de aceptación secundaria - HSD",
+      "clearing": "Compensación de aceptación secundaria - HSD",
+      "bank": "Banco de aceptación secundaria - HSD",
+      "withholding": "Retención de aceptación secundaria - HSD"
+    },
+    "card_mode": "Tarjeta de aceptación secundaria",
+    "items": {
+      "HS-UX-PART-SEC": {
+        "label": "Válvula de aceptación secundaria",
+        "receipt": "MAT-STE-2026-00002",
+        "quantity": 10,
+        "unit_rate": 20
+      },
+      "HS-UX-LINEN-SEC": {
+        "label": "Sábana de aceptación secundaria",
+        "receipt": "MAT-STE-2026-00003",
+        "quantity": 10,
+        "unit_rate": 50
+      }
+    },
+    "maintenance": {
+      "order": "MAN-2026-00001",
+      "status": "Open"
+    },
+    "stay": {
+      "stay": "EST-2026-00001",
+      "folio": "CTA-2026-00001",
+      "room": "qmf5ju94js"
+    },
+    "origin": "Native fixture: four accounts, one payment mode, two Item/opening Stock Entries, H110 maintenance and H101 stay. Subsequent secondary commands must be submitted through role Pages."
+  },
+  "counts": {
+    "HS Booking": 1,
+    "HS Stay": 1,
+    "HS Charge": 1,
+    "HS Payment": 0,
+    "HS Shift": 0,
+    "HS Maintenance Order": 1,
+    "HS Incident": 0,
+    "HS Retention Run": 0,
+    "Sales Invoice": 0,
+    "Payment Entry": 0,
+    "Journal Entry": 0,
+    "Purchase Order": 0,
+    "Purchase Receipt": 0,
+    "Purchase Invoice": 0,
+    "Stock Entry": 3,
+    "Stock Reconciliation": 0,
+    "GL Entry": 6,
+    "File": 2
+  },
+  "stock": [
+    {
+      "item_code": "HS-DEMO-WATER",
+      "warehouse": "Stores - HSD",
+      "actual_qty": 100.0,
+      "valuation_rate": 10.0
+    },
+    {
+      "item_code": "HS-UX-LINEN-SEC",
+      "warehouse": "Stores - HSD",
+      "actual_qty": 10.0,
+      "valuation_rate": 50.0
+    },
+    {
+      "item_code": "HS-UX-PART-SEC",
+      "warehouse": "Stores - HSD",
+      "actual_qty": 10.0,
+      "valuation_rate": 20.0
+    }
+  ],
+  "payments": [],
+  "source_sha256": "ac3b56aec458c11e3e0eca4710d9b376b5e7b332441affd9d5f31c6a22a62be3"
+}

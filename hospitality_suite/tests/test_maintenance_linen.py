@@ -105,6 +105,33 @@ class TestMaintenanceLinen(IntegrationTestCase):
         self.assertEqual(record.resolved_by,frappe.session.user)
         self.assertEqual(record.status,"Resolved")
 
+    def test_assigned_technician_can_attach_private_evidence_without_cost_write_permission(self):
+        from frappe.utils.file_manager import save_file
+        order=self.order(assigned_to="maintenance@hospitality.example.invalid")
+        frappe.set_user("maintenance@hospitality.example.invalid")
+        self.assertNotIn(1,order.get_permlevel_access("write"))
+        file=save_file("evidencia-tecnico-ficticia.txt",b"Adjunto sintetico del tecnico",order.doctype,order.name,is_private=1)
+        self.call("maintenance",dict(order=order.name,modified=str(order.modified),evidence=file.file_url,
+            notes="Revision con evidencia privada",cost=99999))
+        order.reload()
+        self.assertEqual(order.evidence,file.file_url)
+        self.assertEqual(order.cost,0)
+        self.assertEqual(order.modified_by,"maintenance@hospitality.example.invalid")
+        self.assertNotIn(1,order.get_permlevel_access("write"))
+        self.assertTrue(frappe.has_permission("File","read",doc=file))
+        projected=next(row for row in api.bootstrap(self.prop.name)["maintenance"] if row.name==order.name)
+        self.assertEqual(projected.evidence,file.file_url)
+        frappe.set_user("Administrator")
+        other=self.order(assigned_to="maintenance@hospitality.example.invalid",blocks_room=False)
+        frappe.set_user("maintenance@hospitality.example.invalid")
+        before=frappe.db.count("HS Request")
+        with self.assertRaises(frappe.ValidationError):
+            self.call("maintenance",dict(order=other.name,modified=str(other.modified),evidence=file.file_url,cost=99999))
+        other.reload()
+        self.assertFalse(other.evidence)
+        self.assertEqual(other.cost,0)
+        self.assertEqual(frappe.db.count("HS Request"),before)
+
     def test_linen_transfer_receipt_and_loss_use_native_stock(self):
         laundry=frappe.get_doc(dict(doctype="Warehouse",warehouse_name="Lavandería ficticia "+uuid.uuid4().hex[:6],company=self.prop.company,
                                    parent_warehouse=frappe.db.get_value("Warehouse",{"company":self.prop.company,"is_group":1},"name"),hs_property=self.prop.name)).insert()

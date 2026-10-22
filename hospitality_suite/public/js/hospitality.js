@@ -261,7 +261,9 @@ window.hospitality_suite = window.hospitality_suite || {};
       const selectors=fields.filter(df=>df.fieldtype==="Select").map(df=>({df,options:df.options}));
       for(const {df} of selectors)df.options=[];
       this.prepare_operational_links?.(fields);
-      const d=new frappe.ui.Dialog({title:__(titleText),fields,size,primary_action_label:__(label),primary_action:()=>{}});
+      // Native fading backdrops still intercept the next Page click after the
+      // form has disappeared. Operational close/open sequences are immediate.
+      const d=new frappe.ui.Dialog({title:__(titleText),fields,size,animate:false,primary_action_label:__(label),primary_action:()=>{}});
       d.get_values=preserveEditingValue(d,d.get_values);
       d.$wrapper.addClass("hs-form-dialog");
       d.get_close_btn().attr("aria-label",__("Cerrar formulario"));

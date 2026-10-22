@@ -24,9 +24,11 @@
         "docs/INSTALACION_LIMPIA.md",
         "docs/evidence/release-install-native-tests.xml",
         "docs/TAREAS_Y_ESTADOS_POR_ROL.md",
-        "docs/evidence/task-state-crosswalk.json"
+        "docs/evidence/task-state-crosswalk.json",
+        "docs/VENTANAS_Y_EVIDENCIAS_PRIVADAS.md",
+        "docs/evidence/secondary-acceptance-verification.json"
       ],
-      "remaining": "Paquete/instalación limpia S18-01/S19-02 y operación habitual mediante Pages S00-02/S04-14 acreditados. Completar estados/reglas/secuencias S04-16, variantes visuales secundarias S04-20 y recuperación/entrega final F26 S19-07/S19-08. La revisión de tareas conserva 212 V y seis I; no se declara completo el alcance."
+      "remaining": "Paquete/instalación limpia y operación habitual mediante Pages acreditados. Completar estados/reglas S04-16, variantes visuales secundarias S04-20 y F26/paquete/entrega S19-07/S19-08. VENTANAS_Y_EVIDENCIAS_PRIVADAS.md corrige secuencias y adjuntos concretos con 405 nativas/222 JS, sin cierre general: 212 V y seis I."
     },
     {
       "id": "S00-02",
@@ -334,9 +336,11 @@
         "docs/INSTALACION_LIMPIA.md",
         "docs/evidence/release-install-native-tests.xml",
         "docs/TAREAS_Y_ESTADOS_POR_ROL.md",
-        "docs/evidence/task-state-crosswalk.json"
+        "docs/evidence/task-state-crosswalk.json",
+        "docs/VENTANAS_Y_EVIDENCIAS_PRIVADAS.md",
+        "docs/evidence/secondary-acceptance-verification.json"
       ],
-      "remaining": "Paquete/instalación limpia S18-01/S19-02 y operación habitual mediante Pages S00-02/S04-14 acreditados. Completar estados/reglas/secuencias S04-16, variantes visuales secundarias S04-20 y recuperación/entrega final F26 S19-07/S19-08. La revisión de tareas conserva 212 V y seis I; no se declara completo el alcance."
+      "remaining": "Continuar hasta cerrar reglas/estados S04-16, variantes secundarias S04-20 y recuperación/entrega final S19-07/S19-08. Secuencias rápidas y adjuntos de mantenimiento/novedades de este recorrido corregidos y probados; 212 V/seis I conserva el alcance completo pendiente."
     },
     {
       "id": "S01-13",
@@ -1193,9 +1197,11 @@
         "docs/evidence/phase-review-actions.json",
         "docs/VALIDACION_NUMERICA.md",
         "docs/TAREAS_Y_ESTADOS_POR_ROL.md",
-        "docs/evidence/task-state-crosswalk.json"
+        "docs/evidence/task-state-crosswalk.json",
+        "docs/VENTANAS_Y_EVIDENCIAS_PRIVADAS.md",
+        "docs/evidence/secondary-acceptance-verification.json"
       ],
-      "remaining": "Reglas comunes y tipos numéricos, filas/borradores y estados principales acreditados; compatibilidad con controles nativos y error local de repuestos repetidos en TAREAS_Y_ESTADOS_POR_ROL.md, 221 JS. Completar reglas específicas y estados de búsquedas/vistas secundarias de la colección finita. Persiste observación de Cerrar repuestos seguido inmediatamente de Registrar novedad sin apertura; un clic posterior funciona, con causa aún no demostrada. No se declara resuelta por las salidas de sesión que sí funcionan en este recorrido."
+      "remaining": "Secuencia rápida de cierre/apertura resuelta: fondo nativo interceptaba clic, corregido con animate:false y seis ciclos emparejados. 405 nativas/222 JS y adjuntos privados verificados. Completar reglas específicas y estados de búsquedas/vistas secundarias de la colección finita; no se declara completo todo el conjunto."
     },
     {
       "id": "S04-17",
@@ -1331,9 +1337,11 @@
         "docs/REVISION_FASES_Y_ACCIONES.md",
         "docs/evidence/phase-review-actions.json",
         "docs/TAREAS_Y_ESTADOS_POR_ROL.md",
-        "docs/evidence/task-state-crosswalk.json"
+        "docs/evidence/task-state-crosswalk.json",
+        "docs/VENTANAS_Y_EVIDENCIAS_PRIVADAS.md",
+        "docs/evidence/secondary-acceptance-verification.json"
       ],
-      "remaining": "Flujos habituales de Pages acreditados por aceptación/teclado y nuevo mantenimiento de tres roles; no equivalen a todas las variantes secundarias. Completar los recorridos visuales explícitos de T11 (tesorería/egresos), T14 (ropa), T18 (políticas pendientes), T19 (compras/movimientos), T20 (retención/reintento), T21 (conversión de portal), adjuntos T15/T16 y secuencias rápidas, según TAREAS_Y_ESTADOS_POR_ROL.md y task-state-crosswalk.json. No se atribuyen a la UI los documentos preparados como fixtures API."
+      "remaining": "Mantenimiento/novedades: técnico adjunta evidencia privada y Supervisión consulta, resuelve y completa/libera desde Pages; enlaces conservados. Completar variantes visuales secundarias de tesorería/egresos, compras/movimientos, ropa, políticas/otros adjuntos, retención/reintento y conversión del portal. El fixture API y los dos roles de escritorio no equivalen a la aceptación de todas las variantes."
     },
     {
       "id": "S05-01",
@@ -5180,9 +5188,11 @@
         "docs/INSTALACION_LIMPIA.md",
         "docs/evidence/release-install-native-tests.xml",
         "docs/TAREAS_Y_ESTADOS_POR_ROL.md",
-        "docs/evidence/task-state-crosswalk.json"
+        "docs/evidence/task-state-crosswalk.json",
+        "docs/VENTANAS_Y_EVIDENCIAS_PRIVADAS.md",
+        "docs/evidence/secondary-acceptance-verification.json"
       ],
-      "remaining": "Completar S04-16/S04-20 y ensayo final F26 con actualización y recuperación coordinada de código, base y archivos en destino aislado; generar paquete final y revisar entrega. S18-01/S19-02 acreditan instalación independiente de 3a8d0bf con 404 nativas/215 JS y dos carreras reales. Ese paquete no incluye los dos cambios de interfaz de esta revisión (221 JS), que deben entrar en la entrega final."
+      "remaining": "Completar S04-16/S04-20 y F26 con recuperación coordinada de código, base y archivos, paquete final y revisión de entrega. Instalación independiente previa acreditada; su paquete no incluye las correcciones posteriores de interfaz y evidencia privada. 405 nativas/222 JS actuales no sustituyen F26."
     },
     {
       "id": "S19-08",
@@ -5206,9 +5216,11 @@
         "docs/INSTALACION_LIMPIA.md",
         "docs/evidence/release-install-native-tests.xml",
         "docs/TAREAS_Y_ESTADOS_POR_ROL.md",
-        "docs/evidence/task-state-crosswalk.json"
+        "docs/evidence/task-state-crosswalk.json",
+        "docs/VENTANAS_Y_EVIDENCIAS_PRIVADAS.md",
+        "docs/evidence/secondary-acceptance-verification.json"
       ],
-      "remaining": "Cerrar variantes visuales secundarias/estados S04-16/S04-20 y fase 7/F26, manteniendo fuentes y evidencias diferenciadas. El contraste finito de 22 familias/84 manejadores, once Pages y nueve roles acredita el camino operativo S00-02/S04-14, pero no se presenta como 84 recorridos GUI ni como entrega completa."
+      "remaining": "Cerrar variantes secundarias/estados S04-16/S04-20 y fase 7/F26, manteniendo fuentes y evidencia diferenciadas. VENTANAS_Y_EVIDENCIAS_PRIVADAS.md aporta un tramo comprobado con 405 nativas/222 JS y restauración estricta, sin atribuirle todas las variantes ni la entrega completa."
     },
     {
       "id": "S19-09",

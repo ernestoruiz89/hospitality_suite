@@ -1,0 +1,2190 @@
+{
+  "scope": "Desktop role Pages. Native API fixture explicitly identified; financial/procurement/linen/retention/portal scenarios not performed in this phase.",
+  "events": [
+    {
+      "label": "rapid-before-parts-open",
+      "observed_at_utc": "2026-10-22T01:17:47.894Z",
+      "backdrops": [
+        "modal-backdrop fade show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.5IE6WQ4O.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "maintenance",
+          "disabled": false,
+          "text": "Nueva orden"
+        },
+        {
+          "action": "incident",
+          "disabled": false,
+          "text": "Registrar novedad"
+        },
+        {
+          "action": "maintenance",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "maintenance_parts",
+          "disabled": false,
+          "text": "Repuestos"
+        },
+        {
+          "action": "maintenance_evidence",
+          "disabled": false,
+          "text": "Evidencia"
+        },
+        {
+          "action": "print_maintenance",
+          "disabled": false,
+          "text": "Imprimir orden"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Registrar salida"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal fade hs-form-dialog hs-keyboard-dialog show",
+          "title": "Repuestos de mantenimiento",
+          "visible": true
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "options": [
+            {
+              "text": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "text": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": "Buscar artículo por nombre o código",
+          "name": "_hs_item_search",
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Repuesto",
+          "name": "item",
+          "options": [
+            {
+              "text": "Seleccione…",
+              "value": ""
+            },
+            {
+              "text": "Agua minibar (demostración)",
+              "value": "HS-DEMO-WATER"
+            },
+            {
+              "text": "Sábana de aceptación secundaria",
+              "value": "HS-UX-LINEN-SEC"
+            },
+            {
+              "text": "Válvula de aceptación secundaria",
+              "value": "HS-UX-PART-SEC"
+            }
+          ],
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Cantidad",
+          "name": "quantity",
+          "value": "1.000"
+        }
+      ],
+      "text": "Mantenimiento\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nmaintenance@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nMantenimiento\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nMantenimiento y bloqueos\n\nRepuestos con existencias de ERPNext y reapertura autorizada.\n\nNueva orden\nRegistrar novedad\nHabitación / equipo / orden\tPeríodo\tResponsable\tEstado\tRepuestos y costo\tAcciones\nHabitación H110\nOrden de apoyo a aceptación secundaria\nBloquea disponibilidad\t21/10/2026 19:16\nHasta reapertura autorizada\tmaintenance@hospitality.example.invalid\tAbierto\tSin repuestos\nC$ 0.00\tActualizarRepuestosEvidenciaImprimir orden\nDaños y objetos encontrados\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 19:17:17.578742 · NIO\nRepuestos de mantenimiento\n\nEl costo se obtiene de la valoración de inventario al registrar la salida.\n\nBuscar artículo por nombre o código\n_hs_item_search\nRepuesto\nSeleccione…\nAgua minibar (demostración)\nSábana de aceptación secundaria\nVálvula de aceptación secundaria\nSe muestran hasta 50 coincidencias. Busque por nombre o código para consultar todo el catálogo.\nitem\nCantidad\nquantity\nRegistrar salida",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-maintenance"
+    },
+    {
+      "label": "rapid-before-close-then-incident",
+      "observed_at_utc": "2026-10-22T01:17:49.038Z",
+      "backdrops": [
+        "modal-backdrop fade show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.5IE6WQ4O.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "maintenance",
+          "disabled": false,
+          "text": "Nueva orden"
+        },
+        {
+          "action": "incident",
+          "disabled": false,
+          "text": "Registrar novedad"
+        },
+        {
+          "action": "maintenance",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "maintenance_parts",
+          "disabled": false,
+          "text": "Repuestos"
+        },
+        {
+          "action": "maintenance_evidence",
+          "disabled": false,
+          "text": "Evidencia"
+        },
+        {
+          "action": "print_maintenance",
+          "disabled": false,
+          "text": "Imprimir orden"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Guardar"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal fade hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal fade hs-form-dialog hs-keyboard-dialog show",
+          "title": "Daño u objeto encontrado",
+          "visible": true
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "options": [
+            {
+              "text": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "text": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": "Habitación",
+          "name": "room",
+          "options": [
+            {
+              "text": "Seleccione…",
+              "value": ""
+            },
+            {
+              "text": "H101",
+              "value": "qmf5ju94js"
+            },
+            {
+              "text": "H102",
+              "value": "qmf24e5qke"
+            },
+            {
+              "text": "H103",
+              "value": "qmfnhs65gb"
+            },
+            {
+              "text": "H104",
+              "value": "qmfodmger0"
+            },
+            {
+              "text": "H105",
+              "value": "qmfvqm1he4"
+            },
+            {
+              "text": "H106",
+              "value": "qmfaq0ktsg"
+            },
+            {
+              "text": "H107",
+              "value": "qmfsq0ov22"
+            },
+            {
+              "text": "H108",
+              "value": "qmfo34k6dr"
+            },
+            {
+              "text": "H109",
+              "value": "qmf4nvo6rd"
+            },
+            {
+              "text": "H110",
+              "value": "qmffump0i2"
+            }
+          ],
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Tipo",
+          "name": "kind",
+          "options": [
+            {
+              "text": "Daño",
+              "value": "Damage"
+            },
+            {
+              "text": "Objeto encontrado",
+              "value": "Lost Property"
+            }
+          ],
+          "value": "Damage"
+        },
+        {
+          "invalid": null,
+          "label": "Descripción",
+          "name": "description",
+          "value": ""
+        }
+      ],
+      "text": "Mantenimiento\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nmaintenance@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nMantenimiento\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nMantenimiento y bloqueos\n\nRepuestos con existencias de ERPNext y reapertura autorizada.\n\nNueva orden\nRegistrar novedad\nHabitación / equipo / orden\tPeríodo\tResponsable\tEstado\tRepuestos y costo\tAcciones\nHabitación H110\nOrden de apoyo a aceptación secundaria\nBloquea disponibilidad\t21/10/2026 19:16\nHasta reapertura autorizada\tmaintenance@hospitality.example.invalid\tAbierto\tSin repuestos\nC$ 0.00\tActualizarRepuestosEvidenciaImprimir orden\nDaños y objetos encontrados\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 19:17:17.578742 · NIO\nDaño u objeto encontrado\nHabitación\nSeleccione…\nH101\nH102\nH103\nH104\nH105\nH106\nH107\nH108\nH109\nH110\nroom\nTipo\nDaño\nObjeto encontrado\nkind\nDescripción\ndescripción\nGuardar",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-maintenance"
+    },
+    {
+      "label": "rapid-before-close-immediate-dom",
+      "observed_at_utc": "2026-10-22T01:18:49.751Z",
+      "backdrops": [
+        "modal-backdrop fade"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.5IE6WQ4O.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "maintenance",
+          "disabled": false,
+          "text": "Nueva orden"
+        },
+        {
+          "action": "incident",
+          "disabled": false,
+          "text": "Registrar novedad"
+        },
+        {
+          "action": "maintenance",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "maintenance_parts",
+          "disabled": false,
+          "text": "Repuestos"
+        },
+        {
+          "action": "maintenance_evidence",
+          "disabled": false,
+          "text": "Evidencia"
+        },
+        {
+          "action": "print_maintenance",
+          "disabled": false,
+          "text": "Imprimir orden"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal fade hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal fade hs-form-dialog hs-keyboard-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "options": [
+            {
+              "text": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "text": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Mantenimiento\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nmaintenance@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nMantenimiento\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nMantenimiento y bloqueos\n\nRepuestos con existencias de ERPNext y reapertura autorizada.\n\nNueva orden\nRegistrar novedad\nHabitación / equipo / orden\tPeríodo\tResponsable\tEstado\tRepuestos y costo\tAcciones\nHabitación H110\nOrden de apoyo a aceptación secundaria\nBloquea disponibilidad\t21/10/2026 19:16\nHasta reapertura autorizada\tmaintenance@hospitality.example.invalid\tAbierto\tSin repuestos\nC$ 0.00\tActualizarRepuestosEvidenciaImprimir orden\nDaños y objetos encontrados\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 19:17:17.578742 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-maintenance"
+    },
+    {
+      "label": "rapid-before-close-hit-test",
+      "observed_at_utc": "2026-10-22T01:19:10.842Z",
+      "dom": {
+        "backdrops": [
+          {
+            "classes": "modal-backdrop fade",
+            "opacity": "0.535771",
+            "pointerEvents": "auto"
+          }
+        ],
+        "hitAction": null,
+        "hitClass": "modal-backdrop fade",
+        "hitTag": "DIV",
+        "target": "Registrar novedad"
+      }
+    },
+    {
+      "label": "rapid-after-parts-open",
+      "observed_at_utc": "2026-10-22T01:20:42.815Z",
+      "backdrops": [
+        "modal-backdrop show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.XVJXBCFM.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "maintenance",
+          "disabled": false,
+          "text": "Nueva orden"
+        },
+        {
+          "action": "incident",
+          "disabled": false,
+          "text": "Registrar novedad"
+        },
+        {
+          "action": "maintenance",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "maintenance_parts",
+          "disabled": false,
+          "text": "Repuestos"
+        },
+        {
+          "action": "maintenance_evidence",
+          "disabled": false,
+          "text": "Evidencia"
+        },
+        {
+          "action": "print_maintenance",
+          "disabled": false,
+          "text": "Imprimir orden"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Registrar salida"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog hs-keyboard-dialog show",
+          "title": "Repuestos de mantenimiento",
+          "visible": true
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "options": [
+            {
+              "text": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "text": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": "Buscar artículo por nombre o código",
+          "name": "_hs_item_search",
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Repuesto",
+          "name": "item",
+          "options": [
+            {
+              "text": "Seleccione…",
+              "value": ""
+            },
+            {
+              "text": "Agua minibar (demostración)",
+              "value": "HS-DEMO-WATER"
+            },
+            {
+              "text": "Sábana de aceptación secundaria",
+              "value": "HS-UX-LINEN-SEC"
+            },
+            {
+              "text": "Válvula de aceptación secundaria",
+              "value": "HS-UX-PART-SEC"
+            }
+          ],
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Cantidad",
+          "name": "quantity",
+          "value": "1.000"
+        }
+      ],
+      "text": "Mantenimiento\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nmaintenance@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nMantenimiento\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nMantenimiento y bloqueos\n\nRepuestos con existencias de ERPNext y reapertura autorizada.\n\nNueva orden\nRegistrar novedad\nHabitación / equipo / orden\tPeríodo\tResponsable\tEstado\tRepuestos y costo\tAcciones\nHabitación H110\nOrden de apoyo a aceptación secundaria\nBloquea disponibilidad\t21/10/2026 19:16\nHasta reapertura autorizada\tmaintenance@hospitality.example.invalid\tAbierto\tSin repuestos\nC$ 0.00\tActualizarRepuestosEvidenciaImprimir orden\nDaños y objetos encontrados\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 19:20:13.127908 · NIO\nRepuestos de mantenimiento\n\nEl costo se obtiene de la valoración de inventario al registrar la salida.\n\nBuscar artículo por nombre o código\n_hs_item_search\nRepuesto\nSeleccione…\nAgua minibar (demostración)\nSábana de aceptación secundaria\nVálvula de aceptación secundaria\nSe muestran hasta 50 coincidencias. Busque por nombre o código para consultar todo el catálogo.\nitem\nCantidad\nquantity\nRegistrar salida",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-maintenance"
+    },
+    {
+      "label": "rapid-after-cycles-closed",
+      "observed_at_utc": "2026-10-22T01:21:12.525Z",
+      "backdrops": [],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.XVJXBCFM.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "maintenance",
+          "disabled": false,
+          "text": "Nueva orden"
+        },
+        {
+          "action": "incident",
+          "disabled": false,
+          "text": "Registrar novedad"
+        },
+        {
+          "action": "maintenance",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "maintenance_parts",
+          "disabled": false,
+          "text": "Repuestos"
+        },
+        {
+          "action": "maintenance_evidence",
+          "disabled": false,
+          "text": "Evidencia"
+        },
+        {
+          "action": "print_maintenance",
+          "disabled": false,
+          "text": "Imprimir orden"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "options": [
+            {
+              "text": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "text": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Mantenimiento\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nmaintenance@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nMantenimiento\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nMantenimiento y bloqueos\n\nRepuestos con existencias de ERPNext y reapertura autorizada.\n\nNueva orden\nRegistrar novedad\nHabitación / equipo / orden\tPeríodo\tResponsable\tEstado\tRepuestos y costo\tAcciones\nHabitación H110\nOrden de apoyo a aceptación secundaria\nBloquea disponibilidad\t21/10/2026 19:16\nHasta reapertura autorizada\tmaintenance@hospitality.example.invalid\tAbierto\tSin repuestos\nC$ 0.00\tActualizarRepuestosEvidenciaImprimir orden\nDaños y objetos encontrados\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 19:20:13.127908 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-maintenance"
+    },
+    {
+      "label": "maintenance-upload-private-selected",
+      "observed_at_utc": "2026-10-22T01:22:00.329Z",
+      "backdrops": [
+        "modal-backdrop fade show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.XVJXBCFM.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "maintenance",
+          "disabled": false,
+          "text": "Nueva orden"
+        },
+        {
+          "action": "incident",
+          "disabled": false,
+          "text": "Registrar novedad"
+        },
+        {
+          "action": "maintenance",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "maintenance_parts",
+          "disabled": false,
+          "text": "Repuestos"
+        },
+        {
+          "action": "maintenance_evidence",
+          "disabled": false,
+          "text": "Evidencia"
+        },
+        {
+          "action": "print_maintenance",
+          "disabled": false,
+          "text": "Imprimir orden"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Subir"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal fade show hs-keyboard-dialog",
+          "title": "Subir",
+          "visible": true
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "options": [
+            {
+              "text": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "text": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "value": "on"
+        }
+      ],
+      "text": "Mantenimiento\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nmaintenance@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nMantenimiento\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nMantenimiento y bloqueos\n\nRepuestos con existencias de ERPNext y reapertura autorizada.\n\nNueva orden\nRegistrar novedad\nHabitación / equipo / orden\tPeríodo\tResponsable\tEstado\tRepuestos y costo\tAcciones\nHabitación H110\nOrden de apoyo a aceptación secundaria\nBloquea disponibilidad\t21/10/2026 19:16\nHasta reapertura autorizada\tmaintenance@hospitality.example.invalid\tAbierto\tSin repuestos\nC$ 0.00\tActualizarRepuestosEvidenciaImprimir orden\nDaños y objetos encontrados\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 19:20:13.127908 · NIO\nSubir\nsecondary-acceptance-evidence.txt\n187\nPrivado\nSubir",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-maintenance"
+    },
+    {
+      "label": "maintenance-upload-finished-without-reference",
+      "observed_at_utc": "2026-10-22T01:23:08.455Z",
+      "backdrops": [],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.XVJXBCFM.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "maintenance",
+          "disabled": false,
+          "text": "Nueva orden"
+        },
+        {
+          "action": "incident",
+          "disabled": false,
+          "text": "Registrar novedad"
+        },
+        {
+          "action": "maintenance",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "maintenance_parts",
+          "disabled": false,
+          "text": "Repuestos"
+        },
+        {
+          "action": "maintenance_evidence",
+          "disabled": false,
+          "text": "Evidencia"
+        },
+        {
+          "action": "print_maintenance",
+          "disabled": false,
+          "text": "Imprimir orden"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "options": [
+            {
+              "text": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "text": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Mantenimiento\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nmaintenance@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nMantenimiento\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nMantenimiento y bloqueos\n\nRepuestos con existencias de ERPNext y reapertura autorizada.\n\nNueva orden\nRegistrar novedad\nHabitación / equipo / orden\tPeríodo\tResponsable\tEstado\tRepuestos y costo\tAcciones\nHabitación H110\nOrden de apoyo a aceptación secundaria\nBloquea disponibilidad\t21/10/2026 19:16\nHasta reapertura autorizada\tmaintenance@hospitality.example.invalid\tAbierto\tSin repuestos\nC$ 0.00\tActualizarRepuestosEvidenciaImprimir orden\nDaños y objetos encontrados\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 19:22:01.869679 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-maintenance"
+    },
+    {
+      "label": "maintenance-library-row-selected",
+      "observed_at_utc": "2026-10-22T01:29:41.654Z",
+      "backdrops": [
+        "modal-backdrop fade show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.XVJXBCFM.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "maintenance",
+          "disabled": false,
+          "text": "Nueva orden"
+        },
+        {
+          "action": "incident",
+          "disabled": false,
+          "text": "Registrar novedad"
+        },
+        {
+          "action": "maintenance",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "maintenance_parts",
+          "disabled": false,
+          "text": "Repuestos"
+        },
+        {
+          "action": "maintenance_evidence",
+          "disabled": false,
+          "text": "Evidencia"
+        },
+        {
+          "action": "print_maintenance",
+          "disabled": false,
+          "text": "Imprimir orden"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Subir"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal fade show hs-keyboard-dialog",
+          "title": "Subir",
+          "visible": true
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "options": [
+            {
+              "text": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "text": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "value": ""
+        }
+      ],
+      "text": "Mantenimiento\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nmaintenance@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nMantenimiento\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nMantenimiento y bloqueos\n\nRepuestos con existencias de ERPNext y reapertura autorizada.\n\nNueva orden\nRegistrar novedad\nHabitación / equipo / orden\tPeríodo\tResponsable\tEstado\tRepuestos y costo\tAcciones\nHabitación H110\nOrden de apoyo a aceptación secundaria\nBloquea disponibilidad\t21/10/2026 19:16\nHasta reapertura autorizada\tmaintenance@hospitality.example.invalid\tAbierto\tSin repuestos\nC$ 0.00\tActualizarRepuestosEvidenciaImprimir orden\nDaños y objetos encontrados\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 19:28:46.207403 · NIO\nSubir\n← Volver a subir archivos\nInicio\nAttachments\nsecondary-acceptance-evidence.txt\nSubir",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-maintenance"
+    },
+    {
+      "label": "maintenance-private-reference-fixed",
+      "observed_at_utc": "2026-10-22T01:30:09.564Z",
+      "backdrops": [],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.XVJXBCFM.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "maintenance",
+          "disabled": false,
+          "text": "Nueva orden"
+        },
+        {
+          "action": "incident",
+          "disabled": false,
+          "text": "Registrar novedad"
+        },
+        {
+          "action": "maintenance",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "maintenance_parts",
+          "disabled": false,
+          "text": "Repuestos"
+        },
+        {
+          "action": "maintenance_evidence",
+          "disabled": false,
+          "text": "Evidencia"
+        },
+        {
+          "action": "print_maintenance",
+          "disabled": false,
+          "text": "Imprimir orden"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "options": [
+            {
+              "text": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "text": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Mantenimiento\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nmaintenance@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nMantenimiento\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nMantenimiento y bloqueos\n\nRepuestos con existencias de ERPNext y reapertura autorizada.\n\nNueva orden\nRegistrar novedad\nHabitación / equipo / orden\tPeríodo\tResponsable\tEstado\tRepuestos y costo\tAcciones\nHabitación H110\nOrden de apoyo a aceptación secundaria\nBloquea disponibilidad\t21/10/2026 19:16\nHasta reapertura autorizada\tmaintenance@hospitality.example.invalid\tAbierto\tSin repuestos\nC$ 0.00\tActualizarRepuestosEvidenciaImprimir ordenVer evidencia\nDaños y objetos encontrados\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 19:29:42.445040 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-maintenance"
+    },
+    {
+      "label": "maintenance-incident-created",
+      "observed_at_utc": "2026-10-22T01:33:38.990Z",
+      "backdrops": [],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.XVJXBCFM.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "maintenance",
+          "disabled": false,
+          "text": "Nueva orden"
+        },
+        {
+          "action": "incident",
+          "disabled": false,
+          "text": "Registrar novedad"
+        },
+        {
+          "action": "maintenance",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "maintenance_parts",
+          "disabled": false,
+          "text": "Repuestos"
+        },
+        {
+          "action": "maintenance_evidence",
+          "disabled": false,
+          "text": "Evidencia"
+        },
+        {
+          "action": "print_maintenance",
+          "disabled": false,
+          "text": "Imprimir orden"
+        },
+        {
+          "action": "incident_evidence",
+          "disabled": false,
+          "text": "Adjuntar evidencia"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "options": [
+            {
+              "text": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "text": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Mantenimiento\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nmaintenance@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nMantenimiento\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nMantenimiento y bloqueos\n\nRepuestos con existencias de ERPNext y reapertura autorizada.\n\nNueva orden\nRegistrar novedad\nHabitación / equipo / orden\tPeríodo\tResponsable\tEstado\tRepuestos y costo\tAcciones\nHabitación H110\nOrden de apoyo a aceptación secundaria\nBloquea disponibilidad\t21/10/2026 19:16\nHasta reapertura autorizada\tmaintenance@hospitality.example.invalid\tAbierto\tSin repuestos\nC$ 0.00\tActualizarRepuestosEvidenciaImprimir ordenVer evidencia\nDaños y objetos encontrados\nHabitación\tNovedad\tDescripción\tEstado\tResolución / acciones\nH110\tDaño\tDaño sintético en luminaria de H110; solo para aceptación temporal.\tAbierto\tAdjuntar evidencia\nHora de referencia del servidor: 2026-10-21 19:33:26.668802 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-maintenance"
+    },
+    {
+      "label": "maintenance-incident-upload-private-selected",
+      "observed_at_utc": "2026-10-22T01:33:46.570Z",
+      "backdrops": [
+        "modal-backdrop fade show"
+      ],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.XVJXBCFM.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "maintenance",
+          "disabled": false,
+          "text": "Nueva orden"
+        },
+        {
+          "action": "incident",
+          "disabled": false,
+          "text": "Registrar novedad"
+        },
+        {
+          "action": "maintenance",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "maintenance_parts",
+          "disabled": false,
+          "text": "Repuestos"
+        },
+        {
+          "action": "maintenance_evidence",
+          "disabled": false,
+          "text": "Evidencia"
+        },
+        {
+          "action": "print_maintenance",
+          "disabled": false,
+          "text": "Imprimir orden"
+        },
+        {
+          "action": "incident_evidence",
+          "disabled": false,
+          "text": "Adjuntar evidencia"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": "Subir"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal fade show hs-keyboard-dialog",
+          "title": "Subir",
+          "visible": true
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "options": [
+            {
+              "text": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "text": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "value": "on"
+        }
+      ],
+      "text": "Mantenimiento\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nmaintenance@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nMantenimiento\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nMantenimiento y bloqueos\n\nRepuestos con existencias de ERPNext y reapertura autorizada.\n\nNueva orden\nRegistrar novedad\nHabitación / equipo / orden\tPeríodo\tResponsable\tEstado\tRepuestos y costo\tAcciones\nHabitación H110\nOrden de apoyo a aceptación secundaria\nBloquea disponibilidad\t21/10/2026 19:16\nHasta reapertura autorizada\tmaintenance@hospitality.example.invalid\tAbierto\tSin repuestos\nC$ 0.00\tActualizarRepuestosEvidenciaImprimir ordenVer evidencia\nDaños y objetos encontrados\nHabitación\tNovedad\tDescripción\tEstado\tResolución / acciones\nH110\tDaño\tDaño sintético en luminaria de H110; solo para aceptación temporal.\tAbierto\tAdjuntar evidencia\nHora de referencia del servidor: 2026-10-21 19:33:26.668802 · NIO\nSubir\nsecondary-incident-evidence.txt\n115\nPrivado\nSubir",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-maintenance"
+    },
+    {
+      "label": "maintenance-incident-private-evidence-saved",
+      "observed_at_utc": "2026-10-22T01:34:30.019Z",
+      "backdrops": [],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.XVJXBCFM.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "maintenance",
+          "disabled": false,
+          "text": "Nueva orden"
+        },
+        {
+          "action": "incident",
+          "disabled": false,
+          "text": "Registrar novedad"
+        },
+        {
+          "action": "maintenance",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "maintenance_parts",
+          "disabled": false,
+          "text": "Repuestos"
+        },
+        {
+          "action": "maintenance_evidence",
+          "disabled": false,
+          "text": "Evidencia"
+        },
+        {
+          "action": "print_maintenance",
+          "disabled": false,
+          "text": "Imprimir orden"
+        },
+        {
+          "action": "incident_evidence",
+          "disabled": false,
+          "text": "Adjuntar evidencia"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Repuestos de mantenimiento",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Daño u objeto encontrado",
+          "visible": false
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "options": [
+            {
+              "text": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "text": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Mantenimiento\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nmaintenance@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nMantenimiento\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nMantenimiento y bloqueos\n\nRepuestos con existencias de ERPNext y reapertura autorizada.\n\nNueva orden\nRegistrar novedad\nHabitación / equipo / orden\tPeríodo\tResponsable\tEstado\tRepuestos y costo\tAcciones\nHabitación H110\nOrden de apoyo a aceptación secundaria\nBloquea disponibilidad\t21/10/2026 19:16\nHasta reapertura autorizada\tmaintenance@hospitality.example.invalid\tAbierto\tSin repuestos\nC$ 0.00\tActualizarRepuestosEvidenciaImprimir ordenVer evidencia\nDaños y objetos encontrados\nHabitación\tNovedad\tDescripción\tEstado\tResolución / acciones\nH110\tDaño\tDaño sintético en luminaria de H110; solo para aceptación temporal.\tAbierto\tAdjuntar evidencia\nHora de referencia del servidor: 2026-10-21 19:33:47.207937 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-maintenance"
+    },
+    {
+      "label": "maintenance-both-private-links-final",
+      "observed_at_utc": "2026-10-22T01:44:08.401Z",
+      "backdrops": [],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S27NPDSI.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "maintenance",
+          "disabled": false,
+          "text": "Nueva orden"
+        },
+        {
+          "action": "incident",
+          "disabled": false,
+          "text": "Registrar novedad"
+        },
+        {
+          "action": "maintenance",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "maintenance_parts",
+          "disabled": false,
+          "text": "Repuestos"
+        },
+        {
+          "action": "maintenance_evidence",
+          "disabled": false,
+          "text": "Evidencia"
+        },
+        {
+          "action": "print_maintenance",
+          "disabled": false,
+          "text": "Imprimir orden"
+        },
+        {
+          "action": "incident_evidence",
+          "disabled": false,
+          "text": "Adjuntar evidencia"
+        }
+      ],
+      "dialogs": [],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "options": [
+            {
+              "text": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "text": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Mantenimiento\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nmaintenance@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nMantenimiento\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nMantenimiento y bloqueos\n\nRepuestos con existencias de ERPNext y reapertura autorizada.\n\nNueva orden\nRegistrar novedad\nHabitación / equipo / orden\tPeríodo\tResponsable\tEstado\tRepuestos y costo\tAcciones\nHabitación H110\nOrden de apoyo a aceptación secundaria\nBloquea disponibilidad\t21/10/2026 19:16\nHasta reapertura autorizada\tmaintenance@hospitality.example.invalid\tAbierto\tSin repuestos\nC$ 0.00\tActualizarRepuestosEvidenciaImprimir ordenVer evidencia\nDaños y objetos encontrados\nHabitación\tNovedad\tDescripción\tEstado\tResolución / acciones\nH110\tDaño\tDaño sintético en luminaria de H110; solo para aceptación temporal.\tAbierto\tAdjuntar evidenciaVer evidencia\nHora de referencia del servidor: 2026-10-21 19:40:59.657067 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-maintenance"
+    },
+    {
+      "label": "maintenance-ready-for-role-switch",
+      "observed_at_utc": "2026-10-22T01:47:58.021Z",
+      "backdrops": [],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S27NPDSI.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "maintenance",
+          "disabled": false,
+          "text": "Nueva orden"
+        },
+        {
+          "action": "incident",
+          "disabled": false,
+          "text": "Registrar novedad"
+        },
+        {
+          "action": "maintenance",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "maintenance_parts",
+          "disabled": false,
+          "text": "Repuestos"
+        },
+        {
+          "action": "maintenance_evidence",
+          "disabled": false,
+          "text": "Evidencia"
+        },
+        {
+          "action": "print_maintenance",
+          "disabled": false,
+          "text": "Imprimir orden"
+        },
+        {
+          "action": "incident_evidence",
+          "disabled": false,
+          "text": "Adjuntar evidencia"
+        }
+      ],
+      "dialogs": [],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "options": [
+            {
+              "text": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "text": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Mantenimiento\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nmaintenance@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nMantenimiento\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nMantenimiento y bloqueos\n\nRepuestos con existencias de ERPNext y reapertura autorizada.\n\nNueva orden\nRegistrar novedad\nHabitación / equipo / orden\tPeríodo\tResponsable\tEstado\tRepuestos y costo\tAcciones\nHabitación H110\nOrden de apoyo a aceptación secundaria\nBloquea disponibilidad\t21/10/2026 19:16\nHasta reapertura autorizada\tmaintenance@hospitality.example.invalid\tAbierto\tSin repuestos\nC$ 0.00\tActualizarRepuestosEvidenciaImprimir ordenVer evidencia\nDaños y objetos encontrados\nHabitación\tNovedad\tDescripción\tEstado\tResolución / acciones\nH110\tDaño\tDaño sintético en luminaria de H110; solo para aceptación temporal.\tAbierto\tAdjuntar evidenciaVer evidencia\nHora de referencia del servidor: 2026-10-21 19:44:13.117500 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-maintenance"
+    },
+    {
+      "label": "supervisor-maintenance-and-incident-evidence",
+      "observed_at_utc": "2026-10-22T01:51:13.126Z",
+      "backdrops": [],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S27NPDSI.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "maintenance",
+          "disabled": false,
+          "text": "Nueva orden"
+        },
+        {
+          "action": "incident",
+          "disabled": false,
+          "text": "Registrar novedad"
+        },
+        {
+          "action": "maintenance",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "maintenance_parts",
+          "disabled": false,
+          "text": "Repuestos"
+        },
+        {
+          "action": "maintenance_evidence",
+          "disabled": false,
+          "text": "Evidencia"
+        },
+        {
+          "action": "print_maintenance",
+          "disabled": false,
+          "text": "Imprimir orden"
+        },
+        {
+          "action": "incident_evidence",
+          "disabled": false,
+          "text": "Adjuntar evidencia"
+        },
+        {
+          "action": "resolve_incident",
+          "disabled": false,
+          "text": "Resolver"
+        }
+      ],
+      "dialogs": [],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "options": [
+            {
+              "text": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "text": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Mantenimiento\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nsupervisor@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nMantenimiento\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nMantenimiento y bloqueos\n\nRepuestos con existencias de ERPNext y reapertura autorizada.\n\nNueva orden\nRegistrar novedad\nHabitación / equipo / orden\tPeríodo\tResponsable\tEstado\tRepuestos y costo\tAcciones\nHabitación H110\nOrden de apoyo a aceptación secundaria\nBloquea disponibilidad\t21/10/2026 19:16\nHasta reapertura autorizada\tmaintenance@hospitality.example.invalid\tAbierto\tSin repuestos\nC$ 0.00\tActualizarRepuestosEvidenciaImprimir ordenVer evidencia\nDaños y objetos encontrados\nHabitación\tNovedad\tDescripción\tEstado\tResolución / acciones\nH110\tDaño\tDaño sintético en luminaria de H110; solo para aceptación temporal.\tAbierto\tAdjuntar evidenciaResolverVer evidencia\nHora de referencia del servidor: 2026-10-21 19:51:09.519297 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-maintenance"
+    },
+    {
+      "label": "supervisor-incident-resolved-private-link-retained",
+      "observed_at_utc": "2026-10-22T01:51:33.755Z",
+      "backdrops": [],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S27NPDSI.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "maintenance",
+          "disabled": false,
+          "text": "Nueva orden"
+        },
+        {
+          "action": "incident",
+          "disabled": false,
+          "text": "Registrar novedad"
+        },
+        {
+          "action": "maintenance",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "maintenance_parts",
+          "disabled": false,
+          "text": "Repuestos"
+        },
+        {
+          "action": "maintenance_evidence",
+          "disabled": false,
+          "text": "Evidencia"
+        },
+        {
+          "action": "print_maintenance",
+          "disabled": false,
+          "text": "Imprimir orden"
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Resolver novedad / entregar objeto",
+          "visible": false
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "options": [
+            {
+              "text": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "text": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Mantenimiento\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nsupervisor@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nMantenimiento\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nMantenimiento y bloqueos\n\nRepuestos con existencias de ERPNext y reapertura autorizada.\n\nNueva orden\nRegistrar novedad\nHabitación / equipo / orden\tPeríodo\tResponsable\tEstado\tRepuestos y costo\tAcciones\nHabitación H110\nOrden de apoyo a aceptación secundaria\nBloquea disponibilidad\t21/10/2026 19:16\nHasta reapertura autorizada\tmaintenance@hospitality.example.invalid\tAbierto\tSin repuestos\nC$ 0.00\tActualizarRepuestosEvidenciaImprimir ordenVer evidencia\nDaños y objetos encontrados\nHabitación\tNovedad\tDescripción\tEstado\tResolución / acciones\nH110\tDaño\tDaño sintético en luminaria de H110; solo para aceptación temporal.\tResuelto\tSupervisión revisó la evidencia sintética; reparación comprobada en esta prueba temporal.Ver evidencia\nHora de referencia del servidor: 2026-10-21 19:51:25.715856 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-maintenance"
+    },
+    {
+      "label": "supervisor-order-completed-evidence-link-retained",
+      "observed_at_utc": "2026-10-22T01:51:49.451Z",
+      "backdrops": [],
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.S27NPDSI.js"
+      ],
+      "buttons": [
+        {
+          "action": "reload",
+          "disabled": false,
+          "text": "Actualizar"
+        },
+        {
+          "action": "logout",
+          "disabled": false,
+          "text": "Cerrar sesión"
+        },
+        {
+          "action": "maintenance",
+          "disabled": false,
+          "text": "Nueva orden"
+        },
+        {
+          "action": "incident",
+          "disabled": false,
+          "text": "Registrar novedad"
+        },
+        {
+          "action": "print_maintenance",
+          "disabled": false,
+          "text": "Imprimir orden"
+        },
+        {
+          "action": null,
+          "disabled": false,
+          "text": ""
+        }
+      ],
+      "dialogs": [
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Resolver novedad / entregar objeto",
+          "visible": false
+        },
+        {
+          "classes": "modal hs-form-dialog",
+          "title": "Actualizar mantenimiento",
+          "visible": false
+        }
+      ],
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "options": [
+            {
+              "text": "Motel Luna Demo",
+              "value": "qmqrio5i1h"
+            },
+            {
+              "text": "Hotel Jardín Demo",
+              "value": "qmbjb0i1qc"
+            }
+          ],
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Mantenimiento\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nsupervisor@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nMantenimiento\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nMantenimiento y bloqueos\n\nRepuestos con existencias de ERPNext y reapertura autorizada.\n\nNueva orden\nRegistrar novedad\nHabitación / equipo / orden\tPeríodo\tResponsable\tEstado\tRepuestos y costo\tAcciones\nHabitación H110\nOrden de apoyo a aceptación secundaria\nBloqueo liberado\t21/10/2026 19:16\nReapertura autorizada\tmaintenance@hospitality.example.invalid\tCompletada\tSin repuestos\nC$ 0.00\t—Imprimir ordenVer evidencia\nDaños y objetos encontrados\nHabitación\tNovedad\tDescripción\tEstado\tResolución / acciones\nH110\tDaño\tDaño sintético en luminaria de H110; solo para aceptación temporal.\tResuelto\tSupervisión revisó la evidencia sintética; reparación comprobada en esta prueba temporal.Ver evidencia\nHora de referencia del servidor: 2026-10-21 19:51:44.312040 · NIO\nOperación confirmada",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-maintenance"
+    }
+  ],
+  "roles": [
+    "HS Maintenance",
+    "HS Supervisor"
+  ],
+  "desktop_only": true,
+  "last_session_logged_out": true,
+  "temporary_agent_tab_closed": true,
+  "full_secondary_acceptance": false,
+  "final_bundle": "S27NPDSI",
+  "limitations": [
+    "API-created fixture: accounts, payment mode, opening stock, H110 order and H101 stay.",
+    "No financial, procurement, linen, retention, retry, portal conversion or secondary policy UI flow in this phase.",
+    "The native uploader retains its own animation; animate:false applies to app operational forms.",
+    "Private evidence text downloads returned HTTP 200. No rendered file preview is claimed.",
+    "A library label click timed out before selection; the visible library row was then selected once.",
+    "Screenshots 363/364 document the technician; 365 documents Supervisión after completion/resolution."
+  ],
+  "private_download_http_observations": [
+    {
+      "server_time": "21/Oct/2026 19:30:33",
+      "path": "/private/files/secondary-acceptance-evidence.txt",
+      "http_status": 200
+    },
+    {
+      "server_time": "21/Oct/2026 19:44:09",
+      "path": "/private/files/secondary-incident-evidence.txt",
+      "http_status": 200
+    },
+    {
+      "server_time": "21/Oct/2026 19:51:17",
+      "path": "/private/files/secondary-incident-evidence.txt",
+      "http_status": 200
+    },
+    {
+      "server_time": "21/Oct/2026 19:51:51",
+      "path": "/private/files/secondary-acceptance-evidence.txt",
+      "http_status": 200
+    }
+  ]
+}

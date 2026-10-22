@@ -69,3 +69,19 @@ test('maintenance shows the catalogue part name safely while retaining its origi
   assert.match(html,/Válvula &lt;principal&gt; × 2/);assert.doesNotMatch(html,/INTERNAL-PART-KEY|<principal>/);
   assert.equal(part.item,'INTERNAL-PART-KEY');assert.equal(part.stock_entry,'original-entry');
 });
+
+test('incident evidence remains accessible by its private link before and after resolution',()=>{
+  const f=fixture(['maintain','incident']);let html='';
+  Object.assign(f.desk.data,{maintenance:[],incidents:[
+    {name:'incident-open',room:'room',kind:'Damage',description:'Novedad abierta',status:'Open',evidence:'/private/files/abierta.txt'},
+    {name:'incident-resolved',room:'room',kind:'Damage',description:'Novedad revisada',status:'Resolved',resolution:'Revisado <correctamente>',evidence:'/private/files/evidencia"final.txt'}]});
+  const chain={first(){return this;},find(){return this;},each(){return this;}};
+  f.desk.render_maintenance({html(value){html=value;},find(){return chain;}});
+  assert.equal((html.match(/>Ver evidencia<\/a>/g)||[]).length,2);
+  assert.match(html,/href="\/private\/files\/abierta.txt"/);
+  assert.match(html,/href="\/private\/files\/evidencia&quot;final.txt"/);
+  assert.match(html,/target="_blank" rel="noopener"/);
+  assert.match(html,/Revisado &lt;correctamente&gt;/);
+  assert.match(html,/data-act="incident_evidence" data-id="incident-open"/);
+  assert.doesNotMatch(html,/data-act="incident_evidence" data-id="incident-resolved"/);
+});

@@ -1,5 +1,7 @@
 # Hospitality Suite
 
+[VENTANAS_Y_EVIDENCIAS_PRIVADAS.md](docs/VENTANAS_Y_EVIDENCIAS_PRIVADAS.md) aporta evidencia parcial a S04-16/S04-20: causa del clic perdido demostrada y corregida, adjunto privado del técnico conservado sin ampliar permisos de costos, y consulta de evidencia de novedades abiertas/resueltas. **405 nativas (373 integración/32 unitarias) y 222 JS aprobadas**, dos roles reales y dieciocho observaciones de escritorio. Aceptación restaurada, principal conservado y 741 archivos físicos originales idénticos. **212 V y seis I**: siguen reglas/estados y variantes secundarias, F26 y paquete/entrega final. Los registros anteriores conservan su alcance histórico; OTA sigue aplazada.
+
 PMS nativo para modalidades Hotel, Por tiempo y Hotel y por tiempo. Recepción, caja, limpieza y gerencia trabajan desde once Pages de Desk en español; la contabilidad y el inventario permanecen en ERPNext.
 
 Versión objetivo probada: **Frappe 16.52.0, ERPNext 16.51.1, Python 3.14.6, MariaDB 10.11.14 y Node 24.18.0**, Ubuntu 24.04 / WSL2. App 0.8.8 con contratos externos de referencia y pruebas simuladas, desactivados por defecto; el objetivo completo sigue activo. Otras versiones no están acreditadas.

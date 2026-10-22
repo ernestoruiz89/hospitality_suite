@@ -1,5 +1,7 @@
 # Tareas operativas y estados por rol
 
+Complemento posterior: [VENTANAS_Y_EVIDENCIAS_PRIVADAS.md](VENTANAS_Y_EVIDENCIAS_PRIVADAS.md) resuelve la observación de clic inmediato que se registra abajo y revisa adjuntos privados con técnico/Supervisión. 405 nativas y 222 JS actuales; 212 V/seis I, sin cierre general de aceptación secundaria. El texto siguiente documenta la fase anterior y sus 404 nativas históricas.
+
 Revisión del 21/10/2026 sobre 0.8.8, después de `ad1f701`. Se acreditan **S00-02 y S04-14**: las tareas habituales de recepción, caja, limpieza, mantenimiento y gerencia disponen de Pages y acciones propias, sin exigir formularios técnicos de ERPNext. **212 V y seis I**, conservando las 218 entradas y su fuente. La aceptación visual de todas las variantes secundarias, los estados restantes y F26 continúan abiertos; esta revisión no declara completa la aplicación.
 
 ## Colección finita de tareas
