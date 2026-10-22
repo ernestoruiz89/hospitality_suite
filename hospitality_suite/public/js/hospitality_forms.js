@@ -14,7 +14,14 @@
     const bounds=typesOnly?{}:field.df._hsBounds||{};
     const integer=bounds.integer||['Int','Long Int','LongInt'].includes(field.df.fieldtype);
     let value;
-    try{value=Number(field.eval_expression?field.eval_expression(raw):raw);}catch{value=NaN;}
+    try{
+      const evaluated=field.eval_expression?field.eval_expression(raw):raw;
+      // Number accepts radix literals that native numeric controls do not.
+      value=typeof evaluated==='number'||typeof evaluated==='string'&&/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i.test(evaluated.trim())?Number(evaluated):NaN;
+      // Native Int uses cint/parseInt: "1e2" becomes 1 and 10**21 can too.
+      // A review must never accept a different quantity from the saved value.
+      if(integer&&Number.isInteger(value)&&(field.get_parsed_value?field.get_parsed_value(raw):parseInt(evaluated,10))!==value)value=NaN;
+    }catch{value=NaN;}
     if(!Number.isFinite(value)||integer&&!Number.isInteger(value)||bounds.min!==undefined&&value<bounds.min){
       if(bounds.min!==undefined)return integer?__('Indique un número entero de {0} o más.',[bounds.min]):__('Indique un número de {0} o más.',[bounds.min]);
       return integer?__('Indique un número entero.'):__('Indique un número válido.');

@@ -1,0 +1,37 @@
+{
+  "stage": "prepare-part",
+  "observed_at_utc": "2026-10-21T23:43:01.954440+00:00",
+  "site": "hospitality-acceptance.localhost",
+  "database_mutation": true,
+  "categories": [
+    {
+      "category_name": "Capacidad clara temporal",
+      "capacity": 2,
+      "owner": "manager@hospitality.example.invalid"
+    }
+  ],
+  "fixture": {
+    "item": "HS-UX-PART-TS",
+    "item_label": "Válvula de prueba temporal",
+    "receipt": "MAT-STE-2026-00002",
+    "warehouse": "Stores - HSD",
+    "initial_quantity": 10,
+    "unit_cost": 20,
+    "fixture_origin": "Explicit native Item and opening Stock Entry only; maintenance actions must come from role Pages."
+  },
+  "quantity": 10.0,
+  "financial_operation_counts": {
+    "HS Booking": 0,
+    "HS Stay": 0,
+    "HS Charge": 0,
+    "HS Payment": 0,
+    "HS Shift": 0,
+    "Sales Invoice": 0,
+    "Payment Entry": 0,
+    "Journal Entry": 0
+  },
+  "sources_sha256": {
+    "hospitality_suite/public/js/hospitality_forms.js": "c833121c88947575250c09fa03ec9ec75f9ec997676b503cc13794fa3a0973f6",
+    "hospitality_suite/public/js/hospitality_workflows.js": "e1d6be22916fcf98731a72ed8b411abf736588ae820322418922c1caad4a660f"
+  }
+}

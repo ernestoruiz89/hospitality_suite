@@ -22,9 +22,11 @@
         "docs/evidence/phase-review-crosswalk.json",
         "docs/evidence/provider-contracts-native-tests.xml",
         "docs/INSTALACION_LIMPIA.md",
-        "docs/evidence/release-install-native-tests.xml"
+        "docs/evidence/release-install-native-tests.xml",
+        "docs/TAREAS_Y_ESTADOS_POR_ROL.md",
+        "docs/evidence/task-state-crosswalk.json"
       ],
-      "remaining": "Paquete e instalación limpia S18-01/S19-02 acreditados en INSTALACION_LIMPIA.md. Completar las tareas/estados transversales S00-02/S04-14/S04-16/S04-20 y la aceptación/recuperación coordinada final F26 de S19-07/S19-08 antes de declarar íntegro el alcance."
+      "remaining": "Paquete/instalación limpia S18-01/S19-02 y operación habitual mediante Pages S00-02/S04-14 acreditados. Completar estados/reglas/secuencias S04-16, variantes visuales secundarias S04-20 y recuperación/entrega final F26 S19-07/S19-08. La revisión de tareas conserva 212 V y seis I; no se declara completo el alcance."
     },
     {
       "id": "S00-02",
@@ -33,7 +35,7 @@
       "line": 8,
       "kind": "clause",
       "requirement": "La aplicación debe permitir que recepción, caja, limpieza, mantenimiento y gerencia trabajen mediante PÁGINAS PERSONALIZADAS, claras y rápidas. Los DocTypes serán la estructura interna; el usuario operativo no debe necesitar recorrer formularios técnicos de ERPNext para completar sus tareas habituales.",
-      "status": "I",
+      "status": "V",
       "implementation": [
         "hospitality_suite/public/js/hospitality.js",
         "hospitality_suite/public/js/hospitality_workflows.js",
@@ -58,9 +60,17 @@
         "docs/evidence/print-delivery-pdfs.json",
         "docs/evidence/print-delivery-ui-data.json",
         "docs/REVISION_FASES_Y_ACCIONES.md",
-        "docs/evidence/phase-review-actions.json"
+        "docs/evidence/phase-review-actions.json",
+        "docs/ACEPTACION_Y_DEMOSTRACION.md",
+        "docs/TECLADO_Y_FOCO.md",
+        "docs/TAREAS_Y_ESTADOS_POR_ROL.md",
+        "docs/evidence/task-state-crosswalk.json",
+        "docs/evidence/task-state-browser.json",
+        "docs/evidence/task-state-completed-database.json",
+        "docs/evidence/task-state-js-tests.log",
+        "docs/evidence/task-state-verification.json"
       ],
-      "remaining": "La aceptación S17-18 queda acreditada en 0.8.0 con recepción+caja, limpieza/supervisión, contabilidad y gerencia. Completar el contraste del conjunto de tareas habituales y secundarias de todos los roles/Pages; este recorrido de aceptación no acredita por sí solo todos los casos y formularios."
+      "remaining": ""
     },
     {
       "id": "S01-01",
@@ -322,9 +332,11 @@
         "docs/evidence/phase-review-crosswalk.json",
         "docs/evidence/provider-contracts-native-tests.xml",
         "docs/INSTALACION_LIMPIA.md",
-        "docs/evidence/release-install-native-tests.xml"
+        "docs/evidence/release-install-native-tests.xml",
+        "docs/TAREAS_Y_ESTADOS_POR_ROL.md",
+        "docs/evidence/task-state-crosswalk.json"
       ],
-      "remaining": "Paquete e instalación limpia S18-01/S19-02 acreditados en INSTALACION_LIMPIA.md. Completar las tareas/estados transversales S00-02/S04-14/S04-16/S04-20 y la aceptación/recuperación coordinada final F26 de S19-07/S19-08 antes de declarar íntegro el alcance."
+      "remaining": "Paquete/instalación limpia S18-01/S19-02 y operación habitual mediante Pages S00-02/S04-14 acreditados. Completar estados/reglas/secuencias S04-16, variantes visuales secundarias S04-20 y recuperación/entrega final F26 S19-07/S19-08. La revisión de tareas conserva 212 V y seis I; no se declara completo el alcance."
     },
     {
       "id": "S01-13",
@@ -1057,7 +1069,7 @@
       "line": 70,
       "kind": "enumerated",
       "requirement": "- Acciones frecuentes dentro de la página mediante paneles, asistentes breves o diálogos, sin obligar a abrir formularios estándar.",
-      "status": "I",
+      "status": "V",
       "implementation": [
         "hospitality_suite/public/js/hospitality.js",
         "hospitality_suite/public/js/hospitality_forms.js",
@@ -1076,9 +1088,17 @@
         "docs/evidence/print-delivery-pdfs.json",
         "docs/evidence/print-delivery-ui-data.json",
         "docs/REVISION_FASES_Y_ACCIONES.md",
-        "docs/evidence/phase-review-actions.json"
+        "docs/evidence/phase-review-actions.json",
+        "docs/ACEPTACION_Y_DEMOSTRACION.md",
+        "docs/TECLADO_Y_FOCO.md",
+        "docs/TAREAS_Y_ESTADOS_POR_ROL.md",
+        "docs/evidence/task-state-crosswalk.json",
+        "docs/evidence/task-state-browser.json",
+        "docs/evidence/task-state-completed-database.json",
+        "docs/evidence/task-state-js-tests.log",
+        "docs/evidence/task-state-verification.json"
       ],
-      "remaining": "La aceptación S17-18 queda acreditada en 0.8.0 con recepción+caja, limpieza/supervisión, contabilidad y gerencia. Completar el contraste del conjunto de tareas habituales y secundarias de todos los roles/Pages; este recorrido de aceptación no acredita por sí solo todos los casos y formularios."
+      "remaining": ""
     },
     {
       "id": "S04-15",
@@ -1171,9 +1191,11 @@
         "docs/evidence/print-delivery-ui-data.json",
         "docs/REVISION_FASES_Y_ACCIONES.md",
         "docs/evidence/phase-review-actions.json",
-        "docs/VALIDACION_NUMERICA.md"
+        "docs/VALIDACION_NUMERICA.md",
+        "docs/TAREAS_Y_ESTADOS_POR_ROL.md",
+        "docs/evidence/task-state-crosswalk.json"
       ],
-      "remaining": "0.8.3–0.8.5 acreditan validación compartida, límites de cantidad/personas y actividad/reintento. 0.8.6 resuelve selectores técnicos, vacío junto a borradores y acceso/etiquetas/conservación numérica del editor expandido, con defectos originales y repetición final. Completar las demás reglas específicas por campo y estados de búsquedas/vistas secundarias, incluida su carga/vacío y doble envío. Los clics durante cierre visual nativo conservan observación histórica; no se afirma una causa completa. SELECTORES_Y_RESERVA_MANUAL.md delimita esta fase. 0.8.7 corrige la deshabilitación persistente de acciones en modales y su reinserción tardía, con defectos intermedios y repetición real conservados. Esto no acredita todas las reglas/estados ni todos los clics durante el cierre visual nativo. Revisión numérica sobre 0.8.8: corregidas fracciones enteras y valores malformados antes del parseo, incluidas filas opcionales y guardado parcial; 215 JS y Gerencia/Recepción reales. VALIDACION_NUMERICA.md delimita la cobertura y conserva pendientes las demás reglas y estados."
+      "remaining": "Reglas comunes y tipos numéricos, filas/borradores y estados principales acreditados; compatibilidad con controles nativos y error local de repuestos repetidos en TAREAS_Y_ESTADOS_POR_ROL.md, 221 JS. Completar reglas específicas y estados de búsquedas/vistas secundarias de la colección finita. Persiste observación de Cerrar repuestos seguido inmediatamente de Registrar novedad sin apertura; un clic posterior funciona, con causa aún no demostrada. No se declara resuelta por las salidas de sesión que sí funcionan en este recorrido."
     },
     {
       "id": "S04-17",
@@ -1307,9 +1329,11 @@
         "docs/evidence/print-delivery-pdfs.json",
         "docs/evidence/print-delivery-ui-data.json",
         "docs/REVISION_FASES_Y_ACCIONES.md",
-        "docs/evidence/phase-review-actions.json"
+        "docs/evidence/phase-review-actions.json",
+        "docs/TAREAS_Y_ESTADOS_POR_ROL.md",
+        "docs/evidence/task-state-crosswalk.json"
       ],
-      "remaining": "La aceptación S17-18 queda acreditada en 0.8.0 con recepción+caja, limpieza/supervisión, contabilidad y gerencia. Completar el contraste del conjunto de tareas habituales y secundarias de todos los roles/Pages; este recorrido de aceptación no acredita por sí solo todos los casos y formularios. En 0.8.3 se observa salida de sesión sin confirmación después de arqueo hasta recargar; falta reproducir y resolver ese contexto de acciones, sin atribuirlo aún a una causa. En 0.8.4 dos arqueos completan salida sin recarga; permanecen observaciones del clic durante refresco y confirmación por nombre accesible tras varios diálogos, documentadas en DISPONIBILIDAD_VISUAL_Y_LIMITES.md. 0.8.7 acredita accesos a nueve impresiones desde cinco roles y limpieza móvil; sus documentos se preparan mediante API y no se atribuye su creación a la UI. La acción de reserva a cuenta antes deshabilitada se corrige y repite; el contraste global permanece abierto."
+      "remaining": "Flujos habituales de Pages acreditados por aceptación/teclado y nuevo mantenimiento de tres roles; no equivalen a todas las variantes secundarias. Completar los recorridos visuales explícitos de T11 (tesorería/egresos), T14 (ropa), T18 (políticas pendientes), T19 (compras/movimientos), T20 (retención/reintento), T21 (conversión de portal), adjuntos T15/T16 y secuencias rápidas, según TAREAS_Y_ESTADOS_POR_ROL.md y task-state-crosswalk.json. No se atribuyen a la UI los documentos preparados como fixtures API."
     },
     {
       "id": "S05-01",
@@ -5154,9 +5178,11 @@
         "docs/REVISION_FASES_Y_ACCIONES.md",
         "docs/evidence/phase-review-crosswalk.json",
         "docs/INSTALACION_LIMPIA.md",
-        "docs/evidence/release-install-native-tests.xml"
+        "docs/evidence/release-install-native-tests.xml",
+        "docs/TAREAS_Y_ESTADOS_POR_ROL.md",
+        "docs/evidence/task-state-crosswalk.json"
       ],
-      "remaining": "Completar S00-02/S04-14/S04-16/S04-20 y el ensayo final F26 de actualización y recuperación coordinada de código, base y archivos en un destino aislado. Paquete/instalación limpia S18-01/S19-02 acreditados en INSTALACION_LIMPIA.md, con 404 nativas/215 JS y dos carreras reales. Restaurar el estado vacío y actualizar helpers de pruebas no sustituyen ese ensayo final."
+      "remaining": "Completar S04-16/S04-20 y ensayo final F26 con actualización y recuperación coordinada de código, base y archivos en destino aislado; generar paquete final y revisar entrega. S18-01/S19-02 acreditan instalación independiente de 3a8d0bf con 404 nativas/215 JS y dos carreras reales. Ese paquete no incluye los dos cambios de interfaz de esta revisión (221 JS), que deben entrar en la entrega final."
     },
     {
       "id": "S19-08",
@@ -5178,9 +5204,11 @@
         "docs/evidence/provider-contracts-native-tests.xml",
         "docs/evidence/provider-contracts-js-tests.log",
         "docs/INSTALACION_LIMPIA.md",
-        "docs/evidence/release-install-native-tests.xml"
+        "docs/evidence/release-install-native-tests.xml",
+        "docs/TAREAS_Y_ESTADOS_POR_ROL.md",
+        "docs/evidence/task-state-crosswalk.json"
       ],
-      "remaining": "Cerrar la aceptación global de tareas/estados y la fase 7/F26. Mantener el registro y comprobar resultados de las acciones; la presencia de manejador no acredita por sí sola una tarea completada."
+      "remaining": "Cerrar variantes visuales secundarias/estados S04-16/S04-20 y fase 7/F26, manteniendo fuentes y evidencias diferenciadas. El contraste finito de 22 familias/84 manejadores, once Pages y nueve roles acredita el camino operativo S00-02/S04-14, pero no se presenta como 84 recorridos GUI ni como entrega completa."
     },
     {
       "id": "S19-09",

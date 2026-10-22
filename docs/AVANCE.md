@@ -1,5 +1,9 @@
 # Registro de implementación
 
+## Tareas por rol y acciones operativas — 0.8.8
+
+[TAREAS_Y_ESTADOS_POR_ROL.md](TAREAS_Y_ESTADOS_POR_ROL.md) cierra S00-02/S04-14: 22 familias relacionan las 84 acciones con sus Pages, roles y evidencia, sin convertir enlaces en recorridos GUI. Nuevo flujo de técnico/Gerencia/Supervisión: orden, inicio, repuestos 10→8→10, devolución nativa, objeto encontrado/resuelto y H101 reabierta. Se corrigen cantidades interpretadas de modo distinto por Frappe y nombres de repuesto. **221 JS aprobadas**, tres roles y 23 observaciones; 404 nativas históricas con Python idéntico. Restauración estricta: principal 72/1246/dos archivos; aceptación 71/185 y 72/250 con Version. **212 V y seis I**; siguen variantes visuales secundarias/estados/secuencias rápidas, F26 y paquete final. La observación de clic inmediato tras cerrar un diálogo permanece abierta. OTA aplazada.
+
 ## Paquete e instalación limpia — 0.8.8
 
 [INSTALACION_LIMPIA.md](INSTALACION_LIMPIA.md) acredita S18-01/S19-02: 332 archivos de app en sdist/wheel, instalación realmente vacía en un bench nuevo, metadatos/permisos y primer establecimiento desde la Page. **404 nativas y 215 JS aprobadas**, dos carreras reales y protección del principal. Se corrigen siete supuestos de preparación de pruebas sin quitar verificaciones; intentos fallidos conservados. Principal 72/1246/dos archivos y aceptación 72/250 sin cambios. **210 V y ocho I**, sin cierre general de tareas/estados ni del ensayo final F26; OTA aplazada.

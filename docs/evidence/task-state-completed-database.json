@@ -1,0 +1,106 @@
+{
+  "stage": "completed",
+  "observed_at_utc": "2026-10-21T23:52:14.823513+00:00",
+  "site": "hospitality-acceptance.localhost",
+  "database_mutation": false,
+  "categories": [
+    {
+      "category_name": "Capacidad clara temporal",
+      "capacity": 2,
+      "owner": "manager@hospitality.example.invalid"
+    }
+  ],
+  "fixture": {
+    "item": "HS-UX-PART-TS",
+    "item_label": "Válvula de prueba temporal",
+    "receipt": "MAT-STE-2026-00002",
+    "warehouse": "Stores - HSD",
+    "initial_quantity": 10,
+    "unit_cost": 20,
+    "fixture_origin": "Explicit native Item and opening Stock Entry only; maintenance actions must come from role Pages."
+  },
+  "quantity": 10.0,
+  "incident": {
+    "name": "INC-2026-00001",
+    "status": "Resolved",
+    "owner": "maintenance@hospitality.example.invalid",
+    "resolved_by": "manager@hospitality.example.invalid",
+    "resolved_at": "2026-10-21 17:51:08.735320",
+    "resolution": "Llave sintética entregada a la persona responsable; constancia temporal de la prueba."
+  },
+  "audit": [
+    {
+      "action": "Maintenance Open",
+      "actor": "maintenance@hospitality.example.invalid",
+      "source_name": "MAN-2026-00001"
+    },
+    {
+      "action": "Maintenance In Progress",
+      "actor": "maintenance@hospitality.example.invalid",
+      "source_name": "MAN-2026-00001"
+    },
+    {
+      "action": "Maintenance parts issue",
+      "actor": "maintenance@hospitality.example.invalid",
+      "source_name": "MAN-2026-00001"
+    },
+    {
+      "action": "Record incident",
+      "actor": "maintenance@hospitality.example.invalid",
+      "source_name": "INC-2026-00001"
+    },
+    {
+      "action": "Maintenance parts return",
+      "actor": "manager@hospitality.example.invalid",
+      "source_name": "MAN-2026-00001"
+    },
+    {
+      "action": "Resolve incident",
+      "actor": "manager@hospitality.example.invalid",
+      "source_name": "INC-2026-00001"
+    },
+    {
+      "action": "Maintenance Completed",
+      "actor": "supervisor@hospitality.example.invalid",
+      "source_name": "MAN-2026-00001"
+    }
+  ],
+  "order": {
+    "name": "MAN-2026-00001",
+    "owner": "maintenance@hospitality.example.invalid",
+    "status": "Completed",
+    "cost": 0.0,
+    "room": "H101",
+    "assigned_to": "maintenance@hospitality.example.invalid"
+  },
+  "part": {
+    "item": "HS-UX-PART-TS",
+    "quantity": 2.0,
+    "status": "Returned",
+    "stock_entry": "MAT-STE-2026-00003",
+    "native_document_status": 2,
+    "owner": "maintenance@hospitality.example.invalid"
+  },
+  "allocations": [
+    {
+      "status": "Released",
+      "starts_at": "2026-10-21 08:00:00",
+      "ends_at": null,
+      "room": "qmf5ju94js"
+    }
+  ],
+  "financial_operation_counts": {
+    "HS Booking": 0,
+    "HS Stay": 0,
+    "HS Charge": 0,
+    "HS Payment": 0,
+    "HS Shift": 0,
+    "Sales Invoice": 0,
+    "Payment Entry": 0,
+    "Journal Entry": 0
+  },
+  "sources_sha256": {
+    "hospitality_suite/public/js/hospitality_forms.js": "c833121c88947575250c09fa03ec9ec75f9ec997676b503cc13794fa3a0973f6",
+    "hospitality_suite/public/js/hospitality_workflows.js": "439cbf3c1fd448f9dd49ccccad2de326b88c5d0774e9fba18af4b29ea8c0fa8c"
+  }
+}

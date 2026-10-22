@@ -1,0 +1,90 @@
+TAP version 13
+# Subtest: native integer controls cannot silently truncate scientific notation or a large expression after passing preflight
+not ok 1 - native integer controls cannot silently truncate scientific notation or a large expression after passing preflight
+  ---
+  duration_ms: 79.6925
+  type: 'test'
+  location: 'C:\\Users\\Ernesto\\Documents\\ChatGPT\\Hotel\\tools\\test_native_numeric_ui.cjs:28:1'
+  failureType: 'testCodeFailure'
+  error: 'Int: 1e2'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: ~
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\Ernesto\Documents\ChatGPT\Hotel\tools\test_native_numeric_ui.cjs:33:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: native integer and decimal controls reject radix literals that Number interprets differently
+not ok 2 - native integer and decimal controls reject radix literals that Number interprets differently
+  ---
+  duration_ms: 91.886
+  type: 'test'
+  location: 'C:\\Users\\Ernesto\\Documents\\ChatGPT\\Hotel\\tools\\test_native_numeric_ui.cjs:37:1'
+  failureType: 'testCodeFailure'
+  error: 'Int: 0x10'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: ~
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (C:\Users\Ernesto\Documents\ChatGPT\Hotel\tools\test_native_numeric_ui.cjs:41:5)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: native formulas, locale grouping, signed values, zero and precise decimal rounding remain accepted
+ok 3 - native formulas, locale grouping, signed values, zero and precise decimal rounding remain accepted
+  ---
+  duration_ms: 202.8484
+  type: 'test'
+  ...
+# Subtest: scientific notation accepted by native decimal controls remains a decimal while fractional integers fail
+ok 4 - scientific notation accepted by native decimal controls remains a decimal while fractional integers fail
+  ---
+  duration_ms: 101.8159
+  type: 'test'
+  ...
+# Subtest: numeric drafts without a mounted native editor reject radix and integer exponents as well
+not ok 5 - numeric drafts without a mounted native editor reject radix and integer exponents as well
+  ---
+  duration_ms: 101.6699
+  type: 'test'
+  location: 'C:\\Users\\Ernesto\\Documents\\ChatGPT\\Hotel\\tools\\test_native_numeric_ui.cjs:69:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+
+      assert(desk.form_numeric_error(field,'0x10'))
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: ~
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (C:\Users\Ernesto\Documents\ChatGPT\Hotel\tools\test_native_numeric_ui.cjs:72:39)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 2
+# fail 3
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 800.9029

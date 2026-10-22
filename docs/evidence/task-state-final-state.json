@@ -1,0 +1,47 @@
+{
+  "observed_at_utc": "2026-10-22T01:10:47.859264+00:00",
+  "sites": {
+    "hospitality.localhost": {
+      "business_date": "2026-10-19",
+      "operation_counts": {
+        "HS Booking": 23,
+        "HS Stay": 5,
+        "HS Charge": 10,
+        "HS Payment": 11,
+        "HS Shift": 5,
+        "Sales Invoice": 7,
+        "Payment Entry": 9
+      }
+    },
+    "hospitality-acceptance.localhost": {
+      "business_date": "2026-10-19",
+      "operation_counts": {
+        "HS Booking": 0,
+        "HS Stay": 0,
+        "HS Charge": 0,
+        "HS Payment": 0,
+        "HS Shift": 0,
+        "Sales Invoice": 0,
+        "Payment Entry": 0
+      }
+    }
+  },
+  "ports": {
+    "8086": true,
+    "8089": false,
+    "8091": false,
+    "9001": true,
+    "9003": false,
+    "11001": true,
+    "13001": true,
+    "11003": false,
+    "13003": false
+  },
+  "main_http": 200,
+  "bundle": "/assets/hospitality_suite/dist/js/hospitality.bundle.5IE6WQ4O.js",
+  "served_bundle_sha256": "0d176ed7914b301b916848244a6ff713481d72a0fb4060fa6a77740af59f6dc1",
+  "acceptance_restored": true,
+  "main_business_mutations": false,
+  "independent_release_bench_stopped": true,
+  "ota_sync_deferred_by_user": true
+}

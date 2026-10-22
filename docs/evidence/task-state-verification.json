@@ -1,0 +1,73 @@
+{
+  "reviewed_at_utc": "2026-10-22T01:10:48.295685+00:00",
+  "statuses": {
+    "I": 6,
+    "V": 212
+  },
+  "source_sha256": "876632e08057a1ea0386bd9e01fde6f477c62380a9414bed23e2a852765fb651",
+  "audit_sha256": "84b41cd24e420b58534adf4d5e0edba0c17852005b8c89c9ba0c2d04e0e848cd",
+  "verified_requirements": [
+    "S00-02",
+    "S04-14"
+  ],
+  "javascript": {
+    "tests": 221,
+    "desk": 218,
+    "portal": 3,
+    "skipped": 0
+  },
+  "historical_native": {
+    "tests": 404,
+    "rerun": false,
+    "execution_revision": "be67c92",
+    "current_python_identical": true
+  },
+  "browser": {
+    "roles": [
+      "HS Manager",
+      "HS Maintenance",
+      "HS Supervisor"
+    ],
+    "events": 23,
+    "final_bundle": "5IE6WQ4O",
+    "intermediate_bundle": "46PQW7RZ",
+    "open_observations": [
+      {
+        "sequence": "Close parts dialog, immediately click Registrar novedad",
+        "observed": "No new dialog appeared; read-only DOM inspection showed no backdrop, hidden previous dialog and enabled action. A later click opened the incident dialog.",
+        "status": "Cause unproven; retained under S04-16 and S04-20."
+      }
+    ]
+  },
+  "task_families": 22,
+  "handlers": 84,
+  "acceptance_restored": true,
+  "main_business_mutations": false,
+  "current_distribution_package_includes_this_ui_delta": false,
+  "references_sha256": {
+    "task-state-actions-before-label.json": "33911177b99f0327cf9c66283011c4b76164f5d4833230d9fd43dd06486b57a5",
+    "task-state-actions.json": "cf9a1eb705e3bedad836854aeaa19fab68fed8cece85f3401510ad0e191ac909",
+    "task-state-browser.json": "af80909a7dff5fb48916903fa326ebe7c649f098962872df9905a3e8774c1fc4",
+    "task-state-build.log": "55d5a606d143efd0e1709160ea50952ce3ab09f24e62e0bf3826c7fca4928d6f",
+    "task-state-completed-database.json": "2e58270096ba7f9cde9c8c25641d6fa2b124d92bc6b922b7c38eb1abb7c6cfef",
+    "task-state-crosswalk.json": "6d980284cc754a35a7ec18ee361cf17f738ddf30852f4ffd0e85386445705b5e",
+    "task-state-final-state.json": "980a495e9b64728dfdbc352453fca08619c0b229ba24e6091b4da999b106d007",
+    "task-state-issued-database.json": "3dbbb5a6e9b04e22d0efd07983e5b12787dc517027551573394a65fcfdd60706",
+    "task-state-js-fixture-diagnostic.log": "f2a9c23906ae2455321cc429889c5e501169a5efe5a2c3796d66feb32765253b",
+    "task-state-js-tests.log": "d8e452d417223b01ff11bfedf80c913d8d893ff22914089f927efd09ef5df335",
+    "task-state-native-numeric-red.log": "7a68c050afae00ae4a7565acd4b2a256a04fb8280a05f1d416104d63b49ad1e8",
+    "task-state-numeric-only-js-tests.log": "cbdac80095c9f9912dc21d53257220caa11e26b4f1edcdaa58ca1db057208810",
+    "task-state-part-label-red.log": "6ecf7f9685aa381d5f0fe51db8424a3c4fa08f5ab922c56e7d6ee7043edd888b",
+    "task-state-prepare-part-database.json": "8145ec60bb799d4e9e51916d613d90969ca5ccda77a718dc880ffa27233c894f",
+    "task-state-returned-database.json": "68b84d6bffc83a56418b59cc2125fd554cb7cde075872db4add0163129d73909",
+    "task-state-review-upgrade.json": "a2403d24a3f4a341b864767ccbeee143bba60f1df4afa7c60427dddac8ee36b5",
+    "task-state-review-ux-restored.json": "d64122ce2f087e8c83c8bab5973d424f985f228ef11f9dd44506d25ef5e0f633",
+    "task-state-scalar-database.json": "247b01493b68ce573ad8a4f1c40b19d28f1054b46e5dbc45ed414ba5f8c01c01",
+    "359-capacidad-sin-conversion.png": "3b4b4c4db3ed27ad5187d55d9687eefc0bb70a593abafa30fc0a688c2fd8f246",
+    "360-mantenimiento-codigo-anterior.png": "a41298f344e384e49d010cbc712e42b5af3fb40f247a6ff5ec0413c99d36d6ba",
+    "361-mantenimiento-repuesto-legible.png": "3130f01e5d730aaea8f575a430533b92e5cafc53b964f33d8b6061bcbe50aec9",
+    "362-mantenimiento-reapertura-autorizada.png": "15593ba6a87b348bc1986ed023314b31d37bca4f7f9a8fa027746a132647a477"
+  },
+  "all_requirements_completed": false,
+  "ota_sync_deferred_by_user": true
+}

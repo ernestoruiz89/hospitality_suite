@@ -2,6 +2,9 @@
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),{createRequire}=require('node:module');
 const parser=createRequire('/home/frappe/benches/hospitality-bench/apps/frappe/package.json')('@babel/parser');
 const root=path.resolve(__dirname,'..'),folder=path.join(root,'hospitality_suite/public/js');
+const outputArg=process.argv.indexOf('--output');
+const output=path.resolve(root,outputArg>=0?process.argv[outputArg+1]:'docs/evidence/phase-review-actions.json');
+if(!output.startsWith(path.join(root,'docs/evidence')+path.sep)||fs.existsSync(output))throw Error('Choose a new output inside docs/evidence; preserve prior inventories');
 const handlers={},buttons=[],dynamic=[],rpc=[],mutations=[],sources={};
 const bundle='hospitality_suite/public/hospitality.bundle.js',bundleSource=fs.readFileSync(path.join(root,bundle),'utf8');
 const imports=parser.parse(bundleSource,{sourceType:'module'}).program.body.filter(node=>node.type==='ImportDeclaration').map(node=>node.source.value);
@@ -60,5 +63,5 @@ const effectiveHandlers=Object.fromEntries(Object.entries(handlers).map(([name,d
 const proof={scope:'Static literal action/RPC bindings in explicit bundle load order; dynamic bindings listed for review, no UI replay and no behavioral completion claim.',
  sources_sha256:sources,load_order:loadOrder,handler_count:Object.keys(handlers).length,handlers,effective_handlers:effectiveHandlers,buttons,rpc,mutations,dynamic_bindings:dynamic,unbound_literal_actions:unbound,
  unresolved_dynamic_buttons:dynamic.filter(row=>row.kind==='computed_button'&&!row.resolved_actions?.length).length};
-fs.writeFileSync(path.join(root,'docs/evidence/phase-review-actions.json'),JSON.stringify(proof,null,2)+'\n');
+fs.writeFileSync(output,JSON.stringify(proof,null,2)+'\n');
 console.log(JSON.stringify({sources:Object.keys(sources).length,handlers:proof.handler_count,button_occurrences:buttons.length,unbound_literal_actions:unbound,dynamic_bindings:dynamic}));

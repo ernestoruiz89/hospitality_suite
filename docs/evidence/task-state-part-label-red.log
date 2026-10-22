@@ -1,0 +1,66 @@
+TAP version 13
+# Subtest: cleaning keeps instructions and uses explicit inspection versus release actions
+ok 1 - cleaning keeps instructions and uses explicit inspection versus release actions
+  ---
+  duration_ms: 5.7379
+  type: 'test'
+  ...
+# Subtest: requesting correction has a required reason and submits the current task version
+ok 2 - requesting correction has a required reason and submits the current task version
+  ---
+  duration_ms: 3.3841
+  type: 'test'
+  ...
+# Subtest: cards prioritize urgent work, escape notes, show type and hide another cleaner actions
+ok 3 - cards prioritize urgent work, escape notes, show type and hide another cleaner actions
+  ---
+  duration_ms: 2.6278
+  type: 'test'
+  ...
+# Subtest: open ended maintenance hides deadline, clears a stale date and fits two task tabs
+ok 4 - open ended maintenance hides deadline, clears a stale date and fits two task tabs
+  ---
+  duration_ms: 2.425
+  type: 'test'
+  ...
+# Subtest: reception identifies an indefinite block and does not offer its room reservation
+ok 5 - reception identifies an indefinite block and does not offer its room reservation
+  ---
+  duration_ms: 2.1499
+  type: 'test'
+  ...
+# Subtest: maintenance shows the catalogue part name safely while retaining its original stock reference
+not ok 6 - maintenance shows the catalogue part name safely while retaining its original stock reference
+  ---
+  duration_ms: 2.9056
+  type: 'test'
+  location: 'C:\\Users\\Ernesto\\Documents\\ChatGPT\\Hotel\\tools\\test_housekeeping_ui.cjs:61:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /Válvula &lt;principal&gt; × 2/. Input:
+
+    '<div class="hs-toolbar"><div><h2>Mantenimiento y bloqueos</h2><p>Repuestos con existencias de ERPNext y reapertura autorizada.</p></div><button type="button" class="btn btn-primary hs-action" data-act="maintenance" data-id="" data-hs-owner="hs-page-1">Nueva orden</button></div><div class="hs-table-wrap"><table class="hs-table"><thead><tr><th scope="col">Habitación / equipo / orden</th><th scope="col">Período</th><th scope="col">Responsable</th><th scope="col">Estado</th><th scope="col">Repuestos y costo</th><th scope="col">Acciones</th></tr></thead><tbody><tr><td data-label="Habitación / equipo / orden">Habitación H101<br>Revisar grifería<br><small>Sin bloqueo de habitación</small></td><td data-label="Período"><br></td><td data-label="Responsable">Sin asignar</td><td data-label="Estado"><span class="hs-badge hs-in-progress">En proceso</span></td><td data-label="Repuestos y costo">INTERNAL-PART-KEY × 2<br>C$ 40.00</td><td data-label="Acciones"><button type="button" class="btn btn-secondary hs-action" data-act="maintenance" data-id="order" data-hs-owner="hs-page-1">Actualizar</button><button type="button" class="btn btn-secondary hs-action" data-act="maintenance_parts" data-id="order" data-hs-owner="hs-page-1">Repuestos</button><button type="button" class="btn btn-secondary hs-action" data-act="maintenance_evidence" data-id="order" data-hs-owner="hs-page-1">Evidencia</button></td></tr></tbody></table></div><section class="hs-section"><h2>Daños y objetos encontrados</h2><div class="hs-empty"><span class="hs-empty-icon" aria-hidden="true">✓</span><h3>No hay pendientes en esta vista.</h3><p>La información se actualiza al registrar movimientos.</p></div></section>'
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: '<div class="hs-toolbar"><div><h2>Mantenimiento y bloqueos</h2><p>Repuestos con existencias de ERPNext y reapertura autorizada.</p></div><button type="button" class="btn btn-primary hs-action" data-act="maintenance" data-id="" data-hs-owner="hs-page-1">Nueva orden</button></div><div class="hs-table-wrap"><table class="hs-table"><thead><tr><th scope="col">Habitación / equipo / orden</th><th scope="col">Período</th><th scope="col">Responsable</th><th scope="col">Estado</th><th scope="col">Repuestos y costo</th><th scope="col">Acciones</th></tr></thead><tbody><tr><td data-label="Habitación / equipo / orden">Habitación H101<br>Revisar grifería<br><small>Sin bloqueo de habitación</small></td><td data-label="Período"><br></td><td data-label="Responsable">Sin asignar</td><td data-label="Estado"><span class="hs-badge hs-in-progress">En proceso</span></td><td data-label="Repuestos y costo">INTERNAL-PART-KEY × 2<br>C$ 40.00</td><td data-label="Acciones"><button type="button" class="btn btn-secondary hs-action" data-act="maintenance" data-id="order" data-hs-owner="hs-page-1">Actualizar</button><button type="button" class="btn btn-secondary hs-action" data-act="maintenance_parts" data-id="order" data-hs-owner="hs-page-1">Repuestos</button><button type="button" class="btn btn-secondary hs-action" data-act="maintenance_evidence" data-id="order" data-hs-owner="hs-page-1">Evidencia</button></td></tr></tbody></table></div><section class="hs-section"><h2>Daños y objetos encontrados</h2><div class="hs-empty"><span class="hs-empty-icon" aria-hidden="true">✓</span><h3>No hay pendientes en esta vista.</h3><p>La información se actualiza al registrar movimientos.</p></div></section>'
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\Ernesto\Documents\ChatGPT\Hotel\tools\test_housekeeping_ui.cjs:69:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 5
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 117.4479

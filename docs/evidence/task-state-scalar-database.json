@@ -1,0 +1,27 @@
+{
+  "stage": "scalar",
+  "observed_at_utc": "2026-10-21T23:42:49.889321+00:00",
+  "site": "hospitality-acceptance.localhost",
+  "database_mutation": false,
+  "categories": [
+    {
+      "category_name": "Capacidad clara temporal",
+      "capacity": 2,
+      "owner": "manager@hospitality.example.invalid"
+    }
+  ],
+  "financial_operation_counts": {
+    "HS Booking": 0,
+    "HS Stay": 0,
+    "HS Charge": 0,
+    "HS Payment": 0,
+    "HS Shift": 0,
+    "Sales Invoice": 0,
+    "Payment Entry": 0,
+    "Journal Entry": 0
+  },
+  "sources_sha256": {
+    "hospitality_suite/public/js/hospitality_forms.js": "c833121c88947575250c09fa03ec9ec75f9ec997676b503cc13794fa3a0973f6",
+    "hospitality_suite/public/js/hospitality_workflows.js": "e1d6be22916fcf98731a72ed8b411abf736588ae820322418922c1caad4a660f"
+  }
+}

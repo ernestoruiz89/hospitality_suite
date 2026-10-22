@@ -1,5 +1,9 @@
 # Siguiente fase del objetivo activo
 
+## Después de la revisión de tareas por rol
+
+[TAREAS_Y_ESTADOS_POR_ROL.md](TAREAS_Y_ESTADOS_POR_ROL.md) acredita S00-02/S04-14; **212 V y seis I**: S00-01/S01-12/S04-16/S04-20/S19-07/S19-08. La colección finita identifica las variantes visuales restantes de tesorería, compras/movimientos, ropa, retención, conversión del portal, políticas y adjuntos. Prioridad inmediata: reproducir la secuencia Cerrar repuestos → Registrar novedad cuyo primer clic no abrió el nuevo diálogo; resolver los estados/reglas restantes y completar esas variantes. Después F26 y paquete final incluyendo las dos correcciones de interfaz actuales. **221 JS** y recorrido de tres roles aprobados; se conservan 404 nativas históricas con Python idéntico, datos/archivos restaurados y OTA aplazada. Los apartados siguientes son antecedentes.
+
 ## Después de la instalación independiente
 
 [INSTALACION_LIMPIA.md](INSTALACION_LIMPIA.md) cierra S18-01/S19-02 con paquete, instalación, primer arranque, 404 nativas/215 JS y dos carreras reales. **210 V y ocho I**: S00-01/S00-02/S01-12/S04-14/S04-16/S04-20/S19-07/S19-08. Continuar la aceptación de tareas/estados por rol y secuencias de diálogos; después, F26 con recuperación coordinada de código, base y archivos de una versión previa. Se conserva el bench independiente para ese ensayo. OTA aplazada; objetivo activo.

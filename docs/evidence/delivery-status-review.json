@@ -1,5 +1,5 @@
 {
-  "reviewed_at_utc": "2026-10-21T23:30:35.425977+00:00",
+  "reviewed_at_utc": "2026-10-22T01:10:49.093180+00:00",
   "requirements": [
     "S18-01",
     "S19-02",
@@ -10,12 +10,13 @@
   ],
   "scope": "Package/clean installation, native artifacts, operational prints, delivered evidence and differentiated status list; not proof of overall app completion.",
   "source_sha256": "876632e08057a1ea0386bd9e01fde6f477c62380a9414bed23e2a852765fb651",
-  "audit_sha256": "c3fecf0c206ecab5a683d6546723fefca4fe377fa8dc3b8b4b8433b766fdc4b5",
+  "audit_sha256": "84b41cd24e420b58534adf4d5e0edba0c17852005b8c89c9ba0c2d04e0e848cd",
   "statuses": {
-    "I": 8,
-    "V": 210
+    "I": 6,
+    "V": 212
   },
   "verified_ids": [
+    "S00-02",
     "S01-01",
     "S01-02",
     "S01-03",
@@ -60,6 +61,7 @@
     "S04-11",
     "S04-12",
     "S04-13",
+    "S04-14",
     "S04-15",
     "S04-17",
     "S04-18",
@@ -231,51 +233,43 @@
     {
       "id": "S00-01",
       "status": "I",
-      "remaining": "Paquete e instalación limpia S18-01/S19-02 acreditados en INSTALACION_LIMPIA.md. Completar las tareas/estados transversales S00-02/S04-14/S04-16/S04-20 y la aceptación/recuperación coordinada final F26 de S19-07/S19-08 antes de declarar íntegro el alcance."
-    },
-    {
-      "id": "S00-02",
-      "status": "I",
-      "remaining": "La aceptación S17-18 queda acreditada en 0.8.0 con recepción+caja, limpieza/supervisión, contabilidad y gerencia. Completar el contraste del conjunto de tareas habituales y secundarias de todos los roles/Pages; este recorrido de aceptación no acredita por sí solo todos los casos y formularios."
+      "remaining": "Paquete/instalación limpia S18-01/S19-02 y operación habitual mediante Pages S00-02/S04-14 acreditados. Completar estados/reglas/secuencias S04-16, variantes visuales secundarias S04-20 y recuperación/entrega final F26 S19-07/S19-08. La revisión de tareas conserva 212 V y seis I; no se declara completo el alcance."
     },
     {
       "id": "S01-12",
       "status": "I",
-      "remaining": "Paquete e instalación limpia S18-01/S19-02 acreditados en INSTALACION_LIMPIA.md. Completar las tareas/estados transversales S00-02/S04-14/S04-16/S04-20 y la aceptación/recuperación coordinada final F26 de S19-07/S19-08 antes de declarar íntegro el alcance."
-    },
-    {
-      "id": "S04-14",
-      "status": "I",
-      "remaining": "La aceptación S17-18 queda acreditada en 0.8.0 con recepción+caja, limpieza/supervisión, contabilidad y gerencia. Completar el contraste del conjunto de tareas habituales y secundarias de todos los roles/Pages; este recorrido de aceptación no acredita por sí solo todos los casos y formularios."
+      "remaining": "Paquete/instalación limpia S18-01/S19-02 y operación habitual mediante Pages S00-02/S04-14 acreditados. Completar estados/reglas/secuencias S04-16, variantes visuales secundarias S04-20 y recuperación/entrega final F26 S19-07/S19-08. La revisión de tareas conserva 212 V y seis I; no se declara completo el alcance."
     },
     {
       "id": "S04-16",
       "status": "I",
-      "remaining": "0.8.3–0.8.5 acreditan validación compartida, límites de cantidad/personas y actividad/reintento. 0.8.6 resuelve selectores técnicos, vacío junto a borradores y acceso/etiquetas/conservación numérica del editor expandido, con defectos originales y repetición final. Completar las demás reglas específicas por campo y estados de búsquedas/vistas secundarias, incluida su carga/vacío y doble envío. Los clics durante cierre visual nativo conservan observación histórica; no se afirma una causa completa. SELECTORES_Y_RESERVA_MANUAL.md delimita esta fase. 0.8.7 corrige la deshabilitación persistente de acciones en modales y su reinserción tardía, con defectos intermedios y repetición real conservados. Esto no acredita todas las reglas/estados ni todos los clics durante el cierre visual nativo. Revisión numérica sobre 0.8.8: corregidas fracciones enteras y valores malformados antes del parseo, incluidas filas opcionales y guardado parcial; 215 JS y Gerencia/Recepción reales. VALIDACION_NUMERICA.md delimita la cobertura y conserva pendientes las demás reglas y estados."
+      "remaining": "Reglas comunes y tipos numéricos, filas/borradores y estados principales acreditados; compatibilidad con controles nativos y error local de repuestos repetidos en TAREAS_Y_ESTADOS_POR_ROL.md, 221 JS. Completar reglas específicas y estados de búsquedas/vistas secundarias de la colección finita. Persiste observación de Cerrar repuestos seguido inmediatamente de Registrar novedad sin apertura; un clic posterior funciona, con causa aún no demostrada. No se declara resuelta por las salidas de sesión que sí funcionan en este recorrido."
     },
     {
       "id": "S04-20",
       "status": "I",
-      "remaining": "La aceptación S17-18 queda acreditada en 0.8.0 con recepción+caja, limpieza/supervisión, contabilidad y gerencia. Completar el contraste del conjunto de tareas habituales y secundarias de todos los roles/Pages; este recorrido de aceptación no acredita por sí solo todos los casos y formularios. En 0.8.3 se observa salida de sesión sin confirmación después de arqueo hasta recargar; falta reproducir y resolver ese contexto de acciones, sin atribuirlo aún a una causa. En 0.8.4 dos arqueos completan salida sin recarga; permanecen observaciones del clic durante refresco y confirmación por nombre accesible tras varios diálogos, documentadas en DISPONIBILIDAD_VISUAL_Y_LIMITES.md. 0.8.7 acredita accesos a nueve impresiones desde cinco roles y limpieza móvil; sus documentos se preparan mediante API y no se atribuye su creación a la UI. La acción de reserva a cuenta antes deshabilitada se corrige y repite; el contraste global permanece abierto."
+      "remaining": "Flujos habituales de Pages acreditados por aceptación/teclado y nuevo mantenimiento de tres roles; no equivalen a todas las variantes secundarias. Completar los recorridos visuales explícitos de T11 (tesorería/egresos), T14 (ropa), T18 (políticas pendientes), T19 (compras/movimientos), T20 (retención/reintento), T21 (conversión de portal), adjuntos T15/T16 y secuencias rápidas, según TAREAS_Y_ESTADOS_POR_ROL.md y task-state-crosswalk.json. No se atribuyen a la UI los documentos preparados como fixtures API."
     },
     {
       "id": "S19-07",
       "status": "I",
-      "remaining": "Completar S00-02/S04-14/S04-16/S04-20 y el ensayo final F26 de actualización y recuperación coordinada de código, base y archivos en un destino aislado. Paquete/instalación limpia S18-01/S19-02 acreditados en INSTALACION_LIMPIA.md, con 404 nativas/215 JS y dos carreras reales. Restaurar el estado vacío y actualizar helpers de pruebas no sustituyen ese ensayo final."
+      "remaining": "Completar S04-16/S04-20 y ensayo final F26 con actualización y recuperación coordinada de código, base y archivos en destino aislado; generar paquete final y revisar entrega. S18-01/S19-02 acreditan instalación independiente de 3a8d0bf con 404 nativas/215 JS y dos carreras reales. Ese paquete no incluye los dos cambios de interfaz de esta revisión (221 JS), que deben entrar en la entrega final."
     },
     {
       "id": "S19-08",
       "status": "I",
-      "remaining": "Cerrar la aceptación global de tareas/estados y la fase 7/F26. Mantener el registro y comprobar resultados de las acciones; la presencia de manejador no acredita por sí sola una tarea completada."
+      "remaining": "Cerrar variantes visuales secundarias/estados S04-16/S04-20 y fase 7/F26, manteniendo fuentes y evidencias diferenciadas. El contraste finito de 22 familias/84 manejadores, once Pages y nueve roles acredita el camino operativo S00-02/S04-14, pero no se presenta como 84 recorridos GUI ni como entrega completa."
     }
   ],
   "current_javascript": {
-    "tests": 215,
-    "desk": 212,
+    "tests": 221,
+    "desk": 218,
     "portal": 3,
-    "phase": "release-install",
-    "execution_revision": "93b4e07",
-    "executed_log_sha256": "f3d118e97d1e1b7b1cccb67c31298b1ab0106e0b55bacf81aef59363bdeab78f"
+    "phase": "task-state-review",
+    "execution_revision": null,
+    "base_revision": "ad1f701",
+    "executed_log_sha256": "d8e452d417223b01ff11bfedf80c913d8d893ff22914089f927efd09ef5df335",
+    "sources_comparison_sha256": "6d980284cc754a35a7ec18ee361cf17f738ddf30852f4ffd0e85386445705b5e"
   },
   "current_native": {
     "tests": 404,
@@ -283,20 +277,28 @@
     "pure": 32,
     "phase": "0.8.8",
     "execution_revision": "be67c92d3b22b70f9a4a17d0841eb829a8e38f02",
-    "rerun": true,
+    "rerun": false,
     "independent_bench": true,
+    "scope": "Historical full native regression; current Python sources identical. No new full native run for this frontend delta.",
     "first_failures_preserved": 7,
-    "source_comparison_sha256": "6ddbdeb6797cf69618895a724865d3f752f271c3e55e808d48823a6cf30221df",
+    "source_comparison_sha256": "6d980284cc754a35a7ec18ee361cf17f738ddf30852f4ffd0e85386445705b5e",
     "junit_sha256": "77be465c3b2c609e21570542d9f0ca95fcba86f369122ac13cc44f568b74407e",
     "raw_output_sha256": "e458816c38837ebdef8332bba9e72f4d59f01c7358e9bcbe2d30ebc8c9ac59ba"
   },
   "latest_ui": {
-    "phase": "release-install",
+    "phase": "task-state-review",
+    "events": 23,
+    "roles": 3,
+    "installed_bundle": "5IE6WQ4O",
+    "acceptance_restored_after_review": true,
+    "scope": "Manager numeric validation; Maintenance issue/incident, Manager return/resolution, Supervisor release. Desktop only; remaining secondary variants and rapid close/open observation kept open."
+  },
+  "historical_independent_install": {
+    "revision": "3a8d0bf",
     "events": 2,
     "roles": 1,
     "installed_bundle": "hospitality.bundle.DWFPEU45.js",
-    "clean_state_restored_before_tests": true,
-    "scope": "Administrator initial setup and first property through Page only; not complete role acceptance."
+    "current_frontend_delta_packaged": false
   },
   "historical_native": {
     "tests": 380,
@@ -321,10 +323,11 @@
     "limitations_preserved": true
   },
   "references_sha256": {
-    "docs/ESTADO_Y_EVIDENCIAS_ENTREGA.md": "4508c169192dbd7e2a6430fa57cfabfb33311cf50fb7841bb9e99f90439edb7b",
+    "docs/ESTADO_Y_EVIDENCIAS_ENTREGA.md": "37166e36231cc4e15ff75fcc309b814ce5e5c2296e0d928e73e10d2e4bed3f41",
+    "docs/TAREAS_Y_ESTADOS_POR_ROL.md": "53a85f2bc8d9f9497314e5c1af1fc5dcb7c77abfca633c8f992932335fd04f15",
     "docs/INSTALACION_LIMPIA.md": "2c7e89cae5caeac82a1f7a0745f569a328282b78712a1ffb3cdc65dc284ee5b4",
     "docs/VALIDACION_NUMERICA.md": "9497a72b325712d8a2ed3aa6cde52b0dc6b4b161aad03b0c9d80b0ec49f9e51f",
-    "docs/AUDITORIA_ESPECIFICACION.md": "4604f66a92c12c8fbd0275bb5af78d3ccd4fa0c16b27d6a050922f7bbb0551c6",
+    "docs/AUDITORIA_ESPECIFICACION.md": "5a36fa1a50aff49291f08d917665bbd494755535d9b930d34d5c51c0cd219495",
     "docs/REVISION_FASES_Y_ACCIONES.md": "fa348b3fbbe3ab1b0e10b4c04e356c6960a597933348f509e2b3fb41cc4f006a",
     "docs/DISPONIBILIDAD_POR_CANTIDAD.md": "e76226a821cfd7e00108f3cc566572a29d85f915ceeecc4e6c846d9dc10ea534",
     "docs/BORRADORES_DE_RESERVA.md": "2faf6f5f80a63db0f64d746c4b45fd441704f00a3ba157934d50869082e32134",
@@ -351,8 +354,8 @@
     "docs/ENTREGABLES_Y_REVISION.md": "77aae010a6779c5974b09eaad51e41e2befef2adef44199749a30526b61ed710",
     "docs/IMPRESIONES_OPERATIVAS.md": "cff3a31398ba0f8d5e407570d265c267d41826e16a32c428b97f11e1ac2a952f",
     "docs/CONTRATOS_PROVEEDORES.md": "1c5c65a95290ef7831422adab40fa711aada7c39879fbac20dadb27f98c71499",
-    "docs/REQUISITOS.md": "09c7ee0fcf6114b0344de4f6bea2ef4ed9abe57f338f85cefa8f19de3e5789a7",
-    "docs/PENDIENTES.md": "647831183c431db5d87fad961117ddeb128791a7fc39f5fbc5fffee942c9c16e",
+    "docs/REQUISITOS.md": "17384a41145bc2bef81140392e3c1e546fc2d249da0951ebab6672dcf4bcb723",
+    "docs/PENDIENTES.md": "86917c74c113997e2d0e1518a6df3e05953d5e5c9b9501490451c8f1c31df5d0",
     "docs/VALIDACION_FORMULARIOS.md": "eb6a8a866f2dcc2037fa9808654ad62a76355c8a4632eed2ab04a2205babd7e4",
     "docs/ACTIVIDAD_Y_RECUPERACION_PAGES.md": "75de66165b82ce9ba32215d7fafb0563b2310bf92036223ddabe5573d8492821",
     "docs/OPERACION.md": "5e6a6a96ea96fa191871a2fb741473f47eaf9f61cea99a408c7b50a394b1162c",
@@ -506,7 +509,29 @@
     "docs/evidence/release-install-main-browser.json": "30557697e38c9c7d17aaf8ae31ed2f02c15a995744ca2609685695e062bd75a9",
     "docs/evidence/release-install-upgrade.json": "a2403d24a3f4a341b864767ccbeee143bba60f1df4afa7c60427dddac8ee36b5",
     "docs/evidence/release-install-final-state.json": "0e530ffe482c54cc5138086321a382585f11c303f895dbce40928c585c9971d8",
-    "docs/evidence/release-install-verification.json": "1bbf4ae45580788ef87527d6146d07a99ea6deba7abc2222809774e80d1df7e2"
+    "docs/evidence/release-install-verification.json": "1bbf4ae45580788ef87527d6146d07a99ea6deba7abc2222809774e80d1df7e2",
+    "docs/evidence/task-state-crosswalk.json": "6d980284cc754a35a7ec18ee361cf17f738ddf30852f4ffd0e85386445705b5e",
+    "docs/evidence/task-state-actions.json": "cf9a1eb705e3bedad836854aeaa19fab68fed8cece85f3401510ad0e191ac909",
+    "docs/AUDITORIA_DEVOLUCIONES.md": "d8c4b491def20cd1261f9ae0639fbf563866e5bf63d05c04f7fc0bed1bc13caf",
+    "docs/evidence/task-state-browser.json": "af80909a7dff5fb48916903fa326ebe7c649f098962872df9905a3e8774c1fc4",
+    "docs/evidence/359-capacidad-sin-conversion.png": "3b4b4c4db3ed27ad5187d55d9687eefc0bb70a593abafa30fc0a688c2fd8f246",
+    "docs/evidence/task-state-scalar-database.json": "247b01493b68ce573ad8a4f1c40b19d28f1054b46e5dbc45ed414ba5f8c01c01",
+    "docs/evidence/task-state-issued-database.json": "3dbbb5a6e9b04e22d0efd07983e5b12787dc517027551573394a65fcfdd60706",
+    "docs/evidence/360-mantenimiento-codigo-anterior.png": "a41298f344e384e49d010cbc712e42b5af3fb40f247a6ff5ec0413c99d36d6ba",
+    "docs/evidence/361-mantenimiento-repuesto-legible.png": "3130f01e5d730aaea8f575a430533b92e5cafc53b964f33d8b6061bcbe50aec9",
+    "docs/evidence/task-state-returned-database.json": "68b84d6bffc83a56418b59cc2125fd554cb7cde075872db4add0163129d73909",
+    "docs/evidence/362-mantenimiento-reapertura-autorizada.png": "15593ba6a87b348bc1986ed023314b31d37bca4f7f9a8fa027746a132647a477",
+    "docs/evidence/task-state-completed-database.json": "2e58270096ba7f9cde9c8c25641d6fa2b124d92bc6b922b7c38eb1abb7c6cfef",
+    "tools/test_native_numeric_ui.cjs": "b8663a686abaaad5f435688cbe8e64e3de5c7829f5828bc9fc9d88a3a6981f46",
+    "docs/evidence/task-state-js-tests.log": "d8e452d417223b01ff11bfedf80c913d8d893ff22914089f927efd09ef5df335",
+    "docs/evidence/task-state-native-numeric-red.log": "7a68c050afae00ae4a7565acd4b2a256a04fb8280a05f1d416104d63b49ad1e8",
+    "docs/evidence/task-state-part-label-red.log": "6ecf7f9685aa381d5f0fe51db8424a3c4fa08f5ab922c56e7d6ee7043edd888b",
+    "docs/evidence/task-state-js-fixture-diagnostic.log": "f2a9c23906ae2455321cc429889c5e501169a5efe5a2c3796d66feb32765253b",
+    "docs/evidence/task-state-build.log": "55d5a606d143efd0e1709160ea50952ce3ab09f24e62e0bf3826c7fca4928d6f",
+    "docs/evidence/task-state-review-ux-restored.json": "d64122ce2f087e8c83c8bab5973d424f985f228ef11f9dd44506d25ef5e0f633",
+    "docs/evidence/task-state-review-upgrade.json": "a2403d24a3f4a341b864767ccbeee143bba60f1df4afa7c60427dddac8ee36b5",
+    "docs/evidence/task-state-final-state.json": "980a495e9b64728dfdbc352453fca08619c0b229ba24e6091b4da999b106d007",
+    "docs/evidence/task-state-verification.json": "bf8d799743a783e7964807cfaa94e24132e928bb1516344693f2ef29f9d2c4c1"
   },
   "database_mutations": false,
   "ui_replay": false,

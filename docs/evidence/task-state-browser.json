@@ -1,0 +1,657 @@
+{
+  "site": "hospitality-acceptance.localhost:8089",
+  "roles": [
+    "HS Manager",
+    "HS Maintenance",
+    "HS Supervisor"
+  ],
+  "events": [
+    {
+      "label": "manager-integer-exponent-blocked",
+      "observed_at_utc": "2026-10-21T23:41:25.316Z",
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.46PQW7RZ.js"
+      ],
+      "focused": "capacity",
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": "Categoría",
+          "name": "category_name",
+          "value": "Capacidad clara temporal"
+        },
+        {
+          "invalid": "true",
+          "label": "Capacidad",
+          "name": "capacity",
+          "value": "1e2"
+        },
+        {
+          "invalid": null,
+          "label": "Comodidades",
+          "name": "amenities",
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Camas extra admitidas",
+          "name": "max_extra_beds",
+          "value": "0"
+        }
+      ],
+      "text": "Configuración\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nConfiguración\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nConfigure la operación paso a paso\n\nLas cuentas e impuestos se seleccionan explícitamente de ERPNext.\n\n1. Políticas y contabilidad →\n2. Categorías →\n3. Habitaciones →\n4. Tarifas →\n5. Medios de pago →\n6. Empresas, agencias y crédito\n7. Horarios y penalizaciones\n8. Denominaciones de caja\n9. Series y formatos\n11. Categorías de gasto\n12. Clasificación y mínimos\n13. Equipos y activos\n14. Retención de datos\n15. Portal de reservas\n16. Anticipos y garantías\n17. Artículos y servicios\n18. Contabilidad por servicio\nConfiguración actual\n\n10 habitaciones · 1 categorías · 1 tarifas\n\nHora de referencia del servidor: 2026-10-21 17:40:53.828442 · NIO\nConfiguración\n\nRevise los campos indicados antes de continuar.\n\nCategoría\ncategory_name\nCapacidad\ncapacity\n\nIndique un número entero.\n\nComodidades\namenities\nCamas extra admitidas\nmax_extra_beds\nGuardar",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-setup"
+    },
+    {
+      "label": "manager-integer-radix-blocked",
+      "observed_at_utc": "2026-10-21T23:41:37.617Z",
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.46PQW7RZ.js"
+      ],
+      "focused": "capacity",
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": "Categoría",
+          "name": "category_name",
+          "value": "Capacidad clara temporal"
+        },
+        {
+          "invalid": "true",
+          "label": "Capacidad",
+          "name": "capacity",
+          "value": "0x10"
+        },
+        {
+          "invalid": null,
+          "label": "Comodidades",
+          "name": "amenities",
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Camas extra admitidas",
+          "name": "max_extra_beds",
+          "value": "0"
+        }
+      ],
+      "text": "Configuración\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nConfiguración\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nConfigure la operación paso a paso\n\nLas cuentas e impuestos se seleccionan explícitamente de ERPNext.\n\n1. Políticas y contabilidad →\n2. Categorías →\n3. Habitaciones →\n4. Tarifas →\n5. Medios de pago →\n6. Empresas, agencias y crédito\n7. Horarios y penalizaciones\n8. Denominaciones de caja\n9. Series y formatos\n11. Categorías de gasto\n12. Clasificación y mínimos\n13. Equipos y activos\n14. Retención de datos\n15. Portal de reservas\n16. Anticipos y garantías\n17. Artículos y servicios\n18. Contabilidad por servicio\nConfiguración actual\n\n10 habitaciones · 1 categorías · 1 tarifas\n\nHora de referencia del servidor: 2026-10-21 17:40:53.828442 · NIO\nConfiguración\n\nRevise los campos indicados antes de continuar.\n\nCategoría\ncategory_name\nCapacidad\ncapacity\n\nIndique un número entero.\n\nComodidades\namenities\nCamas extra admitidas\nmax_extra_beds\nGuardar",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-setup"
+    },
+    {
+      "label": "manager-valid-expression-saved",
+      "observed_at_utc": "2026-10-21T23:42:53.195Z",
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.46PQW7RZ.js"
+      ],
+      "focused": null,
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Configuración\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nConfiguración\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nConfigure la operación paso a paso\n\nLas cuentas e impuestos se seleccionan explícitamente de ERPNext.\n\n1. Políticas y contabilidad →\n2. Categorías →\n3. Habitaciones →\n4. Tarifas →\n5. Medios de pago →\n6. Empresas, agencias y crédito\n7. Horarios y penalizaciones\n8. Denominaciones de caja\n9. Series y formatos\n11. Categorías de gasto\n12. Clasificación y mínimos\n13. Equipos y activos\n14. Retención de datos\n15. Portal de reservas\n16. Anticipos y garantías\n17. Artículos y servicios\n18. Contabilidad por servicio\nConfiguración actual\n\n10 habitaciones · 2 categorías · 1 tarifas\n\nHora de referencia del servidor: 2026-10-21 17:41:40.688039 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-setup"
+    },
+    {
+      "label": "maintenance-cannot-open-manager-setup",
+      "observed_at_utc": "2026-10-21T23:43:41.415Z",
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.46PQW7RZ.js"
+      ],
+      "focused": null,
+      "inputs": [],
+      "text": "No permitido\nEl usuario maintenance@hospitality.example.invalid no tiene acceso a doctype a través del permiso de rol para el documento Página\nSin permiso para Página",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-setup"
+    },
+    {
+      "label": "maintenance-empty",
+      "observed_at_utc": "2026-10-21T23:43:53.659Z",
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.46PQW7RZ.js"
+      ],
+      "focused": null,
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Mantenimiento\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nmaintenance@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nMantenimiento\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nMantenimiento y bloqueos\n\nRepuestos con existencias de ERPNext y reapertura autorizada.\n\nNueva orden\nRegistrar novedad\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nDaños y objetos encontrados\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 17:43:42.819711 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-maintenance"
+    },
+    {
+      "label": "maintenance-required-work-inline",
+      "observed_at_utc": "2026-10-21T23:43:59.465Z",
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.46PQW7RZ.js"
+      ],
+      "focused": "title",
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": "true",
+          "label": "Trabajo requerido",
+          "name": "title",
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Tipo",
+          "name": "kind",
+          "value": "Corrective"
+        },
+        {
+          "invalid": null,
+          "label": "Habitación (opcional para equipo)",
+          "name": "room",
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Equipo (opcional)",
+          "name": "equipment",
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Bloquear disponibilidad de la habitación",
+          "name": "blocks_room",
+          "value": "on"
+        }
+      ],
+      "text": "Mantenimiento\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nmaintenance@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nMantenimiento\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nMantenimiento y bloqueos\n\nRepuestos con existencias de ERPNext y reapertura autorizada.\n\nNueva orden\nRegistrar novedad\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nDaños y objetos encontrados\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 17:43:42.819711 · NIO\nNueva orden de mantenimiento\n\nRevise los campos indicados antes de continuar.\n\nTrabajo y ubicación\nPlazo y responsable\nTrabajo requerido\ntitle\n\nComplete Trabajo requerido.\n\nTipo\nCorrectivo\nPreventivo\nkind\nHabitación (opcional para equipo)\nSeleccione…\nH101\nH102\nH103\nH104\nH105\nH106\nH107\nH108\nH109\nH110\nroom\nEquipo (opcional)\nSeleccione…\nequipment\nBloquear disponibilidad de la habitación\n\nblocks_room\nCrear orden de mantenimiento",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-maintenance"
+    },
+    {
+      "label": "maintenance-created-page-ready",
+      "observed_at_utc": "2026-10-21T23:44:22.709Z",
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.46PQW7RZ.js"
+      ],
+      "focused": null,
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Mantenimiento\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nmaintenance@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nMantenimiento\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nMantenimiento y bloqueos\n\nRepuestos con existencias de ERPNext y reapertura autorizada.\n\nNueva orden\nRegistrar novedad\nHabitación / equipo / orden\tPeríodo\tResponsable\tEstado\tRepuestos y costo\tAcciones\nHabitación H101\nRevisar grifería temporal\nBloquea disponibilidad\t21/10/2026 08:00\nHasta reapertura autorizada\tmaintenance@hospitality.example.invalid\tAbierto\tSin repuestos\nC$ 0.00\tActualizarRepuestosEvidenciaImprimir orden\nDaños y objetos encontrados\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 17:44:09.871100 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-maintenance"
+    },
+    {
+      "label": "maintenance-no-release-option",
+      "observed_at_utc": "2026-10-21T23:44:37.050Z",
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.46PQW7RZ.js"
+      ],
+      "focused": "status",
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": "Estado",
+          "name": "status",
+          "value": "Open"
+        },
+        {
+          "invalid": null,
+          "label": "Observaciones",
+          "name": "notes",
+          "value": "Prueba temporal de bloqueo, repuestos y reapertura desde las páginas."
+        }
+      ],
+      "text": "Mantenimiento\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nmaintenance@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nMantenimiento\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nMantenimiento y bloqueos\n\nRepuestos con existencias de ERPNext y reapertura autorizada.\n\nNueva orden\nRegistrar novedad\nHabitación / equipo / orden\tPeríodo\tResponsable\tEstado\tRepuestos y costo\tAcciones\nHabitación H101\nRevisar grifería temporal\nBloquea disponibilidad\t21/10/2026 08:00\nHasta reapertura autorizada\tmaintenance@hospitality.example.invalid\tAbierto\tSin repuestos\nC$ 0.00\tActualizarRepuestosEvidenciaImprimir orden\nDaños y objetos encontrados\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 17:44:09.871100 · NIO\nActualizar mantenimiento\nEstado\nAbierta\nEn curso\nstatus\nObservaciones\nnotes\nGuardar",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-maintenance"
+    },
+    {
+      "label": "maintenance-started-success",
+      "observed_at_utc": "2026-10-21T23:44:46.033Z",
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.46PQW7RZ.js"
+      ],
+      "focused": null,
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Mantenimiento\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nmaintenance@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nMantenimiento\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nMantenimiento y bloqueos\n\nRepuestos con existencias de ERPNext y reapertura autorizada.\n\nNueva orden\nRegistrar novedad\nHabitación / equipo / orden\tPeríodo\tResponsable\tEstado\tRepuestos y costo\tAcciones\nHabitación H101\nRevisar grifería temporal\nBloquea disponibilidad\t21/10/2026 08:00\nHasta reapertura autorizada\tmaintenance@hospitality.example.invalid\tEn proceso\tSin repuestos\nC$ 0.00\tActualizarRepuestosEvidenciaImprimir orden\nDaños y objetos encontrados\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 17:44:38.347788 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-maintenance"
+    },
+    {
+      "label": "maintenance-parts-search-empty",
+      "observed_at_utc": "2026-10-21T23:45:21.611Z",
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.46PQW7RZ.js"
+      ],
+      "focused": "_hs_item_search",
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": "Buscar artículo por nombre o código",
+          "name": "_hs_item_search",
+          "value": "Sin coincidencia temporal 987654321"
+        },
+        {
+          "invalid": null,
+          "label": "Repuesto",
+          "name": "item",
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Cantidad",
+          "name": "quantity",
+          "value": "1.000"
+        }
+      ],
+      "text": "Mantenimiento\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nmaintenance@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nMantenimiento\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nMantenimiento y bloqueos\n\nRepuestos con existencias de ERPNext y reapertura autorizada.\n\nNueva orden\nRegistrar novedad\nHabitación / equipo / orden\tPeríodo\tResponsable\tEstado\tRepuestos y costo\tAcciones\nHabitación H101\nRevisar grifería temporal\nBloquea disponibilidad\t21/10/2026 08:00\nHasta reapertura autorizada\tmaintenance@hospitality.example.invalid\tEn proceso\tSin repuestos\nC$ 0.00\tActualizarRepuestosEvidenciaImprimir orden\nDaños y objetos encontrados\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 17:44:38.347788 · NIO\nRepuestos de mantenimiento\n\nEl costo se obtiene de la valoración de inventario al registrar la salida.\n\nBuscar artículo por nombre o código\n_hs_item_search\nRepuesto\nSeleccione…\nNo hay artículos que coincidan con la búsqueda.\nitem\nCantidad\nquantity\nRegistrar salida",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-maintenance"
+    },
+    {
+      "label": "maintenance-decimal-radix-blocked",
+      "observed_at_utc": "2026-10-21T23:45:33.962Z",
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.46PQW7RZ.js"
+      ],
+      "focused": "quantity",
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": "Buscar artículo por nombre o código",
+          "name": "_hs_item_search",
+          "value": "Válvula"
+        },
+        {
+          "invalid": null,
+          "label": "Repuesto",
+          "name": "item",
+          "value": "HS-UX-PART-TS"
+        },
+        {
+          "invalid": "true",
+          "label": "Cantidad",
+          "name": "quantity",
+          "value": "0x10"
+        }
+      ],
+      "text": "Mantenimiento\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nmaintenance@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nMantenimiento\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nMantenimiento y bloqueos\n\nRepuestos con existencias de ERPNext y reapertura autorizada.\n\nNueva orden\nRegistrar novedad\nHabitación / equipo / orden\tPeríodo\tResponsable\tEstado\tRepuestos y costo\tAcciones\nHabitación H101\nRevisar grifería temporal\nBloquea disponibilidad\t21/10/2026 08:00\nHasta reapertura autorizada\tmaintenance@hospitality.example.invalid\tEn proceso\tSin repuestos\nC$ 0.00\tActualizarRepuestosEvidenciaImprimir orden\nDaños y objetos encontrados\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 17:44:38.347788 · NIO\nRepuestos de mantenimiento\n\nRevise los campos indicados antes de continuar.\n\nEl costo se obtiene de la valoración de inventario al registrar la salida.\n\nBuscar artículo por nombre o código\n_hs_item_search\nRepuesto\nSeleccione…\nVálvula de prueba temporal\nElija un artículo de los resultados.\nitem\nCantidad\nquantity\n\nIndique un número válido.\n\nRegistrar salida",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-maintenance"
+    },
+    {
+      "label": "maintenance-parts-issued",
+      "observed_at_utc": "2026-10-21T23:45:50.725Z",
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.46PQW7RZ.js"
+      ],
+      "focused": null,
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Mantenimiento\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nmaintenance@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nMantenimiento\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nMantenimiento y bloqueos\n\nRepuestos con existencias de ERPNext y reapertura autorizada.\n\nNueva orden\nRegistrar novedad\nHabitación / equipo / orden\tPeríodo\tResponsable\tEstado\tRepuestos y costo\tAcciones\nHabitación H101\nRevisar grifería temporal\nBloquea disponibilidad\t21/10/2026 08:00\nHasta reapertura autorizada\tmaintenance@hospitality.example.invalid\tEn proceso\tHS-UX-PART-TS × 2\nC$ 40.00\tActualizarRepuestosEvidenciaImprimir orden\nDaños y objetos encontrados\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 17:45:34.578645 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-maintenance"
+    },
+    {
+      "label": "maintenance-part-name-final",
+      "observed_at_utc": "2026-10-21T23:48:38.336Z",
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.5IE6WQ4O.js"
+      ],
+      "focused": null,
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Mantenimiento\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nmaintenance@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nMantenimiento\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nMantenimiento y bloqueos\n\nRepuestos con existencias de ERPNext y reapertura autorizada.\n\nNueva orden\nRegistrar novedad\nHabitación / equipo / orden\tPeríodo\tResponsable\tEstado\tRepuestos y costo\tAcciones\nHabitación H101\nRevisar grifería temporal\nBloquea disponibilidad\t21/10/2026 08:00\nHasta reapertura autorizada\tmaintenance@hospitality.example.invalid\tEn proceso\tVálvula de prueba temporal × 2\nC$ 40.00\tActualizarRepuestosEvidenciaImprimir orden\nDaños y objetos encontrados\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 17:47:34.182021 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-maintenance"
+    },
+    {
+      "label": "maintenance-no-return-option",
+      "observed_at_utc": "2026-10-21T23:48:45.235Z",
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.5IE6WQ4O.js"
+      ],
+      "focused": "_hs_item_search",
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": "Buscar artículo por nombre o código",
+          "name": "_hs_item_search",
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Repuesto",
+          "name": "item",
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Cantidad",
+          "name": "quantity",
+          "value": "1.000"
+        }
+      ],
+      "text": "Mantenimiento\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nmaintenance@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nMantenimiento\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nMantenimiento y bloqueos\n\nRepuestos con existencias de ERPNext y reapertura autorizada.\n\nNueva orden\nRegistrar novedad\nHabitación / equipo / orden\tPeríodo\tResponsable\tEstado\tRepuestos y costo\tAcciones\nHabitación H101\nRevisar grifería temporal\nBloquea disponibilidad\t21/10/2026 08:00\nHasta reapertura autorizada\tmaintenance@hospitality.example.invalid\tEn proceso\tVálvula de prueba temporal × 2\nC$ 40.00\tActualizarRepuestosEvidenciaImprimir orden\nDaños y objetos encontrados\n✓\nNo hay pendientes en esta vista.\n\nLa información se actualiza al registrar movimientos.\n\nHora de referencia del servidor: 2026-10-21 17:47:34.182021 · NIO\nRepuestos de mantenimiento\n\nEl costo se obtiene de la valoración de inventario al registrar la salida.\n\nBuscar artículo por nombre o código\n_hs_item_search\nRepuesto\nSeleccione…\nAgua minibar (demostración)\nVálvula de prueba temporal\nSe muestran hasta 50 coincidencias. Busque por nombre o código para consultar todo el catálogo.\nitem\nCantidad\nquantity\nRegistrar salida",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-maintenance"
+    },
+    {
+      "label": "maintenance-incident-submitted",
+      "observed_at_utc": "2026-10-21T23:49:37.774Z",
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.5IE6WQ4O.js"
+      ],
+      "focused": null,
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Mantenimiento\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nmaintenance@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nMantenimiento\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nMantenimiento y bloqueos\n\nRepuestos con existencias de ERPNext y reapertura autorizada.\n\nNueva orden\nRegistrar novedad\nHabitación / equipo / orden\tPeríodo\tResponsable\tEstado\tRepuestos y costo\tAcciones\nHabitación H101\nRevisar grifería temporal\nBloquea disponibilidad\t21/10/2026 08:00\nHasta reapertura autorizada\tmaintenance@hospitality.example.invalid\tEn proceso\tVálvula de prueba temporal × 2\nC$ 40.00\tActualizarRepuestosEvidenciaImprimir orden\nDaños y objetos encontrados\nHabitación\tNovedad\tDescripción\tEstado\tResolución / acciones\nH101\tObjeto encontrado\tLlave sintética encontrada durante la revisión temporal de H101.\tAbierto\tAdjuntar evidencia\nHora de referencia del servidor: 2026-10-21 17:49:32.485657 · NIO\nOperación confirmada",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-maintenance"
+    },
+    {
+      "label": "maintenance-logout-confirmation-after-several-dialogs",
+      "observed_at_utc": "2026-10-21T23:49:42.687Z",
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.5IE6WQ4O.js"
+      ],
+      "focused": null,
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Mantenimiento\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nLimpieza\nMantenimiento\nmaintenance@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nMantenimiento\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nMantenimiento y bloqueos\n\nRepuestos con existencias de ERPNext y reapertura autorizada.\n\nNueva orden\nRegistrar novedad\nHabitación / equipo / orden\tPeríodo\tResponsable\tEstado\tRepuestos y costo\tAcciones\nHabitación H101\nRevisar grifería temporal\nBloquea disponibilidad\t21/10/2026 08:00\nHasta reapertura autorizada\tmaintenance@hospitality.example.invalid\tEn proceso\tVálvula de prueba temporal × 2\nC$ 40.00\tActualizarRepuestosEvidenciaImprimir orden\nDaños y objetos encontrados\nHabitación\tNovedad\tDescripción\tEstado\tResolución / acciones\nH101\tObjeto encontrado\tLlave sintética encontrada durante la revisión temporal de H101.\tAbierto\tAdjuntar evidencia\nHora de referencia del servidor: 2026-10-21 17:49:32.485657 · NIO\nConfirmar\n\n¿Seguro que quieres cerrar sesión?\n\nNo\n \nSi",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-maintenance"
+    },
+    {
+      "label": "manager-return-option-visible",
+      "observed_at_utc": "2026-10-21T23:50:39.136Z",
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.5IE6WQ4O.js"
+      ],
+      "focused": "_hs_item_search",
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": "Buscar artículo por nombre o código",
+          "name": "_hs_item_search",
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Repuesto",
+          "name": "item",
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Cantidad",
+          "name": "quantity",
+          "value": "1.000"
+        }
+      ],
+      "text": "Mantenimiento\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nMantenimiento\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nMantenimiento y bloqueos\n\nRepuestos con existencias de ERPNext y reapertura autorizada.\n\nNueva orden\nRegistrar novedad\nHabitación / equipo / orden\tPeríodo\tResponsable\tEstado\tRepuestos y costo\tAcciones\nHabitación H101\nRevisar grifería temporal\nBloquea disponibilidad\t21/10/2026 08:00\nHasta reapertura autorizada\tmaintenance@hospitality.example.invalid\tEn proceso\tVálvula de prueba temporal × 2\nC$ 40.00\tActualizarRepuestosEvidenciaImprimir orden\nDaños y objetos encontrados\nHabitación\tNovedad\tDescripción\tEstado\tResolución / acciones\nH101\tObjeto encontrado\tLlave sintética encontrada durante la revisión temporal de H101.\tAbierto\tAdjuntar evidenciaResolver\nHora de referencia del servidor: 2026-10-21 17:49:50.969797 · NIO\nRepuestos de mantenimiento\n\nEl costo se obtiene de la valoración de inventario al registrar la salida.\n\nBuscar artículo por nombre o código\n_hs_item_search\nRepuesto\nSeleccione…\nAgua minibar (demostración)\nVálvula de prueba temporal\nSe muestran hasta 50 coincidencias. Busque por nombre o código para consultar todo el catálogo.\nitem\nCantidad\nquantity\nDevolver MAT-STE-2026-00003\nRegistrar salida",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-maintenance"
+    },
+    {
+      "label": "manager-return-reason-inline",
+      "observed_at_utc": "2026-10-21T23:50:44.139Z",
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.5IE6WQ4O.js"
+      ],
+      "focused": "reason",
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": "true",
+          "label": "Motivo",
+          "name": "reason",
+          "value": ""
+        }
+      ],
+      "text": "Mantenimiento\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nMantenimiento\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nMantenimiento y bloqueos\n\nRepuestos con existencias de ERPNext y reapertura autorizada.\n\nNueva orden\nRegistrar novedad\nHabitación / equipo / orden\tPeríodo\tResponsable\tEstado\tRepuestos y costo\tAcciones\nHabitación H101\nRevisar grifería temporal\nBloquea disponibilidad\t21/10/2026 08:00\nHasta reapertura autorizada\tmaintenance@hospitality.example.invalid\tEn proceso\tVálvula de prueba temporal × 2\nC$ 40.00\tActualizarRepuestosEvidenciaImprimir orden\nDaños y objetos encontrados\nHabitación\tNovedad\tDescripción\tEstado\tResolución / acciones\nH101\tObjeto encontrado\tLlave sintética encontrada durante la revisión temporal de H101.\tAbierto\tAdjuntar evidenciaResolver\nHora de referencia del servidor: 2026-10-21 17:49:50.969797 · NIO\nDevolver repuestos sin usar\n\nRevise los campos indicados antes de continuar.\n\nMotivo\nreason\n\nComplete Motivo.\n\nDevolver a inventario",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-maintenance"
+    },
+    {
+      "label": "manager-parts-returned-page",
+      "observed_at_utc": "2026-10-21T23:51:00.318Z",
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.5IE6WQ4O.js"
+      ],
+      "focused": null,
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Mantenimiento\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nMantenimiento\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nMantenimiento y bloqueos\n\nRepuestos con existencias de ERPNext y reapertura autorizada.\n\nNueva orden\nRegistrar novedad\nHabitación / equipo / orden\tPeríodo\tResponsable\tEstado\tRepuestos y costo\tAcciones\nHabitación H101\nRevisar grifería temporal\nBloquea disponibilidad\t21/10/2026 08:00\nHasta reapertura autorizada\tmaintenance@hospitality.example.invalid\tEn proceso\tSin repuestos\nC$ 0.00\tActualizarRepuestosEvidenciaImprimir orden\nDaños y objetos encontrados\nHabitación\tNovedad\tDescripción\tEstado\tResolución / acciones\nH101\tObjeto encontrado\tLlave sintética encontrada durante la revisión temporal de H101.\tAbierto\tAdjuntar evidenciaResolver\nHora de referencia del servidor: 2026-10-21 17:50:47.047940 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-maintenance"
+    },
+    {
+      "label": "manager-incident-resolved",
+      "observed_at_utc": "2026-10-21T23:51:12.610Z",
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.5IE6WQ4O.js"
+      ],
+      "focused": null,
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Mantenimiento\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nmanager@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nMantenimiento\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nMantenimiento y bloqueos\n\nRepuestos con existencias de ERPNext y reapertura autorizada.\n\nNueva orden\nRegistrar novedad\nHabitación / equipo / orden\tPeríodo\tResponsable\tEstado\tRepuestos y costo\tAcciones\nHabitación H101\nRevisar grifería temporal\nBloquea disponibilidad\t21/10/2026 08:00\nHasta reapertura autorizada\tmaintenance@hospitality.example.invalid\tEn proceso\tSin repuestos\nC$ 0.00\tActualizarRepuestosEvidenciaImprimir orden\nDaños y objetos encontrados\nHabitación\tNovedad\tDescripción\tEstado\tResolución / acciones\nH101\tObjeto encontrado\tLlave sintética encontrada durante la revisión temporal de H101.\tResuelto\tLlave sintética entregada a la persona responsable; constancia temporal de la prueba.\nHora de referencia del servidor: 2026-10-21 17:51:09.263242 · NIO\nOperación confirmada",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-maintenance"
+    },
+    {
+      "label": "supervisor-release-option-visible",
+      "observed_at_utc": "2026-10-21T23:51:55.459Z",
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.5IE6WQ4O.js"
+      ],
+      "focused": "status",
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": "Estado",
+          "name": "status",
+          "value": "In Progress"
+        },
+        {
+          "invalid": null,
+          "label": "Responsable (correo)",
+          "name": "assigned_to",
+          "value": "maintenance@hospitality.example.invalid"
+        },
+        {
+          "invalid": null,
+          "label": "Observaciones",
+          "name": "notes",
+          "value": "Prueba temporal de bloqueo, repuestos y reapertura desde las páginas."
+        }
+      ],
+      "text": "Mantenimiento\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nsupervisor@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nMantenimiento\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nMantenimiento y bloqueos\n\nRepuestos con existencias de ERPNext y reapertura autorizada.\n\nNueva orden\nRegistrar novedad\nHabitación / equipo / orden\tPeríodo\tResponsable\tEstado\tRepuestos y costo\tAcciones\nHabitación H101\nRevisar grifería temporal\nBloquea disponibilidad\t21/10/2026 08:00\nHasta reapertura autorizada\tmaintenance@hospitality.example.invalid\tEn proceso\tSin repuestos\nC$ 0.00\tActualizarRepuestosEvidenciaImprimir orden\nDaños y objetos encontrados\nHabitación\tNovedad\tDescripción\tEstado\tResolución / acciones\nH101\tObjeto encontrado\tLlave sintética encontrada durante la revisión temporal de H101.\tResuelto\tLlave sintética entregada a la persona responsable; constancia temporal de la prueba.\nHora de referencia del servidor: 2026-10-21 17:51:26.107217 · NIO\nActualizar mantenimiento\nEstado\nEn curso\nCompletar y liberar bloqueo\nstatus\nResponsable (correo)\nassigned_to\nObservaciones\nnotes\nGuardar",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-maintenance"
+    },
+    {
+      "label": "supervisor-maintenance-completed",
+      "observed_at_utc": "2026-10-21T23:52:20.086Z",
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.5IE6WQ4O.js"
+      ],
+      "focused": null,
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "value": "qmbjb0i1qc"
+        }
+      ],
+      "text": "Mantenimiento\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nsupervisor@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nMantenimiento\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nMantenimiento y bloqueos\n\nRepuestos con existencias de ERPNext y reapertura autorizada.\n\nNueva orden\nRegistrar novedad\nHabitación / equipo / orden\tPeríodo\tResponsable\tEstado\tRepuestos y costo\tAcciones\nHabitación H101\nRevisar grifería temporal\nBloqueo liberado\t21/10/2026 08:00\nReapertura autorizada\tmaintenance@hospitality.example.invalid\tCompletada\tSin repuestos\nC$ 0.00\t—Imprimir orden\nDaños y objetos encontrados\nHabitación\tNovedad\tDescripción\tEstado\tResolución / acciones\nH101\tObjeto encontrado\tLlave sintética encontrada durante la revisión temporal de H101.\tResuelto\tLlave sintética entregada a la persona responsable; constancia temporal de la prueba.\nHora de referencia del servidor: 2026-10-21 17:51:57.215897 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-maintenance"
+    },
+    {
+      "label": "supervisor-reception-after-release",
+      "observed_at_utc": "2026-10-21T23:53:41.114Z",
+      "bundle": [
+        "http://hospitality-acceptance.localhost:8089/assets/hospitality_suite/dist/js/hospitality.bundle.5IE6WQ4O.js"
+      ],
+      "focused": null,
+      "inputs": [
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "value": "qmbjb0i1qc"
+        },
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": null,
+          "name": "",
+          "value": ""
+        },
+        {
+          "invalid": null,
+          "label": "Filtrar por limpieza",
+          "name": "",
+          "value": ""
+        }
+      ],
+      "text": "Recepción\nH\nHospitality\nOPERACIÓN DIARIA\nInicio\nRecepción\nReservas\nEstancias\nCaja\nLimpieza\nMantenimiento\nConsumos e inventario\nClientes y huéspedes\nGerencia\nConfiguración\nsupervisor@hospitality.example.invalid\nAmerica/Managua\n● Tiempo real conectado\nGESTIÓN DE ALOJAMIENTO\nRecepción\n\nFecha operativa: 2026-10-19\n\nEstablecimiento\nMotel Luna Demo\nHotel Jardín Demo\nActualizar\nCerrar sesión\nBuscar habitación, piso o categoría\nReservar\nRegistrar entrada inmediata\nFiltros de habitaciones · Todos\n\nMostrando 10 de 10 habitaciones\n\nRestablecer filtros\nHABITACIÓN\nH101\nEstándar · Piso 1\nSin ocupación\nLimpia\nConsulte la disponibilidad para el período deseado.\nReservar\nHistorial\nHABITACIÓN\nH102\nEstándar · Piso 1\nSin ocupación\nLimpia\nConsulte la disponibilidad para el período deseado.\nReservar\nHistorial\nHABITACIÓN\nH103\nEstándar · Piso 1\nSin ocupación\nLimpia\nConsulte la disponibilidad para el período deseado.\nReservar\nHistorial\nHABITACIÓN\nH104\nEstándar · Piso 1\nSin ocupación\nLimpia\nConsulte la disponibilidad para el período deseado.\nReservar\nHistorial\nHABITACIÓN\nH105\nEstándar · Piso 1\nSin ocupación\nLimpia\nConsulte la disponibilidad para el período deseado.\nReservar\nHistorial\nHABITACIÓN\nH106\nEstándar · Piso 2\nSin ocupación\nLimpia\nConsulte la disponibilidad para el período deseado.\nReservar\nHistorial\nHABITACIÓN\nH107\nEstándar · Piso 2\nSin ocupación\nLimpia\nConsulte la disponibilidad para el período deseado.\nReservar\nHistorial\nHABITACIÓN\nH108\nEstándar · Piso 2\nSin ocupación\nLimpia\nConsulte la disponibilidad para el período deseado.\nReservar\nHistorial\nHABITACIÓN\nH109\nEstándar · Piso 2\nSin ocupación\nLimpia\nConsulte la disponibilidad para el período deseado.\nReservar\nHistorial\nHABITACIÓN\nH110\nEstándar · Piso 2\nSin ocupación\nLimpia\nConsulte la disponibilidad para el período deseado.\nReservar\nHistorial\nHora de referencia del servidor: 2026-10-21 17:52:21.310130 · NIO",
+      "url": "http://hospitality-acceptance.localhost:8089/desk/hospitality-suite/hospitality-reception",
+      "rooms": [
+        {
+          "canReserve": true,
+          "text": "HABITACIÓN\nH101\nEstándar · Piso 1\nSin ocupación\nLimpia\nConsulte la disponibilidad para el período deseado.\nReservar\nHistorial"
+        }
+      ]
+    }
+  ],
+  "fixture_origin": "Only Item and opening Stock Entry created by native fixture; category, maintenance, issue/return, incident/resolution and release submitted through role Pages.",
+  "intermediate_bundle": "46PQW7RZ",
+  "final_bundle": "5IE6WQ4O",
+  "known_open_observations": [
+    {
+      "sequence": "Close parts dialog, immediately click Registrar novedad",
+      "observed": "No new dialog appeared; read-only DOM inspection showed no backdrop, hidden previous dialog and enabled action. A later click opened the incident dialog.",
+      "status": "Cause unproven; retained under S04-16 and S04-20."
+    }
+  ],
+  "limitations": [
+    "Desktop review only; historical mobile evidence is not a new mobile run.",
+    "No new attachment upload or print review in this phase.",
+    "Initial numeric and issue steps ran on 46PQW7RZ; label fix, return, resolution and release ran on 5IE6WQ4O.",
+    "Read-only database checkpoints prove stored outcomes, not a network request trace."
+  ],
+  "last_session_logged_out": true,
+  "ota_sync_deferred_by_user": true
+}

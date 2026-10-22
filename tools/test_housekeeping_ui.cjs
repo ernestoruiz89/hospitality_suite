@@ -57,3 +57,15 @@ test('reception identifies an indefinite block and does not offer its room reser
   assert.match(html,/Hasta reapertura autorizada/);assert.match(html,/Reapertura pendiente/);
   assert.doesNotMatch(html,/data-act="reserve" data-id="blocked-room"/);
 });
+
+test('maintenance shows the catalogue part name safely while retaining its original stock reference',()=>{
+  const f=fixture(['maintain']);let html='';
+  const part={item:'INTERNAL-PART-KEY',quantity:2,status:'Issued',stock_entry:'original-entry'};
+  Object.assign(f.desk.data,{inventory_currency:'NIO',items:[{name:part.item,item_name:'Válvula anterior',display_name:'Válvula <principal>'}],
+    maintenance:[{name:'order',room:'room',title:'Revisar grifería',status:'In Progress',parts:[part],cost:40}]});
+  f.desk.amount=()=> 'C$ 40.00';
+  const chain={first(){return this;},find(){return this;},each(){return this;}};
+  f.desk.render_maintenance({html(value){html=value;},find(){return chain;}});
+  assert.match(html,/Válvula &lt;principal&gt; × 2/);assert.doesNotMatch(html,/INTERNAL-PART-KEY|<principal>/);
+  assert.equal(part.item,'INTERNAL-PART-KEY');assert.equal(part.stock_entry,'original-entry');
+});
