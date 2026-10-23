@@ -18,8 +18,7 @@
   {
    "fieldname": "company",
    "label": "Compañía",
-   "fieldtype": "Link",
-   "options": "Company",
+   "fieldtype": "Data",
    "reqd": 1
   },
   {

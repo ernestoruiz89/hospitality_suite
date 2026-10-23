@@ -24,13 +24,22 @@ def create_property(values,request_key):
     from hospitality_suite.service import canonical,operation
     from hospitality_suite.mode import normalize_mode
     from hospitality_suite.time import cutoff_time
+    from hospitality_suite.standalone_accounting import provider
+    pms = provider() == "pms"
     if not is_system():
         frappe.throw(frappe._("Se requiere administración del sistema"),frappe.PermissionError)
-    allowed={"property_name","company","mode","currency","time_zone","business_date","close_time"}
+    allowed={"property_name","company","organization","mode","currency","time_zone","business_date","close_time"}
     if not isinstance(request_key,str) or not request_key.strip() or len(request_key)>140 or any(k not in allowed for k in values):
         frappe.throw(frappe._("Configuración no válida"))
     submitted=values
     values={**values,"mode":normalize_mode(values["mode"])} if "mode" in values else values
+    if pms:
+        organization = frappe.get_doc("HS Organization", values.get("organization"), for_update=True)
+        if not organization.active or organization.base_currency != values.get("currency"):
+            frappe.throw(frappe._("La entidad legal debe estar activa y usar la moneda indicada"))
+        values = {**values, "company": organization.name}
+    elif values.get("organization"):
+        frappe.throw(frappe._("La vinculación de una entidad propia requiere migración contable"))
     for field in ("property_name","company","currency"):
         if not isinstance(values.get(field),str) or not values[field].strip():
             frappe.throw(frappe._("Indique nombre, compañía y moneda del establecimiento"))
@@ -52,7 +61,8 @@ def create_property(values,request_key):
             frappe.throw(frappe._("Indique una fecha operativa inicial válida (AAAA-MM-DD)"))
     # Serialize the absence of a request as well as its completed result. There
     # is no HS Property to lock yet; Company is the existing parent resource.
-    frappe.get_doc("Company",values["company"],for_update=True).check_permission("read")
+    if not pms:
+        frappe.get_doc("Company",values["company"],for_update=True).check_permission("read")
     key=hashlib.sha256(f"{frappe.session.user}|{values['company']}|create_property|{request_key}".encode()).hexdigest()
     digest=hashlib.sha256(canonical(submitted).encode()).hexdigest()
     prior=frappe.db.sql("SELECT payload_hash,result FROM `tabHS Request` WHERE request_key=%s FOR UPDATE",(key,),as_dict=True)
@@ -107,12 +117,18 @@ def assign_user(prop,data):
 def document_settings(prop):
     from hospitality_suite.security import require
     require(prop.name,"setup")
+    from hospitality_suite.standalone_accounting import provider
+    if provider() == "pms":
+        return dict(series={}, formats={}, roles=ROLES, can_manage_users=is_system())
     series={dt:[r for r in (frappe.get_meta(dt).get_field("naming_series").options or "").splitlines() if r] for dt in ("Sales Invoice","Payment Entry")}
     formats={dt:["Standard"]+frappe.get_all("Print Format",filters={"doc_type":dt,"disabled":0},pluck="name") for dt in ("Sales Invoice","HS Payment","HS Booking","HS Stay","HS Shift")}
     return dict(series=series,formats=formats,roles=ROLES,can_manage_users=is_system())
 
 
 def validate_document_settings(prop):
+    from hospitality_suite.standalone_accounting import provider
+    if provider() == "pms":
+        return
     for field,dt in (("invoice_series","Sales Invoice"),("payment_series","Payment Entry")):
         value=prop.get(field)
         options=(frappe.get_meta(dt).get_field("naming_series").options or "").splitlines()

@@ -11,8 +11,7 @@
   {
    "fieldname": "company",
    "label": "Compañía",
-   "fieldtype": "Link",
-   "options": "Company",
+   "fieldtype": "Data",
    "reqd": 1
   },
   {
@@ -50,14 +49,12 @@
   {
    "fieldname": "customer",
    "label": "Cliente pagador",
-   "fieldtype": "Link",
-   "options": "Customer"
+   "fieldtype": "Data"
   },
   {
    "fieldname": "item",
    "label": "Artículo",
-   "fieldtype": "Link",
-   "options": "Item",
+   "fieldtype": "Data",
    "reqd": 1
   },
   {

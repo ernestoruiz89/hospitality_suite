@@ -11,8 +11,7 @@
   {
    "fieldname": "company",
    "label": "Compañía",
-   "fieldtype": "Link",
-   "options": "Company",
+   "fieldtype": "Data",
    "reqd": 1
   },
   {
@@ -57,15 +56,13 @@
   {
    "fieldname": "customer",
    "label": "Cliente pagador",
-   "fieldtype": "Link",
-   "options": "Customer"
+   "fieldtype": "Data"
   },
   {
    "fieldname": "shift",
    "label": "Turno",
    "fieldtype": "Link",
-   "options": "HS Shift",
-   "reqd": 1
+   "options": "HS Shift"
   },
   {
    "fieldname": "method",
@@ -93,7 +90,8 @@
    "fieldname": "exchange_rate",
    "label": "Tipo de cambio",
    "fieldtype": "Float",
-   "default": 1
+   "default": 1,
+   "precision": 9
   },
   {
    "fieldname": "base_amount",
@@ -105,7 +103,7 @@
    "fieldname": "kind",
    "label": "Tipo",
    "fieldtype": "Select",
-   "options": "Payment\nAdvance\nGuarantee\nRefund\nGuarantee Refund\nGuarantee Applied\nWithdrawal\nExpense\nSupplier Payment\nSettlement",
+   "options": "Payment\nAdvance\nGuarantee\nRefund\nGuarantee Refund\nGuarantee Applied\nWithdrawal\nExpense\nSupplier Payment\nSettlement\nOther Income",
    "reqd": 1,
    "default": "Payment"
   },
@@ -120,14 +118,42 @@
   {
    "fieldname": "payment_entry",
    "label": "Comprobante de pago",
-   "fieldtype": "Link",
-   "options": "Payment Entry"
+   "fieldtype": "Data"
   },
   {
    "fieldname": "journal_entry",
    "label": "Asiento contable",
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "pms_party",
+   "label": "Pms party",
    "fieldtype": "Link",
-   "options": "Journal Entry"
+   "options": "HS Party"
+  },
+  {
+   "fieldname": "pms_counter_account",
+   "label": "Pms counter account",
+   "fieldtype": "Link",
+   "options": "HS Account"
+  },
+  {
+   "fieldname": "pms_concept",
+   "label": "Pms concept",
+   "fieldtype": "Link",
+   "options": "HS Treasury Concept"
+  },
+  {
+   "fieldname": "pms_receivable",
+   "label": "Pms receivable",
+   "fieldtype": "Link",
+   "options": "HS PMS Receivable"
+  },
+  {
+   "fieldname": "pms_journal",
+   "label": "Pms journal",
+   "fieldtype": "Link",
+   "options": "HS Journal"
   },
   {
    "fieldname": "reference",
@@ -168,8 +194,7 @@
   {
    "fieldname": "sales_invoice",
    "label": "Factura de venta",
-   "fieldtype": "Link",
-   "options": "Sales Invoice"
+   "fieldtype": "Data"
   },
   {
    "fieldname": "expense_category",
@@ -180,14 +205,12 @@
   {
    "fieldname": "supplier",
    "label": "Proveedor",
-   "fieldtype": "Link",
-   "options": "Supplier"
+   "fieldtype": "Data"
   },
   {
    "fieldname": "purchase_invoice",
    "label": "Factura de proveedor",
-   "fieldtype": "Link",
-   "options": "Purchase Invoice"
+   "fieldtype": "Data"
   },
   {
    "fieldname": "fee_snapshot",
@@ -250,6 +273,11 @@
   "status",
   "payment_entry",
   "journal_entry",
+  "pms_party",
+  "pms_counter_account",
+  "pms_concept",
+  "pms_receivable",
+  "pms_journal",
   "reference",
   "source_payment",
   "reason",

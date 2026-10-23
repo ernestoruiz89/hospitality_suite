@@ -11,8 +11,7 @@
   {
    "fieldname": "company",
    "label": "Compañía",
-   "fieldtype": "Link",
-   "options": "Company",
+   "fieldtype": "Data",
    "reqd": 1
   },
   {
@@ -25,8 +24,7 @@
   {
    "fieldname": "customer",
    "label": "Cliente pagador",
-   "fieldtype": "Link",
-   "options": "Customer"
+   "fieldtype": "Data"
   },
   {
    "fieldname": "guest",
@@ -86,8 +84,7 @@
   {
    "fieldname": "agent_commission_invoice",
    "label": "Factura de comisión",
-   "fieldtype": "Link",
-   "options": "Purchase Invoice",
+   "fieldtype": "Data",
    "read_only": 1
   },
   {
@@ -139,8 +136,7 @@
   {
    "fieldname": "fee_invoice",
    "label": "Factura de penalización",
-   "fieldtype": "Link",
-   "options": "Sales Invoice"
+   "fieldtype": "Data"
   },
   {
    "fieldname": "fee_amount",

@@ -11,8 +11,7 @@
   {
    "fieldname": "item",
    "label": "Artículo",
-   "fieldtype": "Link",
-   "options": "Item",
+   "fieldtype": "Data",
    "reqd": 1
   },
   {
@@ -25,8 +24,7 @@
   {
    "fieldname": "stock_entry",
    "label": "Movimiento de inventario",
-   "fieldtype": "Link",
-   "options": "Stock Entry",
+   "fieldtype": "Data",
    "reqd": 1
   },
   {

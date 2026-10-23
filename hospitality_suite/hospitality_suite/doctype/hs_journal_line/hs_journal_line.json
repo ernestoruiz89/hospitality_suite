@@ -1,0 +1,86 @@
+{
+ "doctype": "DocType",
+ "name": "HS Journal Line",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "hash",
+ "naming_rule": "Random",
+ "fields": [
+  {
+   "fieldname": "account",
+   "label": "Cuenta contable",
+   "fieldtype": "Link",
+   "options": "HS Account",
+   "reqd": 1
+  },
+  {
+   "fieldname": "debit",
+   "label": "Debit",
+   "fieldtype": "Currency",
+   "default": 0
+  },
+  {
+   "fieldname": "credit",
+   "label": "Credit",
+   "fieldtype": "Currency",
+   "default": 0
+  },
+  {
+   "fieldname": "party",
+   "label": "Party",
+   "fieldtype": "Link",
+   "options": "HS Party"
+  },
+  {
+   "fieldname": "account_currency",
+   "label": "Moneda de cuenta",
+   "fieldtype": "Link",
+   "options": "Currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "exchange_rate",
+   "label": "Tipo de cambio",
+   "fieldtype": "Float",
+   "default": 0,
+   "precision": 9
+  },
+  {
+   "fieldname": "debit_in_account_currency",
+   "label": "Debit in account currency",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "account_currency"
+  },
+  {
+   "fieldname": "credit_in_account_currency",
+   "label": "Credit in account currency",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "account_currency"
+  },
+  {
+   "fieldname": "memo",
+   "label": "Memo",
+   "fieldtype": "Small Text"
+  }
+ ],
+ "field_order": [
+  "account",
+  "debit",
+  "credit",
+  "party",
+  "account_currency",
+  "exchange_rate",
+  "debit_in_account_currency",
+  "credit_in_account_currency",
+  "memo"
+ ],
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0,
+ "istable": 1
+}

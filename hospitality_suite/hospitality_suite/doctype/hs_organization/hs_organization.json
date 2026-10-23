@@ -1,0 +1,65 @@
+{
+ "doctype": "DocType",
+ "name": "HS Organization",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "ENT-.#####",
+ "naming_rule": "Expression (old style)",
+ "fields": [
+  {
+   "fieldname": "legal_name",
+   "label": "Legal name",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "tax_id",
+   "label": "Tax id",
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "base_currency",
+   "label": "Base currency",
+   "fieldtype": "Link",
+   "options": "Currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "tax_regime",
+   "label": "Tax regime",
+   "fieldtype": "Select",
+   "options": "General\nCuota Fija",
+   "reqd": 1,
+   "default": "General"
+  },
+  {
+   "fieldname": "active",
+   "label": "Habilitado",
+   "fieldtype": "Check",
+   "default": 1
+  }
+ ],
+ "field_order": [
+  "legal_name",
+  "tax_id",
+  "base_currency",
+  "tax_regime",
+  "active"
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0
+}

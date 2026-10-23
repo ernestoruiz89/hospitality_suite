@@ -3,6 +3,7 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 node_modules
+*.tsbuildinfo
 *.egg-info/
 dist
 .venv/

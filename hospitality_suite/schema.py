@@ -1,5 +1,7 @@
 """Declarative schema; generated JSON is committed and installed by Frappe sync."""
 
+from copy import deepcopy
+
 ROLES = ["HS Administrator", "HS Manager", "HS Supervisor", "HS Receptionist", "HS Cashier",
          "HS Housekeeping", "HS Maintenance", "HS Accountant", "HS Auditor"]
 OPERATORS = ROLES[:5] + ["HS Accountant", "HS Auditor"]
@@ -37,9 +39,11 @@ SCHEMA = {
     "HS Access": dict(roles=["System Manager"], writable=True, fields=[link("user", "User"), *SCOPE]),
     "HS Property": dict(roles=ROLES, writable=True, fields=[
         f("property_name", required=True), link("company", "Company"),
+        link("organization", "HS Organization", False, label="Entidad legal de Suite"),
         select("mode", ["Hotel", "Por tiempo", "Mixed"]), f("time_zone", default="America/Managua", reqd=1),
         f("business_date", "Date", required=True), f("close_time", "Time", default="06:00:00"),
-        link("currency", "Currency"), f("check_in_time", "Time", default="14:00:00"),
+        link("currency", "Currency"), f("accepted_currencies", "Table", "HS Property Currency"),
+        f("check_in_time", "Time", default="14:00:00"),
         f("check_out_time", "Time", default="12:00:00"), f("cleaning_minutes", "Int", default=30),
         f("inspection_required", "Check", default=1), f("discreet_mode", "Check"),
         select("lodging_charge_policy",["Arrival","Nightly"],default="Arrival",label="Generación de cargos de alojamiento"),
@@ -177,14 +181,19 @@ SCHEMA = {
         select("purpose",["Merchandise","Cleaning","Linen","Parts","Asset"])]),
     "HS Shift": dict(roles=FINANCE, fields=[*SCOPE, link("cashier", "User"), f("opened_at", "Datetime"), f("closed_at", "Datetime"),
         select("status", ["Open", "Review", "Closed"]), link("currency", "Currency"), f("opening_amount", "Currency", "currency"),
+        f("opening_by_currency", "Code", "JSON"),
         f("expected_amount", "Currency", "currency"), f("counted_amount", "Currency", "currency"), f("difference", "Currency", "currency"),
         f("denominations", "Code", "JSON"), f("reason", "Small Text"), link("approved_by", "User", False)]),
     "HS Payment": dict(roles=FINANCE, fields=[*SCOPE, link("stay", "HS Stay", False), link("booking", "HS Booking", False),
         f("business_date","Date",read_only=1,label="Fecha operativa"),f("business_date_source",read_only=1,hidden=1,print_hide=1),
-        link("folio", "HS Folio", False), link("customer", "Customer",False), link("shift", "HS Shift"), link("method", "HS Payment Method"),
-        *MONEY, f("exchange_rate", "Float", default=1), f("base_amount", "Currency"),
-        select("kind", ["Payment", "Advance", "Guarantee", "Refund", "Guarantee Refund", "Guarantee Applied", "Withdrawal","Expense","Supplier Payment","Settlement"]),
+        link("folio", "HS Folio", False), link("customer", "Customer",False), link("shift", "HS Shift", False), link("method", "HS Payment Method"),
+        *MONEY, f("exchange_rate", "Float", default=1, precision=9), f("base_amount", "Currency"),
+        select("kind", ["Payment", "Advance", "Guarantee", "Refund", "Guarantee Refund", "Guarantee Applied", "Withdrawal","Expense","Supplier Payment","Settlement", "Other Income"]),
         select("status", ["Posted", "Cancelled"]), link("payment_entry", "Payment Entry", False), link("journal_entry", "Journal Entry", False),
+        link("pms_party", "HS Party", False), link("pms_counter_account", "HS Account", False),
+        link("pms_concept", "HS Treasury Concept", False),
+        link("pms_receivable", "HS PMS Receivable", False),
+        link("pms_journal", "HS Journal", False),
         f("reference"), link("source_payment", "HS Payment", False), f("reason", "Small Text"),
         f("tendered","Currency","currency"),f("change_amount","Currency","currency"),link("service","HS Service Request",False),link("sales_invoice","Sales Invoice",False),
         link("expense_category","HS Expense Category",False),link("supplier","Supplier",False),link("purchase_invoice","Purchase Invoice",False),
@@ -287,7 +296,123 @@ SCHEMA = {
         f("content_hash",hidden=1,print_hide=1),select("status",["Pending","Deleted","Shared","Failed"]),f("last_error","Small Text")]),
 }
 
-SCOPED = [name for name, spec in SCHEMA.items() if not spec.get("child") and name != "HS Access"]
+# These records form the Frappe-only financial book. The legacy ERPNext fields
+# above remain available while the operating services are moved to a provider.
+# New documents use a company identifier as plain data so their schema never
+# introduces another dependency on the ERPNext Company DocType.
+PMS_SCOPE = [f("company", required=True), link("property", "HS Property")]
+SCHEMA.update({
+    "HS Property Currency": dict(child=True, fields=[link("currency", "Currency")]),
+    "HS Site Mode": dict(sitewide=True, single=True, roles=["System Manager"],
+        controller="PMSModeDocument", fields=[
+            f("provider", "Select", "\nPMS\nERPNext", required=True),
+            f("cutover_date", "Date"), f("migration_reference", "Small Text"),
+        ]),
+    "HS Organization": dict(sitewide=True, roles=["System Manager"], writable=True,
+        controller="OrganizationDocument", fields=[
+            f("legal_name", required=True), f("tax_id"), link("base_currency", "Currency"),
+            select("tax_regime", ["General", "Cuota Fija"]), f("active", "Check", default=1),
+        ]),
+    "HS Exchange Rate": dict(roles=FINANCE, controller="PMSExchangeRateDocument", fields=[
+        *PMS_SCOPE, link("organization", "HS Organization"),
+        link("from_currency", "Currency"), link("to_currency", "Currency"),
+        f("rate", "Float", precision=9, required=True), f("effective_at", "Datetime", required=True),
+        f("source", required=True),
+    ]),
+    "HS Account": dict(roles=FINANCE, controller="PMSAccountDocument", fields=[
+        *PMS_SCOPE, link("organization", "HS Organization"),
+        f("account_code", required=True), f("account_number"), f("account_name", required=True),
+        select("root_type", ["Asset", "Liability", "Equity", "Income", "Expense"]),
+        select("account_type", ["General", "Accumulated Depreciation", "Asset Received But Not Billed", "Bank", "Cash", "Chargeable", "Capital Work in Progress", "Cost of Goods Sold", "Current Asset", "Current Liability", "Depreciation", "Direct Expense", "Direct Income", "Equity", "Expense Account", "Expenses Included In Asset Valuation", "Expenses Included In Valuation", "Fixed Asset", "Income Account", "Indirect Expense", "Indirect Income", "Liability", "Payable", "Receivable", "Round Off", "Round Off for Opening", "Stock", "Stock Adjustment", "Stock Received But Not Billed", "Service Received But Not Billed", "Tax", "Temporary"], default="General"),
+        link("account_currency", "Currency"), link("parent_account", "HS Account", False),
+        f("is_group", "Check"), f("is_cash", "Check"), f("is_bank", "Check"), f("active", "Check", default=1),
+    ]),
+    "HS Journal Line": dict(child=True, fields=[
+        link("account", "HS Account"), f("debit", "Currency"),
+        f("credit", "Currency"), link("party", "HS Party", False),
+        link("account_currency", "Currency"), f("exchange_rate", "Float", precision=9),
+        f("debit_in_account_currency", "Currency", "account_currency"),
+        f("credit_in_account_currency", "Currency", "account_currency"),
+        f("memo", "Small Text"),
+    ]),
+    "HS Journal": dict(roles=FINANCE, controller="PMSJournalDocument", fields=[
+        *PMS_SCOPE, link("organization", "HS Organization"),
+        f("posting_date", "Date", required=True), f("business_date", "Date", required=True),
+        f("source_doctype", required=True), f("source_name", required=True), f("purpose", required=True),
+        link("reversal_of", "HS Journal", False, unique=1),
+        f("memo", "Small Text"), select("status", ["Posted"]),
+        f("total_debit", "Currency", read_only=1), f("total_credit", "Currency", read_only=1),
+        f("lines", "Table", "HS Journal Line"),
+    ]),
+    "HS Party": dict(roles=OPERATORS, controller="PMSMasterDocument", fields=[
+        *PMS_SCOPE, link("organization", "HS Organization"),
+        f("party_name", required=True), select("party_type", ["Customer", "Supplier", "Both"]),
+        f("tax_id"), f("email", "Data", options="Email"), f("phone"),
+        f("active", "Check", default=1),
+    ]),
+    "HS PMS Receivable": dict(roles=FINANCE, controller="PMSReceivableDocument", fields=[
+        *PMS_SCOPE, link("organization", "HS Organization"), link("party", "HS Party"),
+        f("reference", required=True), f("description", "Small Text", required=True),
+        f("business_date", "Date", required=True), link("currency", "Currency"),
+        f("amount", "Currency", "currency", required=True),
+        link("receivable_account", "HS Account"), link("income_account", "HS Account"),
+        link("journal", "HS Journal"), link("reversal_journal", "HS Journal", False),
+        select("status", ["Posted", "Cancelled"]),
+    ]),
+    "HS PMS Allocation": dict(roles=FINANCE, controller="PMSAllocationDocument", fields=[
+        *PMS_SCOPE, link("organization", "HS Organization"),
+        link("receivable", "HS PMS Receivable"), link("payment", "HS Payment"),
+        select("kind", ["Direct", "Advance Applied"]),
+        f("business_date", "Date", required=True), link("currency", "Currency"),
+        f("amount", "Currency", "currency", required=True),
+        link("journal", "HS Journal", False),
+    ]),
+    "HS Product": dict(roles=OPERATORS, controller="PMSMasterDocument", fields=[
+        *PMS_SCOPE, link("organization", "HS Organization"),
+        f("product_code", required=True), f("product_name", required=True),
+        select("product_type", ["Service", "Stock", "Asset"]),
+        link("income_account", "HS Account", False), link("expense_account", "HS Account", False),
+        link("inventory_account", "HS Account", False),
+        f("sales_rate", "Currency"), f("active", "Check", default=1),
+    ]),
+    "HS Warehouse": dict(roles=FINANCE, controller="PMSMasterDocument", fields=[
+        *PMS_SCOPE, link("organization", "HS Organization"),
+        f("warehouse_code", required=True), f("warehouse_name", required=True),
+        f("active", "Check", default=1),
+    ]),
+    "HS Stock Movement": dict(roles=FINANCE, controller="PMSStockMovementDocument", fields=[
+        *PMS_SCOPE, link("organization", "HS Organization"),
+        link("product", "HS Product"), link("warehouse", "HS Warehouse"),
+        select("direction", ["Receipt", "Issue"]),
+        f("quantity_delta", "Float", required=True), f("value_delta", "Currency", required=True),
+        f("balance_quantity", "Float", required=True), f("balance_value", "Currency", required=True),
+        f("business_date", "Date", required=True),
+        f("source_doctype", required=True), f("source_name", required=True), f("purpose", required=True),
+        link("journal", "HS Journal", False), f("memo", "Small Text"),
+    ]),
+})
+
+# Core metadata must sync on a site without ERPNext. On ERPNext sites the
+# original Link semantics are restored by site-specific Property Setters after
+# migration; existing field names and stored values are deliberately retained.
+ERP_LINK_DOCTYPES = {
+    "Company", "Customer", "Supplier", "Item", "Account", "Warehouse", "Cost Center",
+    "Sales Invoice", "Payment Entry", "Journal Entry", "Stock Entry", "Stock Reconciliation",
+    "Purchase Invoice", "Purchase Receipt", "Purchase Order", "Material Request",
+    "Delivery Note", "Sales Order", "Asset", "Mode of Payment", "Price List",
+    "Sales Taxes and Charges Template",
+}
+ERP_LINK_TARGETS = {}
+for _doctype, _spec in SCHEMA.items():
+    # SCOPE/MONEY field dictionaries are reused above; isolate them before a
+    # site-independent metadata transform or only the first DocType is mapped.
+    _spec["fields"] = deepcopy(_spec["fields"])
+    for _field in _spec["fields"]:
+        if _field["fieldtype"] == "Link" and _field.get("options") in ERP_LINK_DOCTYPES:
+            ERP_LINK_TARGETS[(_doctype, _field["fieldname"])] = _field.pop("options")
+            _field["fieldtype"] = "Data"
+
+SCOPED = [name for name, spec in SCHEMA.items() if not spec.get("child") and not spec.get("sitewide") and name != "HS Access"]
 WRITABLE = [name for name, spec in SCHEMA.items() if spec.get("writable")]
 PAGES = {
     "hospitality-home": ("Inicio", ROLES), "hospitality-reception": ("Recepción", OPERATORS),

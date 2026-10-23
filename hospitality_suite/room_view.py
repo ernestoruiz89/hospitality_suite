@@ -155,7 +155,8 @@ def room_snapshot(property_name, room_name):
         current = dict(name=stay.name if can["stay"] else None,
                        guest_label=summary["guest_label"], starts_at=local(stay.starts_at, prop).isoformat(),
                        ends_at=local(stay.ends_at, prop).isoformat(), overdue=summary["overdue_departure"])
-        if can["account"]:
+        from hospitality_suite.standalone_accounting import provider
+        if can["account"] and provider() == "erpnext":
             from hospitality_suite.accounting import folios_for_stay, folio_balance
             values = {}
             shared = False

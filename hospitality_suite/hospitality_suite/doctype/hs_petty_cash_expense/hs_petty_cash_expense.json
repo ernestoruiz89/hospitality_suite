@@ -11,8 +11,7 @@
   {
    "fieldname": "company",
    "label": "Compañía",
-   "fieldtype": "Link",
-   "options": "Company",
+   "fieldtype": "Data",
    "reqd": 1
   },
   {
@@ -87,22 +86,19 @@
   {
    "fieldname": "expense_account",
    "label": "Cuenta de gastos",
-   "fieldtype": "Link",
-   "options": "Account",
+   "fieldtype": "Data",
    "reqd": 1
   },
   {
    "fieldname": "petty_account",
    "label": "Cuenta de Caja Chica",
-   "fieldtype": "Link",
-   "options": "Account",
+   "fieldtype": "Data",
    "reqd": 1
   },
   {
    "fieldname": "journal_entry",
    "label": "Asiento contable",
-   "fieldtype": "Link",
-   "options": "Journal Entry",
+   "fieldtype": "Data",
    "reqd": 1
   },
   {

@@ -1,0 +1,201 @@
+{
+ "doctype": "DocType",
+ "name": "HS Stock Movement",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "MOVSTK-.YYYY.-.#####",
+ "naming_rule": "Expression (old style)",
+ "fields": [
+  {
+   "fieldname": "company",
+   "label": "Compañía",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "property",
+   "label": "Establecimiento",
+   "fieldtype": "Link",
+   "options": "HS Property",
+   "reqd": 1
+  },
+  {
+   "fieldname": "organization",
+   "label": "Organization",
+   "fieldtype": "Link",
+   "options": "HS Organization",
+   "reqd": 1
+  },
+  {
+   "fieldname": "product",
+   "label": "Product",
+   "fieldtype": "Link",
+   "options": "HS Product",
+   "reqd": 1
+  },
+  {
+   "fieldname": "warehouse",
+   "label": "Almacén",
+   "fieldtype": "Link",
+   "options": "HS Warehouse",
+   "reqd": 1
+  },
+  {
+   "fieldname": "direction",
+   "label": "Direction",
+   "fieldtype": "Select",
+   "options": "Receipt\nIssue",
+   "reqd": 1,
+   "default": "Receipt"
+  },
+  {
+   "fieldname": "quantity_delta",
+   "label": "Quantity delta",
+   "fieldtype": "Float",
+   "default": 0,
+   "reqd": 1
+  },
+  {
+   "fieldname": "value_delta",
+   "label": "Value delta",
+   "fieldtype": "Currency",
+   "default": 0,
+   "reqd": 1
+  },
+  {
+   "fieldname": "balance_quantity",
+   "label": "Balance quantity",
+   "fieldtype": "Float",
+   "default": 0,
+   "reqd": 1
+  },
+  {
+   "fieldname": "balance_value",
+   "label": "Balance value",
+   "fieldtype": "Currency",
+   "default": 0,
+   "reqd": 1
+  },
+  {
+   "fieldname": "business_date",
+   "label": "Fecha operativa",
+   "fieldtype": "Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "source_doctype",
+   "label": "Tipo de documento de origen",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "source_name",
+   "label": "Documento de origen",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "purpose",
+   "label": "Uso operativo",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "journal",
+   "label": "Journal",
+   "fieldtype": "Link",
+   "options": "HS Journal"
+  },
+  {
+   "fieldname": "memo",
+   "label": "Memo",
+   "fieldtype": "Small Text"
+  }
+ ],
+ "field_order": [
+  "company",
+  "property",
+  "organization",
+  "product",
+  "warehouse",
+  "direction",
+  "quantity_delta",
+  "value_delta",
+  "balance_quantity",
+  "balance_value",
+  "business_date",
+  "source_doctype",
+  "source_name",
+  "purpose",
+  "journal",
+  "memo"
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Administrator",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Supervisor",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Cashier",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Accountant",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Auditor",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0
+}

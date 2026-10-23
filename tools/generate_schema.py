@@ -38,13 +38,18 @@ for name, spec in SCHEMA.items():
         data.update(autoname=DOCUMENT_SERIES[name], naming_rule="Expression (old style)")
     if spec.get("child"):
         data.update(istable=1, permissions=[])
+    if spec.get("single"):
+        data.update(issingle=1)
+        data.pop("autoname", None)
+        data.pop("naming_rule", None)
     titles = {"HS Property":"property_name", "HS Category":"category_name", "HS Room":"room_number", "HS Rate":"title", "HS Guest":"full_name", "HS Payment Method":"mode_of_payment", "HS Folio":"label", "HS Travel Agent":"agent_name", "HS Experience":"experience_name"}
     if name in titles:
         data.update(title_field=titles[name], search_fields=titles[name], show_title_field_in_link=1)
     write(folder / (slug + ".json"), json.dumps(data, indent=1, ensure_ascii=False) + "\n")
     class_name = name.replace(" ", "")
     write(folder / "__init__.py", "")
-    write(folder / (slug + ".py"), f'from hospitality_suite.controllers import ScopedDocument\n\n\nclass {class_name}(ScopedDocument):\n    pass\n')
+    controller = spec.get("controller", "ScopedDocument")
+    write(folder / (slug + ".py"), f'from hospitality_suite.controllers import {controller}\n\n\nclass {class_name}({controller}):\n    pass\n')
 
 for route, (title, roles) in PAGES.items():
     slug = route.replace("-", "_")
@@ -73,5 +78,9 @@ for source,(dt,name) in formats.items():
     data=dict(doctype="Print Format",name=name,doc_type=dt,module="Hospitality Suite",standard="Yes",custom_format=1,
               print_format_type="Jinja",html=(ROOT / f"hospitality_suite/templates/print/{source}.html").read_text(encoding="utf-8"),
               css=".hs-print{font-family:Arial,sans-serif;color:#173c32;font-size:11px}.hs-print h1{font-size:25px}.hs-print h2{font-size:15px;margin-top:25px}.hs-print table{width:100%;border-collapse:collapse;margin:18px 0}.hs-print th,.hs-print td{border-bottom:1px solid #dce5dc;padding:10px;text-align:left}.hs-print th{background:#edf2e9}.eyebrow{font-size:9px;letter-spacing:2px}.muted{color:#6c7b70;font-size:9px}")
-    write(ROOT / f"hospitality_suite/hospitality_suite/print_format/{slug}/{slug}.json",json.dumps(data,indent=1,ensure_ascii=False)+"\n")
+    if source == "invoice":
+        destination = ROOT / f"hospitality_suite/erpnext_assets/print_format/{slug}.json"
+    else:
+        destination = ROOT / f"hospitality_suite/hospitality_suite/print_format/{slug}/{slug}.json"
+    write(destination,json.dumps(data,indent=1,ensure_ascii=False)+"\n")
 print(f"Generated {len(SCHEMA)} DocTypes and {len(PAGES)} Pages")

@@ -1,0 +1,184 @@
+{
+ "doctype": "DocType",
+ "name": "HS Journal",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "ASI-.YYYY.-.#####",
+ "naming_rule": "Expression (old style)",
+ "fields": [
+  {
+   "fieldname": "company",
+   "label": "Compañía",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "property",
+   "label": "Establecimiento",
+   "fieldtype": "Link",
+   "options": "HS Property",
+   "reqd": 1
+  },
+  {
+   "fieldname": "organization",
+   "label": "Organization",
+   "fieldtype": "Link",
+   "options": "HS Organization",
+   "reqd": 1
+  },
+  {
+   "fieldname": "posting_date",
+   "label": "Posting date",
+   "fieldtype": "Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "business_date",
+   "label": "Fecha operativa",
+   "fieldtype": "Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "source_doctype",
+   "label": "Tipo de documento de origen",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "source_name",
+   "label": "Documento de origen",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "purpose",
+   "label": "Uso operativo",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "reversal_of",
+   "label": "Reversal of",
+   "fieldtype": "Link",
+   "options": "HS Journal",
+   "unique": 1
+  },
+  {
+   "fieldname": "memo",
+   "label": "Memo",
+   "fieldtype": "Small Text"
+  },
+  {
+   "fieldname": "status",
+   "label": "Estado",
+   "fieldtype": "Select",
+   "options": "Posted",
+   "reqd": 1,
+   "default": "Posted"
+  },
+  {
+   "fieldname": "total_debit",
+   "label": "Total debit",
+   "fieldtype": "Currency",
+   "default": 0,
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_credit",
+   "label": "Total credit",
+   "fieldtype": "Currency",
+   "default": 0,
+   "read_only": 1
+  },
+  {
+   "fieldname": "lines",
+   "label": "Lines",
+   "fieldtype": "Table",
+   "options": "HS Journal Line"
+  }
+ ],
+ "field_order": [
+  "company",
+  "property",
+  "organization",
+  "posting_date",
+  "business_date",
+  "source_doctype",
+  "source_name",
+  "purpose",
+  "reversal_of",
+  "memo",
+  "status",
+  "total_debit",
+  "total_credit",
+  "lines"
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Administrator",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Supervisor",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Cashier",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Accountant",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Auditor",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0
+}

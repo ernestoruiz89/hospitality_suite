@@ -17,9 +17,14 @@
   {
    "fieldname": "company",
    "label": "Compañía",
-   "fieldtype": "Link",
-   "options": "Company",
+   "fieldtype": "Data",
    "reqd": 1
+  },
+  {
+   "fieldname": "organization",
+   "label": "Entidad legal de Suite",
+   "fieldtype": "Link",
+   "options": "HS Organization"
   },
   {
    "fieldname": "mode",
@@ -54,6 +59,12 @@
    "fieldtype": "Link",
    "options": "Currency",
    "reqd": 1
+  },
+  {
+   "fieldname": "accepted_currencies",
+   "label": "Monedas habilitadas",
+   "fieldtype": "Table",
+   "options": "HS Property Currency"
   },
   {
    "fieldname": "check_in_time",
@@ -138,34 +149,29 @@
   {
    "fieldname": "cost_center",
    "label": "Centro de costo",
-   "fieldtype": "Link",
-   "options": "Cost Center",
+   "fieldtype": "Data",
    "permlevel": 1
   },
   {
    "fieldname": "warehouse",
    "label": "Almacén",
-   "fieldtype": "Link",
-   "options": "Warehouse"
+   "fieldtype": "Data"
   },
   {
    "fieldname": "laundry_warehouse",
    "label": "Almacén de lavandería",
-   "fieldtype": "Link",
-   "options": "Warehouse"
+   "fieldtype": "Data"
   },
   {
    "fieldname": "income_account",
    "label": "Cuenta de ingresos del establecimiento",
-   "fieldtype": "Link",
-   "options": "Account",
+   "fieldtype": "Data",
    "permlevel": 1
   },
   {
    "fieldname": "expense_account",
    "label": "Cuenta de gastos del establecimiento",
-   "fieldtype": "Link",
-   "options": "Account",
+   "fieldtype": "Data",
    "permlevel": 1
   },
   {
@@ -178,29 +184,25 @@
   {
    "fieldname": "receivable_account",
    "label": "Cuenta por cobrar",
-   "fieldtype": "Link",
-   "options": "Account",
+   "fieldtype": "Data",
    "permlevel": 1
   },
   {
    "fieldname": "guarantee_account",
    "label": "Cuenta de garantías",
-   "fieldtype": "Link",
-   "options": "Account",
+   "fieldtype": "Data",
    "permlevel": 1
   },
   {
    "fieldname": "cash_transfer_account",
    "label": "Cuenta de entregas de efectivo",
-   "fieldtype": "Link",
-   "options": "Account",
+   "fieldtype": "Data",
    "permlevel": 1
   },
   {
    "fieldname": "petty_cash_account",
    "label": "Cuenta exclusiva de Caja Chica",
-   "fieldtype": "Link",
-   "options": "Account",
+   "fieldtype": "Data",
    "unique": 1,
    "permlevel": 1
   },
@@ -214,53 +216,45 @@
   {
    "fieldname": "petty_cash_overage_account",
    "label": "Ingreso por sobrante de Caja Chica",
-   "fieldtype": "Link",
-   "options": "Account",
+   "fieldtype": "Data",
    "permlevel": 1
   },
   {
    "fieldname": "petty_cash_shortage_account",
    "label": "Gasto por faltante de Caja Chica",
-   "fieldtype": "Link",
-   "options": "Account",
+   "fieldtype": "Data",
    "permlevel": 1
   },
   {
    "fieldname": "lodging_item",
    "label": "Artículo de alojamiento",
-   "fieldtype": "Link",
-   "options": "Item"
+   "fieldtype": "Data"
   },
   {
    "fieldname": "extra_hour_item",
    "label": "Artículo de horas adicionales por tiempo",
-   "fieldtype": "Link",
-   "options": "Item"
+   "fieldtype": "Data"
   },
   {
    "fieldname": "day_pass_item",
    "label": "Artículo de Day Pass sin habitación",
-   "fieldtype": "Link",
-   "options": "Item"
+   "fieldtype": "Data"
   },
   {
    "fieldname": "tax_template",
    "label": "Plantilla de impuestos",
-   "fieldtype": "Link",
-   "options": "Sales Taxes and Charges Template",
+   "fieldtype": "Data",
    "permlevel": 1
   },
   {
    "fieldname": "price_list",
    "label": "Lista de precios",
-   "fieldtype": "Link",
-   "options": "Price List"
+   "fieldtype": "Data"
   },
   {
    "fieldname": "agent_commission_item",
    "label": "Artículo de comisión de agencias",
-   "fieldtype": "Link",
-   "options": "Item"
+   "fieldtype": "Data"
   },
   {
    "fieldname": "tax_policy_confirmed",
@@ -313,8 +307,7 @@
   {
    "fieldname": "penalty_item",
    "label": "Artículo para penalizaciones",
-   "fieldtype": "Link",
-   "options": "Item"
+   "fieldtype": "Data"
   },
   {
    "fieldname": "early_hour_rate",
@@ -347,8 +340,7 @@
   {
    "fieldname": "timing_item",
    "label": "Artículo de cargos por horario",
-   "fieldtype": "Link",
-   "options": "Item"
+   "fieldtype": "Data"
   },
   {
    "fieldname": "checkout_inspection_required",
@@ -393,11 +385,13 @@
  "field_order": [
   "property_name",
   "company",
+  "organization",
   "mode",
   "time_zone",
   "business_date",
   "close_time",
   "currency",
+  "accepted_currencies",
   "check_in_time",
   "check_out_time",
   "cleaning_minutes",

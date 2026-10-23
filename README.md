@@ -18,7 +18,7 @@ Abra [Reservas](http://hospitality.localhost:8086/desk/hospitality-suite/hospita
 
 Frappe **16.52.0**, ERPNext **16.51.1**, Python **3.14.6**, Node **24.18.0**, MariaDB **10.11.14**, Ubuntu 24.04/WSL2; commits y rutas en [la evidencia de entorno](docs/evidence/f26-candidate-environment.json). Otras versiones no están acreditadas. HRMS es opcional y no estaba instalado. PDF requiere `wkhtmltopdf` con Qt parcheado; un renderer incompatible se rechaza con un error claro.
 
-La app declara sus dependencias Bench en `pyproject.toml`, usa JS/CSS y controles nativos de Frappe, y no modifica el núcleo. [Arquitectura y decisiones](docs/ARQUITECTURA.md).
+La app declara sus dependencias Bench en `pyproject.toml`, usa JS/CSS y controles nativos de Frappe, y no modifica el núcleo. [Arquitectura y decisiones](docs/ARQUITECTURA.md). El [modo PMS sin ERPNext](docs/ARQUITECTURA_PMS_SIN_ERPNEXT.md) ya puede instalarse en un sitio Frappe 16 para ensayos: incluye catálogo contable, asientos, monedas por establecimiento, Caja y cuentas por cobrar internas. Sigue en desarrollo y aún no sustituye al modo ERPNext para facturación fiscal, folios, compras, cierres y paridad operativa.
 
 ## Instalación con Bench
 

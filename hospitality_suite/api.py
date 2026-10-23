@@ -13,9 +13,30 @@ from hospitality_suite import setup
 from hospitality_suite import service_accounting
 from hospitality_suite import periodic
 from hospitality_suite import booking_drafts
+from hospitality_suite import standalone_accounting
+from hospitality_suite import standalone_coa
+from hospitality_suite import standalone_currency
+from hospitality_suite import standalone_cash, standalone_receivables
 from hospitality_suite.inputs import object_payload as payload
 
 COMMANDS = {
+    "pms_account": ("chart", standalone_accounting.save_account),
+    "pms_coa_import": ("chart", standalone_coa.import_chart),
+    "pms_currencies": ("chart", standalone_currency.configure),
+    "pms_exchange_rate": ("chart", standalone_currency.record_rate),
+    "pms_payment_method": ("chart", standalone_cash.setup_method),
+    "pms_expense_category": ("chart", standalone_cash.setup_category),
+    "pms_income_concept": ("chart", standalone_cash.setup_concept),
+    "pms_customer": ("finance", standalone_cash.create_customer),
+    "pms_open_shift": ("finance", standalone_cash.open_shift),
+    "pms_close_shift": ("finance", standalone_cash.close_shift),
+    "pms_cash_movement": ("finance", standalone_cash.post_movement),
+    "pms_receivable": ("chart", standalone_receivables.create),
+    "pms_apply_advance": ("finance", standalone_receivables.apply_advance),
+    "pms_cancel_receivable": ("approve", standalone_receivables.cancel),
+    "pms_opening_balance": ("setup", standalone_accounting.opening_balance),
+    "pms_manual_journal": ("journal", standalone_accounting.manual_journal),
+    "pms_reverse_journal": ("approve", standalone_accounting.reverse),
     "travel_agent": ("setup", travel_experiences.save_agent),
     "experience": ("setup", travel_experiences.save_experience),
     "experience_order": ("reserve", travel_experiences.order_experience),
@@ -82,11 +103,71 @@ COMMANDS = {
 }
 
 
+@frappe.whitelist()
+def pms_trial_balance(property_name, through_date=None):
+    return standalone_accounting.trial_balance(property_name, through_date)
+
+
+@frappe.whitelist()
+def pms_accounts(property_name):
+    return standalone_accounting.list_accounts(property_name)
+
+
+@frappe.whitelist()
+def pms_chart(property_name):
+    rows = standalone_accounting.chart(property_name)
+    account_types = next(field["options"].split("\n") for field in standalone_coa.SCHEMA["HS Account"]["fields"]
+                         if field["fieldname"] == "account_type")
+    return {"accounts": rows, "account_types": [name for name in account_types if name],
+            "currencies": frappe.get_all("Currency", filters={"enabled": 1}, pluck="name", order_by="name asc")}
+
+
+@frappe.whitelist(methods=["POST"])
+def pms_coa_preview(property_name, file_name, content_base64):
+    return standalone_coa.preview(property_name, file_name, content_base64)
+
+
+@frappe.whitelist()
+def pms_coa_export(property_name):
+    return standalone_coa.export_chart(property_name)
+
+
+@frappe.whitelist()
+def pms_currency_settings(property_name):
+    return standalone_currency.settings(property_name)
+
+
+@frappe.whitelist()
+def pms_cash_snapshot(property_name):
+    return standalone_cash.snapshot(property_name)
+
+
+@frappe.whitelist()
+def pms_customers(property_name):
+    return standalone_cash.customers(property_name)
+
+
+@frappe.whitelist()
+def pms_receivables(property_name):
+    return standalone_receivables.snapshot(property_name)
+
+
+@frappe.whitelist()
+def pms_cash_preview(property_name, data):
+    prop = require(property_name, "finance")
+    return standalone_cash.quote(prop, payload(data))
+
+
 @frappe.whitelist(methods=["POST"])
 def execute(property_name, action, request_key, data=None):
     data = payload({} if data is None else data)
     if not isinstance(action,str) or action not in COMMANDS:
         frappe.throw(frappe._("Acción desconocida"))
+    if standalone_accounting.provider() == "pms" and action in {
+        "open_shift", "close_shift", "payment", "cash_expense", "finance_post", "withdrawal",
+        "invoice", "direct_sale", "day_pass_no_room", "supplier_payment", "petty_fund",
+        "petty_expense", "petty_rendition", "purchase_invoice", "receive_purchase"}:
+        frappe.throw(frappe._("Use el flujo PMS de este sitio para la operación financiera"))
     permission, handler = COMMANDS[action]
     body = {**data, "operation": action}
     return command(property_name, permission, request_key, body, lambda prop: handler(prop, data))
@@ -218,12 +299,22 @@ def bootstrap(property_name=None):
     props = frappe.get_all("HS Property", filters={"name": ["in", names]}, fields=["name", "company", "property_name", "brand_name", "mode", "day_pass_item", "time_zone", "currency", "business_date", "discreet_mode", "inspection_required", "guest_id_required"])
     roles = frappe.get_roles()
     pages = [dict(route=route, title=title, icon=PAGE_ICONS[route]) for route, (title, accepted) in PAGES.items() if is_system() or set(roles).intersection(accepted)]
-    result = dict(properties=props, pages=pages, actions=[a for a in ACTIONS if may(a)], server_time=str(now_datetime()))
+    result = dict(properties=props, pages=pages, actions=[a for a in ACTIONS if may(a)],
+                  accounting_provider=standalone_accounting.provider(), server_time=str(now_datetime()))
     result["can_create_property"]=is_system()
     result["system_timezone"] = frappe.utils.get_system_timezone()
     if not property_name:
         return result
     prop = require(property_name)
+    if standalone_accounting.provider() == "pms":
+        result["accounting_provider"] = "pms"
+        result["accepted_currencies"] = sorted(standalone_currency.enabled_currencies(prop))
+        result["rooms"] = project("HS Room", prop,
+            ["name", "room_number", "category", "floor", "zone", "cleaning_status", "active"])
+        result["categories"] = project("HS Category", prop, ["name", "category_name", "capacity"])
+        result["cleaning"] = project("HS Cleaning Task", prop,
+            ["name", "room", "kind", "status", "priority", "assigned_to"])
+        return result
     if any(may(a) for a in ("reserve","finance","report")):
         result["travel_experiences"]=travel_experiences.board(prop)
     petty_visible=(may("finance") or may("report") or prop.petty_cash_responsible==frappe.session.user or

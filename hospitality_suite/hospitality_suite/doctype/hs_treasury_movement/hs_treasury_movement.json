@@ -11,8 +11,7 @@
   {
    "fieldname": "company",
    "label": "Compañía",
-   "fieldtype": "Link",
-   "options": "Company",
+   "fieldtype": "Data",
    "reqd": 1
   },
   {
@@ -68,14 +67,12 @@
   {
    "fieldname": "cash_account",
    "label": "Cuenta de Caja o banco",
-   "fieldtype": "Link",
-   "options": "Account"
+   "fieldtype": "Data"
   },
   {
    "fieldname": "counter_account",
    "label": "Cuenta de contrapartida",
-   "fieldtype": "Link",
-   "options": "Account",
+   "fieldtype": "Data",
    "reqd": 1
   },
   {
@@ -136,8 +133,7 @@
   {
    "fieldname": "journal_entry",
    "label": "Asiento contable",
-   "fieldtype": "Link",
-   "options": "Journal Entry"
+   "fieldtype": "Data"
   }
  ],
  "field_order": [

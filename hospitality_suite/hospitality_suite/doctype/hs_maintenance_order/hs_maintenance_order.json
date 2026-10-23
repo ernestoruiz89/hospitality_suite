@@ -11,8 +11,7 @@
   {
    "fieldname": "company",
    "label": "Compañía",
-   "fieldtype": "Link",
-   "options": "Company",
+   "fieldtype": "Data",
    "reqd": 1
   },
   {
@@ -108,8 +107,7 @@
   {
    "fieldname": "stock_entry",
    "label": "Movimiento de inventario",
-   "fieldtype": "Link",
-   "options": "Stock Entry",
+   "fieldtype": "Data",
    "permlevel": 1
   },
   {

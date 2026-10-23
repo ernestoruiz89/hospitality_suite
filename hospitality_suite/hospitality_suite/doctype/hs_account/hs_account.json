@@ -1,0 +1,181 @@
+{
+ "doctype": "DocType",
+ "name": "HS Account",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "CUENTA-.#####",
+ "naming_rule": "Expression (old style)",
+ "fields": [
+  {
+   "fieldname": "company",
+   "label": "Compañía",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "property",
+   "label": "Establecimiento",
+   "fieldtype": "Link",
+   "options": "HS Property",
+   "reqd": 1
+  },
+  {
+   "fieldname": "organization",
+   "label": "Organization",
+   "fieldtype": "Link",
+   "options": "HS Organization",
+   "reqd": 1
+  },
+  {
+   "fieldname": "account_code",
+   "label": "Código interno",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "account_number",
+   "label": "Número de cuenta ERPNext",
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "account_name",
+   "label": "Nombre de cuenta",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "root_type",
+   "label": "Naturaleza contable",
+   "fieldtype": "Select",
+   "options": "Asset\nLiability\nEquity\nIncome\nExpense",
+   "reqd": 1,
+   "default": "Asset"
+  },
+  {
+   "fieldname": "account_type",
+   "label": "Tipo de cuenta",
+   "fieldtype": "Select",
+   "options": "General\nAccumulated Depreciation\nAsset Received But Not Billed\nBank\nCash\nChargeable\nCapital Work in Progress\nCost of Goods Sold\nCurrent Asset\nCurrent Liability\nDepreciation\nDirect Expense\nDirect Income\nEquity\nExpense Account\nExpenses Included In Asset Valuation\nExpenses Included In Valuation\nFixed Asset\nIncome Account\nIndirect Expense\nIndirect Income\nLiability\nPayable\nReceivable\nRound Off\nRound Off for Opening\nStock\nStock Adjustment\nStock Received But Not Billed\nService Received But Not Billed\nTax\nTemporary",
+   "reqd": 1,
+   "default": "General"
+  },
+  {
+   "fieldname": "account_currency",
+   "label": "Moneda de cuenta",
+   "fieldtype": "Link",
+   "options": "Currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "parent_account",
+   "label": "Cuenta superior",
+   "fieldtype": "Link",
+   "options": "HS Account"
+  },
+  {
+   "fieldname": "is_group",
+   "label": "Cuenta agrupadora",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "is_cash",
+   "label": "Es efectivo",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "is_bank",
+   "label": "Es banco",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "active",
+   "label": "Habilitado",
+   "fieldtype": "Check",
+   "default": 1
+  }
+ ],
+ "field_order": [
+  "company",
+  "property",
+  "organization",
+  "account_code",
+  "account_number",
+  "account_name",
+  "root_type",
+  "account_type",
+  "account_currency",
+  "parent_account",
+  "is_group",
+  "is_cash",
+  "is_bank",
+  "active"
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Administrator",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Supervisor",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Cashier",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Accountant",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Auditor",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0
+}

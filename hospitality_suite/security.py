@@ -9,6 +9,8 @@ ACTIONS = {
     "setup": MANAGERS, "reserve": MANAGERS + ["HS Receptionist"],
     "stay": MANAGERS + ["HS Receptionist"],
     "finance": MANAGERS + ["HS Cashier", "HS Accountant"],
+    "journal": ["HS Administrator", "HS Manager", "HS Accountant"],
+    "chart": ["HS Administrator", "HS Manager", "HS Accountant"],
     "commission": MANAGERS + ["HS Accountant"],
     "petty": [role for role in ROLES if role != "HS Auditor"],
     "clean": MANAGERS + ["HS Housekeeping"], "inspect": MANAGERS,

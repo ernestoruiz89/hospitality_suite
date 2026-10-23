@@ -6,9 +6,15 @@ app_publisher = "Hospitality Suite Contributors"
 app_description = "Administración de hoteles y alojamiento por tiempo"
 app_email = ""
 app_license = "MIT"
-required_apps = ["erpnext"]
+required_apps = []
 app_logo_url = "/assets/hospitality_suite/images/hospitality-suite.svg"
-app_home = "/desk/hospitality-suite/hospitality-home"
+app_home = "/hospitality-launch"
+# The React client is introduced alongside the existing Desk workflow. Staff
+# launch migration can switch app_home after every operational screen is ready.
+website_route_rules = [
+    {"from_route": "/hospitality/app", "to_route": "hospitality-app"},
+    {"from_route": "/hospitality/app/<path:app_path>", "to_route": "hospitality-app"},
+]
 add_to_apps_screen = [{
     "name": app_name,
     "logo": app_logo_url,

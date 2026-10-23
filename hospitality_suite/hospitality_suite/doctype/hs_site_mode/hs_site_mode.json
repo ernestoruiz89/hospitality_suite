@@ -1,0 +1,47 @@
+{
+ "doctype": "DocType",
+ "name": "HS Site Mode",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "fields": [
+  {
+   "fieldname": "provider",
+   "label": "Proveedor de integración",
+   "fieldtype": "Select",
+   "options": "\nPMS\nERPNext",
+   "reqd": 1
+  },
+  {
+   "fieldname": "cutover_date",
+   "label": "Cutover date",
+   "fieldtype": "Date"
+  },
+  {
+   "fieldname": "migration_reference",
+   "label": "Migration reference",
+   "fieldtype": "Small Text"
+  }
+ ],
+ "field_order": [
+  "provider",
+  "cutover_date",
+  "migration_reference"
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0,
+ "issingle": 1
+}

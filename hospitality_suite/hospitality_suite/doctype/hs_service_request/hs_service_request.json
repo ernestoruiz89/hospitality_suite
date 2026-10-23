@@ -11,8 +11,7 @@
   {
    "fieldname": "company",
    "label": "Compañía",
-   "fieldtype": "Link",
-   "options": "Company",
+   "fieldtype": "Data",
    "reqd": 1
   },
   {
@@ -37,14 +36,12 @@
   {
    "fieldname": "customer",
    "label": "Cliente pagador",
-   "fieldtype": "Link",
-   "options": "Customer"
+   "fieldtype": "Data"
   },
   {
    "fieldname": "item",
    "label": "Artículo",
-   "fieldtype": "Link",
-   "options": "Item",
+   "fieldtype": "Data",
    "reqd": 1
   },
   {
@@ -90,26 +87,22 @@
   {
    "fieldname": "stock_entry",
    "label": "Movimiento de inventario",
-   "fieldtype": "Link",
-   "options": "Stock Entry"
+   "fieldtype": "Data"
   },
   {
    "fieldname": "return_stock_entry",
    "label": "Devolución de inventario",
-   "fieldtype": "Link",
-   "options": "Stock Entry"
+   "fieldtype": "Data"
   },
   {
    "fieldname": "credit_note",
    "label": "Nota de crédito",
-   "fieldtype": "Link",
-   "options": "Sales Invoice"
+   "fieldtype": "Data"
   },
   {
    "fieldname": "sales_invoice",
    "label": "Factura de venta",
-   "fieldtype": "Link",
-   "options": "Sales Invoice"
+   "fieldtype": "Data"
   },
   {
    "fieldname": "notes",

@@ -11,8 +11,7 @@
   {
    "fieldname": "item",
    "label": "Artículo",
-   "fieldtype": "Link",
-   "options": "Item",
+   "fieldtype": "Data",
    "reqd": 1
   },
   {

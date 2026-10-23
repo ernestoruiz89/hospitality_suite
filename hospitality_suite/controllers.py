@@ -128,10 +128,30 @@ class ScopedDocument(Document):
                     or get_datetime(self.ends_at)!=get_datetime(block.ends_at)):
                 frappe.throw(_("La asignación no coincide con el bloqueo de habitación"))
         if self.doctype == "HS Property":
-            from hospitality_suite.financial_movements import validate_property
-            validate_property(self, check_history=True)
-            from hospitality_suite.service_accounting import validate_configuration
-            validate_configuration(self)
+            currencies = [row.currency for row in self.accepted_currencies]
+            if len(currencies) != len(set(currencies)) or len(currencies) > 12 or any(
+                not frappe.db.exists("Currency", currency) for currency in currencies):
+                frappe.throw(_("Revise las monedas habilitadas del establecimiento"))
+            old_currencies = {row.currency for row in self.get_doc_before_save().accepted_currencies} if self.get_doc_before_save() else set()
+            removed = old_currencies - set(currencies) - {self.currency}
+            for currency in removed:
+                if any(frappe.db.exists(doctype, {"property": self.name, field: currency}) for doctype, field in
+                       (("HS Account", "account_currency"), ("HS Payment Method", "currency"),
+                        ("HS Payment", "currency"), ("HS Shift", "currency"), ("HS Rate", "currency"),
+                        ("HS Exchange Rate", "from_currency"))):
+                    frappe.throw(_("No quite una moneda utilizada por cuentas u operaciones"))
+                for shift in frappe.get_all("HS Shift", filters={"property": self.name, "status": "Open"},
+                                            fields=["opening_by_currency"]):
+                    if currency in frappe.parse_json(shift.opening_by_currency or "{}"):
+                        frappe.throw(_("No quite una moneda utilizada por un turno abierto"))
+            from hospitality_suite.standalone_accounting import provider
+            if provider() == "erpnext":
+                from hospitality_suite.financial_movements import validate_property
+                validate_property(self, check_history=True)
+                from hospitality_suite.service_accounting import validate_configuration
+                validate_configuration(self)
+            elif not self.organization or self.company != self.organization:
+                frappe.throw(_("Seleccione la entidad legal propia del establecimiento"))
             from hospitality_suite.time import cutoff_time
             cutoff_time(self.close_time)
             from hospitality_suite.pricing import decimal
@@ -235,6 +255,11 @@ class ScopedDocument(Document):
                 if frappe.db.sql("SELECT name FROM `tabHS Allocation` WHERE room=%s AND status='Active' FOR UPDATE",(self.name,)):
                     frappe.throw(_("No puede cambiar categoría o disponibilidad con asignaciones activas"))
         if self.doctype == "HS Payment Method":
+            from hospitality_suite.standalone_accounting import provider
+            if provider() == "pms":
+                from hospitality_suite.standalone_cash import validate_method
+                validate_method(self)
+                return
             from hospitality_suite.service import lock_property,current_all,operation
             lock_property(self.property)
             account = frappe.get_doc("Account", self.account)
@@ -252,19 +277,31 @@ class ScopedDocument(Document):
             if any(bool(row.is_cash)!=bool(self.is_cash) for row in peers):
                 frappe.throw(frappe._("Los medios que comparten una cuenta deben conservar la misma clasificación de efectivo"))
         if self.doctype=="HS Expense Category":
+            from hospitality_suite.standalone_accounting import provider
+            if provider() == "pms":
+                from hospitality_suite.standalone_cash import validate_category
+                validate_category(self)
+                return
             account=frappe.get_doc("Account",self.account)
             self.currency=frappe.db.get_value("Company",self.company,"default_currency")
             if account.company!=self.company or account.is_group or account.root_type!="Expense" or account.account_currency!=self.currency or self.max_amount<0:
                 frappe.throw(frappe._("Configure una cuenta de gasto de la compañía en moneda base y un límite no negativo"))
         if self.doctype=="HS Treasury Concept":
+            from hospitality_suite.standalone_accounting import provider
+            if provider() == "pms":
+                from hospitality_suite.standalone_cash import validate_concept
+                validate_concept(self)
+                return
             from hospitality_suite.financial_movements import validate_concept
             validate_concept(self)
         if self.doctype=="HS Equipment":
             from hospitality_suite.equipment import validate_equipment
             validate_equipment(self)
         if self.doctype=="HS Payment" and self.is_new() and self.kind in ("Payment","Advance","Guarantee","Refund","Guarantee Refund"):
-            from hospitality_suite.treasury import method_snapshot
-            self.fee_snapshot=frappe.as_json(method_snapshot(frappe.get_doc("HS Payment Method",self.method),refund=self.kind in ("Refund","Guarantee Refund")))
+            from hospitality_suite.standalone_accounting import provider
+            if provider() != "pms":
+                from hospitality_suite.treasury import method_snapshot
+                self.fee_snapshot=frappe.as_json(method_snapshot(frappe.get_doc("HS Payment Method",self.method),refund=self.kind in ("Refund","Guarantee Refund")))
         if self.doctype=="HS Billing Party" and (self.credit_limit<0 or not 0 <= (self.credit_days or 0) <= 365):
             frappe.throw(frappe._("Revise el límite y el plazo de crédito"))
         if self.doctype=="HS Folio":
@@ -288,3 +325,340 @@ class ScopedDocument(Document):
                 frappe.throw(frappe._("Conserve el medio utilizado en facturas POS para la trazabilidad"))
         if self.doctype not in WRITABLE:
             frappe.throw(_("Conserve la trazabilidad: use una reversión autorizada"))
+
+
+class OrganizationDocument(Document):
+    """Legal entity master shared by properties in a single owner's site."""
+
+    def validate(self):
+        from hospitality_suite.security import is_system
+
+        if not is_system():
+            frappe.throw(_("Solo administración del sistema puede modificar entidades legales"), frappe.PermissionError)
+        old = self.get_doc_before_save()
+        if old and old.base_currency != self.base_currency and frappe.db.exists("HS Property", {"organization": self.name}):
+            frappe.throw(_("La moneda de una entidad con establecimientos exige migración contable"))
+
+    def on_trash(self):
+        if frappe.db.exists("HS Property", {"organization": self.name}):
+            frappe.throw(_("No puede borrar una entidad con establecimientos"))
+
+
+class PMSModeDocument(Document):
+    """Changing the ledger authority requires the migration service."""
+
+    def validate(self):
+        from hospitality_suite.security import is_system
+
+        if not is_system():
+            frappe.throw(_("Solo administración del sistema puede consultar el modo financiero"), frappe.PermissionError)
+        previous = frappe.db.get_single_value("HS Site Mode", "provider")
+        if previous and previous != self.provider and not getattr(frappe.local, "hs_provider_cutover", False):
+            frappe.throw(_("El cambio de libro contable requiere una migración verificada"))
+
+
+class PMSMasterDocument(ScopedDocument):
+    """Scope standalone masters to their legal entity and property."""
+
+    def validate(self):
+        super().validate()
+        prop = frappe.get_doc("HS Property", self.property)
+        if not prop.organization or self.organization != prop.organization:
+            frappe.throw(_("La entidad legal no coincide con el establecimiento"))
+        for field in ("income_account", "expense_account", "inventory_account"):
+            account_name = self.get(field)
+            if account_name:
+                account = frappe.db.get_value("HS Account", account_name,
+                    ["property", "organization", "root_type", "is_group"], as_dict=True)
+                expected = {"income_account": "Income", "expense_account": "Expense",
+                            "inventory_account": "Asset"}[field]
+                if not account or (account.property, account.organization) != (self.property, self.organization) or account.root_type != expected or account.is_group:
+                    frappe.throw(_("La cuenta {0} debe corresponder al establecimiento y naturaleza contable").format(field))
+        if self.doctype in ("HS Product", "HS Warehouse"):
+            field = "product_code" if self.doctype == "HS Product" else "warehouse_code"
+            code = (self.get(field) or "").strip()
+            if not code or len(code) > 40:
+                frappe.throw(_("Indique un código de hasta 40 caracteres"))
+            if frappe.db.exists(self.doctype, {"property": self.property, field: code, "name": ["!=", self.name]}):
+                frappe.throw(_("El código ya existe en este establecimiento"))
+            self.set(field, code)
+        if self.doctype == "HS Product" and (self.sales_rate or 0) < 0:
+            frappe.throw(_("El precio no puede ser negativo"))
+
+
+class PMSAccountDocument(PMSMasterDocument):
+    def validate(self):
+        super().validate()
+        prop = frappe.get_doc("HS Property", self.property)
+        if not self.account_currency:
+            self.account_currency = prop.currency
+        if not frappe.db.exists("Currency", self.account_currency):
+            frappe.throw(_("Seleccione una moneda válida para la cuenta"))
+        from hospitality_suite.standalone_currency import enabled
+        if not enabled(prop, self.account_currency):
+            frappe.throw(_("La moneda de la cuenta no está habilitada en el establecimiento"))
+        if self.is_cash and self.is_bank:
+            frappe.throw(_("Caja y banco requieren cuentas distintas"))
+        if self.is_cash:
+            self.account_type = "Cash"
+        elif self.is_bank:
+            self.account_type = "Bank"
+        self.account_type = self.account_type or "General"
+        expected_root = {"Cash": "Asset", "Bank": "Asset", "Receivable": "Asset",
+                         "Stock": "Asset", "Fixed Asset": "Asset", "Accumulated Depreciation": "Asset",
+                         "Asset Received But Not Billed": "Asset", "Capital Work in Progress": "Asset",
+                         "Current Asset": "Asset", "Payable": "Liability", "Current Liability": "Liability",
+                         "Liability": "Liability", "Stock Received But Not Billed": "Liability",
+                         "Service Received But Not Billed": "Liability", "Equity": "Equity",
+                         "Income Account": "Income", "Direct Income": "Income", "Indirect Income": "Income",
+                         "Expense Account": "Expense", "Direct Expense": "Expense", "Indirect Expense": "Expense",
+                         "Cost of Goods Sold": "Expense", "Depreciation": "Expense",
+                         "Stock Adjustment": "Expense", "Expenses Included In Asset Valuation": "Expense",
+                         "Expenses Included In Valuation": "Expense"}.get(self.account_type)
+        if expected_root and self.root_type != expected_root:
+            frappe.throw(_("El tipo de cuenta no coincide con su naturaleza contable"))
+        self.is_cash = int(self.account_type == "Cash" and not self.is_group)
+        self.is_bank = int(self.account_type == "Bank" and not self.is_group)
+        code = (self.account_code or "").strip()
+        if not code or len(code) > 40:
+            frappe.throw(_("Indique un código contable de hasta 40 caracteres"))
+        self.account_code = code
+        if self.account_number and (not self.account_number.strip() or len(self.account_number.strip()) > 40):
+            frappe.throw(_("El número de cuenta debe tener hasta 40 caracteres"))
+        self.account_number = (self.account_number or "").strip()
+        if self.account_number and frappe.db.exists("HS Account", {"property": self.property,
+                                      "account_number": self.account_number, "name": ["!=", self.name]}):
+            frappe.throw(_("El número de cuenta ERPNext ya existe en este establecimiento"))
+        if frappe.db.exists("HS Account", {"property": self.property, "account_code": code, "name": ["!=", self.name]}):
+            frappe.throw(_("El código contable ya existe en este establecimiento"))
+        if self.is_cash and self.is_bank or (self.is_cash or self.is_bank) and self.root_type != "Asset":
+            frappe.throw(_("Caja y banco requieren cuentas de activo distintas"))
+        if self.parent_account:
+            seen = {self.name}
+            parent = self.parent_account
+            while parent:
+                if parent in seen:
+                    frappe.throw(_("La jerarquía de cuentas contiene un ciclo"))
+                seen.add(parent)
+                row = frappe.db.get_value("HS Account", parent,
+                    ["property", "organization", "root_type", "parent_account", "is_group"], as_dict=True)
+                if not row or (row.property, row.organization, row.root_type) != (self.property, self.organization, self.root_type) or not row.is_group:
+                    frappe.throw(_("La cuenta padre debe ser agrupadora de la misma entidad y naturaleza"))
+                parent = row.parent_account
+        old = self.get_doc_before_save()
+        if old and old.active and not self.active and (
+            frappe.db.exists("HS PMS Receivable", {"receivable_account": self.name}) or
+            frappe.db.exists("HS Payment", {"pms_counter_account": self.name, "kind": "Advance",
+                                            "status": "Posted"})):
+            frappe.throw(_("La cuenta respalda saldos de clientes; configure otra cuenta para movimientos nuevos"))
+        if old and old.is_group and not self.is_group and frappe.db.exists("HS Account", {"parent_account": self.name}):
+            frappe.throw(_("No puede convertir en cuenta de movimiento una agrupadora con subcuentas"))
+        if old and any(old.get(field) != self.get(field) for field in
+                       ("property", "organization", "company", "account_code", "account_number", "root_type", "parent_account", "is_group", "account_type", "account_currency", "is_cash", "is_bank")):
+            if frappe.db.exists("HS Journal Line", {"account": self.name}):
+                frappe.throw(_("No cambie la identidad de una cuenta con movimientos"))
+
+
+class PMSReceivableDocument(ScopedDocument):
+    """An internal receivable is an immutable, posted business event."""
+
+    def validate(self):
+        super().validate()
+        if not self.is_new():
+            old = self.get_doc_before_save()
+            if (not getattr(frappe.local, "hs_operation", False) or not old or
+                    old.status != "Posted" or self.status != "Cancelled" or
+                    any(old.get(field) != self.get(field) for field in
+                        ("property", "company", "organization", "party", "reference", "description",
+                         "business_date", "currency", "amount", "receivable_account",
+                         "income_account", "journal")) or
+                    frappe.db.exists("HS PMS Allocation", {"receivable": self.name})):
+                frappe.throw(_("La cuenta por cobrar registrada es inmutable"))
+            reversal = frappe.db.get_value("HS Journal", self.reversal_journal,
+                ["property", "reversal_of"], as_dict=True)
+            if not reversal or reversal.property != self.property or reversal.reversal_of != self.journal:
+                frappe.throw(_("Se requiere el asiento inverso del cargo original"))
+            return
+        prop = frappe.get_doc("HS Property", self.property)
+        if self.status != "Posted" or self.reversal_journal:
+            frappe.throw(_("Un cargo nuevo debe quedar publicado sin reversión"))
+        if (self.organization != prop.organization or self.currency != prop.currency or
+                str(self.business_date) != str(prop.business_date)):
+            frappe.throw(_("La entidad, moneda o fecha operativa no coincide"))
+        party = frappe.db.get_value("HS Party", self.party,
+            ["property", "active", "party_type"], as_dict=True)
+        if not party or party.property != prop.name or not party.active or party.party_type not in ("Customer", "Both"):
+            frappe.throw(_("Seleccione un cliente activo del establecimiento"))
+        from hospitality_suite.ledger_rules import LedgerValidationError, amount
+        try:
+            if amount(self.amount) <= 0:
+                frappe.throw(_("El cargo debe ser mayor que cero"))
+        except LedgerValidationError as exc:
+            frappe.throw(str(exc))
+        from hospitality_suite.standalone_accounting import account
+        receivable = account(prop, self.receivable_account)
+        income = account(prop, self.income_account)
+        if (receivable.root_type != "Asset" or receivable.account_type != "Receivable" or
+                income.root_type != "Income" or
+                receivable.account_currency != prop.currency or income.account_currency != prop.currency or
+                receivable.is_cash or receivable.is_bank):
+            frappe.throw(_("Seleccione cuentas por cobrar e ingreso en moneda base"))
+        journal = frappe.db.get_value("HS Journal", self.journal,
+            ["property", "source_doctype", "source_name", "purpose"], as_dict=True)
+        if not journal or (journal.property, journal.source_doctype, journal.source_name, journal.purpose) != (
+                prop.name, "HS PMS Receivable", self.reference, "Receivable"):
+            frappe.throw(_("El asiento del cargo no coincide"))
+
+    def on_trash(self):
+        frappe.throw(_("La cuenta por cobrar registrada no se borra"))
+
+
+class PMSAllocationDocument(ScopedDocument):
+    """A payment application is append only and cannot outlive its source."""
+
+    def validate(self):
+        super().validate()
+        if not self.is_new():
+            frappe.throw(_("La aplicación de pago es inmutable"))
+        prop = frappe.get_doc("HS Property", self.property)
+        receivable = frappe.db.get_value("HS PMS Receivable", self.receivable,
+            ["property", "organization", "party", "currency"], as_dict=True)
+        payment = frappe.db.get_value("HS Payment", self.payment,
+            ["property", "pms_party", "kind", "status", "pms_receivable", "pms_journal"], as_dict=True)
+        if (not receivable or not payment or receivable.property != prop.name or
+                payment.property != prop.name or receivable.organization != prop.organization or
+                self.organization != prop.organization or self.currency != prop.currency or
+                receivable.currency != prop.currency or receivable.party != payment.pms_party or
+                payment.status != "Posted" or
+                (self.kind == "Direct" and (payment.kind != "Payment" or
+                                             payment.pms_receivable != self.receivable or
+                                             self.journal != payment.pms_journal)) or
+                (self.kind == "Advance Applied" and (payment.kind != "Advance" or not self.journal)) or
+                self.kind not in ("Direct", "Advance Applied") or
+                str(self.business_date) != str(prop.business_date)):
+            frappe.throw(_("La aplicación no coincide con el cobro y la cuenta por cobrar"))
+        from hospitality_suite.ledger_rules import LedgerValidationError, amount
+        try:
+            if amount(self.amount) <= 0:
+                frappe.throw(_("La aplicación debe ser mayor que cero"))
+        except LedgerValidationError as exc:
+            frappe.throw(str(exc))
+        if self.journal and frappe.db.get_value("HS Journal", self.journal, "property") != prop.name:
+            frappe.throw(_("El asiento de aplicación pertenece a otro establecimiento"))
+
+    def on_trash(self):
+        frappe.throw(_("La aplicación de pago no se borra"))
+
+
+class PMSJournalDocument(ScopedDocument):
+    """Posted journals are append only; corrections are linked inverse journals."""
+
+    def validate(self):
+        super().validate()
+        if not self.is_new():
+            frappe.throw(_("Un asiento publicado es inmutable; registre una reversión"))
+        prop = frappe.get_doc("HS Property", self.property)
+        if not prop.organization or self.organization != prop.organization:
+            frappe.throw(_("La entidad legal no coincide con el establecimiento"))
+        from hospitality_suite.ledger_rules import LedgerValidationError, currency_line, normalize_lines
+        try:
+            normalized, total = normalize_lines([{"account": row.account, "debit": row.debit,
+                                                     "credit": row.credit} for row in self.lines],
+                                                    frappe.utils.get_currency_precision() or 2)
+        except LedgerValidationError as exc:
+            frappe.throw(str(exc))
+        for row, line in zip(self.lines, normalized):
+            account = frappe.db.get_value("HS Account", row.account,
+                ["property", "organization", "account_currency", "active", "is_group"], as_dict=True)
+            if not account or (account.property, account.organization) != (self.property, self.organization) or not account.active or account.is_group:
+                frappe.throw(_("Cada línea requiere una cuenta activa del establecimiento"))
+            if row.party and frappe.db.get_value("HS Party", row.party, "property") != self.property:
+                frappe.throw(_("El tercero pertenece a otro establecimiento"))
+            try:
+                converted = currency_line({**line,
+                    "account_currency": row.account_currency,
+                    "exchange_rate": row.exchange_rate,
+                    "debit_in_account_currency": row.debit_in_account_currency,
+                    "credit_in_account_currency": row.credit_in_account_currency},
+                    account.account_currency or prop.currency, prop.currency,
+                    frappe.utils.get_currency_precision() or 2)
+            except LedgerValidationError as exc:
+                frappe.throw(str(exc))
+            row.debit, row.credit = line["debit"], line["credit"]
+            row.account_currency = converted["account_currency"]
+            row.exchange_rate = converted["exchange_rate"]
+            row.debit_in_account_currency = converted["debit_in_account_currency"]
+            row.credit_in_account_currency = converted["credit_in_account_currency"]
+        self.total_debit = self.total_credit = total
+        if self.reversal_of:
+            original = frappe.db.get_value("HS Journal", self.reversal_of,
+                ["property", "organization", "reversal_of"], as_dict=True)
+            if not original or (original.property, original.organization) != (self.property, self.organization) or original.reversal_of:
+                frappe.throw(_("El asiento original no es reversible en este establecimiento"))
+            if frappe.db.exists("HS Journal", {"reversal_of": self.reversal_of}):
+                frappe.throw(_("El asiento ya fue revertido"))
+
+    def on_trash(self):
+        frappe.throw(_("Los asientos publicados no se borran"))
+
+
+class PMSExchangeRateDocument(ScopedDocument):
+    """Approved rates are append only; posted movements freeze their chosen rate."""
+
+    def validate(self):
+        super().validate()
+        if not self.is_new():
+            frappe.throw(_("Registre un nuevo tipo de cambio vigente en lugar de modificar el anterior"))
+        prop = frappe.get_doc("HS Property", self.property)
+        if self.organization != prop.organization or self.to_currency != prop.currency:
+            frappe.throw(_("El tipo de cambio debe convertir a la moneda base del establecimiento"))
+        from hospitality_suite.standalone_currency import enabled
+        if not enabled(prop, self.from_currency) or self.from_currency == prop.currency:
+            frappe.throw(_("Seleccione una moneda adicional habilitada"))
+        from decimal import Decimal, InvalidOperation
+        try:
+            rate = Decimal(str(self.rate))
+        except (InvalidOperation, TypeError, ValueError):
+            rate = Decimal(0)
+        if not rate.is_finite() or rate <= 0 or rate >= Decimal("1000000000"):
+            frappe.throw(_("El tipo de cambio debe ser positivo y finito"))
+        self.source = (self.source or "").strip()
+        if not self.source or len(self.source) > 140:
+            frappe.throw(_("Indique la fuente del tipo de cambio"))
+
+    def on_trash(self):
+        frappe.throw(_("Los tipos de cambio históricos no se borran"))
+
+
+class PMSStockMovementDocument(ScopedDocument):
+    def validate(self):
+        super().validate()
+        if not self.is_new():
+            frappe.throw(_("Un movimiento de inventario es inmutable; registre un movimiento compensador"))
+        prop = frappe.get_doc("HS Property", self.property)
+        if not prop.organization or self.organization != prop.organization:
+            frappe.throw(_("La entidad legal no coincide con el establecimiento"))
+        for doctype, field in (("HS Product", "product"), ("HS Warehouse", "warehouse")):
+            row = frappe.db.get_value(doctype, self.get(field),
+                ["property", "organization", "active"], as_dict=True)
+            if not row or (row.property, row.organization) != (self.property, self.organization) or not row.active:
+                frappe.throw(_("Producto o almacén fuera del establecimiento"))
+        from decimal import Decimal
+        quantity_delta = Decimal(str(self.quantity_delta))
+        value_delta = Decimal(str(self.value_delta))
+        if self.direction == "Receipt" and (quantity_delta <= 0 or value_delta <= 0):
+            frappe.throw(_("La recepción requiere cantidad y costo positivos"))
+        if self.direction == "Issue" and (quantity_delta >= 0 or value_delta >= 0):
+            frappe.throw(_("La salida requiere cantidad y costo negativos"))
+        if Decimal(str(self.balance_quantity)) < 0 or Decimal(str(self.balance_value)) < 0:
+            frappe.throw(_("El inventario no puede quedar negativo"))
+        from hospitality_suite.standalone_inventory import current_balance
+        before_qty, before_value = current_balance(prop, self.product, self.warehouse)
+        if (before_qty + Decimal(str(self.quantity_delta)) != Decimal(str(self.balance_quantity)) or
+                before_value + Decimal(str(self.value_delta)) != Decimal(str(self.balance_value))):
+            frappe.throw(_("El movimiento no concilia con el saldo de inventario"))
+        if self.journal and frappe.db.get_value("HS Journal", self.journal, "property") != self.property:
+            frappe.throw(_("El asiento pertenece a otro establecimiento"))
+
+    def on_trash(self):
+        frappe.throw(_("Los movimientos de inventario no se borran"))

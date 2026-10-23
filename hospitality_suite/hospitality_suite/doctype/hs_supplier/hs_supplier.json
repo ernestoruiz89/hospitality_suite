@@ -11,8 +11,7 @@
   {
    "fieldname": "company",
    "label": "Compañía",
-   "fieldtype": "Link",
-   "options": "Company",
+   "fieldtype": "Data",
    "reqd": 1
   },
   {
@@ -25,8 +24,7 @@
   {
    "fieldname": "supplier",
    "label": "Proveedor",
-   "fieldtype": "Link",
-   "options": "Supplier",
+   "fieldtype": "Data",
    "reqd": 1
   },
   {

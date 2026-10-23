@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 
-from hospitality_suite.schema import ROLES, SCOPED,STANDARD_SCOPED
+from hospitality_suite.schema import ROLES, SCOPED, STANDARD_SCOPED, ERP_LINK_TARGETS
 
 
 def after_install():
@@ -14,25 +14,35 @@ def after_install():
 
 
 def after_migrate():
+    if not frappe.db.get_single_value("HS Site Mode", "provider"):
+        frappe.db.set_single_value("HS Site Mode", "provider",
+            "ERPNext" if "erpnext" in frappe.get_installed_apps() else "PMS")
+    from hospitality_suite.standalone_accounting import provider
+    erp_mode = provider() == "erpnext"
+    if erp_mode and "erpnext" not in frappe.get_installed_apps():
+        frappe.throw(frappe._("El modo ERPNext requiere instalar ERPNext antes de sincronizar la Suite"))
+    if erp_mode:
+        restore_erp_links()
     custom = []
     for name, target, label in [("hs_property", "HS Property", "Establecimiento de alojamiento"), ("hs_stay", "HS Stay", "Estancia de alojamiento"), ("hs_shift", "HS Shift", "Turno de caja"), ("hs_folio", "HS Folio", "Cuenta de estancia"), ("hs_booking", "HS Booking", "Reserva de alojamiento")]:
         custom.append(dict(fieldname=name, label=label, fieldtype="Link", options=target, insert_after="company", no_copy=1,print_hide=1))
-    create_custom_fields({dt: custom for dt in STANDARD_SCOPED if frappe.db.exists("DocType",dt)})
-    create_custom_fields({dt:[dict(fieldname="hs_correction_reason",label="Motivo de corrección de alojamiento",fieldtype="Small Text",allow_on_submit=1,print_hide=1)] for dt in STANDARD_SCOPED if frappe.db.exists("DocType",dt)})
-    create_custom_fields({"Sales Invoice Item": [dict(fieldname="hs_charge", label="Cargo de estancia", fieldtype="Link", options="HS Charge", no_copy=1,print_hide=1)]})
-    create_custom_fields({"Sales Invoice Item":[dict(fieldname="hs_charge_sources",label="Cargos que componen la línea",fieldtype="Code",options="JSON",read_only=1,no_copy=1,print_hide=1)]})
-    create_custom_fields({"Warehouse":[dict(fieldname="hs_property",label="Establecimiento de alojamiento",fieldtype="Link",options="HS Property")]})
-    create_custom_fields({"Asset":[dict(fieldname="hs_property",label="Establecimiento de alojamiento",fieldtype="Link",options="HS Property",allow_on_submit=1,print_hide=1)]})
-    create_custom_fields({"Stock Entry":[dict(fieldname="hs_stock_purpose",label="Uso operativo",fieldtype="Select",options="\nSale\nCleaning\nWaste\nLinen Replacement\nMaintenance\nTransfer\nAdjustment\nLaundry",print_hide=1)]})
+    if erp_mode:
+        create_custom_fields({dt: custom for dt in STANDARD_SCOPED if frappe.db.exists("DocType",dt)})
+        create_custom_fields({dt:[dict(fieldname="hs_correction_reason",label="Motivo de corrección de alojamiento",fieldtype="Small Text",allow_on_submit=1,print_hide=1)] for dt in STANDARD_SCOPED if frappe.db.exists("DocType",dt)})
+        create_custom_fields({"Sales Invoice Item": [dict(fieldname="hs_charge", label="Cargo de estancia", fieldtype="Link", options="HS Charge", no_copy=1,print_hide=1)]})
+        create_custom_fields({"Sales Invoice Item":[dict(fieldname="hs_charge_sources",label="Cargos que componen la línea",fieldtype="Code",options="JSON",read_only=1,no_copy=1,print_hide=1)]})
+        create_custom_fields({"Warehouse":[dict(fieldname="hs_property",label="Establecimiento de alojamiento",fieldtype="Link",options="HS Property")]})
+        create_custom_fields({"Asset":[dict(fieldname="hs_property",label="Establecimiento de alojamiento",fieldtype="Link",options="HS Property",allow_on_submit=1,print_hide=1)]})
+        create_custom_fields({"Stock Entry":[dict(fieldname="hs_stock_purpose",label="Uso operativo",fieldtype="Select",options="\nSale\nCleaning\nWaste\nLinen Replacement\nMaintenance\nTransfer\nAdjustment\nLaundry",print_hide=1)]})
     from frappe.permissions import add_permission
-    for dt in ("Account","Item","Company","Cost Center","Warehouse","Mode of Payment","Price List","Sales Taxes and Charges Template","Customer","Supplier","Currency"):
+    for dt in (("Account","Item","Company","Cost Center","Warehouse","Mode of Payment","Price List","Sales Taxes and Charges Template","Customer","Supplier","Currency") if erp_mode else ()):
         for role in ("HS Administrator","HS Manager","HS Supervisor","HS Receptionist","HS Cashier","HS Accountant"):
             if frappe.db.exists("Role",role) and not frappe.db.exists("Custom DocPerm",{"parent":dt,"role":role}):
                 add_permission(dt,role,0,"select")
-    for role in ("HS Administrator","HS Manager","HS Accountant","HS Auditor"):
+    for role in (("HS Administrator","HS Manager","HS Accountant","HS Auditor") if erp_mode else ()):
         if frappe.db.exists("Role",role) and not frappe.db.exists("Custom DocPerm",{"parent":"GL Entry","role":role}):
             add_permission("GL Entry",role,0,"read")
-    for dt in ("Sales Invoice", "Payment Entry", "Journal Entry", "Stock Entry","Stock Reconciliation","Purchase Order","Purchase Receipt","Purchase Invoice"):
+    for dt in (("Sales Invoice", "Payment Entry", "Journal Entry", "Stock Entry","Stock Reconciliation","Purchase Order","Purchase Receipt","Purchase Invoice") if erp_mode else ()):
         for role in ("HS Administrator", "HS Manager", "HS Supervisor", "HS Receptionist", "HS Cashier", "HS Accountant", "HS Auditor"):
             if frappe.db.exists("Role", role) and not frappe.db.exists("Custom DocPerm", {"parent": dt, "role": role}):
                 add_permission(dt, role, 0, "read")
@@ -55,15 +65,44 @@ def after_migrate():
     frappe.db.add_index("HS Room Block",["property","status","starts_at","ends_at"],"hs_room_block_interval")
     frappe.db.add_index("HS Guest Ticket", ["property", "status", "due_at"], "hs_ticket_queue")
     frappe.db.add_index("HS Ticket Event", ["ticket", "occurred_at"], "hs_ticket_timeline")
+    frappe.db.add_unique("HS Account", ["property", "account_code"], "hs_account_code_unique")
+    frappe.db.add_unique("HS Product", ["property", "product_code"], "hs_product_code_unique")
+    frappe.db.add_unique("HS Warehouse", ["property", "warehouse_code"], "hs_warehouse_code_unique")
+    frappe.db.add_index("HS Journal", ["property", "posting_date"], "hs_journal_period")
+    frappe.db.add_unique("HS Exchange Rate", ["property", "from_currency", "effective_at"], "hs_exchange_rate_unique")
     sync_print_formats()
+
+
+def restore_erp_links():
+    """ERP sites retain link controls although core JSON stores portable data."""
+    from frappe.custom.doctype.property_setter.property_setter import make_property_setter
+
+    for (doctype, field), target in ERP_LINK_TARGETS.items():
+        if not frappe.db.exists("DocType", doctype) or not frappe.db.exists("DocType", target):
+            continue
+        for prop, value in (("fieldtype", "Link"), ("options", target)):
+            existing = frappe.db.get_value("Property Setter",
+                {"doc_type": doctype, "field_name": field, "property": prop},
+                ["value", "is_system_generated"], as_dict=True)
+            if existing and existing.value != value and not existing.is_system_generated:
+                frappe.throw(frappe._("Revise la personalización existente de {0}.{1} antes de migrar").format(doctype, field))
+            if not existing or existing.value != value:
+                make_property_setter(doctype, field, prop, value, "Data", validate_fields_for_doctype=False)
+        frappe.clear_cache(doctype=doctype)
 
 
 def sync_print_formats():
     """Refresh app-owned formats by content, including a site's future timestamp."""
     from frappe.modules.import_file import import_file_by_path
     folder=Path(frappe.get_app_path("hospitality_suite","hospitality_suite","print_format"))
-    for path in sorted(folder.glob('*/*.json')):
+    paths = sorted(folder.glob('*/*.json'))
+    from hospitality_suite.standalone_accounting import provider
+    if provider() == "erpnext":
+        paths.extend(Path(frappe.get_app_path("hospitality_suite", "erpnext_assets", "print_format")).glob("*.json"))
+    for path in paths:
         source=json.loads(path.read_text(encoding='utf-8'))
+        if not frappe.db.exists("DocType", source["doc_type"]):
+            continue
         if frappe.db.exists('Print Format',source['name']):
             current=frappe.get_doc('Print Format',source['name'])
             if current.standard!='Yes' or current.module!='Hospitality Suite':
@@ -75,6 +114,9 @@ def sync_print_formats():
 
 
 def validate_financial_configuration(prop):
+    from hospitality_suite.standalone_accounting import provider
+    if provider() == "pms":
+        frappe.throw(frappe._("Configure las cuentas financieras propias antes de habilitar operaciones monetarias"))
     from hospitality_suite.service_accounting import validate_configuration
     validate_configuration(prop)
     from hospitality_suite.item_configuration import validate_bindings

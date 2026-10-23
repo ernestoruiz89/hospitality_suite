@@ -11,8 +11,7 @@
   {
    "fieldname": "company",
    "label": "Compañía",
-   "fieldtype": "Link",
-   "options": "Company",
+   "fieldtype": "Data",
    "reqd": 1
   },
   {
@@ -25,15 +24,13 @@
   {
    "fieldname": "mode_of_payment",
    "label": "Medio de pago",
-   "fieldtype": "Link",
-   "options": "Mode of Payment",
+   "fieldtype": "Data",
    "reqd": 1
   },
   {
    "fieldname": "account",
    "label": "Cuenta contable",
-   "fieldtype": "Link",
-   "options": "Account",
+   "fieldtype": "Data",
    "reqd": 1
   },
   {
@@ -68,8 +65,7 @@
   {
    "fieldname": "fee_account",
    "label": "Cuenta de comisiones",
-   "fieldtype": "Link",
-   "options": "Account"
+   "fieldtype": "Data"
   },
   {
    "fieldname": "refund_fee_percent",
@@ -91,14 +87,12 @@
   {
    "fieldname": "withholding_account",
    "label": "Cuenta de retenciones",
-   "fieldtype": "Link",
-   "options": "Account"
+   "fieldtype": "Data"
   },
   {
    "fieldname": "settlement_account",
    "label": "Cuenta de liquidación",
-   "fieldtype": "Link",
-   "options": "Account"
+   "fieldtype": "Data"
   }
  ],
  "field_order": [

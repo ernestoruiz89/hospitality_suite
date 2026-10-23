@@ -1,0 +1,170 @@
+{
+ "doctype": "DocType",
+ "name": "HS Product",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "PROD-.#####",
+ "naming_rule": "Expression (old style)",
+ "fields": [
+  {
+   "fieldname": "company",
+   "label": "Compañía",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "property",
+   "label": "Establecimiento",
+   "fieldtype": "Link",
+   "options": "HS Property",
+   "reqd": 1
+  },
+  {
+   "fieldname": "organization",
+   "label": "Organization",
+   "fieldtype": "Link",
+   "options": "HS Organization",
+   "reqd": 1
+  },
+  {
+   "fieldname": "product_code",
+   "label": "Product code",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "product_name",
+   "label": "Product name",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "product_type",
+   "label": "Product type",
+   "fieldtype": "Select",
+   "options": "Service\nStock\nAsset",
+   "reqd": 1,
+   "default": "Service"
+  },
+  {
+   "fieldname": "income_account",
+   "label": "Cuenta de ingresos",
+   "fieldtype": "Link",
+   "options": "HS Account"
+  },
+  {
+   "fieldname": "expense_account",
+   "label": "Cuenta de gastos",
+   "fieldtype": "Link",
+   "options": "HS Account"
+  },
+  {
+   "fieldname": "inventory_account",
+   "label": "Inventory account",
+   "fieldtype": "Link",
+   "options": "HS Account"
+  },
+  {
+   "fieldname": "sales_rate",
+   "label": "Sales rate",
+   "fieldtype": "Currency",
+   "default": 0
+  },
+  {
+   "fieldname": "active",
+   "label": "Habilitado",
+   "fieldtype": "Check",
+   "default": 1
+  }
+ ],
+ "field_order": [
+  "company",
+  "property",
+  "organization",
+  "product_code",
+  "product_name",
+  "product_type",
+  "income_account",
+  "expense_account",
+  "inventory_account",
+  "sales_rate",
+  "active"
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Administrator",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Supervisor",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Receptionist",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Cashier",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Accountant",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Auditor",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0
+}

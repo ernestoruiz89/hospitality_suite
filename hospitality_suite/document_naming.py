@@ -5,6 +5,15 @@ Annual counters use the site's calendar year, independently of business_date.
 Technical records and child rows retain random internal identifiers.
 """
 DOCUMENT_SERIES = {
+    'HS Organization': 'ENT-.#####',
+    'HS Account': 'CUENTA-.#####',
+    'HS Journal': 'ASI-.YYYY.-.#####',
+    'HS Party': 'TER-.#####',
+    'HS PMS Receivable': 'CXCPMS-.YYYY.-.#####',
+    'HS PMS Allocation': 'APL-.YYYY.-.#####',
+    'HS Product': 'PROD-.#####',
+    'HS Warehouse': 'ALM-.#####',
+    'HS Stock Movement': 'MOVSTK-.YYYY.-.#####',
     'HS Property': 'ESTAB-.#####',
     'HS Category': 'CAT-.#####',
     'HS Room': 'HAB-.#####',
