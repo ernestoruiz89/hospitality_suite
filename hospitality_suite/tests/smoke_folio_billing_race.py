@@ -9,7 +9,9 @@ import frappe
 
 from hospitality_suite import api
 from hospitality_suite.service import command, insert
+from hospitality_suite.standalone_cash import expected as cash_expected
 from hospitality_suite.standalone_accounting import balance, provider
+from hospitality_suite.standalone_receivables import outstanding
 from hospitality_suite.tests.financial_race import race_command
 
 
@@ -52,9 +54,11 @@ def _verify(prop, folio, charge_names, account, income, expected):
 
 def _remove(property_name, organization):
     frappe.db.rollback()
-    scoped = ("HS Journal", "HS PMS Receivable", "HS Charge",
+    scoped = ("HS PMS Allocation", "HS Payment", "HS Shift", "HS Journal",
+        "HS PMS Receivable", "HS Charge",
         "HS Folio", "HS Stay", "HS Guest", "HS Product", "HS Rate",
-        "HS Room", "HS Category", "HS Party", "HS Account",
+        "HS Room", "HS Category", "HS Party", "HS Payment Method",
+        "HS Account",
         "HS Audit Event", "HS Request")
     journals = []
     if property_name:
@@ -99,6 +103,21 @@ def run():
         income = api.execute(property_name, "pms_account", "billing-income-" + suffix,
             {"account_code": "4000" + suffix, "account_name": "Ingreso de prueba",
              "root_type": "Income"})["account"]
+        bank = api.execute(property_name, "pms_account", "billing-bank-" + suffix,
+            {"account_code": "1010" + suffix, "account_name": "Banco de prueba",
+             "root_type": "Asset", "account_type": "Bank"})["account"]
+        cash = api.execute(property_name, "pms_account", "billing-cash-" + suffix,
+            {"account_code": "1000" + suffix, "account_name": "Caja de prueba",
+             "root_type": "Asset", "account_type": "Cash"})["account"]
+        bank_method = api.execute(property_name, "pms_payment_method",
+            "billing-bank-method-" + suffix,
+            {"label": "Banco de facturación", "account": bank})["method"]
+        cash_method = api.execute(property_name, "pms_payment_method",
+            "billing-cash-method-" + suffix,
+            {"label": "Efectivo de facturación", "account": cash})["method"]
+        shift = api.execute(property_name, "pms_open_shift",
+            "billing-shift-" + suffix,
+            {"opening_by_currency": {"NIO": "0.00"}})["shift"]
         party = api.execute(property_name, "pms_customer",
             "billing-party-" + suffix,
             {"party_name": "Huésped facturación " + suffix})["party"]
@@ -171,8 +190,62 @@ def run():
                 frappe.db.count("HS Audit Event", {"property": property_name,
                     "action": "pms_folio_billed"}) != 2):
             raise AssertionError("Distinct-key billing posted twice")
+        sites_path = Path(frappe.local.sites_path).resolve()
+        for index, same_key in enumerate((True, False)):
+            receivable = (first_result if index == 0 else second_result)[
+                "receivables"][0]["receivable"]
+            value = "100" if index == 0 else "40"
+            payment = {"kind": "Payment", "amount": value,
+                "method": cash_method if index == 0 else bank_method,
+                "receivable": receivable,
+                "reference": f"BILLING-RACE-PAY-{index}-{suffix}",
+                "reason": "Cobro concurrente de cuenta de prueba"}
+            if index == 0:
+                payment["shift"] = shift
+            reviewed = api.pms_cash_preview(property_name, payment)
+            if Decimal(str(reviewed["base_amount"])) != Decimal(value):
+                raise AssertionError("Payment quote changed the reviewed amount")
+            payment.update(expected_exchange_rate=reviewed["exchange_rate"],
+                expected_rate_record=reviewed["exchange_rate_record"],
+                expected_debit=reviewed["debit"],
+                expected_credit=reviewed["credit"])
+            frappe.db.commit()
+            posted = race_command(SITE, sites_path, property_name,
+                "pms_cash_movement", payment,
+                f"billing-race-payment-{index}-{suffix}",
+                same_key=same_key)
+            frappe.db.rollback()
+            if (not posted["allocation"] or
+                    outstanding(frappe.get_doc("HS Property", property_name),
+                        receivable) != 0 or
+                    frappe.db.count("HS Payment", {"property": property_name,
+                        "kind": "Payment", "status": "Posted"}) != index + 1 or
+                    frappe.db.count("HS PMS Allocation", {
+                        "property": property_name, "kind": "Direct"}) != index + 1 or
+                    frappe.db.count("HS Request", {"property": property_name,
+                        "operation": "pms_cash_movement"}) != index + 1):
+                raise AssertionError("Concurrent collection duplicated a payment")
+        actual = frappe.get_doc("HS Property", property_name)
+        if (Decimal(balance(actual, ar)) != 0 or
+                Decimal(balance(actual, cash)) != Decimal("100") or
+                Decimal(balance(actual, bank)) != Decimal("40") or
+                Decimal(balance(actual, income)) != Decimal("-140") or
+                cash_expected(frappe.get_doc("HS Shift", shift))["NIO"] !=
+                    "100.00" or
+                frappe.db.count("HS Journal", {"property": property_name,
+                    "purpose": "Payment"}) != 2 or
+                frappe.db.count("HS Payment", {"property": property_name,
+                    "method": cash_method, "shift": shift,
+                    "status": "Posted"}) != 1 or
+                frappe.db.count("HS Payment", {"property": property_name,
+                    "method": bank_method, "status": "Posted"}) != 1 or
+                frappe.db.count("HS Audit Event", {"property": property_name,
+                    "action": "pms_cash_movement_posted"}) != 2):
+            raise AssertionError("Collected funds, receivables and income diverged")
         return {"site": SITE, "same_key": "same_result",
             "distinct_key": "rejected", "receivables": 2,
-            "journals": 2, "balance": "140.00"}
+            "payments": 2, "payment_journals": 2,
+            "receivable_balance": "0.00", "cash_expected": "100.00",
+            "bank_balance": "40.00"}
     finally:
         _remove(property_name, organization)
