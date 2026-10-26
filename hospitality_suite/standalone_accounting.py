@@ -165,7 +165,7 @@ def reversible_journals(property_name, search="", offset=0, page_length=25):
             tuple([prop.name, prop.organization, *names]), as_dict=True)
         by_journal = {name: [] for name in names}
         for line in lines:
-            by_journal[line.parent].append({key: str(line[key])
+            by_journal[line.parent].append({key: _money_text(line[key])
                 if key in ("debit", "credit", "debit_in_account_currency",
                            "credit_in_account_currency") else line[key]
                 for key in ("account", "account_code", "account_name",
@@ -175,8 +175,8 @@ def reversible_journals(property_name, search="", offset=0, page_length=25):
         for row in rows:
             row["lines"] = by_journal[row.name]
             row["posting_date"] = str(row.posting_date)
-            row["total_debit"] = str(row.total_debit)
-            row["total_credit"] = str(row.total_credit)
+            row["total_debit"] = _money_text(row.total_debit)
+            row["total_credit"] = _money_text(row.total_credit)
     return {"rows": rows, "total": total, "offset": offset,
         "page_length": page_length}
 

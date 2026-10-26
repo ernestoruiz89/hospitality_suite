@@ -112,8 +112,12 @@ def exercise():
             search=manual["journal"])
         if (page["total"] != 1 or len(page["rows"]) != 1 or
                 page["rows"][0]["name"] != manual["journal"] or
-                len(page["rows"][0]["lines"]) != 2 or other["total"]):
-            frappe.throw("The new manual journal was not scoped in React")
+                page["rows"][0]["total_debit"] != "5.00" or
+                len(page["rows"][0]["lines"]) != 2 or
+                sorted((line["debit"], line["credit"]) for line in
+                    page["rows"][0]["lines"]) !=
+                    [("0.00", "5.00"), ("5.00", "0.00")] or other["total"]):
+            frappe.throw("The manual journal was not scoped or formatted for React")
         reversed_entry = api.execute(property_name, "pms_reverse_journal",
             "journal-workspace-reversal-" + marker,
             {"journal": manual["journal"],
