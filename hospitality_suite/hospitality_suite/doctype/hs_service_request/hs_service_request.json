@@ -125,6 +125,34 @@
    "options": "HS PMS Receivable"
   },
   {
+   "fieldname": "pms_party",
+   "label": "Pagador histórico PMS",
+   "fieldtype": "Link",
+   "options": "HS Party",
+   "read_only": 1
+  },
+  {
+   "fieldname": "pms_product",
+   "label": "Producto histórico PMS",
+   "fieldtype": "Link",
+   "options": "HS Product",
+   "read_only": 1
+  },
+  {
+   "fieldname": "pms_fiscal_invoice",
+   "label": "Factura histórica PMS",
+   "fieldtype": "Link",
+   "options": "HS PMS Fiscal Document",
+   "read_only": 1
+  },
+  {
+   "fieldname": "pms_fiscal_credit",
+   "label": "Nota histórica PMS",
+   "fieldtype": "Link",
+   "options": "HS PMS Fiscal Document",
+   "read_only": 1
+  },
+  {
    "fieldname": "notes",
    "label": "Observaciones",
    "fieldtype": "Small Text"
@@ -150,6 +178,10 @@
   "credit_note",
   "sales_invoice",
   "pms_receivable",
+  "pms_party",
+  "pms_product",
+  "pms_fiscal_invoice",
+  "pms_fiscal_credit",
   "notes"
  ],
  "permissions": [

@@ -106,7 +106,7 @@ def invoice_quote(prop, data):
             frappe.throw(_("El cargo no conserva un asiento publicado"))
         product = (frappe.db.get_value("HS Charge", row.source_charge, "item")
                    if row.source_charge else frappe.db.get_value(
-                       "HS Service Request", row.source_service, "item")
+                       "HS Service Request", row.source_service, "pms_product")
                    if row.source_service else frappe.db.get_value(
                        "HS Experience Order", row.experience_order, "pms_product")
                    if row.experience_order else None)

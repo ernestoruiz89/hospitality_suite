@@ -5,13 +5,27 @@ from uuid import uuid4
 
 import frappe
 
-from hospitality_suite import api, setup, standalone_closing, standalone_inventory
+from hospitality_suite import api, setup, standalone_accounting, standalone_closing, standalone_inventory
+from hospitality_suite.pms_cutover_links import _grouped_values
+from hospitality_suite.schema import ERP_LINK_TARGETS
 from hospitality_suite.service import operation
 
 
 def run():
     if "erpnext" in frappe.get_installed_apps() or not frappe.local.site.startswith("hs-pms-smoke"):
         frappe.throw("Use únicamente un sitio PMS descartable")
+    return _run()
+
+
+def run_cutover_compat():
+    if ("erpnext" not in frappe.get_installed_apps() or
+            standalone_accounting.provider() != "pms" or
+            not frappe.local.site.startswith("hs-cutover-restore")):
+        frappe.throw("Use únicamente el sitio PMS+ERPNext de ensayo del corte")
+    return _run()
+
+
+def _run():
     frappe.set_user("Administrator")
     suffix = uuid4().hex[:8]
     try:
@@ -104,6 +118,17 @@ def run():
                     "document_type") == "Invoice" and
                 frappe.db.count("HS PMS Allocation", {
                     "receivable": service_sale["receivable"], "kind": "Direct"}) == 1)
+        service_links = frappe.db.get_value("HS Service Request",
+            service_sale["service"], ["customer", "item", "sales_invoice",
+                "credit_note", "pms_party", "pms_product", "pms_fiscal_invoice"],
+            as_dict=True)
+        assert (not service_links.sales_invoice and not service_links.credit_note and
+                service_links.pms_party == service_links.customer == customer and
+                service_links.pms_product == service_links.item == service_item and
+                service_links.pms_fiscal_invoice == service_sale["invoice"])
+        assert (("HS Service Request", "sales_invoice") in ERP_LINK_TARGETS and
+                not any(row.old_value == service_sale["invoice"] for row in
+                    _grouped_values("HS Service Request", "sales_invoice", False)))
 
         stock_data = {"customer": customer, "item": stock_item,
             "warehouse": warehouse, "quantity": "1", "method": bank_method,
@@ -160,6 +185,10 @@ def run():
                     "status") == "Returned" and
                 frappe.db.get_value("HS PMS Fiscal Document",
                     returned["credit_note"], "document_type") == "Credit Note")
+            assert (frappe.db.get_value("HS Service Request", sale["service"],
+                "pms_fiscal_credit") == returned["credit_note"] and
+                not frappe.db.get_value("HS Service Request", sale["service"],
+                    "credit_note"))
         assert (standalone_inventory.current_balance(prop, stock_item, warehouse) ==
                     (Decimal("3"), Decimal("30")) and
                 frappe.db.count("HS PMS Fiscal Document", {

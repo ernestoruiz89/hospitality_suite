@@ -1190,25 +1190,30 @@ class ServiceRequestDocument(ScopedDocument):
         super().validate()
         if self.pms_receivable:
             from hospitality_suite.standalone_accounting import provider
+            property_scope = frappe.db.get_value("HS Property", self.property,
+                ["organization", "company"], as_dict=True)
             source = frappe.db.get_value("HS PMS Receivable", self.pms_receivable,
                 ["property", "organization", "party", "source_service", "amount",
                  "status"], as_dict=True)
-            fiscal = frappe.db.get_value("HS PMS Fiscal Document", self.sales_invoice,
+            fiscal = frappe.db.get_value("HS PMS Fiscal Document", self.pms_fiscal_invoice,
                 ["property", "document_type", "party", "total_amount", "status"],
-                as_dict=True) if self.sales_invoice else None
-            if (provider() != "pms" or not source or not fiscal or
+                as_dict=True) if self.pms_fiscal_invoice else None
+            if (provider() not in ("pms", "erpnext") or not property_scope or
+                    not source or not fiscal or
                     self.stay or self.folio or self.charge or self.included or
                     self.opening_stock_issue or self.status not in ("Delivered", "Returned") or
+                    self.sales_invoice or self.credit_note or
+                    not self.pms_party or not self.pms_product or
                     source.property != self.property or
-                    source.organization != self.company or
-                    source.party != self.customer or source.source_service != self.name or
+                    source.organization != property_scope.organization or
+                    source.party != self.pms_party or source.source_service != self.name or
                     source.status != "Posted" or
                     Decimal(str(source.amount)) != Decimal(str(self.amount)) or
                     fiscal.property != self.property or fiscal.document_type != "Invoice" or
-                    fiscal.party != self.customer or fiscal.status != "Posted" or
+                    fiscal.party != self.pms_party or fiscal.status != "Posted" or
                     Decimal(str(fiscal.total_amount)) != Decimal(str(self.amount)) or
                     not frappe.db.exists("HS PMS Fiscal Line", {
-                        "parent": self.sales_invoice,
+                        "parent": self.pms_fiscal_invoice,
                         "receivable": self.pms_receivable})):
                 frappe.throw(_("La venta directa PMS no conserva su cargo y factura"))
             payment = frappe.db.get_value("HS Payment", {
@@ -1217,26 +1222,28 @@ class ServiceRequestDocument(ScopedDocument):
                 "status": "Posted"}, ["name", "pms_journal"], as_dict=True)
             if not payment or not payment.pms_journal:
                 frappe.throw(_("La venta directa PMS requiere su cobro publicado"))
-            if self.status == "Delivered" and (self.credit_note or self.return_stock_entry):
+            if self.status == "Delivered" and (
+                    self.pms_fiscal_credit or self.return_stock_entry):
                 frappe.throw(_("La venta vigente no puede tener devolución"))
             if self.status == "Returned":
-                credit = frappe.db.get_value("HS PMS Fiscal Document", self.credit_note,
+                credit = frappe.db.get_value("HS PMS Fiscal Document", self.pms_fiscal_credit,
                     ["property", "document_type", "source_invoice", "total_amount",
-                     "status"], as_dict=True) if self.credit_note else None
+                     "status"], as_dict=True) if self.pms_fiscal_credit else None
                 refunded = frappe.db.exists("HS Payment", {
                     "property": self.property, "source_payment": payment.name,
                     "pms_receivable": self.pms_receivable,
                     "kind": "Refund", "status": "Posted"})
                 if (not credit or credit.property != self.property or
                         credit.document_type != "Credit Note" or
-                        credit.source_invoice != self.sales_invoice or
+                        credit.source_invoice != self.pms_fiscal_invoice or
                         credit.status != "Posted" or
                         Decimal(str(credit.total_amount)) != Decimal(str(self.amount)) or
                         not refunded or bool(self.stock_entry) != bool(self.return_stock_entry)):
                     frappe.throw(_("La devolución no conserva nota, reembolso e inventario"))
         previous = self.get_doc_before_save()
         if previous and previous.pms_receivable:
-            immutable = ("pms_receivable", "sales_invoice", "stock_entry",
+            immutable = ("pms_receivable", "pms_party", "pms_product",
+                "pms_fiscal_invoice", "sales_invoice", "credit_note", "stock_entry",
                 "customer", "item", "warehouse", "quantity", "amount",
                 "currency", "stay", "folio", "charge", "included",
                 "opening_stock_issue")
@@ -1244,7 +1251,7 @@ class ServiceRequestDocument(ScopedDocument):
                     for field in immutable) or
                     previous.status == "Returned" and (
                         self.status != "Returned" or
-                        previous.credit_note != self.credit_note or
+                        previous.pms_fiscal_credit != self.pms_fiscal_credit or
                         previous.return_stock_entry != self.return_stock_entry) or
                     previous.status == "Delivered" and
                         self.status not in ("Delivered", "Returned")):
@@ -1973,15 +1980,18 @@ class PMSReceivableDocument(ScopedDocument):
             frappe.throw(_("El cargo de estancia requiere una cuenta de estancia y un cargo de origen"))
         if self.source_service:
             service = frappe.db.get_value("HS Service Request", self.source_service,
-                ["property", "company", "customer", "item", "stay", "folio",
+                ["property", "company", "customer", "item", "pms_party",
+                 "pms_product", "stay", "folio",
                  "charge", "status", "amount", "currency"], as_dict=True)
-            product = frappe.db.get_value("HS Product", service.item,
+            product = frappe.db.get_value("HS Product", service.pms_product,
                 ["property", "organization", "income_account", "tax_profile"],
                 as_dict=True) if service else None
             if (self.folio or self.source_charge or self.booking or
                     self.experience_order or not service or not product or
                     service.property != prop.name or service.company != prop.company or
-                    service.customer != self.party or service.stay or service.folio or
+                    service.customer != self.party or service.pms_party != self.party or
+                    service.item != service.pms_product or
+                    service.stay or service.folio or
                     service.charge or service.status != "Requested" or
                     service.currency != prop.currency or
                     Decimal(str(service.amount or 0)) != Decimal(str(self.amount or 0)) or

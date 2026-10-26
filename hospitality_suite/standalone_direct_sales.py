@@ -103,17 +103,20 @@ def history(property_name, search="", offset=0, page_length=25, returnable=0):
     if str(returnable) not in ("0", "1"):
         frappe.throw(_("Revise el filtro de devoluciones"))
     rows = frappe.db.sql(
-        "SELECT s.name, s.creation, s.customer, p.party_name AS customer_name, "
-        "s.item, product.product_name AS item_name, product.product_type, "
-        "s.quantity, s.amount, s.currency, s.status, s.sales_invoice, "
-        "s.credit_note, s.pms_receivable, s.stock_entry, "
+        "SELECT s.name, s.creation, s.pms_party AS customer, "
+        "p.party_name AS customer_name, s.pms_product AS item, "
+        "product.product_name AS item_name, product.product_type, "
+        "s.quantity, s.amount, s.currency, s.status, "
+        "s.pms_fiscal_invoice AS sales_invoice, "
+        "s.pms_fiscal_credit AS credit_note, "
+        "s.pms_receivable, s.stock_entry, "
         "invoice.document_number, credit.document_number AS credit_number "
         "FROM `tabHS Service Request` s "
         "JOIN `tabHS PMS Receivable` r ON r.name=s.pms_receivable "
-        "JOIN `tabHS Party` p ON p.name=s.customer "
-        "JOIN `tabHS Product` product ON product.name=s.item "
-        "JOIN `tabHS PMS Fiscal Document` invoice ON invoice.name=s.sales_invoice "
-        "LEFT JOIN `tabHS PMS Fiscal Document` credit ON credit.name=s.credit_note "
+        "JOIN `tabHS Party` p ON p.name=s.pms_party "
+        "JOIN `tabHS Product` product ON product.name=s.pms_product "
+        "JOIN `tabHS PMS Fiscal Document` invoice ON invoice.name=s.pms_fiscal_invoice "
+        "LEFT JOIN `tabHS PMS Fiscal Document` credit ON credit.name=s.pms_fiscal_credit "
         "WHERE s.property=%s AND s.company=%s AND r.property=s.property "
         "AND r.source_service=s.name AND r.status='Posted' "
         "AND p.property=s.property AND product.property=s.property "
@@ -261,7 +264,8 @@ def sell(prop, data):
         frappe.throw(_("El precio, impuesto, cambio o serie cambió; revise la venta"))
     product = locked_doc("HS Product", q["item"])
     service = insert("HS Service Request", prop, customer=q["customer"],
-        item=product.name, warehouse=q["warehouse"], quantity=q["quantity"],
+        pms_party=q["customer"], item=product.name, pms_product=product.name,
+        warehouse=q["warehouse"], quantity=q["quantity"],
         amount=q["total"], currency=prop.currency, status="Requested",
         notes=q["notes"])
     stock = None
@@ -312,7 +316,7 @@ def sell(prop, data):
     service.status = "Delivered"
     service.pms_receivable = posted["receivable"]
     service.stock_entry = stock["movement"] if stock else None
-    service.sales_invoice = fiscal["document"]
+    service.pms_fiscal_invoice = fiscal["document"]
     service.save()
     audit(prop, "pms_direct_sale", service, details={
         "receivable": posted["receivable"], "invoice": fiscal["document"],
@@ -338,16 +342,16 @@ def return_quote(prop, data):
     service = locked_doc("HS Service Request", data.get("service"))
     if (service.property != prop.name or service.company != prop.company or
             service.status != "Delivered" or service.stay or service.folio or
-            not service.pms_receivable or not service.sales_invoice or
-            service.credit_note or service.return_stock_entry):
+            not service.pms_receivable or not service.pms_fiscal_invoice or
+            service.pms_fiscal_credit or service.return_stock_entry):
         frappe.throw(_("Seleccione una venta directa PMS vigente del establecimiento"))
     receivable = locked_doc("HS PMS Receivable", service.pms_receivable)
     if (receivable.property != prop.name or receivable.source_service != service.name or
             receivable.status != "Posted"):
         frappe.throw(_("La venta directa no conserva su cuenta por cobrar"))
-    invoice = locked_doc("HS PMS Fiscal Document", service.sales_invoice)
+    invoice = locked_doc("HS PMS Fiscal Document", service.pms_fiscal_invoice)
     if (invoice.property != prop.name or invoice.document_type != "Invoice" or
-            invoice.status != "Posted" or invoice.party != service.customer or
+            invoice.status != "Posted" or invoice.party != service.pms_party or
             Decimal(str(invoice.total_amount)) != Decimal(str(service.amount))):
         frappe.throw(_("La factura original de la venta no concilia"))
     payments = frappe.get_all("HS Payment", filters={"property": prop.name,
@@ -371,7 +375,7 @@ def return_quote(prop, data):
     movement = None
     if service.stock_entry:
         movement = locked_doc("HS Stock Movement", service.stock_entry)
-        if (movement.property != prop.name or movement.product != service.item or
+        if (movement.property != prop.name or movement.product != service.pms_product or
                 movement.warehouse != service.warehouse or
                 movement.source_doctype != service.doctype or
                 movement.source_name != service.name or
@@ -427,14 +431,14 @@ def return_sale(prop, data):
         if (journal.property != prop.name or not expense or not inventory or
                 Decimal(str(original.value_delta)) != -Decimal(q["stock_value"])):
             frappe.throw(_("El costo original del artículo ya no concilia"))
-        movement = receive(prop, product=service.item,
+        movement = receive(prop, product=service.pms_product,
             warehouse=service.warehouse, quantity=service.quantity,
             value=q["stock_value"], counter_account=expense,
             inventory_account_name=inventory, historical_return=True,
             source_doctype=service.doctype, source_name=service.name,
             purpose="Direct Sale Return", memo=q["reason"])
     service.status = "Returned"
-    service.credit_note = credited["document"]
+    service.pms_fiscal_credit = credited["document"]
     service.return_stock_entry = movement["movement"] if movement else None
     service.save()
     audit(prop, "pms_direct_sale_return", service, reason=q["reason"],
