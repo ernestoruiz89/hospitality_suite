@@ -122,12 +122,9 @@ def inspect():
         search="HIST-", page_length=25)
     if {row["name"] for row in history["rows"]} != {SALE, RETURNED_SALE}:
         frappe.throw("The ERPNext view lost historical PMS counter sales")
-    try:
-        api.pms_direct_sale_history(property_name, returnable=1)
-    except frappe.ValidationError:
-        pass
-    else:
-        frappe.throw("The ERPNext view offered a PMS sale as natively returnable")
+    returnable = api.pms_direct_sale_history(property_name, returnable=1)
+    if returnable["rows"] or sale.erp_cutover_snapshot or returned.erp_cutover_snapshot:
+        frappe.throw("A legacy cutover gained unfrozen return terms")
     invoice = frappe.get_doc("HS PMS Fiscal Document", sale.pms_fiscal_invoice)
     returned_invoice = frappe.get_doc("HS PMS Fiscal Document",
         returned.pms_fiscal_invoice)
