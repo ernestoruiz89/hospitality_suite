@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
 import { call, type Property } from "./api"
 import { OpeningSupplierCreditsPms } from "./OpeningSupplierCreditsPms"
+import { SupplierDocumentBrowser, type SupplierDocument, type SupplierTarget } from "./SupplierDocumentBrowser"
 import { purchaseSections, usePurchaseSection, type PurchaseSection } from "./PurchaseSections"
 import { useIdempotentCommand, type SendCommand } from "./useIdempotentCommand"
 
@@ -107,7 +108,7 @@ export function Purchases({ property, canPurchase, canApprove }: {
   const [taxAccount, setTaxAccount] = useState("")
   const [purchaseNotes, setPurchaseNotes] = useState("")
   const [purchaseQuote, setPurchaseQuote] = useState<PurchaseQuote | null>(null)
-  const [selectedPurchase, setSelectedPurchase] = useState("")
+  const [selectedPaymentTarget, setSelectedPaymentTarget] = useState<SupplierTarget | null>(null)
   const [method, setMethod] = useState("")
   const [shift, setShift] = useState("")
   const [paymentAmount, setPaymentAmount] = useState("")
@@ -126,7 +127,7 @@ export function Purchases({ property, canPurchase, canApprove }: {
     setSupplier(""); setBillReference(""); setLineRows([emptyLine()]);
     setCurrency(property.currency); setPayableAccount(""); setTaxAccount("");
     setPurchaseNotes(""); setPurchaseQuote(null)
-    setSelectedPurchase(""); setMethod(""); setShift(""); setPaymentAmount(""); setSettledAmount("");
+    setSelectedPaymentTarget(null); setMethod(""); setShift(""); setPaymentAmount(""); setSettledAmount("");
     setPaymentReference(""); setPaymentReason(""); setPaymentQuote(null)
     refresh().catch((issue: unknown) => setError(issue instanceof Error ? issue.message : "No se pudieron consultar las compras."))
   }, [refresh, property.currency])
@@ -142,18 +143,15 @@ export function Purchases({ property, canPurchase, canApprove }: {
       position === index ? { ...row, [field]: value } : row))
   }
   const selectedMethod = data?.methods.find((row) => row.name === method)
-  const isOpeningPayment = selectedPurchase.startsWith("opening:")
-  const selectedOpening = isOpeningPayment ? data?.opening_payables.find((row) =>
-    row.name === selectedPurchase.slice(8)) : undefined
+  const isOpeningPayment = selectedPaymentTarget?.kind === "Opening Payable"
+  const selectedOpening = isOpeningPayment ? selectedPaymentTarget : null
   const foreignOpening = !!selectedOpening && selectedOpening.currency !== data?.currency
   const paymentData = { [isOpeningPayment ? "payable" : "purchase"]:
-      isOpeningPayment ? selectedPurchase.slice(8) : selectedPurchase,
+      selectedPaymentTarget?.name,
     method, amount: paymentAmount,
     ...(foreignOpening ? { settled_amount: settledAmount } : {}),
     shift: selectedMethod?.is_cash ? shift : null,
     reference: paymentReference.trim(), reason: paymentReason.trim() }
-  const supplierLabel = (id: string) => data?.suppliers.find((row) => row.name === id)?.party_name || id
-  const productLabel = (id: string) => data?.products.find((row) => row.name === id)?.product_name || id
 
   async function createSupplier(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); if (busy) return
@@ -186,7 +184,7 @@ export function Purchases({ property, canPurchase, canApprove }: {
     finally { setBusy(false) }
   }
   async function pay(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault(); if (busy) return
+    event.preventDefault(); if (busy || !selectedPaymentTarget) return
     setBusy(true); setError(""); setNotice("")
     try {
       if (!paymentQuote) {
@@ -197,7 +195,7 @@ export function Purchases({ property, canPurchase, canApprove }: {
         await send(isOpeningPayment ?
           "pms_pay_opening_supplier" : "pms_pay_supplier",
           { ...paymentData, acceptance: paymentQuote.acceptance })
-        setSelectedPurchase(""); setPaymentAmount(""); setSettledAmount(""); setPaymentReference(""); setPaymentReason("");
+        setSelectedPaymentTarget(null); setPaymentAmount(""); setSettledAmount(""); setPaymentReference(""); setPaymentReason("");
         setPaymentQuote(null)
         await refreshAfter("Pago aplicado a la cuenta por pagar.")
       }
@@ -232,9 +230,18 @@ export function Purchases({ property, canPurchase, canApprove }: {
           <Button disabled={busy || !data.products.length || !data.warehouses.length} className="sm:col-span-2">{purchaseQuote ? "Confirmar recepción" : "Revisar compra"}</Button>
         </form></CardContent></Card>
       }
-      {section === "payables" && <Card><CardHeader><CardTitle>Cuentas por pagar</CardTitle></CardHeader><CardContent className="space-y-2">{data.opening_payables.map((row) => <div key={row.name} className="flex flex-wrap justify-between gap-2 border-b border-border py-2 text-sm"><span><strong>{row.opening_source_name}</strong> · {supplierLabel(row.supplier)}<span className="block text-xs text-muted-foreground">Factura abierta trasladada de ERPNext · Vence {row.due_date}</span></span><span className="text-right">Pendiente {row.currency} {row.outstanding}<span className="block text-xs text-muted-foreground">Base {data.currency} {row.base_outstanding}</span></span></div>)}{data.purchases.map((row) => <div key={row.name} className="flex flex-wrap justify-between gap-2 border-b border-border py-2 text-sm"><span><strong>{row.supplier_reference}</strong> · {supplierLabel(row.supplier)}{row.status === "Cancelled" && " · Cancelada"}<span className="block text-xs text-muted-foreground">{row.lines.map((line) => `${productLabel(line.product)} (${line.quantity})`).join(" · ")} · Factura {row.invoice_currency} {row.invoice_amount}</span></span><span className="text-right">Pendiente {data.currency} {row.outstanding}<span className="block text-xs text-muted-foreground">Costo {data.currency} {row.base_cost}</span></span></div>)}{!data.purchases.length && !data.opening_payables.length && <p className="text-sm text-muted-foreground">No hay cuentas por pagar registradas.</p>}</CardContent></Card>}
+      {section === "payables" && <Card><CardHeader><CardTitle>Cuentas por pagar</CardTitle></CardHeader><CardContent>
+        <SupplierDocumentBrowser property={property} kind="Target" selected={null}
+          onSelect={() => {}} refreshToken={data} />
+      </CardContent></Card>}
       {section === "supplier-pay" && <Card><CardHeader><CardTitle>Abono al proveedor</CardTitle><CardDescription>El efectivo requiere turno propio y saldo disponible. El banco usa su cuenta contable.</CardDescription></CardHeader><CardContent><form onSubmit={pay} className="space-y-3">
-          <select required value={selectedPurchase} onChange={(event) => { changePayment(); setSelectedPurchase(event.target.value); setSettledAmount("") }} className="h-9 w-full rounded-md border border-border bg-white px-2 text-sm"><option value="">Cuenta por pagar pendiente</option>{data.opening_payables.filter((row) => Number(row.outstanding) > 0).map((row) => <option key={row.name} value={`opening:${row.name}`}>{row.opening_source_name} · {supplierLabel(row.supplier)} · {row.currency} {row.outstanding} · Apertura</option>)}{data.purchases.filter((row) => Number(row.outstanding) > 0).map((row) => <option key={row.name} value={row.name}>{row.supplier_reference} · {supplierLabel(row.supplier)} · {data.currency} {row.outstanding}</option>)}</select>
+          <SupplierDocumentBrowser property={property} kind="Target" selected={selectedPaymentTarget}
+            actionLabel="Pagar" refreshToken={data}
+            onSelect={(row: SupplierDocument | null) => {
+              setSelectedPaymentTarget(row?.kind === "Opening Payable" || row?.kind === "Purchase" ? row : null)
+              setSettledAmount(""); changePayment()
+            }} />
+          <p className="text-sm">Deuda seleccionada: {selectedPaymentTarget?.reference || "Seleccione una cuenta por pagar arriba."}</p>
           <select required value={method} onChange={(event) => { changePayment(); setMethod(event.target.value); setShift("") }} className="h-9 w-full rounded-md border border-border bg-white px-2 text-sm"><option value="">Medio de pago</option>{data.methods.map((row) => <option key={row.name} value={row.name}>{row.mode_of_payment} · {row.currency}</option>)}</select>
           {selectedMethod?.is_cash && <select required value={shift} onChange={(event) => { changePayment(); setShift(event.target.value) }} className="h-9 w-full rounded-md border border-border bg-white px-2 text-sm"><option value="">Turno abierto propio</option>{data.shifts.map((row) => <option key={row.name} value={row.name}>{row.name}</option>)}</select>}
           <Input required aria-label={`Importe del pago en ${selectedMethod?.currency || data.currency}`} type="number" min="0.01" step="0.01" value={paymentAmount} onChange={(event) => { changePayment(); setPaymentAmount(event.target.value) }} placeholder={`Importe (${selectedMethod?.currency || data.currency})`} />
@@ -242,7 +249,7 @@ export function Purchases({ property, canPurchase, canApprove }: {
           <Input required maxLength={140} placeholder="Referencia del pago" value={paymentReference} onChange={(event) => { changePayment(); setPaymentReference(event.target.value) }} />
           <Input required maxLength={500} placeholder="Motivo" value={paymentReason} onChange={(event) => { changePayment(); setPaymentReason(event.target.value) }} />
           {paymentQuote && <div className="rounded-lg bg-secondary p-3 text-sm"><strong>{paymentQuote.currency} {paymentQuote.amount}</strong> · Cambio {paymentQuote.exchange_rate}<p>Débito proveedores {data.currency} {paymentQuote.payable_release_base || paymentQuote.base_amount} · Crédito Caja/banco {data.currency} {paymentQuote.base_amount}</p>{paymentQuote.settlement_currency && <p>Deuda liquidada: {paymentQuote.settlement_currency} {paymentQuote.settled_amount}</p>}{Number(paymentQuote.exchange_variance_base || 0) !== 0 && <p>Diferencia de cambio: {data.currency} {paymentQuote.exchange_variance_base}</p>}<p>Pendiente luego del pago: {paymentQuote.settlement_currency || data.currency} {paymentQuote.outstanding_after}{paymentQuote.base_outstanding_after && ` · Base ${data.currency} ${paymentQuote.base_outstanding_after}`}</p></div>}
-          <Button disabled={busy || !selectedPurchase || !method}>{paymentQuote ? "Confirmar pago" : "Revisar pago"}</Button>
+          <Button disabled={busy || !selectedPaymentTarget || !method}>{paymentQuote ? "Confirmar pago" : "Revisar pago"}</Button>
         </form></CardContent></Card>}
       {(section === "returns" || section === "return-new" || section === "supplier-refund") &&
         <PurchaseReturns property={property} data={data} refresh={refresh} send={send} section={section} canApprove={canApprove} />}

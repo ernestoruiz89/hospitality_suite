@@ -2147,6 +2147,14 @@ def run(persist=False):
                 if item["opening_source_name"] == "PCN-" + suffix), None)
             if not supplier_credit or supplier_credit["available"] != "4.00":
                 frappe.throw("El crédito inicial del proveedor no conserva su saldo")
+            supplier_credit_page = api.pms_supplier_document_page(opening_prop.name,
+                kind="Credit", search="PCN-" + suffix)
+            other_supplier_credits = api.pms_supplier_document_page(other_prop.name,
+                kind="Credit", search="PCN-" + suffix)
+            if (other_supplier_credits["rows"] or len(supplier_credit_page["rows"]) != 1 or
+                    supplier_credit_page["rows"][0]["name"] != supplier_credit["name"] or
+                    supplier_credit_page["rows"][0]["available"] != "4.00"):
+                frappe.throw("La página de créditos de proveedor perdió hotel o saldo")
             try:
                 api.execute(opening_prop.name, "pms_reverse_journal",
                     "reverse-vendor-opening-" + suffix,
@@ -2169,6 +2177,16 @@ def run(persist=False):
                 item["opening_source_name"] == "PINV2-" + suffix), None)
             if not second_opened or second_opened["outstanding"] != "2.00":
                 frappe.throw("La segunda cuenta por pagar no está disponible")
+            first_payable_page = api.pms_supplier_document_page(opening_prop.name,
+                kind="Target", supplier=supplier.name, page_length=1)
+            second_payable_page = api.pms_supplier_document_page(opening_prop.name,
+                kind="Target", supplier=supplier.name, offset=1, page_length=1)
+            if (not first_payable_page["has_more"] or
+                    len(first_payable_page["rows"]) != 1 or
+                    len(second_payable_page["rows"]) != 1 or
+                    first_payable_page["rows"][0]["name"] ==
+                        second_payable_page["rows"][0]["name"]):
+                frappe.throw("La paginación de deudas repitió o perdió registros")
             cross_supplier_data = {"credit": supplier_credit["name"],
                 "target_type": "Opening Payable", "target": second_opened["name"],
                 "amount": "1.00", "reason": "Traspasar crédito a otro pasivo"}
@@ -2209,6 +2227,14 @@ def run(persist=False):
             new_purchase = api.execute(opening_prop.name, "pms_receive_purchase",
                 "reverse-vendor-real-purchase-" + suffix,
                 {**purchase_data, "acceptance": purchase_quote["acceptance"]})
+            purchase_page = api.pms_supplier_document_page(opening_prop.name,
+                kind="Target", supplier=supplier.name, currency="NIO",
+                search="NEW-PINV-" + suffix)
+            if (len(purchase_page["rows"]) != 1 or
+                    purchase_page["rows"][0]["kind"] != "Purchase" or
+                    purchase_page["rows"][0]["name"] != new_purchase["purchase"] or
+                    purchase_page["rows"][0]["outstanding"] != "2.00"):
+                frappe.throw("La búsqueda de deudas omitió la compra PMS")
             stock_before_credit = frappe.db.count("HS Stock Movement",
                 {"property": opening_prop.name})
             purchase_apply_data = {"credit": supplier_credit["name"],

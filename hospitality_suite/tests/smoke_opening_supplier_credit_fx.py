@@ -76,6 +76,28 @@ def run():
                 balances(prop, credit.name) != (Decimal(50), Decimal(1800)) or
                 outstanding(prop, payable.name) != Decimal(100)):
             frappe.throw("La apertura no conservó principal y valor base")
+        credit_page = api.pms_supplier_document_page(prop.name, kind="Credit",
+            search=credit.opening_source_name)
+        target_page = api.pms_supplier_document_page(prop.name, kind="Target",
+            supplier=supplier.name, currency="USD", search=payable.opening_source_name)
+        if (len(credit_page["rows"]) != 1 or
+                credit_page["rows"][0]["available"] != "50.00" or
+                credit_page["rows"][0]["base_available"] != "1800.00" or
+                len(target_page["rows"]) != 1 or
+                target_page["rows"][0]["kind"] != "Opening Payable" or
+                target_page["rows"][0]["outstanding"] != "100.00" or
+                target_page["rows"][0]["base_outstanding"] != "3500.00"):
+            frappe.throw("La página de proveedores perdió principal o valor base")
+        frappe.set_user("Guest")
+        try:
+            try:
+                api.pms_supplier_document_page(prop.name, kind="Credit")
+            except frappe.PermissionError:
+                frappe.clear_messages()
+            else:
+                frappe.throw("Un visitante pudo consultar créditos de proveedores")
+        finally:
+            frappe.set_user("Administrator")
         records = {"blockers": [], "opening_supplier_credits": []}
         controls = defaultdict(Decimal)
         erp_to_pms_transfer_plan._control(
@@ -135,6 +157,19 @@ def run():
                 balances(prop, credit.name) != (Decimal(30), Decimal(1080)) or
                 outstanding(prop, payable.name) != Decimal(80)):
             frappe.throw("La aplicación extranjera no fue idempotente")
+        credit_page = api.pms_supplier_document_page(prop.name, kind="Credit",
+            search=credit.opening_source_name)
+        target_page = api.pms_supplier_document_page(prop.name, kind="Target",
+            supplier=supplier.name, currency="USD", search=payable.opening_source_name)
+        applications_page = api.pms_supplier_document_page(prop.name,
+            kind="Application", search=credit.opening_source_name)
+        if (credit_page["rows"][0]["available"] != "30.00" or
+                credit_page["rows"][0]["base_available"] != "1080.00" or
+                target_page["rows"][0]["outstanding"] != "80.00" or
+                target_page["rows"][0]["base_outstanding"] != "2800.00" or
+                len(applications_page["rows"]) != 1 or
+                applications_page["rows"][0]["remaining"] != "20.00"):
+            frappe.throw("Las páginas no actualizaron los saldos aplicados")
         if journal_lines(applied["journal"]) != {
                 (debt_ap.name, Decimal(700), Decimal(0), Decimal(20), Decimal(0)),
                 (credit_ap.name, Decimal(0), Decimal(720), Decimal(0), Decimal(20)),
@@ -156,6 +191,11 @@ def run():
                 balances(prop, credit.name) != (Decimal(40), Decimal(1440)) or
                 outstanding(prop, payable.name) != Decimal(90)):
             frappe.throw("La reversión no restituyó ambos saldos")
+        applications_page = api.pms_supplier_document_page(prop.name,
+            kind="Application", search=credit.opening_source_name)
+        if (len(applications_page["rows"]) != 1 or
+                applications_page["rows"][0]["remaining"] != "10.00"):
+            frappe.throw("La página de aplicaciones no actualizó el reversible")
         if journal_lines(reversal["journal"]) != {
                 (credit_ap.name, Decimal(360), Decimal(0), Decimal(10), Decimal(0)),
                 (debt_ap.name, Decimal(0), Decimal(350), Decimal(0), Decimal(10)),
