@@ -9,7 +9,8 @@ from hospitality_suite import api
 from hospitality_suite.service import lock_property
 
 
-def race_command(site, sites_path, prop_name, action, payload, key, *, same_key):
+def race_command(site, sites_path, prop_name, action, payload, key, *,
+                 same_key, second_payload=None, rejected_message=None):
     held = threading.Event()
     attempting = threading.Event()
     release = threading.Event()
@@ -43,10 +44,11 @@ def race_command(site, sites_path, prop_name, action, payload, key, *, same_key)
         try:
             attempting.set()
             try:
-                result = api.execute(prop_name, action, other_key, payload)
-            except (frappe.ValidationError, frappe.TimestampMismatchError):
+                result = api.execute(prop_name, action, other_key,
+                    payload if second_payload is None else second_payload)
+            except (frappe.ValidationError, frappe.TimestampMismatchError) as exc:
                 frappe.db.rollback()
-                return {"status": "rejected"}
+                return {"status": "rejected", "message": str(exc)}
             frappe.db.commit()
             return {"status": "posted", "result": result}
         finally:
@@ -71,4 +73,6 @@ def race_command(site, sites_path, prop_name, action, payload, key, *, same_key)
         raise AssertionError("A same-key command did not return its first result")
     if not same_key and second_result["status"] != "rejected":
         raise AssertionError("Two distinct commands changed the same document")
+    if rejected_message and rejected_message not in second_result.get("message", ""):
+        raise AssertionError("The competing command failed for an unexpected reason")
     return first_result["result"]
