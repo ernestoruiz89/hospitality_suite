@@ -254,13 +254,13 @@ def inspect_reversal():
     eligible = api.pms_direct_sale_history(sale.property, returnable=1)
     fiscal = frappe.get_doc("HS PMS Fiscal Document", sale.pms_fiscal_invoice)
     if (sale.status != "Delivered" or sale.credit_note or
-            sale.erp_return_refund or len(history) != 1 or
-            history[0]["credit_note"] !=
-                frappe.db.get_value("Sales Invoice", {
-                    "hs_property": sale.property, "is_return": 1,
-                    "docstatus": 2}, "name") or
+            sale.erp_return_refund or not history or
+            any(frappe.db.get_value("Sales Invoice",
+                    entry["credit_note"], "docstatus") != 2
+                for entry in history) or
             not any(row["name"] == sale.name and
-                row["correction_count"] == 1 for row in eligible["rows"]) or
+                row["correction_count"] == len(history)
+                for row in eligible["rows"]) or
             fiscal.document_number != proof["document_number"] or
             fiscal.document_number not in frappe.get_print(
                 "HS PMS Fiscal Document", fiscal.name,
@@ -268,5 +268,6 @@ def inspect_reversal():
         frappe.throw("The committed correction lost its fiscal or audit trail")
     return {"persistent_direct_correction_verified": True,
         "fiscal_invoice": fiscal.document_number,
-        "cancelled_credit_note": history[0]["credit_note"],
+        "cancelled_credit_note": history[-1]["credit_note"],
+        "correction_count": len(history),
         "returnable_again": True}

@@ -1,7 +1,5 @@
 """Two-connection correction races on the disposable persistent Day Pass clone."""
 
-import threading
-from concurrent.futures import ThreadPoolExecutor
 from decimal import Decimal
 from hashlib import sha256
 from pathlib import Path
@@ -10,7 +8,8 @@ from uuid import uuid4
 import frappe
 
 from hospitality_suite import api, cashier
-from hospitality_suite.service import canonical, lock_property
+from hospitality_suite.service import canonical
+from hospitality_suite.tests.financial_race import race_command
 from hospitality_suite.tests.probe_persistent_day_pass_cutover import SITE, inspect
 
 
@@ -42,7 +41,8 @@ def _return_again(tag, *, same_key):
         "source_name": day_pass.name,
         "action": "erp_historical_day_pass_returned"})
     frappe.db.commit()
-    result = _race(prop.name, "erp_historical_day_pass_return",
+    result = race_command(SITE, SITES, prop.name,
+        "erp_historical_day_pass_return",
         {**request, "amount": quote["refund_amount"],
          "acceptance": quote["acceptance"]},
         "qa-day-pass-race-return-" + tag, same_key=same_key)
@@ -60,71 +60,6 @@ def _return_again(tag, *, same_key):
                 audit_before + 1):
         raise AssertionError("The new synthetic return did not reconcile")
     return day_pass.name, shifts[0], result
-
-
-def _race(prop_name, action, payload, key, *, same_key):
-    held = threading.Event()
-    attempting = threading.Event()
-    release = threading.Event()
-    second_done = threading.Event()
-    other_key = key if same_key else key + "-different"
-
-    def first():
-        frappe.init(site=SITE, sites_path=str(SITES))
-        frappe.connect()
-        frappe.set_user("Administrator")
-        try:
-            lock_property(prop_name, "approve")
-            held.set()
-            if not attempting.wait(15) or not release.wait(15):
-                raise AssertionError("The second Day Pass command did not arrive")
-            result = api.execute(prop_name, action, key, payload)
-            frappe.db.commit()
-            return {"status": "posted", "result": result}
-        except Exception:
-            frappe.db.rollback()
-            raise
-        finally:
-            frappe.destroy()
-
-    def second():
-        if not held.wait(15):
-            raise AssertionError("The first Day Pass command did not lock the hotel")
-        frappe.init(site=SITE, sites_path=str(SITES))
-        frappe.connect()
-        frappe.set_user("Administrator")
-        try:
-            attempting.set()
-            try:
-                result = api.execute(prop_name, action, other_key, payload)
-            except (frappe.ValidationError, frappe.TimestampMismatchError):
-                frappe.db.rollback()
-                return {"status": "rejected"}
-            frappe.db.commit()
-            return {"status": "posted", "result": result}
-        finally:
-            second_done.set()
-            frappe.destroy()
-
-    with ThreadPoolExecutor(max_workers=2) as pool:
-        one = pool.submit(first)
-        two = pool.submit(second)
-        try:
-            if not held.wait(15) or not attempting.wait(15):
-                raise AssertionError("Both independent sessions did not start")
-            if second_done.wait(0.3):
-                raise AssertionError("The second Day Pass command bypassed the hotel lock")
-        finally:
-            release.set()
-        first_result = one.result(timeout=30)
-        second_result = two.result(timeout=30)
-    if first_result["status"] != "posted":
-        raise AssertionError("The first Day Pass command did not post")
-    if same_key and second_result != first_result:
-        raise AssertionError("A same-key command did not return its first result")
-    if not same_key and second_result["status"] != "rejected":
-        raise AssertionError("Two distinct commands changed the same return")
-    return first_result["result"]
 
 
 def run():
@@ -152,7 +87,7 @@ def run():
             "source_name": day_pass.name,
             "action": "erp_historical_day_pass_return_reversal"})
         frappe.db.commit()
-        result = _race(prop.name,
+        result = race_command(SITE, SITES, prop.name,
             "erp_historical_day_pass_return_reversal", payload,
             "qa-day-pass-race-correction-" + tag, same_key=same_key)
         frappe.db.rollback()
