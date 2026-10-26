@@ -1161,6 +1161,66 @@ def pms_folios(property_name):
              "balance": folio_balance(row.name)} for row in rows]
 
 
+@frappe.whitelist()
+def pms_folio_page(property_name, search="", offset=0, page_length=25, selected=""):
+    prop = require(property_name, "finance")
+    standalone_accounting.require_pms(prop)
+    try:
+        offset, page_length = int(offset), int(page_length)
+    except (TypeError, ValueError, OverflowError):
+        frappe.throw(frappe._("Revise la paginación de cuentas de estancia"))
+    if (offset < 0 or offset > 1000000 or not 1 <= page_length <= 100 or
+            not isinstance(search, str) or len(search) > 100 or
+            not isinstance(selected, str) or len(selected) > 140):
+        frappe.throw(frappe._("Revise la búsqueda de cuentas de estancia"))
+    term = search.strip()
+    selected = selected.strip()
+    query = (
+        "SELECT f.name,f.label,f.customer,p.party_name AS customer_name,"
+        "f.currency,f.status,f.stay,f.booking "
+        "FROM `tabHS Folio` f "
+        "LEFT JOIN `tabHS Party` p ON p.name=f.customer "
+        "AND p.property=f.property AND p.organization=%s "
+        "WHERE f.property=%s AND f.company=%s "
+    )
+    rows = frappe.db.sql(query +
+        "AND (%s='' OR LOCATE(%s,f.name)>0 OR LOCATE(%s,f.label)>0 "
+        "OR LOCATE(%s,f.customer)>0 "
+        "OR LOCATE(%s,COALESCE(p.party_name,''))>0 "
+        "OR LOCATE(%s,COALESCE(f.stay,''))>0 "
+        "OR LOCATE(%s,COALESCE(f.booking,''))>0) "
+        "ORDER BY f.modified DESC,f.name DESC LIMIT %s OFFSET %s",
+        (prop.organization, prop.name, prop.company,
+         term, term, term, term, term, term, term, page_length + 1, offset),
+        as_dict=True)
+    visible = rows[:page_length]
+    selected_row = next((row for row in visible if row.name == selected), None)
+    if selected and not selected_row:
+        matches = frappe.db.sql(query + "AND f.name=%s LIMIT 1",
+            (prop.organization, prop.name, prop.company, selected), as_dict=True)
+        selected_row = matches[0] if matches else None
+    from hospitality_suite.accounting import folio_balance
+
+    for row in visible:
+        row["balance"] = folio_balance(row.name)
+    if selected_row and selected_row not in visible:
+        selected_row["balance"] = folio_balance(selected_row.name)
+    return {"rows": visible, "selected": selected_row,
+            "offset": offset, "has_more": len(rows) > page_length}
+
+
+@frappe.whitelist()
+def pms_receivable_accounts(property_name):
+    prop = require(property_name, "finance")
+    standalone_accounting.require_pms(prop)
+    return frappe.get_all("HS Account", filters={"property": prop.name,
+        "organization": prop.organization, "account_currency": prop.currency,
+        "root_type": "Asset", "account_type": "Receivable", "is_group": 0,
+        "active": 1, "is_cash": 0, "is_bank": 0},
+        fields=["name", "account_code", "account_name"],
+        order_by="account_code asc")
+
+
 def _erp_open_folios(property_name, search, offset, page_length, permission):
     """Small property-scoped picker shared by independent ERPNext workflows."""
     from hospitality_suite.paging import page

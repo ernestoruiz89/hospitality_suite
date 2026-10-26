@@ -848,6 +848,29 @@ def run():
         assert any(row["name"] == fixture["folio"] and
                    row["balance"]["outstanding"] == "90.00"
                    for row in api.pms_folios(second_prop.name))
+        folio_page = api.pms_folio_page(second_prop.name,
+            search=fixture["folio"], selected=fixture["folio"])
+        assert len(folio_page["rows"]) == 1
+        assert folio_page["selected"]["name"] == fixture["folio"]
+        assert folio_page["selected"]["balance"]["outstanding"] == "90.00"
+        assert any(row["name"] == ar for row in api.pms_receivable_accounts(second_prop.name))
+        assert not api.pms_folio_page(prop.name, selected=fixture["folio"])["selected"]
+        try:
+            api.pms_folio_page(second_prop.name, offset=-1)
+        except frappe.ValidationError:
+            frappe.clear_messages()
+        else:
+            raise AssertionError("La consulta de cuentas aceptó una página negativa")
+        frappe.set_user("Guest")
+        try:
+            try:
+                api.pms_folio_page(second_prop.name, selected=fixture["folio"])
+            except frappe.PermissionError:
+                frappe.clear_messages()
+            else:
+                raise AssertionError("Un visitante consultó cuentas privadas")
+        finally:
+            frappe.set_user("Administrator")
         cancelled_folio = api.execute(second_prop.name, "pms_cancel_receivable",
             "folio-cancel-" + suffix,
             dict(receivable=billed["receivables"][0]["receivable"], reason="Corrección"))
@@ -857,6 +880,13 @@ def run():
         split = api.execute(second_prop.name, "create_folio",
             "folio-split-" + suffix,
             dict(stay=fixture["stay"], customer=customer, label="Cuenta separada"))
+        first_folio_page = api.pms_folio_page(second_prop.name, page_length=1)
+        next_folio_page = api.pms_folio_page(second_prop.name, offset=1, page_length=1)
+        assert first_folio_page["has_more"] and len(next_folio_page["rows"]) == 1
+        assert first_folio_page["rows"][0]["name"] != next_folio_page["rows"][0]["name"]
+        selected_off_page = api.pms_folio_page(second_prop.name, page_length=1,
+            selected=next_folio_page["rows"][0]["name"])
+        assert selected_off_page["selected"]["name"] == next_folio_page["rows"][0]["name"]
         source_page = api.folio_pending_charges(second_prop.name, fixture["folio"], 0, 25)
         assert source_page["total"] >= 1 and any(
             row["name"] == fixture["source"] for row in source_page["rows"])

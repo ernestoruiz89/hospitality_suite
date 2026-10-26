@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState, type FormEvent } from "react"
 import { Link, useSearchParams } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
 import { call, execute, type Property } from "./api"
 import { availableFolioSections } from "./FolioSections"
@@ -17,8 +18,9 @@ type Folio = {
   booking?: string | null
   balance: { pending: string; scheduled: string; outstanding: string }
 }
-type Account = { name: string; account_code: string; account_name: string;
-  root_type: string; account_type: string; is_cash: boolean; is_bank: boolean }
+type FolioPage = { rows: Folio[]; selected: Folio | null;
+  offset: number; has_more: boolean }
+type Account = { name: string; account_code: string; account_name: string }
 type Quote = { folio: string; currency: string; total: string; acceptance: string;
   lines: { source_charge: string; description: string; amount: string;
     net_amount: string; tax_amount: string; tax_treatment: string;
@@ -42,7 +44,11 @@ export function Folios({ property, canApprove }: { property: Property; canApprov
   const sections = availableFolioSections(canApprove)
   const section = sections.find((item) => item.id === searchParams.get("section")) || sections[0]
   const folio = searchParams.get("folio") || ""
-  const [folios, setFolios] = useState<Folio[] | null>(null)
+  const [folioPage, setFolioPage] = useState<FolioPage | null>(null)
+  const [search, setSearch] = useState("")
+  const [appliedSearch, setAppliedSearch] = useState("")
+  const [offset, setOffset] = useState(0)
+  const [reload, setReload] = useState(0)
   const [accounts, setAccounts] = useState<Account[]>([])
   const [receivableAccount, setReceivableAccount] = useState("")
   const [quote, setQuote] = useState<(Quote & { requestKey: string }) | null>(null)
@@ -59,19 +65,14 @@ export function Folios({ property, canApprove }: { property: Property; canApprov
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState("")
   const [notice, setNotice] = useState("")
-  const selected = folios?.find((row) => row.name === folio)
+  const folios = folioPage?.rows || null
+  const selected = folioPage?.selected?.name === folio ? folioPage.selected : null
   useEffect(() => {
     if (!searchParams.has("section") || sections.some((item) => item.id === searchParams.get("section"))) return
     const next = new URLSearchParams(searchParams)
     next.set("section", sections[0].id)
     setSearchParams(next, { replace: true })
   }, [searchParams, setSearchParams, sections])
-  useEffect(() => {
-    if (!folios || !folio || selected) return
-    const next = new URLSearchParams(searchParams)
-    next.delete("folio")
-    setSearchParams(next, { replace: true })
-  }, [folio, folios, searchParams, selected, setSearchParams])
   function chooseFolio(name: string, targetSection = section.id) {
     const next = new URLSearchParams(searchParams)
     next.set("section", targetSection)
@@ -82,23 +83,40 @@ export function Folios({ property, canApprove }: { property: Property; canApprov
     setAdjustmentQuote(null); setAdjustmentOptions(null); setError("")
   }
 
-  const refresh = useCallback(async () => {
-    const [rows, finance] = await Promise.all([
-      call<Folio[]>("pms_folios", { property_name: property.name }),
-      call<{ accounts: Account[] }>("pms_receivables", { property_name: property.name }),
+  const refresh = useCallback(async (signal?: AbortSignal) => {
+    const [page, availableAccounts] = await Promise.all([
+      call<FolioPage>("pms_folio_page", { property_name: property.name,
+        search: appliedSearch, offset: String(offset), page_length: "25",
+        selected: folio }, signal),
+      call<Account[]>("pms_receivable_accounts", { property_name: property.name }, signal),
     ])
-    setFolios(rows)
-    setAccounts(finance.accounts.filter((row) => row.root_type === "Asset" &&
-      row.account_type === "Receivable" && !row.is_cash && !row.is_bank))
-  }, [property.name])
+    if (signal?.aborted) return
+    setFolioPage(page)
+    setAccounts(availableAccounts)
+  }, [property.name, folio, appliedSearch, offset, reload])
 
   useEffect(() => {
-    setFolios(null); setReceivableAccount(""); setQuote(null)
+    setFolioPage(null); setSearch(""); setAppliedSearch(""); setOffset(0)
+    setReceivableAccount(""); setQuote(null)
     setServiceOptions(null); setServiceStay(""); setServiceProduct(""); setServiceQuantity("1"); setServiceQuote(null)
     setAdjustmentOptions(null); setSourceCharge(""); setAdjustmentAmount(""); setAdjustmentReason(""); setAdjustmentQuote(null)
     setError(""); setNotice("")
-    refresh().catch((issue: unknown) => setError(issue instanceof Error ? issue.message : "No se pudieron consultar las cuentas."))
+  }, [property.name])
+
+  useEffect(() => {
+    const controller = new AbortController()
+    setFolioPage(null)
+    refresh(controller.signal).catch((issue: unknown) => {
+      if (!controller.signal.aborted)
+        setError(issue instanceof Error ? issue.message : "No se pudieron consultar las cuentas.")
+    })
+    return () => controller.abort()
   }, [refresh])
+
+  function find(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    setOffset(0); setAppliedSearch(search.trim()); setReload((value) => value + 1)
+  }
 
   useEffect(() => {
     if (section.id !== "services" || !selected) { setServiceOptions(null); return }
@@ -231,10 +249,26 @@ export function Folios({ property, canApprove }: { property: Property; canApprov
       <p className="mt-1 text-sm text-muted-foreground">{section.label} · {section.description}. La factura numerada se emite en Facturación PMS.</p></div>
     {error && <p role="alert" className="rounded-lg border border-destructive/30 bg-red-50 p-3 text-sm text-destructive">{error}</p>}
     {notice && <p role="status" className="rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-900">{notice}</p>}
+    <form onSubmit={find} className="flex flex-wrap gap-2">
+      <Input aria-label="Buscar cuentas de estancia" maxLength={100}
+        placeholder="Buscar por cuenta, huésped, reserva o estancia"
+        value={search} onChange={(event) => setSearch(event.target.value)}
+        className="min-w-56 max-w-xl flex-1" />
+      <Button type="submit" variant="outline">Buscar</Button>
+    </form>
+    {folioPage && <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
+      <span>Página {Math.floor(folioPage.offset / 25) + 1} · {folioPage.rows.length} cuenta(s)</span>
+      <div className="flex gap-2">
+        <Button type="button" size="sm" variant="outline" disabled={!folioPage.offset}
+          onClick={() => setOffset(Math.max(0, folioPage.offset - 25))}>Anterior</Button>
+        <Button type="button" size="sm" variant="outline" disabled={!folioPage.has_more}
+          onClick={() => setOffset(folioPage.offset + 25)}>Siguiente</Button>
+      </div>
+    </div>}
     {!folios && !error && <Skeleton className="h-64 w-full" />}
     {folios && <div className="space-y-5">
       {section.id !== "accounts" && <Card><CardHeader><CardTitle>Cuenta seleccionada</CardTitle><CardDescription>Elija la cuenta que desea gestionar o <Link className="text-primary underline" to={`/folios?section=accounts${folio ? `&folio=${encodeURIComponent(folio)}` : ""}`}>consulte todas las cuentas</Link>.</CardDescription></CardHeader><CardContent>
-        <label className="block max-w-2xl space-y-1 text-sm"><span>Cuenta de estancia</span><select value={selected?.name || ""} onChange={(event) => chooseFolio(event.target.value)} className="h-9 w-full rounded-md border border-border bg-white px-2"><option value="">Seleccione una cuenta</option>{folios.map((row) => <option key={row.name} value={row.name}>{row.label || row.name} · {row.customer_name || row.customer} · {row.currency} {row.balance.outstanding}</option>)}</select></label>
+        <label className="block max-w-2xl space-y-1 text-sm"><span>Cuenta de estancia</span><select value={selected?.name || ""} onChange={(event) => chooseFolio(event.target.value)} className="h-9 w-full rounded-md border border-border bg-white px-2"><option value="">Seleccione una cuenta</option>{selected && !folios.some((row) => row.name === selected.name) && <option value={selected.name}>{selected.label || selected.name} · {selected.customer_name || selected.customer} · {selected.currency} {selected.balance.outstanding}</option>}{folios.map((row) => <option key={row.name} value={row.name}>{row.label || row.name} · {row.customer_name || row.customer} · {row.currency} {row.balance.outstanding}</option>)}</select></label>
       </CardContent></Card>}
       {section.id === "accounts" && <Card><CardHeader><CardTitle>Cuentas de estancia</CardTitle><CardDescription>Saldos en la moneda base del establecimiento.</CardDescription></CardHeader>
         <CardContent className="space-y-2">{folios.map((row) => <button key={row.name} type="button" disabled={busy}
