@@ -1,5 +1,5 @@
 import { Component, Suspense, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react"
-import { Link, Navigate, Route, Routes, useLocation, useParams } from "react-router-dom"
+import { Link, Navigate, Route, Routes, useLocation, useParams, useSearchParams } from "react-router-dom"
 import { Banknote, BarChart3, BedDouble, BookOpen, CalendarDays, CalendarCheck2, ChevronRight, ClipboardList, Coins, Compass, FileText, LayoutDashboard, FolderTree, HandCoins, HeartPulse, Landmark, LogIn, Menu, Package, ReceiptText, RefreshCw, RotateCcw, Search, Settings2, ShieldCheck, Shirt, Sun, Tickets as TicketsIcon, UserRound, UsersRound, Wrench, X } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -17,6 +17,7 @@ import { availableFiscalArchiveSections } from "./FiscalArchiveSections"
 import { availableReceptionSections } from "./ReceptionSections"
 import { RoomDetailSections } from "./RoomDetailSections"
 import { RoomServiceAction } from "./RoomServiceAction"
+import { RoomPanel, roomPanelTab, type RoomPanelTab } from "./RoomPanel"
 import { RoomAccountActions } from "./RoomAccountActions"
 import { reservationSections } from "./ReservationSections"
 import { staySections } from "./StaySections"
@@ -491,8 +492,31 @@ function StatCard({ label, value, hint, icon: Icon }: { label: string; value: nu
   return <Card className="gap-3"><CardHeader className="flex flex-row items-center justify-between"><CardDescription>{label}</CardDescription><Icon size={18} className="text-primary" /></CardHeader><CardContent><p className="text-3xl font-semibold tabular-nums">{value}</p><p className="mt-1 text-xs text-muted-foreground">{hint}</p></CardContent></Card>
 }
 
+function AttentionRoom({ room, actions, onOpen }: { room: Room; actions: string[];
+  onOpen: (room: string, tab: RoomPanelTab) => void }) {
+  return <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-white p-3">
+    <div className="min-w-0">
+      <button type="button" onClick={() => onOpen(room.name, "now")}
+        className="font-semibold text-primary hover:underline">Habitación {room.room_number}</button>
+      <p className="text-sm text-muted-foreground">{room.guest_label || room.arrival_label || room.category_label}</p>
+      <div className="mt-1 flex flex-wrap gap-1">{room.arrival && <Badge>Entrada</Badge>}{room.departure && <Badge variant="secondary">Salida</Badge>}{room.work && <Badge variant="outline">Trabajo</Badge>}</div>
+    </div>
+    <div className="flex flex-wrap gap-2">
+      {room.arrival && room.booking && actions.includes("reserve") && actions.includes("stay") &&
+        <Button size="sm" onClick={() => onOpen(room.name, "arrival")}>Registrar entrada</Button>}
+      {room.departure && room.stay && actions.includes("stay") &&
+        <Button size="sm" onClick={() => onOpen(room.name, "departure")}>Revisar salida</Button>}
+      {room.occupied && room.stay && actions.includes("service") &&
+        <Button size="sm" variant="outline" onClick={() => onOpen(room.name, "service")}>Agregar consumo</Button>}
+      {room.work && actions.some((action) => ["clean", "maintain", "inspect", "block"].includes(action)) &&
+        <Button size="sm" variant="outline" onClick={() => onOpen(room.name, "work")}>Ver trabajo</Button>}
+    </div>
+  </div>
+}
+
 function Dashboard({ property, data, actions, provider }: { property: Property; data: Bootstrap | null;
   actions: string[]; provider: "pms" | "erpnext" }) {
+  const [searchParams, setSearchParams] = useSearchParams()
   const [board, setBoard] = useState<RoomBoard | null>(null)
   const [error, setError] = useState("")
   const [queues, setQueues] = useState<HomeQueueSummary | null>(null)
@@ -548,9 +572,20 @@ function Dashboard({ property, data, actions, provider }: { property: Property; 
     { key: "accounts", label: "Cuentas abiertas", to: actions.includes("finance") ?
       provider === "pms" ? "/folios?section=accounts" : "/erp-invoicing" : null },
   ] as const
+  const attentionRooms = board?.rooms.filter((room) => room.arrival || room.departure || room.work).slice(0, 8) || []
   return <div className="space-y-7">
-    <div><p className="text-sm font-medium text-primary">{property.business_date}</p><h1 className="mt-1 text-3xl font-semibold tracking-tight">Panel del establecimiento</h1><p className="mt-2 text-muted-foreground">Situación operativa de {property.brand_name || property.property_name}.</p></div>
+    <div className="flex flex-wrap items-end justify-between gap-3"><div><p className="text-sm font-medium text-primary">{property.business_date}</p><h1 className="mt-1 text-3xl font-semibold tracking-tight">Panel del establecimiento</h1><p className="mt-2 text-muted-foreground">Situación operativa de {property.brand_name || property.property_name}.</p></div>
+      <div className="flex flex-wrap gap-2">{actions.includes("reserve") && <Button asChild><Link to="/reception?section=reservation">Nueva reserva</Link></Button>}
+        <Button asChild variant="outline"><Link to="/rooms">Habitaciones</Link></Button></div></div>
     {error && <p role="alert" className="rounded-lg border border-destructive/30 bg-red-50 p-4 text-sm text-destructive">{error}</p>}
+    <Card><CardHeader><CardTitle>Atención inmediata</CardTitle><CardDescription>Actúe desde aquí sobre llegadas, salidas y trabajo pendiente.</CardDescription></CardHeader>
+      <CardContent className="grid gap-2 lg:grid-cols-2">{attentionRooms.map((room) => <AttentionRoom key={room.name} room={room} actions={actions}
+        onOpen={(name, tab) => setSearchParams((current) => {
+          const next = new URLSearchParams(current); next.set("room", name); next.set("tab", tab); return next
+        })} />)}
+        {board && !attentionRooms.length && <p className="py-4 text-sm text-muted-foreground">No hay habitaciones que requieran atención inmediata.</p>}
+        {!board && <Skeleton className="h-20 lg:col-span-2" />}
+      </CardContent></Card>
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
       {board ? <>
         <StatCard label="Habitaciones ocupadas" value={occupancy.occupied} hint={`de ${operable} operativas`} icon={BedDouble} />
@@ -577,21 +612,22 @@ function Dashboard({ property, data, actions, provider }: { property: Property; 
         })}</div> : !queueError && <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">{queueCards.map(({ key }) => <Skeleton key={key} className="h-26 rounded-lg" />)}</div>}
         <p className="text-xs text-muted-foreground">Llegadas y salidas incluyen pendientes anteriores. Las cuentas compartidas se cuentan una vez.</p>
       </CardContent></Card>}
-    <div className="grid gap-4 lg:grid-cols-[1.5fr_1fr]">
-      <Card><CardHeader><CardTitle>Atención inmediata</CardTitle><CardDescription>Habitaciones con llegada, salida o trabajo pendiente.</CardDescription></CardHeader><CardContent className="space-y-2">
-        {board?.rooms.filter((room) => room.arrival || room.departure || room.work).slice(0, 8).map((room) => <Link key={room.name} to={`/rooms/${encodeURIComponent(room.name)}`} className="flex items-center justify-between rounded-lg border border-border p-3 hover:bg-muted"><div><strong>Habitación {room.room_number}</strong><p className="text-sm text-muted-foreground">{room.category_label}</p></div><div className="flex gap-1">{room.arrival && <Badge>Entrada</Badge>}{room.departure && <Badge variant="secondary">Salida</Badge>}{room.work && <Badge variant="outline">Trabajo</Badge>}</div></Link>)}
-        {board && !board.rooms.some((room) => room.arrival || room.departure || room.work) && <p className="py-8 text-center text-sm text-muted-foreground">No hay habitaciones que requieran atención inmediata.</p>}
-        {!board && <Skeleton className="h-20" />}
-      </CardContent></Card>
-      <Card><CardHeader><CardTitle>Fecha operativa</CardTitle><CardDescription>Información del establecimiento seleccionado.</CardDescription></CardHeader><CardContent className="space-y-3 text-sm">
-        <div className="flex justify-between gap-3"><span className="text-muted-foreground">Fecha</span><strong>{property.business_date}</strong></div>
-        <div className="flex justify-between gap-3"><span className="text-muted-foreground">Modalidad</span><strong>{property.mode}</strong></div>
-        <div className="flex justify-between gap-3"><span className="text-muted-foreground">Moneda</span><strong>{property.currency}</strong></div>
-        <div className="flex justify-between gap-3"><span className="text-muted-foreground">Zona horaria</span><strong>{property.time_zone}</strong></div>
-        {data?.shifts && <div className="flex justify-between gap-3"><span className="text-muted-foreground">Turnos abiertos</span><strong>{data.shifts.filter((shift) => shift.status === "Open").length}</strong></div>}
-        <Button asChild className="mt-3 w-full"><Link to="/rooms">Ver habitaciones <ChevronRight /></Link></Button>
-      </CardContent></Card>
-    </div>
+    <p className="text-xs text-muted-foreground">Fecha operativa {property.business_date} · {property.mode} · {property.currency} · {property.time_zone}
+      {data?.shifts && ` · ${data.shifts.filter((shift) => shift.status === "Open").length} turno(s) abierto(s)`}</p>
+    {board?.rooms.some((room) => room.name === searchParams.get("room")) && <RoomPanel
+      key={`${property.name}:${searchParams.get("room")}`} property={property} provider={provider}
+      actions={actions} room={searchParams.get("room") || ""}
+      initialTab={roomPanelTab(searchParams.get("tab"))}
+      onTabChange={(tab) => setSearchParams((current) => {
+        const next = new URLSearchParams(current); next.set("tab", tab); return next
+      }, { replace: true })}
+      onClose={() => setSearchParams((current) => {
+        const next = new URLSearchParams(current); next.delete("room"); next.delete("tab"); return next
+      }, { replace: true })} onChanged={() => {
+        void call<RoomBoard>("room_board_snapshot", { property_name: property.name }).then(setBoard)
+          .catch((reason: unknown) => setError(reason instanceof Error ? reason.message : "No se pudo actualizar el tablero."))
+        setQueueRevision((value) => value + 1)
+      }} />}
   </div>
 }
 
@@ -611,6 +647,51 @@ const roomFilterKey = (user: string, property: string) =>
   `hospitality-suite-room-filters-v1:${JSON.stringify([user, property])}`
 const normalizeRoomSearch = (value: string) => value.normalize("NFD")
   .replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("es").trim()
+const roomTime = (value?: string | null) => value ? value.slice(0, 16).replace("T", " ") : "—"
+const cleaningLabel: Record<string, string> = { Clean: "Limpia", Dirty: "Sucia",
+  Cleaning: "En limpieza", Inspection: "Por inspeccionar" }
+
+function RoomTile({ room, actions, onOpen }: { room: Room;
+  actions: string[]; onOpen: (room: string, tab: RoomPanelTab) => void }) {
+  const state = status(room)
+  const primaryBorder = !room.active ? "border-t-slate-400" : room.blocked ? "border-t-amber-500" :
+    room.occupied ? "border-t-blue-500" : room.arrival ? "border-t-violet-500" : "border-t-emerald-500"
+  const canReserve = actions.includes("reserve") && room.active && !room.blocked && !room.occupied && !room.arrival
+  const canHistory = ["stay", "finance", "report"].some((action) => actions.includes(action))
+  return <Card className={`gap-3 border-t-4 sm:h-full ${primaryBorder}`}>
+    <CardHeader className="gap-1 pb-0"><p className="text-[10px] font-semibold tracking-[0.16em] text-muted-foreground">HABITACIÓN</p>
+      <div className="flex items-start justify-between gap-2"><CardTitle className="text-2xl"><button type="button"
+        onClick={() => onOpen(room.name, "now")} className="hover:text-primary hover:underline">{room.room_number}</button></CardTitle>
+        <Badge className={state.tone}>{room.occupied ? "Alojado" : room.active && !room.blocked ? "Sin ocupación" : state.text}</Badge></div>
+      <CardDescription>{room.category_label}{room.floor ? ` · Piso ${room.floor}` : ""}</CardDescription>
+    </CardHeader>
+    <CardContent className="flex flex-col gap-3 text-sm">
+      <div className="flex flex-wrap gap-1.5"><Badge variant="outline">{cleaningLabel[room.cleaning_status] || room.cleaning_status}</Badge>
+        {room.arrival && <Badge variant="secondary">{room.overdue_arrival ? "Llegada atrasada" : "Llega"}</Badge>}
+        {room.departure && <Badge variant="secondary">{room.overdue_departure ? "Salida vencida" : "Sale"}</Badge>}
+        {room.work && <Badge variant="outline">Trabajo pendiente</Badge>}</div>
+      <div className="space-y-1 text-xs text-muted-foreground sm:min-h-16">
+        {room.occupied ? <><p className="font-medium text-foreground">{room.guest_label || "Huésped registrado"}</p>
+          <p>Entrada: {roomTime(room.stay_start)}</p><p>Salida prevista: {roomTime(room.stay_end)}</p></> :
+          room.arrival ? <><p className="font-medium text-foreground">{room.arrival_label || "Llegada asignada"}</p>
+            <p>Entrada prevista: {roomTime(room.arrival_start)}</p><p>Salida prevista: {roomTime(room.arrival_end)}</p></> :
+          <p>{!room.active ? "Habitación desactivada." : room.blocked ? "Fuera de servicio." :
+            "Compruebe disponibilidad para las fechas deseadas."}</p>}
+      </div>
+      <div className="mt-auto grid gap-2 border-t pt-3">
+        {room.arrival && room.booking && actions.includes("reserve") && actions.includes("stay") &&
+          <Button type="button" size="sm" onClick={() => onOpen(room.name, "arrival")}>Registrar entrada</Button>}
+        {room.departure && room.stay && actions.includes("stay") &&
+          <Button type="button" size="sm" onClick={() => onOpen(room.name, "departure")}>Revisar salida</Button>}
+        {canReserve && <Button type="button" size="sm" onClick={() => onOpen(room.name, "reservation")}>Reservar</Button>}
+        <Button type="button" variant="outline" size="sm" onClick={() => onOpen(room.name, "now")}>Abrir ficha</Button>
+        {room.occupied && room.stay && actions.includes("service") &&
+          <Button type="button" variant="outline" size="sm" onClick={() => onOpen(room.name, "service")}>Agregar consumo</Button>}
+        {canHistory && <Button type="button" variant="ghost" size="sm" onClick={() => onOpen(room.name, "history")}>Historial</Button>}
+      </div>
+    </CardContent>
+  </Card>
+}
 
 function readRoomFilters(key: string): RoomFilters {
   try {
@@ -627,7 +708,9 @@ function readRoomFilters(key: string): RoomFilters {
   } catch { return emptyRoomFilters() }
 }
 
-function RoomList({ property, user }: { property: Property; user: string }) {
+function RoomList({ property, user, actions, provider }: { property: Property; user: string;
+  actions: string[]; provider: "pms" | "erpnext" }) {
+  const [searchParams, setSearchParams] = useSearchParams()
   const [board, setBoard] = useState<RoomBoard | null>(null)
   const storageKey = roomFilterKey(user, property.name)
   const [filters, setFilters] = useState<RoomFilters>(() => readRoomFilters(storageKey))
@@ -678,7 +761,10 @@ function RoomList({ property, user }: { property: Property; user: string }) {
     { id: "work", label: "Trabajo pendiente", count: board?.counts.work },
   ]
   return <div className="space-y-6">
-    <div className="flex flex-wrap items-end justify-between gap-3"><div><h1 className="text-3xl font-semibold tracking-tight">Habitaciones</h1><p className="mt-2 text-sm text-muted-foreground">Estado actual, llegadas y tareas por habitación.</p></div><Button variant="outline" onClick={() => refresh()}><RefreshCw size={16} /> Actualizar</Button></div>
+    <div className="flex flex-wrap items-end justify-between gap-3"><div><h1 className="text-3xl font-semibold tracking-tight">Habitaciones</h1><p className="mt-2 text-sm text-muted-foreground">Estado actual, llegadas y tareas por habitación.</p></div>
+      <div className="flex flex-wrap gap-2">{actions.includes("reserve") && <Button asChild><Link to="/reception?section=reservation">Nueva reserva</Link></Button>}
+        {actions.includes("reserve") && actions.includes("stay") && <Button asChild variant="outline"><Link to="/reception?section=arrivals">Llegadas</Link></Button>}
+        <Button variant="outline" onClick={() => refresh()}><RefreshCw size={16} /> Actualizar</Button></div></div>
     {error && <p role="alert" className="rounded-lg border border-destructive/30 bg-red-50 p-4 text-sm text-destructive">{error}</p>}
     <div className="relative max-w-sm"><Search size={17} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" /><Input ref={searchRef} aria-label="Buscar habitación" maxLength={120} value={filters.query} onChange={(event) => setFilters((current) => ({ ...current, query: event.target.value }))} placeholder="Buscar número, categoría, piso o zona" className="pl-9" /></div>
     <div className="space-y-3">
@@ -695,18 +781,32 @@ function RoomList({ property, user }: { property: Property; user: string }) {
       </details>
       {board && <div className="flex flex-wrap items-center justify-between gap-3"><p role="status" className="text-sm text-muted-foreground">Mostrando {filtered.length} de {board.rooms.length} habitaciones</p><Button type="button" variant="ghost" size="sm" onClick={clearFilters}>Restablecer filtros</Button></div>}
     </div>
-    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {!board && Array.from({ length: 6 }, (_, index) => <Skeleton key={index} className="h-43 rounded-xl" />)}
-      {filtered.map((room) => { const state = status(room); return <Link to={`/rooms/${encodeURIComponent(room.name)}`} key={room.name} className="group"><Card className="h-full gap-4 transition-shadow hover:shadow-md"><CardHeader><div className="flex items-start justify-between gap-3"><div><CardTitle className="text-xl">{room.room_number}</CardTitle><CardDescription>{room.category_label}{room.floor ? ` · Piso ${room.floor}` : ""}</CardDescription></div><span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${state.tone}`}>{state.text}</span></div></CardHeader><CardContent><p className="min-h-5 truncate text-sm text-muted-foreground">{room.guest_label || room.arrival_label || "Sin huésped activo"}</p><div className="mt-4 flex flex-wrap gap-1.5">{room.cleaning_status !== "Clean" && <Badge variant="outline">Limpieza: {room.cleaning_status}</Badge>}{room.work && <Badge variant="secondary">{room.task_count + room.maintenance_count + room.ticket_count} tareas</Badge>}{room.departure && <Badge variant="outline">Salida</Badge>}</div></CardContent></Card></Link> })}
+      {filtered.map((room) => <RoomTile key={room.name} room={room} actions={actions}
+        onOpen={(name, tab) => setSearchParams((current) => {
+          const next = new URLSearchParams(current); next.set("room", name); next.set("tab", tab); return next
+        })} />)}
     </div>
     {board && filtered.length === 0 && <div className="rounded-xl border border-dashed border-border p-10 text-center"><p className="text-sm text-muted-foreground">No hay habitaciones que coincidan con los filtros.</p><Button type="button" variant="outline" className="mt-4" onClick={clearFilters}>Mostrar todas las habitaciones</Button></div>}
     {board && <p className="text-xs text-muted-foreground">Actualizado: {new Date(board.checked_at).toLocaleString("es-NI")}</p>}
+    {board?.rooms.some((room) => room.name === searchParams.get("room")) && <RoomPanel
+      key={`${property.name}:${searchParams.get("room")}`} property={property} provider={provider}
+      actions={actions} room={searchParams.get("room") || ""}
+      initialTab={roomPanelTab(searchParams.get("tab"))}
+      onTabChange={(tab) => setSearchParams((current) => {
+        const next = new URLSearchParams(current); next.set("tab", tab); return next
+      }, { replace: true })}
+      onClose={() => setSearchParams((current) => {
+        const next = new URLSearchParams(current); next.delete("room"); next.delete("tab"); return next
+      }, { replace: true })} onChanged={() => void refresh()} />}
   </div>
 }
 
 function RoomView({ property, provider, canFinance }: { property: Property;
   provider: "pms" | "erpnext"; canFinance: boolean }) {
   const { room } = useParams()
+  const [searchParams] = useSearchParams()
   const [data, setData] = useState<RoomDetail | null>(null)
   const [error, setError] = useState("")
   const refreshRoom = useCallback(async () => {
@@ -725,12 +825,27 @@ function RoomView({ property, provider, canFinance }: { property: Property;
   if (error) return <p role="alert" className="rounded-lg border border-destructive/30 bg-red-50 p-4 text-sm text-destructive">{error}</p>
   if (!data) return <Skeleton className="h-80 rounded-xl" />
   const state = status(data.room)
+  const onlyAccount = data.current?.accounts?.length === 1 ? data.current.accounts[0] : null
+  const billable = onlyAccount ? Number(onlyAccount.pending) + Number(onlyAccount.scheduled) : 0
+  const payable = onlyAccount ? Number(onlyAccount.outstanding) -
+    (provider === "pms" ? Number(onlyAccount.pending) + Number(onlyAccount.scheduled) : Number(onlyAccount.scheduled)) : 0
+  const accountId = onlyAccount ? encodeURIComponent(onlyAccount.name) : ""
   return <div className="space-y-6">
     <Link to="/rooms" className="text-sm font-medium text-primary hover:underline">← Habitaciones</Link>
     <div className="flex flex-wrap items-center justify-between gap-3"><div><p className="text-sm text-muted-foreground">{data.room.category_label}</p><h1 className="text-3xl font-semibold">Habitación {data.room.room_number}</h1></div><div className="flex items-center gap-2"><span className={`rounded-full px-3 py-1.5 text-sm font-semibold ${state.tone}`}>{state.text}</span>{(data.can.clean || data.can.maintain || data.can.block) && <Button asChild variant="outline"><Link to={`/room-work?room=${encodeURIComponent(data.room.name)}`}>Gestionar trabajo</Link></Button>}</div></div>
+    {data.current && <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-white p-3" aria-label="Acciones de la estancia actual">
+      <div className="text-sm"><strong>{data.current.guest_label || "Estancia actual"}</strong>
+        <span className="ml-2 text-muted-foreground">Salida prevista: {roomTime(data.current.ends_at)}</span></div>
+      <div className="flex flex-wrap gap-2">
+        {canFinance && onlyAccount && billable > 0.005 && <Button asChild size="sm" variant="outline"><Link to={provider === "pms" ? `/folios?section=post&folio=${accountId}` : `/erp-invoicing?folio=${accountId}`}>
+          {provider === "pms" ? "Contabilizar cargos" : "Facturar cuenta"}</Link></Button>}
+        {canFinance && onlyAccount && payable > 0.005 && <Button asChild size="sm"><Link to={provider === "pms" ? `/cash?section=collect&folio=${accountId}` : `/customer-credits?section=folios&folio=${accountId}`}>Cobrar cuenta</Link></Button>}
+        {data.can.stay && data.current.name && <Button asChild size="sm" variant="outline"><Link to="/departures" state={{ stay: { property: property.name, name: data.current.name } }}>Revisar salida</Link></Button>}
+      </div>
+    </div>}
     {data.can.service && data.current?.service_stay && <RoomServiceAction key={`${property.name}:${data.current.service_stay}`}
       property={property} stay={data.current.service_stay} provider={provider} roomNumber={data.room.room_number}
-      onAccountChanged={refreshRoom} />}
+      onAccountChanged={refreshRoom} initialOpen={searchParams.get("action") === "service"} />}
     <div className="grid gap-4 lg:grid-cols-2">
       <Card><CardHeader><CardTitle>Estancia actual</CardTitle></CardHeader><CardContent>
         {data.current ? <div className="space-y-2 text-sm">
@@ -750,8 +865,17 @@ function RoomView({ property, provider, canFinance }: { property: Property;
       <Card><CardHeader><CardTitle>Trabajo de habitación</CardTitle></CardHeader><CardContent className="space-y-3 text-sm"><p>Limpieza: <strong>{data.room.cleaning_status}</strong></p>{data.tasks.map((task) => <p key={task.name}>{task.kind} · {task.status}</p>)}{data.maintenance.map((order) => <p key={order.name}>{order.title} · {order.status}</p>)}{data.tickets.map((ticket) => <p key={ticket.name}>{ticket.subject} · {ticket.status}</p>)}{data.can.ticket && <Button asChild variant="outline" size="sm"><Link to={`/tickets?room=${encodeURIComponent(data.room.name)}`}>Crear ticket para esta habitación</Link></Button>}</CardContent></Card>
       <Card><CardHeader><CardTitle>Características</CardTitle></CardHeader><CardContent className="space-y-2 text-sm"><p>Capacidad: {data.details.capacity ?? "—"} · Camas: {data.details.beds ?? "—"}</p>{data.details.amenities && <p>{data.details.amenities}</p>}{data.details.description && <p className="text-muted-foreground">{data.details.description}</p>}</CardContent></Card>
     </div>
-    <RoomDetailSections key={`${property.name}:${data.room.name}`} property={property} detail={data} />
+    <RoomDetailSections key={`${property.name}:${data.room.name}`} property={property} detail={data}
+      initialTab={searchParams.get("tab") === "history" ? "history" : "schedule"} />
   </div>
+}
+
+function RoomPanelRoute() {
+  const { room } = useParams()
+  const [searchParams] = useSearchParams()
+  const tab = searchParams.get("action") === "service" ? "service" :
+    searchParams.get("tab") === "history" ? "history" : "now"
+  return <Navigate to={`/rooms?room=${encodeURIComponent(room || "")}&tab=${tab}`} replace />
 }
 
 function PropertyApp() {
@@ -816,15 +940,17 @@ function PropertyApp() {
       <Route path="/" element={<Dashboard property={selected} data={detail}
         actions={base.actions} provider={base.accounting_provider} />} />
       <Route path="/rooms" element={<RoomList key={`${base.user}:${selected.name}`}
-        property={selected} user={base.user} />} />
-      <Route path="/rooms/:room" element={<RoomView property={selected} provider={base.accounting_provider}
+        property={selected} user={base.user} actions={base.actions} provider={base.accounting_provider} />} />
+      <Route path="/rooms/:room" element={<RoomPanelRoute />} />
+      <Route path="/rooms/:room/full" element={<RoomView property={selected} provider={base.accounting_provider}
         canFinance={base.actions.includes("finance")} />} />
       {showRoomWork && <Route path="/room-work" element={<RoomOperations property={selected} provider={base.accounting_provider} />} />}
       {showTickets && <Route path="/tickets" element={<Tickets key={selected.name} property={selected} canInspect={base.actions.includes("inspect")} />} />}
       {showSetup && <Route path="/setup" element={<Setup key={selected.name} property={selected} provider={base.accounting_provider} />} />}
       {base.can_create_property && <Route path="/new-property" element={<Onboarding />} />}
       {showReception && <Route path="/reception" element={<Reception property={selected} provider={base.accounting_provider} canApprove={base.actions.includes("approve")} canSetup={base.actions.includes("setup")} canManageGuests={base.actions.includes("guest")} canStay={base.actions.includes("stay")} />} />}
-      {showReception && <Route path="/reservations" element={<Reservations key={selected.name} property={selected} canStay={base.actions.includes("stay")} />} />}
+      {showReception && <Route path="/reservations" element={<Reservations key={selected.name} property={selected}
+        provider={base.accounting_provider} canStay={base.actions.includes("stay")} />} />}
       {showStays && <Route path="/stays" element={<Stays key={selected.name} property={selected} provider={base.accounting_provider} canFinance={showCash || showErpCredits} canApprove={showRetention} />} />}
       {showReception && <Route path="/reservations/draft/:booking" element={<BookingDraft key={selected.name} property={selected} provider={base.accounting_provider} />} />}
       {showReception && <Route path="/availability" element={<Availability key={selected.name} property={selected} />} />}

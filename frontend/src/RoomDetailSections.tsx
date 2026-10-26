@@ -45,11 +45,14 @@ const tone: Record<string, string> = {
   "Room Block": "bg-rose-200",
 }
 
-export function RoomDetailSections({ property, detail }: { property: Property; detail: RoomDetail }) {
+export function RoomDetailSections({ property, detail, initialTab = "schedule", embedded = false }: {
+  property: Property; detail: RoomDetail; initialTab?: "schedule" | "history" | "insights";
+  embedded?: boolean }) {
   const room = detail.room.name
   const today = detail.checked_at.slice(0, 10)
   const allowedDays = detail.mode === "Por tiempo" ? [1, 2, 7] : [7, 14, 30]
-  const [tab, setTab] = useState<"schedule" | "history" | "insights">("schedule")
+  const [tab, setTab] = useState<"schedule" | "history" | "insights">(initialTab)
+  useEffect(() => setTab(initialTab), [initialTab])
   const [scheduleDate, setScheduleDate] = useState(today)
   const [scheduleDays, setScheduleDays] = useState(allowedDays[0])
   const [scheduleQuery, setScheduleQuery] = useState({ date: today, days: allowedDays[0], revision: 0 })
@@ -157,16 +160,17 @@ export function RoomDetailSections({ property, detail }: { property: Property; d
     { name: "Limpieza media", value: selectedInsight.avg_clean_minutes === null ? "Sin mediciones" : `${selectedInsight.avg_clean_minutes} min` },
   ] : []
 
-  return <Card><CardHeader><CardTitle>Agenda e historial</CardTitle>
-    <CardDescription>Consultas de la habitación en el horario de {detail.time_zone}.</CardDescription></CardHeader>
+  return <Card className={embedded ? "border-0 bg-transparent shadow-none" : undefined}>
+    {!embedded && <CardHeader><CardTitle>Agenda e historial</CardTitle>
+    <CardDescription>Consultas de la habitación en el horario de {detail.time_zone}.</CardDescription></CardHeader>}
     <CardContent className="space-y-5">
-      <div className="flex flex-wrap gap-2" role="tablist" aria-label="Secciones de la habitación">
+      {!embedded && <div className="flex flex-wrap gap-2" role="tablist" aria-label="Secciones de la habitación">
         {(["schedule", ...(detail.can.history ? ["history"] : []), "insights"] as const).map((item) =>
           <Button key={item} type="button" role="tab" aria-selected={tab === item}
             variant={tab === item ? "default" : "outline"} onClick={() => setTab(item as typeof tab)}>
             {item === "schedule" ? "Agenda" : item === "history" ? "Historial" : "Indicadores"}
           </Button>)}
-      </div>
+      </div>}
       {tab === "schedule" && <div className="space-y-4" role="tabpanel">
         <div className="flex flex-wrap items-end gap-3">
           <label className="space-y-1 text-sm"><span>Desde</span><Input className="w-48" type="date" value={scheduleDate}

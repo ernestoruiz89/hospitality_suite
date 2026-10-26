@@ -121,6 +121,10 @@ def _summary(room, ctx, can, names):
                 work=bool(tasks or orders or tickets), task_count=len(tasks), maintenance_count=len(orders), ticket_count=len(tickets),
                 guest_label=label(stay.guest) if stay and can["people"] else None,
                 arrival_label=label(arrival["guest"]) if arrival and can["people"] else None,
+                stay_start=local(stay.starts_at, ctx["prop"]).isoformat() if stay and can["stay"] else None,
+                stay_end=local(stay.ends_at, ctx["prop"]).isoformat() if stay and can["stay"] else None,
+                arrival_start=local(arrival["starts_at"], ctx["prop"]).isoformat() if arrival and can["reserve"] else None,
+                arrival_end=local(arrival["ends_at"], ctx["prop"]).isoformat() if arrival and can["reserve"] else None,
                 stay=stay.name if stay and can["stay"] else None,
                 booking=arrival["booking"] if arrival and can["reserve"] else None)
 

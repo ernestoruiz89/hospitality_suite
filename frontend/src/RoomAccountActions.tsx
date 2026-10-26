@@ -18,8 +18,8 @@ const moneyAmount = (currency: string, amount: string | number) => {
   }) : `${currency} ${amount}`
 }
 
-export function RoomAccountActions({ accounts, charges, provider }: {
-  accounts: Account[]; charges: Charge[]; provider: "pms" | "erpnext"
+export function RoomAccountActions({ accounts, charges, provider, canFinance = true }: {
+  accounts: Account[]; charges: Charge[]; provider: "pms" | "erpnext"; canFinance?: boolean
 }) {
   if (!accounts.length) return <p className="text-muted-foreground">Sin cuentas de estancia abiertas.</p>
   const labels = new Map(accounts.map((account) => [account.name, account.label || account.name]))
@@ -50,9 +50,9 @@ export function RoomAccountActions({ accounts, charges, provider }: {
             <span className="block font-medium">{moneyAmount(account.currency, billed)}</span></p>
         </div>
         <div className="mt-2 flex flex-wrap gap-2">
-          {billable > 0.005 && <Button asChild variant="outline" size="sm"><Link to={invoiceUrl}>
+          {canFinance && billable > 0.005 && <Button asChild variant="outline" size="sm"><Link to={invoiceUrl}>
             {provider === "pms" ? "Contabilizar cargos" : "Facturar cuenta"}</Link></Button>}
-          {payable > 0.005 && <Button asChild variant="outline" size="sm"><Link to={paymentUrl}>Registrar pago</Link></Button>}
+          {canFinance && payable > 0.005 && <Button asChild variant="outline" size="sm"><Link to={paymentUrl}>Registrar pago</Link></Button>}
         </div>
         {provider === "pms" && billable > 0.005 && payable <= 0.005 &&
           <p className="mt-2 text-xs text-muted-foreground">Contabilice los cargos antes de registrar el pago.</p>}

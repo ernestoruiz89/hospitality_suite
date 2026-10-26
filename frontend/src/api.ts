@@ -74,6 +74,10 @@ export type Room = {
   ticket_count: number
   guest_label?: string | null
   arrival_label?: string | null
+  stay_start?: string | null
+  stay_end?: string | null
+  arrival_start?: string | null
+  arrival_end?: string | null
   stay?: string | null
   booking?: string | null
 }

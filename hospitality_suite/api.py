@@ -2945,6 +2945,15 @@ def reservation_page(property_name, status="current", search="", offset=0, page_
         order_by="creation desc, name desc", limit=length + 1, offset=start)
     more = len(rows) > length
     rows = rows[:length]
+    booking_names = [row.name for row in rows]
+    active_allocations = set(frappe.get_all("HS Allocation", filters={
+        "property": prop.name, "company": prop.company,
+        "booking": ["in", booking_names], "kind": "Reservation", "status": "Active"},
+        pluck="booking", limit_page_length=1000)) if booking_names else set()
+    bookings_with_stay = set(frappe.get_all("HS Stay", filters={
+        "property": prop.name, "company": prop.company,
+        "booking": ["in", booking_names]},
+        pluck="booking", limit_page_length=1000)) if booking_names else set()
     guest_names = {row.guest for row in rows if row.guest}
     guest_labels = {row.name: row.full_name for row in frappe.get_all("HS Guest",
         filters={"property": prop.name, "name": ["in", list(guest_names)]},
@@ -2969,7 +2978,12 @@ def reservation_page(property_name, status="current", search="", offset=0, page_
                       "starts_at_local": local(row.starts_at, prop).isoformat() if row.starts_at else None,
                       "ends_at_local": local(row.ends_at, prop).isoformat() if row.ends_at else None,
                       "channel": row.channel, "currency": row.currency,
-                      "amount": str(row.amount or 0), "modified": str(row.modified)}
+                      "amount": str(row.amount or 0), "modified": str(row.modified),
+                      "modifiable": row.status in ("Hold", "Confirmed") and
+                          row.name not in bookings_with_stay,
+                      "can_arrive": row.status in ("Confirmed", "Checked In") and
+                          row.name in active_allocations,
+                      "can_cancel": row.status in ("Hold", "Confirmed")}
                      for row in rows]}
 
 

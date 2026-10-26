@@ -20,11 +20,11 @@ type Snapshot = { currency: string; stays: Stay[]; requests: Request[];
 type Quote = { currency: string; unit_rate: string; amount: string; acceptance: string;
   net?: string; tax?: string; total?: string; included_in_price?: boolean }
 
-export function RoomServiceAction({ property, stay, provider, roomNumber, onAccountChanged }: {
+export function RoomServiceAction({ property, stay, provider, roomNumber, onAccountChanged, initialOpen = false }: {
   property: Property; stay: string; provider: "pms" | "erpnext"; roomNumber: string;
-  onAccountChanged: () => Promise<void>
+  onAccountChanged: () => Promise<void>; initialOpen?: boolean
 }) {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(initialOpen)
   const [data, setData] = useState<Snapshot | null>(null)
   const [folio, setFolio] = useState("")
   const [item, setItem] = useState("")
@@ -43,6 +43,7 @@ export function RoomServiceAction({ property, stay, provider, roomNumber, onAcco
   const send = useIdempotentCommand(property.name)
 
   useEffect(() => { reviewVersion.current += 1; setQuote(null) }, [property.name, stay])
+  useEffect(() => { if (initialOpen) setOpen(true) }, [initialOpen])
 
   const refresh = useCallback(async () => {
     const result = await call<Snapshot>(provider === "pms" ? "pms_service_snapshot" : "erp_service_snapshot",

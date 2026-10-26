@@ -19,8 +19,10 @@ type Detail = { stay: string; modified: string; currency: string;
   inspection_required: boolean; inspected: boolean;
   timing: { amount: string; acceptance: string; explanation: string[]; kind: string } }
 
-export function Departure({ property, provider, canInspect, canFinance, canApprove }: {
-  property: Property; provider: "pms" | "erpnext"; canInspect: boolean; canFinance: boolean; canApprove: boolean
+export function Departure({ property, provider, canInspect, canFinance, canApprove,
+  initialStay, embedded = false, onChanged }: {
+  property: Property; provider: "pms" | "erpnext"; canInspect: boolean; canFinance: boolean; canApprove: boolean;
+  initialStay?: string; embedded?: boolean; onChanged?: () => void
 }) {
   const location = useLocation()
   const navigate = useNavigate()
@@ -51,10 +53,10 @@ export function Departure({ property, provider, canInspect, canFinance, canAppro
       result.folios.find((row) => row.name)?.name || "")
   }, [property.name, provider])
   useEffect(() => {
-    setStays(null); setSelected(""); setDetail(null); setFolio("")
+    setStays(null); setSelected(initialStay || ""); setDetail(null); setFolio("")
     setError(""); setNotice(""); setCheckoutKey(""); setCreditReason(""); setOverrideReason("")
     refresh().catch((issue: unknown) => setError(issue instanceof Error ? issue.message : "No se pudieron consultar las salidas."))
-  }, [refresh])
+  }, [refresh, initialStay])
   useEffect(() => {
     if (!stays || !location.state) return
     const target = (location.state as { stay?: { property: string; name: string } }).stay
@@ -132,6 +134,7 @@ export function Departure({ property, provider, canInspect, canFinance, canAppro
       setSelected(""); setDetail(null); setCheckoutKey("")
       setCreditReason(""); setOverrideReason("")
       await refresh()
+      onChanged?.()
       setNotice(`Salida ${result.stay} registrada. Se creó la tarea de limpieza ${result.cleaning_task}.`)
     } catch (issue) { setError(issue instanceof Error ? issue.message : "No se pudo registrar la salida.") }
     finally { setBusy(false) }
@@ -155,16 +158,16 @@ export function Departure({ property, provider, canInspect, canFinance, canAppro
     !detail.services_pending && !detail.experiences_pending
 
   return <div className="space-y-6">
-    <div><h1 className="text-3xl font-semibold">Salidas</h1><p className="mt-1 text-sm text-muted-foreground">Revise tiempo, cuentas, depósitos e inspección antes de liberar la habitación.</p></div>
+    {!embedded && <div><h1 className="text-3xl font-semibold">Salidas</h1><p className="mt-1 text-sm text-muted-foreground">Revise tiempo, cuentas, depósitos e inspección antes de liberar la habitación.</p></div>}
     {error && <p role="alert" className="rounded-lg border border-destructive/30 bg-red-50 p-3 text-sm text-destructive">{error}</p>}
     {notice && <p role="status" className="rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-900">{notice}</p>}
-    {!stays ? <Skeleton className="h-72 w-full" /> : <div className="grid gap-5 lg:grid-cols-[1fr_1.5fr]">
-      <Card><CardHeader><CardTitle>Estancias activas</CardTitle><CardDescription>Seleccione la habitación que va a salir.</CardDescription></CardHeader><CardContent className="space-y-2">
+    {!stays ? <Skeleton className="h-72 w-full" /> : <div className={embedded ? "space-y-5" : "grid gap-5 lg:grid-cols-[1fr_1.5fr]"}>
+      {!embedded && <Card><CardHeader><CardTitle>Estancias activas</CardTitle><CardDescription>Seleccione la habitación que va a salir.</CardDescription></CardHeader><CardContent className="space-y-2">
         {stays.map((row) => <button key={row.name} type="button" disabled={busy} onClick={() => { setSelected(row.name); setError(""); setNotice("") }} className={`w-full rounded-lg border p-3 text-left text-sm hover:bg-muted ${selected === row.name ? "border-primary bg-secondary" : "border-border"}`}>
           <strong>Habitación {row.room_label}</strong> · {row.guest_label}<span className="block text-muted-foreground">{row.name} · prevista {row.ends_at_local}</span>
         </button>)}
         {!stays.length && <p className="text-sm text-muted-foreground">No hay estancias activas.</p>}
-      </CardContent></Card>
+      </CardContent></Card>}
       {selected && (!detail || detail.stay !== selected) ? <Skeleton className="h-96 w-full" /> : detail ? <div className="space-y-5">
         <Card><CardHeader><CardTitle>Liquidación de tiempo</CardTitle><CardDescription>{detail.timing.explanation.join(" · ")}</CardDescription></CardHeader><CardContent className="space-y-3 text-sm">
           <p>Importe adicional: <strong>{detail.currency} {detail.timing.amount}</strong></p>

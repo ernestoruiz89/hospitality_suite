@@ -75,14 +75,21 @@ type BookingContext = { booking: { name: string; property: string; status: strin
 const newRoom = (): RoomDraft => ({ id: crypto.randomUUID(), category: "", room: "",
   people: "1", extraBeds: "0", rate: "" })
 
-export function Reception({ property, provider, canApprove, canSetup, canManageGuests, canStay }: {
+export function Reception({ property, provider, canApprove, canSetup, canManageGuests, canStay,
+  embeddedSection, initialRoomChoice, initialBooking, onChanged }: {
   property: Property; provider: "pms" | "erpnext"; canApprove: boolean;
-  canSetup: boolean; canManageGuests: boolean; canStay: boolean }) {
+  canSetup: boolean; canManageGuests: boolean; canStay: boolean;
+  embeddedSection?: "reservation" | "arrivals";
+  initialRoomChoice?: { property: string; room: string; category: string };
+  initialBooking?: { property: string; name: string; action: "edit" | "arrival" | "cancel" };
+  onChanged?: () => void }) {
   const location = useLocation()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const visibleSections = availableReceptionSections(provider, canSetup, canStay, canManageGuests)
-  const section = visibleSections.find((item) => item.id === searchParams.get("section")) || visibleSections[0]
+  const section = visibleSections.find((item) => item.id === (embeddedSection || searchParams.get("section"))) || visibleSections[0]
+  const embeddedRoomLoaded = useRef(false)
+  const embeddedBookingLoaded = useRef(false)
   const [data, setData] = useState<ReceptionData | null>(null)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState("")
@@ -204,14 +211,33 @@ export function Reception({ property, provider, canApprove, canSetup, canManageG
     navigate("/reception?section=reservation", { replace: true, state: null })
   }, [data, location.state, navigate, property.mode, property.name])
   useEffect(() => {
-    if (!data || !location.state) return
-    const target = (location.state as { booking?: { property: string; name: string;
-      action: "edit" | "arrival" | "cancel" } }).booking
+    if (!data || (!location.state && !initialRoomChoice)) return
+    const choice = initialRoomChoice ? (!embeddedRoomLoaded.current ? initialRoomChoice : undefined) :
+      (location.state as { roomChoice?: {
+        property: string; room: string; category: string } } | null)?.roomChoice
+    if (!choice) return
+    if (choice === initialRoomChoice) embeddedRoomLoaded.current = true
+    const room = data.rooms.find((entry) => entry.name === choice.room &&
+      entry.category === choice.category)
+    if (choice.property === property.name && room) {
+      setRooms([{ ...newRoom(), category: room.category, room: room.name }])
+      setReservationQuote(null)
+      setNotice(`Habitación ${room.room_number} preseleccionada. Indique fechas y huésped; el cupo se comprobará al cotizar.`)
+      requestAnimationFrame(() => document.getElementById("reservation-form")?.scrollIntoView({ behavior: "smooth" }))
+    }
+    if (!embeddedSection) navigate("/reception?section=reservation", { replace: true, state: null })
+  }, [data, location.state, navigate, property.name, initialRoomChoice, embeddedSection])
+  useEffect(() => {
+    if (!data || (!location.state && !initialBooking)) return
+    const target = initialBooking ? (!embeddedBookingLoaded.current ? initialBooking : undefined) :
+      (location.state as { booking?: { property: string; name: string;
+        action: "edit" | "arrival" | "cancel" } } | null)?.booking
     if (!target) return
+    if (target === initialBooking) embeddedBookingLoaded.current = true
     if (target.property !== property.name || !target.name ||
         !["edit", "arrival", "cancel"].includes(target.action)) {
       setError("La reserva solicitada no pertenece a este establecimiento.")
-      navigate("/reception?section=arrivals", { replace: true, state: null })
+      if (!embeddedSection) navigate("/reception?section=arrivals", { replace: true, state: null })
       return
     }
     const controller = new AbortController()
@@ -252,7 +278,8 @@ export function Reception({ property, provider, canApprove, canSetup, canManageG
               category: line.category, cleaning_status: "—",
             }] : []), ...current.rooms],
         }))
-        setError(""); setNotice(`Reserva ${source.name} cargada desde el historial.`)
+        setError(""); setNotice(embeddedSection ? `Reserva ${source.name} lista para ${target.action === "edit" ? "modificar" : target.action === "cancel" ? "cancelar" : "registrar entrada"}.` :
+          `Reserva ${source.name} cargada desde el historial.`)
         if (target.action === "edit") {
           setEditingBooking({ name: source.name, modified: source.modified })
           setEditingReason(""); setGuest(source.guest || ""); setPayer(source.customer)
@@ -275,17 +302,19 @@ export function Reception({ property, provider, canApprove, canSetup, canManageG
           setCancelBooking(source.name); setCancelStatus("Cancelled")
           setCancelReason(""); setCancelQuote(null)
         }
-        navigate(`/reception?section=${target.action === "edit" ? "reservation" : "arrivals"}`, { replace: true, state: null })
-        requestAnimationFrame(() => document.getElementById(
-          target.action === "edit" ? "reservation-form" : "reception-arrivals")
-          ?.scrollIntoView({ behavior: "smooth" }))
+        if (!embeddedSection) {
+          navigate(`/reception?section=${target.action === "edit" ? "reservation" : "arrivals"}`, { replace: true, state: null })
+          requestAnimationFrame(() => document.getElementById(
+            target.action === "edit" ? "reservation-form" : "reception-arrivals")
+            ?.scrollIntoView({ behavior: "smooth" }))
+        }
       }).catch((issue: unknown) => {
         if (controller.signal.aborted) return
         setError(issue instanceof Error ? issue.message : "No se pudo cargar la reserva.")
-        navigate("/reception?section=arrivals", { replace: true, state: null })
+        if (!embeddedSection) navigate("/reception?section=arrivals", { replace: true, state: null })
       })
     return () => controller.abort()
-  }, [canStay, data, location.state, navigate, property.name])
+  }, [canStay, data, location.state, navigate, property.name, initialBooking, embeddedSection])
   useEffect(() => {
     if (!companionStay || !canManageGuests) return
     const controller = new AbortController()
@@ -449,6 +478,7 @@ export function Reception({ property, provider, canApprove, canSetup, canManageG
         reservationQuote.requestKey)
       if (wasEditing) stopEditing(); else setReservationQuote(null)
       await refresh()
+      onChanged?.()
       setNotice(wasEditing ? `Reserva ${result.booking} modificada.` :
         directEntry ? `Entrada registrada: ${result.stay}. Cuenta de estancia ${result.folio}.` :
         `Reserva ${result.booking} confirmada con ${reservationQuote.request.rooms.length} habitación(es).`)
@@ -542,7 +572,7 @@ export function Reception({ property, provider, canApprove, canSetup, canManageG
           modified: selectedCancelBooking.modified, status: cancelQuote.status,
           reason: cancelReason.trim(), fee_acceptance: cancelQuote.acceptance },
         cancelQuote.requestKey)
-      await refresh(); setCancelBooking(""); setCancelReason(""); setCancelQuote(null)
+      await refresh(); onChanged?.(); setCancelBooking(""); setCancelReason(""); setCancelQuote(null)
       setNotice(`${cancelQuote.status === "No Show" ? "No presentación" : "Cancelación"} registrada.` +
         (result.fee_receivable || result.fee_invoice ?
           ` Cargo ${result.fee_receivable || result.fee_invoice} contabilizado.` : ""))
@@ -571,7 +601,7 @@ export function Reception({ property, provider, canApprove, canSetup, canManageG
           allocation: arrivalAllocation, room: arrivalRoom, guest: arrivalGuest,
           timing_acceptance: arrivalQuote.acceptance }, arrivalQuote.requestKey)
       setArrivalQuote(null); setArrivalBooking(""); setArrivalAllocation("")
-      await refresh(); setNotice(`Entrada ${result.stay} registrada. Cuenta de estancia ${result.folio}.`)
+      await refresh(); onChanged?.(); setNotice(`Entrada ${result.stay} registrada. Cuenta de estancia ${result.folio}.`)
     } catch (issue) { setError(issue instanceof Error ? issue.message : "No se pudo registrar la entrada.") }
     finally { setBusy(false) }
   }
@@ -649,13 +679,16 @@ export function Reception({ property, provider, canApprove, canSetup, canManageG
   }
 
   return <div className="space-y-6">
-    <div><h1 className="text-3xl font-semibold">Recepción</h1><p className="mt-1 text-sm text-muted-foreground">Registre huéspedes, revise tarifas, confirme reservas y abra estancias.</p></div>
+    {!embeddedSection && <div><h1 className="text-3xl font-semibold">Recepción</h1><p className="mt-1 text-sm text-muted-foreground">Registre huéspedes, revise tarifas, confirme reservas y abra estancias.</p></div>}
     {error && <p role="alert" className="rounded-lg border border-destructive/30 bg-red-50 p-3 text-sm text-destructive">{error}</p>}
     {notice && <p role="status" className="rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-900">{notice}</p>}
     {!data ? <Skeleton className="h-96 w-full" /> : <>
-      <div className="border-b border-border pb-3"><h2 className="text-xl font-semibold">{section.label}</h2>
-        <p className="text-sm text-muted-foreground">{section.description}</p></div>
-      {section.id === "arrivals" && <PortalRequests key={property.name} property={property} parties={data.parties}
+      <div className="border-b border-border pb-3"><h2 className="text-xl font-semibold">{embeddedSection === "arrivals" ?
+        initialBooking?.action === "cancel" ? "Cancelar reserva" : "Registrar entrada" : section.label}</h2>
+        <p className="text-sm text-muted-foreground">{embeddedSection === "arrivals" ?
+          initialBooking?.action === "cancel" ? "Revise la política y el motivo antes de confirmar." :
+            "Revise la asignación y los cargos antes de confirmar." : section.description}</p></div>
+      {section.id === "arrivals" && !embeddedSection && <PortalRequests key={property.name} property={property} parties={data.parties}
         guests={data.guests} categories={data.categories} onChanged={refresh} />}
       {section.id === "folios" && <FolioWork key={`folios-${property.name}`} property={property} stays={data.stays}
         folios={data.folios} parties={data.parties} onChanged={refresh} />}
@@ -714,9 +747,15 @@ export function Reception({ property, provider, canApprove, canSetup, canManageG
           <Button disabled={busy} className="sm:col-span-2">Guardar política</Button>
         </form></CardContent>
       </Card>}
-      {section.id === "arrivals" && <Card id="reception-arrivals"><CardHeader><CardTitle>Llegadas pendientes</CardTitle><CardDescription>Confirme retenciones y registre cada habitación de una reserva.</CardDescription></CardHeader><CardContent className="space-y-3">
-        {data.bookings.filter((row) => data.allocations.some((item) => item.booking === row.name)).map((row) => <div key={row.name} className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-3 text-sm"><span><strong>{row.name}</strong> · {guestLabel(row.guest)} · {payerLabel(row.customer)}<span className="block text-muted-foreground">{row.starts_at_local} → {row.ends_at_local} · {row.status} · {data.currency} {row.amount} · {data.allocations.filter((item) => item.booking === row.name).length} habitación(es) pendientes</span></span>{row.status === "Hold" ? <Button type="button" variant="outline" disabled={busy} onClick={() => confirmHold(row)}>Confirmar retención</Button> : canStay && <Button type="button" variant="outline" disabled={busy} onClick={() => selectArrival(row)}>Preparar entrada</Button>}{row.modifiable && <Button type="button" variant="outline" disabled={busy} onClick={() => editBooking(row)}>Modificar</Button>}{row.status !== "Checked In" && <Button type="button" variant="outline" disabled={busy} onClick={() => selectCancellation(row)}>Cancelar / no presentación</Button>}</div>)}
-        {data.portal_enabled && data.bookings.some((row) => row.status === "Confirmed" || row.status === "Checked In") &&
+      {section.id === "arrivals" && <Card id="reception-arrivals"><CardHeader><CardTitle>{embeddedSection ?
+        initialBooking?.action === "cancel" ? "Revisar cancelación" : "Registrar entrada" : "Llegadas pendientes"}</CardTitle>
+        <CardDescription>{embeddedSection ? initialBooking?.action === "cancel" ?
+          "Calcule la penalización antes de registrar la cancelación o no presentación." :
+          "Revise la asignación, el huésped y los cargos antes de confirmar." :
+          "Confirme retenciones y registre cada habitación de una reserva."}</CardDescription></CardHeader><CardContent className="space-y-3">
+        {!embeddedSection && data.bookings.filter((row) => data.allocations.some((item) => item.booking === row.name)).map((row) => <div key={row.name} className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-3 text-sm"><span><strong>{row.name}</strong> · {guestLabel(row.guest)} · {payerLabel(row.customer)}<span className="block text-muted-foreground">{row.starts_at_local} → {row.ends_at_local} · {row.status} · {data.currency} {row.amount} · {data.allocations.filter((item) => item.booking === row.name).length} habitación(es) pendientes</span></span>{row.status === "Hold" ? <Button type="button" variant="outline" disabled={busy} onClick={() => confirmHold(row)}>Confirmar retención</Button> : canStay && <Button type="button" variant="outline" disabled={busy} onClick={() => selectArrival(row)}>Preparar entrada</Button>}{row.modifiable && <Button type="button" variant="outline" disabled={busy} onClick={() => editBooking(row)}>Modificar</Button>}{row.status !== "Checked In" && <Button type="button" variant="outline" disabled={busy} onClick={() => selectCancellation(row)}>Cancelar / no presentación</Button>}</div>)}
+        {embeddedSection && initialBooking && !selectedBooking && !error && <Skeleton className="h-24 rounded-lg" />}
+        {!embeddedSection && data.portal_enabled && data.bookings.some((row) => row.status === "Confirmed" || row.status === "Checked In") &&
           <div className="space-y-2 rounded-lg border border-border p-3"><p className="text-sm font-semibold">Enlaces de confirmación</p><p className="text-xs text-muted-foreground">El enlace firmado dura siete días. Compártalo con el huésped correspondiente.</p><div className="flex flex-wrap gap-2">{data.bookings.filter((row) => row.status === "Confirmed" || row.status === "Checked In").map((row) => <Button key={row.name} type="button" variant="outline" size="sm" disabled={busy} onClick={() => void prepareConfirmationLink(row.name)}>Preparar enlace · {row.name}</Button>)}</div>
             {confirmationLink && <div className="flex flex-wrap gap-2"><Input readOnly aria-label={`Enlace de confirmación de ${confirmationLink.booking}`} value={confirmationLink.url} onFocus={(event) => event.target.select()} className="min-w-64 flex-1" /><Button type="button" variant="outline" onClick={() => void copyConfirmationLink()}>Copiar</Button><a className="inline-flex h-9 items-center rounded-md border border-border px-3 text-sm hover:bg-secondary" href={confirmationLink.url} target="_blank" rel="noopener noreferrer">Abrir</a></div>}
           </div>}

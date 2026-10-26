@@ -1,18 +1,22 @@
 import { useEffect, useRef, useState, type FormEvent } from "react"
 import { Link, useSearchParams } from "react-router-dom"
+import { Dialog as DialogPrimitive } from "radix-ui"
+import { X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
 import { call, execute, type Property } from "./api"
 import { reservationSections } from "./ReservationSections"
+import { Reception } from "./Reception"
 
 type View = "current" | "history" | "draft"
 type Booking = { name: string; status: string; guest: string | null;
   guest_label: string | null; customer: string | null;
   customer_label: string | null; starts_at_local: string | null;
   ends_at_local: string | null; channel: string | null;
-  currency: string; amount: string; modified: string }
+  currency: string; amount: string; modified: string;
+  modifiable: boolean; can_arrive: boolean; can_cancel: boolean }
 type Page = { property: string; status: View; search: string;
   offset: number; page_length: number; has_more: boolean; rows: Booking[] }
 type Detail = { booking: { name: string; property: string; status: string;
@@ -29,9 +33,14 @@ type Detail = { booking: { name: string; property: string; status: string;
     people: number | null }[] } | null }
 
 const dateLabel = (value: string | null) => value ? value.slice(0, 16).replace("T", " ") : "Por definir"
+const statusLabel: Record<string, string> = { Hold: "Retenida", Confirmed: "Confirmada",
+  "Checked In": "Con entradas", Draft: "Borrador", Completed: "Finalizada",
+  Cancelled: "Cancelada", "No Show": "No presentación" }
 const PAGE_LENGTH = 25
+type Workflow = { booking: string; action: "edit" | "arrival" | "cancel" }
 
-export function Reservations({ property, canStay }: { property: Property; canStay: boolean }) {
+export function Reservations({ property, provider, canStay }: { property: Property;
+  provider: "pms" | "erpnext"; canStay: boolean }) {
   const [searchParams, setSearchParams] = useSearchParams()
   const requested = searchParams.get("section")
   const section = reservationSections.find((item) => item.id === requested) || reservationSections[0]
@@ -48,6 +57,7 @@ export function Reservations({ property, canStay }: { property: Property; canSta
   const [detailError, setDetailError] = useState("")
   const [notice, setNotice] = useState("")
   const [busy, setBusy] = useState(false)
+  const [workflow, setWorkflow] = useState<Workflow | null>(null)
   const holdRequest = useRef<{ booking: string; modified: string; key: string } | null>(null)
 
   useEffect(() => {
@@ -93,15 +103,17 @@ export function Reservations({ property, canStay }: { property: Property; canSta
       })
     return () => controller.abort()
   }, [property.name, detailName])
+  useEffect(() => {
+    if (detail && detailName) document.getElementById("reservation-detail")?.scrollIntoView({
+      behavior: "smooth", block: "start" })
+  }, [detail, detailName])
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault(); setOffset(0); setSearch(searchInput.trim()); setRevision((value) => value + 1)
   }
   const selected = page?.rows.find((row) => row.name === detailName)
-  async function confirmHold() {
-    if (!detail || detail.booking.status !== "Hold" || busy) return
-    const booking = detail.booking.name
-    const modified = detail.workflow.modified
+  async function confirmHold(booking: string, modified: string) {
+    if (busy) return
     if (holdRequest.current?.booking !== booking || holdRequest.current.modified !== modified)
       holdRequest.current = { booking, modified, key: crypto.randomUUID() }
     setBusy(true); setError(""); setNotice("")
@@ -116,12 +128,6 @@ export function Reservations({ property, canStay }: { property: Property; canSta
       setError(issue instanceof Error ? issue.message : "No se pudo confirmar la retención.")
     } finally { setBusy(false) }
   }
-  const manageLink = (action: "edit" | "arrival" | "cancel") => ({
-    pathname: `/reception?section=${action === "edit" ? "reservation" : "arrivals"}`,
-    state: { booking: { property: property.name,
-      name: detailName, action } },
-  })
-
   return <div className="space-y-6">
     <div className="flex flex-wrap items-end justify-between gap-3"><div>
       <h1 className="text-3xl font-semibold">{section.label}</h1>
@@ -140,10 +146,20 @@ export function Reservations({ property, canStay }: { property: Property; canSta
         {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
         {loading && <Skeleton className="h-52 rounded-lg" />}
         {page && <><div className="space-y-2">{page.rows.map((row) => <div key={row.name} className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-border p-3 text-sm">
-          <div><strong>{row.name}</strong> · {row.status}<p>{row.guest_label || "Huésped por definir"} · {row.customer_label || "Pagador por definir"}</p>
+          <div><strong>{row.name}</strong> · {statusLabel[row.status] || row.status}<p>{row.guest_label || "Huésped por definir"} · {row.customer_label || "Pagador por definir"}</p>
             <p className="text-xs text-muted-foreground">{dateLabel(row.starts_at_local)} → {dateLabel(row.ends_at_local)} · {row.channel || "Recepción"}
               {row.status !== "Draft" && <> · {row.currency} {row.amount}</>}</p></div>
-          <div className="flex gap-2"><Button type="button" size="sm" variant="outline" onClick={() => setDetailName(row.name)}>Detalle</Button>
+          <div className="flex flex-wrap gap-2">
+            {row.status === "Hold" && <Button type="button" size="sm" disabled={busy}
+              onClick={() => void confirmHold(row.name, row.modified)}>Confirmar</Button>}
+            {canStay && row.can_arrive && <Button size="sm" onClick={() => setWorkflow({ booking: row.name,
+              action: "arrival" })}>Registrar entrada</Button>}
+            {row.modifiable && <Button size="sm" variant="outline" onClick={() => setWorkflow({ booking: row.name,
+              action: "edit" })}>Modificar</Button>}
+            {row.can_cancel && <Button size="sm" variant="outline" onClick={() => setWorkflow({ booking: row.name,
+              action: "cancel" })}>Cancelar</Button>}
+            <Button type="button" size="sm" variant="outline" aria-expanded={detailName === row.name}
+              onClick={() => setDetailName((current) => current === row.name ? "" : row.name)}>Detalle</Button>
             {row.status === "Draft" && <Button asChild size="sm"><Link to={`/reservations/draft/${encodeURIComponent(row.name)}`}>Retomar</Link></Button>}
             <a className="inline-flex h-8 items-center rounded-md border border-border px-3 text-sm hover:bg-secondary"
                 href={`/printview?doctype=${encodeURIComponent("HS Booking")}&name=${encodeURIComponent(row.name)}&format=${encodeURIComponent("HS Confirmación de reserva")}`}
@@ -155,7 +171,7 @@ export function Reservations({ property, canStay }: { property: Property; canSta
               <Button variant="outline" disabled={!page.has_more || loading} onClick={() => setOffset(offset + PAGE_LENGTH)}>Siguiente</Button></div></div>
         </>}
       </CardContent></Card>
-    {detailName && <Card><CardHeader><CardTitle>Detalle de {detailName}</CardTitle>
+    {detailName && <Card id="reservation-detail"><CardHeader><CardTitle>Detalle de {detailName}</CardTitle>
       <CardDescription>{selected?.status || detail?.booking.status}</CardDescription></CardHeader><CardContent className="space-y-3 text-sm">
       {detailError && <p role="alert" className="text-destructive">{detailError}</p>}
       {!detail && !detailError && <Skeleton className="h-32 rounded-lg" />}
@@ -179,12 +195,37 @@ export function Reservations({ property, canStay }: { property: Property; canSta
         </ul></div>
         <div className="flex flex-wrap gap-2">
           {detail.booking.status === "Draft" && <Button asChild><Link to={`/reservations/draft/${encodeURIComponent(detailName)}`}>Retomar borrador</Link></Button>}
-          {detail.booking.status === "Hold" && <Button disabled={busy} onClick={() => void confirmHold()}>Confirmar retención</Button>}
-          {detail.workflow.modifiable && <Button asChild variant="outline"><Link to={manageLink("edit").pathname} state={manageLink("edit").state}>Modificar</Link></Button>}
-          {canStay && detail.workflow.can_arrive && <Button asChild variant="outline"><Link to={manageLink("arrival").pathname} state={manageLink("arrival").state}>Registrar entrada</Link></Button>}
-          {detail.workflow.can_cancel && <Button asChild variant="outline"><Link to={manageLink("cancel").pathname} state={manageLink("cancel").state}>Cancelar / no presentación</Link></Button>}
+          {detail.booking.status === "Hold" && <Button disabled={busy} onClick={() => void confirmHold(detailName, detail.workflow.modified)}>Confirmar retención</Button>}
+          {detail.workflow.modifiable && <Button variant="outline" onClick={() => setWorkflow({ booking: detailName,
+            action: "edit" })}>Modificar</Button>}
+          {canStay && detail.workflow.can_arrive && <Button variant="outline" onClick={() => setWorkflow({ booking: detailName,
+            action: "arrival" })}>Registrar entrada</Button>}
+          {detail.workflow.can_cancel && <Button variant="outline" onClick={() => setWorkflow({ booking: detailName,
+            action: "cancel" })}>Cancelar / no presentación</Button>}
         </div>
       </>}
     </CardContent></Card>}
+    {workflow && <DialogPrimitive.Root open onOpenChange={(open) => { if (!open) setWorkflow(null) }}>
+      <DialogPrimitive.Portal><DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/45" />
+        <DialogPrimitive.Content className="fixed inset-y-0 right-0 z-50 flex w-full flex-col border-l bg-background shadow-2xl outline-none sm:max-w-3xl"
+          aria-describedby="reservation-workflow-description">
+          <header className="flex items-start justify-between gap-3 border-b px-4 py-4 sm:px-6">
+            <div><DialogPrimitive.Title className="text-xl font-semibold">{workflow.action === "edit" ? "Modificar" :
+              workflow.action === "cancel" ? "Cancelar" : "Registrar entrada de"} reserva {workflow.booking}</DialogPrimitive.Title>
+              <DialogPrimitive.Description id="reservation-workflow-description" className="text-sm text-muted-foreground">
+                Revise los datos antes de confirmar la operación.
+              </DialogPrimitive.Description></div>
+            <DialogPrimitive.Close asChild><Button variant="ghost" size="icon" aria-label="Cerrar operación"><X size={18} /></Button></DialogPrimitive.Close>
+          </header>
+          <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4 sm:px-6">
+            <Reception key={`${property.name}:${workflow.booking}:${workflow.action}`} property={property}
+              provider={provider} canApprove={false} canSetup={false} canManageGuests={false}
+              canStay={canStay} embeddedSection={workflow.action === "edit" ? "reservation" : "arrivals"}
+              initialBooking={{ property: property.name, name: workflow.booking, action: workflow.action }}
+              onChanged={() => setRevision((value) => value + 1)} />
+          </div>
+        </DialogPrimitive.Content>
+      </DialogPrimitive.Portal>
+    </DialogPrimitive.Root>}
   </div>
 }
