@@ -21,6 +21,12 @@ type Sale = { name: string; creation: string; customer: string;
   currency: string; status: string; sales_invoice: string; credit_note: string | null;
   payment: { method: string; amount: number; currency: string; shift: string } | null }
 type SalePage = { rows: Sale[]; has_more: boolean }
+type HistoricalSale = { name: string; creation: string; customer_name: string;
+  item_name: string; quantity: number; amount: number; currency: string;
+  status: string; sales_invoice: string; credit_note: string | null;
+  document_number: string; credit_number: string | null;
+  payment: { amount: number; currency: string } | null }
+type HistoricalPage = { rows: HistoricalSale[]; has_more: boolean }
 type Quote = { customer: string; item: string; quantity: string; rate: string;
   total: string; currency: string; method: string; payment_amount: string;
   payment_currency: string; exchange_rate: string; acceptance: string;
@@ -32,6 +38,7 @@ const PAGE_LENGTH = 25
 const selectClass = "h-9 w-full rounded-md border border-border bg-white px-2 text-sm"
 const errorText = (issue: unknown) => issue instanceof Error ? issue.message : "No se pudo completar la operación."
 const invoicePrint = (name: string) => `/printview?doctype=${encodeURIComponent("Sales Invoice")}&name=${encodeURIComponent(name)}`
+const pmsPrint = (name: string) => `/printview?doctype=${encodeURIComponent("HS PMS Fiscal Document")}&name=${encodeURIComponent(name)}&format=${encodeURIComponent("HS Documento fiscal PMS")}`
 const statusLabels: Record<string, string> = { Delivered: "Entregada", Returned: "Devuelta" }
 
 export function ErpDirectSales({ property, canApprove }: { property: Property; canApprove: boolean }) {
@@ -60,6 +67,8 @@ export function ErpDirectSales({ property, canApprove }: { property: Property; c
   const [historyOffset, setHistoryOffset] = useState(0)
   const [historyRevision, setHistoryRevision] = useState(0)
   const [history, setHistory] = useState<SalePage | null>(null)
+  const [historicalOffset, setHistoricalOffset] = useState(0)
+  const [historical, setHistorical] = useState<HistoricalPage | null>(null)
   const [returnSale, setReturnSale] = useState("")
   const [returnShift, setReturnShift] = useState("")
   const [returnReason, setReturnReason] = useState("")
@@ -113,6 +122,19 @@ export function ErpDirectSales({ property, canApprove }: { property: Property; c
     return () => controller.abort()
   }, [property.name, section, historySearch, historyOffset, historyRevision])
 
+  useEffect(() => {
+    if (section !== "history") return
+    const controller = new AbortController()
+    setHistorical(null)
+    call<HistoricalPage>("pms_direct_sale_history", { property_name: property.name,
+      search: historySearch, offset: String(historicalOffset),
+      page_length: String(PAGE_LENGTH), returnable: "0",
+    }, controller.signal).then((result) => {
+      if (!controller.signal.aborted) setHistorical(result)
+    }).catch((issue: unknown) => { if (!controller.signal.aborted) setError(errorText(issue)) })
+    return () => controller.abort()
+  }, [property.name, section, historySearch, historicalOffset, historyRevision])
+
   const selectedMethod = options?.methods.find((row) => row.name === method)
   const selectedReturn = history?.rows.find((row) => row.name === returnSale)
   const invalidate = () => { setQuote(null); setIssued(null); setError("") }
@@ -122,7 +144,7 @@ export function ErpDirectSales({ property, canApprove }: { property: Property; c
     event.preventDefault(); setCustomerOffset(0); setCustomerSearch(customerInput.trim())
   }
   function searchHistory(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault(); setHistoryOffset(0); setHistorySearch(historyInput.trim())
+    event.preventDefault(); setHistoryOffset(0); setHistoricalOffset(0); setHistorySearch(historyInput.trim())
     setReturnSale(""); setReturnKey("")
   }
   async function review(event: FormEvent<HTMLFormElement>) {
@@ -225,5 +247,18 @@ export function ErpDirectSales({ property, canApprove }: { property: Property; c
         <label className="block space-y-1"><span>Motivo</span><Input required maxLength={500} value={returnReason} onChange={(event) => { setReturnReason(event.target.value); setReturnKey("") }} /></label>
         <div className="flex gap-2"><Button disabled={busy || !returnShift}>Confirmar devolución</Button><Button type="button" variant="outline" onClick={() => setReturnSale("")}>Cancelar</Button></div></form>}
     </CardContent></Card>}
+    {section === "history" && <Card><CardHeader><CardTitle>Ventas PMS anteriores al corte</CardTitle>
+      <CardDescription>Consulta e impresión de documentos originales. Para devolver una venta PMS anterior al corte, solicite revisión de Gerencia y Contabilidad.</CardDescription></CardHeader>
+      <CardContent className="space-y-3">{!historical ? <Skeleton className="h-28" /> : <>
+        <div className="space-y-2">{historical.rows.map((row) => <div key={row.name} className="rounded-md border p-3 text-sm">
+          <div className="flex flex-wrap justify-between gap-2"><div><strong>{row.document_number}</strong><p>{row.customer_name} · {row.item_name} × {row.quantity}</p>
+            <p className="text-xs text-muted-foreground">{row.name} · {statusLabels[row.status] || row.status} · PMS histórico · {new Date(row.creation).toLocaleString("es-NI")}</p></div>
+            <p>{row.currency} {row.amount}{row.payment && <span className="block text-xs text-muted-foreground">Cobro {row.payment.currency} {row.payment.amount}</span>}</p></div>
+          <div className="mt-2 flex flex-wrap gap-2"><Button asChild size="sm" variant="outline"><a href={pmsPrint(row.sales_invoice)} target="_blank" rel="noopener noreferrer">Factura PMS</a></Button>
+            {row.credit_note && <Button asChild size="sm" variant="outline"><a href={pmsPrint(row.credit_note)} target="_blank" rel="noopener noreferrer">Nota PMS {row.credit_number}</a></Button>}</div>
+        </div>)}{!historical.rows.length && <p className="text-sm text-muted-foreground">No hay ventas PMS anteriores al corte con ese criterio.</p>}</div>
+        <div className="flex gap-2"><Button variant="outline" disabled={!historicalOffset} onClick={() => setHistoricalOffset(Math.max(0, historicalOffset - PAGE_LENGTH))}>Anteriores</Button>
+          <Button variant="outline" disabled={!historical.has_more} onClick={() => setHistoricalOffset(historicalOffset + PAGE_LENGTH)}>Siguientes</Button></div>
+      </>}</CardContent></Card>}
   </div>
 }

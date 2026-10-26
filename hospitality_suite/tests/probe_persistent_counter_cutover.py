@@ -118,6 +118,16 @@ def inspect():
             returned.status != "Returned" or sale.folio or returned.folio):
         frappe.throw("The direct sales changed property, state, or scope")
     property_name = sale.property
+    history = api.pms_direct_sale_history(property_name,
+        search="HIST-", page_length=25)
+    if {row["name"] for row in history["rows"]} != {SALE, RETURNED_SALE}:
+        frappe.throw("The ERPNext view lost historical PMS counter sales")
+    try:
+        api.pms_direct_sale_history(property_name, returnable=1)
+    except frappe.ValidationError:
+        pass
+    else:
+        frappe.throw("The ERPNext view offered a PMS sale as natively returnable")
     invoice = frappe.get_doc("HS PMS Fiscal Document", sale.pms_fiscal_invoice)
     returned_invoice = frappe.get_doc("HS PMS Fiscal Document",
         returned.pms_fiscal_invoice)

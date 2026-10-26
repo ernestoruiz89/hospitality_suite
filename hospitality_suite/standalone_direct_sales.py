@@ -98,10 +98,16 @@ def product_page(property_name, search="", offset=0, page_length=25):
 
 def history(property_name, search="", offset=0, page_length=25, returnable=0):
     prop = require(property_name, "finance")
-    require_pms(prop)
+    from hospitality_suite.standalone_accounting import provider
+
+    active_provider = provider()
+    if active_provider not in ("pms", "erpnext"):
+        frappe.throw(_("El historial de ventas PMS no está disponible"))
     start, length, pattern = _page(search, offset, page_length)
     if str(returnable) not in ("0", "1"):
         frappe.throw(_("Revise el filtro de devoluciones"))
+    if active_provider == "erpnext" and str(returnable) == "1":
+        frappe.throw(_("La devolución de ventas PMS anteriores al corte requiere un flujo histórico"))
     rows = frappe.db.sql(
         "SELECT s.name, s.creation, s.pms_party AS customer, "
         "p.party_name AS customer_name, s.pms_product AS item, "
