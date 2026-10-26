@@ -5,7 +5,7 @@ from hashlib import sha256
 
 import frappe
 from frappe import _
-from frappe.utils import nowdate
+from frappe.utils import now_datetime, nowdate
 
 from hospitality_suite import accounting
 from hospitality_suite.cashier import expected
@@ -274,3 +274,167 @@ def return_sale(prop, data):
     return {"service": service.name, "credit_note": credit.name,
         "refund": refund.name,
         "stock_entry": stock_entry.name if stock_entry else None}
+
+
+def _reversal_source(prop, data):
+    if provider() != "erpnext":
+        frappe.throw(_("Esta corrección requiere contabilidad ERPNext"))
+    require(prop.name, "approve")
+    service = locked_doc("HS Service Request", data.get("service"))
+    assert_version(service, data.get("modified"))
+    if (service.property != prop.name or service.company != prop.company or
+            service.status != "Returned" or service.stay or service.folio or
+            not service.pms_receivable or not service.pms_fiscal_invoice or
+            service.pms_fiscal_credit or service.sales_invoice or
+            not service.erp_cutover_snapshot or not service.erp_cutover_sha256 or
+            sha256(service.erp_cutover_snapshot.encode()).hexdigest() !=
+                service.erp_cutover_sha256 or
+            not service.credit_note or not service.erp_return_refund):
+        frappe.throw(_("Seleccione una devolución PMS histórica vigente en ERPNext"))
+    proof = frappe.parse_json(service.erp_cutover_snapshot)
+    if (not isinstance(proof, dict) or proof.get("source") != service.name or
+            proof.get("property") != prop.name or
+            proof.get("company") != prop.company or
+            proof.get("source_receivable") != service.pms_receivable or
+            proof.get("source_invoice") != service.pms_fiscal_invoice or
+            bool(proof.get("stock")) != bool(service.return_stock_entry)):
+        frappe.throw(_("La prueba de corte de la venta no concilia"))
+    credit = locked_doc("Sales Invoice", service.credit_note)
+    refund = locked_doc("HS Payment", service.erp_return_refund)
+    pe = locked_doc("Payment Entry", refund.payment_entry)
+    stock = (locked_doc("Stock Entry", service.return_stock_entry)
+        if service.return_stock_entry else None)
+    if (credit.docstatus != 1 or not credit.is_return or
+            credit.company != prop.company or credit.hs_property != prop.name or
+            credit.customer != service.customer or
+            _value(-credit.grand_total) != _value(service.amount) or
+            refund.status != "Posted" or refund.kind != "Refund" or
+            refund.property != prop.name or refund.company != prop.company or
+            refund.service != service.name or
+            refund.source_payment != proof.get("source_payment") or
+            refund.sales_invoice != credit.name or
+            pe.docstatus != 1 or pe.company != prop.company or
+            pe.hs_property != prop.name or pe.payment_type != "Pay" or
+            pe.party != service.customer or
+            not any(row.reference_doctype == "Sales Invoice" and
+                row.reference_name == credit.name and
+                _value(-row.allocated_amount) == _value(service.amount)
+                for row in pe.references) or
+            (stock and (stock.docstatus != 1 or
+                stock.company != prop.company or
+                stock.hs_property != prop.name or
+                stock.stock_entry_type != "Material Receipt"))):
+        frappe.throw(_("La devolución ya cambió; revise sus documentos"))
+    if (str(refund.business_date) != str(prop.business_date) or
+            frappe.db.exists("HS Daily Close", {"property": prop.name,
+                "business_date": prop.business_date, "status": "Closed"})):
+        frappe.throw(_("Solo puede corregir una devolución en la fecha operativa abierta"))
+    shift = locked_doc("HS Shift", refund.shift) if refund.shift else None
+    if shift and (shift.property != prop.name or shift.company != prop.company or
+            shift.status != "Open" or pe.hs_shift != shift.name):
+        frappe.throw(_("El turno del reembolso debe continuar abierto"))
+    if stock:
+        # A later movement can depend on the receipt's valuation. Correct it
+        # before further movements of the same article in this warehouse.
+        later = frappe.db.sql(
+            "SELECT later.name FROM `tabStock Ledger Entry` own "
+            "JOIN `tabStock Ledger Entry` later ON "
+            "later.item_code=own.item_code AND later.warehouse=own.warehouse "
+            "WHERE own.voucher_type='Stock Entry' AND own.voucher_no=%s "
+            "AND own.is_cancelled=0 AND later.is_cancelled=0 "
+            "AND later.voucher_no<>%s AND later.creation>own.creation LIMIT 1",
+            (stock.name, stock.name))
+        if later:
+            frappe.throw(_("Existen movimientos de inventario posteriores al reingreso"))
+    history = frappe.parse_json(service.erp_return_corrections) if (
+        service.erp_return_corrections) else []
+    if (not isinstance(history, list) or
+            bool(service.erp_return_corrections) !=
+                bool(service.erp_return_corrections_sha256) or
+            (service.erp_return_corrections and
+             sha256(service.erp_return_corrections.encode()).hexdigest() !=
+                service.erp_return_corrections_sha256)):
+        frappe.throw(_("El historial de correcciones no concilia"))
+    return service, proof, credit, refund, pe, stock, shift, history
+
+
+def reversal_quote(prop, data):
+    if not isinstance(data, dict) or set(data) != {"service", "modified", "reason"}:
+        frappe.throw(_("Revise la corrección de la devolución histórica"))
+    reason = _text(data["reason"], "el motivo", 500, required=True)
+    service, proof, credit, refund, pe, stock, shift, history = (
+        _reversal_source(prop, data))
+    signature = {"service": service.name, "modified": str(service.modified),
+        "snapshot_sha256": service.erp_cutover_sha256,
+        "history_sha256": service.erp_return_corrections_sha256,
+        "credit": credit.name, "credit_modified": str(credit.modified),
+        "refund": refund.name, "refund_modified": str(refund.modified),
+        "payment_entry": pe.name, "payment_modified": str(pe.modified),
+        "stock_entry": stock.name if stock else None,
+        "stock_modified": str(stock.modified) if stock else None,
+        "shift": shift.name if shift else None,
+        "shift_modified": str(shift.modified) if shift else None,
+        "business_date": str(prop.business_date), "reason": reason}
+    return {"service": service.name, "original_invoice": proof["document_number"],
+        "credit_note": credit.name, "refund": refund.name,
+        "payment_entry": pe.name, "stock_entry": stock.name if stock else None,
+        "refund_currency": refund.currency, "refund_amount": str(refund.amount),
+        "business_date": str(prop.business_date), "correction_count": len(history),
+        "reason": reason,
+        "acceptance": sha256(canonical(signature).encode()).hexdigest()}
+
+
+def reverse_return(prop, data):
+    if not isinstance(data, dict) or set(data) != {
+            "service", "modified", "reason", "acceptance"}:
+        frappe.throw(_("Revise la corrección de la devolución histórica"))
+    accepted = reversal_quote(prop, {key: value for key, value in data.items()
+        if key != "acceptance"})
+    if accepted["acceptance"] != data["acceptance"]:
+        frappe.throw(_("Cambió la devolución; revise la corrección"))
+    service, proof, credit, refund, pe, stock, shift, history = (
+        _reversal_source(prop, data))
+    before = getattr(frappe.local, "hs_erp_historical_direct_reversal", None)
+    frappe.local.hs_erp_historical_direct_reversal = service.name
+    try:
+        for doc in (pe, credit, stock):
+            if not doc:
+                continue
+            # Payment Entry cancellation updates the credit's outstanding
+            # amount and modified timestamp through ERPNext reconciliation.
+            doc.reload()
+            if doc.docstatus != 1:
+                frappe.throw(_("Cambió un comprobante de la devolución"))
+            doc.hs_correction_reason = accepted["reason"]
+            doc.flags.ignore_permissions = True
+            doc.cancel()
+        refund.reload()
+        if refund.status != "Cancelled":
+            frappe.throw(_("El reembolso no fue cancelado por ERPNext"))
+        history.append({"credit_note": credit.name, "refund": refund.name,
+            "payment_entry": pe.name, "stock_entry": stock.name if stock else None,
+            "source_payment": proof["source_payment"],
+            "business_date": str(prop.business_date),
+            "actor": frappe.session.user, "at": str(now_datetime()),
+            "reason": accepted["reason"]})
+        service.status = "Delivered"
+        service.credit_note = None
+        service.erp_return_refund = None
+        service.return_stock_entry = None
+        service.erp_return_corrections = canonical(history)
+        service.erp_return_corrections_sha256 = sha256(
+            service.erp_return_corrections.encode()).hexdigest()
+        service.save()
+    finally:
+        frappe.local.hs_erp_historical_direct_reversal = before
+    audit(prop, "erp_historical_direct_sale_return_reversal", service,
+        accepted["reason"], {"credit_note": credit.name,
+            "refund": refund.name, "payment_entry": pe.name,
+            "stock_entry": stock.name if stock else None,
+            "source_invoice": proof["source_invoice"],
+            "correction_count": len(history)})
+    return {"service": service.name, "status": service.status,
+        "credit_note": credit.name, "refund": refund.name,
+        "payment_entry": pe.name,
+        "stock_entry": stock.name if stock else None,
+        "correction_count": len(history)}

@@ -103,6 +103,7 @@ COMMANDS = {
     "pms_direct_sale": ("finance", standalone_direct_sales.sell),
     "pms_direct_sale_return": ("approve", standalone_direct_sales.return_sale),
     "erp_historical_direct_sale_return": ("approve", erp_historical_direct_sales.return_sale),
+    "erp_historical_direct_sale_return_reversal": ("approve", erp_historical_direct_sales.reverse_return),
     "pms_issue_credit_note": ("approve", standalone_fiscal.issue_credit),
     "pms_warehouse": ("setup", standalone_inventory.create_warehouse),
     "pms_opening_stock": ("inventory", standalone_inventory.opening_stock),
@@ -251,6 +252,7 @@ ERP_ONLY_ACTIONS = frozenset({
     "apply_customer_advance", "open_shift", "close_shift",
     "credit_note", "apply_guarantee", "withdrawal",
     "direct_sale", "return_direct_sale", "erp_historical_day_pass_return",
+    "erp_historical_direct_sale_return_reversal",
     "cash_expense", "cash_expense_reviewed",
     "settle_payment", "purchase_order", "receive_purchase",
     "purchase_invoice", "supplier_payment", "move_stock", "adjust_stock",
@@ -1004,6 +1006,12 @@ def pms_direct_sale_return_quote(property_name, data):
 def erp_historical_direct_sale_return_quote(property_name, data):
     prop = require(property_name, "approve")
     return erp_historical_direct_sales.quote(prop, payload(data))
+
+
+@frappe.whitelist()
+def erp_historical_direct_sale_return_reversal_quote(property_name, data):
+    prop = require(property_name, "approve")
+    return erp_historical_direct_sales.reversal_quote(prop, payload(data))
 
 
 @frappe.whitelist()

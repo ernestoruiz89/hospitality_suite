@@ -1292,6 +1292,8 @@ class ServiceRequestDocument(ScopedDocument):
                         frappe.throw(_("La devolución ERPNext no conserva nota, reembolso e inventario"))
         previous = self.get_doc_before_save()
         if previous and previous.pms_receivable:
+            from hospitality_suite.service import canonical
+
             immutable = ("pms_receivable", "pms_party", "pms_product",
                 "pms_fiscal_invoice", "sales_invoice", "stock_entry",
                 "customer", "item", "warehouse", "quantity", "amount",
@@ -1301,18 +1303,55 @@ class ServiceRequestDocument(ScopedDocument):
             native_transition = (previous.status == "Delivered" and
                 self.status == "Returned" and
                 getattr(frappe.local, "hs_erp_historical_direct_return", False))
+            native_reversal = (previous.status == "Returned" and
+                self.status == "Delivered" and not previous.pms_fiscal_credit and
+                getattr(frappe.local, "hs_erp_historical_direct_reversal", None)
+                    == self.name)
+            old_history = (frappe.parse_json(previous.erp_return_corrections)
+                if previous.erp_return_corrections else [])
+            new_history = (frappe.parse_json(self.erp_return_corrections)
+                if self.erp_return_corrections else [])
+            if (not isinstance(old_history, list) or
+                    not isinstance(new_history, list) or
+                    bool(self.erp_return_corrections) !=
+                        bool(self.erp_return_corrections_sha256) or
+                    (self.erp_return_corrections and
+                     sha256(self.erp_return_corrections.encode()).hexdigest() !=
+                        self.erp_return_corrections_sha256)):
+                frappe.throw(_("El historial de correcciones no concilia"))
+            if native_reversal:
+                last = new_history[-1] if new_history else None
+                if (new_history[:-1] != old_history or not isinstance(last, dict) or
+                        last.get("credit_note") != previous.credit_note or
+                        last.get("refund") != previous.erp_return_refund or
+                        last.get("stock_entry") != previous.return_stock_entry or
+                        not last.get("reason") or
+                        last.get("actor") != frappe.session.user or
+                        any(frappe.db.get_value(dt, name, "docstatus") != 2
+                            for dt, name in (("Sales Invoice", previous.credit_note),
+                                             ("Payment Entry", last.get("payment_entry")),
+                                             ("Stock Entry", previous.return_stock_entry))
+                            if name) or
+                        frappe.db.get_value("HS Payment",
+                            previous.erp_return_refund, "status") != "Cancelled"):
+                    frappe.throw(_("La corrección no conserva sus documentos cancelados"))
+            elif new_history != old_history or (
+                    self.erp_return_corrections_sha256 or "") != (
+                        previous.erp_return_corrections_sha256 or ""):
+                frappe.throw(_("El historial de correcciones es inmutable"))
             if (any(str(previous.get(field) or "") != str(self.get(field) or "")
                     for field in immutable) or
                     (previous.credit_note != self.credit_note or
                      previous.erp_return_refund != self.erp_return_refund or
                      previous.return_stock_entry != self.return_stock_entry)
-                        and not native_transition and
+                        and not native_transition and not native_reversal and
                         (previous.credit_note or self.credit_note or
                          previous.erp_return_refund or self.erp_return_refund) or
                     previous.status == "Returned" and (
-                        self.status != "Returned" or
+                        (self.status != "Returned" and not native_reversal) or
                         previous.pms_fiscal_credit != self.pms_fiscal_credit or
-                        previous.return_stock_entry != self.return_stock_entry) or
+                        (previous.return_stock_entry != self.return_stock_entry and
+                         not native_reversal)) or
                     previous.status == "Delivered" and
                         self.status not in ("Delivered", "Returned")):
                 frappe.throw(_("Los términos contabilizados de la venta directa son inmutables"))

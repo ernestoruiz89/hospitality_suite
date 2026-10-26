@@ -17,6 +17,7 @@ BACKUP_FILE = "direct-return-final-backup-manifest.json"
 REFERENCE = "HS-PERSISTENT-DIRECT-RETURN-20261026"
 RETURN_KEY = "persistent-direct-return-20261026"
 SHIFT_KEY = "persistent-direct-return-shift-20261026"
+CORRECTION_KEY = "persistent-direct-return-correction-20261026"
 
 
 def _site(expected_provider):
@@ -200,3 +201,72 @@ def inspect_return():
         "fiscal_invoice": fiscal.document_number,
         "native_credit_note": credit.name, "refund": refund.name,
         "original_payment": proof["source_payment"]}
+
+
+def reverse_return():
+    if frappe.local.site != SITE or provider() != "erpnext":
+        frappe.throw("Use only the isolated committed cutover site")
+    frappe.set_user("Administrator")
+    sale = frappe.get_doc("HS Service Request", SALE)
+    if sale.status != "Returned" or not sale.credit_note or not sale.erp_return_refund:
+        frappe.throw("The committed historical return is not active")
+    refund = frappe.get_doc("HS Payment", sale.erp_return_refund)
+    shift = frappe.get_doc("HS Shift", refund.shift)
+    request = {"service": sale.name, "modified": str(sale.modified),
+        "reason": "Corrección persistente de devolución sintética"}
+    quote = api.erp_historical_direct_sale_return_reversal_quote(
+        sale.property, canonical(request))
+    submitted = {**request, "acceptance": quote["acceptance"]}
+    first = api.execute(sale.property,
+        "erp_historical_direct_sale_return_reversal", CORRECTION_KEY,
+        submitted)
+    second = api.execute(sale.property,
+        "erp_historical_direct_sale_return_reversal", CORRECTION_KEY,
+        submitted)
+    sale.reload()
+    refund.reload()
+    if (first != second or sale.status != "Delivered" or
+            sale.credit_note or sale.erp_return_refund or
+            refund.status != "Cancelled" or
+            frappe.db.get_value("Sales Invoice", first["credit_note"],
+                "docstatus") != 2 or
+            frappe.db.get_value("Payment Entry", first["payment_entry"],
+                "docstatus") != 2 or
+            cashier.expected(shift).get(sale.currency) != "100.00" or
+            sha256(sale.erp_return_corrections.encode()).hexdigest() !=
+                sale.erp_return_corrections_sha256):
+        frappe.throw("The persistent historical correction did not reconcile")
+    frappe.db.commit()
+    return {"persistent_direct_return_reversed": True,
+        "service": sale.name, "credit_note": first["credit_note"],
+        "refund": first["refund"],
+        "cash_expected": cashier.expected(shift).get(sale.currency),
+        "retry_identical": True}
+
+
+def inspect_reversal():
+    if frappe.local.site != SITE or provider() != "erpnext":
+        frappe.throw("Use only the isolated committed cutover site")
+    frappe.set_user("Administrator")
+    sale = frappe.get_doc("HS Service Request", SALE)
+    proof = frappe.parse_json(sale.erp_cutover_snapshot)
+    history = frappe.parse_json(sale.erp_return_corrections)
+    eligible = api.pms_direct_sale_history(sale.property, returnable=1)
+    fiscal = frappe.get_doc("HS PMS Fiscal Document", sale.pms_fiscal_invoice)
+    if (sale.status != "Delivered" or sale.credit_note or
+            sale.erp_return_refund or len(history) != 1 or
+            history[0]["credit_note"] !=
+                frappe.db.get_value("Sales Invoice", {
+                    "hs_property": sale.property, "is_return": 1,
+                    "docstatus": 2}, "name") or
+            not any(row["name"] == sale.name and
+                row["correction_count"] == 1 for row in eligible["rows"]) or
+            fiscal.document_number != proof["document_number"] or
+            fiscal.document_number not in frappe.get_print(
+                "HS PMS Fiscal Document", fiscal.name,
+                print_format="HS Documento fiscal PMS")):
+        frappe.throw("The committed correction lost its fiscal or audit trail")
+    return {"persistent_direct_correction_verified": True,
+        "fiscal_invoice": fiscal.document_number,
+        "cancelled_credit_note": history[0]["credit_note"],
+        "returnable_again": True}

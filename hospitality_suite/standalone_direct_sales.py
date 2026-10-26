@@ -115,6 +115,7 @@ def history(property_name, search="", offset=0, page_length=25, returnable=0):
         "s.pms_fiscal_credit AS credit_note, "
         "s.pms_receivable, s.stock_entry, s.credit_note AS native_credit_note, "
         "s.erp_return_refund, s.return_stock_entry, "
+        "s.erp_return_corrections, "
         "invoice.document_number, credit.document_number AS credit_number "
         "FROM `tabHS Service Request` s "
         "JOIN `tabHS PMS Receivable` r ON r.name=s.pms_receivable "
@@ -147,8 +148,11 @@ def history(property_name, search="", offset=0, page_length=25, returnable=0):
         limit_page_length=50
     ) if names else []
     by_service = {row.service: row for row in payments}
-    return {"rows": [{**row, "payment": by_service.get(row.name)}
-        for row in visible], "offset": start, "has_more": len(rows) > length}
+    for row in visible:
+        history = row.pop("erp_return_corrections")
+        row.correction_count = len(frappe.parse_json(history)) if history else 0
+        row.payment = by_service.get(row.name)
+    return {"rows": visible, "offset": start, "has_more": len(rows) > length}
 
 
 def _money(value):

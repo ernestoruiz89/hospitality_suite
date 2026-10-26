@@ -2840,6 +2840,122 @@ def run(include_live_day_pass=False, prior_day_pass_credit=False,
                             raise
                     else:
                         frappe.throw("A historical return document could be cancelled")
+                frappe.db.savepoint("hs_historical_correction_closed_shift")
+                try:
+                    frappe.db.set_value("HS Shift", refund_shift["shift"],
+                        "status", "Review", update_modified=False)
+                    blocked_request = {"service": historical_sale.name,
+                        "modified": str(historical_sale.modified),
+                        "reason": "Intento con turno cerrado"}
+                    try:
+                        suite_api.erp_historical_direct_sale_return_reversal_quote(
+                            prop.name, canonical(blocked_request))
+                    except frappe.ValidationError as exc:
+                        if "turno" not in str(exc).lower():
+                            raise
+                    else:
+                        frappe.throw("A closed shift allowed historical correction")
+                finally:
+                    frappe.db.rollback(
+                        save_point="hs_historical_correction_closed_shift")
+                frappe.db.savepoint("hs_historical_correction_closed_date")
+                try:
+                    current_business = frappe.db.get_value("HS Property",
+                        prop.name, "business_date")
+                    frappe.db.set_value("HS Property", prop.name,
+                        "business_date", str(frappe.utils.getdate(
+                            current_business) + timedelta(days=1)),
+                        update_modified=False)
+                    try:
+                        suite_api.erp_historical_direct_sale_return_reversal_quote(
+                            prop.name, canonical(blocked_request))
+                    except frappe.ValidationError as exc:
+                        if "fecha operativa" not in str(exc).lower():
+                            raise
+                    else:
+                        frappe.throw("A later business date allowed historical correction")
+                finally:
+                    frappe.db.rollback(
+                        save_point="hs_historical_correction_closed_date")
+                correction_request = {"service": historical_sale.name,
+                    "modified": str(historical_sale.modified),
+                    "reason": "Corrección integral de devolución histórica"}
+                correction_quote = (
+                    suite_api.erp_historical_direct_sale_return_reversal_quote(
+                        prop.name, canonical(correction_request)))
+                correction_key = "historical-counter-correction-" + suffix
+                correction = suite_api.execute(prop.name,
+                    "erp_historical_direct_sale_return_reversal",
+                    correction_key, {**correction_request,
+                        "acceptance": correction_quote["acceptance"]})
+                if (suite_api.execute(prop.name,
+                        "erp_historical_direct_sale_return_reversal",
+                        correction_key, {**correction_request,
+                            "acceptance": correction_quote["acceptance"]}) !=
+                            correction):
+                    frappe.throw("The historical correction retried twice")
+                historical_sale.reload()
+                native_refund.reload()
+                if (historical_sale.status != "Delivered" or
+                        historical_sale.credit_note or
+                        historical_sale.erp_return_refund or
+                        native_refund.status != "Cancelled" or
+                        frappe.db.get_value("Sales Invoice", native_credit.name,
+                            "docstatus") != 2 or
+                        frappe.db.get_value("Payment Entry", native_payment.name,
+                            "docstatus") != 2 or
+                        sha256(historical_sale.erp_return_corrections.encode()).hexdigest()
+                            != historical_sale.erp_return_corrections_sha256 or
+                        len(frappe.parse_json(
+                            historical_sale.erp_return_corrections)) != 1):
+                    frappe.throw("The historical counter correction did not reconcile")
+                stock_correction_request = {"service": stock_service.name,
+                    "modified": str(stock_service.modified),
+                    "reason": "Corrección de devolución con reingreso"}
+                stock_correction_quote = (
+                    suite_api.erp_historical_direct_sale_return_reversal_quote(
+                        prop.name, canonical(stock_correction_request)))
+                stock_correction = suite_api.execute(prop.name,
+                    "erp_historical_direct_sale_return_reversal",
+                    "historical-stock-correction-" + suffix,
+                    {**stock_correction_request,
+                     "acceptance": stock_correction_quote["acceptance"]})
+                stock_service.reload()
+                stock_refund = frappe.get_doc("HS Payment", stock_return["refund"])
+                stock_now = Decimal(str(frappe.db.get_value("Bin", {
+                    "warehouse": target_warehouse, "item_code": item.name},
+                    "actual_qty") or 0))
+                if (stock_correction["stock_entry"] != restored.name or
+                        stock_service.status != "Delivered" or
+                        stock_service.return_stock_entry or
+                        stock_refund.status != "Cancelled" or
+                        frappe.db.get_value("Stock Entry", restored.name,
+                            "docstatus") != 2 or stock_now != stock_before or
+                        frappe.db.exists("GL Entry", {"voucher_type": "Stock Entry",
+                            "voucher_no": restored.name, "is_cancelled": 0})):
+                    frappe.throw("The historical stock correction did not reconcile")
+                available_again = suite_api.pms_direct_sale_history(
+                    prop.name, returnable=1)
+                if {row["name"] for row in available_again["rows"]} != {
+                        historical_sale.name, stock_service.name}:
+                    frappe.throw("Corrected historical sales are not returnable")
+                historical_request["modified"] = str(historical_sale.modified)
+                repeat_quote = suite_api.erp_historical_direct_sale_return_quote(
+                    prop.name, canonical(historical_request))
+                repeated = suite_api.execute(prop.name,
+                    "erp_historical_direct_sale_return",
+                    "historical-counter-return-repeat-" + suffix,
+                    {**historical_request,
+                     "acceptance": repeat_quote["acceptance"]})
+                historical_sale.reload()
+                if (repeated["credit_note"] == native_credit.name or
+                        historical_sale.status != "Returned" or
+                        len(frappe.parse_json(
+                            historical_sale.erp_return_corrections)) != 1 or
+                        counter_sale["document_number"] not in frappe.get_print(
+                            "HS PMS Fiscal Document", counter_sale["invoice"],
+                            print_format="HS Documento fiscal PMS")):
+                    frappe.throw("The corrected sale could not be returned again")
             finally:
                 frappe.local.hs_cutover_rehearsal = previous_counter_flag
         finally:

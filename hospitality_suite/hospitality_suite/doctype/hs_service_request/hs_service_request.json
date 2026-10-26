@@ -175,6 +175,21 @@
    "read_only": 1
   },
   {
+   "fieldname": "erp_return_corrections",
+   "label": "Correcciones de devoluciones ERPNext",
+   "fieldtype": "Code",
+   "options": "JSON",
+   "read_only": 1,
+   "hidden": 1
+  },
+  {
+   "fieldname": "erp_return_corrections_sha256",
+   "label": "Huella de correcciones de devoluciones",
+   "fieldtype": "Data",
+   "read_only": 1,
+   "hidden": 1
+  },
+  {
    "fieldname": "notes",
    "label": "Observaciones",
    "fieldtype": "Small Text"
@@ -207,6 +222,8 @@
   "erp_cutover_snapshot",
   "erp_cutover_sha256",
   "erp_return_refund",
+  "erp_return_corrections",
+  "erp_return_corrections_sha256",
   "notes"
  ],
  "permissions": [

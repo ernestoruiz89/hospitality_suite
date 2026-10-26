@@ -298,6 +298,8 @@ SCHEMA = {
         f("erp_cutover_snapshot", "Code", "JSON", read_only=1, hidden=1),
         f("erp_cutover_sha256", read_only=1, hidden=1),
         link("erp_return_refund", "HS Payment", False, read_only=1),
+        f("erp_return_corrections", "Code", "JSON", read_only=1, hidden=1),
+        f("erp_return_corrections_sha256", read_only=1, hidden=1),
         f("notes", "Small Text")]),
     "HS Laundry Rate": dict(roles=MANAGERS+["HS Accountant","HS Receptionist"], fields=[*SCOPE,
         f("garment",required=True,label="Prenda"),select("service_type",["Wash & Iron","Dry Clean","Iron Only"]),

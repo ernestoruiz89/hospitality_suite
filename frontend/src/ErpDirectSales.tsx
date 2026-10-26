@@ -26,11 +26,16 @@ type HistoricalSale = { name: string; creation: string; customer_name: string;
   status: string; sales_invoice: string; credit_note: string | null;
   document_number: string; credit_number: string | null;
   modified: string; native_credit_note: string | null; erp_return_refund: string | null;
+  correction_count: number;
   payment: { amount: number; currency: string } | null }
 type HistoricalPage = { rows: HistoricalSale[]; has_more: boolean }
 type HistoricalReturnQuote = { original_invoice: string; total: string; currency: string;
   refund_amount: string; refund_currency: string; exchange_rate: string;
   stock_value: string | null; acceptance: string }
+type HistoricalCorrectionQuote = { original_invoice: string; credit_note: string;
+  payment_entry: string; stock_entry: string | null; refund_currency: string;
+  refund_amount: string; business_date: string; correction_count: number;
+  acceptance: string }
 type Quote = { customer: string; item: string; quantity: string; rate: string;
   total: string; currency: string; method: string; payment_amount: string;
   payment_currency: string; exchange_rate: string; acceptance: string;
@@ -84,6 +89,10 @@ export function ErpDirectSales({ property, canApprove }: { property: Property; c
   const [historicalReason, setHistoricalReason] = useState("")
   const [historicalQuote, setHistoricalQuote] = useState<HistoricalReturnQuote | null>(null)
   const [historicalKey, setHistoricalKey] = useState("")
+  const [historicalCorrection, setHistoricalCorrection] = useState("")
+  const [correctionReason, setCorrectionReason] = useState("")
+  const [correctionQuote, setCorrectionQuote] = useState<HistoricalCorrectionQuote | null>(null)
+  const [correctionKey, setCorrectionKey] = useState("")
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState("")
   const [notice, setNotice] = useState("")
@@ -149,6 +158,7 @@ export function ErpDirectSales({ property, canApprove }: { property: Property; c
   const selectedMethod = options?.methods.find((row) => row.name === method)
   const selectedReturn = history?.rows.find((row) => row.name === returnSale)
   const selectedHistorical = historical?.rows.find((row) => row.name === historicalReturn)
+  const selectedCorrection = historical?.rows.find((row) => row.name === historicalCorrection)
   const selectedHistoricalMethod = options?.methods.find((row) => row.name === historicalMethod)
   const invalidate = () => { setQuote(null); setIssued(null); setError("") }
   const saleData = () => ({ customer, item, quantity, method, shift,
@@ -159,6 +169,7 @@ export function ErpDirectSales({ property, canApprove }: { property: Property; c
   function searchHistory(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setHistoryOffset(0); setHistoricalOffset(0); setHistorySearch(historyInput.trim())
     setReturnSale(""); setReturnKey(""); setHistoricalReturn(""); setHistoricalQuote(null)
+    setHistoricalCorrection(""); setCorrectionQuote(null)
   }
   async function review(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -232,6 +243,32 @@ export function ErpDirectSales({ property, canApprove }: { property: Property; c
     } catch (issue) { setError(errorText(issue)) }
     finally { setBusy(false) }
   }
+  const correctionData = () => ({ service: selectedCorrection?.name || "",
+    modified: selectedCorrection?.modified || "", reason: correctionReason.trim() })
+  async function reviewHistoricalCorrection(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    if (!canApprove || !selectedCorrection || !correctionReason.trim() || busy) return
+    setBusy(true); setError(""); setCorrectionQuote(null); setCorrectionKey("")
+    try {
+      const result = await call<HistoricalCorrectionQuote>(
+        "erp_historical_direct_sale_return_reversal_quote", {
+          property_name: property.name, data: JSON.stringify(correctionData()) })
+      setCorrectionQuote(result); setCorrectionKey(crypto.randomUUID())
+    } catch (issue) { setError(errorText(issue)) }
+    finally { setBusy(false) }
+  }
+  async function issueHistoricalCorrection() {
+    if (!selectedCorrection || !correctionQuote || !correctionKey || busy) return
+    setBusy(true); setError(""); setNotice("")
+    try {
+      await execute(property.name, "erp_historical_direct_sale_return_reversal",
+        { ...correctionData(), acceptance: correctionQuote.acceptance }, correctionKey)
+      setHistoricalCorrection(""); setCorrectionQuote(null); setCorrectionKey("")
+      setNotice(`Devolución ${correctionQuote.credit_note} corregida. La venta PMS vuelve a estar vigente.`)
+      setHistoryRevision((value) => value + 1)
+    } catch (issue) { setError(errorText(issue)) }
+    finally { setBusy(false) }
+  }
 
   return <div className="space-y-6">
     <div><h1 className="text-3xl font-semibold">Ventas directas</h1>
@@ -300,6 +337,8 @@ export function ErpDirectSales({ property, canApprove }: { property: Property; c
           <div className="mt-2 flex flex-wrap gap-2"><Button asChild size="sm" variant="outline"><a href={pmsPrint(row.sales_invoice)} target="_blank" rel="noopener noreferrer">Factura PMS</a></Button>
             {row.credit_note && <Button asChild size="sm" variant="outline"><a href={pmsPrint(row.credit_note)} target="_blank" rel="noopener noreferrer">Nota PMS {row.credit_number}</a></Button>}
             {row.native_credit_note && <Button asChild size="sm" variant="outline"><a href={invoicePrint(row.native_credit_note)} target="_blank" rel="noopener noreferrer">Nota ERPNext</a></Button>}
+            {row.correction_count > 0 && <span className="self-center text-xs text-muted-foreground">Correcciones: {row.correction_count}</span>}
+            {section === "history" && canApprove && row.status === "Returned" && row.native_credit_note && <Button size="sm" variant="outline" onClick={() => { setHistoricalCorrection(row.name); setCorrectionReason(""); setCorrectionQuote(null); setCorrectionKey("") }}>Corregir devolución</Button>}
             {section === "returns" && canApprove && <Button size="sm" variant="outline" onClick={() => { setHistoricalReturn(row.name); setHistoricalMethod(""); setHistoricalShift(""); setHistoricalReference(""); setHistoricalReason(""); setHistoricalQuote(null); setHistoricalKey("") }}>Devolver</Button>}</div>
         </div>)}{!historical.rows.length && <p className="text-sm text-muted-foreground">No hay ventas PMS anteriores al corte con ese criterio.</p>}</div>
         <div className="flex gap-2"><Button variant="outline" disabled={!historicalOffset} onClick={() => { setHistoricalOffset(Math.max(0, historicalOffset - PAGE_LENGTH)); setHistoricalReturn(""); setHistoricalQuote(null) }}>Anteriores</Button>
@@ -315,5 +354,14 @@ export function ErpDirectSales({ property, canApprove }: { property: Property; c
         {historicalQuote && <div className="space-y-2 rounded-md border border-primary/30 bg-white p-3"><p>Nota ERPNext: {historicalQuote.currency} {historicalQuote.total}. Reembolso: <strong>{historicalQuote.refund_currency} {historicalQuote.refund_amount}</strong>{historicalQuote.stock_value && ` · Inventario a reingresar: ${historicalQuote.currency} ${historicalQuote.stock_value}`}</p>
           <Button type="button" disabled={busy} onClick={() => void issueHistoricalReturn()}>Confirmar devolución</Button></div>}
       </form>}</CardContent></Card>}
+    {section === "history" && selectedCorrection && <Card><CardHeader><CardTitle>Corregir devolución histórica</CardTitle>
+      <CardDescription>Solo durante la fecha operativa abierta. ERPNext cancelará juntos el reembolso, la nota y el reingreso, y conservará el motivo.</CardDescription></CardHeader>
+      <CardContent><form onSubmit={(event) => void reviewHistoricalCorrection(event)} className="space-y-3 text-sm">
+        <p>Factura PMS <strong>{selectedCorrection.document_number}</strong> · nota ERPNext {selectedCorrection.native_credit_note}.</p>
+        <label className="block space-y-1"><span>Motivo de corrección</span><Input required maxLength={500} value={correctionReason} onChange={(event) => { setCorrectionReason(event.target.value); setCorrectionQuote(null); setCorrectionKey("") }} /></label>
+        <div className="flex gap-2"><Button type="submit" variant="outline" disabled={busy || !correctionReason.trim()}>Revisar corrección</Button><Button type="button" variant="outline" onClick={() => { setHistoricalCorrection(""); setCorrectionQuote(null) }}>Cancelar</Button></div>
+        {correctionQuote && <div className="space-y-2 rounded-md border border-primary/30 bg-white p-3"><p>Fecha operativa {correctionQuote.business_date}. Se cancelarán nota {correctionQuote.credit_note}, reembolso {correctionQuote.refund_currency} {correctionQuote.refund_amount}, asiento {correctionQuote.payment_entry}{correctionQuote.stock_entry && ` y reingreso ${correctionQuote.stock_entry}`}.</p>
+          <Button type="button" disabled={busy} onClick={() => void issueHistoricalCorrection()}>Confirmar corrección integral</Button></div>}
+      </form></CardContent></Card>}
   </div>
 }
