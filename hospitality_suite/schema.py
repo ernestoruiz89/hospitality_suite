@@ -267,6 +267,7 @@ SCHEMA = {
         link("expense_category","HS Expense Category",False),link("supplier","Supplier",False),link("purchase_invoice","Purchase Invoice",False),
         f("fee_snapshot","Code","JSON",hidden=1,print_hide=1),f("fee_amount","Currency","currency"),f("withholding_amount","Currency","currency"),f("net_amount","Currency","currency"),f("clearing_base_amount","Currency"),f("settlement_direction","Select","\nReceive\nPay")]),
     "HS Cleaning Task": dict(roles=ROLES, fields=[*SCOPE, link("room", "HS Room"), link("stay", "HS Stay", False),
+        f("source_stay", read_only=1),
         select("kind", ["Departure", "Stay", "Deep"]), select("priority", ["Normal", "High", "Urgent"]), link("assigned_to", "User", False),
         select("status", ["Pending", "In Progress", "Inspection", "Completed"]), f("started_at", "Datetime"), f("completed_at", "Datetime"),
         f("checklist", "Code", "JSON"), f("notes", "Small Text"), link("inspected_by", "User", False)]),

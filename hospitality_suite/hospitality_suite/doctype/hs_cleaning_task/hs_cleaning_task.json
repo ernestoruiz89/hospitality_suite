@@ -35,6 +35,12 @@
    "options": "HS Stay"
   },
   {
+   "fieldname": "source_stay",
+   "label": "Estancia de origen",
+   "fieldtype": "Data",
+   "read_only": 1
+  },
+  {
    "fieldname": "kind",
    "label": "Tipo",
    "fieldtype": "Select",
@@ -97,6 +103,7 @@
   "property",
   "room",
   "stay",
+  "source_stay",
   "kind",
   "priority",
   "assigned_to",
