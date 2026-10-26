@@ -3517,9 +3517,22 @@ def run():
             frappe.set_user("Administrator")
         assert standalone_inventory.current_balance(second_prop, second_purchase_product,
             stock_service["warehouse"]) == (Decimal("3"), Decimal("65.70"))
+        full_purchase_snapshot = api.pms_purchase_snapshot(second_prop.name)
         assert any(row["name"] == multi_doc.name and len(row["lines"]) == 2 and
                    row["outstanding"] == "109.50" for row in
-                   api.pms_purchase_snapshot(second_prop.name)["purchases"])
+                   full_purchase_snapshot["purchases"])
+        compact_purchase_snapshot = api.pms_purchase_snapshot(second_prop.name, compact=1)
+        assert set(compact_purchase_snapshot) == {
+            "currency", "currencies", "suppliers", "products", "warehouses",
+            "accounts", "methods", "shifts"}
+        assert all(compact_purchase_snapshot[key] == full_purchase_snapshot[key]
+                   for key in compact_purchase_snapshot)
+        try:
+            api.pms_purchase_snapshot(second_prop.name, compact="invalid")
+        except frappe.ValidationError:
+            frappe.clear_messages()
+        else:
+            raise AssertionError("La consulta de compras aceptó un formato inválido")
         for part, remaining in (("1.00", "73.00"), ("2.00", "0.00")):
             multi_payment_data = dict(purchase=multi_doc.name, method=bank_method,
                 amount=part, reference="MULTI-PAY-" + part + suffix,

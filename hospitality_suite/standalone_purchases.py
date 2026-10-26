@@ -383,9 +383,11 @@ def pay_supplier(prop, data):
         "outstanding": reviewed["outstanding_after"]}
 
 
-def snapshot(property_name):
+def snapshot(property_name, compact=0):
     prop = require(property_name, "finance")
     require_pms(prop)
+    if str(compact) not in ("0", "1"):
+        frappe.throw(_("Revise el formato de la consulta de compras"))
     suppliers = frappe.get_all("HS Party", filters={"property": prop.name,
         "organization": prop.organization, "active": 1,
         "party_type": ["in", ["Supplier", "Both"]]},
@@ -409,6 +411,12 @@ def snapshot(property_name):
     shifts = frappe.get_all("HS Shift", filters={"property": prop.name,
         "cashier": frappe.session.user, "status": "Open"},
         fields=["name", "opened_at"], order_by="opened_at desc")
+    catalogs = {"currency": prop.currency, "currencies": sorted(enabled_currencies(prop)),
+        "suppliers": suppliers, "products": products,
+        "warehouses": warehouses, "accounts": accounts, "methods": methods,
+        "shifts": shifts}
+    if str(compact) == "1":
+        return catalogs
     purchases = frappe.get_all("HS PMS Purchase", filters={"property": prop.name},
         fields=["name", "supplier", "supplier_reference", "purchase_order", "product", "warehouse",
                 "quantity", "invoice_currency", "invoice_amount", "recoverable_tax",
@@ -464,10 +472,7 @@ def snapshot(property_name):
     from hospitality_suite.standalone_opening_supplier_credits import snapshot as supplier_credit_snapshot
     from hospitality_suite.standalone_purchase_returns import snapshot as return_snapshot
     from hospitality_suite.standalone_purchase_orders import snapshot as order_snapshot
-    return {"currency": prop.currency, "currencies": sorted(enabled_currencies(prop)),
-        "suppliers": suppliers, "products": products,
-        "warehouses": warehouses, "accounts": accounts, "methods": methods,
-        "shifts": shifts, "purchases": purchases, "opening_payables": opening_snapshot(prop),
+    return {**catalogs, "purchases": purchases, "opening_payables": opening_snapshot(prop),
         "opening_supplier_credits": supplier_credit_snapshot(prop),
         "payments": payments[:200],
         "returns": return_snapshot(prop), "orders": order_snapshot(prop)}

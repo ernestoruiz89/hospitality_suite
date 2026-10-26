@@ -20,47 +20,13 @@ type PurchaseLine = { product: string; warehouse: string; quantity: string;
   invoice_amount: string; recoverable_tax: string }
 const emptyLine = (): PurchaseLine => ({ product: "", warehouse: "", quantity: "",
   invoice_amount: "", recoverable_tax: "0" })
-type Purchase = { name: string; supplier: string; supplier_reference: string;
-  purchase_order: string | null;
-  product: string; warehouse: string; quantity: number; invoice_currency: string;
-  invoice_amount: number; recoverable_tax: number; base_amount: number; base_cost: number;
-  base_tax: number; business_date: string; outstanding: string;
-  status: string; cancellation_return: string | null;
-  lines: { product: string; warehouse: string; quantity: number; invoice_amount: number;
-    base_cost: number; stock_movement: string | null }[] }
-type OpeningPayable = { name: string; supplier: string; opening_source_name: string;
-  business_date: string; due_date: string; currency: string; amount: number;
-  base_amount: number; outstanding: string; base_outstanding: string;
-  payable_account: string }
-type ReturnRow = { name: string; purchase: string; supplier: string; reference: string;
-  kind: string;
-  invoice_currency: string; credit_amount: number; base_credit: number;
-  supplier_credit: number; refund_available: string; business_date: string }
 type Snapshot = { currency: string; currencies: string[];
   suppliers: { name: string; party_name: string; tax_id?: string }[];
   products: { name: string; product_code: string; product_name: string }[];
   warehouses: { name: string; warehouse_name: string }[];
   accounts: Account[];
   methods: { name: string; mode_of_payment: string; currency: string; is_cash: boolean }[];
-  shifts: { name: string; opened_at: string }[];
-  purchases: Purchase[];
-  opening_payables: OpeningPayable[];
-  opening_supplier_credits: {
-    credits: { name: string; supplier: string; opening_source_name: string;
-      currency: string; amount: number; base_amount: number;
-      available: string; base_available: string }[];
-    applications: { name: string; opening_credit: string; target_type: string;
-      opening_payable: string | null; purchase: string | null;
-      currency: string; remaining: string }[] };
-  orders: Order[];
-  returns: ReturnRow[];
-  payments: { name: string; kind: string; pms_purchase: string | null;
-    pms_opening_payable: string | null;
-    pms_opening_supplier_credit?: string | null;
-    pms_purchase_return: string | null; amount: number; currency: string;
-    base_amount: number; method: string; reference: string; business_date: string;
-    pms_settlement_currency?: string | null; pms_settled_amount?: number | null;
-    pms_released_base_amount?: number | null }[] }
+  shifts: { name: string; opened_at: string }[] }
 type PurchaseQuote = { acceptance: string; supplier_name: string;
   lines: { product_name: string; quantity: string; invoice_amount: string;
     recoverable_tax: string; base_cost: string }[];
@@ -113,7 +79,7 @@ export function Purchases({ property, canPurchase, canApprove }: {
   const [paymentReason, setPaymentReason] = useState("")
   const [paymentQuote, setPaymentQuote] = useState<PaymentQuote | null>(null)
   const refresh = useCallback(async () => setData(await call<Snapshot>("pms_purchase_snapshot",
-    { property_name: property.name })), [property.name])
+    { property_name: property.name, compact: "1" })), [property.name])
   async function refreshAfter(success: string) {
     try { await refresh(); setNotice(success) }
     catch { setNotice(`${success} Actualice la vista para consultar la compra.`) }

@@ -683,8 +683,8 @@ def erp_purchase_search(property_name, mode="orders", search="", offset=0,
 
 
 @frappe.whitelist()
-def pms_purchase_snapshot(property_name):
-    return standalone_purchases.snapshot(property_name)
+def pms_purchase_snapshot(property_name, compact=0):
+    return standalone_purchases.snapshot(property_name, compact)
 
 
 @frappe.whitelist()
