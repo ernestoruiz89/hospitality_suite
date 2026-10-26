@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { call, type ChartData, type Property } from "./api"
 import { pmsCashMovementKind, pmsCashSections, pmsCashSetupKind, usePmsCashSection } from "./CashSections"
 import { CashRefundSourcePicker, type RefundablePayment } from "./CashRefundSourcePicker"
+import { ReceivablePicker, type OpenReceivable } from "./ReceivablePicker"
 import { useIdempotentCommand } from "./useIdempotentCommand"
 
 type CashData = {
@@ -27,8 +28,7 @@ type CashData = {
     folio: string | null; booking: string | null }[]
   refundable: RefundablePayment[]
   deposit_accounts: { name: string; account_code: string; account_name: string }[]
-  receivables: { name: string; party: string; folio: string | null; reference: string; currency: string;
-    outstanding: string }[]
+  receivables: OpenReceivable[]
 }
 type Quote = { kind: string; amount: string; currency: string; exchange_rate: string; base_amount: string;
   base_currency: string; debit: string; credit: string; exchange_rate_record: string | null;
@@ -64,6 +64,7 @@ export function Cash({ property, canSetup, canRefund }: { property: Property; ca
   const [shift, setShift] = useState("")
   const [counter, setCounter] = useState("")
   const [receivable, setReceivable] = useState("")
+  const [selectedReceivable, setSelectedReceivable] = useState<OpenReceivable | null>(null)
   const [settledAmount, setSettledAmount] = useState("")
   const [party, setParty] = useState("")
   const [folio, setFolio] = useState("")
@@ -100,7 +101,7 @@ export function Cash({ property, canSetup, canRefund }: { property: Property; ca
   useEffect(() => {
     setSnapshot(null); setChart(null); setError(""); setNotice("")
     setOpening({}); setCounted({}); setMethod(""); setShift(""); setQuote(null)
-    setCounter(""); setReceivable(""); setSettledAmount(""); setParty(""); setFolio(""); setBooking(""); setGuaranteeTarget("booking"); setCustomerName(""); setCategory(""); setConcept("")
+    setCounter(""); setReceivable(""); setSelectedReceivable(null); setSettledAmount(""); setParty(""); setFolio(""); setBooking(""); setGuaranteeTarget("booking"); setCustomerName(""); setCategory(""); setConcept("")
     setSelectedRefund(null); setRefundQuote(null)
     refresh().catch((reason: unknown) => setError(reason instanceof Error ? reason.message : "No se pudo consultar Caja."))
     if (canSetup) call<ChartData>("pms_chart", { property_name: property.name }).then(setChart)
@@ -108,7 +109,7 @@ export function Cash({ property, canSetup, canRefund }: { property: Property; ca
   }, [refresh, canSetup])
   useEffect(() => {
     appliedCollectContext.current = ""
-    setMethod(""); setShift(""); setCounter(""); setReceivable(""); setSettledAmount("")
+    setMethod(""); setShift(""); setCounter(""); setReceivable(""); setSelectedReceivable(null); setSettledAmount("")
     setParty(""); setFolio(""); setBooking(""); setGuaranteeTarget("booking"); setCustomerName("")
     setCategory(""); setConcept(""); setAmount(""); setReference(""); setReason("")
     setQuote(null); setSetupLabel(""); setSetupAccount(""); setSetupLimit("")
@@ -125,6 +126,7 @@ export function Cash({ property, canSetup, canRefund }: { property: Property; ca
     if (matches.length === 1) {
       appliedCollectContext.current = context
       setReceivable(matches[0].name)
+      setSelectedReceivable(matches[0])
     }
   }, [snapshot, requestedFolio, requestedReceivable, section, property.name])
 
@@ -141,7 +143,10 @@ export function Cash({ property, canSetup, canRefund }: { property: Property; ca
   const chosenBooking = snapshot?.bookings.find((item) => item.name === booking)
   const chosenReceivable = snapshot?.receivables.find((item) => item.name === receivable &&
     (!requestedFolio || item.folio === requestedFolio) &&
-    (!requestedReceivable || item.name === requestedReceivable))
+    (!requestedReceivable || item.name === requestedReceivable)) ||
+    (selectedReceivable?.name === receivable &&
+    (!requestedFolio || selectedReceivable.folio === requestedFolio) &&
+    (!requestedReceivable || selectedReceivable.name === requestedReceivable) ? selectedReceivable : null)
   const availableReceivables = snapshot?.receivables.filter((item) =>
     Number(item.outstanding) > 0 && (!requestedFolio || item.folio === requestedFolio) &&
     (!requestedReceivable || item.name === requestedReceivable)) || []
@@ -180,6 +185,7 @@ export function Cash({ property, canSetup, canRefund }: { property: Property; ca
           } : {}),
         })
         setQuote(null); setAmount(""); setReference(""); setReason("")
+        if (kind === "Payment") { setReceivable(""); setSelectedReceivable(null); setSettledAmount("") }
         await refreshAfter(`Movimiento ${result.payment} contabilizado.`)
       }
     } catch (reason) { setError(reason instanceof Error ? reason.message : "No se pudo procesar el movimiento.") }
@@ -283,7 +289,11 @@ export function Cash({ property, canSetup, canRefund }: { property: Property; ca
           <label className="space-y-1 text-sm">Medio<select required value={method} onChange={(event) => { changed(); setMethod(event.target.value) }} className="h-9 w-full rounded-md border border-border bg-white px-2"><option value="">Seleccione medio</option>{snapshot.methods.map((item) => <option key={item.name} value={item.name}>{item.mode_of_payment} · {item.currency}</option>)}</select></label>
           {chosenMethod?.is_cash && <label className="space-y-1 text-sm">Turno<select required value={shift} onChange={(event) => { changed(); setShift(event.target.value) }} className="h-9 w-full rounded-md border border-border bg-white px-2"><option value="">Seleccione turno</option>{snapshot.shifts.map((item) => <option key={item.name} value={item.name}>{item.name}</option>)}</select></label>}
           {(kind === "Advance" || kind === "Guarantee") && <label className="space-y-1 text-sm">Cuenta de depósitos<select required value={counter} onChange={(event) => { changed(); setCounter(event.target.value) }} className="h-9 w-full rounded-md border border-border bg-white px-2"><option value="">Seleccione pasivo</option>{snapshot.deposit_accounts.map((item) => <option key={item.name} value={item.name}>{item.account_code} · {item.account_name}</option>)}</select></label>}
-          {kind === "Payment" && <label className="space-y-1 text-sm sm:col-span-2">Cuenta por cobrar<select required value={receivable} onChange={(event) => { changed(); setReceivable(event.target.value); setSettledAmount("") }} className="h-9 w-full rounded-md border border-border bg-white px-2"><option value="">Seleccione cuenta pendiente</option>{availableReceivables.map((item) => <option key={item.name} value={item.name}>{item.reference} · Saldo {item.currency} {item.outstanding}</option>)}</select></label>}
+          {kind === "Payment" && (requestedReceivable ?
+            <label className="space-y-1 text-sm sm:col-span-2">Cuenta por cobrar<select required value={receivable} onChange={(event) => { changed(); const chosen = availableReceivables.find((item) => item.name === event.target.value) || null; setReceivable(chosen?.name || ""); setSelectedReceivable(chosen); setSettledAmount("") }} className="h-9 w-full rounded-md border border-border bg-white px-2"><option value="">Seleccione cuenta pendiente</option>{availableReceivables.map((item) => <option key={item.name} value={item.name}>{item.reference} · Saldo {item.currency} {item.outstanding}</option>)}</select></label> :
+            <div className="space-y-1 text-sm sm:col-span-2"><span>Cuenta por cobrar</span><ReceivablePicker property={property} selected={chosenReceivable || null}
+              onSelect={(item) => { changed(); setReceivable(item?.name || ""); setSelectedReceivable(item); setSettledAmount("") }}
+              folio={requestedFolio} refreshToken={snapshot} label="Seleccione cuenta pendiente" /></div>)}
           {kind === "Payment" && requestedReceivable && <div className="text-sm sm:col-span-2">
             <p>Cuenta por cobrar: <strong>{availableReceivables[0]?.reference || requestedReceivable}</strong></p>
             {!availableReceivables.length && <p className="mt-1 text-muted-foreground">Esta cuenta ya no tiene saldo pendiente o no pertenece al establecimiento. <Link className="text-primary underline" to="/receivables?section=balances">Ver saldos pendientes</Link></p>}
