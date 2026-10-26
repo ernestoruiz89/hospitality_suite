@@ -177,11 +177,15 @@ def main():
     if os.geteuid() != 0 or len(sys.argv) not in (2, 3):
         fail("Use root en el WSL de ensayo e indique un manifiesto JSON")
     if len(sys.argv) == 3:
-        if sys.argv[1] != "--data-bearing":
+        if sys.argv[1] == "--data-bearing":
+            SOURCE_SITE = "hs-cutover-restore.local"
+            TARGET_SITE = "hs-cutover-data-restore.local"
+            TARGET_DB = "hs_cutover_data_restore"
+        elif sys.argv[1] == "--persistent-counter":
+            TARGET_SITE = "hs-erp-smoke-persistent.local"
+            TARGET_DB = "hs_erp_counter_persistent_20261026"
+        else:
             fail("Modo de restauración desconocido")
-        SOURCE_SITE = "hs-cutover-restore.local"
-        TARGET_SITE = "hs-cutover-data-restore.local"
-        TARGET_DB = "hs_cutover_data_restore"
         BACKUPS = BENCH / "sites" / SOURCE_SITE / "private" / "backups"
         TARGET = BENCH / "sites" / TARGET_SITE
         manifest_argument = sys.argv[2]

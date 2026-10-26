@@ -1487,6 +1487,48 @@ def run(include_live_day_pass=False, prior_day_pass_credit=False,
                     "cutover-live-pass-prior-credit-" + suffix,
                     {**credit_request, "acceptance": credit_quote["acceptance"],
                      "reason": "Corrección parcial anterior al corte"})
+            persistent_counter_sale = persistent_counter_return = None
+            if persist_source:
+                counter_shift = suite_api.execute(prop.name, "pms_open_shift",
+                    "persistent-counter-shift-" + suffix,
+                    {"opening_by_currency": {"NIO": "0"}})["shift"]
+                counter_data = {"customer": party.name,
+                    "item": experience_product.name, "quantity": "1",
+                    "method": cash_method.name, "shift": counter_shift,
+                    "series": fiscal_series, "reference": "COUNTER-" + suffix}
+                first_quote = suite_api.preview(prop.name, counter_data,
+                    "pms_direct_sale")
+                persistent_counter_sale = suite_api.execute(prop.name,
+                    "pms_direct_sale", "persistent-counter-sale-" + suffix,
+                    {**counter_data, "acceptance": first_quote["acceptance"]})
+                second_quote = suite_api.preview(prop.name, counter_data,
+                    "pms_direct_sale")
+                second_sale = suite_api.execute(prop.name,
+                    "pms_direct_sale", "persistent-counter-returned-" + suffix,
+                    {**counter_data, "acceptance": second_quote["acceptance"]})
+                counter_credit_series = suite_api.execute(prop.name,
+                    "pms_fiscal_series", "persistent-counter-credit-series-" + suffix,
+                    {"series_code": "HIST-COUNTER-CR-" + suffix + "-",
+                     "document_type": "Credit Note", "start_number": 1,
+                     "end_number": 10, "padding": 6})["series"]
+                return_data = {"service": second_sale["service"],
+                    "series": counter_credit_series, "shift": counter_shift,
+                    "reference": "COUNTER-RETURN-" + suffix,
+                    "reason": "Devolución previa al corte persistente"}
+                return_quote = suite_api.pms_direct_sale_return_quote(
+                    prop.name, return_data)
+                persistent_counter_return = suite_api.execute(prop.name,
+                    "pms_direct_sale_return", "persistent-counter-return-" + suffix,
+                    {**return_data, "acceptance": return_quote["acceptance"]})
+                suite_api.execute(prop.name, "pms_close_shift",
+                    "persistent-counter-shift-close-" + suffix,
+                    {"shift": counter_shift,
+                     "counted_by_currency": {"NIO": "8.00"}})
+                from hospitality_suite import standalone_closing
+                prop.reload()
+                close_snapshot = standalone_closing.build(prop)
+                frappe.db.set_value("HS Daily Close", previous_close,
+                    "summary", canonical(close_snapshot), update_modified=False)
             frappe.db.set_value("HS Property", prop.name, "business_date",
                 str(today), update_modified=False)
             frappe.db.set_value("HS Daily Close", previous_close, "status",
@@ -1512,6 +1554,8 @@ def run(include_live_day_pass=False, prior_day_pass_credit=False,
                 source_committed = True
                 return {"persistent_source_seeded": True,
                     "property": prop.name, "day_pass": issued["day_pass"],
+                    "direct_sale": persistent_counter_sale["service"],
+                    "direct_return": persistent_counter_return["service"],
                     "source_receivable": issued["receivable"],
                     "source_invoice": invoice["document"],
                     "prior_credit": prior_credit["document"] if prior_credit else None,
