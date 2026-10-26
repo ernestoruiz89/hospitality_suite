@@ -576,6 +576,18 @@ def run():
             dict(kind="Advance", amount="5", method=cash_method, shift=shift,
                  counter_account=deposit, party=customer, reference="ADV-" + suffix,
                  reason="Anticipo de cliente")) == receipt
+        eligible_advances = api.pms_deposits_page(second_prop.name, receivable)
+        assert ([row["name"] for row in eligible_advances["rows"]] ==
+                [receipt["payment"]] and
+                eligible_advances["rows"][0]["available"] == "182.50" and
+                not api.pms_deposits_page(second_prop.name, receivable,
+                    search="missing-" + suffix)["rows"])
+        try:
+            api.pms_deposits_page(prop.name, receivable)
+        except (frappe.ValidationError, frappe.PermissionError):
+            frappe.clear_messages()
+        else:
+            raise AssertionError("Otra sede consultó depósitos de la cuenta")
         receipt_lines = frappe.get_doc("HS Journal", receipt["journal"]).lines
         assert sum(Decimal(str(line.debit)) for line in receipt_lines) == Decimal("182.50")
         assert sum(Decimal(str(line.credit)) for line in receipt_lines) == Decimal("182.50")
@@ -891,6 +903,11 @@ def run():
                  reference="GUAR-" + suffix, reason="Garantía del folio")) == guarantee
         assert guarantee["base_amount"] == "73.00"
         assert deposit_available(second_prop, guarantee["payment"], "Guarantee") == Decimal("73.00")
+        eligible_guarantees = api.pms_deposits_page(second_prop.name,
+            rebilled["receivables"][0]["receivable"], kind="Guarantee")
+        assert ([row["name"] for row in eligible_guarantees["rows"]] ==
+                [guarantee["payment"]] and
+                eligible_guarantees["rows"][0]["available"] == "73.00")
         assert any(row["source"] == guarantee["payment"] and
                    row["kind"] == "Guarantee" for prop in
                    api.pms_cutover_preflight()["properties"]
@@ -1511,6 +1528,12 @@ def run():
                  acceptance=arrival_quote["acceptance"]))
         assert arrival_bill["total"] == "100.00"
         assert folio_balance(arrived["folio"])["outstanding"] == "100.00"
+        arrival_options = api.pms_deposits_page(second_prop.name,
+            arrival_bill["receivables"][0]["receivable"], kind="Guarantee")
+        assert (booking_guarantee["payment"] in {
+                    row["name"] for row in arrival_options["rows"]} and
+                guarantee["payment"] not in {
+                    row["name"] for row in arrival_options["rows"]})
         try:
             api.execute(second_prop.name, "pms_apply_guarantee", "wrong-guarantee-folio-" + suffix,
                 dict(receivable=arrival_bill["receivables"][0]["receivable"],

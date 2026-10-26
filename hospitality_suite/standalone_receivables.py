@@ -572,6 +572,72 @@ def receivables_page(property_name, search="", offset=0, page_length=25,
             "offset": offset, "has_more": len(rows) > page_length}
 
 
+def deposits_page(property_name, receivable, kind="Advance", search="",
+                  offset=0, page_length=25):
+    if kind not in ("Advance", "Guarantee"):
+        frappe.throw(_("Seleccione anticipo o garantía"))
+    prop = require(property_name, "approve" if kind == "Guarantee" else "finance")
+    require_pms(prop)
+    try:
+        offset, page_length = int(offset), int(page_length)
+    except (TypeError, ValueError):
+        frappe.throw(_("Revise la paginación de depósitos"))
+    if (not isinstance(receivable, str) or not receivable or len(receivable) > 140 or
+            not isinstance(search, str) or len(search) > 100 or
+            offset < 0 or page_length < 1 or page_length > 100):
+        frappe.throw(_("Revise la búsqueda de depósitos"))
+    target = frappe.db.get_value("HS PMS Receivable", receivable,
+        ["property", "party", "currency", "status", "folio"], as_dict=True)
+    if (not target or target.property != prop.name or target.status != "Posted" or
+            target.currency != prop.currency):
+        frappe.throw(_("Seleccione una cuenta vigente del establecimiento"),
+            frappe.PermissionError)
+    if outstanding(prop, receivable) <= 0:
+        return {"rows": [], "search": search.strip(), "offset": offset,
+                "has_more": False}
+    folio_name, booking_name = "", ""
+    if kind == "Guarantee":
+        folio = frappe.db.get_value("HS Folio", target.folio,
+            ["property", "company", "customer", "booking", "stay"], as_dict=True) if target.folio else None
+        if (not folio or folio.property != prop.name or
+                folio.company != prop.company or folio.customer != target.party):
+            return {"rows": [], "search": search.strip(), "offset": offset,
+                    "has_more": False}
+        folio_name = target.folio
+        booking_name = folio.booking or (frappe.db.get_value(
+            "HS Stay", folio.stay, "booking") if folio.stay else None) or ""
+    scope = (" AND ((COALESCE(p.folio,'')<>'' AND p.folio=%s) OR "
+             "(COALESCE(p.folio,'')='' AND p.booking=%s))"
+             if kind == "Guarantee" else "")
+    term = search.strip()
+    rows = frappe.db.sql(
+        "SELECT p.name,p.kind,p.pms_party,p.folio,p.booking,p.reference,p.amount,"
+        "p.currency,p.base_amount,p.pms_counter_account,"
+        "p.base_amount-COALESCE(a.applied,0)-COALESCE(f.refunded,0) AS available "
+        "FROM `tabHS Payment` p LEFT JOIN ("
+        "SELECT payment,SUM(CASE WHEN kind IN ('Advance Reversed','Guarantee Reversed') "
+        "THEN -amount ELSE amount END) AS applied "
+        "FROM `tabHS PMS Allocation` WHERE property=%s "
+        "AND kind IN ('Advance Applied','Advance Reversed',"
+        "'Guarantee Applied','Guarantee Reversed') GROUP BY payment) a "
+        "ON a.payment=p.name LEFT JOIN ("
+        "SELECT source_payment,SUM(base_amount) AS refunded "
+        "FROM `tabHS Payment` WHERE property=%s AND kind IN ('Refund','Guarantee Refund') "
+        "AND status='Posted' GROUP BY source_payment) f ON f.source_payment=p.name "
+        "WHERE p.property=%s AND p.kind=%s AND p.status='Posted' "
+        "AND p.pms_journal IS NOT NULL AND p.pms_party=%s "
+        "AND p.base_amount-COALESCE(a.applied,0)-COALESCE(f.refunded,0)>0" +
+        scope + (" AND (LOCATE(%s,p.name)>0 OR LOCATE(%s,p.reference)>0)"
+                 if term else "") +
+        " ORDER BY p.creation DESC,p.name DESC LIMIT %s OFFSET %s",
+        (prop.name, prop.name, prop.name, kind, target.party,
+         *((folio_name, booking_name) if kind == "Guarantee" else ()),
+         *((term, term) if term else ()), page_length + 1, offset), as_dict=True)
+    return {"rows": [{**row, "available": _money(row.available)}
+                     for row in rows[:page_length]],
+            "search": term, "offset": offset, "has_more": len(rows) > page_length}
+
+
 def snapshot(property_name):
     prop = require(property_name, "finance")
     require_pms(prop)
