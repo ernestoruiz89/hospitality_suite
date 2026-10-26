@@ -217,6 +217,14 @@ def run():
                 {**refund_data, "acceptance": refund_quote["acceptance"]}) != refunded or
                 balances(prop, credit.name) != (Decimal(0), Decimal(0))):
             frappe.throw("El reintegro extranjero duplicó el crédito")
+        payment_page = api.pms_supplier_payment_page(prop.name,
+            search=refund_data["reference"])
+        if (len(payment_page["rows"]) != 1 or
+                payment_page["rows"][0]["name"] != refunded["payment"] or
+                payment_page["rows"][0]["source_reference"] != credit.opening_source_name or
+                Decimal(str(payment_page["rows"][0]["pms_settled_amount"])) != 40 or
+                Decimal(str(payment_page["rows"][0]["pms_released_base_amount"])) != 1440):
+            frappe.throw("El historial paginado perdió el reintegro extranjero")
         if journal_lines(refunded["journal"]) != {
                 (bank.name, Decimal(1480), Decimal(0), Decimal(1480), Decimal(0)),
                 (credit_ap.name, Decimal(0), Decimal(1440), Decimal(0), Decimal(40)),

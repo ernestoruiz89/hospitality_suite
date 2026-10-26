@@ -131,3 +131,50 @@ def page(property_name, kind="Target", search="", supplier="", currency="",
                      for row in rows[:page_length]]
     return {"rows": page_rows, "search": term, "offset": offset,
             "has_more": len(rows) > page_length}
+
+
+def payments_page(property_name, search="", offset=0, page_length=25):
+    prop = require(property_name, "finance")
+    require_pms(prop)
+    try:
+        offset, page_length = int(offset), int(page_length)
+    except (TypeError, ValueError, OverflowError):
+        frappe.throw(_("Revise la paginación de pagos de proveedores"))
+    if (offset < 0 or page_length < 1 or page_length > 100 or
+            not isinstance(search, str) or len(search) > 100):
+        frappe.throw(_("Revise la búsqueda de pagos de proveedores"))
+    term = search.strip()
+    rows = frappe.db.sql(
+        "SELECT m.name,m.kind,m.reference,m.business_date,m.currency,m.amount,"
+        "m.base_amount,m.method,m.pms_purchase,m.pms_purchase_return,"
+        "m.pms_opening_payable,m.pms_opening_supplier_credit,"
+        "m.pms_settlement_currency,m.pms_settled_amount,"
+        "m.pms_released_base_amount,m.pms_exchange_variance_account,"
+        "COALESCE(c.opening_source_name,o.opening_source_name,"
+        "r.reference,b.supplier_reference) AS source_reference,"
+        "p.party_name AS supplier_name "
+        "FROM `tabHS Payment` m "
+        "LEFT JOIN `tabHS PMS Purchase` b ON b.name=m.pms_purchase "
+        "AND b.property=m.property "
+        "LEFT JOIN `tabHS PMS Purchase Return` r ON r.name=m.pms_purchase_return "
+        "AND r.property=m.property "
+        "LEFT JOIN `tabHS PMS Opening Payable` o ON o.name=m.pms_opening_payable "
+        "AND o.property=m.property "
+        "LEFT JOIN `tabHS PMS Opening Supplier Credit` c "
+        "ON c.name=m.pms_opening_supplier_credit AND c.property=m.property "
+        "LEFT JOIN `tabHS Party` p ON p.name=COALESCE(c.supplier,o.supplier,"
+        "r.supplier,b.supplier) AND p.property=m.property "
+        "WHERE m.property=%s AND m.status='Posted' "
+        "AND m.kind IN ('Supplier Payment','Supplier Refund') "
+        "AND (m.pms_purchase IS NOT NULL OR "
+        "(m.kind='Supplier Payment' AND m.pms_opening_payable IS NOT NULL "
+        "AND m.pms_journal IS NOT NULL) OR "
+        "(m.kind='Supplier Refund' AND m.pms_opening_supplier_credit IS NOT NULL)) "
+        "AND (%s='' OR LOCATE(%s,m.name)>0 OR LOCATE(%s,m.reference)>0 "
+        "OR LOCATE(%s,COALESCE(c.opening_source_name,o.opening_source_name,"
+        "r.reference,b.supplier_reference))>0 OR LOCATE(%s,p.party_name)>0) "
+        "ORDER BY m.creation DESC,m.name DESC LIMIT %s OFFSET %s",
+        (prop.name, term, term, term, term, term, page_length + 1, offset),
+        as_dict=True)
+    return {"rows": rows[:page_length], "search": term, "offset": offset,
+            "has_more": len(rows) > page_length}

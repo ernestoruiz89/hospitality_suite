@@ -3621,6 +3621,20 @@ def run():
         refunded = api.execute(second_prop.name, "pms_supplier_refund",
             "purchase-supplier-refund-" + suffix, refund_command)
         assert refunded["available"] == "0.00"
+        payment_page = api.pms_supplier_payment_page(second_prop.name,
+            search=refund_data["reference"])
+        assert len(payment_page["rows"]) == 1
+        assert payment_page["rows"][0]["name"] == refunded["payment"]
+        assert payment_page["rows"][0]["source_reference"] == paid_return_data["reference"]
+        first_payment_page = api.pms_supplier_payment_page(second_prop.name,
+            page_length=1)
+        next_payment_page = api.pms_supplier_payment_page(second_prop.name,
+            offset=1, page_length=1)
+        assert first_payment_page["has_more"]
+        assert len(first_payment_page["rows"]) == len(next_payment_page["rows"]) == 1
+        assert first_payment_page["rows"][0]["name"] != next_payment_page["rows"][0]["name"]
+        assert not api.pms_supplier_payment_page(prop.name,
+            search=refund_data["reference"])["rows"]
         assert not api.pms_purchase_document_page(second_prop.name,
             kind="Return", search=paid_return_data["reference"],
             available_only=1)["rows"]

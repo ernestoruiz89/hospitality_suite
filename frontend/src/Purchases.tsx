@@ -9,6 +9,7 @@ import { OpeningSupplierCreditsPms } from "./OpeningSupplierCreditsPms"
 import { PurchaseDocumentBrowser, type PurchaseCandidate, type PurchaseDocument,
   type SupplierReturn } from "./PurchaseDocumentBrowser"
 import { SupplierDocumentBrowser, type SupplierDocument, type SupplierTarget } from "./SupplierDocumentBrowser"
+import { SupplierPaymentHistory } from "./SupplierPaymentHistory"
 import { purchaseSections, usePurchaseSection, type PurchaseSection } from "./PurchaseSections"
 import { useIdempotentCommand, type SendCommand } from "./useIdempotentCommand"
 
@@ -255,20 +256,8 @@ export function Purchases({ property, canPurchase, canApprove }: {
         </form></CardContent></Card>}
       {(section === "returns" || section === "return-new" || section === "supplier-refund") &&
         <PurchaseReturns property={property} data={data} refresh={refresh} send={send} section={section} canApprove={canApprove} />}
-      {section === "supplier-payments" && <Card><CardHeader><CardTitle>Pagos y reintegros recientes</CardTitle></CardHeader>
-        <CardContent className="space-y-2">{data.payments.map((row) =>
-          <div key={row.name} className="flex flex-wrap justify-between gap-2 border-b border-border py-2 text-sm">
-            <span>{row.kind === "Supplier Refund" ? "Reintegro" : "Pago"} · {row.reference} · {
-              row.pms_opening_supplier_credit
-                ? data.opening_supplier_credits.credits.find((item) => item.name === row.pms_opening_supplier_credit)?.opening_source_name || row.pms_opening_supplier_credit
-                : row.pms_opening_payable
-                  ? data.opening_payables.find((item) => item.name === row.pms_opening_payable)?.opening_source_name || row.pms_opening_payable
-                  : data.purchases.find((item) => item.name === row.pms_purchase)?.supplier_reference || row.pms_purchase
-            }{row.pms_settlement_currency && <span className="block text-xs text-muted-foreground">
-              Principal liquidado {row.pms_settlement_currency} {row.pms_settled_amount} · Valor base liberado {data.currency} {row.pms_released_base_amount}
-            </span>}</span>
-            <strong>{row.currency} {row.amount} · Base {data.currency} {row.base_amount}</strong>
-          </div>)}{!data.payments.length && <p className="text-sm text-muted-foreground">Sin movimientos de proveedores.</p>}</CardContent></Card>}
+      {section === "supplier-payments" && <Card><CardHeader><CardTitle>Pagos y reintegros</CardTitle></CardHeader>
+        <CardContent><SupplierPaymentHistory property={property} refreshToken={data} /></CardContent></Card>}
     </>}
   </div>
 }

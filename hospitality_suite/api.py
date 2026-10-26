@@ -370,6 +370,12 @@ def pms_supplier_document_page(property_name, kind="Target", search="",
 
 
 @frappe.whitelist()
+def pms_supplier_payment_page(property_name, search="", offset=0, page_length=25):
+    return standalone_supplier_paging.payments_page(property_name, search,
+        offset, page_length)
+
+
+@frappe.whitelist()
 def pms_purchase_document_page(property_name, kind="Purchase", search="",
                                offset=0, page_length=25, available_only=0):
     return standalone_purchase_paging.page(property_name, kind, search, offset,
