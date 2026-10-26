@@ -1,4 +1,4 @@
-"""Verify a partial PMS purchase order cannot be received twice in a race."""
+"""Verify competing PMS purchase receipts and supplier payments."""
 
 from decimal import Decimal
 from pathlib import Path
@@ -11,6 +11,7 @@ from hospitality_suite.service import command, insert
 from hospitality_suite.standalone_accounting import balance, provider
 from hospitality_suite.standalone_inventory import current_balance
 from hospitality_suite.standalone_purchase_orders import progress
+from hospitality_suite.standalone_purchases import outstanding
 from hospitality_suite.tests.financial_race import race_command
 
 
@@ -21,8 +22,9 @@ def _remove(property_name, organization, requester):
     frappe.db.rollback()
     parents = ("HS PMS Purchase", "HS PMS Purchase Order")
     children = ("HS PMS Purchase Line", "HS PMS Purchase Order Line")
-    scoped = ("HS Stock Movement", "HS Journal", "HS Product",
-              "HS Warehouse", "HS Account", "HS Party", "HS Audit Event",
+    scoped = ("HS Payment", "HS Payment Method", "HS Stock Movement",
+              "HS Journal", "HS Product", "HS Warehouse", "HS Account",
+              "HS Party", "HS Audit Event",
               "HS Request") + parents
     journals = []
     child_parents = []
@@ -80,13 +82,43 @@ def _verify(property_name, product, warehouse, inventory, payable,
             any(Decimal(str(row.quantity_delta)) != 1 or
                 Decimal(str(row.value_delta)) != 10 or not row.journal
                 for row in movements) or
-            frappe.db.count("HS Journal", {"property": property_name}) != received or
+            frappe.db.count("HS Journal", {"property": property_name}) != received + 1 or
             frappe.db.count("HS Audit Event", {"property": property_name,
                 "action": "pms_purchase_received"}) != received or
             frappe.db.count("HS Request", {"property": property_name,
                 "operation": "pms_receive_purchase"}) != received):
         raise AssertionError("Order, stock, payables and ledger did not reconcile")
     return purchases
+
+
+def _verify_payments(property_name, bank, payable, equity, purchases, *, paid):
+    frappe.db.rollback()
+    prop = frappe.get_doc("HS Property", property_name)
+    payments = frappe.get_all("HS Payment", filters={
+        "property": property_name, "kind": "Supplier Payment",
+        "status": "Posted"}, fields=["name", "pms_purchase", "pms_journal",
+            "reference", "base_amount"], limit_page_length=0)
+    paid_value = Decimal(paid * 10)
+    if (len(payments) != paid or
+            {row.pms_purchase for row in payments} != set(purchases[:paid]) or
+            any(not row.pms_journal or Decimal(str(row.base_amount)) != 10
+                for row in payments) or
+            any(not frappe.db.exists("HS Journal", {
+                "name": row.pms_journal, "property": property_name,
+                "source_doctype": "HS Payment", "source_name": row.name,
+                "purpose": "Supplier Payment"}) for row in payments) or
+            Decimal(balance(prop, bank)) != 20 - paid_value or
+            Decimal(balance(prop, payable)) != paid_value - 20 or
+            Decimal(balance(prop, equity)) != -20 or
+            any(outstanding(prop, name) != (Decimal(0) if index < paid else Decimal(10))
+                for index, name in enumerate(purchases)) or
+            frappe.db.count("HS Journal", {"property": property_name}) != 3 + paid or
+            frappe.db.count("HS Audit Event", {"property": property_name,
+                "action": "pms_supplier_paid"}) != paid or
+            frappe.db.count("HS Request", {"property": property_name,
+                "operation": "pms_pay_supplier"}) != paid):
+        raise AssertionError("Supplier payment, payables and bank did not reconcile")
+    return payments
 
 
 def run():
@@ -116,6 +148,23 @@ def run():
             {"account_code": "2100" + suffix,
              "account_name": "Proveedores de prueba", "root_type": "Liability",
              "account_type": "Payable"})["account"]
+        bank = api.execute(property_name, "pms_account",
+            "purchase-race-bank-" + suffix,
+            {"account_code": "1010" + suffix,
+             "account_name": "Banco de prueba", "root_type": "Asset",
+             "account_type": "Bank"})["account"]
+        equity = api.execute(property_name, "pms_account",
+            "purchase-race-equity-" + suffix,
+            {"account_code": "3000" + suffix,
+             "account_name": "Patrimonio de prueba", "root_type": "Equity"})["account"]
+        method = api.execute(property_name, "pms_payment_method",
+            "purchase-race-method-" + suffix,
+            {"label": "Banco de compras", "account": bank})["method"]
+        api.execute(property_name, "pms_opening_balance",
+            "purchase-race-opening-" + suffix,
+            {"reference": "PURCHASE-RACE-OPENING-" + suffix,
+             "lines": [{"account": bank, "debit": "20.00", "credit": 0},
+                       {"account": equity, "debit": 0, "credit": "20.00"}]})
         warehouse = api.execute(property_name, "pms_warehouse",
             "purchase-race-warehouse-" + suffix,
             {"warehouse_code": "PURCHASE" + suffix,
@@ -192,9 +241,42 @@ def run():
                 any(row.supplier_reference == loser_payload["supplier_reference"]
                     for row in rows)):
             raise AssertionError("The rejected receipt left a purchase")
+        purchases = [first["purchase"], second["purchase"]]
+        frappe.db.commit()
+
+        def payment(purchase, reference):
+            data = {"purchase": purchase, "method": method,
+                "amount": "10.00", "reference": reference,
+                "reason": "Abono de compra concurrente"}
+            reviewed = api.pms_supplier_payment_quote(property_name, data)
+            return {**data, "acceptance": reviewed["acceptance"]}
+
+        first_payment = race_command(SITE, sites_path, property_name,
+            "pms_pay_supplier", payment(purchases[0], "RACE-PAY-ONE-" + suffix),
+            "purchase-race-pay-same-" + suffix, same_key=True)
+        payments = _verify_payments(property_name, bank, payable, equity, purchases,
+            paid=1)
+        if payments[0].name != first_payment["payment"]:
+            raise AssertionError("The same-key supplier payment did not replay")
+        frappe.db.commit()
+
+        winner_payment = payment(purchases[1], "RACE-PAY-TWO-A-" + suffix)
+        loser_payment = payment(purchases[1], "RACE-PAY-TWO-B-" + suffix)
+        second_payment = race_command(SITE, sites_path, property_name,
+            "pms_pay_supplier", winner_payment,
+            "purchase-race-pay-distinct-" + suffix, same_key=False,
+            second_payload=loser_payment,
+            rejected_message="La compra ya está pagada")
+        payments = _verify_payments(property_name, bank, payable, equity, purchases,
+            paid=2)
+        if (second_payment["payment"] not in {row.name for row in payments} or
+                any(row.reference == loser_payment["reference"]
+                    for row in payments)):
+            raise AssertionError("The rejected payment left a supplier settlement")
         return {"site": SITE, "same_key": "same_result",
-            "distinct_keys": "order_limit_rejected", "received_quantity": "2",
-            "inventory_value": "20.00", "payable_balance": "-20.00",
-            "purchases": 2, "stock_movements": 2}
+            "distinct_keys": "order_limit_and_overpayment_rejected",
+            "received_quantity": "2", "inventory_value": "20.00",
+            "payable_balance": "0.00", "bank_balance": "0.00",
+            "purchases": 2, "stock_movements": 2, "supplier_payments": 2}
     finally:
         _remove(property_name, organization, requester)
