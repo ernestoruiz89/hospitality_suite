@@ -285,10 +285,14 @@ def run():
         expense = new_account("5000", "Expense")
         assert next(row for row in api.health_snapshot(prop.name)["checks"]
             if row["key"] == "accounts")["status"] == "OK"
+        assert api.pms_opening_balance_status(prop.name)["available"]
         opening = api.execute(prop.name, "pms_opening_balance", "opening-" + suffix,
             dict(reference="SMOKE-" + suffix, lines=[
                 dict(account=cash, debit="100.00", credit=0),
                 dict(account=equity, debit=0, credit="100.00")]))
+        assert (not api.pms_opening_balance_status(prop.name)["available"] and
+                api.pms_opening_balance_status(prop.name)["existing_journal"] ==
+                    opening["journal"])
         assert standalone_accounting.balance(prop, cash) == "100.00"
         manual_data = dict(reference="AJ-" + suffix, reason="Ajuste de prueba con soporte",
                            lines=[dict(account=expense, debit="7.25", credit="0"),
@@ -296,6 +300,11 @@ def run():
         manual = api.execute(prop.name, "pms_manual_journal", "manual-" + suffix, manual_data)
         repeated = api.execute(prop.name, "pms_manual_journal", "manual-" + suffix, manual_data)
         assert repeated == manual and manual["total"] == "7.25"
+        eligible = api.pms_reversible_journals(prop.name)
+        assert (eligible["total"] == 2 and
+                {row["name"] for row in eligible["rows"]} ==
+                    {opening["journal"], manual["journal"]} and
+                all(len(row["lines"]) == 2 for row in eligible["rows"]))
         assert standalone_accounting.balance(prop, expense) == "7.25"
         assert any(row["name"] == expense for row in api.pms_accounts(prop.name))
         try:
@@ -315,6 +324,7 @@ def run():
         assert Decimal(standalone_accounting.balance(prop, cash)) == 0
         api.execute(prop.name, "pms_reverse_journal", "reverse-manual-" + suffix,
                     dict(journal=manual["journal"], reason="Prueba de reversión manual"))
+        assert api.pms_reversible_journals(prop.name)["total"] == 0
         assert Decimal(standalone_accounting.balance(prop, expense)) == 0
 
         def create_masters(locked):

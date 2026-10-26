@@ -1,6 +1,6 @@
 import { Component, Suspense, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react"
 import { Link, Navigate, Route, Routes, useLocation, useParams } from "react-router-dom"
-import { Banknote, BarChart3, BedDouble, BookOpen, CalendarDays, CalendarCheck2, ChevronRight, ClipboardList, Coins, Compass, FileText, LayoutDashboard, FolderTree, HandCoins, HeartPulse, Landmark, LogIn, Menu, Package, ReceiptText, RefreshCw, Search, Settings2, ShieldCheck, Shirt, Sun, Tickets as TicketsIcon, UserRound, UsersRound, Wrench, X } from "lucide-react"
+import { Banknote, BarChart3, BedDouble, BookOpen, CalendarDays, CalendarCheck2, ChevronRight, ClipboardList, Coins, Compass, FileText, LayoutDashboard, FolderTree, HandCoins, HeartPulse, Landmark, LogIn, Menu, Package, ReceiptText, RefreshCw, RotateCcw, Search, Settings2, ShieldCheck, Shirt, Sun, Tickets as TicketsIcon, UserRound, UsersRound, Wrench, X } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -38,7 +38,7 @@ import { ticketSections } from "./TicketSections"
 import { availableSetupSections } from "./SetupSections"
 import { erpReportSections, pmsReportSections } from "./ReportSections"
 import {
-  Journal, Chart, Cash, ErpCash, Receivables, Folios, Products, Billing, FiscalArchive,
+  Journal, JournalReversal, Chart, Cash, ErpCash, Receivables, Folios, Products, Billing, FiscalArchive,
   Reception, Availability, RateCalendar, RoomCalendar, Reservations, Stays, BookingDraft,
   Departure, Credit, ErpCredit, ErpInvoicing, ErpAdjustments, ErpDirectSales, PmsDirectSales, Services, ErpServices, Inventory, ErpInventory, Purchases, ErpPurchases,
   Financing, ErpFinancing, DailyClose, ErpDailyClose, Reports, ErpReports, Portfolio, Health,
@@ -136,6 +136,8 @@ function Shell({ children, properties, property, setProperty, provider, showJour
   showUsers: boolean
   showNewProperty: boolean
 }) {
+  const showOpening = provider === "pms" && showJournal && showNewProperty
+  const showReversal = provider === "pms" && showRetention
   const [menuOpen, setMenuOpen] = useState(false)
   const location = useLocation()
   const [expandedGroup, setExpandedGroup] = useState<{ moduleId: string; path: string;
@@ -299,6 +301,8 @@ function Shell({ children, properties, property, setProperty, provider, showJour
     ...erpCreditNav,
     ...financingNav,
     ...(showJournal ? [{ to: "/journal", label: "Asiento contable", icon: BookOpen }] : []),
+    ...(showOpening ? [{ to: "/journal/opening", label: "Saldos iniciales", icon: BookOpen }] : []),
+    ...(showReversal ? [{ to: "/journal/reverse", label: "Revertir asiento", icon: RotateCcw }] : []),
     ...chartNav,
     ...(showCurrencies ? [{ to: "/currencies", label: "Monedas del establecimiento", icon: Coins }] : []),
     ...productNav,
@@ -324,7 +328,7 @@ function Shell({ children, properties, property, setProperty, provider, showJour
     { id: "purchasing", label: "Compras", icon: ReceiptText, routes: purchaseNav.map((item) => item.to) },
     { id: "commercial", label: "Comercial", icon: Compass, routes: ["/rates", ...travelNav.map((item) => item.to)] },
     { id: "finance", label: "Finanzas", icon: Banknote, routes: [...folioNav.map((item) => item.to), ...billingNav.map((item) => item.to), "/erp-invoicing", "/erp-adjustments", ...directSaleNav.map((item) => item.to), ...fiscalNav.map((item) => item.to), ...cashNav.map((item) => item.to), ...pettyNav.map((item) => item.to), ...dailyCloseNav.map((item) => item.to), ...receivableNav.map((item) => item.to), ...customerCreditNav.map((item) => item.to), ...creditNav.map((item) => item.to), ...erpCreditNav.map((item) => item.to), ...financingNav.map((item) => item.to)] },
-    { id: "accounting", label: "Contabilidad", icon: BookOpen, routes: ["/journal", ...chartNav.map((item) => item.to), "/currencies"] },
+    { id: "accounting", label: "Contabilidad", icon: BookOpen, routes: ["/journal", "/journal/opening", "/journal/reverse", ...chartNav.map((item) => item.to), "/currencies"] },
     { id: "management", label: "Gerencia", icon: BarChart3, routes: ["/portfolio", ...reportNav.map((item) => item.to)] },
     { id: "admin", label: "Administración", icon: Settings2, routes: [...setupNav.map((item) => item.to), "/health", "/retention", "/new-property"] },
     { id: "users", label: "Usuarios", icon: UsersRound, routes: ["/users", "/users/new", "/users/assign"] },
@@ -836,6 +840,8 @@ function PropertyApp() {
         : <ErpDirectSales key={selected.name} property={selected} canApprove={showRetention} />} />}
       {(showCash || showErpCredits) && <Route path="/fiscal-archive" element={<FiscalArchive key={selected.name} property={selected} provider={base.accounting_provider} />} />}
       {showJournal && <Route path="/journal" element={<Journal property={selected} />} />}
+      {base.accounting_provider === "pms" && showJournal && base.can_create_property && <Route path="/journal/opening" element={<Journal property={selected} mode="opening" />} />}
+      {base.accounting_provider === "pms" && showRetention && <Route path="/journal/reverse" element={<JournalReversal property={selected} />} />}
       {showChart && <Route path="/chart" element={<Chart key={selected.name} property={selected} />} />}
       {showCurrencies && <Route path="/currencies" element={<PropertyCurrencies property={selected} />} />}
       {showProducts && <Route path="/products" element={<Products property={selected} />} />}

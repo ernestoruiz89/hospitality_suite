@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { call, execute, type LedgerAccount, type Property } from "./api"
 
 type Line = { account: string; debit: string; credit: string; rate: string; memo: string }
+type OpeningStatus = { available: boolean; existing_journal: string | null; business_date: string }
 const emptyLine = (): Line => ({ account: "", debit: "", credit: "", rate: "1", memo: "" })
 
 function cents(value: string): bigint | null {
@@ -26,10 +27,13 @@ function baseCents(value: string, rate: string): bigint | null {
 
 function formatted(value: bigint) { return `${value / 100n}.${String(value % 100n).padStart(2, "0")}` }
 
-export function Journal({ property }: { property: Property }) {
+export function Journal({ property, mode = "manual" }: { property: Property; mode?: "manual" | "opening" }) {
+  const opening = mode === "opening"
   const [accounts, setAccounts] = useState<LedgerAccount[] | null>(null)
+  const [openingStatus, setOpeningStatus] = useState<OpeningStatus | null>(null)
   const [reference, setReference] = useState("")
   const [reason, setReason] = useState("")
+  const [postingDate, setPostingDate] = useState(property.business_date)
   const [lines, setLines] = useState<Line[]>([emptyLine(), emptyLine()])
   const [requestKey, setRequestKey] = useState("")
   const [busy, setBusy] = useState(false)
@@ -39,17 +43,22 @@ export function Journal({ property }: { property: Property }) {
   useEffect(() => {
     const controller = new AbortController()
     setAccounts(null)
+    setOpeningStatus(null)
     setError("")
     setPosted("")
     setReference("")
     setReason("")
+    setPostingDate(property.business_date)
     setLines([emptyLine(), emptyLine()])
     setRequestKey("")
     call<LedgerAccount[]>("pms_accounts", { property_name: property.name }, controller.signal)
       .then(setAccounts)
       .catch((reason: unknown) => { if (!controller.signal.aborted) setError(reason instanceof Error ? reason.message : "No se pudieron cargar las cuentas.") })
+    if (opening) call<OpeningStatus>("pms_opening_balance_status", { property_name: property.name }, controller.signal)
+      .then(setOpeningStatus)
+      .catch((issue: unknown) => { if (!controller.signal.aborted) setError(issue instanceof Error ? issue.message : "No se pudo revisar el saldo inicial.") })
     return () => controller.abort()
-  }, [property.name])
+  }, [property.name, property.business_date, opening])
 
   const prepared = useMemo(() => lines.map((line) => {
     const account = accounts?.find((item) => item.name === line.account)
@@ -62,8 +71,8 @@ export function Journal({ property }: { property: Property }) {
   const totals = useMemo(() => prepared.reduce((sum, item) => ({
     debit: sum.debit + (item.debit || 0n), credit: sum.credit + (item.credit || 0n),
   }), { debit: 0n, credit: 0n }), [prepared])
-  const valid = reference.trim() && reason.trim() && lines.length >= 2 &&
-    prepared.every((item) => item.account?.manual_enabled && item.debit !== null && item.credit !== null &&
+  const valid = reference.trim() && reason.trim() && (!opening || (postingDate && openingStatus?.available)) && lines.length >= 2 &&
+    prepared.every((item) => item.account && (opening || item.account.manual_enabled) && item.debit !== null && item.credit !== null &&
       (item.debit! > 0n) !== (item.credit! > 0n)) &&
     totals.debit > 0n && totals.debit === totals.credit
 
@@ -85,8 +94,9 @@ export function Journal({ property }: { property: Property }) {
     setBusy(true)
     setError("")
     try {
-      const result = await execute<{ journal: string; total: string }>(property.name, "pms_manual_journal", {
-        reference: reference.trim(), reason: reason.trim(),
+      const result = await execute<{ journal: string; total: string }>(property.name,
+        opening ? "pms_opening_balance" : "pms_manual_journal", {
+        reference: reference.trim(), ...(opening ? { memo: reason.trim(), posting_date: postingDate } : { reason: reason.trim() }),
         lines: prepared.map((item) => ({ account: item.line.account,
           debit: formatted(item.debit!), credit: formatted(item.credit!),
           account_currency: item.account!.account_currency, exchange_rate: item.rate,
@@ -94,6 +104,8 @@ export function Journal({ property }: { property: Property }) {
           credit_in_account_currency: item.line.credit || "0", memo: item.line.memo.trim() })),
       }, key)
       setPosted(result.journal)
+      if (opening) setOpeningStatus({ available: false, existing_journal: result.journal,
+        business_date: property.business_date })
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : "No se pudo publicar el asiento.")
     } finally {
@@ -102,22 +114,24 @@ export function Journal({ property }: { property: Property }) {
   }
 
   return <div className="space-y-6">
-    <div><div className="flex items-center gap-3"><BookOpen className="text-primary" /><h1 className="text-3xl font-semibold tracking-tight">Asiento contable</h1></div>
-      <p className="mt-2 text-sm text-muted-foreground">Ajuste manual del {property.business_date} en {property.currency}. El asiento publicado solo puede corregirse mediante reversión.</p></div>
+    <div><div className="flex items-center gap-3"><BookOpen className="text-primary" /><h1 className="text-3xl font-semibold tracking-tight">{opening ? "Saldos iniciales" : "Asiento contable"}</h1></div>
+      <p className="mt-2 text-sm text-muted-foreground">{opening ? `Una apertura por establecimiento, en ${property.currency}. Registre las partidas conciliadas antes de iniciar operaciones.` : `Ajuste manual del ${property.business_date} en ${property.currency}. El asiento publicado se corrige desde Revertir asiento.`}</p></div>
     {error && <p role="alert" className="rounded-lg border border-destructive/30 bg-red-50 p-4 text-sm text-destructive">{error}</p>}
     {posted && <p role="status" className="rounded-lg border border-emerald-300 bg-emerald-50 p-4 text-sm text-emerald-800">Asiento {posted} publicado. Conserve la referencia para su auditoría.</p>}
-    {!accounts ? <Skeleton className="h-96 rounded-xl" /> : accounts.length === 0 ?
+    {!accounts || (opening && !openingStatus && !error) ? <Skeleton className="h-96 rounded-xl" /> : opening && !openingStatus ? null : opening && openingStatus && !openingStatus.available ?
+      <Card><CardHeader><CardTitle>El establecimiento ya tiene movimientos</CardTitle><CardDescription>Los saldos iniciales solo se registran antes del primer asiento. Asiento existente: {openingStatus.existing_journal}.</CardDescription></CardHeader></Card> : accounts.length === 0 ?
       <Card><CardHeader><CardTitle>Plan de cuentas pendiente</CardTitle><CardDescription>Configure las cuentas de este establecimiento antes de registrar asientos.</CardDescription></CardHeader></Card> :
       <form onSubmit={submit} className="space-y-5">
-        <Card><CardHeader><CardTitle>Justificación</CardTitle><CardDescription>La referencia debe identificar el soporte del ajuste y ser única en este establecimiento.</CardDescription></CardHeader>
+        <Card><CardHeader><CardTitle>{opening ? "Conciliación inicial" : "Justificación"}</CardTitle><CardDescription>La referencia debe identificar el soporte y ser única en este establecimiento.</CardDescription></CardHeader>
           <CardContent className="grid gap-4 md:grid-cols-2">
             <label className="space-y-2 text-sm font-medium">Referencia<Input required maxLength={140} value={reference} onChange={(event) => { changed(); setReference(event.target.value) }} placeholder="AJ-2026-001" /></label>
-            <label className="space-y-2 text-sm font-medium">Motivo<Input required maxLength={500} value={reason} onChange={(event) => { changed(); setReason(event.target.value) }} placeholder="Motivo y documento de respaldo" /></label>
+            <label className="space-y-2 text-sm font-medium">{opening ? "Descripción de la conciliación" : "Motivo"}<Input required maxLength={500} value={reason} onChange={(event) => { changed(); setReason(event.target.value) }} placeholder="Motivo y documento de respaldo" /></label>
+            {opening && <label className="space-y-2 text-sm font-medium">Fecha contable<Input required type="date" value={postingDate} onChange={(event) => { changed(); setPostingDate(event.target.value) }} /></label>}
           </CardContent></Card>
-        <Card><CardHeader><CardTitle>Partidas</CardTitle><CardDescription>Los débitos y créditos deben coincidir. Las cuentas de Caja, banco e inventario usan sus movimientos propios.</CardDescription></CardHeader>
+        <Card><CardHeader><CardTitle>Partidas</CardTitle><CardDescription>{opening ? "Los débitos y créditos deben coincidir. Esta apertura admite las cuentas de Caja, banco e inventario conciliadas." : "Los débitos y créditos deben coincidir. Las cuentas de Caja, banco e inventario usan sus movimientos propios."}</CardDescription></CardHeader>
           <CardContent className="space-y-3">
             {lines.map((line, index) => <div key={index} className="grid gap-2 rounded-lg border border-border p-3 md:grid-cols-[minmax(180px,2fr)_minmax(90px,1fr)_minmax(90px,1fr)_minmax(90px,1fr)_minmax(130px,1.5fr)_auto]">
-              <label className="space-y-1 text-xs text-muted-foreground">Cuenta<select required value={line.account} onChange={(event) => updateLine(index, "account", event.target.value)} className="h-9 w-full rounded-md border border-border bg-white px-2 text-sm text-foreground"><option value="">Seleccione cuenta</option>{accounts.map((account) => <option key={account.name} value={account.name} disabled={!account.manual_enabled}>{account.account_code} · {account.account_name}{account.manual_enabled ? "" : " (cuenta de control)"}</option>)}</select></label>
+              <label className="space-y-1 text-xs text-muted-foreground">Cuenta<select required value={line.account} onChange={(event) => updateLine(index, "account", event.target.value)} className="h-9 w-full rounded-md border border-border bg-white px-2 text-sm text-foreground"><option value="">Seleccione cuenta</option>{accounts.map((account) => <option key={account.name} value={account.name} disabled={!opening && !account.manual_enabled}>{account.account_code} · {account.account_name}{opening || account.manual_enabled ? "" : " (cuenta de control)"}</option>)}</select></label>
               <label className="space-y-1 text-xs text-muted-foreground">Débito {prepared[index].account?.account_currency || ""}<Input type="number" min="0" step="0.01" value={line.debit} onChange={(event) => updateLine(index, "debit", event.target.value)} /></label>
               <label className="space-y-1 text-xs text-muted-foreground">Crédito {prepared[index].account?.account_currency || ""}<Input type="number" min="0" step="0.01" value={line.credit} onChange={(event) => updateLine(index, "credit", event.target.value)} /></label>
               <label className="space-y-1 text-xs text-muted-foreground">{prepared[index].foreign ? `Cambio a ${property.currency}` : "Tipo de cambio"}<Input type="number" min="0.000000001" step="any" value={line.rate} disabled={!prepared[index].foreign} onChange={(event) => updateLine(index, "rate", event.target.value)} /></label>
@@ -127,7 +141,7 @@ export function Journal({ property }: { property: Property }) {
             <Button type="button" variant="outline" onClick={() => { changed(); setLines((current) => [...current, emptyLine()]) }}><Plus size={16} /> Agregar partida</Button>
           </CardContent></Card>
         <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl bg-secondary p-4 text-sm"><div>Débitos <strong className="ml-2 tabular-nums">{formatted(totals.debit)}</strong><span className="mx-3 text-muted-foreground">·</span>Créditos <strong className="ml-2 tabular-nums">{formatted(totals.credit)}</strong> {property.currency}</div>
-          <Button type="submit" disabled={!valid || busy || !!posted}>{busy ? "Publicando…" : posted ? "Publicado" : "Publicar asiento"}</Button></div>
+          <Button type="submit" disabled={!valid || busy || !!posted}>{busy ? "Publicando…" : posted ? "Publicado" : opening ? "Registrar saldos iniciales" : "Publicar asiento"}</Button></div>
       </form>}
   </div>
 }

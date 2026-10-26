@@ -277,6 +277,18 @@ def pms_accounts(property_name):
 
 
 @frappe.whitelist()
+def pms_opening_balance_status(property_name):
+    return standalone_accounting.opening_status(property_name)
+
+
+@frappe.whitelist()
+def pms_reversible_journals(property_name, search="", offset=0,
+                            page_length=25):
+    return standalone_accounting.reversible_journals(
+        property_name, search, offset, page_length)
+
+
+@frappe.whitelist()
 def pms_chart(property_name):
     rows = standalone_accounting.chart(property_name)
     account_types = next(field["options"].split("\n") for field in standalone_coa.SCHEMA["HS Account"]["fields"]

@@ -113,6 +113,74 @@ def list_accounts(property_name):
     return accounts
 
 
+def opening_status(property_name):
+    prop = require(property_name, "setup")
+    require_pms(prop)
+    if not is_system():
+        frappe.throw(_("Solo administración del sistema puede registrar saldos iniciales"),
+            frappe.PermissionError)
+    existing = frappe.db.get_value("HS Journal", {"property": prop.name},
+        "name", order_by="creation asc")
+    return {"available": not bool(existing), "existing_journal": existing,
+        "business_date": str(prop.business_date)}
+
+
+def reversible_journals(property_name, search="", offset=0, page_length=25):
+    prop = require(property_name, "approve")
+    require_pms(prop)
+    try:
+        offset, page_length = int(offset), int(page_length)
+    except (TypeError, ValueError):
+        frappe.throw(_("Revise la paginación de asientos"))
+    if (offset < 0 or not 1 <= page_length <= 100 or
+            not isinstance(search, str) or len(search) > 100):
+        frappe.throw(_("Revise la búsqueda de asientos"))
+    pattern = "%" + search.strip() + "%"
+    where = (
+        "j.property=%s AND j.organization=%s AND j.company=%s "
+        "AND j.status='Posted' "
+        "AND j.source_doctype IN ('HS Manual Journal','HS Opening Balance') "
+        "AND NOT EXISTS (SELECT 1 FROM `tabHS Journal` reversal "
+        "WHERE reversal.reversal_of=j.name) "
+        "AND (j.name LIKE %s OR j.source_name LIKE %s OR j.memo LIKE %s)")
+    values = (prop.name, prop.organization, prop.company,
+        pattern, pattern, pattern)
+    total = frappe.db.sql("SELECT COUNT(*) FROM `tabHS Journal` j WHERE " +
+        where, values, as_list=True)[0][0]
+    rows = frappe.db.sql(
+        "SELECT j.name,j.posting_date,j.source_doctype,j.source_name,j.memo,"
+        "j.total_debit,j.total_credit FROM `tabHS Journal` j WHERE " + where +
+        " ORDER BY j.posting_date DESC,j.creation DESC,j.name DESC "
+        "LIMIT %s OFFSET %s", values + (page_length, offset), as_dict=True)
+    if rows:
+        names = [row.name for row in rows]
+        placeholders = ",".join(["%s"] * len(names))
+        lines = frappe.db.sql(
+            "SELECT l.parent,l.account,a.account_code,a.account_name,"
+            "l.account_currency,l.debit,l.credit,l.debit_in_account_currency,"
+            "l.credit_in_account_currency FROM `tabHS Journal Line` l "
+            "JOIN `tabHS Account` a ON a.name=l.account AND a.property=%s "
+            "AND a.organization=%s "
+            "WHERE l.parent IN (" + placeholders + ") ORDER BY l.parent,l.idx",
+            tuple([prop.name, prop.organization, *names]), as_dict=True)
+        by_journal = {name: [] for name in names}
+        for line in lines:
+            by_journal[line.parent].append({key: str(line[key])
+                if key in ("debit", "credit", "debit_in_account_currency",
+                           "credit_in_account_currency") else line[key]
+                for key in ("account", "account_code", "account_name",
+                            "account_currency", "debit", "credit",
+                            "debit_in_account_currency",
+                            "credit_in_account_currency")})
+        for row in rows:
+            row["lines"] = by_journal[row.name]
+            row["posting_date"] = str(row.posting_date)
+            row["total_debit"] = str(row.total_debit)
+            row["total_credit"] = str(row.total_credit)
+    return {"rows": rows, "total": total, "offset": offset,
+        "page_length": page_length}
+
+
 def manual_journal(prop, data):
     """Post a documented general-ledger adjustment on the open business day."""
     require_pms(prop)

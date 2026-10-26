@@ -2,6 +2,7 @@ import { lazy } from "react"
 
 // Keep route components out of the initial bundle. Navigation metadata stays eager in App.
 export const Journal = lazy(() => import("./Journal").then(({ Journal }) => ({ default: Journal })))
+export const JournalReversal = lazy(() => import("./JournalReversal").then(({ JournalReversal }) => ({ default: JournalReversal })))
 export const Chart = lazy(() => import("./Chart").then(({ Chart }) => ({ default: Chart })))
 export const Cash = lazy(() => import("./Cash").then(({ Cash }) => ({ default: Cash })))
 export const ErpCash = lazy(() => import("./ErpCash").then(({ ErpCash }) => ({ default: ErpCash })))
