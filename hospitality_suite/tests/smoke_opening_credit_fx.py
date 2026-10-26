@@ -112,6 +112,15 @@ def run(kind="Credit Note"):
             posted = _post_property(prop, "erp.example.invalid", "b" * 64, plan)
             credit = frappe.get_doc("HS PMS Opening Credit", posted["credits"][0])
             receivable = frappe.get_doc("HS PMS Receivable", posted["receivables"][0])
+            credit_page = api.pms_opening_balances_page(prop.name, kind="Credit",
+                search=credit.opening_source_name)
+            if (credit_page["has_more"] or len(credit_page["rows"]) != 1 or
+                    credit_page["rows"][0]["name"] != credit.name or
+                    credit_page["rows"][0]["available"] != "50.00" or
+                    credit_page["rows"][0]["base_available"] != "1800.00" or
+                    api.pms_opening_balances_page(prop.name, kind="Credit",
+                        search="INEXISTENTE-" + suffix)["rows"]):
+                frappe.throw("La página inicial no mostró el crédito extranjero exacto")
             position = account_currency_balance(prop, ar.name)
             close = close_snapshot(prop)
             opened = next(row for row in close["breakdown"]["opening_customer_credits"]
@@ -159,6 +168,11 @@ def run(kind="Credit Note"):
                     opening_balances(prop, receivable.name) !=
                     (Decimal(80), Decimal(2800))):
                 frappe.throw("La aplicación no redujo ambas obligaciones")
+            credit_page = api.pms_opening_balances_page(prop.name, kind="Credit",
+                search=credit.opening_source_name)
+            if (credit_page["rows"][0]["available"] != "30.00" or
+                    credit_page["rows"][0]["base_available"] != "1080.00"):
+                frappe.throw("La página no actualizó el saldo del crédito aplicado")
             try:
                 api.execute(prop.name, "pms_apply_opening_credit",
                     "fx-credit-apply-stale-" + suffix,

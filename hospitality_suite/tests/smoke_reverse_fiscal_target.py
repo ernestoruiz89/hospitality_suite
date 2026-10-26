@@ -1785,6 +1785,17 @@ def run(persist=False):
                     imported["outstanding"] != "25.00"):
                 frappe.throw("La cartera migrada no enlaza su PDF fiscal en la API")
             opening_credits = api.pms_receivables(opening_prop.name)["opening_credits"]["credits"]
+            first_credit_page = api.pms_opening_balances_page(opening_prop.name,
+                kind="Credit", page_length=1)
+            second_credit_page = api.pms_opening_balances_page(opening_prop.name,
+                kind="Credit", offset=1, page_length=1)
+            if (not first_credit_page["has_more"] or
+                    second_credit_page["has_more"] or
+                    len(first_credit_page["rows"]) != 1 or
+                    len(second_credit_page["rows"]) != 1 or
+                    first_credit_page["rows"][0]["name"] ==
+                        second_credit_page["rows"][0]["name"]):
+                frappe.throw("La paginación de créditos repitió o perdió registros")
             note = next((item for item in opening_credits if item["opening_source_name"] ==
                 credit_row["source_name"]), None)
             advance = next((item for item in opening_credits if item["opening_source_name"] ==
@@ -1798,6 +1809,10 @@ def run(persist=False):
             guarantees = api.pms_receivables(opening_prop.name)["opening_guarantees"]
             guarantee = next((item for item in guarantees if item["opening_source_name"] ==
                 "HS-GUAR-" + suffix), None)
+            guarantee_page = api.pms_opening_balances_page(opening_prop.name,
+                kind="Guarantee", search="HS-GUAR-" + suffix)
+            other_guarantees = api.pms_opening_balances_page(other_prop.name,
+                kind="Guarantee", search="HS-GUAR-" + suffix)
             if (not guarantee or guarantee["customer"] != party.name or
                     guarantee["available"] != "5.00" or
                     guarantee["source_folio"] != "FOL-ORIGEN-" + suffix or
@@ -1806,6 +1821,12 @@ def run(persist=False):
                     frappe.db.exists("HS Payment", {"property": opening_prop.name,
                         "kind": "Guarantee", "status": "Posted"})):
                 frappe.throw("La garantía de apertura creó un cobro o perdió su origen")
+            if (other_guarantees["rows"] or guarantee_page["has_more"] or
+                    len(guarantee_page["rows"]) != 1 or
+                    guarantee_page["rows"][0]["name"] != guarantee["name"] or
+                    guarantee_page["rows"][0]["available"] != "5.00" or
+                    guarantee_page["rows"][0]["source_folio"] != guarantee["source_folio"]):
+                frappe.throw("La página de garantías perdió el saldo o folio de origen")
             frappe.db.savepoint("hs_reverse_imported_invoice_guarantee_probe")
             try:
                 direct_data = {"guarantee": guarantee["name"],
@@ -1822,6 +1843,10 @@ def run(persist=False):
                         frappe.db.get_value("HS PMS Receivable",
                             imported["name"], "folio") != folio_name):
                     frappe.throw("La garantía no se aplicó a la factura abierta del folio")
+                guarantee_page = api.pms_opening_balances_page(opening_prop.name,
+                    kind="Guarantee", search="HS-GUAR-" + suffix)
+                if guarantee_page["rows"][0]["available"] != "4.00":
+                    frappe.throw("La página no actualizó la garantía aplicada")
             finally:
                 frappe.db.rollback(save_point="hs_reverse_imported_invoice_guarantee_probe")
             try:

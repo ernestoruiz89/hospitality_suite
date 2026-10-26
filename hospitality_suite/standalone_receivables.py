@@ -689,6 +689,65 @@ def applications_page(property_name, kind="Advance", search="", offset=0,
             "search": term, "offset": offset, "has_more": len(rows) > page_length}
 
 
+def opening_balances_page(property_name, kind="Credit", search="", offset=0,
+                          page_length=25):
+    if kind not in ("Credit", "Guarantee"):
+        frappe.throw(_("Seleccione créditos o garantías de apertura"))
+    prop = require(property_name, "finance")
+    require_pms(prop)
+    try:
+        offset, page_length = int(offset), int(page_length)
+    except (TypeError, ValueError):
+        frappe.throw(_("Revise la paginación de saldos de apertura"))
+    if (not isinstance(search, str) or len(search) > 100 or
+            offset < 0 or page_length < 1 or page_length > 100):
+        frappe.throw(_("Revise la búsqueda de saldos de apertura"))
+    term = search.strip()
+    if kind == "Credit":
+        rows = frappe.db.sql(
+            "SELECT c.name,c.credit_kind,c.customer,p.party_name,"
+            "c.opening_source_site,c.opening_source_doctype,"
+            "c.opening_source_name,c.currency,c.amount,c.base_amount,"
+            "c.receivable_account "
+            "FROM `tabHS PMS Opening Credit` c "
+            "LEFT JOIN `tabHS Party` p ON p.name=c.customer AND p.property=c.property "
+            "WHERE c.property=%s AND c.status='Posted'" +
+            (" AND (LOCATE(%s,c.name)>0 OR LOCATE(%s,c.opening_source_name)>0 "
+             "OR LOCATE(%s,p.party_name)>0)" if term else "") +
+            " ORDER BY c.creation DESC,c.name DESC LIMIT %s OFFSET %s",
+            (prop.name, *((term,) * 3 if term else ()),
+             page_length + 1, offset), as_dict=True)
+        from hospitality_suite.standalone_opening_credits import balances
+        page = []
+        for row in rows[:page_length]:
+            nominal, base = balances(prop, row.name)
+            historical = (frappe.db.get_value("HS Historical Fiscal Document",
+                {"property": prop.name, "source_site": row.opening_source_site,
+                 "source_doctype": "Sales Invoice",
+                 "source_name": row.opening_source_name}, "name")
+                if row.opening_source_doctype == "Sales Invoice" else None)
+            page.append({**row, "kind": kind, "available": _money(nominal),
+                "base_available": _money(base), "historical_document": historical})
+    else:
+        rows = frappe.db.sql(
+            "SELECT g.name,g.customer,p.party_name,g.opening_source_name,"
+            "g.source_booking,g.source_stay,g.source_folio,g.currency,"
+            "g.amount,g.liability_account "
+            "FROM `tabHS PMS Opening Guarantee` g "
+            "LEFT JOIN `tabHS Party` p ON p.name=g.customer AND p.property=g.property "
+            "WHERE g.property=%s AND g.status='Posted'" +
+            (" AND (LOCATE(%s,g.name)>0 OR LOCATE(%s,g.opening_source_name)>0 "
+             "OR LOCATE(%s,p.party_name)>0)" if term else "") +
+            " ORDER BY g.creation DESC,g.name DESC LIMIT %s OFFSET %s",
+            (prop.name, *((term,) * 3 if term else ()),
+             page_length + 1, offset), as_dict=True)
+        from hospitality_suite.standalone_opening_guarantees import available
+        page = [{**row, "kind": kind, "available": _money(available(prop, row.name))}
+                for row in rows[:page_length]]
+    return {"rows": page, "search": term, "offset": offset,
+            "has_more": len(rows) > page_length}
+
+
 def snapshot(property_name):
     prop = require(property_name, "finance")
     require_pms(prop)

@@ -354,6 +354,13 @@ def pms_applications_page(property_name, kind="Advance", search="",
 
 
 @frappe.whitelist()
+def pms_opening_balances_page(property_name, kind="Credit", search="",
+                              offset=0, page_length=25):
+    return standalone_receivables.opening_balances_page(property_name, kind,
+        search, offset, page_length)
+
+
+@frappe.whitelist()
 def pms_fiscal_snapshot(property_name):
     return standalone_fiscal.snapshot(property_name)
 
