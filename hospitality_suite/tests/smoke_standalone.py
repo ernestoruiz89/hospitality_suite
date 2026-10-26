@@ -488,6 +488,23 @@ def run():
         deposit = account_number("2000")
         income = account_number("4000")
         operating_expense = account_number("5000")
+        def assert_manual_control_rejected(selected, label):
+            assert not next(row for row in api.pms_accounts(second_prop.name)
+                            if row["name"] == selected)["manual_enabled"]
+            before = standalone_accounting.balance(second_prop, selected)
+            try:
+                api.execute(second_prop.name, "pms_manual_journal",
+                    "manual-control-" + label + suffix,
+                    dict(reference="CONTROL-" + label + suffix,
+                         reason="La cuenta tiene un auxiliar operativo",
+                         lines=[dict(account=selected, debit="1.00", credit="0"),
+                                dict(account=owner, debit="0", credit="1.00")]))
+            except frappe.ValidationError:
+                pass
+            else:
+                raise AssertionError("Se ajustó directamente una cuenta de control: " + label)
+            assert standalone_accounting.balance(second_prop, selected) == before
+
         api.execute(second_prop.name, "pms_opening_balance", "opening-fx-" + suffix,
             dict(reference="FX-OPEN-" + suffix, lines=[
                 dict(account=nio_cash, debit="100.00", credit="0"),
@@ -521,6 +538,7 @@ def run():
                  amount="1000", receivable_account=ar, income_account=income))
         receivable = charge["receivable"]
         assert standalone_accounting.balance(second_prop, ar) == "1000.00"
+        assert_manual_control_rejected(ar, "AR")
         try:
             api.execute(second_prop.name, "pms_reverse_journal", "reverse-charge-" + suffix,
                 dict(journal=charge["journal"], reason="No dejar saldos huérfanos"))
@@ -563,6 +581,7 @@ def run():
         assert sum(Decimal(str(line.credit)) for line in receipt_lines) == Decimal("182.50")
         assert any(line.account == usd_cash and Decimal(str(line.debit_in_account_currency)) == 5
                    for line in receipt_lines)
+        assert_manual_control_rejected(deposit, "DEPOSIT")
         try:
             api.execute(second_prop.name, "pms_cash_movement", "stale-rate-" + suffix,
                 dict(kind="Advance", amount="1", method=cash_method, shift=shift,
@@ -1706,6 +1725,7 @@ def run():
         profile = api.execute(second_prop.name, "pms_tax_profile", "tax-profile-" + suffix,
             dict(label="Gravado de prueba", treatment="Taxable", rate="15",
                  included_in_price=0, liability_account=tax_account))["profile"]
+        assert_manual_control_rejected(tax_account, "TAX")
         existing_product = frappe.get_doc("HS Product", lodging_product)
         api.save_setup(second_prop.name, "product",
             {"name": lodging_product, "tax_profile": profile}, "product-tax-" + suffix,
@@ -2203,6 +2223,7 @@ def run():
             return dict(warehouse=stock_warehouse, item=item.name)
         stock_service = command(second_prop.name, "setup", "service-stock-master-" + suffix,
             {"operation": "smoke_service_stock_master"}, create_service_stock)
+        assert_manual_control_rejected(stock_asset, "STOCK")
         stock_opening_data = dict(product=stock_service["item"],
             warehouse=stock_service["warehouse"], quantity="2", value="20.00",
             equity_account=owner, reference="guest-stock-" + suffix)
@@ -2260,6 +2281,7 @@ def run():
         assert api.execute(second_prop.name, "pms_transfer_stock",
             "stock-transfer-" + suffix, transfer_data) == transferred
         assert transferred["value"] == "10.00"
+        assert_manual_control_rejected(clearing, "STOCKCLEARING")
         assert standalone_inventory.current_balance(second_prop, stock_service["item"],
             stock_service["warehouse"]) == (Decimal("1"), Decimal("10.00"))
         assert standalone_inventory.current_balance(second_prop, stock_service["item"],
@@ -2399,6 +2421,7 @@ def run():
         payable = api.execute(second_prop.name, "pms_account", "purchase-payable-" + suffix,
             dict(account_code="2200" + suffix, account_name="Proveedores PMS",
                  root_type="Liability", account_type="Payable"))["account"]
+        assert_manual_control_rejected(payable, "AP")
         input_tax = api.execute(second_prop.name, "pms_account", "purchase-tax-" + suffix,
             dict(account_code="1300" + suffix, account_name="Impuesto recuperable",
                  root_type="Asset", account_type="Tax"))["account"]
@@ -2416,6 +2439,7 @@ def run():
             "purchase-receipt-" + suffix, purchase_command)
         assert api.execute(second_prop.name, "pms_receive_purchase",
             "purchase-receipt-" + suffix, purchase_command) == purchase
+        assert_manual_control_rejected(input_tax, "INPUTTAX")
         assert standalone_accounting.balance(second_prop, payable) == "-73.00"
         assert standalone_accounting.balance(second_prop, input_tax) == "7.30"
         assert standalone_inventory.current_balance(second_prop, stock_service["item"],
@@ -2481,6 +2505,8 @@ def run():
             dict(label="Préstamo socios", nature="Loan", account=loan_account))["concept"]
         capital_concept = api.execute(second_prop.name, "pms_income_concept", "capital-concept-" + suffix,
             dict(label="Aporte propietarios", nature="Capital", account=capital_account))["concept"]
+        assert_manual_control_rejected(loan_account, "LOAN")
+        assert_manual_control_rejected(capital_account, "CAPITAL")
         loan_request = api.execute(second_prop.name, "pms_financing_request", "loan-request-" + suffix,
             dict(kind="Loan Received", concept=loan_concept, amount="73.00",
                  reason="Financiar reposición de inventario"))["movement"]

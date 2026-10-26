@@ -97,19 +97,42 @@ def chart(property_name):
         order_by="account_code asc")
 
 
+def _manual_control_accounts(prop):
+    """Accounts whose balance is reconciled against an operational subledger."""
+    rows = frappe.db.sql(
+        "SELECT inventory_account FROM `tabHS Product` WHERE property=%s "
+        "UNION SELECT liability_account FROM `tabHS PMS Tax Profile` WHERE property=%s "
+        "UNION SELECT liability_account FROM `tabHS PMS Opening Guarantee` WHERE property=%s "
+        "UNION SELECT tax_account FROM `tabHS PMS Purchase` WHERE property=%s "
+        "UNION SELECT tax_account FROM `tabHS PMS Purchase Order` WHERE property=%s "
+        "UNION SELECT tax_account FROM `tabHS PMS Purchase Return` WHERE property=%s "
+        "UNION SELECT clearing_account FROM `tabHS Stock Transfer` WHERE property=%s "
+        "UNION SELECT pms_counter_account FROM `tabHS Payment` WHERE property=%s "
+        "AND kind IN ('Advance','Guarantee') AND status='Posted' AND pms_journal IS NOT NULL "
+        "UNION SELECT account FROM `tabHS Treasury Concept` WHERE property=%s "
+        "AND nature IN ('Loan','Capital') "
+        "UNION SELECT counter_account FROM `tabHS Treasury Movement` WHERE property=%s "
+        "AND pms_journal IS NOT NULL AND kind IN ('Initial Fund','Replenishment',"
+        "'Loan Received','Loan Repayment','Capital Contribution','Capital Withdrawal') "
+        "UNION SELECT petty_account FROM `tabHS Petty Cash Expense` WHERE property=%s "
+        "AND pms_journal IS NOT NULL",
+        (prop.name,) * 11, as_list=True)
+    return {name for name, in rows if name} | {prop.petty_cash_account}
+
+
 def list_accounts(property_name):
     prop = require(property_name, "journal")
     require_pms(prop)
     accounts = frappe.get_all("HS Account", filters={"property": prop.name, "organization": prop.organization,
                     "active": 1, "is_group": 0},
-                    fields=["name", "account_code", "account_name", "root_type", "account_currency", "is_cash", "is_bank"],
+                    fields=["name", "account_code", "account_name", "root_type", "account_type",
+                            "account_currency", "is_cash", "is_bank"],
                     order_by="account_code asc")
-    inventory_accounts = set(frappe.get_all("HS Product", filters={"property": prop.name,
-                              "active": 1, "inventory_account": ["is", "set"]},
-                              pluck="inventory_account"))
+    control_accounts = _manual_control_accounts(prop)
     for row in accounts:
         row["manual_enabled"] = not (row.is_cash or row.is_bank or
-            row.name in inventory_accounts or row.name == prop.petty_cash_account)
+            row.account_type in ("Receivable", "Payable", "Stock") or
+            row.name in control_accounts)
     return accounts
 
 
@@ -201,17 +224,16 @@ def manual_journal(prop, data):
            set(line) - {"account", "debit", "credit", "memo", "account_currency", "exchange_rate",
                         "debit_in_account_currency", "credit_in_account_currency"} for line in lines):
         frappe.throw(_("Las líneas del asiento contienen campos desconocidos"))
+    control_accounts = _manual_control_accounts(prop)
     for line in lines:
         if line.get("memo") is not None and (not isinstance(line["memo"], str) or len(line["memo"]) > 140):
             frappe.throw(_("El detalle de cada partida debe tener hasta 140 caracteres"))
         selected = account(prop, line.get("account"))
         if selected.is_cash or selected.is_bank:
             frappe.throw(_("Use los movimientos de Caja o banco para sus cuentas de control"))
-        if selected.name == prop.petty_cash_account:
-            frappe.throw(_("Use el flujo de Caja Chica para su cuenta de control"))
-        if frappe.db.exists("HS Product", {"property": prop.name,
-                             "inventory_account": selected.name, "active": 1}):
-            frappe.throw(_("Use movimientos de inventario para la cuenta de existencias"))
+        if (selected.account_type in ("Receivable", "Payable", "Stock") or
+                selected.name in control_accounts):
+            frappe.throw(_("Use la operación vinculada para esta cuenta de control"))
     doc = post(prop, source_doctype="HS Manual Journal", source_name=reference.strip(),
                purpose="Manual Journal", lines=lines, memo=reason.strip())
     audit(prop, "pms_manual_journal", doc, reason=reason.strip(),

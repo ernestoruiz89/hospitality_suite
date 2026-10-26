@@ -175,6 +175,10 @@ En ERPNext, el reporte de Auditoría React abre el detalle histórico de cada ev
 
 Ningún establecimiento existente cambia de proveedor automáticamente. En un sitio nuevo sin ERPNext se debe configurar el catálogo, monedas, tipos de cambio y medios de cobro antes de operar Caja. Las operaciones PMS aún pendientes permanecen deshabilitadas.
 
+### Cuentas de control en el mayor PMS
+
+La interfaz y la API excluyen de asientos manuales las cuentas conciliadas con auxiliares de cartera, proveedores, existencias, anticipos, garantías, tributos, Caja Chica, financiación y traspasos de stock. La restricción conserva las cuentas usadas en documentos históricos aunque se desactive su maestro. Los saldos iniciales usan una operación independiente antes del primer asiento; los movimientos posteriores se corrigen desde su propio flujo y mantienen el auxiliar y el mayor conciliados.
+
 ### Liquidación de deuda inicial extranjera
 
 En la apertura ERPNext → PMS, una factura pendiente de proveedor cuya **cuenta por pagar** esté en moneda extranjera se traslada con su saldo nominal y su saldo base verificado por `Payment Ledger Entry`. El asiento de apertura conserva ambos importes y el tipo de cambio histórico. Un pago parcial libera proporcionalmente el valor base de ese pasivo; el último libera el remanente exacto. El desembolso se valora al cambio vigente del medio de pago y la diferencia se carga o abona a la cuenta de resultados elegida en **Configuración → Diferencia cambiaria**. Si el medio de pago usa una moneda distinta a la de la deuda, el operador indica cuánto principal original cancela; si coincide, ese importe se toma del pago. Compras y el cierre diario muestran por separado principal original, valor base liberado, efectivo desembolsado y diferencia cambiaria. Los créditos de proveedor en moneda base no se aplican a una deuda extranjera.
