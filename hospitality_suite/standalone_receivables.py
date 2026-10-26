@@ -495,9 +495,10 @@ def cancel(prop, data, *, allow_day_pass=False):
     return {"receivable": doc.name, "status": doc.status, "reversal_journal": reversal.name}
 
 
-def list_receivables(prop, open_only=False, folio=None):
+def list_receivables(prop, open_only=False, folio=None, receivable=None):
     open_filter = " AND (r.amount-COALESCE(a.original_allocated,0)-COALESCE(c.credited,0))>0" if open_only else ""
     folio_filter = " AND r.folio=%s" if folio else ""
+    receivable_filter = " AND r.name=%s" if receivable else ""
     rows = frappe.db.sql(
         "SELECT r.name, r.party, r.reference, r.description, r.amount, r.currency, "
         "r.base_currency, r.base_amount, "
@@ -525,9 +526,10 @@ def list_receivables(prop, open_only=False, folio=None):
         "FROM `tabHS PMS Fiscal Line` l JOIN `tabHS PMS Fiscal Document` d ON d.name=l.parent "
         "WHERE d.property=%s AND d.document_type='Credit Note' AND d.status='Posted' "
         "GROUP BY l.receivable) c ON c.receivable=r.name "
-        "WHERE r.property=%s AND r.status='Posted'" + open_filter + folio_filter +
+        "WHERE r.property=%s AND r.status='Posted'" + open_filter + folio_filter + receivable_filter +
         " ORDER BY r.creation DESC LIMIT 200",
-        (prop.name, prop.name, prop.name, *((folio,) if folio else ())), as_dict=True)
+        (prop.name, prop.name, prop.name, *((folio,) if folio else ()),
+         *((receivable,) if receivable else ())), as_dict=True)
     return [{**row, "outstanding": _money(row.outstanding),
              "base_outstanding": _money(row.base_outstanding)} for row in rows]
 

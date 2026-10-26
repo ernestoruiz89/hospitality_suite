@@ -52,6 +52,7 @@ export function Cash({ property, canSetup, canRefund }: { property: Property; ca
   const [searchParams] = useSearchParams()
   const section = usePmsCashSection(canRefund, canSetup)
   const requestedFolio = section === "collect" ? searchParams.get("folio") || "" : ""
+  const requestedReceivable = section === "collect" ? searchParams.get("receivable") || "" : ""
   const sectionInfo = pmsCashSections.find((item) => item.id === section)!
   const kind = pmsCashMovementKind(section) || "Payment"
   const setupKind = pmsCashSetupKind(section) || "method"
@@ -88,15 +89,17 @@ export function Cash({ property, canSetup, canRefund }: { property: Property; ca
   const [refundReference, setRefundReference] = useState("")
   const [refundReason, setRefundReason] = useState("")
   const [refundQuote, setRefundQuote] = useState<Quote | null>(null)
-  const appliedRoomContext = useRef("")
+  const appliedCollectContext = useRef("")
 
   const refresh = useCallback(async () => {
     const result = await call<CashData>("pms_cash_snapshot", {
-      property_name: property.name, ...(requestedFolio ? { folio: requestedFolio } : {}),
+      property_name: property.name,
+      ...(requestedFolio ? { folio: requestedFolio } : {}),
+      ...(requestedReceivable ? { receivable: requestedReceivable } : {}),
     })
     setSnapshot(result)
     setOpening((current) => Object.keys(current).length ? current : Object.fromEntries(result.accepted_currencies.map((currency) => [currency, "0"])))
-  }, [property.name, requestedFolio])
+  }, [property.name, requestedFolio, requestedReceivable])
   useEffect(() => {
     setSnapshot(null); setChart(null); setError(""); setNotice("")
     setOpening({}); setCounted({}); setMethod(""); setShift(""); setQuote(null)
@@ -107,7 +110,7 @@ export function Cash({ property, canSetup, canRefund }: { property: Property; ca
       .catch((reason: unknown) => setError(reason instanceof Error ? reason.message : "No se pudo consultar el catálogo."))
   }, [refresh, canSetup])
   useEffect(() => {
-    appliedRoomContext.current = ""
+    appliedCollectContext.current = ""
     setMethod(""); setShift(""); setCounter(""); setReceivable(""); setSettledAmount("")
     setParty(""); setFolio(""); setBooking(""); setGuaranteeTarget("booking"); setCustomerName("")
     setCategory(""); setConcept(""); setAmount(""); setReference(""); setReason("")
@@ -116,15 +119,17 @@ export function Cash({ property, canSetup, canRefund }: { property: Property; ca
     setRefundReason(""); setRefundQuote(null)
   }, [section])
   useEffect(() => {
-    if (!snapshot || !requestedFolio || section !== "collect") return
-    const context = property.name + ":" + requestedFolio
-    if (appliedRoomContext.current === context) return
-    const matches = snapshot.receivables.filter((row) => row.folio === requestedFolio)
+    if (!snapshot || section !== "collect" || !(requestedFolio || requestedReceivable)) return
+    const context = [property.name, requestedFolio, requestedReceivable].join(":")
+    if (appliedCollectContext.current === context) return
+    const matches = snapshot.receivables.filter((row) =>
+      (!requestedFolio || row.folio === requestedFolio) &&
+      (!requestedReceivable || row.name === requestedReceivable))
     if (matches.length === 1) {
-      appliedRoomContext.current = context
+      appliedCollectContext.current = context
       setReceivable(matches[0].name)
     }
-  }, [snapshot, requestedFolio, section, property.name])
+  }, [snapshot, requestedFolio, requestedReceivable, section, property.name])
 
   async function refreshAfter(success: string) {
     try { await refresh(); setNotice(success) }
@@ -138,9 +143,11 @@ export function Cash({ property, canSetup, canRefund }: { property: Property; ca
   const chosenFolio = snapshot?.folios.find((item) => item.name === folio)
   const chosenBooking = snapshot?.bookings.find((item) => item.name === booking)
   const chosenReceivable = snapshot?.receivables.find((item) => item.name === receivable &&
-    (!requestedFolio || item.folio === requestedFolio))
+    (!requestedFolio || item.folio === requestedFolio) &&
+    (!requestedReceivable || item.name === requestedReceivable))
   const availableReceivables = snapshot?.receivables.filter((item) =>
-    Number(item.outstanding) > 0 && (!requestedFolio || item.folio === requestedFolio)) || []
+    Number(item.outstanding) > 0 && (!requestedFolio || item.folio === requestedFolio) &&
+    (!requestedReceivable || item.name === requestedReceivable)) || []
   const foreignReceivable = kind === "Payment" && chosenReceivable?.currency !== property.currency && !!chosenReceivable
   const payload = useMemo(() => ({ kind, amount, method, ...(chosenMethod?.is_cash ? { shift } : {}),
     ...(kind === "Payment" ? { receivable, ...(foreignReceivable && settledAmount ? { settled_amount: settledAmount } : {}) } : kind === "Advance" ? { counter_account: counter, party } :
@@ -155,8 +162,8 @@ export function Cash({ property, canSetup, canRefund }: { property: Property; ca
   async function transact(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (busy) return
-    if (kind === "Payment" && requestedFolio && !chosenReceivable) {
-      setError("Seleccione un cargo pendiente de la cuenta de estancia indicada.")
+    if (kind === "Payment" && (requestedFolio || requestedReceivable) && !chosenReceivable) {
+      setError("La cuenta por cobrar indicada ya no tiene saldo pendiente en este establecimiento.")
       return
     }
     setBusy(true); setError(""); setNotice("")
@@ -281,6 +288,10 @@ export function Cash({ property, canSetup, canRefund }: { property: Property; ca
           {chosenMethod?.is_cash && <label className="space-y-1 text-sm">Turno<select required value={shift} onChange={(event) => { changed(); setShift(event.target.value) }} className="h-9 w-full rounded-md border border-border bg-white px-2"><option value="">Seleccione turno</option>{snapshot.shifts.map((item) => <option key={item.name} value={item.name}>{item.name}</option>)}</select></label>}
           {(kind === "Advance" || kind === "Guarantee") && <label className="space-y-1 text-sm">Cuenta de depósitos<select required value={counter} onChange={(event) => { changed(); setCounter(event.target.value) }} className="h-9 w-full rounded-md border border-border bg-white px-2"><option value="">Seleccione pasivo</option>{snapshot.deposit_accounts.map((item) => <option key={item.name} value={item.name}>{item.account_code} · {item.account_name}</option>)}</select></label>}
           {kind === "Payment" && <label className="space-y-1 text-sm sm:col-span-2">Cuenta por cobrar<select required value={receivable} onChange={(event) => { changed(); setReceivable(event.target.value); setSettledAmount("") }} className="h-9 w-full rounded-md border border-border bg-white px-2"><option value="">Seleccione cuenta pendiente</option>{availableReceivables.map((item) => <option key={item.name} value={item.name}>{item.reference} · Saldo {item.currency} {item.outstanding}</option>)}</select></label>}
+          {kind === "Payment" && requestedReceivable && <div className="text-sm sm:col-span-2">
+            <p>Cuenta por cobrar: <strong>{availableReceivables[0]?.reference || requestedReceivable}</strong></p>
+            {!availableReceivables.length && <p className="mt-1 text-muted-foreground">Esta cuenta ya no tiene saldo pendiente o no pertenece al establecimiento. <Link className="text-primary underline" to="/receivables?section=balances">Ver saldos pendientes</Link></p>}
+          </div>}
           {kind === "Payment" && requestedFolio && <div className="text-sm sm:col-span-2">
             <p>Cuenta de estancia: <strong>{snapshot.folios.find((item) => item.name === requestedFolio)?.label || requestedFolio}</strong></p>
             {!availableReceivables.length && <p className="mt-1 text-muted-foreground">No hay cargos contabilizados pendientes de cobro para esta cuenta. <Link className="text-primary underline" to={"/folios?section=post&folio=" + encodeURIComponent(requestedFolio)}>Revisar cargos</Link></p>}

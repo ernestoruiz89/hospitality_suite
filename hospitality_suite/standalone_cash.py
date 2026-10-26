@@ -685,13 +685,17 @@ def refund(prop, data):
             "exchange_variance_base": q["exchange_variance_base"]}
 
 
-def snapshot(property_name, folio=None):
+def snapshot(property_name, folio=None, receivable=None):
     prop = require(property_name, "finance")
     require_pms(prop)
     if folio is not None:
         if not isinstance(folio, str) or len(folio) > 140:
             frappe.throw(_("Revise la cuenta de estancia"))
         folio = folio.strip() or None
+    if receivable is not None:
+        if not isinstance(receivable, str) or len(receivable) > 140:
+            frappe.throw(_("Revise la cuenta por cobrar"))
+        receivable = receivable.strip() or None
     from hospitality_suite.standalone_receivables import list_receivables
     methods = frappe.get_all("HS Payment Method", filters={"property": prop.name},
         fields=["name", "mode_of_payment", "account", "currency", "is_cash"])
@@ -762,5 +766,6 @@ def snapshot(property_name, folio=None):
         "shifts": [{**shift, "expected": expected(frappe.get_doc("HS Shift", shift.name))}
                                for shift in shifts if shift.cashier == frappe.session.user],
         "deposit_accounts": deposit_accounts,
-        "receivables": list_receivables(prop, open_only=True, folio=folio),
+        "receivables": list_receivables(prop, open_only=True, folio=folio,
+                                        receivable=receivable),
         "movements": movements, "refundable": refundable}

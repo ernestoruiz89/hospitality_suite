@@ -190,6 +190,16 @@ def run():
                 frappe.db.count("HS Audit Event", {"property": property_name,
                     "action": "pms_folio_billed"}) != 2):
             raise AssertionError("Distinct-key billing posted twice")
+        targeted = first_result["receivables"][0]["receivable"]
+        cash_view = api.pms_cash_snapshot(property_name,
+            folio=fixture["folio"], receivable=targeted)
+        if ([row["name"] for row in cash_view["receivables"]] != [targeted] or
+                api.pms_cash_snapshot(property_name,
+                    receivable="missing-" + suffix)["receivables"] or
+                api.pms_cash_snapshot(property_name,
+                    folio="missing-" + suffix,
+                    receivable=targeted)["receivables"]):
+            raise AssertionError("Cash did not scope the requested receivable")
         sites_path = Path(frappe.local.sites_path).resolve()
         for index, same_key in enumerate((True, False)):
             receivable = (first_result if index == 0 else second_result)[

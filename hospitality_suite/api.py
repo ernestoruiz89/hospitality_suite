@@ -318,8 +318,8 @@ def erp_property_currency_settings(property_name):
 
 
 @frappe.whitelist()
-def pms_cash_snapshot(property_name, folio=None):
-    return standalone_cash.snapshot(property_name, folio=folio)
+def pms_cash_snapshot(property_name, folio=None, receivable=None):
+    return standalone_cash.snapshot(property_name, folio=folio, receivable=receivable)
 
 
 @frappe.whitelist()
