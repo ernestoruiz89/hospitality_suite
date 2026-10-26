@@ -495,12 +495,16 @@ def cancel(prop, data, *, allow_day_pass=False):
     return {"receivable": doc.name, "status": doc.status, "reversal_journal": reversal.name}
 
 
-def list_receivables(prop, open_only=False, folio=None, receivable=None):
+def list_receivables(prop, open_only=False, folio=None, receivable=None, *,
+                     search="", offset=0, page_length=200):
     open_filter = " AND (r.amount-COALESCE(a.original_allocated,0)-COALESCE(c.credited,0))>0" if open_only else ""
     folio_filter = " AND r.folio=%s" if folio else ""
     receivable_filter = " AND r.name=%s" if receivable else ""
+    search_filter = (" AND (LOCATE(%s,r.name)>0 OR LOCATE(%s,r.reference)>0 "
+                     "OR LOCATE(%s,p.party_name)>0)"
+                     if search else "")
     rows = frappe.db.sql(
-        "SELECT r.name, r.party, r.reference, r.description, r.amount, r.currency, "
+        "SELECT r.name, r.party, p.party_name, r.reference, r.description, r.amount, r.currency, "
         "r.base_currency, r.base_amount, "
         "r.business_date, r.due_date, r.receivable_account, r.folio, "
         "f.stay AS folio_stay, "
@@ -509,7 +513,9 @@ def list_receivables(prop, open_only=False, folio=None, receivable=None):
         "r.amount-COALESCE(a.original_allocated,0)-COALESCE(c.credited,0) AS outstanding, "
         "COALESCE(NULLIF(r.base_amount,0),r.amount)-COALESCE(a.base_allocated,0)-"
         "COALESCE(c.credited,0) AS base_outstanding "
-        "FROM `tabHS PMS Receivable` r LEFT JOIN `tabHS Folio` f ON f.name=r.folio "
+        "FROM `tabHS PMS Receivable` r "
+        "LEFT JOIN `tabHS Party` p ON p.name=r.party AND p.property=r.property "
+        "LEFT JOIN `tabHS Folio` f ON f.name=r.folio "
         "LEFT JOIN `tabHS Stay` s ON s.name=f.stay "
         "LEFT JOIN `tabHS Historical Fiscal Document` h ON "
         "h.property=r.property AND h.source_site=r.opening_source_site "
@@ -526,12 +532,31 @@ def list_receivables(prop, open_only=False, folio=None, receivable=None):
         "FROM `tabHS PMS Fiscal Line` l JOIN `tabHS PMS Fiscal Document` d ON d.name=l.parent "
         "WHERE d.property=%s AND d.document_type='Credit Note' AND d.status='Posted' "
         "GROUP BY l.receivable) c ON c.receivable=r.name "
-        "WHERE r.property=%s AND r.status='Posted'" + open_filter + folio_filter + receivable_filter +
-        " ORDER BY r.creation DESC LIMIT 200",
+        "WHERE r.property=%s AND r.status='Posted'" + open_filter + folio_filter +
+        receivable_filter + search_filter +
+        " ORDER BY r.creation DESC,r.name DESC LIMIT %s OFFSET %s",
         (prop.name, prop.name, prop.name, *((folio,) if folio else ()),
-         *((receivable,) if receivable else ())), as_dict=True)
+         *((receivable,) if receivable else ()),
+         *((search,) * 3 if search else ()),
+         page_length, offset), as_dict=True)
     return [{**row, "outstanding": _money(row.outstanding),
              "base_outstanding": _money(row.base_outstanding)} for row in rows]
+
+
+def receivables_page(property_name, search="", offset=0, page_length=25):
+    prop = require(property_name, "finance")
+    require_pms(prop)
+    try:
+        offset, page_length = int(offset), int(page_length)
+    except (TypeError, ValueError):
+        frappe.throw(_("Revise la paginación de cuentas por cobrar"))
+    if (not isinstance(search, str) or len(search) > 100 or
+            offset < 0 or page_length < 1 or page_length > 100):
+        frappe.throw(_("Revise la búsqueda de cuentas por cobrar"))
+    rows = list_receivables(prop, open_only=True, search=search.strip(),
+        offset=offset, page_length=page_length + 1)
+    return {"rows": rows[:page_length], "search": search.strip(),
+            "offset": offset, "has_more": len(rows) > page_length}
 
 
 def snapshot(property_name):

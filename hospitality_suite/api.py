@@ -333,6 +333,11 @@ def pms_receivables(property_name):
 
 
 @frappe.whitelist()
+def pms_receivables_page(property_name, search="", offset=0, page_length=25):
+    return standalone_receivables.receivables_page(property_name, search, offset, page_length)
+
+
+@frappe.whitelist()
 def pms_fiscal_snapshot(property_name):
     return standalone_fiscal.snapshot(property_name)
 

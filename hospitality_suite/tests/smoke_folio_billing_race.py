@@ -200,6 +200,26 @@ def run():
                     folio="missing-" + suffix,
                     receivable=targeted)["receivables"]):
             raise AssertionError("Cash did not scope the requested receivable")
+        first_page = api.pms_receivables_page(property_name, page_length=1)
+        second_page = api.pms_receivables_page(property_name, offset=1,
+            page_length=1)
+        if (not first_page["has_more"] or second_page["has_more"] or
+                {row["name"] for page in (first_page, second_page)
+                    for row in page["rows"]} != {row.name for row in rows}):
+            raise AssertionError("Open receivables did not paginate")
+        target_reference = frappe.db.get_value("HS PMS Receivable", targeted,
+            "reference")
+        for term in (targeted, target_reference):
+            found = api.pms_receivables_page(property_name, search=term)
+            if [row["name"] for row in found["rows"]] != [targeted]:
+                raise AssertionError("Receivable search did not select the account")
+        by_customer = api.pms_receivables_page(property_name,
+            search="Huésped facturación " + suffix)
+        if ({row["name"] for row in by_customer["rows"]} !=
+                {row.name for row in rows} or
+                api.pms_receivables_page(property_name,
+                    search="missing-" + suffix)["rows"]):
+            raise AssertionError("Customer receivable search was not scoped")
         sites_path = Path(frappe.local.sites_path).resolve()
         for index, same_key in enumerate((True, False)):
             receivable = (first_result if index == 0 else second_result)[
@@ -236,7 +256,8 @@ def run():
                         "operation": "pms_cash_movement"}) != index + 1):
                 raise AssertionError("Concurrent collection duplicated a payment")
         actual = frappe.get_doc("HS Property", property_name)
-        if (Decimal(balance(actual, ar)) != 0 or
+        if (api.pms_receivables_page(property_name)["rows"] or
+                Decimal(balance(actual, ar)) != 0 or
                 Decimal(balance(actual, cash)) != Decimal("100") or
                 Decimal(balance(actual, bank)) != Decimal("40") or
                 Decimal(balance(actual, income)) != Decimal("-140") or
