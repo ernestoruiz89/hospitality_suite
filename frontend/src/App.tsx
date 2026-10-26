@@ -344,7 +344,8 @@ function Shell({ children, properties, property, setProperty, provider, showJour
     purchaseNav[0]?.to
   const matchesRoute = (route: string) => {
     const [path, search] = route.split("?")
-    if (path === "/users" || path === "/users/new" || path === "/users/assign")
+    if (path === "/users" || path === "/users/new" || path === "/users/assign" ||
+        path === "/journal" || path === "/journal/opening" || path === "/journal/reverse")
       return location.pathname === path
     if (path === "/reservations" && search && location.pathname.startsWith("/reservations/draft/"))
       return new URLSearchParams(search).get("section") === "draft"
