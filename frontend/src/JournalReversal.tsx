@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useState, type FormEvent } from "react"
+import { useCallback, useEffect, useRef, useState, type FormEvent } from "react"
 import { RotateCcw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
 import { call, execute, type Property } from "./api"
+import { createLatestRequest } from "./latestRequest"
 
 type JournalLine = { account: string; account_code: string; account_name: string;
   account_currency: string; debit: string; credit: string;
@@ -15,6 +16,7 @@ type JournalRow = { name: string; posting_date: string; source_doctype: string;
 type JournalPage = { rows: JournalRow[]; total: number; offset: number; page_length: number }
 
 export function JournalReversal({ property }: { property: Property }) {
+  const requests = useRef(createLatestRequest())
   const [query, setQuery] = useState("")
   const [search, setSearch] = useState("")
   const [offset, setOffset] = useState(0)
@@ -26,37 +28,32 @@ export function JournalReversal({ property }: { property: Property }) {
   const [error, setError] = useState("")
   const [notice, setNotice] = useState("")
 
-  const load = useCallback(async (term: string, start: number, signal?: AbortSignal) => {
-    const result = await call<JournalPage>("pms_reversible_journals", {
+  const load = useCallback((term: string, start: number, errorMessage: string) => {
+    return requests.current.run((signal) => call<JournalPage>("pms_reversible_journals", {
       property_name: property.name, search: term, offset: String(start),
       page_length: "25",
-    }, signal)
-    setPage(result)
+    }, signal), setPage, (issue) => setError(issue instanceof Error ? issue.message : errorMessage))
   }, [property.name])
 
   useEffect(() => {
-    const controller = new AbortController()
     setPage(null); setSelected(""); setReason(""); setRequestKey("")
     setQuery(""); setSearch(""); setOffset(0); setError(""); setNotice("")
-    load("", 0, controller.signal).catch((issue: unknown) => {
-      if (!controller.signal.aborted) setError(issue instanceof Error ? issue.message : "No se pudieron consultar los asientos.")
-    })
-    return () => controller.abort()
+    void load("", 0, "No se pudieron consultar los asientos.")
+    return () => requests.current.abort()
   }, [load])
 
   const current = page?.rows.find((row) => row.name === selected)
   function find(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    if (busy) return
     setSearch(query.trim()); setOffset(0); setSelected(""); setReason(""); setRequestKey("")
     setError(""); setNotice(""); setPage(null)
-    load(query.trim(), 0).catch((issue: unknown) =>
-      setError(issue instanceof Error ? issue.message : "No se pudieron buscar los asientos."))
+    void load(query.trim(), 0, "No se pudieron buscar los asientos.")
   }
   async function changePage(next: number) {
     setOffset(next); setSelected(""); setReason(""); setRequestKey("")
     setError(""); setPage(null)
-    try { await load(search, next) }
-    catch (issue) { setError(issue instanceof Error ? issue.message : "No se pudo cargar la página.") }
+    await load(search, next, "No se pudo cargar la página.")
   }
   async function reverse(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -69,7 +66,7 @@ export function JournalReversal({ property }: { property: Property }) {
         { journal: current.name, reason: reason.trim() }, key)
       setNotice(`Asiento ${result.reversed} revertido mediante ${result.journal}.`)
       setSelected(""); setReason(""); setRequestKey("")
-      await load(search, offset)
+      await load(search, offset, "No se pudo actualizar la lista de asientos.")
     } catch (issue) {
       setError(issue instanceof Error ? issue.message : "No se pudo revertir el asiento.")
     } finally { setBusy(false) }

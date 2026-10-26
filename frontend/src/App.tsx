@@ -841,7 +841,7 @@ function PropertyApp() {
       {(showCash || showErpCredits) && <Route path="/fiscal-archive" element={<FiscalArchive key={selected.name} property={selected} provider={base.accounting_provider} />} />}
       {showJournal && <Route path="/journal" element={<Journal property={selected} />} />}
       {base.accounting_provider === "pms" && showJournal && base.can_create_property && <Route path="/journal/opening" element={<Journal property={selected} mode="opening" />} />}
-      {base.accounting_provider === "pms" && showRetention && <Route path="/journal/reverse" element={<JournalReversal property={selected} />} />}
+      {base.accounting_provider === "pms" && showRetention && <Route path="/journal/reverse" element={<JournalReversal key={selected.name} property={selected} />} />}
       {showChart && <Route path="/chart" element={<Chart key={selected.name} property={selected} />} />}
       {showCurrencies && <Route path="/currencies" element={<PropertyCurrencies property={selected} />} />}
       {showProducts && <Route path="/products" element={<Products property={selected} />} />}

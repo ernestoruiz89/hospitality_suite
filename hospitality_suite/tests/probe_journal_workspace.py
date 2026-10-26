@@ -4,6 +4,7 @@ import frappe
 from uuid import uuid4
 
 from hospitality_suite import api
+from hospitality_suite.security import is_system
 from hospitality_suite.standalone_accounting import provider
 
 
@@ -34,6 +35,55 @@ def inspect():
             "journal_count": frappe.db.count("HS Journal", {
                 "property": name})})
     return {"journal_workspace_scoped": True, "properties": results}
+
+
+def inspect_permissions():
+    """Exercise the exposed read APIs with actual scoped Suite identities."""
+    inspected = inspect()
+    property_name, other_name = [row["property"] for row in inspected["properties"]]
+    def denied(action):
+        try:
+            action()
+        except frappe.PermissionError:
+            return
+        raise AssertionError("The journal API exposed an unauthorized hotel or role")
+
+    frappe.db.savepoint("hs_journal_permission_probe")
+    try:
+        marker = uuid4().hex[:12]
+        actors = {}
+        for role in ("HS Manager", "HS Accountant", "HS Cashier"):
+            email = f"journal-{role.lower().replace(' ', '-')}-{marker}@example.invalid"
+            api.create_operational_user({"email": email, "first_name": "Journal QA"})
+            api.execute(property_name, "assign_user", "journal-role-" + role + marker,
+                {"email": email, "roles": [role], "reason": "Verificación de permisos"})
+            if is_system(email):
+                raise AssertionError("The scoped test user gained system permissions")
+            actors[role] = email
+        manager = actors["HS Manager"]
+        accountant = actors["HS Accountant"]
+        cashier = actors["HS Cashier"]
+        frappe.set_user("Guest")
+        denied(lambda: api.pms_opening_balance_status(property_name))
+        denied(lambda: api.pms_reversible_journals(property_name))
+
+        frappe.set_user(cashier)
+        denied(lambda: api.pms_opening_balance_status(property_name))
+        denied(lambda: api.pms_reversible_journals(property_name))
+
+        frappe.set_user(accountant)
+        api.pms_accounts(property_name)
+        denied(lambda: api.pms_opening_balance_status(property_name))
+        denied(lambda: api.pms_reversible_journals(property_name))
+
+        frappe.set_user(manager)
+        api.pms_reversible_journals(property_name)
+        denied(lambda: api.pms_opening_balance_status(property_name))
+        denied(lambda: api.pms_reversible_journals(other_name))
+        return {"roles_scoped": True, "other_hotel_denied": True}
+    finally:
+        frappe.set_user("Administrator")
+        frappe.db.rollback(save_point="hs_journal_permission_probe")
 
 
 def exercise():
