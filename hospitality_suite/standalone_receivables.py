@@ -638,6 +638,57 @@ def deposits_page(property_name, receivable, kind="Advance", search="",
             "search": term, "offset": offset, "has_more": len(rows) > page_length}
 
 
+def applications_page(property_name, kind="Advance", search="", offset=0,
+                      page_length=25):
+    kinds = {"Advance": "Advance Applied",
+             "Guarantee": "Guarantee Applied",
+             "Opening Credit": "Opening Credit Applied",
+             "Opening Guarantee": "Opening Guarantee Applied"}
+    if kind not in kinds:
+        frappe.throw(_("Seleccione un tipo de aplicación válido"))
+    prop = require(property_name, "approve")
+    require_pms(prop)
+    try:
+        offset, page_length = int(offset), int(page_length)
+    except (TypeError, ValueError):
+        frappe.throw(_("Revise la paginación de aplicaciones"))
+    if (not isinstance(search, str) or len(search) > 100 or
+            offset < 0 or page_length < 1 or page_length > 100):
+        frappe.throw(_("Revise la búsqueda de aplicaciones"))
+    term = search.strip()
+    rows = frappe.db.sql(
+        "SELECT a.name,a.kind,a.receivable,r.reference AS receivable_reference,"
+        "COALESCE(p.reference,c.opening_source_name,g.opening_source_name,a.name) "
+        "AS source_reference,COALESCE(c.currency,%s) AS currency,"
+        "CASE WHEN a.kind='Opening Credit Applied' AND c.currency<>%s "
+        "THEN COALESCE(a.settled_amount,0)-COALESCE(rv.settled,0) "
+        "ELSE a.amount-COALESCE(rv.amount,0) END AS remaining "
+        "FROM `tabHS PMS Allocation` a "
+        "LEFT JOIN `tabHS PMS Receivable` r ON r.name=a.receivable "
+        "AND r.property=a.property "
+        "LEFT JOIN `tabHS Payment` p ON p.name=a.payment AND p.property=a.property "
+        "LEFT JOIN `tabHS PMS Opening Credit` c ON c.name=a.opening_credit "
+        "AND c.property=a.property "
+        "LEFT JOIN `tabHS PMS Opening Guarantee` g ON g.name=a.opening_guarantee "
+        "AND g.property=a.property "
+        "LEFT JOIN (SELECT reverses,SUM(amount) AS amount,"
+        "SUM(COALESCE(settled_amount,0)) AS settled "
+        "FROM `tabHS PMS Allocation` WHERE property=%s AND kind IN "
+        "('Advance Reversed','Guarantee Reversed','Opening Credit Reversed',"
+        "'Opening Guarantee Reversed') GROUP BY reverses) rv ON rv.reverses=a.name "
+        "WHERE a.property=%s AND a.kind=%s" +
+        (" AND (LOCATE(%s,a.name)>0 OR LOCATE(%s,r.reference)>0 OR "
+         "LOCATE(%s,p.reference)>0 OR LOCATE(%s,c.opening_source_name)>0 OR "
+         "LOCATE(%s,g.opening_source_name)>0)" if term else "") +
+        " HAVING remaining>0 ORDER BY a.creation DESC,a.name DESC "
+        "LIMIT %s OFFSET %s",
+        (prop.currency, prop.currency, prop.name, prop.name, kinds[kind],
+         *((term,) * 5 if term else ()), page_length + 1, offset), as_dict=True)
+    return {"rows": [{**row, "remaining": _money(row.remaining)}
+                     for row in rows[:page_length]],
+            "search": term, "offset": offset, "has_more": len(rows) > page_length}
+
+
 def snapshot(property_name):
     prop = require(property_name, "finance")
     require_pms(prop)

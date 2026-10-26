@@ -699,6 +699,13 @@ def run():
             dict(receivable=receivable, advance=receipt["payment"], amount="100",
                  reason="Aplicación parcial del anticipo"))
         assert applied["outstanding"] == "681.00" and applied["advance_available"] == "82.50"
+        advance_applications = api.pms_applications_page(second_prop.name,
+            kind="Advance", search="ADV-" + suffix)
+        assert ([(row["name"], row["currency"], row["remaining"])
+                 for row in advance_applications["rows"]] ==
+                [(applied["allocation"], "NIO", "100.00")] and
+                not api.pms_applications_page(second_prop.name,
+                    kind="Guarantee", search="ADV-" + suffix)["rows"])
         try:
             api.execute(second_prop.name, "pms_cancel_receivable", "cancel-paid-" + suffix,
                 dict(receivable=receivable, reason="Tiene aplicaciones"))
@@ -921,6 +928,11 @@ def run():
                  guarantee=guarantee["payment"], amount="20", reason="Cargo cubierto con garantía")) == guarantee_applied
         assert guarantee_applied["outstanding"] == "33.50"
         assert guarantee_applied["guarantee_available"] == "53.00"
+        guarantee_applications = api.pms_applications_page(second_prop.name,
+            kind="Guarantee", search="GUAR-" + suffix)
+        assert any(row["name"] == guarantee_applied["allocation"] and
+                   row["remaining"] == "20.00"
+                   for row in guarantee_applications["rows"])
         assert folio_balance(fixture["folio"])["outstanding"] == "33.50"
         try:
             api.execute(prop.name, "pms_apply_guarantee", "foreign-guarantee-" + suffix,
@@ -943,6 +955,10 @@ def run():
             dict(allocation=guarantee_applied["allocation"], amount="5", reason="Corrección"))
         assert guarantee_unapplied["outstanding"] == "38.50"
         assert guarantee_unapplied["guarantee_available"] == "58.00"
+        assert any(row["name"] == guarantee_applied["allocation"] and
+                   row["remaining"] == "15.00"
+                   for row in api.pms_applications_page(second_prop.name,
+                       kind="Guarantee", search="GUAR-" + suffix)["rows"])
         guarantee_refund = api.execute(second_prop.name, "pms_refund", "refund-guarantee-" + suffix,
             dict(source_payment=guarantee["payment"], amount="1",
                  reference="GUAR-REF-" + suffix, reason="Devolución parcial de garantía"))

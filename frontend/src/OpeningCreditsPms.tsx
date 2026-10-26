@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { call, type Property } from "./api"
+import { ApplicationPicker, type ReversibleApplication } from "./ApplicationPicker"
 import { ReceivablePicker, type OpenReceivable } from "./ReceivablePicker"
 import { type SendCommand } from "./useIdempotentCommand"
 
@@ -46,7 +47,7 @@ export function OpeningCreditsPms({ property, data, refresh, send, canApprove, m
   const [reference, setReference] = useState("")
   const [refundReason, setRefundReason] = useState("")
   const [refundQuote, setRefundQuote] = useState<RefundQuote | null>(null)
-  const [reversal, setReversal] = useState("")
+  const [reversal, setReversal] = useState<ReversibleApplication | null>(null)
   const [reversalAmount, setReversalAmount] = useState("")
   const [reversalReason, setReversalReason] = useState("")
   const [busy, setBusy] = useState(false)
@@ -62,7 +63,6 @@ export function OpeningCreditsPms({ property, data, refresh, send, canApprove, m
   const selectedRefund = data.opening_credits.credits.find((item) => item.name === refundCredit)
   const selectedMethod = data.refund_methods.find((item) => item.name === method)
   const customerName = (id: string) => data.customers.find((item) => item.name === id)?.party_name || id
-  const sourceName = (id: string) => data.opening_credits.credits.find((item) => item.name === id)?.opening_source_name || id
 
   async function applyCredit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); if (busy || !selectedReceivable) return
@@ -106,13 +106,13 @@ export function OpeningCreditsPms({ property, data, refresh, send, canApprove, m
   }
 
   async function unapplyCredit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault(); if (busy) return
+    event.preventDefault(); if (busy || !reversal) return
     setBusy(true); setError(""); setNotice("")
     try {
       await send("pms_unapply_opening_credit",
-        { allocation: reversal, amount: reversalAmount,
+        { allocation: reversal.name, amount: reversalAmount,
           reason: reversalReason.trim() })
-      setReversal(""); setReversalAmount(""); setReversalReason("")
+      setReversal(null); setReversalAmount(""); setReversalReason("")
       await refreshAfter("Aplicación del crédito revertida.")
     } catch (issue) { setError(issue instanceof Error ? issue.message : "No se pudo revertir la aplicación.") }
     finally { setBusy(false) }
@@ -150,12 +150,12 @@ export function OpeningCreditsPms({ property, data, refresh, send, canApprove, m
         <Button disabled={busy || !refundCredit || !method}>{refundQuote ? "Confirmar devolución" : "Revisar devolución"}</Button>
       </form>}
     </div>
-    {mode === "reverse" && canApprove && !!data.opening_credits.applications.length && <form onSubmit={unapplyCredit} className="grid max-w-2xl gap-3 rounded-lg border p-4 sm:grid-cols-3"><h3 className="font-medium sm:col-span-3">Revertir aplicación</h3>
-      <select required value={reversal} onChange={(event) => { setReversal(event.target.value); setReversalAmount("") }} className="h-9 rounded-md border bg-white px-2 text-sm sm:col-span-3"><option value="">Aplicación vigente</option>{data.opening_credits.applications.map((item) => <option key={item.name} value={item.name}>{sourceName(item.opening_credit)} · {data.receivables.find((row) => row.name === item.receivable)?.reference || item.receivable} · Disponible {data.opening_credits.credits.find((row) => row.name === item.opening_credit)?.currency || property.currency} {item.remaining}</option>)}</select>
-      <Input required type="number" min="0.01" step="0.01" max={data.opening_credits.applications.find((item) => item.name === reversal)?.remaining} placeholder={`Importe ${data.opening_credits.credits.find((item) => item.name === data.opening_credits.applications.find((row) => row.name === reversal)?.opening_credit)?.currency || property.currency}`} value={reversalAmount} onChange={(event) => setReversalAmount(event.target.value)} />
+    {mode === "reverse" && canApprove && <form onSubmit={unapplyCredit} className="grid max-w-2xl gap-3 rounded-lg border p-4 sm:grid-cols-3"><h3 className="font-medium sm:col-span-3">Revertir aplicación</h3>
+      <ApplicationPicker property={property} kind="Opening Credit" selected={reversal}
+        refreshToken={data} onSelect={(row) => { setReversal(row); setReversalAmount("") }} />
+      <Input required type="number" min="0.01" step="0.01" max={reversal?.remaining} placeholder={`Importe ${reversal?.currency || property.currency}`} value={reversalAmount} onChange={(event) => setReversalAmount(event.target.value)} />
       <Input required maxLength={500} placeholder="Motivo" value={reversalReason} onChange={(event) => setReversalReason(event.target.value)} />
       <Button disabled={busy || !reversal}>Revertir aplicación</Button>
     </form>}
-    {mode === "reverse" && !data.opening_credits.applications.length && <p className="text-sm text-muted-foreground">No hay aplicaciones de créditos de apertura para revertir.</p>}
   </CardContent></Card>
 }

@@ -149,6 +149,12 @@ def run(kind="Credit Note"):
             applied = api.execute(prop.name, "pms_apply_opening_credit",
                 "fx-credit-apply-" + suffix,
                 {**apply_data, "acceptance": apply_quote["acceptance"]})
+            applications = api.pms_applications_page(prop.name,
+                kind="Opening Credit", search=credit.opening_source_name)
+            if ([(row["name"], row["currency"], row["remaining"])
+                    for row in applications["rows"]] !=
+                    [(applied["allocation"], "USD", "20.00")]):
+                frappe.throw("La reversión paginada perdió el importe USD")
             if (balances(prop, credit.name) != (Decimal(30), Decimal(1080)) or
                     opening_balances(prop, receivable.name) !=
                     (Decimal(80), Decimal(2800))):
@@ -175,6 +181,11 @@ def run(kind="Credit Note"):
                 "fx-credit-unapply-" + suffix,
                 {"allocation": applied["allocation"], "amount": "10.00",
                  "reason": "Reversión parcial USD"})
+            applications = api.pms_applications_page(prop.name,
+                kind="Opening Credit", search=credit.opening_source_name)
+            if ([(row["name"], row["remaining"]) for row in applications["rows"]] !=
+                    [(applied["allocation"], "10.00")]):
+                frappe.throw("La reversión parcial no actualizó el saldo paginado")
             reversed_accounts = {row.account for row in frappe.get_all(
                 "HS Journal Line",
                 filters={"parent": frappe.db.get_value("HS PMS Allocation",

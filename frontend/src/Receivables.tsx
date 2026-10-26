@@ -11,6 +11,7 @@ import { OpeningGuaranteesPms } from "./OpeningGuaranteesPms"
 import { ReceivableBalances } from "./ReceivableBalances"
 import { ReceivablePicker, type OpenReceivable } from "./ReceivablePicker"
 import { availableReceivableSections } from "./ReceivableSections"
+import { UnapplyDepositPms } from "./UnapplyDepositPms"
 import { useIdempotentCommand } from "./useIdempotentCommand"
 
 type Snapshot = {
@@ -73,10 +74,6 @@ export function Receivables({ property, canCreate, canCancel }: { property: Prop
   const [depositKind, setDepositKind] = useState<"Advance" | "Guarantee">("Advance")
   const [applyAmount, setApplyAmount] = useState("")
   const [reason, setReason] = useState("")
-  const [unapplyId, setUnapplyId] = useState("")
-  const [unapplyKind, setUnapplyKind] = useState<"Advance" | "Guarantee">("Advance")
-  const [unapplyAmount, setUnapplyAmount] = useState("")
-  const [unapplyReason, setUnapplyReason] = useState("")
   const refresh = useCallback(async () => {
     setData(await call<Snapshot>("pms_receivables", { property_name: property.name }))
   }, [property.name])
@@ -91,7 +88,7 @@ export function Receivables({ property, canCreate, canCancel }: { property: Prop
     setSearchParams(next, { replace: true })
   }, [searchParams, sections, setSearchParams])
   useEffect(() => {
-    setData(null); setError(""); setNotice(""); setParty(""); setSelectedReceivable(null); setSelectedDeposit(null); setDepositKind("Advance"); setUnapplyKind("Advance"); setTaxProfile("")
+    setData(null); setError(""); setNotice(""); setParty(""); setSelectedReceivable(null); setSelectedDeposit(null); setDepositKind("Advance"); setTaxProfile("")
     refresh().catch((issue: unknown) => setError(issue instanceof Error ? issue.message : "No se pudieron consultar las cuentas."))
   }, [refresh])
   async function createCustomer() {
@@ -129,19 +126,7 @@ export function Receivables({ property, canCreate, canCancel }: { property: Prop
     } catch (issue) { setError(issue instanceof Error ? issue.message : "No se pudo aplicar el depósito.") }
     finally { setBusy(false) }
   }
-  async function unapplyAdvance(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault(); if (busy || !canCancel) return
-    setBusy(true); setError(""); setNotice("")
-    try {
-      await send(unapplyKind === "Guarantee" ? "pms_unapply_guarantee" : "pms_unapply_advance",
-        { allocation: unapplyId, amount: unapplyAmount, reason: unapplyReason })
-      setUnapplyId(""); setUnapplyAmount(""); setUnapplyReason("")
-      await refreshAfter("Aplicación revertida mediante un asiento nuevo.")
-    } catch (issue) { setError(issue instanceof Error ? issue.message : "No se pudo revertir la aplicación.") }
-    finally { setBusy(false) }
-  }
   const selected = selectedReceivable
-  const appliedDeposits = unapplyKind === "Guarantee" ? data?.applied_guarantees : data?.applied_advances
   const customerName = (id: string) => data?.customers.find((item) => item.name === id)?.party_name || id
   const accountName = (id: string) => data?.accounts.find((item) => item.name === id)?.account_name || id
   return <div className="space-y-6">
@@ -181,7 +166,7 @@ export function Receivables({ property, canCreate, canCancel }: { property: Prop
       {section.id === "opening-guarantee-refunds" && <OpeningGuaranteesPms property={property} data={data} refresh={refresh} send={send} canApprove={canCancel} mode="refund" />}
       {section.id === "opening-guarantee-reversals" && <OpeningGuaranteesPms property={property} data={data} refresh={refresh} send={send} canApprove={canCancel} mode="reverse" />}
       {section.id === "balances" && <ReceivableBalances property={property} canCancel={canCancel} onChanged={refresh} />}
-      {section.id === "unapply" && canCancel && <Card><CardHeader><CardTitle>Revertir depósito aplicado</CardTitle><CardDescription>Restituye la cuenta por cobrar y la obligación con el cliente mediante un asiento nuevo.</CardDescription></CardHeader><CardContent><form onSubmit={unapplyAdvance} className="grid max-w-2xl gap-3 sm:grid-cols-3"><select value={unapplyKind} onChange={(event) => { setUnapplyKind(event.target.value as "Advance" | "Guarantee"); setUnapplyId("") }} className="h-9 rounded-md border border-border bg-white px-2 text-sm sm:col-span-3"><option value="Advance">Anticipo</option><option value="Guarantee">Garantía</option></select><select required value={unapplyId} onChange={(event) => { setUnapplyId(event.target.value); setUnapplyAmount("") }} className="h-9 rounded-md border border-border bg-white px-2 text-sm sm:col-span-3"><option value="">Aplicación original</option>{appliedDeposits?.map((item) => <option key={item.name} value={item.name}>{data.receivables.find((row) => row.name === item.receivable)?.reference || item.receivable} · {data.advances.concat(data.guarantees).find((row) => row.name === item.payment)?.reference || item.payment} · Pendiente {property.currency} {item.remaining}</option>)}</select><Input required type="number" min="0.01" step="0.01" max={appliedDeposits?.find((item) => item.name === unapplyId)?.remaining} placeholder={`Importe ${property.currency}`} value={unapplyAmount} onChange={(event) => setUnapplyAmount(event.target.value)} /><Input required maxLength={500} placeholder="Motivo" value={unapplyReason} onChange={(event) => setUnapplyReason(event.target.value)} /><Button disabled={busy || !unapplyId}>Revertir</Button></form>{!data.applied_advances.length && !data.applied_guarantees.length && <p className="mt-4 text-sm text-muted-foreground">No hay depósitos aplicados para revertir.</p>}</CardContent></Card>}
+      {section.id === "unapply" && canCancel && <UnapplyDepositPms property={property} refresh={refresh} refreshToken={data} />}
       {section.id === "cancelled" && canCancel && <Card><CardHeader><CardTitle>Cargos cancelados</CardTitle><CardDescription>Conservan su asiento inverso para auditoría.</CardDescription></CardHeader><CardContent className="space-y-2">{data.cancelled.map((item) => <div key={item.name} className="flex flex-wrap justify-between gap-2 border-b border-border py-2 text-sm"><span>{item.reference} · {customerName(item.party)}</span><span>{item.currency} {item.amount} · Asiento {item.reversal_journal}</span></div>)}{!data.cancelled.length && <p className="text-sm text-muted-foreground">No hay cargos cancelados.</p>}</CardContent></Card>}
     </>}
   </div>

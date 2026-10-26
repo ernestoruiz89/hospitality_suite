@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { call, type Property } from "./api"
+import { ApplicationPicker, type ReversibleApplication } from "./ApplicationPicker"
 import { ReceivablePicker, type OpenReceivable } from "./ReceivablePicker"
 import { type SendCommand } from "./useIdempotentCommand"
 
@@ -44,7 +45,7 @@ export function OpeningGuaranteesPms({ property, data, refresh, send, canApprove
   const [applyAmount, setApplyAmount] = useState("")
   const [applyReason, setApplyReason] = useState("")
   const [applyQuote, setApplyQuote] = useState<ApplyQuote | null>(null)
-  const [reverseAllocation, setReverseAllocation] = useState("")
+  const [reverseAllocation, setReverseAllocation] = useState<ReversibleApplication | null>(null)
   const [reverseAmount, setReverseAmount] = useState("")
   const [reverseReason, setReverseReason] = useState("")
   const invalidate = () => setQuote(null)
@@ -55,8 +56,6 @@ export function OpeningGuaranteesPms({ property, data, refresh, send, canApprove
   }
   const selectedMethod = data.refund_methods.find((item) => item.name === method)
   const selectedGuarantee = data.opening_guarantees.find((item) => item.name === applyGuarantee)
-  const selectedApplication = data.opening_guarantee_applications.find(
-    (item) => item.name === reverseAllocation)
   const customerName = (id: string) => data.customers.find((item) => item.name === id)?.party_name || id
 
   async function submit(event: FormEvent<HTMLFormElement>) {
@@ -100,13 +99,13 @@ export function OpeningGuaranteesPms({ property, data, refresh, send, canApprove
   }
 
   async function unapply(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault(); if (busy) return
+    event.preventDefault(); if (busy || !reverseAllocation) return
     setBusy(true); setError(""); setNotice("")
     try {
       await send("pms_unapply_opening_guarantee",
-        { allocation: reverseAllocation, amount: reverseAmount,
+        { allocation: reverseAllocation.name, amount: reverseAmount,
           reason: reverseReason.trim() })
-      setReverseAllocation(""); setReverseAmount("")
+      setReverseAllocation(null); setReverseAmount("")
       setReverseReason("")
       await refreshAfter("Aplicación revertida con un asiento nuevo.")
     } catch (issue) {
@@ -169,16 +168,14 @@ export function OpeningGuaranteesPms({ property, data, refresh, send, canApprove
       {quote && <p className="rounded-md bg-secondary p-3 text-sm sm:col-span-2">Débito {quote.liability_account} · Crédito {quote.cash_account} · Importe base {property.currency} {quote.base_amount}. Disponible después: {property.currency} {quote.available_after}.</p>}
       <Button disabled={busy || !guarantee || !method}>{quote ? "Confirmar devolución" : "Revisar devolución"}</Button>
     </form></CardContent></Card>}
-    {mode === "reverse" && canApprove && data.opening_guarantee_applications.length > 0 && <Card><CardHeader><CardTitle>Revertir aplicación</CardTitle>
+    {mode === "reverse" && canApprove && <Card><CardHeader><CardTitle>Revertir aplicación</CardTitle>
       <CardDescription>Restituye saldo a la garantía y a la cuenta por cobrar.</CardDescription></CardHeader><CardContent><form onSubmit={unapply} className="grid gap-3 sm:grid-cols-2">
-      <select required value={reverseAllocation} onChange={(event) => { setReverseAllocation(event.target.value); setReverseAmount("") }} className="h-9 rounded-md border bg-white px-2 text-sm sm:col-span-2">
-        <option value="">Aplicación con saldo</option>{data.opening_guarantee_applications.map((item) =>
-          <option key={item.name} value={item.name}>{data.receivables.find((row) => row.name === item.receivable)?.reference || item.receivable} · {property.currency} {item.remaining}</option>)}
-      </select>
-      <Input required type="number" min="0.01" step="0.01" max={selectedApplication?.remaining} placeholder={`Revertir ${property.currency}`} value={reverseAmount} onChange={(event) => setReverseAmount(event.target.value)} />
+      <div className="sm:col-span-2"><ApplicationPicker property={property}
+        kind="Opening Guarantee" selected={reverseAllocation} refreshToken={data}
+        onSelect={(row) => { setReverseAllocation(row); setReverseAmount("") }} /></div>
+      <Input required type="number" min="0.01" step="0.01" max={reverseAllocation?.remaining} placeholder={`Revertir ${reverseAllocation?.currency || property.currency}`} value={reverseAmount} onChange={(event) => setReverseAmount(event.target.value)} />
       <Input required maxLength={500} placeholder="Motivo" value={reverseReason} onChange={(event) => setReverseReason(event.target.value)} />
       <Button disabled={busy || !reverseAllocation}>Revertir y contabilizar</Button>
     </form></CardContent></Card>}
-    {mode === "reverse" && !data.opening_guarantee_applications.length && <p className="text-sm text-muted-foreground">No hay aplicaciones de garantías de apertura para revertir.</p>}
   </div>
 }

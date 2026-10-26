@@ -1863,6 +1863,13 @@ def run(persist=False):
                     "reverse-guarantee-apply-" + suffix,
                     {**application_data,
                      "acceptance": application_quote["acceptance"]})
+                guarantee_applications = api.pms_applications_page(
+                    opening_prop.name, kind="Opening Guarantee",
+                    search=guarantee["opening_source_name"])
+                if ([(row["name"], row["currency"], row["remaining"])
+                        for row in guarantee_applications["rows"]] !=
+                        [(applied_guarantee["allocation"], "NIO", "1.00")]):
+                    frappe.throw("La aplicación inicial no aparece para reversión")
                 if (applied_guarantee["guarantee_available"] != "4.00" or
                         Decimal(applied_guarantee["receivable_outstanding"]) !=
                         original_due - Decimal("1") or
