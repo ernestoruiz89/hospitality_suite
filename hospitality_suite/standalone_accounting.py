@@ -186,7 +186,7 @@ def post(prop, *, source_doctype, source_name, purpose, lines, memo=None,
         if purpose != "Opening Balance" or not is_system():
             frappe.throw(_("Solo un saldo inicial autorizado puede usar otra fecha contable"))
     try:
-        normalized, _ = normalize_lines(lines, frappe.utils.get_currency_precision() or 2)
+        normalized, _totals = normalize_lines(lines, frappe.utils.get_currency_precision() or 2)
     except LedgerValidationError as exc:
         frappe.throw(str(exc))
     enriched = []

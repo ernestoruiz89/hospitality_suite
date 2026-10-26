@@ -2478,6 +2478,153 @@ def run(include_live_day_pass=False, prior_day_pass_credit=False,
             _clear_cutover_metadata()
         if pms_cutover.preflight()["source_sha256"] != plan["source_sha256"]:
             frappe.throw("The direct-experience probe did not restore the source")
+        frappe.db.savepoint("hs_counter_sale_cutover_probe")
+        try:
+            with operation(prop):
+                experience_product.reload()
+                experience_product.sales_rate = 8
+                experience_product.tax_profile = tax_profile.name
+                experience_product.save()
+            counter_shift = suite_api.execute(prop.name, "pms_open_shift",
+                "cutover-counter-shift-" + suffix,
+                {"opening_by_currency": {"NIO": "0"}})["shift"]
+            counter_data = {"customer": party.name,
+                "item": experience_product.name, "quantity": "1",
+                "method": cash_method.name, "shift": counter_shift,
+                "series": fiscal_series, "reference": "COUNTER-" + suffix}
+            counter_quote = suite_api.preview(prop.name, counter_data,
+                "pms_direct_sale")
+            counter_sale = suite_api.execute(prop.name, "pms_direct_sale",
+                "cutover-counter-sale-" + suffix,
+                {**counter_data, "acceptance": counter_quote["acceptance"]})
+            if (counter_quote["total"] != "8.00" or
+                    counter_sale["invoice"] != frappe.db.get_value(
+                        "HS Service Request", counter_sale["service"],
+                        "pms_fiscal_invoice")):
+                frappe.throw("The PMS counter sale lost its numbered invoice")
+            second_quote = suite_api.preview(prop.name, counter_data,
+                "pms_direct_sale")
+            second_sale = suite_api.execute(prop.name, "pms_direct_sale",
+                "cutover-counter-returned-sale-" + suffix,
+                {**counter_data, "acceptance": second_quote["acceptance"]})
+            counter_credit_series = suite_api.execute(prop.name,
+                "pms_fiscal_series", "cutover-counter-credit-series-" + suffix,
+                {"series_code": "COUNTER-CR-" + suffix + "-",
+                 "document_type": "Credit Note", "start_number": 1,
+                 "end_number": 10, "padding": 6})["series"]
+            counter_return_data = {"service": second_sale["service"],
+                "series": counter_credit_series, "shift": counter_shift,
+                "reference": "COUNTER-RETURN-" + suffix,
+                "reason": "Devolución antes del corte"}
+            counter_return_quote = suite_api.pms_direct_sale_return_quote(
+                prop.name, counter_return_data)
+            counter_return = suite_api.execute(prop.name,
+                "pms_direct_sale_return", "cutover-counter-return-" + suffix,
+                {**counter_return_data,
+                 "acceptance": counter_return_quote["acceptance"]})
+            suite_api.execute(prop.name, "pms_close_shift",
+                "cutover-counter-shift-close-" + suffix,
+                {"shift": counter_shift,
+                 "counted_by_currency": {"NIO": "8.00"}})
+            from hospitality_suite import standalone_closing
+            counter_close = standalone_closing.build(prop)
+            with operation(prop):
+                frappe.get_doc({"doctype": "HS Daily Close",
+                    "company": source_company.name, "property": prop.name,
+                    "business_date": str(today), "revision": 1,
+                    "status": "Closed", "summary": canonical(counter_close),
+                    "closed_at": frappe.utils.now_datetime()}).insert(
+                        ignore_permissions=True)
+            from hospitality_suite.standalone_accounting import post
+            try:
+                with operation(prop):
+                    post(prop, source_doctype="Smoke", source_name=suffix,
+                        purpose="Closed Day Probe", lines=[
+                            {"account": cash.name, "debit": "1", "credit": "0"},
+                            {"account": equity.name, "debit": "0", "credit": "1"}])
+            except frappe.ValidationError as exc:
+                if "fecha operativa está cerrada" not in str(exc):
+                    raise
+            else:
+                frappe.throw("A closed PMS day accepted another journal")
+            frappe.db.set_value("HS Property", prop.name, "business_date",
+                str(today + timedelta(days=1)), update_modified=False)
+            prop.reload()
+            counter_source = pms_cutover.preflight()
+            if not counter_source["ready_for_mapping"]:
+                frappe.throw("The historical counter sale blocked cutover: " +
+                    frappe.as_json(counter_source["blockers"]))
+            counter_map = deepcopy(mapping)
+            counter_map["source_sha256"] = counter_source["source_sha256"]
+            counter_review = pms_cutover_plan.review(counter_map)
+            counter_links = counter_review["link_manifest"]
+            expected_counter_links = {
+                ("customer", party.name, customer.name),
+                ("item", experience_product.name, experience_item.name)}
+            found_counter_links = {(row["field"], row["source"], row["target"])
+                for row in counter_links["rewrites"]
+                if row["doctype"] == "HS Service Request"}
+            if (not counter_review["cutover_inputs_consistent"] or
+                    not expected_counter_links <= found_counter_links or
+                    any(row["doctype"] == "HS Service Request" and
+                        row["field"] in ("sales_invoice", "credit_note") and
+                        row["source"] == counter_sale["invoice"]
+                        for row in counter_links["rewrites"])):
+                frappe.throw("The PMS counter sale did not map cleanly: " +
+                    frappe.as_json(counter_links["blockers"]))
+            from hospitality_suite import pms_cutover_activation
+            previous_counter_flag = getattr(frappe.local,
+                "hs_cutover_rehearsal", False)
+            frappe.local.hs_cutover_rehearsal = True
+            try:
+                pms_cutover_activation.activate_validated(counter_map,
+                    source_sha256=counter_source["source_sha256"],
+                    plan_sha256=counter_review["plan"]["plan_sha256"],
+                    link_sha256=counter_links["link_sha256"],
+                    migration_reference="HS-COUNTER-SALE-" + suffix)
+                historical_sale = frappe.get_doc("HS Service Request",
+                    counter_sale["service"])
+                archive = suite_api.pms_fiscal_archive(prop.name,
+                    search=counter_sale["document_number"])
+                returned_sale = frappe.get_doc("HS Service Request",
+                    second_sale["service"])
+                credit_archive = suite_api.pms_fiscal_archive(prop.name,
+                    search=counter_return["document_number"])
+                if (historical_sale.customer != customer.name or
+                        historical_sale.item != experience_item.name or
+                        historical_sale.pms_party != party.name or
+                        historical_sale.pms_product != experience_product.name or
+                        historical_sale.pms_fiscal_invoice != counter_sale["invoice"] or
+                        historical_sale.sales_invoice or
+                        not any(row.name == counter_sale["invoice"] for row in
+                            archive["documents"]) or
+                        returned_sale.status != "Returned" or
+                        returned_sale.customer != customer.name or
+                        returned_sale.item != experience_item.name or
+                        returned_sale.pms_party != party.name or
+                        returned_sale.pms_product != experience_product.name or
+                        returned_sale.pms_fiscal_invoice != second_sale["invoice"] or
+                        returned_sale.pms_fiscal_credit != counter_return["credit_note"] or
+                        returned_sale.sales_invoice or returned_sale.credit_note or
+                        not any(row.name == counter_return["credit_note"] for row in
+                            credit_archive["documents"])):
+                    frappe.throw("The cutover changed the historical counter sale")
+                historical_sale.notes = "Consulta histórica tras corte"
+                with operation(frappe.get_doc("HS Property", prop.name)):
+                    historical_sale.save()
+                if counter_sale["document_number"] not in frappe.get_print(
+                        "HS PMS Fiscal Document", counter_sale["invoice"],
+                        print_format="HS Documento fiscal PMS"):
+                    frappe.throw("The PMS counter invoice no longer prints")
+            finally:
+                frappe.local.hs_cutover_rehearsal = previous_counter_flag
+        finally:
+            frappe.db.rollback(save_point="hs_counter_sale_cutover_probe")
+            from hospitality_suite.pms_cutover_activation import _clear_cutover_metadata
+            _clear_cutover_metadata()
+            prop.reload()
+        if pms_cutover.preflight()["source_sha256"] != plan["source_sha256"]:
+            frappe.throw("The counter sale probe did not restore the source")
         if not manifest["rewrites"]:
             frappe.throw("Synthetic cutover did not exercise link rewriting")
         if {(row["doctype"], row["name"], row["field"]) for row in
