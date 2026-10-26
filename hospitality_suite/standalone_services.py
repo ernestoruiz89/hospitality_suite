@@ -1,12 +1,13 @@
 """Guest service requests fulfilled from PMS products and valued stock."""
 
+from hashlib import sha256
 from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 
 import frappe
 from frappe import _
 
 from hospitality_suite.security import document, require
-from hospitality_suite.service import assert_version, audit, current_all, insert, locked_doc
+from hospitality_suite.service import assert_version, audit, canonical, current_all, insert, locked_doc
 from hospitality_suite.standalone_accounting import account, require_pms
 from hospitality_suite.standalone_folio_services import _quantity
 from hospitality_suite.standalone_inventory import consume, receive
@@ -51,10 +52,10 @@ def _included_available(prop, stay, product):
     return allowed - used
 
 
-def request(prop, data):
+def quote(prop, data):
     require_pms(prop)
     require(prop.name, "service")
-    if not isinstance(data, dict) or set(data) - {"stay", "folio", "item", "warehouse", "quantity", "included", "notes"}:
+    if not isinstance(data, dict) or set(data) - {"stay", "folio", "item", "warehouse", "quantity", "included", "notes", "acceptance"}:
         frappe.throw(_("Revise la solicitud de servicio"))
     stay = document("HS Stay", data.get("stay"), "service")
     folio = document("HS Folio", data.get("folio"), "service")
@@ -80,15 +81,36 @@ def request(prop, data):
         frappe.throw(_("Las observaciones deben tener hasta 500 caracteres"))
     price = (Decimal(str(product.sales_rate or 0)) * quantity).quantize(
         Decimal("0.01"), rounding=ROUND_HALF_UP) if not included else Decimal(0)
-    if not included:
-        tax_for_amount(prop, product.tax_profile, price)
-    doc = insert("HS Service Request", prop, stay=stay.name, folio=folio.name,
-        customer=folio.customer, item=product.name, warehouse=warehouse.name if warehouse else None,
-        quantity=str(quantity), included=int(included), amount=str(price),
+    split = tax_for_amount(prop, product.tax_profile, price) if not included else None
+    result = {"stay": stay.name, "folio": folio.name, "customer": folio.customer,
+        "item": product.name, "warehouse": warehouse.name if warehouse else None,
+        "quantity": str(quantity), "included": bool(included), "currency": prop.currency,
+        "unit_rate": str(product.sales_rate or 0) if not included else "0",
+        "amount": str(price), "net": split["net"] if split else "0.00",
+        "tax": split["tax"] if split else "0.00",
+        "total": split["total"] if split else "0.00",
+        "tax_profile": split["profile"] if split else None,
+        "included_in_price": split["included_in_price"] if split else False}
+    signature = {**result, "product_modified": str(product.modified),
+        "tax_profile_modified": split.get("profile_modified") if split else None,
+        "business_date": str(prop.business_date)}
+    result["acceptance"] = sha256(canonical(signature).encode()).hexdigest()
+    return result
+
+
+def request(prop, data):
+    reviewed = quote(prop, data)
+    if data.get("acceptance") and data["acceptance"] != reviewed["acceptance"]:
+        frappe.throw(_("El precio o impuesto cambió; revise de nuevo el consumo"))
+    notes = data.get("notes") or ""
+    doc = insert("HS Service Request", prop, stay=reviewed["stay"], folio=reviewed["folio"],
+        customer=reviewed["customer"], item=reviewed["item"], warehouse=reviewed["warehouse"],
+        quantity=reviewed["quantity"], included=int(reviewed["included"]), amount=reviewed["amount"],
         currency=prop.currency, status="Requested", notes=notes.strip())
     audit(prop, "pms_service_requested", doc,
-          details={"product": product.name, "quantity": str(quantity), "price": str(price)})
-    return {"service": doc.name, "status": doc.status, "amount": str(price)}
+          details={"product": reviewed["item"], "quantity": reviewed["quantity"],
+                   "price": reviewed["amount"]})
+    return {"service": doc.name, "status": doc.status, "amount": reviewed["amount"]}
 
 
 def _return_charge(prop, doc, reason):

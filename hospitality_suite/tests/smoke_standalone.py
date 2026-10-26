@@ -2120,10 +2120,21 @@ def run():
             {"operation": "smoke_folio_tax"}, add_taxed_folio_product)
         service_request = dict(stay=fixture["stay"], folio=fixture["folio"],
                                item=taxed_product, quantity="1", included=False)
+        service_quote = api.preview(second_prop.name, service_request, "request_service")
+        assert (service_quote["net"], service_quote["tax"], service_quote["total"]) == (
+            "90.00", "13.50", "103.50")
+        try:
+            api.execute(second_prop.name, "request_service", "stale-service-quote-" + suffix,
+                {**service_request, "quantity": "2", "acceptance": service_quote["acceptance"]})
+        except frappe.ValidationError:
+            pass
+        else:
+            raise AssertionError("Se aceptó una cotización de consumo con otra cantidad")
+        reviewed_service_request = {**service_request, "acceptance": service_quote["acceptance"]}
         requested = api.execute(second_prop.name, "request_service", "service-request-" + suffix,
-                                service_request)
+                                reviewed_service_request)
         assert api.execute(second_prop.name, "request_service", "service-request-" + suffix,
-                           service_request) == requested
+                           reviewed_service_request) == requested
         assert requested["status"] == "Requested"
         assert any(row["name"] == requested["service"] for row in
                    api.pms_service_snapshot(second_prop.name)["requests"])
@@ -2147,6 +2158,10 @@ def run():
         command(second_prop.name, "setup", "service-entitlement-" + suffix,
             {"operation": "smoke_service_entitlement"}, grant_included)
         included_data = {**service_request, "included": True}
+        included_quote = api.preview(second_prop.name, included_data, "request_service")
+        assert (included_quote["amount"], included_quote["tax"], included_quote["total"]) == (
+            "0", "0.00", "0.00")
+        included_data["acceptance"] = included_quote["acceptance"]
         included_request = api.execute(second_prop.name, "request_service",
             "service-included-" + suffix, included_data)
         try:

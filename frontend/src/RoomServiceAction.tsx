@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react"
 import { Link } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -17,7 +17,8 @@ type Snapshot = { currency: string; stays: Stay[]; requests: Request[];
   products?: Product[]; warehouses?: { name: string; warehouse_name: string }[];
   balances?: { product: string; warehouse: string; quantity: number }[];
   warehouse?: string | null }
-type Quote = { currency: string; unit_rate: string; amount: string; acceptance: string }
+type Quote = { currency: string; unit_rate: string; amount: string; acceptance: string;
+  net?: string; tax?: string; total?: string; included_in_price?: boolean }
 
 export function RoomServiceAction({ property, stay, provider, roomNumber, onAccountChanged }: {
   property: Property; stay: string; provider: "pms" | "erpnext"; roomNumber: string;
@@ -38,7 +39,10 @@ export function RoomServiceAction({ property, stay, provider, roomNumber, onAcco
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState("")
   const [notice, setNotice] = useState("")
+  const reviewVersion = useRef(0)
   const send = useIdempotentCommand(property.name)
+
+  useEffect(() => { reviewVersion.current += 1; setQuote(null) }, [property.name, stay])
 
   const refresh = useCallback(async () => {
     const result = await call<Snapshot>(provider === "pms" ? "pms_service_snapshot" : "erp_service_snapshot",
@@ -83,24 +87,23 @@ export function RoomServiceAction({ property, stay, provider, roomNumber, onAcco
     row.product === item && row.warehouse === chosenWarehouse)?.quantity || 0,
   [data, item, chosenWarehouse])
   const requests = data?.requests.filter((row) => row.stay === stay) || []
-  const change = () => { setQuote(null); setError(""); setNotice("") }
-  const amount = Number(chosenProduct?.sales_rate || 0) * Number(quantity || 0)
+  const change = () => { reviewVersion.current += 1; setQuote(null); setError(""); setNotice("") }
 
   async function review(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (busy || pendingService || !selectedFolio || !item || Number(quantity) <= 0) return
     setBusy(true); setError(""); setNotice("")
+    const version = ++reviewVersion.current
     try {
-      if (provider === "erpnext") {
-        const result = await call<Quote>("preview", { property_name: property.name,
-          action: "request_service", data: JSON.stringify({ stay, folio: selectedFolio,
-            item, quantity, included: false }) })
-        setQuote(result)
-      } else {
-        setQuote({ currency: data?.currency || property.currency,
-          unit_rate: String(chosenProduct?.sales_rate || 0), amount: amount.toFixed(2), acceptance: "" })
-      }
-    } catch (issue) { setError(issue instanceof Error ? issue.message : "No se pudo revisar el consumo.") }
+      const result = await call<Quote>("preview", { property_name: property.name,
+        action: "request_service", data: JSON.stringify({ stay, folio: selectedFolio,
+          item, quantity, included: false,
+          ...(provider === "pms" && chosenProduct?.product_type === "Stock" ? { warehouse: chosenWarehouse } : {}) }) })
+      if (version === reviewVersion.current) setQuote(result)
+    } catch (issue) {
+      if (version === reviewVersion.current)
+        setError(issue instanceof Error ? issue.message : "No se pudo revisar el consumo.")
+    }
     finally { setBusy(false) }
   }
 
@@ -131,8 +134,8 @@ export function RoomServiceAction({ property, stay, provider, roomNumber, onAcco
     try {
       const result = await send<{ service: string }>("request_service", {
         stay, folio: selectedFolio, item, quantity, included: false, notes: notes.trim(),
-        ...(provider === "pms" ? { warehouse: chosenProduct?.product_type === "Stock" ? chosenWarehouse : null }
-          : { acceptance: quote.acceptance }),
+        acceptance: quote.acceptance,
+        ...(provider === "pms" ? { warehouse: chosenProduct?.product_type === "Stock" ? chosenWarehouse : null } : {}),
       })
       setPendingService(result.service)
       await deliver(result.service)
@@ -187,7 +190,10 @@ export function RoomServiceAction({ property, stay, provider, roomNumber, onAcco
           </form>
           {quote && !pendingService && <div className="space-y-2 rounded-lg bg-secondary p-3 text-sm">
             <p><strong>{chosenProduct?.product_name || itemLabel || item}</strong> · {quantity} × {quote.currency} {quote.unit_rate}</p>
-            <p>Subtotal: <strong>{quote.currency} {quote.amount}</strong> · Impuestos según configuración del producto.</p>
+            {provider === "pms" ? <>
+              <p>Base: <strong>{quote.currency} {quote.net}</strong> · Impuesto: <strong>{quote.currency} {quote.tax}</strong></p>
+              <p>Total a la cuenta: <strong>{quote.currency} {quote.total}</strong>{quote.included_in_price ? " · Impuesto incluido en el precio" : ""}</p>
+            </> : <p>Subtotal: <strong>{quote.currency} {quote.amount}</strong> · Impuestos según configuración del producto.</p>}
             <Button disabled={busy} onClick={() => void confirm()}>Registrar y entregar a la cuenta</Button>
           </div>}
           {pendingService && <div className="space-y-2 rounded-lg border p-3 text-sm"><p>Solicitud {pendingService} registrada; falta confirmar la entrega.</p>

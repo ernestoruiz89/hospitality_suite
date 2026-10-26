@@ -1791,7 +1791,8 @@ def preview(property_name, data, action="reserve"):
 
 def _preview(prop,data,action):
     if action == "request_service":
-        return inventory.service_quote(prop, data)
+        return (standalone_services.quote(prop, data) if standalone_accounting.provider() == "pms"
+                else inventory.service_quote(prop, data))
     if action == "experience_order":
         return travel_experiences.order_quote(prop,data)
     if action == "pms_direct_experience_order":
