@@ -175,6 +175,8 @@ En la vista de habitación, **Revisar consumo** consulta el precio y el desglose
 **Servicios → Nueva solicitud** usa la misma revisión para productos pagados o incluidos. Muestra base, impuesto y total antes de registrar; un cambio del formulario descarta la cotización. Los reintentos de registro y de cambio de estado conservan su clave hasta recibir confirmación, y una falla posterior al guardar durante el refresco se informa sin invitar a duplicar el comando.
 La revisión visual del 26/10/2026 en un clon PMS sin ERPNext confirmó el flujo React con una estancia activa, cuenta principal y un agua de inventario: mostró 98 unidades disponibles y, antes de registrar, base NIO 100.00, impuesto NIO 0.00 y total NIO 100.00. No se confirmó la solicitud; el usuario y el servidor temporales del clon se retiraron después de la comprobación.
 
+El regreso a ERPNext también se ensayó de forma persistente desde un destino que antes había recibido un corte ERPNext → PMS. La activación reconoce el acta inversa conciliada, exige una referencia nueva y conserva el vínculo entre ambas actas. En el clon de dos hoteles conciliaron las carteras, 16 saldos de cuenta y cinco posiciones de inventario; tres facturas de apertura y siete documentos fiscales históricos quedaron disponibles. La guía y las huellas del ensayo están en `docs/CORTE_PMS_A_ERPNEXT.md`.
+
 7. **Pendiente:** ambas migraciones reales, pruebas de concurrencia e idempotencia de todos los comandos y paridad de todas las pantallas React.
 
 Ningún establecimiento existente cambia de proveedor automáticamente. En un sitio nuevo sin ERPNext se debe configurar el catálogo, monedas, tipos de cambio y medios de cobro antes de operar Caja. Las operaciones PMS aún pendientes permanecen deshabilitadas.

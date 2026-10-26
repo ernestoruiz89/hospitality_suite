@@ -115,6 +115,26 @@ def _replayed_result(mode, reference, hashes, backup_sha256):
     return result
 
 
+def _prior_reverse_cutover(mode):
+    """A PMS site may have arrived through a verified ERPNext -> PMS cutover."""
+    reference = mode.migration_reference
+    if not reference:
+        return None
+    row = frappe.db.get_value("HS ERP to PMS Cutover Run",
+        {"migration_reference": reference},
+        ["name", "result_json"], as_dict=True)
+    if not row:
+        frappe.throw(_("El sitio ya registra un corte o cambió de proveedor"))
+    result = frappe.parse_json(row.result_json)
+    if (not isinstance(result, dict) or
+            result.get("migration_reference") != reference or
+            not result.get("cutover_performed") or
+            not result.get("reconciled") or
+            result.get("provider_changed")):
+        frappe.throw(_("El corte previo no conserva un acta conciliada"))
+    return {"cutover_run": row.name, "migration_reference": reference}
+
+
 def activate_validated(mapping, *, source_sha256, plan_sha256,
                        link_sha256, migration_reference, backup_manifest=None):
     """Apply one reviewed transfer and switch the provider in the same DB transaction.
@@ -144,8 +164,11 @@ def activate_validated(mapping, *, source_sha256, plan_sha256,
         mode = _locked_mode()
         if mode.provider == "ERPNext":
             return _replayed_result(mode, reference, hashes, backup_sha256)
-        if mode.provider != "PMS" or mode.migration_reference or provider() != "pms":
+        if mode.provider != "PMS" or provider() != "pms":
             frappe.throw(_("El sitio ya registra un corte o cambió de proveedor"))
+        prior_reverse = _prior_reverse_cutover(mode)
+        if prior_reverse and prior_reverse["migration_reference"] == reference:
+            frappe.throw(_("Use una referencia nueva para el corte a ERPNext"))
         backup = _require_frozen_site(backup_manifest)
         if frappe.db.exists("HS Cutover Run", {"migration_reference": reference}):
             frappe.throw(_("La referencia del corte ya fue utilizada"))
@@ -153,7 +176,7 @@ def activate_validated(mapping, *, source_sha256, plan_sha256,
         transferred = pms_cutover_rehearsal.transfer_validated(mapping,
             source_sha256=source_sha256, plan_sha256=plan_sha256,
             link_sha256=link_sha256)
-        if mode.provider != "PMS" or mode.migration_reference:
+        if mode.provider != "PMS" or _prior_reverse_cutover(mode) != prior_reverse:
             frappe.throw(_("El sitio ya registra un corte o cambió de proveedor"))
         previous_flag = getattr(frappe.local, "hs_provider_cutover", False)
         frappe.local.hs_provider_cutover = True
@@ -189,6 +212,7 @@ def activate_validated(mapping, *, source_sha256, plan_sha256,
             frappe.throw(_("El proveedor ERPNext no quedó activo"))
         result = frappe.parse_json(canonical({**transferred,
             "migration_reference": reference, "cutover_performed": True,
+            **({"prior_reverse_cutover": prior_reverse} if prior_reverse else {}),
             **({"backup": backup} if backup else {})}))
         previous_flag = getattr(frappe.local, "hs_provider_cutover", False)
         frappe.local.hs_provider_cutover = True
