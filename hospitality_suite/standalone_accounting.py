@@ -294,17 +294,7 @@ def reverse(prop, data):
         frappe.throw(_("El asiento pertenece a otro establecimiento"), frappe.PermissionError)
     if original.reversal_of or frappe.db.exists("HS Journal", {"reversal_of": original.name}):
         frappe.throw(_("Este asiento ya fue revertido o es una reversión"))
-    if original.source_doctype in ("HS PMS Receivable", "HS Payment", "HS PMS Cash Movement",
-                                   "HS PMS Allocation", "HS PMS Fiscal Document",
-                                   "HS Stock Movement", "HS PMS Purchase",
-                                   "HS PMS Opening Payable", "HS PMS Opening Credit",
-                                   "HS PMS Opening Guarantee",
-                                   "HS PMS Opening Supplier Credit",
-                                   "HS PMS Supplier Credit Allocation",
-                                   "ERPNext Opening Balance",
-                                   "HS PMS Agency Commission",
-                                   "HS Treasury Movement", "HS Petty Cash Expense",
-                                   "HS Petty Cash Rendition"):
+    if original.source_doctype not in ("HS Manual Journal", "HS Opening Balance"):
         frappe.throw(_("Este asiento pertenece a una operación con saldos vinculados; use su flujo de cancelación"))
     lines = inverse_lines([{"account": row.account, "debit": str(row.debit),
                             "credit": str(row.credit), "party": row.party, "memo": row.memo,

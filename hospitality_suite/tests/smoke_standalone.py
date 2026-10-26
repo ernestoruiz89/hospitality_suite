@@ -3459,6 +3459,16 @@ def run():
             "purchase-return-open-" + suffix,
             {**unpaid_return_data, "acceptance": unpaid_return_quote["acceptance"]})
         assert unpaid_return["outstanding"] == "0.00"
+        assert unpaid_return["adjustment_journal"]
+        try:
+            api.execute(second_prop.name, "pms_reverse_journal",
+                "reverse-purchase-return-" + suffix,
+                dict(journal=unpaid_return["adjustment_journal"],
+                     reason="La devolución conserva saldos vinculados"))
+        except frappe.ValidationError:
+            pass
+        else:
+            raise AssertionError("Se revirtió directamente el ajuste de una devolución de compra")
         assert Decimal(standalone_accounting.balance(second_prop, payable)) == payable_before
         paid_return_data = dict(purchase=multi_doc.name,
             reference="RETURN-PAID-" + suffix, reason="Devolución parcial de factura pagada",
