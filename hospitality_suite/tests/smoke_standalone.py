@@ -875,6 +875,34 @@ def run():
             "folio-cancel-" + suffix,
             dict(receivable=billed["receivables"][0]["receivable"], reason="Corrección"))
         assert cancelled_folio["status"] == "Cancelled"
+        receivables_snapshot = api.pms_receivables(second_prop.name)
+        receivables_catalog = api.pms_receivables(second_prop.name, compact=1)
+        assert set(receivables_catalog) == {
+            "currency", "accounts", "tax_profiles", "refund_methods", "refund_shifts"}
+        assert all(receivables_catalog[key] == receivables_snapshot[key]
+                   for key in receivables_catalog)
+        cancelled_page = api.pms_cancelled_receivables_page(second_prop.name,
+            search=billed["receivables"][0]["receivable"])
+        assert len(cancelled_page["rows"]) == 1
+        assert cancelled_page["rows"][0]["party_name"]
+        assert not api.pms_cancelled_receivables_page(prop.name,
+            search=billed["receivables"][0]["receivable"])["rows"]
+        try:
+            api.pms_cancelled_receivables_page(second_prop.name, offset=-1)
+        except frappe.ValidationError:
+            frappe.clear_messages()
+        else:
+            raise AssertionError("Los cargos cancelados aceptaron una página negativa")
+        frappe.set_user("Guest")
+        try:
+            try:
+                api.pms_cancelled_receivables_page(second_prop.name)
+            except frappe.PermissionError:
+                frappe.clear_messages()
+            else:
+                raise AssertionError("Un visitante consultó cargos cancelados")
+        finally:
+            frappe.set_user("Administrator")
         assert frappe.db.get_value("HS Charge", fixture["source"], "status") == "Pending"
         assert folio_balance(fixture["folio"])["outstanding"] == "90.00"
         split = api.execute(second_prop.name, "create_folio",

@@ -330,8 +330,14 @@ def pms_customers(property_name):
 
 
 @frappe.whitelist()
-def pms_receivables(property_name):
-    return standalone_receivables.snapshot(property_name)
+def pms_receivables(property_name, compact=0):
+    return standalone_receivables.snapshot(property_name, compact)
+
+
+@frappe.whitelist()
+def pms_cancelled_receivables_page(property_name, search="", offset=0, page_length=25):
+    return standalone_receivables.cancelled_page(property_name, search,
+        offset, page_length)
 
 
 @frappe.whitelist()

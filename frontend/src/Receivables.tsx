@@ -5,11 +5,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
 import { call, type Property } from "./api"
+import { CancelledReceivables } from "./CancelledReceivables"
 import { DepositPicker, type EligibleDeposit } from "./DepositPicker"
 import { OpeningCreditsPms } from "./OpeningCreditsPms"
 import { OpeningGuaranteesPms } from "./OpeningGuaranteesPms"
 import { ReceivableBalances } from "./ReceivableBalances"
 import { ReceivablePicker, type OpenReceivable } from "./ReceivablePicker"
+import { ReceivableCustomerPicker, type ReceivableCustomer } from "./ReceivableCustomerPicker"
 import { availableReceivableSections } from "./ReceivableSections"
 import { UnapplyDepositPms } from "./UnapplyDepositPms"
 import { useIdempotentCommand } from "./useIdempotentCommand"
@@ -18,35 +20,8 @@ type Snapshot = {
   currency: string
   accounts: { name: string; account_code: string; account_name: string; root_type: string; account_type: string;
     is_cash: boolean; is_bank: boolean }[]
-  customers: { name: string; party_name: string }[]
   tax_profiles: { name: string; label: string; treatment: string; rate: number;
     included_in_price: boolean }[]
-  receivables: { name: string; party: string; folio: string | null; folio_stay: string | null; booking: string | null;
-    reference: string; description: string;
-    amount: number; currency: string; base_amount: number | null;
-    outstanding: string; receivable_account: string;
-    opening_source_name: string | null; historical_document: string | null }[]
-  advances: { name: string; pms_party: string; reference: string; currency: string;
-    amount: number; available: string; pms_counter_account: string;
-    folio: string | null; booking: string | null }[]
-  guarantees: { name: string; pms_party: string; reference: string; currency: string;
-    amount: number; available: string; pms_counter_account: string;
-    folio: string | null; booking: string | null }[]
-  applied_advances: { name: string; receivable: string; payment: string; remaining: string }[]
-  applied_guarantees: { name: string; receivable: string; payment: string; remaining: string }[]
-  cancelled: { name: string; party: string; reference: string; amount: number;
-    currency: string; reversal_journal: string }[]
-  opening_credits: { credits: { name: string; credit_kind: string; customer: string;
-    opening_source_name: string; currency: string; amount: number; available: string;
-    base_amount: number; base_available: string;
-    receivable_account: string; historical_document: string | null }[];
-    applications: { name: string; opening_credit: string; receivable: string;
-      remaining: string }[] }
-  opening_guarantees: { name: string; customer: string; opening_source_name: string;
-    source_booking: string | null; source_stay: string | null; source_folio: string | null;
-    amount: number; available: string; liability_account: string }[]
-  opening_guarantee_applications: { name: string; opening_guarantee: string;
-    receivable: string; remaining: number }[]
   refund_methods: { name: string; mode_of_payment: string; currency: string;
     is_cash: boolean }[]
   refund_shifts: { name: string; opened_at: string }[]
@@ -62,6 +37,7 @@ export function Receivables({ property, canCreate, canCancel }: { property: Prop
   const [notice, setNotice] = useState("")
   const [busy, setBusy] = useState(false)
   const [party, setParty] = useState("")
+  const [selectedCustomer, setSelectedCustomer] = useState<ReceivableCustomer | null>(null)
   const [newCustomer, setNewCustomer] = useState("")
   const [reference, setReference] = useState("")
   const [description, setDescription] = useState("")
@@ -75,7 +51,8 @@ export function Receivables({ property, canCreate, canCancel }: { property: Prop
   const [applyAmount, setApplyAmount] = useState("")
   const [reason, setReason] = useState("")
   const refresh = useCallback(async () => {
-    setData(await call<Snapshot>("pms_receivables", { property_name: property.name }))
+    setData(await call<Snapshot>("pms_receivables", {
+      property_name: property.name, compact: "1" }))
   }, [property.name])
   async function refreshAfter(success: string) {
     try { await refresh(); setNotice(success) }
@@ -88,15 +65,17 @@ export function Receivables({ property, canCreate, canCancel }: { property: Prop
     setSearchParams(next, { replace: true })
   }, [searchParams, sections, setSearchParams])
   useEffect(() => {
-    setData(null); setError(""); setNotice(""); setParty(""); setSelectedReceivable(null); setSelectedDeposit(null); setDepositKind("Advance"); setTaxProfile("")
+    setData(null); setError(""); setNotice(""); setParty(""); setSelectedCustomer(null); setSelectedReceivable(null); setSelectedDeposit(null); setDepositKind("Advance"); setTaxProfile("")
     refresh().catch((issue: unknown) => setError(issue instanceof Error ? issue.message : "No se pudieron consultar las cuentas."))
   }, [refresh])
   async function createCustomer() {
     if (!newCustomer.trim() || busy) return
     setBusy(true); setError(""); setNotice("")
     try {
-      const result = await send<{ party: string }>("pms_customer", { party_name: newCustomer.trim() })
-      setParty(result.party); setNewCustomer("")
+      const customerName = newCustomer.trim()
+      const result = await send<{ party: string }>("pms_customer", { party_name: customerName })
+      setParty(result.party); setSelectedCustomer({ name: result.party, customer_name: customerName })
+      setNewCustomer("")
       await refreshAfter("Cliente registrado.")
     } catch (issue) { setError(issue instanceof Error ? issue.message : "No se pudo crear el cliente.") }
     finally { setBusy(false) }
@@ -127,7 +106,6 @@ export function Receivables({ property, canCreate, canCancel }: { property: Prop
     finally { setBusy(false) }
   }
   const selected = selectedReceivable
-  const customerName = (id: string) => data?.customers.find((item) => item.name === id)?.party_name || id
   const accountName = (id: string) => data?.accounts.find((item) => item.name === id)?.account_name || id
   return <div className="space-y-6">
     <div><h1 className="text-3xl font-semibold">{section.label}</h1><p className="mt-2 text-sm text-muted-foreground">Cuentas por cobrar · {property.property_name}. Los saldos trasladados de ERPNext conservan su moneda y copia fiscal; no se emiten otra vez.</p></div>
@@ -136,7 +114,10 @@ export function Receivables({ property, canCreate, canCancel }: { property: Prop
     {!data && !error && <Skeleton className="h-72 rounded-xl" />}
     {data && <>
       {section.id === "create" && canCreate && <Card><CardHeader><CardTitle>Registrar cargo interno</CardTitle><CardDescription>Débito a cuentas por cobrar y crédito a ingreso. Use el flujo fiscal correspondiente antes de entregar una factura al cliente.</CardDescription></CardHeader><CardContent><form onSubmit={createReceivable} className="grid max-w-2xl gap-3">
-          <select required value={party} onChange={(event) => setParty(event.target.value)} className="h-9 rounded-md border border-border bg-white px-2 text-sm"><option value="">Seleccione cliente</option>{data.customers.map((item) => <option key={item.name} value={item.name}>{item.party_name}</option>)}</select>
+          <ReceivableCustomerPicker property={property} selected={selectedCustomer}
+            refreshToken={data} onSelect={(customer) => {
+              setSelectedCustomer(customer); setParty(customer?.name || "")
+            }} />
           <div className="flex gap-2"><Input aria-label="Nuevo cliente" maxLength={140} placeholder="Nuevo cliente" value={newCustomer} onChange={(event) => setNewCustomer(event.target.value)} /><Button type="button" variant="outline" disabled={busy || !newCustomer.trim()} onClick={createCustomer}>Crear</Button></div>
           <Input required maxLength={140} placeholder="Referencia del cargo" value={reference} onChange={(event) => setReference(event.target.value)} />
           <Input required maxLength={500} placeholder="Descripción" value={description} onChange={(event) => setDescription(event.target.value)} />
@@ -144,7 +125,7 @@ export function Receivables({ property, canCreate, canCancel }: { property: Prop
           <select required value={receivableAccount} onChange={(event) => setReceivableAccount(event.target.value)} className="h-9 rounded-md border border-border bg-white px-2 text-sm"><option value="">Cuenta por cobrar</option>{data.accounts.filter((item) => item.account_type === "Receivable" && !item.is_cash && !item.is_bank).map((item) => <option key={item.name} value={item.name}>{item.account_code} · {item.account_name}</option>)}</select>
           <select required value={incomeAccount} onChange={(event) => setIncomeAccount(event.target.value)} className="h-9 rounded-md border border-border bg-white px-2 text-sm"><option value="">Cuenta de ingreso</option>{data.accounts.filter((item) => item.root_type === "Income").map((item) => <option key={item.name} value={item.name}>{item.account_code} · {item.account_name}</option>)}</select>
           <select value={taxProfile} onChange={(event) => setTaxProfile(event.target.value)} className="h-9 rounded-md border border-border bg-white px-2 text-sm"><option value="">Sin clasificación tributaria</option>{data.tax_profiles.map((item) => <option key={item.name} value={item.name}>{item.label} · {item.rate}%{item.included_in_price ? " incluido" : " adicional"}</option>)}</select>
-          <Button disabled={busy}>Registrar cargo</Button>
+          <Button disabled={busy || !party}>Registrar cargo</Button>
         </form></CardContent></Card>}
       {section.id === "apply" && <Card><CardHeader><CardTitle>Aplicar depósito</CardTitle><CardDescription>El anticipo o la garantía reduce el saldo por cobrar sin mover efectivo del turno. La garantía solo se aplica a su cuenta de estancia y requiere Gerencia.</CardDescription></CardHeader><CardContent><form onSubmit={applyAdvance} className="grid max-w-2xl gap-3">
           <select value={depositKind} onChange={(event) => { setDepositKind(event.target.value as "Advance" | "Guarantee"); setSelectedDeposit(null) }} className="h-9 rounded-md border border-border bg-white px-2 text-sm"><option value="Advance">Anticipo</option>{canCancel && <option value="Guarantee">Garantía</option>}</select>
@@ -167,7 +148,9 @@ export function Receivables({ property, canCreate, canCancel }: { property: Prop
       {section.id === "opening-guarantee-reversals" && <OpeningGuaranteesPms property={property} data={data} refresh={refresh} send={send} canApprove={canCancel} mode="reverse" />}
       {section.id === "balances" && <ReceivableBalances property={property} canCancel={canCancel} onChanged={refresh} />}
       {section.id === "unapply" && canCancel && <UnapplyDepositPms property={property} refresh={refresh} refreshToken={data} />}
-      {section.id === "cancelled" && canCancel && <Card><CardHeader><CardTitle>Cargos cancelados</CardTitle><CardDescription>Conservan su asiento inverso para auditoría.</CardDescription></CardHeader><CardContent className="space-y-2">{data.cancelled.map((item) => <div key={item.name} className="flex flex-wrap justify-between gap-2 border-b border-border py-2 text-sm"><span>{item.reference} · {customerName(item.party)}</span><span>{item.currency} {item.amount} · Asiento {item.reversal_journal}</span></div>)}{!data.cancelled.length && <p className="text-sm text-muted-foreground">No hay cargos cancelados.</p>}</CardContent></Card>}
+      {section.id === "cancelled" && canCancel && <Card><CardHeader><CardTitle>Cargos cancelados</CardTitle><CardDescription>Conservan su asiento inverso para auditoría.</CardDescription></CardHeader><CardContent>
+        <CancelledReceivables property={property} refreshToken={data} />
+      </CardContent></Card>}
     </>}
   </div>
 }

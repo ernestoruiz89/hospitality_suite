@@ -748,9 +748,28 @@ def opening_balances_page(property_name, kind="Credit", search="", offset=0,
             "has_more": len(rows) > page_length}
 
 
-def snapshot(property_name):
+def snapshot(property_name, compact=0):
     prop = require(property_name, "finance")
     require_pms(prop)
+    if str(compact) not in ("0", "1"):
+        frappe.throw(_("Revise el formato de la consulta de cuentas por cobrar"))
+    accounts = frappe.get_all("HS Account", filters={"property": prop.name,
+        "account_currency": prop.currency, "is_group": 0, "active": 1},
+        fields=["name", "account_code", "account_name", "root_type", "account_type", "is_cash", "is_bank"],
+        order_by="account_code asc")
+    catalogs = {"currency": prop.currency, "accounts": accounts,
+        "tax_profiles": frappe.get_all("HS PMS Tax Profile", filters={"property": prop.name,
+            "active": 1}, fields=["name", "label", "treatment", "rate", "included_in_price"],
+            order_by="label asc"),
+        "refund_methods": frappe.get_all("HS Payment Method",
+            filters={"property": prop.name},
+            fields=["name", "mode_of_payment", "currency", "is_cash"],
+            order_by="mode_of_payment asc"),
+        "refund_shifts": frappe.get_all("HS Shift", filters={"property": prop.name,
+            "cashier": frappe.session.user, "status": "Open"},
+            fields=["name", "opened_at"], order_by="opened_at desc")}
+    if str(compact) == "1":
+        return catalogs
     rows = list_receivables(prop)
     deposits = frappe.db.sql(
         "SELECT p.name, p.kind, p.folio, p.booking, p.pms_party, p.amount, p.currency, p.base_amount, p.reference, "
@@ -780,19 +799,12 @@ def snapshot(property_name):
                                                             "status": "Cancelled"},
         fields=["name", "party", "reference", "amount", "currency", "reversal_journal"],
         order_by="modified desc", limit_page_length=50)
-    accounts = frappe.get_all("HS Account", filters={"property": prop.name,
-        "account_currency": prop.currency, "is_group": 0, "active": 1},
-        fields=["name", "account_code", "account_name", "root_type", "account_type", "is_cash", "is_bank"],
-        order_by="account_code asc")
     customers = frappe.get_all("HS Party", filters={"property": prop.name, "active": 1,
         "party_type": ["in", ["Customer", "Both"]]}, fields=["name", "party_name"],
         order_by="party_name asc", limit_page_length=500)
     from hospitality_suite.standalone_opening_credits import snapshot as opening_snapshot
     from hospitality_suite.standalone_opening_guarantees import snapshot as guarantee_snapshot
-    return {"currency": prop.currency, "accounts": accounts, "customers": customers,
-            "tax_profiles": frappe.get_all("HS PMS Tax Profile", filters={"property": prop.name,
-                "active": 1}, fields=["name", "label", "treatment", "rate", "included_in_price"],
-                order_by="label asc"),
+    return {**catalogs, "customers": customers,
             "cancelled": cancelled,
             "receivables": rows,
             "advances": [{**row, "available": _money(row.available)} for row in deposits if row.kind == "Advance"],
@@ -814,11 +826,30 @@ def snapshot(property_name):
                 "AND a.kind='Opening Guarantee Applied' "
                 "AND a.amount>COALESCE(r.reversed_amount,0) "
                 "ORDER BY a.creation DESC LIMIT 200",
-                (prop.name, prop.name), as_dict=True),
-            "refund_methods": frappe.get_all("HS Payment Method",
-                filters={"property": prop.name},
-                fields=["name", "mode_of_payment", "currency", "is_cash"],
-                order_by="mode_of_payment asc"),
-            "refund_shifts": frappe.get_all("HS Shift", filters={"property": prop.name,
-                "cashier": frappe.session.user, "status": "Open"},
-                fields=["name", "opened_at"], order_by="opened_at desc")}
+                (prop.name, prop.name), as_dict=True)}
+
+
+def cancelled_page(property_name, search="", offset=0, page_length=25):
+    prop = require(property_name, "finance")
+    require_pms(prop)
+    try:
+        offset, page_length = int(offset), int(page_length)
+    except (TypeError, ValueError, OverflowError):
+        frappe.throw(_("Revise la paginación de cargos cancelados"))
+    if (offset < 0 or offset > 1000000 or not 1 <= page_length <= 100 or
+            not isinstance(search, str) or len(search) > 100):
+        frappe.throw(_("Revise la búsqueda de cargos cancelados"))
+    term = search.strip()
+    rows = frappe.db.sql(
+        "SELECT r.name,r.party,p.party_name,r.reference,r.amount,r.currency,"
+        "r.reversal_journal FROM `tabHS PMS Receivable` r "
+        "LEFT JOIN `tabHS Party` p ON p.name=r.party AND p.property=r.property "
+        "AND p.organization=%s "
+        "WHERE r.property=%s AND r.organization=%s AND r.status='Cancelled' "
+        "AND (%s='' OR LOCATE(%s,r.name)>0 OR LOCATE(%s,r.reference)>0 "
+        "OR LOCATE(%s,COALESCE(p.party_name,''))>0) "
+        "ORDER BY r.modified DESC,r.name DESC LIMIT %s OFFSET %s",
+        (prop.organization, prop.name, prop.organization, term, term, term, term,
+         page_length + 1, offset), as_dict=True)
+    return {"rows": rows[:page_length], "offset": offset,
+            "has_more": len(rows) > page_length}
