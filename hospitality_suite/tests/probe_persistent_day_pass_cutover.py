@@ -192,11 +192,12 @@ def inspect_reversal():
     day_pass = frappe.get_doc("HS Day Pass", current["day_pass"])
     history = frappe.parse_json(day_pass.erp_return_corrections)
     snapshot = api.erp_day_pass_snapshot(day_pass.property)
-    if (len(history) != 1 or not any(row["name"] == day_pass.name and
-            row["can_return"] and row["correction_count"] == 1
+    if (not history or not any(row["name"] == day_pass.name and
+            row["can_return"] and row["correction_count"] == len(history)
             for row in snapshot["day_passes"])):
         frappe.throw("The corrected Day Pass is not returnable in React")
     return {"persistent_day_pass_reversal_read_back": True,
         "source_fiscal_invoice": current["source_fiscal_invoice"],
-        "cancelled_credit": history[0]["credit_note"],
+        "cancelled_credit": history[-1]["credit_note"],
+        "correction_count": len(history),
         "returnable_again": True}
