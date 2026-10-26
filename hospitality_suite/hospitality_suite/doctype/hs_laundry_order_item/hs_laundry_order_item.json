@@ -32,8 +32,13 @@
   {
    "fieldname": "item",
    "label": "Artículo",
-   "fieldtype": "Data",
-   "reqd": 1
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "pms_product",
+   "label": "Producto PMS de la experiencia",
+   "fieldtype": "Link",
+   "options": "HS Product"
   },
   {
    "fieldname": "quantity",
@@ -70,6 +75,7 @@
   "garment",
   "service_type",
   "item",
+  "pms_product",
   "quantity",
   "returned_quantity",
   "rate",

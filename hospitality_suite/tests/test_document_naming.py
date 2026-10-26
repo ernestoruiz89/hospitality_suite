@@ -23,7 +23,7 @@ class TestDocumentNaming(IntegrationTestCase):
         for dt, spec in SCHEMA.items():
             meta=frappe.get_meta(dt)
             self.assertFalse(meta.allow_rename)
-            self.assertEqual(meta.autoname,DOCUMENT_SERIES.get(dt,'hash'))
+            self.assertEqual(meta.autoname,None if spec.get('single') else DOCUMENT_SERIES.get(dt,'hash'))
             self.assertFalse(spec.get('child') and dt in DOCUMENT_SERIES)
         # Exercise Frappe's actual counter parser, not a replacement formatter.
         from frappe.model.naming import make_autoname

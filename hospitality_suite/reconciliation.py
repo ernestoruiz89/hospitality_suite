@@ -6,6 +6,58 @@ from hospitality_suite.security import require
 from hospitality_suite.service import current_all,locked_doc
 
 
+def cutover_history(prop):
+    """Return only openings recorded by the active immutable cutover receipt."""
+    reference = frappe.db.get_single_value("HS Site Mode", "migration_reference")
+    if (frappe.db.get_single_value("HS Site Mode", "provider") != "ERPNext" or
+            not reference):
+        return False, set()
+    saved = frappe.db.get_value("HS Cutover Run",
+        {"migration_reference": reference}, "result_json")
+    result = frappe.parse_json(saved) if saved else None
+    if not isinstance(result, dict) or not result.get("cutover_performed"):
+        return False, set()
+    properties = [row for row in result.get("properties", []) if
+        row.get("property") == prop.name and row.get("company") == prop.company]
+    if len(properties) != 1:
+        return False, set()
+    vouchers = properties[0].get("vouchers") or []
+    if any(not isinstance(row, (list, tuple)) or len(row) != 2 for row in vouchers):
+        return False, set()
+    return True, {(row[0], row[1]) for row in vouchers}
+
+
+def historical_pms_payment(prop, payment, vouchers, cutover_recorded):
+    if not cutover_recorded or not payment.pms_journal:
+        return False
+    origin = frappe.db.get_value("HS Journal", payment.pms_journal,
+        ["property", "status", "source_doctype", "source_name"], as_dict=True)
+    if (not origin or origin.property != prop.name or origin.status != "Posted" or
+            origin.source_doctype != "HS Payment" or
+            origin.source_name != payment.name):
+        return False
+    native = (("Payment Entry", payment.payment_entry) if payment.payment_entry else
+              ("Journal Entry", payment.journal_entry) if payment.journal_entry else None)
+    return not native or native in vouchers
+
+
+def historical_pms_movement(prop, source, source_doctype, cutover_recorded, base_amount):
+    """Recognize a PMS event only while its posted origin still reconciles."""
+    if not cutover_recorded or not source.pms_journal or source.journal_entry:
+        return False
+    origin = frappe.db.get_value("HS Journal", source.pms_journal,
+        ["property", "company", "status", "source_doctype", "source_name",
+         "total_debit", "total_credit"], as_dict=True)
+    return bool(origin and origin.property == prop.name and
+        origin.company == prop.company and origin.status == "Posted" and
+        origin.source_doctype == source_doctype and
+        origin.source_name == source.name and
+        decimal(origin.total_debit) == decimal(base_amount) and
+        decimal(origin.total_credit) == decimal(base_amount) and
+        not frappe.db.exists("HS Journal", {"reversal_of": source.pms_journal,
+                                            "status": "Posted"}))
+
+
 def unmatched_cash(prop,shift=None):
     """Internal reconciliation used by authorized reporting and shift commands.
 
@@ -17,13 +69,14 @@ def unmatched_cash(prop,shift=None):
     from hospitality_suite.native_pos import movements as pos_movements
     pos=pos_movements(prop.name,shift)
     recognized={(row['doctype'],row['name']) for row in pos}
+    _, openings = cutover_history(prop)
     result=[]
     for dt,field in (("Payment Entry","payment_entry"),("Journal Entry","journal_entry")):
         filters={"hs_property":prop.name,"docstatus":1}
         if shift:
             filters["hs_shift"]=shift
         for name in current_all(dt,filters=filters,pluck="name"):
-            if (dt,name) in recognized:
+            if (dt,name) in recognized or (dt,name) in openings:
                 continue
             if current_all("HS Payment",filters={field:name,"status":"Posted"},pluck="name"):
                 continue
@@ -88,6 +141,7 @@ def rows(prop,filters=None,limit=1000):
     filters=filters or {}
     visit_matches=visit_selector(prop,filters.get("stay"))
     invoices=shift_invoices(prop,filters.get("shift"))
+    cutover_recorded, opening_vouchers = cutover_history(prop)
     result=[]
     def record(kind,name,origin,expected,actual,currency,detail,*,payment_kind=None):
         difference=money(decimal(actual)-decimal(expected))
@@ -104,6 +158,14 @@ def rows(prop,filters=None,limit=1000):
         from hospitality_suite.financial_movements import balance, ledger_balance, base
         record("Petty cash ledger", prop.name, prop.petty_cash_account, balance(prop), ledger_balance(prop),
                base(prop), "Saldo operativo contra mayor exclusivo de Caja Chica")
+    if not filters.get("shift") and not filters.get("stay"):
+        for doctype, name in sorted(opening_vouchers):
+            voucher = frappe.db.get_value(doctype, name,
+                ["docstatus", "company", "hs_property"], as_dict=True)
+            valid = bool(voucher and voucher.docstatus == 1 and
+                voucher.company == prop.company and voucher.hs_property == prop.name)
+            record("Cutover opening", name, name, 1, 1 if valid else 0,
+                prop.currency, "Comprobante de apertura conservado según el acta del corte")
     charges=current_all("HS Charge",filters={"property":prop.name,"status":"Invoiced"},fields=["*"])
     seen=set()
     for charge in charges:
@@ -121,6 +183,8 @@ def rows(prop,filters=None,limit=1000):
         record("Charge",", ".join(r.name for r in peers),charge.sales_invoice,expected,actual,charge.currency,"Verificación de línea y ajustes de factura")
     for payment in current_all("HS Payment",filters={"property":prop.name,"status":"Posted"},fields=["*"]):
         if not selected(payment):
+            continue
+        if historical_pms_payment(prop, payment, opening_vouchers, cutover_recorded):
             continue
         dt="Payment Entry" if payment.payment_entry else "Journal Entry"
         name=payment.payment_entry or payment.journal_entry
@@ -156,6 +220,9 @@ def rows(prop,filters=None,limit=1000):
     for movement in current_all("HS Treasury Movement", filters={"property": prop.name, "status": "Posted"}, fields=["*"]):
         if not selected(movement, "business_date"):
             continue
+        if historical_pms_movement(prop, movement, "HS Treasury Movement", cutover_recorded,
+                                   movement.base_amount):
+            continue
         native = locked_doc("Journal Entry", movement.journal_entry) if movement.journal_entry and frappe.db.exists("Journal Entry", movement.journal_entry) else None
         actual = decimal(0)
         if native and native.docstatus == 1 and native.hs_property == prop.name and native.hs_shift == movement.shift:
@@ -165,6 +232,9 @@ def rows(prop,filters=None,limit=1000):
                movement.currency, "Contrapartida financiera y asiento vigentes", payment_kind=movement.kind)
     for expense in current_all("HS Petty Cash Expense", filters={"property": prop.name, "status": "Posted"}, fields=["*"]):
         if not selected(expense, "business_date"):
+            continue
+        if historical_pms_movement(prop, expense, "HS Petty Cash Expense", cutover_recorded,
+                                   expense.amount):
             continue
         native = locked_doc("Journal Entry", expense.journal_entry) if expense.journal_entry and frappe.db.exists("Journal Entry", expense.journal_entry) else None
         actual = decimal(0)
@@ -181,6 +251,8 @@ def rows(prop,filters=None,limit=1000):
         if selected(source):
             record("Untracked payment",native["name"],native["name"],0,native["amount"],native["currency"],"Movimiento nativo sin registro operativo: "+native["account"])
     for name in current_all("Sales Invoice",filters={"hs_property":prop.name,"hs_folio":["is","set"],"docstatus":1},pluck="name"):
+        if ("Sales Invoice", name) in opening_vouchers:
+            continue
         native=locked_doc("Sales Invoice",name)
         if not selected(native,"posting_date",invoice=native.name):
             continue

@@ -68,7 +68,7 @@
   Desk.prototype.render_experiences=function(el){
     const {experiences,orders}=board(this),name=id=>experiences.find(row=>row.name===id)?.experience_name||id;
     const totals=Object.fromEntries((board(this).order_totals||[]).map(row=>[row.status,row]));
-    el.html(`<div class="hs-toolbar"><div><h2>${e(__("Experiencias"))}</h2><p>${e(__("Ofrezca experiencias en reservas y cargue al folio solo lo entregado."))}</p></div>
+    el.html(`<div class="hs-toolbar"><div><h2>${e(__("Experiencias"))}</h2><p>${e(__("Ofrezca experiencias en reservas y cargue a la cuenta solo lo entregado."))}</p></div>
       ${this.allowed("setup")?this.button("experience",__("Agregar experiencia"),"","primary"):""}
       ${this.allowed("reserve")?this.button("experience_order",__("Agregar a reserva")):""}</div>
       <div class="hs-metrics"><article><span>${e(__("Por confirmar"))}</span><strong>${e(totals.Reserved?.orders||0)}</strong></article>
@@ -80,9 +80,12 @@
           e(row.show_on_booking_page?__("Sí"):__("No")),e(row.active?__("Activa"):__("Inactiva")),
           this.allowed("setup")?this.button("experience",__("Editar"),row.name):"—"]))}</section>
       <section class="hs-section"><h2>${e(__("Órdenes"))}</h2>${this.table([__("Reserva"),__("Experiencia"),__("Cantidad"),__("Importe"),__("Fecha"),__("Estado"),__("Acción")],
-        orders.map(row=>[e(this.bookingLabel(row.booking)),e(name(row.experience)),e(row.quantity),
+        orders.map(row=>[e(row.booking?this.bookingLabel(row.booking):__("Venta directa")),e(name(row.experience)),e(row.quantity),
           this.amount(row.amount,row.currency),e(row.scheduled_at?this.date(row.scheduled_at):"—"),e(statusLabel[row.status]||row.status),
-          row.status==="Reserved"||row.status==="Confirmed"?this.allowed("service")?this.button("experience_status",__("Gestionar"),row.name):"—":
+          row.status==="Reserved"||row.status==="Confirmed"?
+            row.booking?(this.allowed("service")?this.button("experience_status",__("Gestionar"),row.name):"—"):
+              (this.allowed("finance")?this.button("experience_direct_status",__("Gestionar"),row.name):"—"):
+          row.sales_invoice?`<a href="/app/sales-invoice/${encodeURIComponent(row.sales_invoice)}">${e(row.sales_invoice)}</a>`:
           row.charge?e(row.charge):"—"]))}</section>`);
   };
 
@@ -131,5 +134,31 @@
       f("notes",__("Observaciones"),"Small Text",{default:row.notes}),
       f("reason",__("Motivo de cancelación"),"Small Text")],
       async(v,d)=>{await this.mutate("experience_status",{...v,order:id,modified:row.modified},key);d.hide();});
+  };
+
+  Desk.prototype.action_experience_direct_status=async function(id){
+    const row=board(this).orders.find(value=>value.name===id);
+    if(!row||row.booking||!["Reserved","Confirmed"].includes(row.status))return;
+    const key=frappe.utils.get_random(24);
+    return this.dialog(__("Continuar experiencia directa"),[
+      f("status",__("Acción"),"Select",{reqd:1,options:row.status==="Reserved"?["Confirmed","Cancelled"]:["Delivered","Cancelled"]}),
+      f("scheduled_at",__("Fecha y hora programada"),"Datetime",{default:row.scheduled_at?
+        moment.tz(row.scheduled_at,this.data.system_timezone).tz(this.prop.time_zone).format("YYYY-MM-DDTHH:mm"):undefined}),
+      f("participants",__("Participantes"),"Int",{default:row.participants||row.quantity}),
+      f("notes",__("Observaciones"),"Small Text",{default:row.notes}),
+      f("reason",__("Motivo si cancela"),"Small Text")],
+      async(v,d)=>{
+        if(v.status==="Delivered"){
+          const q=await this.call("preview",{property_name:this.property,
+            action:"pms_direct_experience_delivery",data:JSON.stringify({order:id})});
+          await this.dialog(__("Facturar experiencia entregada"),[
+            f("summary",__("Resumen"),"HTML",{options:`<p>${e(board(this).experiences.find(value=>value.name===row.experience)?.experience_name||row.experience)}</p><p>${e(__("Base"))}: ${e(this.amount(q.net_amount,q.currency))} · ${e(__("Impuesto"))}: ${e(this.amount(q.tax_amount,q.currency))}</p><h3>${e(this.amount(q.total_amount,q.currency))}</h3><p>${e(__("Se creará una factura de venta ERPNext pendiente de cobro."))}</p>`})],
+            async(_,confirm)=>{await this.mutate("pms_direct_experience_status",{order:id,
+              modified:row.modified,status:"Delivered",acceptance:q.acceptance},key);confirm.hide();d.hide();},__("Crear factura"));
+          return;
+        }
+        await this.mutate("pms_direct_experience_status",{...v,order:id,modified:row.modified},key);
+        d.hide();
+      });
   };
 })();

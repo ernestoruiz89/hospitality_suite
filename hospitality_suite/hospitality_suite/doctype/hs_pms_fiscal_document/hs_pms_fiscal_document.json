@@ -1,0 +1,281 @@
+{
+ "doctype": "DocType",
+ "name": "HS PMS Fiscal Document",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "hash",
+ "naming_rule": "Random",
+ "fields": [
+  {
+   "fieldname": "company",
+   "label": "Compañía",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "property",
+   "label": "Establecimiento",
+   "fieldtype": "Link",
+   "options": "HS Property",
+   "reqd": 1
+  },
+  {
+   "fieldname": "organization",
+   "label": "Organización",
+   "fieldtype": "Link",
+   "options": "HS Organization",
+   "reqd": 1
+  },
+  {
+   "fieldname": "document_type",
+   "label": "Tipo de documento",
+   "fieldtype": "Select",
+   "options": "Invoice\nCredit Note",
+   "reqd": 1,
+   "default": "Invoice"
+  },
+  {
+   "fieldname": "series",
+   "label": "Serie",
+   "fieldtype": "Link",
+   "options": "HS PMS Fiscal Series",
+   "reqd": 1
+  },
+  {
+   "fieldname": "sequence_number",
+   "label": "Número de secuencia",
+   "fieldtype": "Int",
+   "reqd": 1
+  },
+  {
+   "fieldname": "document_number",
+   "label": "Número de documento",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "authorization_reference",
+   "label": "Referencia de autorización",
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "business_date",
+   "label": "Fecha operativa",
+   "fieldtype": "Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "issued_at",
+   "label": "Emitido el",
+   "fieldtype": "Datetime",
+   "reqd": 1
+  },
+  {
+   "fieldname": "seller_name",
+   "label": "Nombre del vendedor",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "seller_tax_id",
+   "label": "Identificación fiscal del vendedor",
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "tax_regime",
+   "label": "Régimen fiscal",
+   "fieldtype": "Select",
+   "options": "General\nCuota Fija",
+   "reqd": 1,
+   "default": "General"
+  },
+  {
+   "fieldname": "party",
+   "label": "Tercero",
+   "fieldtype": "Link",
+   "options": "HS Party",
+   "reqd": 1
+  },
+  {
+   "fieldname": "buyer_name",
+   "label": "Nombre del comprador",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "buyer_tax_id",
+   "label": "Identificación fiscal del comprador",
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "folio",
+   "label": "Cuenta de estancia",
+   "fieldtype": "Link",
+   "options": "HS Folio"
+  },
+  {
+   "fieldname": "currency",
+   "label": "Moneda",
+   "fieldtype": "Link",
+   "options": "Currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "net_amount",
+   "label": "Importe neto",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency"
+  },
+  {
+   "fieldname": "tax_amount",
+   "label": "Importe del impuesto",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency"
+  },
+  {
+   "fieldname": "total_amount",
+   "label": "Importe total",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency"
+  },
+  {
+   "fieldname": "source_invoice",
+   "label": "Factura de origen",
+   "fieldtype": "Link",
+   "options": "HS PMS Fiscal Document"
+  },
+  {
+   "fieldname": "historical_source_invoice",
+   "label": "Factura histórica original",
+   "fieldtype": "Link",
+   "options": "HS Historical Fiscal Document"
+  },
+  {
+   "fieldname": "historical_day_pass",
+   "label": "Day Pass histórico",
+   "fieldtype": "Link",
+   "options": "HS Day Pass",
+   "unique": 1
+  },
+  {
+   "fieldname": "journal",
+   "label": "Asiento contable",
+   "fieldtype": "Link",
+   "options": "HS Journal"
+  },
+  {
+   "fieldname": "lines",
+   "label": "Líneas",
+   "fieldtype": "Table",
+   "options": "HS PMS Fiscal Line"
+  },
+  {
+   "fieldname": "status",
+   "label": "Estado",
+   "fieldtype": "Select",
+   "options": "Posted",
+   "reqd": 1,
+   "default": "Posted"
+  }
+ ],
+ "field_order": [
+  "company",
+  "property",
+  "organization",
+  "document_type",
+  "series",
+  "sequence_number",
+  "document_number",
+  "authorization_reference",
+  "business_date",
+  "issued_at",
+  "seller_name",
+  "seller_tax_id",
+  "tax_regime",
+  "party",
+  "buyer_name",
+  "buyer_tax_id",
+  "folio",
+  "currency",
+  "net_amount",
+  "tax_amount",
+  "total_amount",
+  "source_invoice",
+  "historical_source_invoice",
+  "historical_day_pass",
+  "journal",
+  "lines",
+  "status"
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Administrator",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Supervisor",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Cashier",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Accountant",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Auditor",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0
+}

@@ -1,5 +1,5 @@
-from hospitality_suite.controllers import ScopedDocument
+from hospitality_suite.controllers import PMSTreasuryMovementDocument
 
 
-class HSTreasuryMovement(ScopedDocument):
+class HSTreasuryMovement(PMSTreasuryMovementDocument):
     pass

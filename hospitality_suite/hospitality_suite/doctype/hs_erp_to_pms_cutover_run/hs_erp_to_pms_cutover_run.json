@@ -1,0 +1,114 @@
+{
+ "doctype": "DocType",
+ "name": "HS ERP to PMS Cutover Run",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "hash",
+ "naming_rule": "Random",
+ "fields": [
+  {
+   "fieldname": "migration_reference",
+   "label": "Referencia de migración",
+   "fieldtype": "Data",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "source_site",
+   "label": "Sitio de origen",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "source_sha256",
+   "label": "SHA-256 de origen",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "manifest_sha256",
+   "label": "SHA-256 del manifiesto",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "receipt_sha256",
+   "label": "SHA-256 del recibo",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "mapping_sha256",
+   "label": "SHA-256 de equivalencias",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "plan_sha256",
+   "label": "SHA-256 del plan",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "source_backup_sha256",
+   "label": "SHA-256 del respaldo de origen",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "target_backup_sha256",
+   "label": "SHA-256 del respaldo de destino",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "performed_by",
+   "label": "Ejecutado por",
+   "fieldtype": "Link",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "performed_at",
+   "label": "Ejecutado el",
+   "fieldtype": "Datetime",
+   "reqd": 1
+  },
+  {
+   "fieldname": "result_json",
+   "label": "Resultado JSON",
+   "fieldtype": "Code",
+   "options": "JSON",
+   "reqd": 1,
+   "read_only": 1
+  }
+ ],
+ "field_order": [
+  "migration_reference",
+  "source_site",
+  "source_sha256",
+  "manifest_sha256",
+  "receipt_sha256",
+  "mapping_sha256",
+  "plan_sha256",
+  "source_backup_sha256",
+  "target_backup_sha256",
+  "performed_by",
+  "performed_at",
+  "result_json"
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0
+}

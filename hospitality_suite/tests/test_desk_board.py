@@ -59,6 +59,11 @@ class TestDeskBoard(IntegrationTestCase):
         self.assertEqual(result['rows'][0]['room_label'],'Por asignar')
         self.assertEqual(result['rows'][0]['category_label'],'Estándar')
         self.assertEqual(api.bootstrap(self.prop.name)['room_arrivals'],[])
+        summary=api.home_queue_summary(self.prop.name)
+        self.assertEqual(summary['property'],self.prop.name)
+        self.assertEqual(summary['counts']['arrivals'],1)
+        self.assertEqual(summary['counts']['hosted'],1)
+        self.assertEqual(summary['counts'],self.board('arrivals')['counts'])
 
     def test_expired_hold_is_hidden_without_expiring_or_releasing_it_in_a_read(self):
         # Retention is an explicit reserve option, not a client-written status.
@@ -97,6 +102,10 @@ class TestDeskBoard(IntegrationTestCase):
         self.assertIn(group[0]['detail_stay'],[one['stay'],two['stay']])
         self.assertEqual(group[0]['balance']['outstanding'],'3000.00')
         self.assertEqual(sorted(r['balance']['outstanding'] for r in result['rows']),['0.00','0.00','3000.00'])
+        summary=api.home_queue_summary(self.prop.name)
+        self.assertEqual(summary['counts']['accounts'],3)
+        self.assertEqual(summary['counts']['hosted'],2)
+        self.assertEqual(summary['counts'],result['counts'])
         hosted=self.board('hosted')['rows']
         self.assertEqual({row['cleaning_status'] for row in hosted},{'Clean'})
         self.assertTrue(all(row['shared_account'] for row in hosted))
@@ -120,11 +129,14 @@ class TestDeskBoard(IntegrationTestCase):
             frappe.set_user(user)
             self.assertEqual(self.board()['counts']['hosted'],1)
             self.assertEqual(self.board('accounts')['total'],1)
+            self.assertEqual(api.home_queue_summary(self.prop.name)['counts']['hosted'],1)
         frappe.set_user('housekeeping@hospitality.example.invalid')
         with self.assertRaises(frappe.PermissionError):self.board()
+        with self.assertRaises(frappe.PermissionError):api.home_queue_summary(self.prop.name)
         self.assertNotIn('room_arrivals',api.bootstrap(self.prop.name))
         frappe.set_user('Guest')
         with self.assertRaises(frappe.PermissionError):self.board()
+        with self.assertRaises(frappe.PermissionError):api.home_queue_summary(self.prop.name)
         frappe.set_user('Administrator')
         with operation():self.prop.discreet_mode=1;self.prop.save()
         result=self.board()
@@ -132,7 +144,7 @@ class TestDeskBoard(IntegrationTestCase):
         self.assertEqual(result['rows'][0]['customer_label'],'Cliente registrado')
         # The property edit is explicit; the subsequent board reads add no writes.
         counts['Version']=frappe.db.count('Version')
-        self.board('accounts');self.board('departures');self.board('arrivals')
+        self.board('accounts');self.board('departures');self.board('arrivals');api.home_queue_summary(self.prop.name)
         self.assertEqual({dt:frappe.db.count(dt) for dt in watched},counts)
 
     def test_departures_include_overdue_and_active_stays_ignore_the_selected_date(self):
@@ -155,3 +167,4 @@ class TestDeskBoard(IntegrationTestCase):
         frappe.set_user(user)
         self.assertEqual(self.board()['total'],0)
         with self.assertRaises(frappe.PermissionError):api.stay_board(other)
+        with self.assertRaises(frappe.PermissionError):api.home_queue_summary(other)

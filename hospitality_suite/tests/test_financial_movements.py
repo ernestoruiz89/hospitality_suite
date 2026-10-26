@@ -136,6 +136,77 @@ class TestFinancialMovements(IntegrationTestCase):
         self.call("petty_accept", dict(handover=request["handover"]))
         self.assertEqual(frappe.db.get_value("HS Property", self.prop.name, "petty_cash_responsible"), "manager@hospitality.example.invalid")
 
+    def test_handover_candidates_exclude_users_without_property_access(self):
+        self.petty()
+        outsider = f"petty-outsider-{uuid.uuid4().hex[:10]}@example.invalid"
+        user = frappe.get_doc(dict(doctype="User", email=outsider,
+            first_name="Other Hotel", user_type="System User",
+            send_welcome_email=0))
+        user.append("roles", dict(role="HS Cashier"))
+        user.insert(ignore_permissions=True)
+        candidates = {row.name for row in api.erp_petty_snapshot(self.prop.name)["users"]}
+        self.assertIn("manager@hospitality.example.invalid", candidates)
+        self.assertNotIn(outsider, candidates)
+        self.assertNotIn("Guest", candidates)
+        with self.assertRaises(frappe.ValidationError):
+            self.call("petty_handover", dict(incoming=outsider, counted_cash=0))
+
+    def test_pending_handover_can_be_cancelled_with_reason(self):
+        self.petty()
+        request = self.call("petty_handover", dict(
+            incoming="manager@hospitality.example.invalid", counted_cash=0,
+            reason="Cambio de responsable"))
+        with self.assertRaises(frappe.ValidationError):
+            self.call("petty_handover_cancel", dict(handover=request["handover"]))
+        data = dict(handover=request["handover"], reason="El entrante no recibió el fondo")
+        key = uuid.uuid4().hex
+        cancelled = self.call("petty_handover_cancel", data, key)
+        self.assertEqual(self.call("petty_handover_cancel", data, key), cancelled)
+        self.assertEqual(cancelled["status"], "Cancelled")
+        self.assertEqual(frappe.db.get_value("HS Property", self.prop.name,
+            "petty_cash_responsible"), "Administrator")
+        frappe.set_user("manager@hospitality.example.invalid")
+        with self.assertRaises(frappe.PermissionError):
+            self.call("petty_accept", dict(handover=request["handover"]))
+
+    def test_petty_reversal_requires_dependencies_in_order(self):
+        category = self.petty()
+        initial = self.call("petty_fund", dict(kind="Initial Fund", shift=self.shift,
+            method=self.cash, amount=100))["movement"]
+        expense = self.call("petty_expense", dict(category=category.name, amount=20,
+            beneficiary="Proveedor", concept="Compra", receipt_reference="REC-REV"))["expense"]
+        rendition = self.call("petty_rendition", dict(counted_cash=85,
+            explanation="Sobrante justificado"))["rendition"]
+        frappe.set_user("manager@hospitality.example.invalid")
+        self.call("petty_review", dict(rendition=rendition, approve=1,
+            note="Arqueo aprobado"))
+        frappe.set_user("Administrator")
+        replenishment = self.call("petty_fund", dict(kind="Replenishment",
+            rendition=rendition, shift=self.shift, method=self.cash,
+            amount=10, reference="REP-REV"))["movement"]
+        with self.assertRaises(frappe.ValidationError):
+            self.call("finance_reverse", dict(doctype="HS Treasury Movement",
+                name=initial, reason="Intento con reposición"))
+        with self.assertRaises(frappe.ValidationError):
+            self.call("finance_reverse", dict(doctype="HS Petty Cash Rendition",
+                name=rendition, reason="Intento con reposición"))
+        self.call("finance_reverse", dict(doctype="HS Treasury Movement",
+            name=replenishment, reason="Deshacer reposición"))
+        self.assertEqual(frappe.db.get_value("HS Petty Cash Rendition", rendition,
+            "status"), "Approved")
+        reversed_rendition = self.call("finance_reverse", dict(
+            doctype="HS Petty Cash Rendition", name=rendition,
+            reason="Corregir arqueo"))
+        self.assertEqual(reversed_rendition["status"], "Returned")
+        self.assertEqual(frappe.db.get_value("HS Petty Cash Rendition", rendition,
+            "status"), "Returned")
+        self.call("finance_reverse", dict(doctype="HS Petty Cash Expense",
+            name=expense, reason="Corregir desembolso"))
+        self.call("finance_reverse", dict(doctype="HS Treasury Movement",
+            name=initial, reason="Cancelar fondo inicial"))
+        self.assertEqual(balance(self.prop), 0)
+        self.assertEqual(expected(frappe.get_doc("HS Shift", self.shift))["NIO"], "500.00")
+
     def test_account_cannot_be_removed_with_balance_or_unsettled_expense(self):
         category = self.petty()
         self.call("petty_fund", dict(kind="Initial Fund", shift=self.shift, method=self.cash, amount=50))
@@ -229,6 +300,10 @@ class TestFinancialMovements(IntegrationTestCase):
         second_account = self.account("Nuevo pasivo ", "Liability")
         self.call("finance_concept", dict(concept=concept.name, modified=str(concept.modified),
                                            label="Nombre actualizado", nature="Loan", account=second_account, active=0))
+        snapshot = api.erp_financing_snapshot(self.prop.name)
+        self.assertTrue(any(row.name == concept.name and not row.active for row in
+                            snapshot["concept_settings"]))
+        self.assertFalse(any(row.name == concept.name for row in snapshot["concepts"]))
         frappe.set_user("manager@hospitality.example.invalid")
         self.call("finance_approve", dict(movement=request))
         frappe.set_user("Administrator")

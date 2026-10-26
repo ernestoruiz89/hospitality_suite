@@ -1,5 +1,5 @@
-from hospitality_suite.controllers import ScopedDocument
+from hospitality_suite.controllers import ServiceRequestDocument
 
 
-class HSServiceRequest(ScopedDocument):
+class HSServiceRequest(ServiceRequestDocument):
     pass

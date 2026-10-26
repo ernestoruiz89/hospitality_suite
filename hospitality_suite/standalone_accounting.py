@@ -1,8 +1,8 @@
 """Double-entry book for Frappe-only Hospitality Suite sites.
 
 Every posting runs inside ``service.command``'s property lock and request
-transaction. ERPNext sites cannot use this book until a verified cutover
-switches all financial commands to the PMS provider.
+transaction. Installing ERPNext for a future cutover does not change the PMS
+authority; native hotel vouchers remain blocked until the verified switch.
 """
 
 from decimal import Decimal
@@ -33,10 +33,6 @@ def provider():
 def require_pms(prop):
     if provider() != "pms":
         frappe.throw(_("El libro PMS no está activo en este sitio"))
-    # Until the legacy commands have been routed through this provider, a
-    # mixed app installation could otherwise write both books for one event.
-    if "erpnext" in frappe.get_installed_apps():
-        frappe.throw(_("Complete la migración de comandos antes de activar el libro PMS junto a ERPNext"))
     if not prop.organization:
         frappe.throw(_("Configure la entidad legal del establecimiento"))
     organization = frappe.get_doc("HS Organization", prop.organization)
@@ -45,12 +41,12 @@ def require_pms(prop):
     return organization
 
 
-def account(prop, name):
+def account(prop, name, *, allow_inactive=False):
     row = frappe.db.get_value("HS Account", name,
         ["name", "property", "organization", "root_type", "account_type", "account_currency", "is_group", "active", "is_cash", "is_bank"], as_dict=True)
     if not row or (row.property, row.organization) != (prop.name, prop.organization):
         frappe.throw(_("La cuenta no pertenece al establecimiento"), frappe.PermissionError)
-    if not row.active or row.is_group:
+    if (not row.active and not allow_inactive) or row.is_group:
         frappe.throw(_("Seleccione una cuenta activa que admita movimientos"))
     return row
 
@@ -112,7 +108,8 @@ def list_accounts(property_name):
                               "active": 1, "inventory_account": ["is", "set"]},
                               pluck="inventory_account"))
     for row in accounts:
-        row["manual_enabled"] = not (row.is_cash or row.is_bank or row.name in inventory_accounts)
+        row["manual_enabled"] = not (row.is_cash or row.is_bank or
+            row.name in inventory_accounts or row.name == prop.petty_cash_account)
     return accounts
 
 
@@ -142,6 +139,8 @@ def manual_journal(prop, data):
         selected = account(prop, line.get("account"))
         if selected.is_cash or selected.is_bank:
             frappe.throw(_("Use los movimientos de Caja o banco para sus cuentas de control"))
+        if selected.name == prop.petty_cash_account:
+            frappe.throw(_("Use el flujo de Caja Chica para su cuenta de control"))
         if frappe.db.exists("HS Product", {"property": prop.name,
                              "inventory_account": selected.name, "active": 1}):
             frappe.throw(_("Use movimientos de inventario para la cuenta de existencias"))
@@ -192,7 +191,13 @@ def post(prop, *, source_doctype, source_name, purpose, lines, memo=None,
         frappe.throw(str(exc))
     enriched = []
     for line in normalized:
-        selected = account(prop, line["account"])
+        historical_return = (getattr(frappe.local,
+            "hs_historical_day_pass_return", False) and purpose in
+            ("Historical Day Pass Credit", "Historical Day Pass Refund") or
+            getattr(frappe.local, "hs_historical_maintenance_return", False)
+            and source_doctype == "HS Stock Movement" and purpose == "Receipt")
+        selected = account(prop, line["account"],
+            allow_inactive=historical_return)
         try:
             enriched.append(currency_line(line, selected.account_currency or prop.currency,
                                           prop.currency, frappe.utils.get_currency_precision() or 2))
@@ -221,7 +226,17 @@ def reverse(prop, data):
         frappe.throw(_("El asiento pertenece a otro establecimiento"), frappe.PermissionError)
     if original.reversal_of or frappe.db.exists("HS Journal", {"reversal_of": original.name}):
         frappe.throw(_("Este asiento ya fue revertido o es una reversión"))
-    if original.source_doctype in ("HS PMS Receivable", "HS Payment", "HS PMS Cash Movement", "HS PMS Allocation"):
+    if original.source_doctype in ("HS PMS Receivable", "HS Payment", "HS PMS Cash Movement",
+                                   "HS PMS Allocation", "HS PMS Fiscal Document",
+                                   "HS Stock Movement", "HS PMS Purchase",
+                                   "HS PMS Opening Payable", "HS PMS Opening Credit",
+                                   "HS PMS Opening Guarantee",
+                                   "HS PMS Opening Supplier Credit",
+                                   "HS PMS Supplier Credit Allocation",
+                                   "ERPNext Opening Balance",
+                                   "HS PMS Agency Commission",
+                                   "HS Treasury Movement", "HS Petty Cash Expense",
+                                   "HS Petty Cash Rendition"):
         frappe.throw(_("Este asiento pertenece a una operación con saldos vinculados; use su flujo de cancelación"))
     lines = inverse_lines([{"account": row.account, "debit": str(row.debit),
                             "credit": str(row.credit), "party": row.party, "memo": row.memo,
@@ -237,7 +252,7 @@ def reverse(prop, data):
 
 def balance(prop, account_name, through_date=None):
     require_pms(prop)
-    account(prop, account_name)
+    account(prop, account_name, allow_inactive=True)
     date_filter = " AND j.posting_date<=%s" if through_date else ""
     values = [prop.name, account_name]
     if through_date:
@@ -253,7 +268,7 @@ def balance(prop, account_name, through_date=None):
 def account_currency_balance(prop, account_name, through_date=None):
     """Balance in the account's fixed currency, alongside the base balance."""
     require_pms(prop)
-    selected = account(prop, account_name)
+    selected = account(prop, account_name, allow_inactive=True)
     date_filter = " AND j.posting_date<=%s" if through_date else ""
     values = [prop.name, account_name]
     if through_date:

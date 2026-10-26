@@ -90,6 +90,37 @@
    "options": "currency"
   },
   {
+   "fieldname": "exchange_rate",
+   "label": "Tipo de cambio",
+   "fieldtype": "Float",
+   "default": 0,
+   "precision": 9
+  },
+  {
+   "fieldname": "base_amount",
+   "label": "Importe en moneda base",
+   "fieldtype": "Currency",
+   "default": 0
+  },
+  {
+   "fieldname": "rate_record",
+   "label": "Registro de tarifa",
+   "fieldtype": "Link",
+   "options": "HS Exchange Rate"
+  },
+  {
+   "fieldname": "pms_journal",
+   "label": "Asiento PMS",
+   "fieldtype": "Link",
+   "options": "HS Journal"
+  },
+  {
+   "fieldname": "pms_reversal_journal",
+   "label": "Asiento de reversión PMS",
+   "fieldtype": "Link",
+   "options": "HS Journal"
+  },
+  {
    "fieldname": "business_date",
    "label": "Fecha operativa",
    "fieldtype": "Date"
@@ -150,6 +181,11 @@
   "counter_account",
   "currency",
   "amount",
+  "exchange_rate",
+  "base_amount",
+  "rate_record",
+  "pms_journal",
+  "pms_reversal_journal",
   "business_date",
   "reference",
   "reason",

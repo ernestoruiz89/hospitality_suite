@@ -23,7 +23,7 @@
   },
   {
    "fieldname": "organization",
-   "label": "Organization",
+   "label": "Organización",
    "fieldtype": "Link",
    "options": "HS Organization",
    "reqd": 1

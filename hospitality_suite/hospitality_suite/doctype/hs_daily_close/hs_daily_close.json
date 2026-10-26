@@ -28,6 +28,13 @@
    "reqd": 1
   },
   {
+   "fieldname": "revision",
+   "label": "Revisión",
+   "fieldtype": "Int",
+   "reqd": 1,
+   "default": 1
+  },
+  {
    "fieldname": "status",
    "label": "Estado",
    "fieldtype": "Select",
@@ -62,6 +69,7 @@
   "company",
   "property",
   "business_date",
+  "revision",
   "status",
   "summary",
   "blockers",

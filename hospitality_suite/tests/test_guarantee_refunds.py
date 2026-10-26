@@ -11,6 +11,7 @@ from frappe.utils import now_datetime
 from hospitality_suite import api
 from hospitality_suite.cashier import expected
 from hospitality_suite.close_financials import snapshot
+from hospitality_suite.erp_to_pms_preflight import _deposits
 from hospitality_suite.refunds import original_funds
 from hospitality_suite.service import operation
 
@@ -121,6 +122,46 @@ class TestGuaranteeRefunds(IntegrationTestCase):
         entries=frappe.get_all('GL Entry',filters={'voucher_type':'Payment Entry','voucher_no':native.name,'account':loss},fields=['debit','credit'])
         self.assertAlmostEqual(sum(row.debit-row.credit for row in entries),3.76,places=2)
         self.assertEqual(expected(frappe.get_doc('HS Shift',self.shift))['USD'],'0.00')
+
+    def test_foreign_guarantee_application_creates_base_currency_customer_credit(self):
+        parent=frappe.db.get_value('Account',{'company':self.prop.company,
+            'account_type':'Cash','is_group':1})
+        cash=frappe.get_doc(dict(doctype='Account',company=self.prop.company,
+            parent_account=parent,account_name='USD garantía corte '+uuid.uuid4().hex[:6],
+            account_type='Cash',account_currency='USD')).insert()
+        with operation():
+            method=frappe.get_doc(dict(doctype='HS Payment Method',
+                company=self.prop.company,property=self.prop.name,account=cash.name,
+                currency='USD',mode_of_payment=self.method.mode_of_payment,is_cash=1)).insert()
+        received=self.pay(10,method=method.name)
+        applied=self.apply(received,10)
+        source=frappe.get_doc('HS Payment',applied['payment'])
+        funds=original_funds(self.prop,source)
+        self.assertEqual(source.currency,'USD')
+        self.assertEqual(funds.currency,self.prop.currency)
+        self.assertGreater(funds.unallocated,0)
+        blockers=[]
+        deposits=_deposits(self.prop,blockers)
+        credit=next(row for row in deposits['customer_credits']
+            if row['voucher']==applied['journal_entry'])
+        self.assertEqual(Decimal(credit['available']),funds.unallocated)
+        self.assertEqual(credit['base_available'],credit['available'])
+        self.assertFalse([row for row in blockers
+            if row.get('source') in {source.name,applied['journal_entry']}])
+        account_row=next(row for row in frappe.get_doc('Journal Entry',
+            applied['journal_entry']).accounts if row.party_type=='Customer' and
+            row.party==source.customer and row.credit_in_account_currency>0)
+        frappe.db.savepoint('hs_foreign_guarantee_credit_probe')
+        try:
+            frappe.db.set_value('Journal Entry Account',account_row.name,
+                'account_currency','USD',update_modified=False)
+            invalid=[]
+            _deposits(self.prop,invalid)
+            self.assertTrue(any(row.get('code')==
+                'foreign_applied_guarantee_credit_unsupported' and
+                row.get('source')==applied['journal_entry'] for row in invalid))
+        finally:
+            frappe.db.rollback(save_point='hs_foreign_guarantee_credit_probe')
 
     def test_unallocated_return_reconciles_closed_original_shift_without_new_receipt(self):
         applied=self.apply(self.pay(200),200)

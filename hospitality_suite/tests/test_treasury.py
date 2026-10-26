@@ -81,16 +81,90 @@ class TestTreasury(IntegrationTestCase):
         from hospitality_suite.reconciliation import differences
         self.assertEqual(differences(self.prop),[])
 
+    def test_react_cash_expense_review_and_shared_category_setup(self):
+        account=self.account("Gasto React ficticio ",root="Expense")
+        with operation():
+            category=frappe.get_doc(dict(doctype="HS Expense Category",company=self.prop.company,
+                property=self.prop.name,label="Gasto React ficticio",account=account,
+                max_amount=100,active=1)).insert()
+        values=dict(shift=self.shift,method=self.cash,category=category.name,
+                    amount=80,reason="Comprobante de gasto ficticio")
+        snapshot=api.erp_cash_snapshot(self.prop.name,self.shift)
+        self.assertTrue(any(row.name==category.name for row in snapshot["categories"]))
+        self.assertEqual(snapshot["selected"]["expected"]["NIO"],"500.00")
+        quote=api.preview(self.prop.name,values,"cash_expense_reviewed")
+        self.assertEqual((quote["debit"],quote["credit"],quote["available_after"]),
+                         (account,frappe.db.get_value("HS Payment Method",self.cash,"account"),"420.00"))
+        with self.assertRaises(frappe.ValidationError):
+            self.call("cash_expense_reviewed",values)
+        key=uuid.uuid4().hex
+        result=self.call("cash_expense_reviewed",dict(values,acceptance=quote["acceptance"]),key)
+        self.assertEqual(self.call("cash_expense_reviewed",dict(values,acceptance=quote["acceptance"]),key),result)
+        journal=frappe.get_doc("Journal Entry",result["journal_entry"])
+        self.assertEqual(journal.docstatus,1)
+        self.assertEqual(sum(row.debit for row in journal.accounts if row.account==account),80)
+        with self.assertRaises(frappe.ValidationError):
+            self.call("cash_expense_reviewed",dict(values,acceptance=quote["acceptance"]))
+
+        settings=api.erp_cash_settings(self.prop.name)
+        row=next(row for row in settings["categories"] if row.name==category.name)
+        updated=api.save_setup(self.prop.name,"expense_category",
+            dict(name=category.name,label="Gasto React actualizado",account=account,
+                 max_amount=90,active=1),uuid.uuid4().hex,expected_modified=str(row.modified))
+        self.assertEqual(updated["name"],category.name)
+        self.assertEqual(next(row.label for row in api.erp_cash_settings(self.prop.name)["categories"]
+                              if row.name==category.name),"Gasto React actualizado")
+        with self.assertRaises(frappe.ValidationError):
+            api.save_setup(self.prop.name,"expense_category",
+                dict(name=category.name,label="Cambio con versión antigua",account=account,
+                     max_amount=90,active=1),uuid.uuid4().hex,expected_modified=str(row.modified))
+
+    def test_react_payment_method_setup_creates_usable_settlement_policy(self):
+        clearing=self.account("Compensación React ficticia ",account_type="Bank")
+        bank=self.account("Banco React ficticio ",account_type="Bank")
+        expense=self.account("Comisión React ficticia ",root="Expense")
+        tax=self.account("Retención React ficticia ")
+        mode=frappe.db.get_value("Mode of Payment",{"type":"Bank"},"name")
+        result=api.save_setup(self.prop.name,"payment_method",dict(
+            mode_of_payment=mode,account=clearing,currency=self.prop.currency,
+            is_cash=0,reference_required=1,fee_percent=3,fee_fixed=2,
+            fee_account=expense,withholding_percent=1,withholding_account=tax,
+            settlement_account=bank,refund_fee_percent=0,refund_fee_fixed=0),
+            uuid.uuid4().hex)
+        settings=api.erp_cash_method_settings(self.prop.name)
+        created=next(row for row in settings["methods"] if row.name==result["name"])
+        self.assertEqual((created.settlement_account,created.core_locked),(bank,False))
+        receipt=self.receipt(frappe.get_doc("HS Payment Method",result["name"]),100)
+        quote=api.preview(self.prop.name,dict(source_payment=receipt["payment"],amount=100),"settle_payment")
+        self.assertEqual((quote["fee"],quote["withholding"],quote["net"]),("5.00","1.00","94.00"))
+        self.assertTrue(next(row for row in api.erp_cash_method_settings(self.prop.name)["methods"]
+                             if row.name==result["name"]).core_locked)
+        with self.assertRaises(frappe.ValidationError):
+            api.save_setup(self.prop.name,"payment_method",
+                dict(name=result["name"],account=bank),uuid.uuid4().hex,
+                expected_modified=str(created.modified))
+
     def test_partial_card_settlement_preserves_gross_policy_and_all_native_ledgers(self):
         method,clearing,bank,expense,tax=self.card()
         receipt=self.receipt(method,100)
+        sources=api.erp_cash_settlement_sources(self.prop.name,receipt["payment"])
+        self.assertEqual(len(sources["sources"]),1)
+        self.assertEqual((sources["sources"][0]["available"],sources["sources"][0]["direction"]),
+                         ("100.00","Receive"))
         one=self.settle(receipt["payment"],40)
         self.assertEqual((one["fee"],one["withholding"],one["net"]),("2.00","0.40","37.60"))
-        with operation():
-            method.fee_percent,method.fee_fixed,method.withholding_percent=50,0,0
-            method.save()
+        sources=api.erp_cash_settlement_sources(self.prop.name,receipt["payment"])
+        self.assertEqual((sources["sources"][0]["settled"],sources["sources"][0]["available"]),
+                         ("40.00","60.00"))
+        settings=api.erp_cash_method_settings(self.prop.name)
+        configured=next(row for row in settings["methods"] if row.name==method.name)
+        self.assertTrue(configured.core_locked)
+        api.save_setup(self.prop.name,"payment_method",
+            dict(name=method.name,fee_percent=50,fee_fixed=0,withholding_percent=0),
+            uuid.uuid4().hex,expected_modified=str(configured.modified))
         two=self.settle(receipt["payment"],60)
         self.assertEqual((two["fee"],two["withholding"],two["net"]),("3.00","0.60","56.40"))
+        self.assertEqual(api.erp_cash_settlement_sources(self.prop.name,receipt["payment"])["sources"],[])
         vouchers=[receipt["payment_entry"],one["journal_entry"],two["journal_entry"]]
         rows=frappe.get_all("GL Entry",filters={"voucher_no":["in",vouchers],"is_cancelled":0},fields=["account","debit","credit"])
         balance=lambda account:sum(r.debit-r.credit for r in rows if r.account==account)
@@ -111,6 +185,8 @@ class TestTreasury(IntegrationTestCase):
         last=frappe.get_doc("Journal Entry",two["journal_entry"])
         last.hs_correction_reason="Liquidación ficticia duplicada corregida"
         last.cancel()
+        reopened=api.erp_cash_settlement_sources(self.prop.name,receipt["payment"])["sources"]
+        self.assertEqual((len(reopened),reopened[0]["available"]),(1,"60.00"))
         q=api.preview(self.prop.name,dict(source_payment=receipt["payment"],amount=60),"settle_payment")
         self.assertEqual(q["fee"],"3.00")
         self.assertEqual(q["net"],"56.40")

@@ -20,6 +20,13 @@ def bindings(prop,snapshot=None):
 
 
 def validate_bindings(prop):
+    from hospitality_suite.standalone_accounting import provider
+    if provider() == "pms":
+        for field, label in (*BINDINGS, ("day_pass_item", "Day Pass sin habitación"),
+                             ("penalty_item", "Penalización")):
+            if prop.get(field):
+                _pms_service(prop, prop.get(field), label)
+        return
     if prop.get("day_pass_item"):
         day_pass=frappe.get_doc("Item",prop.day_pass_item)
         if day_pass.disabled or not day_pass.is_sales_item or day_pass.is_fixed_asset or day_pass.is_stock_item:
@@ -39,10 +46,28 @@ def bound_item(prop,snapshot,field):
     name=bindings(prop,snapshot).get(field)
     if not name:
         frappe.throw(frappe._("Configure el artículo correspondiente antes de registrar este cargo"))
+    from hospitality_suite.standalone_accounting import provider
+    if provider() == "pms":
+        return _pms_service(prop, name, field).name
     item=frappe.get_doc("Item",name)
     if item.disabled or not item.is_sales_item or item.is_fixed_asset or item.is_stock_item:
         frappe.throw(frappe._("El artículo aceptado debe seguir habilitado como servicio de venta sin inventario"))
     return name
+
+
+def _pms_service(prop, name, label):
+    product = frappe.db.get_value("HS Product", name,
+        ["name", "property", "organization", "active", "product_type", "income_account"],
+        as_dict=True)
+    if (not product or product.property != prop.name or
+            product.organization != prop.organization or not product.active or
+            product.product_type != "Service" or not product.income_account):
+        frappe.throw(frappe._("{0}: seleccione un servicio PMS activo con cuenta de ingresos").format(label))
+    from hospitality_suite.standalone_accounting import account
+    income = account(prop, product.income_account)
+    if income.root_type != "Income" or income.account_currency != prop.currency:
+        frappe.throw(frappe._("{0}: la cuenta de ingresos debe usar la moneda base").format(label))
+    return product
 
 
 def hours_quantity(prop,snapshot,hours):
@@ -50,6 +75,9 @@ def hours_quantity(prop,snapshot,hours):
     if selected["extra_hour_item"]==selected["lodging_item"]:
         return 1  # Legacy accommodation articles bill one accepted charge.
     quantity=decimal(hours)
+    from hospitality_suite.standalone_accounting import provider
+    if provider() == "pms":
+        return quantity or 1
     uom=frappe.db.get_value("Item",selected["extra_hour_item"],"stock_uom")
     if quantity%1 and frappe.db.get_value("UOM",uom,"must_be_whole_number"):
         frappe.throw(frappe._("El artículo aceptado debe admitir fracciones de hora en su unidad"))

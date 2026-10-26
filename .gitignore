@@ -11,3 +11,7 @@ dist
 playwright-report/
 test-results/
 output/
+tmp/
+hospitality_suite/tests/probe_reverse_current_clone.py
+hospitality_suite/tests/seed_reverse_live_stage_target.py
+hospitality_suite/tests/seed_reverse_live_retake_target.py

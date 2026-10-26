@@ -63,11 +63,17 @@ class TestPrivacy(IntegrationTestCase):
         ledger_counts={dt:frappe.db.count(dt) for dt in ("GL Entry","Payment Ledger Entry","Stock Ledger Entry")}
         catalog=api.retention_candidates(self.prop.name)
         self.assertIn(guest.name,[r["name"] for r in catalog["targets"]])
+        attachment_count=len(privacy.files_for(guest))
+        self.assertGreaterEqual(attachment_count,1)
         values=self.data(guest)
         key=uuid.uuid4().hex
         result=api.execute(self.prop.name,"retire_sensitive",key,values)
         self.assertEqual(api.execute(self.prop.name,"retire_sensitive",key,values),result)
         self.assertEqual(result["status"],"Pending")
+        history=api.retention_history(self.prop.name,page_length=1)
+        self.assertGreaterEqual(history["total"],1)
+        self.assertEqual(history["runs"][0]["name"],result["run"])
+        self.assertEqual(history["runs"][0]["file_counts"]["Pending"],attachment_count)
         guest.reload()
         self.assertFalse(guest.identity_number or guest.identity_type or guest.identity_file)
         self.assertFalse(frappe.db.exists("File",file.name))
@@ -78,8 +84,10 @@ class TestPrivacy(IntegrationTestCase):
         self.assertEqual(privacy.purge_run(result["run"])["status"],"Completed")
         self.assertFalse(path.exists())
         run=frappe.get_doc("HS Retention Run",result["run"])
-        self.assertEqual(run.files[0].status,"Deleted")
-        self.assertFalse(run.files[0].file_url or run.files[0].content_hash)
+        self.assertTrue(all(row.status=="Deleted" for row in run.files))
+        self.assertEqual(api.retention_history(self.prop.name,page_length=1)
+                         ["runs"][0]["file_counts"]["Deleted"],attachment_count)
+        self.assertTrue(all(not row.file_url and not row.content_hash for row in run.files))
         self.assertEqual(privacy.purge_run(run.name)["attempts"],1)
         self.assertEqual(ledger_counts,{dt:frappe.db.count(dt) for dt in ledger_counts})
 
@@ -106,6 +114,8 @@ class TestPrivacy(IntegrationTestCase):
         frappe.set_user("supervisor@hospitality.example.invalid")
         with self.assertRaises(frappe.PermissionError):
             api.retention_candidates(self.prop.name)
+        with self.assertRaises(frappe.PermissionError):
+            api.retention_history(self.prop.name)
         with self.assertRaises(frappe.PermissionError):
             api.execute(self.prop.name,"retire_sensitive",uuid.uuid4().hex,values)
         frappe.set_user("Administrator")

@@ -1,6 +1,6 @@
 # Hospitality Suite 0.8.9
 
-Aplicación de alojamiento para **Hotel, Por tiempo y operación Mixta** sobre Frappe/ERPNext. Incluye recepción, reservas, estancias, caja, limpieza, lavandería de huéspedes, mantenimiento, bloqueos operativos de habitaciones, agencias de viajes, experiencias, servicios/inventario, huéspedes, gerencia y configuración. Los documentos estándar de ERPNext son la autoridad contable y de inventario. [Flujo de lavandería](docs/LAVANDERIA_HUESPEDES.md) · [Bloqueos de habitaciones](docs/BLOQUEOS_HABITACION.md) · [Agencias y experiencias](docs/AGENCIAS_Y_EXPERIENCIAS.md).
+Aplicación de alojamiento para **Hotel, Por tiempo y operación Mixta** sobre Frappe. Incluye recepción, reservas, estancias, caja, limpieza, lavandería de huéspedes, mantenimiento, bloqueos operativos de habitaciones, agencias de viajes, experiencias, servicios/inventario, huéspedes, gerencia y configuración. Un sitio elige un solo proveedor contable: ERPNext para el flujo original o el libro PMS propio, todavía en desarrollo, para operar sin ERPNext. [Flujo de lavandería](docs/LAVANDERIA_HUESPEDES.md) · [Bloqueos de habitaciones](docs/BLOQUEOS_HABITACION.md) · [Agencias y experiencias](docs/AGENCIAS_Y_EXPERIENCIAS.md).
 
 El alcance obligatorio del adjunto está contrastado en las **218 entradas** de la [matriz](docs/AUDITORIA_ESPECIFICACION.md), con [cotejo individual](docs/COTEJO_FINAL.md). La sincronización real con Airbnb/Booking sigue aplazada por instrucción del usuario. Las demás integraciones externas son contratos/adaptadores de referencia con pruebas simuladas, sin proveedores activos.
 
@@ -18,7 +18,7 @@ Abra [Reservas](http://hospitality.localhost:8086/desk/hospitality-suite/hospita
 
 Frappe **16.52.0**, ERPNext **16.51.1**, Python **3.14.6**, Node **24.18.0**, MariaDB **10.11.14**, Ubuntu 24.04/WSL2; commits y rutas en [la evidencia de entorno](docs/evidence/f26-candidate-environment.json). Otras versiones no están acreditadas. HRMS es opcional y no estaba instalado. PDF requiere `wkhtmltopdf` con Qt parcheado; un renderer incompatible se rechaza con un error claro.
 
-La app declara sus dependencias Bench en `pyproject.toml`, usa JS/CSS y controles nativos de Frappe, y no modifica el núcleo. [Arquitectura y decisiones](docs/ARQUITECTURA.md). El [modo PMS sin ERPNext](docs/ARQUITECTURA_PMS_SIN_ERPNEXT.md) ya puede instalarse en un sitio Frappe 16 para ensayos: incluye catálogo contable, asientos, monedas por establecimiento, Caja y cuentas por cobrar internas. Sigue en desarrollo y aún no sustituye al modo ERPNext para facturación fiscal, folios, compras, cierres y paridad operativa.
+La app declara sus dependencias Bench en `pyproject.toml`, usa JS/CSS y controles nativos de Frappe, y no modifica el núcleo. [Arquitectura y decisiones](docs/ARQUITECTURA.md). El [modo PMS sin ERPNext](docs/ARQUITECTURA_PMS_SIN_ERPNEXT.md) ya puede instalarse en un sitio Frappe 16 para ensayos: incluye libro contable, multimoneda, Caja, folios, facturas imprimibles, compras, cierres y lavandería de huéspedes. El [procedimiento de corte PMS a ERPNext](docs/CORTE_PMS_A_ERPNEXT.md) está documentado para operadores de Bench. Sigue en desarrollo: faltan paridad operativa completa, migraciones reales entre proveedores y validación de un hotel en producción.
 
 ## Instalación con Bench
 
@@ -32,7 +32,7 @@ bench --site hotel.localhost migrate
 bench build --app hospitality_suite
 ```
 
-Si el sitio ya existe con ERPNext, omita `new-site`. Inicie los procesos de desarrollo con `bench start` y abra la Page `hospitality-home`. La instalación no crea compañía, habitaciones ni operaciones ficticias: complete primero el asistente nativo de ERPNext y cree el primer establecimiento desde Inicio. Configure modalidad/zona/moneda/fecha/corte, habitaciones/categorías/tarifas, impuestos, cuentas/centros de costo/almacenes, medios de pago, políticas, series/formatos y usuarios antes de habilitar operaciones financieras.
+Si el sitio ya existe con ERPNext, omita `new-site`. Inicie los procesos de desarrollo con `bench start` y abra `/hospitality-launch`, que lleva a la interfaz React. La instalación no crea compañía, habitaciones ni operaciones ficticias: complete primero el asistente nativo de ERPNext y cree el primer establecimiento desde Inicio. Configure modalidad/zona/moneda/fecha/corte, habitaciones/categorías/tarifas, impuestos, cuentas/centros de costo/almacenes, medios de pago, políticas, series/formatos y usuarios antes de habilitar operaciones financieras.
 
 Recepción y Caja tienen permisos separados; una misma persona puede reservar y cobrar con ambos roles explícitamente asignados a su sede. Limpieza no recibe inspección o permisos financieros por defecto. La marca comercial y las políticas se configuran por establecimiento.
 
@@ -71,7 +71,9 @@ Las pruebas JS sin servidor se ejecutan desde el repositorio con:
 HOSPITALITY_FRAPPE_ROOT=/ruta/al/bench/apps/frappe node tools/run_ui_tests.cjs
 ```
 
-Última batería: **410 nativas (378 integración/32 unitarias) y 232 JS (229 Desk/tres portal)**, sin fallos ni omisiones, desde el Python/clon del bench independiente sobre 0.8.9. [JUnit](docs/evidence/final-recovery-native-tests.xml), [recibo](docs/evidence/final-recovery-native-run.json), [JS](docs/evidence/f26-js-run.json). El transporte, las carreras reales, el worker y los recorridos GUI están documentados por separado; no se presentan los 232 casos JS como pruebas de navegador.
+La rama de desarrollo posterior a 0.8.9 pasó **444 pruebas de integración y 46 unitarias** en `hospitality-acceptance.localhost` el 26/10/2026, después de `bench migrate`; también pasaron las cuatro pruebas unitarias React, la compilación Vite y la compilación Python. El sitio de aceptación fue respaldado antes de la batería. Los ensayos de corte entre proveedores y sus límites están en [PMS a ERPNext](docs/CORTE_PMS_A_ERPNEXT.md) y [ERPNext a PMS](docs/CORTE_ERPNEXT_A_PMS.md); el origen demostrativo conserva bloqueos de datos y no se ha cortado.
+
+La batería de la entrega 0.8.9 fue **410 nativas (378 integración/32 unitarias) y 232 JS (229 Desk/tres portal)**, sin fallos ni omisiones. [JUnit](docs/evidence/final-recovery-native-tests.xml), [recibo](docs/evidence/final-recovery-native-run.json), [JS](docs/evidence/f26-js-run.json). El transporte, las carreras reales, el worker y los recorridos GUI están documentados por separado; no se presentan los 232 casos JS como pruebas de navegador.
 
 Los helpers de concurrencia requieren sitio de integración designado, scheduler pausado y respaldo. Usan conexiones/commits reales y dejan anulaciones auditadas; no se ejecutan sobre un cliente con operaciones. [Ensayo de instalación y recuperación](docs/ACTUALIZACION_Y_RECUPERACION_FINAL.md).
 

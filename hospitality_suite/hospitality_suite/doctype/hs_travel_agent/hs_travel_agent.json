@@ -62,6 +62,12 @@
    "fieldtype": "Data"
   },
   {
+   "fieldname": "pms_supplier",
+   "label": "Proveedor PMS de la agencia",
+   "fieldtype": "Link",
+   "options": "HS Party"
+  },
+  {
    "fieldname": "active",
    "label": "Habilitado",
    "fieldtype": "Check",
@@ -78,6 +84,7 @@
   "contact_email",
   "commission_pct",
   "supplier",
+  "pms_supplier",
   "active"
  ],
  "permissions": [

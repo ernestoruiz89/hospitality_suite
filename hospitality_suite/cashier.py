@@ -10,13 +10,18 @@ from hospitality_suite.service import insert, audit, assert_version, canonical
 
 
 def open_shift(prop, data):
-    if current_all("HS Shift", filters={"property": prop.name, "cashier": frappe.session.user, "status": "Open", "currency": data.get("currency") or prop.currency}):
+    currency = data.get("currency") or prop.currency
+    from hospitality_suite.standalone_currency import enabled
+    if (not isinstance(currency, str) or not enabled(prop, currency) or
+            not frappe.db.get_value("Currency", currency, "enabled")):
+        frappe.throw(frappe._("La moneda del turno no está habilitada en este establecimiento"))
+    if current_all("HS Shift", filters={"property": prop.name, "cashier": frappe.session.user, "status": "Open", "currency": currency}):
         frappe.throw(frappe._("Ya tiene un turno abierto en esa moneda"))
     opening = money(data.get("opening_amount"))
     if opening < 0:
         frappe.throw(frappe._("El fondo inicial no puede ser negativo"))
     doc = insert("HS Shift", prop, cashier=frappe.session.user, opened_at=now_datetime(), status="Open",
-                 currency=data.get("currency") or prop.currency, opening_amount=opening)
+                 currency=currency, opening_amount=opening)
     audit(prop, "Open shift", doc)
     return dict(shift=doc.name)
 

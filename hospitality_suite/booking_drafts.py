@@ -45,7 +45,17 @@ def normalize(prop, values):
         if guest.property != prop.name:
             frappe.throw(frappe._('El huésped no pertenece al establecimiento'), frappe.PermissionError)
     if result['customer']:
-        frappe.get_doc('Customer', result['customer']).check_permission('read')
+        from hospitality_suite.standalone_accounting import provider
+        if provider() == 'pms':
+            from hospitality_suite.standalone_reception import party
+            party(prop, result['customer'])
+        else:
+            linked = any(frappe.db.exists(dt, {'property': prop.name,
+                'customer': result['customer']}) for dt in ('HS Guest', 'HS Billing Party'))
+            if not linked:
+                frappe.throw(frappe._('Seleccione un pagador registrado en este establecimiento'),
+                             frappe.PermissionError)
+            frappe.get_doc('Customer', result['customer']).check_permission('read')
     if result['travel_agent']:
         from hospitality_suite.travel_experiences import agent
         agent(prop,result['travel_agent'])

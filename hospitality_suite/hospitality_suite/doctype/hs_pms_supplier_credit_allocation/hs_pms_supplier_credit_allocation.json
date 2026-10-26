@@ -1,0 +1,221 @@
+{
+ "doctype": "DocType",
+ "name": "HS PMS Supplier Credit Allocation",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "hash",
+ "naming_rule": "Random",
+ "fields": [
+  {
+   "fieldname": "company",
+   "label": "Compañía",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "property",
+   "label": "Establecimiento",
+   "fieldtype": "Link",
+   "options": "HS Property",
+   "reqd": 1
+  },
+  {
+   "fieldname": "organization",
+   "label": "Organización",
+   "fieldtype": "Link",
+   "options": "HS Organization",
+   "reqd": 1
+  },
+  {
+   "fieldname": "opening_credit",
+   "label": "Crédito de apertura",
+   "fieldtype": "Link",
+   "options": "HS PMS Opening Supplier Credit",
+   "reqd": 1
+  },
+  {
+   "fieldname": "target_type",
+   "label": "Tipo de deuda",
+   "fieldtype": "Select",
+   "options": "Opening Payable\nPurchase",
+   "reqd": 1,
+   "default": "Opening Payable"
+  },
+  {
+   "fieldname": "opening_payable",
+   "label": "Factura inicial del proveedor",
+   "fieldtype": "Link",
+   "options": "HS PMS Opening Payable"
+  },
+  {
+   "fieldname": "purchase",
+   "label": "Compra",
+   "fieldtype": "Link",
+   "options": "HS PMS Purchase"
+  },
+  {
+   "fieldname": "kind",
+   "label": "Tipo",
+   "fieldtype": "Select",
+   "options": "Applied\nReversed",
+   "reqd": 1,
+   "default": "Applied"
+  },
+  {
+   "fieldname": "reverses",
+   "label": "Revierte a",
+   "fieldtype": "Link",
+   "options": "HS PMS Supplier Credit Allocation"
+  },
+  {
+   "fieldname": "business_date",
+   "label": "Fecha operativa",
+   "fieldtype": "Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "currency",
+   "label": "Moneda",
+   "fieldtype": "Link",
+   "options": "Currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amount",
+   "label": "Importe",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "base_currency",
+   "label": "Moneda base",
+   "fieldtype": "Link",
+   "options": "Currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "source_base_amount",
+   "label": "Importe de origen en moneda base",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "base_currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "target_base_amount",
+   "label": "Importe de destino en moneda base",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "base_currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "exchange_variance_account",
+   "label": "Cuenta de diferencia cambiaria",
+   "fieldtype": "Link",
+   "options": "HS Account",
+   "read_only": 1
+  },
+  {
+   "fieldname": "journal",
+   "label": "Asiento contable",
+   "fieldtype": "Link",
+   "options": "HS Journal"
+  },
+  {
+   "fieldname": "reason",
+   "label": "Motivo",
+   "fieldtype": "Small Text"
+  }
+ ],
+ "field_order": [
+  "company",
+  "property",
+  "organization",
+  "opening_credit",
+  "target_type",
+  "opening_payable",
+  "purchase",
+  "kind",
+  "reverses",
+  "business_date",
+  "currency",
+  "amount",
+  "base_currency",
+  "source_base_amount",
+  "target_base_amount",
+  "exchange_variance_account",
+  "journal",
+  "reason"
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Administrator",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Supervisor",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Cashier",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Accountant",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Auditor",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0
+}

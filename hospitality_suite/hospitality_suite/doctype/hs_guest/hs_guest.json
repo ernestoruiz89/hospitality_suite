@@ -34,6 +34,14 @@
    "options": "Email"
   },
   {
+   "fieldname": "portal_user",
+   "label": "Cuenta del portal del huésped",
+   "fieldtype": "Link",
+   "options": "User",
+   "hidden": 1,
+   "read_only": 1
+  },
+  {
    "fieldname": "phone",
    "label": "Teléfono",
    "fieldtype": "Data"
@@ -81,6 +89,7 @@
   "property",
   "full_name",
   "email",
+  "portal_user",
   "phone",
   "identity_type",
   "identity_number",

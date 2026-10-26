@@ -23,7 +23,7 @@
         o.status==="Collected"?this.button("laundry_advance",__("Enviar a proceso"),o.name):
         o.status==="In Process"?this.button("laundry_advance",__("Marcar lista"),o.name):
         this.button("laundry_return",__("Contar devolución"),o.name)+
-          (this.allowed("service")?this.button("laundry_deliver",__("Entregar y cargar al folio"),o.name,"primary"):"");
+          (this.allowed("service")?this.button("laundry_deliver",__("Entregar y cargar a la cuenta"),o.name,"primary"):"");
       return `<article class="hs-task"><div class="hs-task-top"><strong>${e(o.name)} · ${e(__("Habitación"))} ${e(this.roomName(o.room))}</strong><span class="hs-badge">${e(statusLabels[o.status]||o.status)}</span></div>
         <p>${e(o.stay)} · ${pieces} ${e(__("piezas"))}${o.express?` · ${e(__("Exprés"))}`:""}${o.complimentary?` · ${e(__("Cortesía"))}`:""}</p>
         ${detail?`<p>${detail}</p>`:""}${o.ready_by?`<p class="hs-note">${e(__("Entrega prevista"))}: ${e(this.date(o.ready_by))}</p>`:""}
@@ -32,7 +32,7 @@
         ${o.notes?`<p>${e(o.notes)}</p>`:""}${o.shortage_note?`<p>${e(__("Faltante"))}: ${e(o.shortage_note)}</p>`:""}
         <div class="hs-dialog-actions">${next}${this.button("laundry_print",__("Imprimir comprobante"),o.name)}${this.button("laundry_cancel",__("Cancelar"),o.name)}</div></article>`;
     };
-    el.html(`<div class="hs-toolbar"><div><h2>${e(__("Lavandería de huéspedes"))}</h2><p>${e(__("Recogida, lavado, devolución y cargo al folio."))}</p></div>
+    el.html(`<div class="hs-toolbar"><div><h2>${e(__("Lavandería de huéspedes"))}</h2><p>${e(__("Recogida, lavado, devolución y cargo a la cuenta."))}</p></div>
       ${active.length?this.button("laundry_request",__("Solicitar recogida"),"","primary")+this.button("laundry_collect_now",__("Recoger ahora")):""}</div>
       <div class="hs-metrics"><article><span>${e(__("Solicitudes pendientes"))}</span><strong>${open.filter(o=>o.status==="Requested").length}</strong></article>
       <article><span>${e(__("Bolsas en proceso"))}</span><strong>${open.filter(o=>["Collected","In Process"].includes(o.status)).length}</strong></article>
@@ -40,7 +40,7 @@
       <article><span>${e(__("Cargos entregados · 30 días"))}</span><strong>${e(this.amount(laundry.last_30_days?.charges||0,laundry.last_30_days?.currency))}</strong></article></div>
       <section class="hs-section"><div class="hs-toolbar"><h2>${e(__("Pedidos abiertos"))}</h2></div>
         <div class="hs-task-grid">${open.length?open.map(card).join(""):this.empty(__("No hay pedidos de lavandería pendientes"))}</div></section>
-      <section class="hs-section"><h2>${e(__("Entregas recientes"))}</h2>${this.table([__("Orden"),__("Habitación"),__("Estado"),__("Piezas"),__("Cotizado"),__("Cargado al folio")],recent.map(o=>[
+      <section class="hs-section"><h2>${e(__("Entregas recientes"))}</h2>${this.table([__("Orden"),__("Habitación"),__("Estado"),__("Piezas"),__("Cotizado"),__("Cargado a la cuenta")],recent.map(o=>[
         e(o.name),e(this.roomName(o.room)),e(statusLabels[o.status]||o.status),e((o.items||[]).reduce((n,row)=>n+Number(row.returned_quantity||0),0)),
         e(this.amount(o.total,o.currency)),e(this.amount(o.billed_total,o.currency))+" "+this.button("laundry_print",__("Imprimir"),o.name)]))}</section>
       <section class="hs-section"><h2>${e(__("Últimos 30 días por servicio"))}</h2>${this.table([__("Servicio"),__("Piezas devueltas"),__("Cargos registrados")],(laundry.last_30_days?.by_service||[]).map(r=>[
@@ -89,7 +89,7 @@
     const pending=o.items.reduce((n,row)=>n+Number(row.quantity)-Number(row.returned_quantity||0),0);
     const bill=o.complimentary?0:o.items.reduce((n,row)=>n+Number(row.rate)*Number(row.returned_quantity||0),0);
     return this.dialog(`${__("Entregar lavandería")} · ${o.name}`,[
-      f("review",__("Resumen antes de confirmar"),"HTML",{options:`<p>${e(__("Piezas faltantes"))}: <strong>${e(pending)}</strong></p><p>${e(__("Cargo previsto al folio"))}: <strong>${e(this.amount(bill,o.currency))}</strong></p>`}),
+      f("review",__("Resumen antes de confirmar"),"HTML",{options:`<p>${e(__("Piezas faltantes"))}: <strong>${e(pending)}</strong></p><p>${e(__("Cargo previsto a la cuenta"))}: <strong>${e(this.amount(bill,o.currency))}</strong></p>`}),
       ...(pending?[f("shortage_note",__("Explicación de piezas faltantes; requiere Gerencia"),"Small Text",{reqd:1})]:[])],
       async(v,d)=>{await this.mutate("laundry_deliver",{order:id,modified:o.modified,...v},key);d.hide();},__("Entregar y registrar cargo"));
   };

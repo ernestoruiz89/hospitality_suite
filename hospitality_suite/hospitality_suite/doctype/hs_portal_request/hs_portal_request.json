@@ -118,7 +118,7 @@
   },
   {
    "fieldname": "experiences",
-   "label": "Experiences",
+   "label": "Experiencias",
    "fieldtype": "Code",
    "options": "JSON"
   },

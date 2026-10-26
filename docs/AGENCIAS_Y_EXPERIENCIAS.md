@@ -1,6 +1,6 @@
 # Agencias de viajes y experiencias
 
-## Agencias de viajes
+## Modalidad ERPNext: agencias de viajes
 
 En **Agencias de viajes**, Gerencia registra una agencia por establecimiento, su tipo, contacto, porcentaje y, para liquidarla, un Supplier de ERPNext que ya esté registrado como proveedor de la sede. La agencia que origina una reserva es independiente del canal y del cliente que paga. Una OTA puede ser agente sin ser el pagador de la factura al huésped.
 
@@ -8,7 +8,7 @@ La reserva guarda el agente, el porcentaje pactado y una comisión **estimada** 
 
 Una vez completada la reserva y facturados los cargos de alojamiento, Gerencia o Contabilidad revisa la base real y usa **Liquidar**. El cálculo suma los cargos de alojamiento facturados y sus ajustes asociados, antes de impuestos. Una nota de crédito sobre esas facturas bloquea la liquidación automática para revisión en ERPNext. Cada liquidación crea una Purchase Invoice estándar, con un artículo de comisión comprable y sin inventario y la cuenta de gasto configurada en el establecimiento. El proveedor y artículo deben estar configurados antes de liquidar. La factura queda enlazada a la reserva; el pago se hace por el flujo existente de proveedores o desde ERPNext. Una cancelación contable autorizada de esa factura libera el enlace para poder corregirla.
 
-## Experiencias
+## Modalidad ERPNext: experiencias
 
 En **Experiencias**, Gerencia configura nombre, categoría, duración, descripción y un Item de venta **sin inventario**. El precio vigente se toma de Item Price en la lista del establecimiento; no se mantiene una segunda tarifa. La experiencia puede publicarse en el portal. Solo se admite una imagen pública existente en `/files/`.
 
@@ -16,6 +16,20 @@ Recepción puede agregar experiencias al crear una reserva, guardar un borrador 
 
 Una orden pasa de **Reservada** a **Confirmada** con fecha y participantes, y luego a **Entregada**. Al entregar se selecciona estancia y cuenta; se crea una sola vez un HS Charge de servicio que la facturación normal incorpora a Sales Invoice. Antes de entregar se puede cancelar con motivo. La última salida de la reserva exige entregar o cancelar las órdenes pendientes. Una experiencia ya facturada se corrige mediante la nota de crédito estándar del folio, no editando su precio histórico. La venta de experiencias a clientes sin estancia usa la venta directa existente del Item.
 
+## Modalidad PMS sin ERPNext
+
+Cada agencia puede vincularse a un `HS Party` proveedor del mismo establecimiento; no necesita `Supplier` de ERPNext. Recepción selecciona la agencia al crear o modificar la reserva. La cotización muestra y vincula el porcentaje y la comisión estimada sobre el alojamiento aceptado; una modificación conserva el porcentaje pactado cuando sigue siendo la misma agencia.
+
+Gerencia configura cada experiencia con un `HS Product` de servicio activo, precio positivo, cuenta de ingreso y perfil tributario. Recepción puede incluir hasta veinte experiencias distintas al crear una reserva o agregarlas después a una reserva confirmada. El precio unitario y el importe aceptados quedan en la orden aunque cambie el precio del producto. La cotización separa el total con impuesto de las experiencias y el alojamiento. La orden se confirma con horario y participantes, puede cancelarse con motivo o entregarse a una estancia activa y su folio. La entrega crea un `HS Charge` pendiente una sola vez; la contabilización habitual del folio crea la cuenta por cobrar PMS con base e impuesto. La última salida de la reserva se bloquea mientras tenga órdenes reservadas o confirmadas.
+
+La pantalla React **Agencias y experiencias** permite configurar los catálogos, reservar experiencias adicionales y gestionar sus órdenes. Gerencia configura una cuenta de gasto y una cuenta por pagar PMS en moneda base. Al completar la reserva y facturar todo el alojamiento, Contabilidad puede revisar la base real sin impuestos, el porcentaje pactado, proveedor e importe. La aceptación crea una `HS PMS Agency Commission` y un asiento de gasto contra cuenta por pagar. Una nota de crédito vigente sobre alojamiento impide la liquidación automática hasta resolverla. La reserva queda vinculada a una sola comisión vigente; una anulación sin pagos requiere motivo y asiento inverso.
+
+Los abonos a la agencia se registran como `HS Payment` de proveedor vinculados a la comisión. Admiten efectivo con turno abierto y saldo disponible, o banco sin turno, usando medios de pago y tipos de cambio PMS. Cada abono carga la cuenta por pagar y acredita Caja o banco; el saldo se deriva de los pagos registrados y nunca puede superarse. El cierre diario separa el devengo, la anulación y los pagos de las ventas a huéspedes.
+
+**Venta directa de experiencias sin estancia:** Caja o Contabilidad selecciona un cliente PMS y acepta precio, base, impuesto, perfil tributario y cuentas del catálogo. La orden conserva estos importes y el perfil aunque luego cambie el producto. Se confirma el horario y, al entregarla, se revisa la cuenta por cobrar antes de registrar el cargo y su asiento con el desglose aceptado. La orden queda vinculada al cargo, que se factura en **Facturación PMS** y se cobra mediante los pagos y conciliación habituales, incluso en otra moneda habilitada. Una orden reservada o confirmada puede cancelarse con motivo; tras la entrega, un cargo no facturado ni cobrado puede anularse con asiento inverso, y uno facturado requiere nota de crédito. No se crea folio ni estancia ficticia.
+
+Las órdenes directas antiguas sin desglose aceptado no pueden entregarse ni trasladarse a ERPNext. En la pantalla React, Gerencia selecciona explícitamente el perfil tributario histórico y la cuenta de ingreso, consigna una referencia escrita al respaldo y revisa el cálculo antes de confirmarlo. La operación guarda el desglose una sola vez con auditoría e idempotencia. Una orden con datos aceptados parcialmente no admite esta revisión automática y requiere corrección contable individual.
+
 ## Despliegue
 
-Ejecute `python tools/generate_schema.py`, `bench --site <sitio> migrate` y `bench build --app hospitality_suite`. Los establecimientos existentes empiezan con catálogos vacíos y ninguna comisión retroactiva. Configure el artículo y cuenta de comisión desde **Agencias de viajes → Configurar comisión**, y registre al agente como proveedor antes de la primera liquidación. Los impuestos y retenciones del proveedor que requieran tratamiento especial se revisan en ERPNext.
+Ejecute `python tools/generate_schema.py`, `bench --site <sitio> migrate` y `bench build --app hospitality_suite`. Los establecimientos existentes empiezan con catálogos vacíos y ninguna comisión retroactiva. En ERPNext configure el artículo y cuenta de comisión desde **Agencias de viajes → Configurar comisión** y registre al agente como proveedor. En PMS configure las dos cuentas contables desde **Agencias y experiencias** y vincule la agencia a un proveedor `HS Party`. Los impuestos y retenciones del proveedor que requieran tratamiento especial se revisan en ERPNext.

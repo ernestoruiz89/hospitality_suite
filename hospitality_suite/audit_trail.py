@@ -166,6 +166,7 @@ def detail(prop,name):
         values_document=frappe._(TITLES.get(dt,dt))+' · '+str(caption or '')
     return dict(name=event.name,action=action_label(event.action),actor=frappe.db.get_value('User',event.actor,'full_name') or event.actor,
         occurred_at=local(event.occurred_at,prop).strftime('%d/%m/%Y %H:%M:%S'),business_date=str(event.business_date),
+        source_doctype=event.source_doctype,source_name=event.source_name,
         document_type=frappe._(TITLES.get(event.source_doctype,event.source_doctype)),document=recorded_title or context.origin(event.source_doctype,event.source_name),
         reason=event.reason,values=rows,historical_values_available=bool(rows),
         values_document=values_document,

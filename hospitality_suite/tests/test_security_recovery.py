@@ -122,6 +122,37 @@ class TestSecurityRecovery(IntegrationTestCase):
         with self.assertRaises(frappe.PermissionError):
             account_rpc(account=self.prop.receivable_account)
 
+    def test_configured_warehouse_owned_by_other_hotel_is_rejected(self):
+        foreign = frappe.get_doc(dict(doctype="Warehouse",
+            warehouse_name="Almacén ajeno ficticio " + uuid.uuid4().hex[:7],
+            company=self.prop.company, hs_property=self.other.name)).insert()
+        self.assertFalse(security.warehouse_allowed(self.prop, foreign.name))
+        original = self.prop.laundry_warehouse
+        with operation():
+            self.prop.laundry_warehouse = foreign.name
+            with self.assertRaises(frappe.ValidationError):
+                self.prop.save()
+        self.prop.laundry_warehouse = original
+
+        # Simulate configuration drift from a native edit or older installation.
+        frappe.db.set_value("HS Property", self.prop.name,
+            "laundry_warehouse", foreign.name, update_modified=False)
+        self.prop.laundry_warehouse = foreign.name
+        self.assertFalse(security.warehouse_allowed(self.prop, foreign.name))
+        user = "scope-" + uuid.uuid4().hex[:8] + "@example.invalid"
+        frappe.get_doc(dict(doctype="User", email=user, first_name="Scope Test",
+            send_welcome_email=0, user_type="System User",
+            roles=[dict(role="HS Accountant")])).insert()
+        with operation():
+            frappe.get_doc(dict(doctype="HS Access", company=self.prop.company,
+                property=self.prop.name, user=user)).insert()
+        self.assertNotIn(foreign.name, security.inventory_warehouses(user))
+        entry = frappe.get_doc(dict(doctype="Stock Entry", company=self.prop.company,
+            hs_property=self.prop.name, items=[dict(item_code="HS-DEMO-WATER",
+                s_warehouse=foreign.name, qty=1)]))
+        with self.assertRaises(frappe.PermissionError):
+            security.validate_standard(entry)
+
     def test_native_parties_contacts_and_files_do_not_bypass_guest_privacy(self):
         other_guest=frappe.get_doc("HS Guest",{"property":self.other.name})
         contact=frappe.get_doc(dict(doctype="Contact",first_name="Contacto ficticio privado",links=[dict(link_doctype="Customer",link_name=other_guest.customer)])).insert()

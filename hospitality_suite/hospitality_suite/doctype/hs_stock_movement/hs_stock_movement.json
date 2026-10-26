@@ -23,14 +23,14 @@
   },
   {
    "fieldname": "organization",
-   "label": "Organization",
+   "label": "Organización",
    "fieldtype": "Link",
    "options": "HS Organization",
    "reqd": 1
   },
   {
    "fieldname": "product",
-   "label": "Product",
+   "label": "Producto",
    "fieldtype": "Link",
    "options": "HS Product",
    "reqd": 1
@@ -44,7 +44,7 @@
   },
   {
    "fieldname": "direction",
-   "label": "Direction",
+   "label": "Dirección",
    "fieldtype": "Select",
    "options": "Receipt\nIssue",
    "reqd": 1,
@@ -52,28 +52,28 @@
   },
   {
    "fieldname": "quantity_delta",
-   "label": "Quantity delta",
+   "label": "Cambio de cantidad",
    "fieldtype": "Float",
    "default": 0,
    "reqd": 1
   },
   {
    "fieldname": "value_delta",
-   "label": "Value delta",
+   "label": "Cambio de valor",
    "fieldtype": "Currency",
    "default": 0,
    "reqd": 1
   },
   {
    "fieldname": "balance_quantity",
-   "label": "Balance quantity",
+   "label": "Cantidad de saldo",
    "fieldtype": "Float",
    "default": 0,
    "reqd": 1
   },
   {
    "fieldname": "balance_value",
-   "label": "Balance value",
+   "label": "Valor del saldo",
    "fieldtype": "Currency",
    "default": 0,
    "reqd": 1
@@ -104,13 +104,13 @@
   },
   {
    "fieldname": "journal",
-   "label": "Journal",
+   "label": "Asiento contable",
    "fieldtype": "Link",
    "options": "HS Journal"
   },
   {
    "fieldname": "memo",
-   "label": "Memo",
+   "label": "Memorando",
    "fieldtype": "Small Text"
   }
  ],

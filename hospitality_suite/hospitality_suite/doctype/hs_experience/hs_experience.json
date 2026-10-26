@@ -38,8 +38,13 @@
   {
    "fieldname": "item",
    "label": "Artículo",
-   "fieldtype": "Data",
-   "reqd": 1
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "pms_product",
+   "label": "Producto PMS de la experiencia",
+   "fieldtype": "Link",
+   "options": "HS Product"
   },
   {
    "fieldname": "duration",
@@ -75,6 +80,7 @@
   "experience_name",
   "experience_category",
   "item",
+  "pms_product",
   "duration",
   "description",
   "image_url",

@@ -3,6 +3,7 @@
 All commands execute inside service.command's property lock and savepoint.  Amounts
 and account identities are copied onto operational records at posting time.
 """
+import hashlib
 from decimal import Decimal
 
 import frappe
@@ -10,8 +11,8 @@ from frappe.utils import now_datetime, nowdate
 
 from hospitality_suite.accounting import post_standard, ready
 from hospitality_suite.pricing import decimal, money
-from hospitality_suite.security import document, require
-from hospitality_suite.service import audit, current_all, insert, locked_doc
+from hospitality_suite.security import can_receive_petty_cash, document, require
+from hospitality_suite.service import audit, canonical, current_all, insert, locked_doc
 
 INCOMING = {"Other Income", "Loan Received", "Capital Contribution"}
 OUTGOING = {"Loan Repayment", "Capital Withdrawal"}
@@ -29,9 +30,10 @@ def account(prop, name, root, account_type=None):
     if not name:
         frappe.throw(frappe._("Configure una cuenta contable para esta operación"))
     row = locked_doc("Account", name)
-    if (row.company != prop.company or row.is_group or row.root_type != root
+    if (row.company != prop.company or row.is_group or row.disabled or
+            row.root_type != root
             or row.account_currency != base(prop) or (account_type and row.account_type != account_type)):
-        frappe.throw(frappe._("La cuenta debe ser auxiliar, de la compañía, naturaleza indicada y moneda base"))
+        frappe.throw(frappe._("La cuenta debe estar habilitada, ser auxiliar, de la compañía, naturaleza indicada y moneda base"))
     return row
 
 
@@ -196,12 +198,14 @@ def fund_transfer(prop, data):
                              "kind": "Replenishment", "status": "Posted"}, fields=["amount"])), Decimal(0))
         if amount > decimal(rendition.expense_total) - previous:
             frappe.throw(frappe._("La entrega supera los gastos aprobados pendientes de reposición"))
-    posted = journal(prop, prop.petty_cash_account, method.account, amount, kind, shift.name)
+    posted = journal(prop, prop.petty_cash_account, method.account, amount, kind,
+                     shift.name, data.get("reference"))
     move = insert("HS Treasury Movement", prop, kind=kind, rendition=rendition.name if kind == "Replenishment" else None,
                   shift=shift.name, method=method.name, cash_account=method.account,
                   counter_account=prop.petty_cash_account, currency=base(prop), amount=amount,
                   business_date=prop.business_date, status="Posted", requested_by=frappe.session.user,
-                  journal_entry=posted.name, reason=data.get("reason") or kind)
+                  journal_entry=posted.name, reference=data.get("reference"),
+                  reason=data.get("reason") or kind)
     if kind == "Replenishment":
         rendition.status = "Reimbursed" if amount == decimal(rendition.expense_total) - previous else "Partially Reimbursed"
         rendition.save()
@@ -336,11 +340,8 @@ def request_handover(prop, data):
     require(prop.name, "approve")
     configured(prop)
     incoming = data.get("incoming")
-    if incoming == prop.petty_cash_responsible or not frappe.db.get_value("User", incoming, "enabled"):
-        frappe.throw(frappe._("Seleccione otro usuario activo"))
-    from hospitality_suite.security import allowed_properties
-    if prop.name not in allowed_properties(incoming):
-        frappe.throw(frappe._("El nuevo responsable requiere acceso al establecimiento"))
+    if incoming == prop.petty_cash_responsible or not can_receive_petty_cash(prop, incoming):
+        frappe.throw(frappe._("El nuevo responsable requiere acceso y permiso de Caja Chica en este establecimiento"))
     if current_all("HS Petty Cash Handover", filters={"property": prop.name, "status": "Awaiting Acceptance"}, pluck="name"):
         frappe.throw(frappe._("Ya existe un traspaso pendiente"))
     expected = balance(prop)
@@ -375,12 +376,51 @@ def accept_handover(prop, data):
     return dict(handover=handover.name, status=handover.status)
 
 
-def outstanding(source, exclude=None):
-    returned = sum((decimal(r.amount) for r in current_all("HS Treasury Movement", filters={"source_movement": source.name,
-                       "status": "Posted"}, fields=["amount"])), Decimal(0))
-    reserved = sum((decimal(r.amount) for r in current_all("HS Treasury Movement", filters={"source_movement": source.name,
-                       "status": ["in", ["Pending Approval", "Approved"]]}, fields=["name", "amount"]) if r.name != exclude), Decimal(0))
-    return decimal(source.amount) - returned - reserved
+def cancel_handover(prop, data):
+    require(prop.name, "approve")
+    if not isinstance(data, dict) or set(data) - {"handover", "reason"}:
+        frappe.throw(frappe._("Revise la cancelación del traspaso"))
+    handover = document("HS Petty Cash Handover", data.get("handover"), "approve")
+    if handover.status != "Awaiting Acceptance":
+        frappe.throw(frappe._("Solo un traspaso pendiente puede cancelarse"))
+    reason = str(data.get("reason") or "").strip()
+    if not reason:
+        frappe.throw(frappe._("Indique el motivo de cancelación"))
+    handover.status = "Cancelled"
+    handover.save()
+    audit(prop, "Cancel petty cash handover", handover, reason)
+    return dict(handover=handover.name, status=handover.status)
+
+
+def outstanding(source, exclude=None, reserve=True):
+    def principal(row):
+        # PMS stores the tender amount in its original currency. Its base_amount
+        # is the principal represented by the ERPNext opening liability/equity.
+        if row.pms_journal:
+            origin = frappe.db.get_value("HS Journal", row.pms_journal,
+                ["status", "source_doctype", "source_name", "total_debit",
+                 "total_credit"], as_dict=True)
+            value = decimal(row.base_amount)
+            if (not origin or origin.status != "Posted" or
+                    origin.source_doctype != "HS Treasury Movement" or
+                    origin.source_name != row.name or
+                    decimal(origin.total_debit) != value or
+                    decimal(origin.total_credit) != value):
+                frappe.throw(frappe._("El principal PMS requiere conciliación de su asiento original"))
+            return value
+        if row.status == "Posted" and not row.journal_entry:
+            frappe.throw(frappe._("El principal publicado no conserva su asiento original"))
+        return decimal(row.amount)
+
+    returned = sum((principal(r) for r in current_all("HS Treasury Movement", filters={"source_movement": source.name,
+                       "status": "Posted"}, fields=["name", "status", "amount", "base_amount", "pms_journal", "journal_entry"])), Decimal(0))
+    reserved = sum((principal(r) for r in current_all("HS Treasury Movement", filters={"source_movement": source.name,
+                       "status": ["in", ["Pending Approval", "Approved"]]},
+                       fields=["name", "status", "amount", "base_amount", "pms_journal", "journal_entry"]) if r.name != exclude), Decimal(0)) if reserve else Decimal(0)
+    left = principal(source) - returned - reserved
+    if left < 0:
+        frappe.throw(frappe._("El principal requiere conciliación antes de devolverlo"))
+    return left
 
 
 def financing_request(prop, data):
@@ -424,12 +464,30 @@ def approve_financing(prop, data):
     return dict(movement=movement.name, status=movement.status)
 
 
+def cancel_financing_request(prop, data):
+    movement = document("HS Treasury Movement", data.get("movement"), "finance")
+    if movement.kind not in FINANCING or movement.status not in (
+            "Pending Approval", "Approved"):
+        frappe.throw(frappe._("Solo una solicitud sin asiento puede cancelarse"))
+    if movement.status == "Approved" or movement.requested_by != frappe.session.user:
+        require(prop.name, "approve")
+    reason = str(data.get("reason") or "").strip()
+    if not reason:
+        frappe.throw(frappe._("Indique el motivo de cancelación"))
+    movement.status = "Cancelled"
+    movement.save()
+    audit(prop, "Cancel financing request", movement, reason)
+    return dict(movement=movement.name, status=movement.status)
+
+
 def financial_quote(prop, data):
     kind = data.get("kind")
     if kind not in INCOMING | OUTGOING:
         frappe.throw(frappe._("Tipo de movimiento financiero inválido"))
     amount = positive(prop, data.get("amount"))
     approved = document("HS Treasury Movement", data["movement"], "finance") if data.get("movement") else None
+    if kind in FINANCING and not approved:
+        frappe.throw(frappe._("El préstamo o aporte requiere aprobación previa de Gerencia"))
     if approved and (approved.status != "Approved" or approved.kind != kind or decimal(approved.amount) != amount):
         frappe.throw(frappe._("La solicitud aprobada ya no coincide con el importe o tipo"))
     if kind in OUTGOING:
@@ -459,9 +517,27 @@ def financial_quote(prop, data):
         frappe.throw(frappe._("Seleccione Caja o banco"))
     if cash_account == counter:
         frappe.throw(frappe._("La cuenta de contrapartida debe ser distinta de Caja o banco"))
-    return dict(kind=kind, amount=str(amount), currency=base(prop), debit=cash_account if kind in INCOMING else counter,
+    quote = dict(kind=kind, amount=str(amount), currency=base(prop), debit=cash_account if kind in INCOMING else counter,
                 credit=counter if kind in INCOMING else cash_account, cash_account=cash_account,
                 counter_account=counter, shift=shift_name, method=method_name, channel=channel)
+    quote["acceptance"] = hashlib.sha256(canonical({"property": prop.name,
+        "business_date": str(prop.business_date),
+        "movement": approved.name if approved else None,
+        "source_movement": data.get("source_movement"),
+        "concept": data.get("concept"), **quote}).encode()).hexdigest()
+    return quote
+
+
+def financial_preview(prop, data):
+    ready(prop)
+    if data.get("movement"):
+        movement = document("HS Treasury Movement", data["movement"], "finance")
+        if movement.kind not in FINANCING or movement.status != "Approved":
+            frappe.throw(frappe._("Seleccione una solicitud financiera aprobada"))
+        data = {**data, "kind": movement.kind, "amount": movement.amount,
+                "source_movement": movement.source_movement,
+                "concept": movement.concept}
+    return financial_quote(prop, data)
 
 
 def post_financial(prop, data):
@@ -481,6 +557,8 @@ def post_financial(prop, data):
             frappe.throw(frappe._("Solo otros ingresos pueden registrarse sin aprobación previa"))
         quote_data = data
     quote = financial_quote(prop, quote_data)
+    if data.get("acceptance") and data["acceptance"] != quote["acceptance"]:
+        frappe.throw(frappe._("La revisión del asiento cambió; revísela otra vez"))
     if movement and quote["counter_account"] != movement.counter_account:
         frappe.throw(frappe._("La cuenta aprobada cambió; presente una nueva solicitud"))
     posted = journal(prop, quote["debit"], quote["credit"], decimal(quote["amount"]),
@@ -539,5 +617,6 @@ def reverse(prop, data):
     native.hs_correction_reason = reason
     native.flags.ignore_permissions = True
     native.cancel()
+    source.reload()
     audit(prop, "Reverse financial movement", source, reason)
-    return dict(name=source.name, journal_entry=native.name, status="Cancelled")
+    return dict(name=source.name, journal_entry=native.name, status=source.status)

@@ -1,0 +1,224 @@
+{
+ "doctype": "DocType",
+ "name": "HS PMS Agency Commission",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "hash",
+ "naming_rule": "Random",
+ "fields": [
+  {
+   "fieldname": "company",
+   "label": "Compañía",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "property",
+   "label": "Establecimiento",
+   "fieldtype": "Link",
+   "options": "HS Property",
+   "reqd": 1
+  },
+  {
+   "fieldname": "organization",
+   "label": "Organización",
+   "fieldtype": "Link",
+   "options": "HS Organization",
+   "reqd": 1
+  },
+  {
+   "fieldname": "booking",
+   "label": "Reserva",
+   "fieldtype": "Link",
+   "options": "HS Booking",
+   "reqd": 1
+  },
+  {
+   "fieldname": "agent",
+   "label": "Agencia",
+   "fieldtype": "Link",
+   "options": "HS Travel Agent",
+   "reqd": 1
+  },
+  {
+   "fieldname": "supplier",
+   "label": "Proveedor",
+   "fieldtype": "Link",
+   "options": "HS Party",
+   "reqd": 1
+  },
+  {
+   "fieldname": "agent_name",
+   "label": "Nombre de agencia",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "business_date",
+   "label": "Fecha operativa",
+   "fieldtype": "Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "currency",
+   "label": "Moneda",
+   "fieldtype": "Link",
+   "options": "Currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "base_amount",
+   "label": "Importe en moneda base",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "percent",
+   "label": "Porcentaje",
+   "fieldtype": "Percent"
+  },
+  {
+   "fieldname": "amount",
+   "label": "Importe",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "expense_account",
+   "label": "Cuenta de gastos",
+   "fieldtype": "Link",
+   "options": "HS Account",
+   "reqd": 1
+  },
+  {
+   "fieldname": "payable_account",
+   "label": "Cuenta por pagar",
+   "fieldtype": "Link",
+   "options": "HS Account",
+   "reqd": 1
+  },
+  {
+   "fieldname": "journal",
+   "label": "Asiento contable",
+   "fieldtype": "Link",
+   "options": "HS Journal"
+  },
+  {
+   "fieldname": "reversal_journal",
+   "label": "Asiento de reversión",
+   "fieldtype": "Link",
+   "options": "HS Journal"
+  },
+  {
+   "fieldname": "cancel_reason",
+   "label": "Motivo de cancelación",
+   "fieldtype": "Small Text"
+  },
+  {
+   "fieldname": "cancelled_business_date",
+   "label": "Fecha operativa de anulación",
+   "fieldtype": "Date"
+  },
+  {
+   "fieldname": "status",
+   "label": "Estado",
+   "fieldtype": "Select",
+   "options": "Pending\nPosted\nCancelled",
+   "reqd": 1,
+   "default": "Pending"
+  }
+ ],
+ "field_order": [
+  "company",
+  "property",
+  "organization",
+  "booking",
+  "agent",
+  "supplier",
+  "agent_name",
+  "business_date",
+  "currency",
+  "base_amount",
+  "percent",
+  "amount",
+  "expense_account",
+  "payable_account",
+  "journal",
+  "reversal_journal",
+  "cancel_reason",
+  "cancelled_business_date",
+  "status"
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Administrator",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Supervisor",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Cashier",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Accountant",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Auditor",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0
+}

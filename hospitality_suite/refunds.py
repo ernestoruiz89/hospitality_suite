@@ -6,12 +6,46 @@ from hospitality_suite.security import require
 from hospitality_suite.service import current_all,locked_doc
 
 
+def historical_advance_opening(prop, source):
+    """PMS value and nominal amount still unused at the ERP opening."""
+    if (source.kind != 'Advance' or source.property != prop.name or
+            source.status != 'Posted' or not source.pms_journal):
+        frappe.throw(frappe._('El anticipo no conserva su origen PMS'))
+    rate = decimal(source.exchange_rate)
+    if rate <= 0:
+        frappe.throw(frappe._('El anticipo no conserva su tipo de cambio'))
+    used = decimal(0)
+    for row in current_all('HS PMS Allocation', filters={
+            'property': prop.name, 'payment': source.name,
+            'kind': ['in', ['Advance Applied', 'Advance Reversed']]},
+            fields=['kind', 'amount']):
+        used += decimal(row.amount) * (-1 if row.kind == 'Advance Reversed' else 1)
+    for row in current_all('HS Payment', filters={
+            'property': prop.name, 'source_payment': source.name,
+            'kind': 'Refund', 'status': 'Posted'},
+            fields=['name', 'base_amount', 'pms_journal', 'payment_entry',
+                    'journal_entry']):
+        if row.pms_journal and not row.payment_entry and not row.journal_entry:
+            used += decimal(row.base_amount)
+    book = money(decimal(source.base_amount) - used, currency=prop.currency)
+    nominal = money(decimal(source.amount) - used / rate,
+                    currency=source.currency)
+    if book <= 0 or nominal <= 0 or book > decimal(source.base_amount):
+        frappe.throw(frappe._('El saldo histórico del anticipo no concilia'))
+    return frappe._dict(book=book, nominal=nominal, used=used)
+
+
 def original_funds(prop,source):
     if source.kind in ('Advance','Payment') and source.payment_entry:
         doc=locked_doc('Payment Entry',source.payment_entry)
         currency=doc.paid_from_account_currency
         if doc.docstatus!=1 or doc.payment_type!='Receive' or doc.party_type!='Customer' or doc.party!=source.customer or doc.company!=prop.company or doc.hs_property!=prop.name or currency!=prop.currency:
             frappe.throw(frappe._('El movimiento original no conserva una cuenta de cliente y moneda compatibles'))
+        if source.kind == 'Advance' and source.pms_journal:
+            opening = historical_advance_opening(prop, source)
+            if (decimal(doc.paid_amount) != opening.book or
+                    doc.paid_to_account_currency != prop.currency):
+                frappe.throw(frappe._('El crédito inicial del anticipo no concilia'))
         return frappe._dict(doc=doc,account=doc.paid_from,currency=currency,total=decimal(doc.paid_amount),rate=decimal(doc.source_exchange_rate),
                             references=[dict(invoice=row.reference_name,amount=decimal(row.allocated_amount)) for row in doc.references if row.reference_doctype=='Sales Invoice'],
                             unallocated=decimal(doc.unallocated_amount),available_rows=[dict(name=None,amount=decimal(doc.unallocated_amount))])
@@ -43,7 +77,12 @@ def balance(prop,source):
     refunded=decimal(0)
     returned_party=decimal(0)
     by_invoice={}
-    for row in current_all('HS Payment',filters={'source_payment':source.name,'kind':'Refund','status':'Posted'},fields=['name','amount','payment_entry','journal_entry']):
+    opening_nominal=(historical_advance_opening(prop,source).nominal
+                     if source.kind=='Advance' and source.pms_journal
+                     else decimal(source.amount))
+    for row in current_all('HS Payment',filters={'source_payment':source.name,'kind':'Refund','status':'Posted'},fields=['name','amount','payment_entry','journal_entry','pms_journal']):
+        if source.kind=='Advance' and row.pms_journal and not row.payment_entry and not row.journal_entry:
+            continue
         refunded+=decimal(row.amount)
         native=locked_doc('Payment Entry' if row.payment_entry else 'Journal Entry',row.payment_entry or row.journal_entry)
         if native.docstatus!=1:
@@ -56,8 +95,12 @@ def balance(prop,source):
                     by_invoice[parent]=by_invoice.get(parent,decimal(0))-decimal(reference.allocated_amount)
         else:
             returned_party+=sum(decimal(line.debit_in_account_currency)-decimal(line.credit_in_account_currency) for line in native.accounts if line.account==funds.account and line.party_type=='Customer' and line.party==source.customer)
-    remaining=money(decimal(source.amount)-refunded,currency=source.currency)
-    return frappe._dict(funds=funds,remaining=remaining,remaining_party=money(funds.total-returned_party,currency=currency),by_invoice=by_invoice)
+    remaining=money(opening_nominal-refunded,currency=source.currency)
+    remaining_party=money(funds.total-returned_party,currency=currency)
+    if remaining<0 or remaining_party<0:
+        frappe.throw(frappe._('Las devoluciones del anticipo no concilian'))
+    return frappe._dict(funds=funds,opening_nominal=opening_nominal,
+                        remaining=remaining,remaining_party=remaining_party,by_invoice=by_invoice)
 
 
 def invoice_available(values,invoice):
@@ -73,7 +116,7 @@ def plan(prop,source,amount,method,credit_note=None):
     if amount<=0 or amount>remaining:
         frappe.throw(frappe._('La devolución supera el importe disponible'))
     # The last refund absorbs currency rounding, without leaving book-value dust.
-    party_amount=remaining_party if amount==remaining else money(funds.total*amount/decimal(source.amount),currency=currency)
+    party_amount=remaining_party if amount==remaining else money(funds.total*amount/values.opening_nominal,currency=currency)
     if party_amount<=0 or party_amount>remaining_party:
         frappe.throw(frappe._('Revise el importe de devolución y su precisión en la moneda del cliente'))
     credit=None
@@ -85,7 +128,7 @@ def plan(prop,source,amount,method,credit_note=None):
         bound=min(available,remaining_party,abs(min(decimal(0),decimal(credit.outstanding_amount))))
         # Settle the exact book-value limit when its cash equivalent rounds to
         # the requested amount, including a source allocated to several bills.
-        if bound>0 and amount==money(decimal(source.amount)*bound/funds.total,currency=source.currency):
+        if bound>0 and amount==money(values.opening_nominal*bound/funds.total,currency=source.currency):
             party_amount=bound
         if party_amount>available:
             frappe.throw(frappe._('La devolución supera lo aplicado por este movimiento a la factura de origen'))

@@ -1,0 +1,299 @@
+{
+ "doctype": "DocType",
+ "name": "HS PMS Purchase",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "hash",
+ "naming_rule": "Random",
+ "fields": [
+  {
+   "fieldname": "company",
+   "label": "Compañía",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "property",
+   "label": "Establecimiento",
+   "fieldtype": "Link",
+   "options": "HS Property",
+   "reqd": 1
+  },
+  {
+   "fieldname": "organization",
+   "label": "Organización",
+   "fieldtype": "Link",
+   "options": "HS Organization",
+   "reqd": 1
+  },
+  {
+   "fieldname": "supplier",
+   "label": "Proveedor",
+   "fieldtype": "Link",
+   "options": "HS Party",
+   "reqd": 1
+  },
+  {
+   "fieldname": "supplier_reference",
+   "label": "Referencia del proveedor",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "purchase_order",
+   "label": "Orden de compra",
+   "fieldtype": "Link",
+   "options": "HS PMS Purchase Order"
+  },
+  {
+   "fieldname": "product",
+   "label": "Producto",
+   "fieldtype": "Link",
+   "options": "HS Product",
+   "reqd": 1
+  },
+  {
+   "fieldname": "warehouse",
+   "label": "Almacén",
+   "fieldtype": "Link",
+   "options": "HS Warehouse",
+   "reqd": 1
+  },
+  {
+   "fieldname": "quantity",
+   "label": "Cantidad",
+   "fieldtype": "Float",
+   "default": 0,
+   "reqd": 1,
+   "precision": 6
+  },
+  {
+   "fieldname": "invoice_currency",
+   "label": "Moneda de factura",
+   "fieldtype": "Link",
+   "options": "Currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "invoice_amount",
+   "label": "Importe de factura",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "invoice_currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "recoverable_tax",
+   "label": "Impuesto recuperable",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "invoice_currency"
+  },
+  {
+   "fieldname": "exchange_rate",
+   "label": "Tipo de cambio",
+   "fieldtype": "Float",
+   "default": 0,
+   "reqd": 1,
+   "precision": 9
+  },
+  {
+   "fieldname": "rate_record",
+   "label": "Registro de tarifa",
+   "fieldtype": "Link",
+   "options": "HS Exchange Rate"
+  },
+  {
+   "fieldname": "base_amount",
+   "label": "Importe en moneda base",
+   "fieldtype": "Currency",
+   "default": 0,
+   "reqd": 1
+  },
+  {
+   "fieldname": "base_cost",
+   "label": "Costo en moneda base",
+   "fieldtype": "Currency",
+   "default": 0,
+   "reqd": 1
+  },
+  {
+   "fieldname": "base_tax",
+   "label": "Impuesto en moneda base",
+   "fieldtype": "Currency",
+   "default": 0
+  },
+  {
+   "fieldname": "payable_account",
+   "label": "Cuenta por pagar",
+   "fieldtype": "Link",
+   "options": "HS Account",
+   "reqd": 1
+  },
+  {
+   "fieldname": "inventory_account",
+   "label": "Cuenta de inventario",
+   "fieldtype": "Link",
+   "options": "HS Account",
+   "reqd": 1
+  },
+  {
+   "fieldname": "tax_account",
+   "label": "Cuenta de impuesto",
+   "fieldtype": "Link",
+   "options": "HS Account"
+  },
+  {
+   "fieldname": "stock_movement",
+   "label": "Movimiento de inventario",
+   "fieldtype": "Link",
+   "options": "HS Stock Movement"
+  },
+  {
+   "fieldname": "tax_journal",
+   "label": "Asiento de impuesto",
+   "fieldtype": "Link",
+   "options": "HS Journal"
+  },
+  {
+   "fieldname": "lines",
+   "label": "Líneas",
+   "fieldtype": "Table",
+   "options": "HS PMS Purchase Line"
+  },
+  {
+   "fieldname": "cancellation_return",
+   "label": "Devolución por anulación",
+   "fieldtype": "Link",
+   "options": "HS PMS Purchase Return"
+  },
+  {
+   "fieldname": "cancellation_reason",
+   "label": "Motivo de anulación",
+   "fieldtype": "Small Text"
+  },
+  {
+   "fieldname": "cancelled_at",
+   "label": "Anulado el",
+   "fieldtype": "Datetime"
+  },
+  {
+   "fieldname": "business_date",
+   "label": "Fecha operativa",
+   "fieldtype": "Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "status",
+   "label": "Estado",
+   "fieldtype": "Select",
+   "options": "Posted\nCancelled",
+   "reqd": 1,
+   "default": "Posted"
+  },
+  {
+   "fieldname": "notes",
+   "label": "Observaciones",
+   "fieldtype": "Small Text"
+  }
+ ],
+ "field_order": [
+  "company",
+  "property",
+  "organization",
+  "supplier",
+  "supplier_reference",
+  "purchase_order",
+  "product",
+  "warehouse",
+  "quantity",
+  "invoice_currency",
+  "invoice_amount",
+  "recoverable_tax",
+  "exchange_rate",
+  "rate_record",
+  "base_amount",
+  "base_cost",
+  "base_tax",
+  "payable_account",
+  "inventory_account",
+  "tax_account",
+  "stock_movement",
+  "tax_journal",
+  "lines",
+  "cancellation_return",
+  "cancellation_reason",
+  "cancelled_at",
+  "business_date",
+  "status",
+  "notes"
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Administrator",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Supervisor",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Cashier",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Accountant",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Auditor",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0
+}

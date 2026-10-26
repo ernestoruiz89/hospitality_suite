@@ -5,7 +5,7 @@ import frappe
 
 from hospitality_suite.accounting import ready,post_standard,exchange
 from hospitality_suite.pricing import decimal,money
-from hospitality_suite.security import document,require
+from hospitality_suite.security import document,require,warehouse_allowed
 from hospitality_suite.service import current_all,locked_doc,insert,audit,canonical
 
 
@@ -19,8 +19,7 @@ def source(prop,dt,name):
 
 def warehouse(prop,name=None):
     name=name or prop.warehouse
-    doc=locked_doc("Warehouse",name)
-    if doc.company!=prop.company or doc.is_group or (name not in (prop.warehouse,prop.laundry_warehouse) and doc.hs_property!=prop.name):
+    if not warehouse_allowed(prop,name):
         frappe.throw(frappe._("Seleccione un almacén asignado a este establecimiento"),frappe.PermissionError)
     return name
 
@@ -28,7 +27,7 @@ def warehouse(prop,name=None):
 def warehouses(prop):
     names={prop.warehouse,prop.laundry_warehouse}
     names.update(current_all("Warehouse",filters={"hs_property":prop.name,"company":prop.company,"is_group":0},pluck="name"))
-    return sorted(n for n in names if n)
+    return sorted(n for n in names if warehouse_allowed(prop,n))
 
 
 def create_warehouse(prop,data):
@@ -136,6 +135,36 @@ def purchase_order(prop,data):
     return dict(order=order.name,total=str(order.grand_total),currency=order.currency)
 
 
+def _prorate_actual_purchase_taxes(order, receipt, quantities):
+    """Allocate fixed order taxes over partial receipts, with final cent absorption."""
+    if not any(row.charge_type == "Actual" for row in order.taxes):
+        return
+    item_net = lambda row: decimal(row.net_amount or row.amount)
+    total = sum((item_net(row) for row in order.items), decimal(0))
+    if total <= 0 or len(receipt.taxes) != len(order.taxes):
+        frappe.throw(frappe._("No se pueden distribuir los impuestos fijos de la orden"))
+    before = after = decimal(0)
+    for row in order.items:
+        ordered = decimal(row.qty)
+        received = decimal(row.received_qty or 0)
+        next_qty = received + quantities.get(row.name, decimal(0))
+        if ordered <= 0 or received < 0 or next_qty > ordered:
+            frappe.throw(frappe._("La recepción supera la orden original"))
+        before += item_net(row) * received / ordered
+        after += item_net(row) * next_qty / ordered
+    for original, copied in zip(order.taxes, receipt.taxes, strict=True):
+        if (original.charge_type != copied.charge_type or
+                original.account_head != copied.account_head):
+            frappe.throw(frappe._("El impuesto de la recepción no corresponde a la orden"))
+        if original.charge_type == "Actual":
+            fixed = decimal(original.tax_amount)
+            allocated_before = money(fixed * before / total,
+                                     currency=order.currency)
+            allocated_after = money(fixed * after / total,
+                                    currency=order.currency)
+            copied.tax_amount = float(allocated_after - allocated_before)
+
+
 def receive_purchase(prop,data):
     ready(prop)
     order=source(prop,"Purchase Order",data["order"])
@@ -163,6 +192,7 @@ def receive_purchase(prop,data):
         row.cost_center=prop.cost_center
     receipt.remarks=data.get("reason") or "Recepción de orden "+order.name
     receipt.set_missing_values()
+    _prorate_actual_purchase_taxes(order, receipt, quantities)
     receipt.calculate_taxes_and_totals()
     post_standard(receipt,prop)
     audit(prop,"Receive purchase",receipt,receipt.remarks)

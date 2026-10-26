@@ -23,20 +23,20 @@
   },
   {
    "fieldname": "organization",
-   "label": "Organization",
+   "label": "Organización",
    "fieldtype": "Link",
    "options": "HS Organization",
    "reqd": 1
   },
   {
    "fieldname": "warehouse_code",
-   "label": "Warehouse code",
+   "label": "Código de almacén",
    "fieldtype": "Data",
    "reqd": 1
   },
   {
    "fieldname": "warehouse_name",
-   "label": "Warehouse name",
+   "label": "Nombre de almacén",
    "fieldtype": "Data",
    "reqd": 1
   },

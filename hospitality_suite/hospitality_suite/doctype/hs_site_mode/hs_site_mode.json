@@ -15,12 +15,12 @@
   },
   {
    "fieldname": "cutover_date",
-   "label": "Cutover date",
+   "label": "Fecha de corte",
    "fieldtype": "Date"
   },
   {
    "fieldname": "migration_reference",
-   "label": "Migration reference",
+   "label": "Referencia de migración",
    "fieldtype": "Small Text"
   }
  ],

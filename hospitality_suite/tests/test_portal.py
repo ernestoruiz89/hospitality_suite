@@ -3,6 +3,7 @@ import hashlib
 import json
 import time
 import uuid
+from unittest.mock import patch
 
 import frappe
 from frappe.tests import IntegrationTestCase
@@ -28,6 +29,118 @@ class TestPortal(IntegrationTestCase):
         self.assertNotIn(self.prop.name,[p.name for p in portal.catalog()])
         with self.assertRaises(frappe.PermissionError):
             portal.enabled(self.prop.name)
+
+    def test_guest_portal_requires_signed_booking_claim_and_matching_account(self):
+        with operation():
+            self.prop.portal_enabled = 1
+            self.prop.save()
+        guest = frappe.get_doc("HS Guest", {"property": self.prop.name})
+        owner_email = f"portal-{uuid.uuid4().hex}@example.invalid"
+        other_email = f"portal-{uuid.uuid4().hex}@example.invalid"
+        with operation(self.prop):
+            guest.email = owner_email
+            guest.save()
+        for email in (other_email,):
+            frappe.get_doc({"doctype": "User", "email": email, "first_name": "Portal",
+                            "enabled": 1, "user_type": "Website User",
+                            "send_welcome_email": 0}).insert(ignore_permissions=True)
+        room = frappe.get_doc("HS Room", {"property": self.prop.name, "active": 1})
+        start = now_datetime().replace(microsecond=0) + timedelta(days=35)
+        values = {"starts_at": str(start), "ends_at": str(start + timedelta(days=2)),
+                  "customer": guest.customer, "guest": guest.name,
+                  "rooms": [{"category": room.category, "room": room.name, "people": 2}]}
+        values["acceptance"] = api.preview(self.prop.name, values)["acceptance"]
+        booking = api.execute(self.prop.name, "reserve", uuid.uuid4().hex, values)["booking"]
+        with operation(self.prop):
+            token = portal.link(self.prop, {"booking": booking})["url"].split("token=")[1]
+        self.assertTrue(portal.confirmation(token)["can_link_guest"])
+        guest.reload()
+        guest.portal_user = other_email
+        with operation(self.prop), self.assertRaises(frappe.PermissionError):
+            guest.save()
+        guest.reload()
+
+        from frappe.website.page_renderers.template_page import TemplatePage
+        frappe.set_user("Guest")
+        html = TemplatePage("hospitality-guest").get_html()
+        self.assertIn('window.hs_guest_session = {"logged_in": false}', html)
+        self.assertIn("guest-", html)
+        self.assertNotIn(owner_email, html)
+        previous_form = frappe.local.form_dict
+        try:
+            frappe.local.form_dict = frappe._dict(token=token)
+            confirmation_html = TemplatePage("hospitality-confirmation").get_html()
+            self.assertIn('"can_link_guest": true', confirmation_html)
+            self.assertIn("window.csrf_token", confirmation_html)
+            self.assertNotIn(owner_email, confirmation_html)
+        finally:
+            frappe.local.form_dict = previous_form
+        with self.assertRaises(frappe.PermissionError):
+            api.request_guest_portal_account(portal.sign({"doctype": "HS Portal Request",
+                "name": booking, "expires": int(time.time()) + 600}))
+        unavailable_email = f"portal-{uuid.uuid4().hex}@example.invalid"
+        frappe.set_user("Administrator")
+        frappe.db.set_value("HS Guest", guest.name, "email", unavailable_email)
+        frappe.set_user("Guest")
+        frappe.db.savepoint("guest_portal_mail_failure")
+        with patch("frappe.core.doctype.user.user.User.send_welcome_mail_to_user",
+                   side_effect=frappe.OutgoingEmailError):
+            with self.assertRaises(frappe.ValidationError):
+                api.request_guest_portal_account(token)
+        frappe.db.rollback(save_point="guest_portal_mail_failure")
+        self.assertFalse(frappe.db.exists("User", unavailable_email))
+        frappe.set_user("Administrator")
+        frappe.db.set_value("HS Guest", guest.name, "email", owner_email)
+        frappe.set_user("Guest")
+        with patch("frappe.core.doctype.user.user.User.send_welcome_mail_to_user") as send:
+            self.assertTrue(api.request_guest_portal_account(token)["requested"])
+            send.assert_called_once()
+        self.assertEqual(frappe.db.get_value("User", owner_email, "user_type"), "Website User")
+        with patch("frappe.core.doctype.user.user.User.send_welcome_mail_to_user") as send:
+            self.assertTrue(api.request_guest_portal_account(token)["requested"])
+            send.assert_not_called()
+        self.assertIsNone(frappe.db.get_value("HS Guest", guest.name, "portal_user"))
+
+        with self.assertRaises(frappe.PermissionError):
+            api.guest_portal_records()
+        with self.assertRaises(frappe.PermissionError):
+            api.claim_guest_booking(token)
+        frappe.set_user(other_email)
+        self.assertEqual(api.guest_portal_records()["records"], [])
+        with self.assertRaises(frappe.PermissionError):
+            api.claim_guest_booking(token)
+        self.assertIsNone(frappe.db.get_value("HS Guest", guest.name, "portal_user"))
+
+        frappe.set_user(owner_email)
+        self.assertEqual(api.guest_portal_records()["records"], [])
+        with self.assertRaises(frappe.PermissionError):
+            api.claim_guest_booking(portal.sign({"doctype": "HS Portal Request",
+                "name": booking, "expires": int(time.time()) + 600}))
+        self.assertEqual(api.claim_guest_booking(token)["booking"], booking)
+        self.assertEqual(api.claim_guest_booking(token)["booking"], booking)
+        rows = api.guest_portal_records(0, 1)
+        self.assertEqual([row["name"] for row in rows["records"]], [booking])
+        self.assertEqual(rows["records"][0]["property_name"], self.prop.property_name)
+        self.assertFalse(rows["has_more"])
+        with self.assertRaises(frappe.ValidationError):
+            api.guest_portal_records(0, 51)
+
+        frappe.set_user(other_email)
+        self.assertEqual(api.guest_portal_records()["records"], [])
+        with self.assertRaises(frappe.PermissionError):
+            api.claim_guest_booking(token)
+        frappe.set_user("Administrator")
+        frappe.db.set_value("HS Guest", guest.name, "email", other_email)
+        frappe.set_user(owner_email)
+        self.assertEqual(api.guest_portal_records()["records"], [])
+        frappe.set_user(other_email)
+        self.assertEqual(api.claim_guest_booking(token)["booking"], booking)
+        self.assertEqual([row["name"] for row in api.guest_portal_records()["records"]], [booking])
+        frappe.set_user("Administrator")
+        frappe.db.set_value("HS Guest", guest.name, "email", owner_email)
+        frappe.db.set_value("HS Property", self.prop.name, "portal_enabled", 0)
+        frappe.set_user(owner_email)
+        self.assertEqual(api.guest_portal_records()["records"], [])
 
     def test_public_category_content_rejects_missing_private_and_unbounded_assets(self):
         category=frappe.get_doc("HS Category",{"property":self.prop.name})
@@ -87,11 +200,10 @@ class TestPortal(IntegrationTestCase):
             frappe.local.form_dict=frappe._dict(token=token)
             page=TemplatePage("hospitality-confirmation")
             html=page.get_html()
-            self.assertIn("Solicitud recibida; pendiente de confirmación manual",html)
-            self.assertIn("Esta página no acredita un pago",html)
-            self.assertIn("Recepción debe confirmar la solicitud",html)
-            self.assertIn("Cupo conservado hasta",html)
-            self.assertIn(result["hold_until"].strftime("%d/%m/%Y %H:%M"),html)
+            self.assertIn("window.hs_confirmation",html)
+            self.assertIn("confirmation-",html)
+            self.assertIn('"status": "Hold"',html)
+            self.assertIn(result["hold_until"].strftime("%Y-%m-%d %H:%M"),html)
             self.assertNotIn(data["email"],html)
         finally:
             frappe.local.form_dict=previous_form
@@ -105,6 +217,17 @@ class TestPortal(IntegrationTestCase):
             portal.confirmation(expired)
         frappe.set_user("Administrator")
         request_doc=frappe.get_doc("HS Portal Request",{"request_key":frappe.utils.cstr(__import__('hashlib').sha256((self.prop.name+"|"+key).encode()).hexdigest())})
+        queue=api.portal_request_queue(self.prop.name,0,1,"Solicitante ficticio")
+        self.assertEqual(queue["total"],1)
+        self.assertEqual(queue["rows"][0]["name"],request_doc.name)
+        self.assertFalse(queue["rows"][0]["expired"])
+        self.assertEqual(queue["rows"][0]["status"],"Hold")
+        self.assertEqual(api.portal_request_queue(self.prop.name,1,1,"Solicitante ficticio")["rows"],[])
+        self.assertEqual(api.portal_request_queue(self.prop.name,0,1,"missing@example.invalid")["total"],0)
+        frappe.set_user("Guest")
+        with self.assertRaises(frappe.PermissionError):
+            api.portal_request_queue(self.prop.name)
+        frappe.set_user("Administrator")
         guest=frappe.get_all("HS Guest",filters={"property":self.prop.name},fields=["name","customer"])[0]
         values=dict(portal_request=request_doc.name,guest=guest.name,customer=guest.customer)
         values["acceptance"]=api.preview(self.prop.name,values,"convert_portal")["acceptance"]
@@ -112,16 +235,14 @@ class TestPortal(IntegrationTestCase):
         self.assertTrue(converted["booking"])
         self.assertEqual(frappe.db.count("HS Allocation",{"portal_request":request_doc.name,"status":"Active"}),0)
         self.assertEqual(frappe.db.count("HS Allocation",{"booking":converted["booking"],"status":"Active"}),2)
+        self.assertEqual(api.portal_request_queue(self.prop.name,0,25,"Solicitante ficticio")["total"],0)
         frappe.set_user("Guest")
         previous_form=frappe.local.form_dict
         try:
             frappe.local.form_dict=frappe._dict(token=token)
             html=TemplatePage("hospitality-confirmation").get_html()
-            self.assertIn("Solicitud convertida en reserva",html)
-            self.assertIn("Esta página no acredita un pago",html)
-            self.assertIn("Para cambios o consultas",html)
-            self.assertNotIn("Recepción debe confirmar la solicitud",html)
-            self.assertNotIn("Cupo conservado hasta",html)
+            self.assertIn('"status": "Converted"',html)
+            self.assertIn("window.hs_confirmation",html)
             self.assertNotIn(data["email"],html)
             self.assertNotIn(data["full_name"],html)
         finally:

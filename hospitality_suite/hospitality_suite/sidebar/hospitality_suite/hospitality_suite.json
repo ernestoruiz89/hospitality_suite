@@ -8,151 +8,236 @@
  "header_icon": "hotel",
  "items": [
   {
+   "type": "Section Break",
+   "label": "Inicio",
+   "icon": "layout-dashboard",
+   "collapsible": 1,
+   "keep_closed": true,
+   "indent": 1
+  },
+  {
    "type": "Link",
    "link_type": "Page",
    "link_to": "hospitality-home",
    "label": "Inicio",
-   "icon": "layout-dashboard"
+   "icon": "layout-dashboard",
+   "child": 1
+  },
+  {
+   "type": "Section Break",
+   "label": "Recepción",
+   "icon": "concierge-bell",
+   "collapsible": 1,
+   "keep_closed": false,
+   "indent": 1
   },
   {
    "type": "Link",
    "link_type": "Page",
    "link_to": "hospitality-reception",
    "label": "Recepción",
-   "icon": "concierge-bell"
-  },
-  {
-   "type": "Link",
-   "link_type": "Page",
-   "link_to": "hospitality-tickets",
-   "label": "Tickets",
-   "icon": "tickets"
+   "icon": "concierge-bell",
+   "child": 1
   },
   {
    "type": "Link",
    "link_type": "Page",
    "link_to": "hospitality-reservations",
    "label": "Reservas",
-   "icon": "calendar-days"
+   "icon": "calendar-days",
+   "child": 1
   },
   {
    "type": "Link",
    "link_type": "Page",
    "link_to": "hospitality-stays",
    "label": "Estancias",
-   "icon": "bed-double"
-  },
-  {
-   "type": "Link",
-   "link_type": "Page",
-   "link_to": "hospitality-cashier",
-   "label": "Caja",
-   "icon": "wallet"
-  },
-  {
-   "type": "Link",
-   "link_type": "Page",
-   "link_to": "hospitality-housekeeping",
-   "label": "Limpieza",
-   "icon": "broom-sparkles"
-  },
-  {
-   "type": "Link",
-   "link_type": "Page",
-   "link_to": "hospitality-laundry",
-   "label": "Lavandería",
-   "icon": "shirt"
-  },
-  {
-   "type": "Link",
-   "link_type": "Page",
-   "link_to": "hospitality-petty-cash",
-   "label": "Caja Chica",
-   "icon": "hand-coins"
-  },
-  {
-   "type": "Link",
-   "link_type": "Page",
-   "link_to": "hospitality-treasury",
-   "label": "Otros movimientos",
-   "icon": "landmark"
-  },
-  {
-   "type": "Link",
-   "link_type": "Page",
-   "link_to": "hospitality-maintenance",
-   "label": "Mantenimiento",
-   "icon": "wrench"
-  },
-  {
-   "type": "Link",
-   "link_type": "Page",
-   "link_to": "hospitality-room-blocks",
-   "label": "Bloqueos de habitaciones",
-   "icon": "lock-keyhole"
-  },
-  {
-   "type": "Link",
-   "link_type": "Page",
-   "link_to": "hospitality-services",
-   "label": "Consumos e inventario",
-   "icon": "boxes"
-  },
-  {
-   "type": "Link",
-   "link_type": "Page",
-   "link_to": "hospitality-travel-agents",
-   "label": "Agencias de viajes",
-   "icon": "briefcase-business"
-  },
-  {
-   "type": "Link",
-   "link_type": "Page",
-   "link_to": "hospitality-experiences",
-   "label": "Experiencias",
-   "icon": "sparkles"
+   "icon": "bed-double",
+   "child": 1
   },
   {
    "type": "Link",
    "link_type": "Page",
    "link_to": "hospitality-guests",
    "label": "Clientes y huéspedes",
-   "icon": "users-round"
+   "icon": "users-round",
+   "child": 1
   },
   {
    "type": "Link",
    "link_type": "Page",
-   "link_to": "hospitality-management",
-   "label": "Gerencia",
-   "icon": "chart-no-axes-combined"
+   "link_to": "hospitality-room-blocks",
+   "label": "Bloqueos de habitaciones",
+   "icon": "lock-keyhole",
+   "child": 1
+  },
+  {
+   "type": "Section Break",
+   "label": "Operaciones",
+   "icon": "clipboard-list",
+   "collapsible": 1,
+   "keep_closed": true,
+   "indent": 1
   },
   {
    "type": "Link",
    "link_type": "Page",
-   "link_to": "hospitality-setup",
-   "label": "Configuración",
-   "icon": "settings"
+   "link_to": "hospitality-tickets",
+   "label": "Tickets",
+   "icon": "tickets",
+   "child": 1
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
+   "link_to": "hospitality-housekeeping",
+   "label": "Limpieza",
+   "icon": "broom-sparkles",
+   "child": 1
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
+   "link_to": "hospitality-laundry",
+   "label": "Lavandería",
+   "icon": "shirt",
+   "child": 1
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
+   "link_to": "hospitality-maintenance",
+   "label": "Mantenimiento",
+   "icon": "wrench",
+   "child": 1
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
+   "link_to": "hospitality-services",
+   "label": "Consumos e inventario",
+   "icon": "boxes",
+   "child": 1
+  },
+  {
+   "type": "Section Break",
+   "label": "Comercial",
+   "icon": "briefcase-business",
+   "collapsible": 1,
+   "keep_closed": true,
+   "indent": 1
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
+   "link_to": "hospitality-travel-agents",
+   "label": "Agencias de viajes",
+   "icon": "briefcase-business",
+   "child": 1
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
+   "link_to": "hospitality-experiences",
+   "label": "Experiencias",
+   "icon": "sparkles",
+   "child": 1
+  },
+  {
+   "type": "Section Break",
+   "label": "Finanzas",
+   "icon": "landmark",
+   "collapsible": 1,
+   "keep_closed": true,
+   "indent": 1
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
+   "link_to": "hospitality-cashier",
+   "label": "Caja",
+   "icon": "wallet",
+   "child": 1
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
+   "link_to": "hospitality-petty-cash",
+   "label": "Caja Chica",
+   "icon": "hand-coins",
+   "child": 1
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
+   "link_to": "hospitality-treasury",
+   "label": "Otros movimientos",
+   "icon": "landmark",
+   "child": 1
   },
   {
    "type": "Link",
    "link_type": "Page",
    "link_to": "hospitality-credit",
    "label": "Crédito empresarial",
-   "icon": "credit-card"
+   "icon": "credit-card",
+   "child": 1
+  },
+  {
+   "type": "Section Break",
+   "label": "Administración",
+   "icon": "settings",
+   "collapsible": 1,
+   "keep_closed": true,
+   "indent": 1
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
+   "link_to": "hospitality-management",
+   "label": "Gerencia",
+   "icon": "chart-no-axes-combined",
+   "child": 1
   },
   {
    "type": "Link",
    "link_type": "Page",
    "link_to": "hospitality-portfolio",
    "label": "Cartera",
-   "icon": "file-chart-line"
+   "icon": "file-chart-line",
+   "child": 1
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
+   "link_to": "hospitality-setup",
+   "label": "Configuración",
+   "icon": "settings",
+   "child": 1
   },
   {
    "type": "Link",
    "link_type": "Page",
    "link_to": "hospitality-health",
    "label": "Salud del sistema",
-   "icon": "heart-pulse"
+   "icon": "heart-pulse",
+   "child": 1
+  },
+  {
+   "type": "Section Break",
+   "label": "Usuarios",
+   "icon": "users-round",
+   "collapsible": 1,
+   "keep_closed": true,
+   "indent": 1
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
+   "link_to": "hospitality-users",
+   "label": "Usuarios y accesos",
+   "icon": "users-round",
+   "child": 1
   }
  ]
 }

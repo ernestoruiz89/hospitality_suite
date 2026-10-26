@@ -117,8 +117,13 @@ def quote(prop, category, starts_at, ends_at, people=1, rate_name=None, customer
     result["extra_beds"]=int(extra_beds)
     result["included_services"]=included_services(result)
     result["base_explanation"]=list(result["explanation"])
+    from hospitality_suite.standalone_accounting import provider
+    product_doctype, product_label = (("HS Product", "product_name") if provider() == "pms"
+                                      else ("Item", "item_name"))
     for row in result["included_services"]:
-        result["explanation"].append(_("Incluido: {0} × {1}",[frappe.db.get_value("Item",row['item'],"item_name") or row['item'],row['quantity']]))
+        result["explanation"].append(_("Incluido: {0} × {1}",
+            [frappe.db.get_value(product_doctype,row['item'],product_label) or row['item'],
+             row['quantity']]))
     return result
 
 

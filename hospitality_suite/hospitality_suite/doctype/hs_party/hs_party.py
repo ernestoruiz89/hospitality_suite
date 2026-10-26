@@ -1,5 +1,5 @@
-from hospitality_suite.controllers import PMSMasterDocument
+from hospitality_suite.controllers import PMSPartyDocument
 
 
-class HSParty(PMSMasterDocument):
+class HSParty(PMSPartyDocument):
     pass

@@ -5,7 +5,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from hospitality_suite.schema import SCHEMA, MANAGERS, PAGES, PAGE_ICONS
+from hospitality_suite.schema import SCHEMA, MANAGERS, PAGES, PAGE_ICONS, NAV_MODULES
 from hospitality_suite.document_naming import DOCUMENT_SERIES
 
 
@@ -20,7 +20,7 @@ for name, spec in SCHEMA.items():
     perms = []
     for role in dict.fromkeys(["System Manager"] + spec.get("roles", [])):
         row = dict(role=role, read=1, report=1, export=1 if role in MANAGERS + ["HS Accountant", "System Manager"] else 0, print=1)
-        if role == "System Manager" or (role != "HS Auditor" and name not in ("HS Audit Event", "HS Request", "HS Allocation", "HS Access", "HS Ticket Event")):
+        if name not in ("HS Cutover Run", "HS ERP to PMS Cutover Run") and (role == "System Manager" or (role != "HS Auditor" and name not in ("HS Audit Event", "HS Request", "HS Allocation", "HS Access", "HS Ticket Event", "HS Historical Fiscal Document"))):
             row.update(create=1, write=1)
         perms.append(row)
     protected={"HS Property":("cost_center","income_account","expense_account","service_accounts","receivable_account","guarantee_account","cash_transfer_account","petty_cash_account","petty_cash_responsible","petty_cash_overage_account","petty_cash_shortage_account","tax_template","financial_enabled","early_hour_rate","late_hour_rate","cancellation_fee_value","no_show_fee_value"),"HS Maintenance Order":("cost","parts","stock_entry","evidence")}
@@ -62,17 +62,23 @@ for route, (title, roles) in PAGES.items():
 
 for folder in ["hospitality_suite/hospitality_suite", "hospitality_suite/hospitality_suite/doctype", "hospitality_suite/hospitality_suite/page"]:
     write(ROOT / folder / "__init__.py", "")
+sidebar_items = []
+for module in NAV_MODULES:
+    sidebar_items.append(dict(type="Section Break", label=module["title"], icon=module["icon"],
+                              collapsible=1, keep_closed=module["id"] != "front-desk", indent=1))
+    sidebar_items.extend(dict(type="Link", link_type="Page", link_to=route,
+                              label=PAGES[route][0], icon=PAGE_ICONS[route], child=1)
+                         for route in module["routes"])
 sidebar = dict(doctype="Sidebar", name="Hospitality Suite", title="Hospitality Suite", module="Hospitality Suite",
-               app="hospitality_suite", standard=1, header_icon="hotel", items=[
-                   dict(type="Link", link_type="Page", link_to=route, label=title, icon=PAGE_ICONS[route])
-                   for route, (title, roles) in PAGES.items()])
+               app="hospitality_suite", standard=1, header_icon="hotel", items=sidebar_items)
 write(ROOT / "hospitality_suite/hospitality_suite/sidebar/hospitality_suite/hospitality_suite.json",
       json.dumps(sidebar, indent=1, ensure_ascii=False) + "\n")
 formats = {"reservation":("HS Booking","HS Confirmación de reserva"),"registration":("HS Stay","HS Registro de huésped"),
            "folio":("HS Stay","HS Cuenta de estancia"),"receipt":("HS Payment","HS Recibo"),
            "shift":("HS Shift","HS Arqueo"),"cleaning":("HS Cleaning Task","HS Orden de limpieza"),
            "maintenance":("HS Maintenance Order","HS Orden de mantenimiento"),"daily_close":("HS Daily Close","HS Cierre diario"),
-           "invoice":("Sales Invoice","HS Factura"),"laundry":("HS Laundry Order","HS Comprobante de lavandería")}
+           "invoice":("Sales Invoice","HS Factura"),"laundry":("HS Laundry Order","HS Comprobante de lavandería"),
+           "pms_fiscal":("HS PMS Fiscal Document","HS Documento fiscal PMS")}
 for source,(dt,name) in formats.items():
     slug="hs_"+source
     data=dict(doctype="Print Format",name=name,doc_type=dt,module="Hospitality Suite",standard="Yes",custom_format=1,

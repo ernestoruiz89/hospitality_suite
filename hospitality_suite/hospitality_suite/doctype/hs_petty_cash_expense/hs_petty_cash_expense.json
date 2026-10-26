@@ -98,8 +98,19 @@
   {
    "fieldname": "journal_entry",
    "label": "Asiento contable",
-   "fieldtype": "Data",
-   "reqd": 1
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "pms_journal",
+   "label": "Asiento PMS",
+   "fieldtype": "Link",
+   "options": "HS Journal"
+  },
+  {
+   "fieldname": "pms_reversal_journal",
+   "label": "Asiento de reversión PMS",
+   "fieldtype": "Link",
+   "options": "HS Journal"
   },
   {
    "fieldname": "rendition",
@@ -132,6 +143,8 @@
   "expense_account",
   "petty_account",
   "journal_entry",
+  "pms_journal",
+  "pms_reversal_journal",
   "rendition",
   "status"
  ],

@@ -9,8 +9,7 @@ app_license = "MIT"
 required_apps = []
 app_logo_url = "/assets/hospitality_suite/images/hospitality-suite.svg"
 app_home = "/hospitality-launch"
-# The React client is introduced alongside the existing Desk workflow. Staff
-# launch migration can switch app_home after every operational screen is ready.
+# The launcher serves the React staff app for PMS and ERPNext sites.
 website_route_rules = [
     {"from_route": "/hospitality/app", "to_route": "hospitality-app"},
     {"from_route": "/hospitality/app/<path:app_path>", "to_route": "hospitality-app"},
@@ -24,7 +23,7 @@ add_to_apps_screen = [{
     "sequence_id": 10,
 }]
 app_include_js = ["hospitality.bundle.js"]
-app_include_css = ["hospitality.bundle.css"]
+app_include_css = ["hospitality.bundle.css", "hospitality_navigation.bundle.css"]
 after_install = "hospitality_suite.install.after_install"
 after_migrate = "hospitality_suite.install.after_migrate"
 before_tests="hospitality_suite.tests.setup.before_tests"

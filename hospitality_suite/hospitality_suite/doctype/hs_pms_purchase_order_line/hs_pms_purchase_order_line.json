@@ -1,0 +1,77 @@
+{
+ "doctype": "DocType",
+ "name": "HS PMS Purchase Order Line",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "hash",
+ "naming_rule": "Random",
+ "fields": [
+  {
+   "fieldname": "product",
+   "label": "Producto",
+   "fieldtype": "Link",
+   "options": "HS Product",
+   "reqd": 1
+  },
+  {
+   "fieldname": "warehouse",
+   "label": "Almacén",
+   "fieldtype": "Link",
+   "options": "HS Warehouse",
+   "reqd": 1
+  },
+  {
+   "fieldname": "quantity",
+   "label": "Cantidad",
+   "fieldtype": "Float",
+   "default": 0,
+   "reqd": 1,
+   "precision": 6
+  },
+  {
+   "fieldname": "currency",
+   "label": "Moneda",
+   "fieldtype": "Link",
+   "options": "Currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amount",
+   "label": "Importe",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "recoverable_tax",
+   "label": "Impuesto recuperable",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency"
+  },
+  {
+   "fieldname": "inventory_account",
+   "label": "Cuenta de inventario",
+   "fieldtype": "Link",
+   "options": "HS Account",
+   "reqd": 1
+  }
+ ],
+ "field_order": [
+  "product",
+  "warehouse",
+  "quantity",
+  "currency",
+  "amount",
+  "recoverable_tax",
+  "inventory_account"
+ ],
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0,
+ "istable": 1
+}

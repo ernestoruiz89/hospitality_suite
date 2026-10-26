@@ -6,6 +6,39 @@ from frappe.utils import getdate, get_datetime, nowdate, now_datetime
 
 from hospitality_suite.pricing import decimal
 from hospitality_suite.security import allowed_properties, require
+from hospitality_suite.standalone_accounting import provider
+
+
+def _pms_receivables(prop, today):
+    """Current PMS receivables after payments, reversals and fiscal credits."""
+    return frappe.db.sql("""
+        SELECT currency, SUM(outstanding) AS receivable,
+            SUM(CASE WHEN due_date < %s THEN outstanding ELSE 0 END) AS overdue
+        FROM (
+            SELECT r.currency, r.due_date,
+                r.amount - COALESCE(a.amount, 0) - COALESCE(c.amount, 0)
+                    AS outstanding
+            FROM `tabHS PMS Receivable` r
+            LEFT JOIN (
+                SELECT receivable,
+                    SUM(CASE WHEN kind IN ('Direct Reversed',
+                        'Advance Reversed', 'Guarantee Reversed',
+                        'Opening Credit Reversed', 'Opening Guarantee Reversed')
+                        THEN -amount ELSE amount END) AS amount
+                FROM `tabHS PMS Allocation` WHERE property=%s
+                GROUP BY receivable
+            ) a ON a.receivable=r.name
+            LEFT JOIN (
+                SELECT l.receivable, SUM(l.total_amount) AS amount
+                FROM `tabHS PMS Fiscal Line` l
+                JOIN `tabHS PMS Fiscal Document` d ON d.name=l.parent
+                WHERE d.property=%s AND d.document_type='Credit Note'
+                    AND d.status='Posted'
+                GROUP BY l.receivable
+            ) c ON c.receivable=r.name
+            WHERE r.property=%s AND r.status='Posted'
+        ) positions WHERE outstanding>0 GROUP BY currency
+    """, (today, prop.name, prop.name, prop.name), as_dict=True)
 
 
 def snapshot():
@@ -20,6 +53,7 @@ def snapshot():
     totals = defaultdict(lambda: {"receivable": decimal(0), "overdue": decimal(0), "unbilled": decimal(0)})
     today = getdate(nowdate())
     instant = now_datetime()
+    pms = provider() == "pms"
     for prop in properties:
         active_rooms = set(frappe.get_all("HS Room", filters={"property": prop.name, "active": 1}, pluck="name"))
         occupied = {r.room for r in frappe.get_all("HS Stay", filters={"property": prop.name, "status": "Active"}, fields=["room"])} & active_rooms
@@ -29,16 +63,18 @@ def snapshot():
                    if get_datetime(r.starts_at) <= instant and (not r.ends_at or get_datetime(r.ends_at) > instant)} & active_rooms
         tickets = frappe.db.count("HS Guest Ticket", {"property": prop.name, "status": ["in", ["Open", "In Progress"]]})
         overdue_tickets = frappe.db.count("HS Guest Ticket", {"property": prop.name, "status": ["in", ["Open", "In Progress"]], "due_at": ["<", instant]})
-        invoices = frappe.db.sql("""SELECT COALESCE(NULLIF(party_account_currency,''),currency) AS account_currency,
-            SUM(outstanding_amount) AS receivable,
-            SUM(CASE WHEN due_date < %s THEN outstanding_amount ELSE 0 END) AS overdue
-            FROM `tabSales Invoice`
-            WHERE hs_property=%s AND company=%s AND docstatus=1 AND outstanding_amount>0
-            GROUP BY account_currency""", (today, prop.name, prop.company), as_dict=True)
+        invoices = (_pms_receivables(prop, today) if pms else
+            frappe.db.sql("""SELECT COALESCE(NULLIF(party_account_currency,''),currency) AS account_currency,
+                SUM(outstanding_amount) AS receivable,
+                SUM(CASE WHEN due_date < %s THEN outstanding_amount ELSE 0 END) AS overdue
+                FROM `tabSales Invoice`
+                WHERE hs_property=%s AND company=%s AND docstatus=1 AND outstanding_amount>0
+                GROUP BY account_currency""", (today, prop.name, prop.company), as_dict=True))
         amounts = defaultdict(lambda: {"receivable": decimal(0), "overdue": decimal(0), "unbilled": decimal(0)})
         for inv in invoices:
-            amounts[inv.account_currency]["receivable"] += decimal(inv.receivable)
-            amounts[inv.account_currency]["overdue"] += decimal(inv.overdue)
+            currency = inv.currency if pms else inv.account_currency
+            amounts[currency]["receivable"] += decimal(inv.receivable)
+            amounts[currency]["overdue"] += decimal(inv.overdue)
         pending = frappe.db.sql("""SELECT f.currency, SUM(c.amount) AS amount
             FROM `tabHS Folio` f JOIN `tabHS Charge` c ON c.folio=f.name
             WHERE f.property=%s AND f.company=%s AND c.status='Pending'

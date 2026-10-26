@@ -155,7 +155,7 @@ class TestInventoryAudit(IntegrationTestCase):
         invoice=frappe.get_doc(dict(doctype='Sales Invoice',company=self.prop.company,hs_property=self.prop.name,hs_stay=stay['stay'],hs_folio=folio.name,hs_shift=shift,
             customer=folio.customer,currency=folio.currency,debit_to=self.prop.receivable_account,cost_center=self.prop.cost_center,is_pos=1,update_stock=0,account_for_change_amount=method.account,disable_rounded_total=1))
         charges=frappe.get_all('HS Charge',filters={'folio':folio.name,'status':'Pending'},fields=['name','item','quantity','rate','amount'])
-        for row in charges:invoice.append('items',dict(item_code=row.item,qty=row.quantity,rate=row.rate,cost_center=self.prop.cost_center,hs_charge=row.name))
+        for row in charges:invoice.append('items',dict(item_code=row.item,qty=row.quantity,rate=row.rate,cost_center=self.prop.cost_center,warehouse=self.prop.warehouse,hs_charge=row.name))
         invoice.append('payments',dict(mode_of_payment=method.mode_of_payment,account=method.account,amount=sum(row.amount for row in charges)))
         invoice.set_missing_values();invoice.insert().submit()
         self.assertEqual(invoice.outstanding_amount,0);self.assertEqual(self.stock(),initial-2)

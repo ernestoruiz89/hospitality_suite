@@ -29,6 +29,7 @@ class TestInitialSetup(IntegrationTestCase):
         key=uuid.uuid4().hex
         first=api.create_property(values,key)
         self.assertTrue(api.bootstrap()["can_create_property"])
+        self.assertTrue(api.bootstrap()["can_manage_users"])
         self.assertEqual(first,api.create_property(values,key))
         self.assertEqual(frappe.db.count("HS Property",{"property_name":values["property_name"]}),1)
         self.assertEqual(frappe.db.count("HS Request",{"property":first["property"],"operation":"create_property"}),1)
@@ -82,6 +83,7 @@ class TestInitialSetup(IntegrationTestCase):
         self.assertEqual(frappe.db.count("HS Property"),count)
         frappe.set_user("manager@hospitality.example.invalid")
         self.assertFalse(api.bootstrap()["can_create_property"])
+        self.assertFalse(api.bootstrap()["can_manage_users"])
         with self.assertRaises(frappe.PermissionError):
             api.create_property(self.values,uuid.uuid4().hex)
 

@@ -23,14 +23,14 @@
   },
   {
    "fieldname": "organization",
-   "label": "Organization",
+   "label": "Organización",
    "fieldtype": "Link",
    "options": "HS Organization",
    "reqd": 1
   },
   {
    "fieldname": "posting_date",
-   "label": "Posting date",
+   "label": "Fecha de contabilización",
    "fieldtype": "Date",
    "reqd": 1
   },
@@ -60,14 +60,14 @@
   },
   {
    "fieldname": "reversal_of",
-   "label": "Reversal of",
+   "label": "Reversión de",
    "fieldtype": "Link",
    "options": "HS Journal",
    "unique": 1
   },
   {
    "fieldname": "memo",
-   "label": "Memo",
+   "label": "Memorando",
    "fieldtype": "Small Text"
   },
   {
@@ -80,21 +80,21 @@
   },
   {
    "fieldname": "total_debit",
-   "label": "Total debit",
+   "label": "Débito total",
    "fieldtype": "Currency",
    "default": 0,
    "read_only": 1
   },
   {
    "fieldname": "total_credit",
-   "label": "Total credit",
+   "label": "Crédito total",
    "fieldtype": "Currency",
    "default": 0,
    "read_only": 1
   },
   {
    "fieldname": "lines",
-   "label": "Lines",
+   "label": "Líneas",
    "fieldtype": "Table",
    "options": "HS Journal Line"
   }

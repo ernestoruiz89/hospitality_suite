@@ -5,7 +5,8 @@ from hospitality_suite.security import ACTIONS,is_system,require
 
 FIELDS=["name","item_name","disabled","is_stock_item","is_fixed_asset","is_sales_item","is_purchase_item"]
 PURPOSES={"any":{},"sale":{"is_sales_item":1,"is_fixed_asset":0},"stock":{"is_stock_item":1,"is_fixed_asset":0},
-          "purchase":{"is_purchase_item":1,"is_fixed_asset":0}}
+          "purchase":{"is_purchase_item":1,"is_fixed_asset":0},
+          "laundry":{"is_sales_item":1,"is_stock_item":0,"is_fixed_asset":0}}
 
 
 def item_label(name,label):
@@ -24,7 +25,7 @@ def display_rows(rows):
 def authorize(property_name):
     prop=require(property_name)
     roles=set(frappe.get_roles())
-    if not is_system() and not any(roles.intersection(ACTIONS[a]) for a in ("service","clean","maintain","inventory","setup","report")):
+    if not is_system() and not any(roles.intersection(ACTIONS[a]) for a in ("service","finance","clean","maintain","inventory","setup","report")):
         frappe.throw(frappe._("No tiene permiso para consultar el catálogo"),frappe.PermissionError)
     return prop
 

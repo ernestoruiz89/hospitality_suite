@@ -6,6 +6,7 @@ import frappe
 from frappe.utils import now_datetime
 
 from hospitality_suite.security import is_system, require
+from hospitality_suite.standalone_accounting import provider
 
 
 def snapshot(property_name):
@@ -37,15 +38,29 @@ def snapshot(property_name):
             f"{free_percent:.1f}% libre")
     except Exception:
         add("disk", "Disco del sitio", "Unknown", "No se pudo medir espacio libre")
-    required = {
+    accounting_provider = provider()
+    required = ({
+        "company": "Compañía", "currency": "Moneda", "time_zone": "Zona horaria",
+        "organization": "Entidad legal PMS",
+    } if accounting_provider == "pms" else {
         "company": "Compañía", "currency": "Moneda", "time_zone": "Zona horaria",
         "warehouse": "Almacén", "cost_center": "Centro de costo",
         "receivable_account": "Cuenta por cobrar", "guarantee_account": "Cuenta de garantías",
-        "lodging_item": "Artículo de alojamiento", "tax_policy_confirmed": "Política tributaria confirmada",
-    }
+        "lodging_item": "Artículo de alojamiento", "financial_enabled": "Operaciones financieras habilitadas",
+    })
     missing = [label for field, label in required.items() if not prop.get(field)]
+    if accounting_provider == "pms" and prop.organization:
+        organization = frappe.db.get_value("HS Organization", prop.organization,
+            ["active", "base_currency"], as_dict=True)
+        if not organization or not organization.active or organization.base_currency != prop.currency:
+            missing.append("Entidad legal activa en la moneda del establecimiento")
     add("configuration", "Configuración financiera", "Warning" if missing else "OK",
         "Falta: " + ", ".join(missing) if missing else "Campos básicos configurados")
+    if accounting_provider == "pms":
+        count = frappe.db.count("HS Account", {"property": prop.name,
+            "organization": prop.organization, "active": 1, "is_group": 0}) if prop.organization else 0
+        add("accounts", "Cuentas PMS", "OK" if count else "Warning",
+            f"{count} cuentas auxiliares activas")
     for key, title, dt, filters in (
         ("rooms", "Habitaciones", "HS Room", {"property": prop.name, "active": 1}),
         ("rates", "Tarifas", "HS Rate", {"property": prop.name, "active": 1}),
@@ -53,7 +68,8 @@ def snapshot(property_name):
     ):
         count = frappe.db.count(dt, filters)
         add(key, title, "OK" if count else "Warning", f"{count} configurados")
-    return dict(property=prop.name, checked_at=str(now_datetime()),
+    return dict(property=prop.name, accounting_provider=accounting_provider,
+                checked_at=str(now_datetime()),
                 status="Error" if any(c["status"] == "Error" for c in checks) else
                        "Warning" if any(c["status"] == "Warning" for c in checks) else
                        "Unknown" if any(c["status"] == "Unknown" for c in checks) else "OK",

@@ -16,12 +16,16 @@ def daily_close(prop, data):
     reason=data.get('reason')
     if reason is not None and (not isinstance(reason,str) or len(reason)>1000):
         frappe.throw(frappe._('Escriba una observación de cierre de hasta 1000 caracteres'))
-    name = frappe.db.get_value("HS Daily Close", {"property": prop.name, "business_date": prop.business_date})
+    name = frappe.db.get_value("HS Daily Close", {
+        "property": prop.name, "company": prop.company,
+        "business_date": prop.business_date, "status": "Review"})
     doc = locked_doc("HS Daily Close", name) if name else None
     from hospitality_suite.audit_trail import values as audit_values
     before=audit_values(doc)
-    if doc and doc.status == "Closed":
-        return dict(close=doc.name, status=doc.status)
+    if not doc and frappe.db.exists("HS Daily Close", {
+            "property": prop.name, "company": prop.company,
+            "business_date": prop.business_date, "status": "Closed"}):
+        frappe.throw(frappe._("La fecha operativa ya tiene un cierre confirmado"))
     from hospitality_suite.security import ACTIONS,is_system
     if is_system() or set(ACTIONS['finance']).intersection(frappe.get_roles()):
         from hospitality_suite.periodic import generate
@@ -39,14 +43,19 @@ def daily_close(prop, data):
     stable={k:v for k,v in captured["financial"].items() if k!="captured_at"}
     fixed={k:v for k,v in captured.items() if k not in {"financial","occupied_hours","utilization","average_stay_hours"}}
     acceptance=hashlib.sha256(canonical(dict(operational=fixed,financial=stable,blockers=problems)).encode()).hexdigest()
-    if data.get("confirm") and data.get("review_acceptance") and data["review_acceptance"]!=acceptance:
+    if data.get("confirm") and data.get("review_acceptance") != acceptance:
         frappe.throw(frappe._("El resumen del cierre cambió. Actualice la revisión antes de confirmar"))
     values = dict(business_date=prop.business_date, status="Review", summary=canonical(captured), blockers=canonical(problems),reason=reason)
     if doc:
         doc.update(values)
         doc.save()
     else:
-        doc = insert("HS Daily Close", prop, **values)
+        latest = frappe.db.sql("SELECT COALESCE(MAX(revision),0) "
+            "FROM `tabHS Daily Close` WHERE property=%s AND company=%s "
+            "AND business_date=%s", (prop.name, prop.company,
+                                      prop.business_date), as_list=True)[0][0]
+        doc = insert("HS Daily Close", prop, revision=int(latest) + 1,
+                     **values)
     if data.get("confirm"):
         require(prop.name, "approve")
         if problems:

@@ -64,21 +64,96 @@
    "fieldname": "service",
    "label": "Consumo",
    "fieldtype": "Link",
-   "options": "HS Service Request",
-   "reqd": 1
+   "options": "HS Service Request"
   },
   {
    "fieldname": "sales_invoice",
    "label": "Factura de venta",
-   "fieldtype": "Data",
-   "reqd": 1
+   "fieldtype": "Data"
   },
   {
    "fieldname": "payment",
    "label": "Pago",
    "fieldtype": "Link",
+   "options": "HS Payment"
+  },
+  {
+   "fieldname": "pms_receivable",
+   "label": "Cuenta por cobrar PMS",
+   "fieldtype": "Link",
+   "options": "HS PMS Receivable"
+  },
+  {
+   "fieldname": "quote_snapshot",
+   "label": "Cotización aceptada",
+   "fieldtype": "Code",
+   "options": "JSON"
+  },
+  {
+   "fieldname": "erp_opening_invoice",
+   "label": "Saldo trasladado a ERPNext",
+   "fieldtype": "Data",
+   "read_only": 1
+  },
+  {
+   "fieldname": "erp_opening_snapshot",
+   "label": "Continuación ERPNext",
+   "fieldtype": "Code",
+   "options": "JSON",
+   "read_only": 1
+  },
+  {
+   "fieldname": "erp_opening_sha256",
+   "label": "Huella de continuación ERPNext",
+   "fieldtype": "Data",
+   "read_only": 1
+  },
+  {
+   "fieldname": "erp_return_credit_note",
+   "label": "Nota de crédito histórica ERPNext",
+   "fieldtype": "Data",
+   "read_only": 1
+  },
+  {
+   "fieldname": "erp_return_refund",
+   "label": "Reembolso histórico ERPNext",
+   "fieldtype": "Link",
    "options": "HS Payment",
-   "reqd": 1
+   "read_only": 1
+  },
+  {
+   "fieldname": "opening_historical_invoice",
+   "label": "Factura histórica de apertura",
+   "fieldtype": "Link",
+   "options": "HS Historical Fiscal Document",
+   "read_only": 1
+  },
+  {
+   "fieldname": "opening_financial",
+   "label": "Detalle financiero de apertura",
+   "fieldtype": "Code",
+   "options": "JSON",
+   "read_only": 1
+  },
+  {
+   "fieldname": "opening_financial_sha256",
+   "label": "Huella financiera de apertura",
+   "fieldtype": "Data",
+   "read_only": 1
+  },
+  {
+   "fieldname": "opening_credit_note",
+   "label": "Nota de crédito de apertura",
+   "fieldtype": "Link",
+   "options": "HS PMS Fiscal Document",
+   "read_only": 1
+  },
+  {
+   "fieldname": "opening_refund",
+   "label": "Reembolso de apertura",
+   "fieldtype": "Link",
+   "options": "HS Payment",
+   "read_only": 1
   },
   {
    "fieldname": "notes",
@@ -98,6 +173,18 @@
   "service",
   "sales_invoice",
   "payment",
+  "pms_receivable",
+  "quote_snapshot",
+  "erp_opening_invoice",
+  "erp_opening_snapshot",
+  "erp_opening_sha256",
+  "erp_return_credit_note",
+  "erp_return_refund",
+  "opening_historical_invoice",
+  "opening_financial",
+  "opening_financial_sha256",
+  "opening_credit_note",
+  "opening_refund",
   "notes"
  ],
  "permissions": [

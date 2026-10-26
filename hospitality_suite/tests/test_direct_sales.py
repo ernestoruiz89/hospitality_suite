@@ -54,3 +54,41 @@ class TestDirectSales(IntegrationTestCase):
         with self.assertRaises(frappe.ValidationError):
             self.call("direct_sale",values)
         self.assertEqual(frappe.db.count("Sales Invoice"),before)
+
+    def test_react_counter_choices_and_history_are_scoped_and_paged(self):
+        frappe.set_user("cashier@hospitality.example.invalid")
+        shift=self.call("open_shift",dict(opening_amount=0))["shift"]
+        options=api.erp_direct_sale_options(self.prop.name)
+        self.assertTrue(any(row.name==shift for row in options["shifts"]))
+        self.assertTrue(any(row.name==self.method for row in options["methods"]))
+        self.assertFalse(options["can_approve"])
+        customers=api.erp_direct_sale_customers(self.prop.name,
+            search=self.guest.customer)
+        self.assertIn(self.guest.customer,[row.name for row in customers["rows"]])
+        items=api.catalog_search(self.prop.name,txt=self.item,purpose="sale")
+        self.assertIn(self.item,[row.name for row in items["items"]])
+        values=dict(customer=self.guest.customer,item=self.item,quantity=1,
+            method=self.method,shift=shift)
+        quote=api.preview(self.prop.name,values,"direct_sale")
+        sold=self.call("direct_sale",dict(values,acceptance=quote["acceptance"]))
+        page=api.erp_direct_sale_history(self.prop.name,
+            search=sold["invoice"],page_length=1)
+        self.assertEqual([row["name"] for row in page["rows"]],[sold["service"]])
+        self.assertEqual(page["rows"][0]["payment"]["shift"],shift)
+        self.assertTrue(page["rows"][0]["item_name"])
+        self.assertEqual(api.erp_direct_sale_history(self.prop.name,
+            search=sold["invoice"],offset=1,page_length=1)["rows"],[])
+        frappe.set_user("Administrator")
+        self.assertEqual([row["name"] for row in api.erp_direct_sale_history(
+            self.prop.name,search=sold["invoice"],returnable=1)["rows"]],
+            [sold["service"]])
+        self.call("return_direct_sale",dict(service=sold["service"],shift=shift,
+            reason="Devolución sintética para paginación"))
+        self.assertEqual(api.erp_direct_sale_history(self.prop.name,
+            search=sold["invoice"],returnable=1)["rows"],[])
+        other=frappe.get_doc("HS Property",{"property_name":"Luna Demo · Por tiempo"})
+        self.assertEqual(api.erp_direct_sale_history(other.name,
+            search=sold["invoice"])["rows"],[])
+        frappe.set_user("receptionist@hospitality.example.invalid")
+        with self.assertRaises(frappe.PermissionError):
+            api.erp_direct_sale_options(self.prop.name)

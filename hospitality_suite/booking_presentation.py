@@ -40,5 +40,8 @@ def summary(booking, prop):
         rooms.append(dict(number=row.idx, category_label=label('HS Category', row.category, 'category_name') or frappe._('Categoría por definir'),
                           room_label=label('HS Room', row.room, 'room_number') or frappe._('Por asignar'),
                           people=row.people, extra_beds=row.extra_beds, stays=stays))
-    return dict(guest_label=guest(booking.guest), customer_label=label('Customer', booking.customer, 'customer_name') or frappe._('Por definir'),
+    payer = label('HS Party', booking.customer, 'party_name')
+    if not payer and frappe.db.table_exists('Customer'):
+        payer = label('Customer', booking.customer, 'customer_name')
+    return dict(guest_label=guest(booking.guest), customer_label=payer or frappe._('Por definir'),
                 mode_label=' / '.join(modes) or frappe._('Por definir'), rooms=rooms)

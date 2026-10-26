@@ -19,14 +19,17 @@ def after_migrate():
             "ERPNext" if "erpnext" in frappe.get_installed_apps() else "PMS")
     from hospitality_suite.standalone_accounting import provider
     erp_mode = provider() == "erpnext"
-    if erp_mode and "erpnext" not in frappe.get_installed_apps():
+    erp_installed = "erpnext" in frappe.get_installed_apps()
+    if erp_mode and not erp_installed:
         frappe.throw(frappe._("El modo ERPNext requiere instalar ERPNext antes de sincronizar la Suite"))
     if erp_mode:
         restore_erp_links()
+    elif erp_installed:
+        restore_pms_data_fields()
     custom = []
     for name, target, label in [("hs_property", "HS Property", "Establecimiento de alojamiento"), ("hs_stay", "HS Stay", "Estancia de alojamiento"), ("hs_shift", "HS Shift", "Turno de caja"), ("hs_folio", "HS Folio", "Cuenta de estancia"), ("hs_booking", "HS Booking", "Reserva de alojamiento")]:
         custom.append(dict(fieldname=name, label=label, fieldtype="Link", options=target, insert_after="company", no_copy=1,print_hide=1))
-    if erp_mode:
+    if erp_installed:
         create_custom_fields({dt: custom for dt in STANDARD_SCOPED if frappe.db.exists("DocType",dt)})
         create_custom_fields({dt:[dict(fieldname="hs_correction_reason",label="Motivo de corrección de alojamiento",fieldtype="Small Text",allow_on_submit=1,print_hide=1)] for dt in STANDARD_SCOPED if frappe.db.exists("DocType",dt)})
         create_custom_fields({"Sales Invoice Item": [dict(fieldname="hs_charge", label="Cargo de estancia", fieldtype="Link", options="HS Charge", no_copy=1,print_hide=1)]})
@@ -52,7 +55,11 @@ def after_migrate():
     frappe.db.add_index("HS Allocation", ["property", "status", "starts_at", "ends_at"], "hs_allocation_interval")
     frappe.db.add_unique("HS Access", ["user", "property"], "hs_access_unique")
     frappe.db.add_unique("HS Room", ["property", "room_number"], "hs_room_unique")
-    frappe.db.add_unique("HS Daily Close", ["property", "business_date"], "hs_close_unique")
+    if frappe.db.sql("SHOW INDEX FROM `tabHS Daily Close` WHERE Key_name='hs_close_unique'"):
+        frappe.db.sql_ddl("ALTER TABLE `tabHS Daily Close` DROP INDEX `hs_close_unique`")
+    frappe.db.sql("UPDATE `tabHS Daily Close` SET revision=1 WHERE revision IS NULL OR revision<1")
+    frappe.db.add_unique("HS Daily Close", ["property", "business_date", "revision"],
+                         "hs_close_revision_unique")
     frappe.db.add_unique("HS Billing Party",["property","customer"],"hs_billing_party_unique")
     frappe.db.add_unique("HS Supplier",["property","supplier"],"hs_supplier_unique")
     frappe.db.add_unique("HS Stock Policy",["property","item","warehouse"],"hs_stock_policy_unique")
@@ -73,22 +80,86 @@ def after_migrate():
     sync_print_formats()
 
 
+POLYMORPHIC_STOCK_REFERENCES = (
+    ("HS Incident", "stock_entry"),
+    ("HS Maintenance Order", "stock_entry"),
+    ("HS Maintenance Part", "stock_entry"),
+    ("HS Service Request", "stock_entry"),
+    ("HS Service Request", "return_stock_entry"),
+)
+
+
+def _restore_polymorphic_stock_references():
+    """Preserve PMS movement IDs and native Stock Entry IDs in the same fields."""
+    touched = set()
+    for doctype, field in POLYMORPHIC_STOCK_REFERENCES:
+        setters = frappe.get_all("Property Setter", filters={
+            "doc_type": doctype, "field_name": field,
+            "property": ["in", ["fieldtype", "options"]]},
+            fields=["name", "is_system_generated"])
+        if any(not row.is_system_generated for row in setters):
+            frappe.throw(frappe._("Revise la personalización de {0}.{1} antes de migrar").format(doctype, field))
+        for row in setters:
+            frappe.db.delete("Property Setter", {"name": row.name})
+            touched.add(doctype)
+    for doctype in touched:
+        frappe.clear_cache(doctype=doctype)
+
+
 def restore_erp_links():
     """ERP sites retain link controls although core JSON stores portable data."""
-    from frappe.custom.doctype.property_setter.property_setter import make_property_setter
-
+    _restore_polymorphic_stock_references()
+    touched = set()
     for (doctype, field), target in ERP_LINK_TARGETS.items():
         if not frappe.db.exists("DocType", doctype) or not frappe.db.exists("DocType", target):
             continue
+        touched.add(doctype)
         for prop, value in (("fieldtype", "Link"), ("options", target)):
             existing = frappe.db.get_value("Property Setter",
                 {"doc_type": doctype, "field_name": field, "property": prop},
-                ["value", "is_system_generated"], as_dict=True)
+                ["name", "value", "is_system_generated"], as_dict=True)
             if existing and existing.value != value and not existing.is_system_generated:
                 frappe.throw(frappe._("Revise la personalización existente de {0}.{1} antes de migrar").format(doctype, field))
-            if not existing or existing.value != value:
-                make_property_setter(doctype, field, prop, value, "Data", validate_fields_for_doctype=False)
+            if existing and existing.value != value:
+                frappe.db.set_value("Property Setter", existing.name, "value", value)
+            elif not existing:
+                # The fields and targets come from the Suite schema. Insert directly
+                # so cache invalidation happens once per DocType, rather than once
+                # per Property Setter validation and again after every field.
+                frappe.get_doc({"doctype": "Property Setter",
+                    "doctype_or_field": "DocField", "doc_type": doctype,
+                    "field_name": field, "property": prop, "value": value,
+                    "property_type": "Data", "is_system_generated": 1}).db_insert()
+    for doctype in touched:
         frappe.clear_cache(doctype=doctype)
+
+
+def restore_pms_data_fields():
+    """Keep PMS identifiers writable while ERPNext is installed for a future cutover.
+
+    Only remove the system-generated link overrides owned by Suite. The core
+    DocType JSON remains portable Data; activation restores the ERP links after
+    rewriting every surviving source reference to its ERPNext destination.
+    """
+    _restore_polymorphic_stock_references()
+    for (doctype, field), target in ERP_LINK_TARGETS.items():
+        if not frappe.db.exists("DocType", doctype):
+            continue
+        setters = frappe.get_all("Property Setter", filters={
+            "doc_type": doctype, "field_name": field,
+            "property": ["in", ["fieldtype", "options"]]},
+            fields=["name", "property", "value", "is_system_generated"])
+        for setter in setters:
+            expected = "Link" if setter.property == "fieldtype" else target
+            if setter.value != expected or not setter.is_system_generated:
+                frappe.throw(frappe._("Revise la personalización de {0}.{1} antes de operar en PMS").format(doctype, field))
+        for setter in setters:
+            # These generated metadata overrides have no document links.
+            # Document.delete enqueues dynamic-link cleanup for each row,
+            # including in a reversible cutover rehearsal.
+            frappe.db.delete("Property Setter", {"name": setter.name})
+        if setters:
+            frappe.clear_cache(doctype=doctype)
 
 
 def sync_print_formats():
@@ -123,13 +194,19 @@ def validate_financial_configuration(prop):
     validate_bindings(prop)
     required = ["cost_center", "warehouse", "receivable_account", "guarantee_account", "lodging_item"]
     missing = [f for f in required if not prop.get(f)]
-    if missing or not prop.tax_policy_confirmed:
-        frappe.throw(frappe._("Complete la configuración contable y confirme la política tributaria antes de operar: ") + ", ".join(missing))
-    for field in ["cost_center", "warehouse", "receivable_account", "guarantee_account", "tax_template"]:
+    if missing:
+        frappe.throw(frappe._("Complete la configuración contable antes de operar: ") + ", ".join(missing))
+    from hospitality_suite.security import warehouse_allowed
+    for field in ("warehouse", "laundry_warehouse"):
+        if prop.get(field) and not warehouse_allowed(prop, prop.get(field)):
+            frappe.throw(frappe._("El almacén configurado no pertenece a este establecimiento: ") + field)
+    for field in ["cost_center", "warehouse", "receivable_account", "guarantee_account",
+                  "cash_transfer_account", "tax_template"]:
         value = prop.get(field)
         if value:
             doc = frappe.get_doc(prop.meta.get_field(field).options, value)
-            if doc.company != prop.company or doc.get("is_group"):
+            if (doc.company != prop.company or doc.get("is_group") or
+                    doc.get("disabled")):
                 frappe.throw(frappe._("Configuración contable de otra compañía o cuenta agrupadora: ") + field)
     rec = frappe.get_doc("Account", prop.receivable_account)
     guarantee = frappe.get_doc("Account", prop.guarantee_account)
@@ -137,3 +214,9 @@ def validate_financial_configuration(prop):
         frappe.throw(frappe._("Configure una cuenta por cobrar y un pasivo para garantías"))
     if rec.account_currency != prop.currency or guarantee.account_currency != prop.currency:
         frappe.throw(frappe._("Las cuentas de cliente y garantías deben usar la moneda del establecimiento"))
+    if prop.cash_transfer_account:
+        transfer = frappe.get_doc("Account", prop.cash_transfer_account)
+        if (transfer.root_type != "Asset" or transfer.get("disabled") or
+                transfer.account_currency != frappe.db.get_value(
+                    "Company", prop.company, "default_currency")):
+            frappe.throw(frappe._("La cuenta de traslado de efectivo debe ser un activo habilitado en moneda base"))

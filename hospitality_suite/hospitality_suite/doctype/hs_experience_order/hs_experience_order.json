@@ -54,8 +54,13 @@
   {
    "fieldname": "item",
    "label": "Artículo",
-   "fieldtype": "Data",
-   "reqd": 1
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "pms_product",
+   "label": "Producto PMS de la experiencia",
+   "fieldtype": "Link",
+   "options": "HS Product"
   },
   {
    "fieldname": "quantity",
@@ -99,6 +104,43 @@
    "reqd": 1
   },
   {
+   "fieldname": "accepted_net",
+   "label": "Neto aceptado",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency"
+  },
+  {
+   "fieldname": "accepted_tax",
+   "label": "Impuesto aceptado",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency"
+  },
+  {
+   "fieldname": "accepted_total",
+   "label": "Total aceptado",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency"
+  },
+  {
+   "fieldname": "accepted_tax_profile",
+   "label": "Perfil fiscal aceptado",
+   "fieldtype": "Link",
+   "options": "HS PMS Tax Profile"
+  },
+  {
+   "fieldname": "income_account",
+   "label": "Cuenta de ingresos",
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "tax_account",
+   "label": "Cuenta de impuesto",
+   "fieldtype": "Data"
+  },
+  {
    "fieldname": "status",
    "label": "Estado",
    "fieldtype": "Select",
@@ -111,6 +153,17 @@
    "label": "Cargo",
    "fieldtype": "Link",
    "options": "HS Charge"
+  },
+  {
+   "fieldname": "pms_receivable",
+   "label": "Cuenta por cobrar PMS",
+   "fieldtype": "Link",
+   "options": "HS PMS Receivable"
+  },
+  {
+   "fieldname": "sales_invoice",
+   "label": "Factura de venta",
+   "fieldtype": "Data"
   },
   {
    "fieldname": "notes",
@@ -132,14 +185,23 @@
   "folio",
   "customer",
   "item",
+  "pms_product",
   "quantity",
   "participants",
   "scheduled_at",
   "unit_rate",
   "currency",
   "amount",
+  "accepted_net",
+  "accepted_tax",
+  "accepted_total",
+  "accepted_tax_profile",
+  "income_account",
+  "tax_account",
   "status",
   "charge",
+  "pms_receivable",
+  "sales_invoice",
   "notes",
   "cancel_reason"
  ],

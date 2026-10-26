@@ -17,19 +17,19 @@
   },
   {
    "fieldname": "debit",
-   "label": "Debit",
+   "label": "Débito",
    "fieldtype": "Currency",
    "default": 0
   },
   {
    "fieldname": "credit",
-   "label": "Credit",
+   "label": "Crédito",
    "fieldtype": "Currency",
    "default": 0
   },
   {
    "fieldname": "party",
-   "label": "Party",
+   "label": "Tercero",
    "fieldtype": "Link",
    "options": "HS Party"
   },
@@ -49,21 +49,21 @@
   },
   {
    "fieldname": "debit_in_account_currency",
-   "label": "Debit in account currency",
+   "label": "Débito en moneda de cuenta",
    "fieldtype": "Currency",
    "default": 0,
    "options": "account_currency"
   },
   {
    "fieldname": "credit_in_account_currency",
-   "label": "Credit in account currency",
+   "label": "Crédito en moneda de cuenta",
    "fieldtype": "Currency",
    "default": 0,
    "options": "account_currency"
   },
   {
    "fieldname": "memo",
-   "label": "Memo",
+   "label": "Memorando",
    "fieldtype": "Small Text"
   }
  ],

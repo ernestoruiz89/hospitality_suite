@@ -8,7 +8,19 @@ from frappe.utils import get_datetime, now_datetime
 
 from hospitality_suite.security import require
 from hospitality_suite.service import audit, insert
-from hospitality_suite.standalone_accounting import require_pms
+from hospitality_suite.standalone_accounting import account, require_pms
+
+
+def validate_variance_account(prop):
+    """Keep the PMS exchange difference in a local base-currency P&L account."""
+    name = prop.get("pms_exchange_variance_account")
+    if not name:
+        return
+    selected = account(prop, name)
+    if (selected.root_type not in ("Income", "Expense") or
+            selected.account_currency != prop.currency or
+            selected.is_cash or selected.is_bank):
+        frappe.throw(_("Seleccione una cuenta activa de resultados en moneda base para la diferencia cambiaria"))
 
 
 def enabled_currencies(prop):
@@ -25,6 +37,17 @@ def _currency_active(name):
 
 def configure(prop, data):
     require_pms(prop)
+    return _configure(prop, data, "pms_currencies_configured")
+
+
+def configure_erp(prop, data):
+    from hospitality_suite.standalone_accounting import provider
+    if provider() != "erpnext":
+        frappe.throw(_("Configure las monedas desde Contabilidad PMS"))
+    return _configure(prop, data, "erp_property_currencies_configured")
+
+
+def _configure(prop, data, event):
     require(prop.name, "chart")
     currencies = data.get("currencies") if isinstance(data, dict) else None
     if not isinstance(currencies, list) or not 1 <= len(currencies) <= 12 or any(
@@ -36,7 +59,7 @@ def configure(prop, data):
         frappe.throw(_("Incluya la moneda base y seleccione únicamente monedas activas"))
     prop.set("accepted_currencies", [dict(currency=code) for code in currencies if code != prop.currency])
     prop.save()
-    audit(prop, "pms_currencies_configured", prop, details={"currencies": currencies})
+    audit(prop, event, prop, details={"currencies": currencies})
     return {"currencies": currencies, "base_currency": prop.currency}
 
 
@@ -70,6 +93,17 @@ def settings(property_name):
             "rates": frappe.get_all("HS Exchange Rate", filters={"property": prop.name},
                 fields=["name", "from_currency", "to_currency", "rate", "effective_at", "source"],
                 order_by="effective_at desc", limit_page_length=100)}
+
+
+def erp_settings(property_name):
+    prop = require(property_name, "chart")
+    from hospitality_suite.standalone_accounting import provider
+    if provider() != "erpnext":
+        frappe.throw(_("Consulte las monedas desde Contabilidad PMS"))
+    return {"base_currency": prop.currency,
+            "accepted_currencies": sorted(enabled_currencies(prop)),
+            "available_currencies": sorted(enabled_currencies(prop) | set(frappe.get_all(
+                "Currency", filters={"enabled": 1}, pluck="name", order_by="name asc")))}
 
 
 def latest_rate(prop, currency, at=None):

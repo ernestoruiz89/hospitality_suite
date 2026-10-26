@@ -1,0 +1,24 @@
+<div class="hs-print">
+  <p class="eyebrow">HOSPITALITY SUITE · {{ ("NOTA DE CRÉDITO" if doc.document_type == "Credit Note" else "FACTURA") | e }}</p>
+  <h1>{{ doc.document_number | e }}</h1>
+  <p>{{ (doc.seller_name or "") | e }}{% if doc.seller_tax_id %} · RUC {{ doc.seller_tax_id | e }}{% endif %}</p>
+  <table>
+    <tr><th>Fecha</th><td>{{ doc.business_date | e }}</td><th>Moneda</th><td>{{ doc.currency | e }}</td></tr>
+    <tr><th>Cliente</th><td>{{ doc.buyer_name | e }}</td><th>Identificación</th><td>{{ (doc.buyer_tax_id or "—") | e }}</td></tr>
+    {% if doc.folio %}<tr><th>Folio</th><td colspan="3">{{ doc.folio | e }}</td></tr>{% endif %}
+    {% if doc.source_invoice %}<tr><th>Factura original</th><td colspan="3">{{ (frappe.db.get_value("HS PMS Fiscal Document", doc.source_invoice, "document_number") or doc.source_invoice) | e }}</td></tr>{% endif %}
+    {% if doc.historical_source_invoice %}<tr><th>Factura histórica original</th><td colspan="3">{{ (frappe.db.get_value("HS Historical Fiscal Document", doc.historical_source_invoice, "document_number") or doc.historical_source_invoice) | e }}</td></tr>{% endif %}
+    {% if doc.authorization_reference %}<tr><th>Referencia</th><td colspan="3">{{ doc.authorization_reference | e }}</td></tr>{% endif %}
+  </table>
+  <table>
+    <thead><tr><th>Concepto</th><th>Tratamiento</th><th>Base</th><th>Impuesto</th><th>Total</th></tr></thead>
+    <tbody>{% for line in doc.lines %}<tr>
+      <td>{{ (line.description or "") | e }}</td>
+      <td>{{ (line.tax_treatment or "") | e }}{% if line.tax_rate %} ({{ line.tax_rate | e }}%){% endif %}</td>
+      <td>{{ line.get_formatted("net_amount") }}</td>
+      <td>{{ line.get_formatted("tax_amount") }}</td>
+      <td>{{ line.get_formatted("total_amount") }}</td>
+    </tr>{% endfor %}</tbody>
+    <tfoot><tr><th colspan="2">Total {{ doc.currency | e }}</th><th>{{ doc.get_formatted("net_amount") }}</th><th>{{ doc.get_formatted("tax_amount") }}</th><th>{{ doc.get_formatted("total_amount") }}</th></tr></tfoot>
+  </table>
+</div>

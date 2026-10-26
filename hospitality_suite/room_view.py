@@ -9,7 +9,7 @@ from hospitality_suite.security import is_system, property_document, require, AC
 from hospitality_suite.time import local, now_local, to_site
 
 
-VIEW_ACTIONS = ("stay", "finance", "report", "clean", "maintain", "inspect", "ticket", "block")
+VIEW_ACTIONS = ("stay", "finance", "report", "clean", "maintain", "inspect", "ticket", "block", "service")
 
 
 def _access(property_name):
@@ -26,7 +26,7 @@ def _capabilities(prop):
     return dict(people=can("stay") or can("finance") or can("report"),
                 account=can("stay") or can("finance"),
                 clean=can("clean"), maintain=can("maintain"), block=can("block"), ticket=can("ticket"),
-                inspect=can("inspect"), stay=can("stay"),
+                inspect=can("inspect"), stay=can("stay"), service=can("service"),
                 reserve=can("reserve"), history=can("stay") or can("finance") or can("report"),
                 discreet=bool(prop.discreet_mode))
 
@@ -153,21 +153,33 @@ def room_snapshot(property_name, room_name):
     current = None
     if stay:
         current = dict(name=stay.name if can["stay"] else None,
+                       service_stay=stay.name if can["service"] else None,
                        guest_label=summary["guest_label"], starts_at=local(stay.starts_at, prop).isoformat(),
                        ends_at=local(stay.ends_at, prop).isoformat(), overdue=summary["overdue_departure"])
-        from hospitality_suite.standalone_accounting import provider
-        if can["account"] and provider() == "erpnext":
+        if can["account"]:
             from hospitality_suite.accounting import folios_for_stay, folio_balance
             values = {}
             shared = False
+            accounts = []
             for folio in folios_for_stay(frappe.get_doc("HS Stay", stay.name)):
                 balance = folio_balance(folio.name)
                 currency = balance["currency"]
                 values[currency] = values.get(currency, 0) + float(balance["outstanding"])
                 shared = shared or not bool(folio.stay)
+                accounts.append(dict(name=folio.name, label=folio.label,
+                                     shared=not bool(folio.stay), **balance))
             current["account_balances"] = [dict(currency=key, outstanding=value)
                                            for key, value in sorted(values.items())]
+            current["accounts"] = sorted(accounts, key=lambda row: row["name"])
             current["shared_account"] = shared
+            folio_names = [row["name"] for row in accounts]
+            current["recent_charges"] = (frappe.get_all("HS Charge", filters={
+                "property": prop.name, "company": prop.company, "stay": stay.name,
+                "folio": ["in", folio_names],
+                "status": ["in", ["Pending", "Scheduled", "Invoiced", "Posted"]]},
+                fields=["name", "folio", "description", "amount", "currency", "status"],
+                order_by="creation desc, name desc", limit_page_length=8)
+                if folio_names else [])
     pending = None
     if arrival:
         pending = dict(booking=arrival["booking"] if can["reserve"] else None,

@@ -24,7 +24,11 @@ class TestDemoScenario(IntegrationTestCase):
 
     def snapshot(self):
         names=set(SCHEMA)|{'Version','Sales Invoice','Sales Invoice Item','Payment Entry','Payment Entry Reference','Journal Entry','Journal Entry Account','GL Entry','Payment Ledger Entry','Stock Entry','Stock Entry Detail','Stock Ledger Entry','Bin'}
-        return {dt:hashlib.sha256(canonical(frappe.db.sql('SELECT * FROM `tab'+dt+'` ORDER BY name',as_dict=True)).encode()).hexdigest() for dt in names}
+        result={}
+        for dt in names:
+            rows=frappe.db.get_singles_dict(dt) if frappe.get_meta(dt).issingle else frappe.db.sql('SELECT * FROM `tab'+dt+'` ORDER BY name',as_dict=True)
+            result[dt]=hashlib.sha256(canonical(rows).encode()).hexdigest()
+        return result
 
     def test_demo_is_explicit_local_admin_only_and_never_a_public_endpoint(self):
         before=self.snapshot();frappe.conf.hospitality_allow_demo=False

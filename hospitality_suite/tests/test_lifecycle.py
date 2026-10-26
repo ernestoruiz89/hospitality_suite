@@ -158,14 +158,19 @@ class TestLifecycle(IntegrationTestCase):
         self.assertEqual(self.command("daily_close",dict(confirm=False),key),result)
         old=self.prop.business_date
         key=uuid.uuid4().hex
-        closed=self.command("daily_close",dict(confirm=True),key)
-        self.assertEqual(self.command("daily_close",dict(confirm=True),key),closed)
+        values=dict(confirm=True,review_acceptance=result["review_acceptance"])
+        closed=self.command("daily_close",values,key)
+        self.assertEqual(self.command("daily_close",values,key),closed)
         self.assertEqual(str(frappe.db.get_value("HS Property",self.prop.name,"business_date")),str(add_days(old,1)))
 
     def test_reopen_last_day_requires_authorization_reason_and_preserves_snapshot(self):
-        first=self.command("daily_close",dict(confirm=True))["close"]
+        first_review=self.command("daily_close",dict(confirm=False))
+        first=self.command("daily_close",dict(confirm=True,
+            review_acceptance=first_review["review_acceptance"]))["close"]
         snapshot=frappe.db.get_value("HS Daily Close",first,"summary")
-        second=self.command("daily_close",dict(confirm=True))["close"]
+        second_review=self.command("daily_close",dict(confirm=False))
+        second=self.command("daily_close",dict(confirm=True,
+            review_acceptance=second_review["review_acceptance"]))["close"]
         with self.assertRaises(frappe.ValidationError):
             self.command("reopen_day",dict(close=first,reason="Intento de reabrir un día anterior"))
         with self.assertRaises(frappe.ValidationError):

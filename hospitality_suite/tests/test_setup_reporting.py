@@ -1,4 +1,7 @@
 from datetime import timedelta
+from decimal import Decimal
+from concurrent.futures import ThreadPoolExecutor
+import threading
 import uuid
 
 import frappe
@@ -6,6 +9,7 @@ from frappe.tests import IntegrationTestCase
 from frappe.utils import now_datetime
 
 from hospitality_suite import api,reports,reconciliation
+from hospitality_suite.schema import ROLES
 from hospitality_suite.service import operation
 
 
@@ -99,8 +103,99 @@ class TestSetupReporting(IntegrationTestCase):
         with self.assertRaises(frappe.PermissionError):
             self.call("assign_user",{**values,"roles":["HS Administrator"]})
         frappe.set_user("Administrator")
+        settings = api.setup_options(self.prop.name)
+        self.assertNotIn("Standard", settings["formats"]["Sales Invoice"])
+        self.assertNotIn("Standard", settings["formats"]["HS Payment"])
         with self.assertRaises(frappe.ValidationError):
             api.save_setup(self.prop.name,"property",dict(invoice_series="NO-EXISTE-.YYYY.-"),uuid.uuid4().hex,str(self.prop.modified))
+
+    def test_user_grant_serializes_across_properties(self):
+        user = "cashier@hospitality.example.invalid"
+        other = frappe.db.get_value("HS Property", {"name": ["!=", self.prop.name]}, "name")
+        self.assertTrue(other)
+        roles = [role for role in ROLES if role in frappe.get_roles(user)]
+        self.assertTrue(roles)
+        site, sites_path = frappe.local.site, frappe.local.sites_path
+        acquired, attempting, release, completed = (
+            threading.Event() for _ in range(4))
+
+        def lock_identity():
+            frappe.init(site=site, sites_path=sites_path)
+            frappe.connect()
+            frappe.set_user("Administrator")
+            try:
+                frappe.db.sql("SELECT name FROM `tabUser` WHERE name=%s FOR UPDATE", (user,))
+                acquired.set()
+                if not release.wait(10):
+                    raise AssertionError("No se liberó la identidad de prueba")
+                frappe.db.rollback()
+            finally:
+                frappe.destroy()
+
+        def grant_other_hotel():
+            frappe.init(site=site, sites_path=sites_path)
+            frappe.connect()
+            frappe.set_user("Administrator")
+            try:
+                if not acquired.wait(10):
+                    raise AssertionError("No se tomó el bloqueo inicial")
+                attempting.set()
+                api.execute(other, "assign_user", uuid.uuid4().hex,
+                    dict(email=user, roles=roles, reason="Prueba de acceso concurrente"))
+                completed.set()
+                frappe.db.rollback()
+            finally:
+                frappe.destroy()
+
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            first = pool.submit(lock_identity)
+            second = pool.submit(grant_other_hotel)
+            try:
+                self.assertTrue(acquired.wait(10))
+                self.assertTrue(attempting.wait(10))
+                self.assertFalse(completed.wait(0.2))
+            finally:
+                release.set()
+            first.result(timeout=15)
+            second.result(timeout=15)
+        self.assertTrue(completed.is_set())
+
+    def test_erp_credit_react_contract_separates_lookup_creation_and_terms(self):
+        suffix = uuid.uuid4().hex[:8]
+        customer = frappe.get_doc(dict(doctype="Customer",
+            customer_name="React Credit " + suffix,
+            customer_type="Company",
+            customer_group=frappe.db.get_value("Customer Group", {"is_group": 0}, "name"),
+            territory=frappe.db.get_value("Territory", {"is_group": 0}, "name"))).insert()
+        frappe.set_user("manager@hospitality.example.invalid")
+        search = api.erp_credit_customer_search(self.prop.name, suffix)
+        self.assertIn(customer.name, [row.name for row in search["rows"]])
+        values = dict(customer=customer.name, kind="Company", credit_authorized=1,
+            credit_limit=500, credit_days=20, valid_until=None,
+            reason="Autorización de prueba React")
+        key = uuid.uuid4().hex
+        created = api.save_setup(self.prop.name, "billing_party", values, key)
+        self.assertEqual(created, api.save_setup(self.prop.name, "billing_party", values, key))
+        detail = api.credit_status(self.prop.name, customer.name)
+        self.assertEqual((detail["party"], detail["kind"],
+            detail["credit_days"]), (created["name"], "Company", 20))
+        self.assertEqual(Decimal(str(detail["limit"])), Decimal(500))
+        changed = self.call("billing_party", dict(party=created["name"],
+            modified=detail["modified"], credit_limit=600,
+            reason="Actualización de prueba React"))
+        self.assertEqual(changed["party"], created["name"])
+        self.assertEqual(Decimal(str(api.credit_status(self.prop.name,
+            customer.name)["limit"])), Decimal(600))
+        self.assertTrue(any(row["party"] == created["name"] for row in
+            api.credit_overview(self.prop.name)["rows"]))
+        other = frappe.get_all("HS Property", filters={"name": ["!=", self.prop.name]},
+            pluck="name", limit=1)
+        if other:
+            with self.assertRaises(frappe.PermissionError):
+                api.credit_status(other[0], customer.name)
+        frappe.set_user("cashier@hospitality.example.invalid")
+        with self.assertRaises(frappe.PermissionError):
+            api.erp_credit_customer_search(self.prop.name, suffix)
 
     def test_tax_inclusive_net_kpi_and_document_reconciliation(self):
         company=frappe.get_doc("Company",self.prop.company)

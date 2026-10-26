@@ -20,11 +20,12 @@ def grant(prop, customer):
     return rows[0]
 
 
-def invoice_due_date(prop, customer):
+def invoice_due_date(prop, customer, posting_date=None):
+    base_date = max(getdate(nowdate()), getdate(posting_date or nowdate()))
     row = grant(prop, customer)
-    if prop.allow_credit and row and row.credit_authorized and (not row.valid_until or getdate(row.valid_until) >= getdate(nowdate())):
-        return getdate(nowdate()) + timedelta(days=int(row.credit_days or 0))
-    return getdate(nowdate())
+    if prop.allow_credit and row and row.credit_authorized and (not row.valid_until or getdate(row.valid_until) >= base_date):
+        return base_date + timedelta(days=int(row.credit_days or 0))
+    return base_date
 
 
 def snapshot(prop, customer, *, details=False, offset=0, page_length=100):
@@ -118,10 +119,25 @@ def overview(property_name, offset=0, page_length=50):
                              fields=["name", "customer", "kind", "credit_authorized", "credit_limit", "credit_days", "valid_until", "modified"],
                              order_by="customer asc", start=offset, limit=page_length)
     return dict(property=prop.name, currency=prop.currency,
+                property_credit_enabled=bool(prop.allow_credit),
                 total=frappe.db.count("HS Billing Party", filters), offset=offset, page_length=page_length,
                 rows=[dict(**snapshot(prop, p.customer), party=p.name,
                            customer_name=frappe.db.get_value("Customer", p.customer, "customer_name"),
                            kind=p.kind, modified=str(p.modified)) for p in parties])
+
+
+def customer_search(property_name, search):
+    """Small, explicit ERPNext customer lookup for granting hotel credit."""
+    require(property_name, "setup")
+    if not isinstance(search, str) or not 2 <= len(search.strip()) <= 100:
+        frappe.throw(frappe._("Busque un cliente con 2 a 100 caracteres"))
+    query = search.strip().replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+    rows = frappe.get_all("Customer", filters={"disabled": 0},
+        or_filters=[["name", "like", "%" + query + "%"],
+                    ["customer_name", "like", "%" + query + "%"]],
+        fields=["name", "customer_name"],
+        order_by="customer_name asc, name asc", limit=31)
+    return {"rows": rows[:30], "has_more": len(rows) > 30}
 
 
 def update(prop, data):
@@ -147,6 +163,13 @@ def status(property_name, customer, offset=0, page_length=100):
     offset, page_length = int(offset), int(page_length)
     if offset < 0 or not 1 <= page_length <= 100:
         frappe.throw(frappe._("Paginación inválida"))
-    if not frappe.db.exists("HS Billing Party", {"property": prop.name, "company": prop.company, "customer": customer}):
+    party = frappe.db.get_value("HS Billing Party", {"property": prop.name,
+        "company": prop.company, "customer": customer},
+        ["name", "kind", "modified", "reason"], as_dict=True)
+    if not party:
         frappe.throw(frappe._("El cliente no está registrado como pagador de este establecimiento"), frappe.PermissionError)
-    return snapshot(prop, customer, details=True, offset=offset, page_length=page_length)
+    result = snapshot(prop, customer, details=True, offset=offset, page_length=page_length)
+    result.update(party=party.name, kind=party.kind, modified=str(party.modified),
+        reason=party.reason or "",
+        customer_name=frappe.db.get_value("Customer", customer, "customer_name"))
+    return result

@@ -10,6 +10,115 @@ from hospitality_suite.security import document,require
 from hospitality_suite.service import current_all,locked_doc,insert,audit,canonical
 
 
+def _counter_property(property_name):
+    from hospitality_suite.standalone_accounting import provider
+
+    prop = require(property_name, "finance")
+    if provider() != "erpnext":
+        frappe.throw(frappe._("Use el flujo de ventas PMS de este sitio"))
+    return prop
+
+
+def options(property_name):
+    """Payment choices for an ERPNext sale, scoped to the selected counter."""
+    from hospitality_suite.security import ACTIONS, is_system
+
+    prop = _counter_property(property_name)
+    scope = {"property": prop.name, "company": prop.company}
+    can_approve = is_system() or bool(set(frappe.get_roles()).intersection(ACTIONS["approve"]))
+    shifts = frappe.get_all("HS Shift", filters={**scope, "status": "Open"},
+        fields=["name", "cashier", "currency"], order_by="creation desc")
+    return dict(property=prop.name, currency=prop.currency,
+        can_approve=can_approve,
+        methods=frappe.get_all("HS Payment Method", filters=scope,
+            fields=["name", "mode_of_payment", "currency", "is_cash", "reference_required"],
+            order_by="mode_of_payment asc, name asc"),
+        shifts=[row for row in shifts if can_approve or row.cashier == frappe.session.user])
+
+
+def customer_page(property_name, search="", offset=0, page_length=25):
+    """Only payers attached to this hotel are selectable for a counter sale."""
+    prop = _counter_property(property_name)
+    start, length = _page_args(offset, page_length)
+    if not isinstance(search, str) or len(search) > 100:
+        frappe.throw(frappe._("Revise la búsqueda de pagadores"))
+    query = _like(search.strip())
+    rows = frappe.db.sql("""
+        SELECT c.name, c.customer_name
+        FROM `tabCustomer` c
+        WHERE c.disabled=0
+          AND (EXISTS (SELECT 1 FROM `tabHS Guest` g
+                       WHERE g.property=%s AND g.company=%s AND g.customer=c.name)
+               OR EXISTS (SELECT 1 FROM `tabHS Billing Party` b
+                          WHERE b.property=%s AND b.company=%s AND b.customer=c.name))
+          AND (c.name LIKE %s OR c.customer_name LIKE %s)
+        ORDER BY c.customer_name ASC, c.name ASC
+        LIMIT %s OFFSET %s
+    """, (prop.name, prop.company, prop.name, prop.company,
+          query, query, length + 1, start), as_dict=True)
+    return dict(property=prop.name, offset=start, has_more=len(rows) > length,
+        rows=rows[:length])
+
+
+def history(property_name, search="", offset=0, page_length=25, returnable=0):
+    """Counter invoices and full returns, excluding roomless Day Pass."""
+    prop = _counter_property(property_name)
+    start, length = _page_args(offset, page_length)
+    if not isinstance(search, str) or len(search) > 100:
+        frappe.throw(frappe._("Revise la búsqueda de ventas"))
+    if str(returnable) not in ("0", "1"):
+        frappe.throw(frappe._("Revise el filtro de devoluciones"))
+    query = _like(search.strip())
+    pending = str(returnable) == "1"
+    rows = frappe.db.sql("""
+        SELECT s.name, s.creation, s.customer, c.customer_name, s.item,
+               i.item_name,
+               s.quantity, s.amount, s.currency, s.status, s.sales_invoice,
+               s.credit_note
+        FROM `tabHS Service Request` s
+        LEFT JOIN `tabCustomer` c ON c.name=s.customer
+        LEFT JOIN `tabItem` i ON i.name=s.item
+        WHERE s.property=%s AND s.company=%s
+          AND (s.stay IS NULL OR s.stay='')
+          AND s.sales_invoice IS NOT NULL AND s.sales_invoice!=''
+          AND NOT EXISTS (SELECT 1 FROM `tabHS Day Pass` d
+                          WHERE d.property=s.property AND d.company=s.company
+                            AND d.service=s.name)
+          AND (%s=0 OR (s.status='Delivered' AND
+                        (s.credit_note IS NULL OR s.credit_note='')))
+          AND (s.name LIKE %s OR s.sales_invoice LIKE %s OR
+               s.customer LIKE %s OR c.customer_name LIKE %s OR s.item LIKE %s)
+        ORDER BY s.creation DESC, s.name DESC
+        LIMIT %s OFFSET %s
+    """, (prop.name, prop.company, int(pending), query, query, query, query, query,
+          length + 1, start), as_dict=True)
+    visible = rows[:length]
+    names = [row.name for row in visible]
+    payments = frappe.get_all("HS Payment", filters={
+        "property": prop.name, "company": prop.company,
+        "service": ["in", names], "kind": "Payment", "status": "Posted"},
+        fields=["service", "method", "amount", "currency", "shift"]
+    ) if names else []
+    by_service = {row.service: row for row in payments}
+    return dict(property=prop.name, offset=start, has_more=len(rows) > length,
+        rows=[dict(**row, payment=by_service.get(row.name)) for row in visible])
+
+
+def _page_args(offset, page_length):
+    try:
+        start, length = int(offset), int(page_length)
+    except (TypeError, ValueError):
+        frappe.throw(frappe._("Revise la paginación de ventas"))
+    if start < 0 or start > 1000000 or not 1 <= length <= 50:
+        frappe.throw(frappe._("Revise la paginación de ventas"))
+    return start, length
+
+
+def _like(value):
+    escaped = value.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+    return "%" + escaped + "%"
+
+
 def draft(prop,data):
     accounting.ready(prop)
     customer=data.get("customer")
@@ -25,6 +134,7 @@ def draft(prop,data):
     inv.flags.ignore_permissions=True
     inv.update(dict(company=prop.company,customer=customer,currency=prop.currency,posting_date=nowdate(),due_date=nowdate(),
                     debit_to=prop.receivable_account,cost_center=prop.cost_center,hs_property=prop.name,update_stock=0,
+                    selling_price_list=prop.price_list,price_list_currency=prop.currency,plc_conversion_rate=1,
                     taxes_and_charges=prop.tax_template))
     inv.append("items",dict(item_code=item.name,qty=float(quantity),rate=price.price_list_rate,cost_center=prop.cost_center,warehouse=prop.warehouse))
     inv.set_missing_values()

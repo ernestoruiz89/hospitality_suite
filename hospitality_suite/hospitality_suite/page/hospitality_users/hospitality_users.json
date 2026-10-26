@@ -1,0 +1,16 @@
+{
+ "doctype": "Page",
+ "name": "hospitality-users",
+ "page_name": "hospitality-users",
+ "title": "Usuarios y accesos",
+ "module": "Hospitality Suite",
+ "standard": "Yes",
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "System Manager"
+  }
+ ]
+}

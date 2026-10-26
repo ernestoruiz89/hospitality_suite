@@ -39,7 +39,36 @@ def allowed_properties(user=None):
     if is_system(user):
         return frappe.get_all("HS Property", pluck="name")
     rows = frappe.get_all("HS Access", filters={"user": user}, fields=["property", "company"])
-    return [r.property for r in rows if frappe.db.get_value("HS Property", r.property, "company") == r.company]
+    result = []
+    for row in rows:
+        company = frappe.db.get_value("HS Property", row.property, "company")
+        if company and company == row.company:
+            result.append(row.property)
+    return result
+
+
+def can_receive_petty_cash(prop, user):
+    """A handover recipient must be able to accept it in this property."""
+    return bool(user and user != "Guest" and
+        frappe.db.get_value("User", user, "enabled") and
+        prop.name in allowed_properties(user) and
+        (is_system(user) or set(ACTIONS["petty"]).intersection(frappe.get_roles(user))))
+
+
+def petty_handover_users(prop):
+    """Only show active recipients with this property's access and petty role."""
+    access_users = set(frappe.get_all("HS Access", filters={
+        "property": prop.name, "company": prop.company}, pluck="user"))
+    petty_users = set(frappe.get_all("Has Role", filters={
+        "parenttype": "User", "parent": ["in", list(access_users)],
+        "role": ["in", ACTIONS["petty"]]}, pluck="parent")) if access_users else set()
+    system_users = set(frappe.get_all("Has Role", filters={
+        "parenttype": "User", "role": "System Manager"}, pluck="parent"))
+    names = (access_users & petty_users) | system_users | {"Administrator"}
+    names.discard("Guest")
+    return frappe.get_all("User", filters={"name": ["in", list(names)],
+        "enabled": 1}, fields=["name", "full_name"],
+        order_by="full_name asc, name asc")
 
 
 def app_permission():
@@ -54,6 +83,18 @@ def require(property_name, action=None):
     if action and not is_system() and not set(ACTIONS[action]).intersection(frappe.get_roles()):
         frappe.throw(_("No tiene permiso para esta operación"), frappe.PermissionError)
     return frappe.get_doc("HS Property", property_name)
+
+
+def warehouse_allowed(prop, name):
+    """A configured shared warehouse may be unowned, but never owned by another hotel."""
+    if not name:
+        return False
+    warehouse = frappe.db.get_value("Warehouse", name,
+        ["company", "is_group", "hs_property"], as_dict=True)
+    return bool(warehouse and warehouse.company == prop.company and
+        not warehouse.is_group and warehouse.hs_property in (None, "", prop.name) and
+        (warehouse.hs_property == prop.name or
+         name in (prop.get("warehouse"), prop.get("laundry_warehouse"))))
 
 
 @contextmanager
@@ -110,6 +151,10 @@ def has_scope_permission(doc, user=None, permission_type=None, **kwargs):
     prop = doc.name if doc.doctype == "HS Property" else doc.get("property")
     if not prop or prop not in allowed_properties(user):
         return False
+    if doc.doctype != "HS Property":
+        company = frappe.db.get_value("HS Property", prop, "company")
+        if not company or doc.get("company") != company:
+            return False
     if doc.doctype in ("HS Petty Cash Expense", "HS Petty Cash Rendition", "HS Petty Cash Handover") and not is_system(user) and not set(frappe.get_roles(user)).intersection(ACTIONS["finance"] + ACTIONS["report"]):
         if doc.doctype == "HS Petty Cash Handover":
             return user in (doc.outgoing, doc.incoming)
@@ -125,6 +170,9 @@ def scope_query(dt, user=None):
     field = "name" if dt == "HS Property" else "property"
     names = ",".join(frappe.db.escape(v) for v in props)
     rule=f"`tab{dt}`.`{field}` IN ({names})"
+    if dt != "HS Property":
+        rule += (f" AND `tab{dt}`.`company`=(SELECT p.`company` FROM `tabHS Property` p "
+                 f"WHERE p.`name`=`tab{dt}`.`property`)")
     if dt in ("HS Petty Cash Expense", "HS Petty Cash Rendition", "HS Petty Cash Handover") and not is_system(user) and not set(frappe.get_roles(user)).intersection(ACTIONS["finance"] + ACTIONS["report"]):
         escaped=frappe.db.escape(user)
         if dt == "HS Petty Cash Handover":
@@ -139,6 +187,11 @@ for _dt in SCOPED:
 
 
 def validate_file(doc, method=None):
+    old = doc.get_doc_before_save()
+    if ((doc.attached_to_doctype == "HS Historical Fiscal Document" or
+            (old and old.attached_to_doctype == "HS Historical Fiscal Document")) and
+            not getattr(frappe.local, "hs_fiscal_archive_import", False)):
+        frappe.throw(_("El PDF fiscal histórico no admite cambios"), frappe.PermissionError)
     if doc.attached_to_doctype=="Asset":
         target=frappe.get_doc("Asset",doc.attached_to_name)
         if target.hs_property:
@@ -310,6 +363,9 @@ def validate_standard(doc, method=None):
         payers=[booking.customer]+frappe.get_all("HS Folio",filters={"booking":booking.name},pluck="customer")
         if party and party not in payers:
             frappe.throw(frappe._("El pagador no coincide con la reserva o sus cuentas"))
+    from hospitality_suite.standalone_accounting import provider
+    if provider() == "pms" and not getattr(frappe.local, "hs_cutover_opening", False):
+        frappe.throw(frappe._("Este establecimiento sigue usando el libro PMS; los documentos ERPNext de alojamiento requieren el corte verificado"))
     prop = require(prop_name)
     scope=getattr(frappe.local,"hs_selected_property",None)
     if scope and (prop.name,prop.company)!=scope:
@@ -319,12 +375,10 @@ def validate_standard(doc, method=None):
     if doc.doctype in ("Purchase Order","Purchase Receipt","Purchase Invoice") and doc.get("supplier"):
         if not frappe.db.exists("HS Supplier",{"property":prop.name,"supplier":doc.supplier,"active":1}):
             frappe.throw(frappe._("El proveedor no está habilitado en este establecimiento"))
-    if not is_system():
-        owned=set(frappe.get_all("Warehouse",filters={"hs_property":prop.name},pluck="name"))|{prop.warehouse,prop.laundry_warehouse}
-        for row in [doc]+list(doc.get("items") or []):
-            for field in ("warehouse","s_warehouse","t_warehouse","set_warehouse","set_from_warehouse"):
-                if row.get(field) and row.get(field) not in owned:
-                    frappe.throw(frappe._("El almacén no está asignado a este establecimiento"),frappe.PermissionError)
+    for row in [doc]+list(doc.get("items") or []):
+        for field in ("warehouse","s_warehouse","t_warehouse","set_warehouse","set_from_warehouse"):
+            if row.get(field) and not warehouse_allowed(prop, row.get(field)):
+                frappe.throw(frappe._("El almacén no está asignado a este establecimiento"),frappe.PermissionError)
     doc.hs_property = prop.name
     from hospitality_suite.service_accounting import apply_defaults
     apply_defaults(doc,prop,original)
@@ -393,15 +447,42 @@ def validate_standard(doc, method=None):
 
 
 def guard_cancel(doc,method=None):
-    prop_name=doc.get("hs_property") or (frappe.db.get_value("HS Stay",doc.hs_stay,"property") if doc.get("hs_stay") else None)
+    prop_name=(doc.get("hs_property") or
+               (frappe.db.get_value("HS Stay", doc.hs_stay, "property") if doc.get("hs_stay") else None) or
+               (frappe.db.get_value("HS Booking", doc.hs_booking, "property") if doc.get("hs_booking") else None))
     if prop_name:
+        from hospitality_suite.standalone_accounting import provider
+        if provider() == "pms" and not getattr(frappe.local, "hs_cutover_opening", False):
+            frappe.throw(frappe._("Este establecimiento sigue usando el libro PMS; no cancele documentos ERPNext de alojamiento"))
         require(prop_name,"approve")
         if doc.doctype=="Sales Invoice":
+            if frappe.db.exists("HS Day Pass", {
+                    "erp_opening_invoice": doc.name}):
+                frappe.throw(frappe._(
+                    "La factura de apertura de este Day Pass conserva el saldo trasladado"))
+            if frappe.db.exists("HS Day Pass", {
+                    "erp_return_credit_note": doc.name}):
+                frappe.throw(frappe._(
+                    "La nota histórica del Day Pass está vinculada a su devolución; use una corrección integral"))
             bookings=frappe.get_all("HS Charge",filters={"sales_invoice":doc.name,"kind":"Lodging"},pluck="stay")
             for stay_name in set(bookings):
                 booking_name=frappe.db.get_value("HS Stay",stay_name,"booking") if stay_name else None
                 if booking_name and frappe.db.get_value("HS Booking",booking_name,"agent_commission_invoice"):
                     frappe.throw(frappe._("Revierta primero la factura de comisión de la agencia"))
+            if doc.is_return and frappe.db.sql(
+                    "SELECT pe.name FROM `tabPayment Entry Reference` r "
+                    "JOIN `tabPayment Entry` pe ON pe.name=r.parent "
+                    "WHERE pe.docstatus=1 AND r.reference_doctype='Sales Invoice' "
+                    "AND r.reference_name=%s AND r.allocated_amount!=0 LIMIT 1",
+                    (doc.name,), as_list=True):
+                frappe.throw(frappe._(
+                    "Revierta primero el reembolso vinculado a esta nota de crédito"))
+        if doc.doctype == "Payment Entry" and frappe.db.sql(
+                "SELECT pass.name FROM `tabHS Day Pass` pass "
+                "JOIN `tabHS Payment` payment ON payment.name=pass.erp_return_refund "
+                "WHERE payment.payment_entry=%s LIMIT 1", (doc.name,)):
+            frappe.throw(frappe._(
+                "El reembolso histórico del Day Pass está vinculado a su devolución"))
         if not doc.get("hs_correction_reason"):
             frappe.throw(frappe._("Indique el motivo de corrección antes de cancelar un documento de alojamiento"))
         if doc.doctype=='Sales Invoice' and doc.is_return and doc.return_against and frappe.db.get_value('Sales Invoice',doc.return_against,'is_pos'):
@@ -430,8 +511,13 @@ def guard_cancel(doc,method=None):
                         frappe.throw(frappe._("La reversión dejaría el turno sin efectivo suficiente"))
                 if movement.kind in ("Loan Received", "Capital Contribution") and frappe.db.exists("HS Treasury Movement", {"source_movement": movement.name, "status": ["!=", "Cancelled"]}):
                     frappe.throw(frappe._("Revierta primero las devoluciones vinculadas a esta entrada"))
-                if movement.kind == "Initial Fund" and frappe.db.exists("HS Petty Cash Expense", {"property": prop_name, "status": "Posted"}):
-                    frappe.throw(frappe._("Revierta primero los gastos del fondo inicial"))
+                if movement.kind == "Initial Fund" and (
+                        frappe.db.exists("HS Petty Cash Expense", {
+                            "property": prop_name, "status": "Posted"}) or
+                        frappe.db.exists("HS Treasury Movement", {
+                            "property": prop_name, "kind": "Replenishment",
+                            "status": "Posted"})):
+                    frappe.throw(frappe._("Revierta primero los gastos y reposiciones del fondo inicial"))
             expense = frappe.db.get_value("HS Petty Cash Expense", {"journal_entry": doc.name, "status": "Posted"}, ["name", "rendition", "business_date"], as_dict=True)
             if expense and str(expense.business_date) != str(frappe.db.get_value("HS Property", prop_name, "business_date")):
                 frappe.throw(frappe._("No revierta gastos de Caja Chica de una fecha operativa cerrada"))
@@ -549,11 +635,11 @@ for _master in ("Account","Company","Cost Center","Warehouse","Sales Taxes and C
 
 def inventory_warehouses(user=None):
     props=allowed_properties(user)
-    configured=frappe.get_all("HS Property",filters={"name":["in",props]},fields=["warehouse","laundry_warehouse","company"])
-    companies={p.company for p in configured}
+    configured=frappe.get_all("HS Property",filters={"name":["in",props]},
+        fields=["name","warehouse","laundry_warehouse","company"])
     names={p.get(field) for p in configured for field in ("warehouse","laundry_warehouse") if p.get(field)}
     names.update(frappe.get_all("Warehouse",filters={"hs_property":["in",props]},pluck="name"))
-    return [w for w in sorted(names) if frappe.db.get_value("Warehouse",w,"company") in companies]
+    return [w for w in sorted(names) if any(warehouse_allowed(p,w) for p in configured)]
 
 
 def stock_permission(doc,user=None,**kwargs):

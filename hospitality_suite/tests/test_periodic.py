@@ -237,7 +237,7 @@ class TestPeriodic(IntegrationTestCase):
         return frappe.get_doc(dict(doctype='Sales Invoice',company=self.prop.company,customer=self.guest.customer,currency=self.prop.currency,
                     debit_to=self.prop.receivable_account,cost_center=self.prop.cost_center,hs_property=self.prop.name,
                     hs_stay=entered['stay'],hs_folio=entered['folio'],update_stock=0,
-                    items=[dict(item_code=row.item,qty=row.quantity,rate=row.rate,cost_center=self.prop.cost_center,
+                    items=[dict(item_code=row.item,qty=row.quantity,rate=row.rate,cost_center=self.prop.cost_center,warehouse=self.prop.warehouse,
                                 hs_charge=row.name if origins else None) for row in self.rows(entered['stay'])]))
 
     def test_native_invoice_can_post_explicit_scheduled_sources_without_new_charges(self):

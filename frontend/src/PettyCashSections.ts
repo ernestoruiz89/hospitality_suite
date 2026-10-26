@@ -1,0 +1,15 @@
+export const pettySections = [
+  { id: "config", label: "Configuración", description: "Cuenta y responsable" },
+  { id: "initial-fund", label: "Fondo inicial", description: "Primera entrega desde Caja" },
+  { id: "replenishment", label: "Reposición", description: "Cubrir gastos aprobados pendientes" },
+  { id: "expense", label: "Desembolso", description: "Registrar gasto menor" },
+  { id: "rendition-new", label: "Presentar rendición", description: "Declarar efectivo contado y gastos" },
+  { id: "rendition-correct", label: "Corregir comprobante", description: "Actualizar una referencia devuelta" },
+  { id: "rendition-resubmit", label: "Reenviar rendición", description: "Presentar de nuevo el arqueo devuelto" },
+  { id: "review", label: "Aprobaciones", description: "Revisar rendiciones" },
+  { id: "handover-request", label: "Solicitar traspaso", description: "Arqueo y nuevo responsable" },
+  { id: "handover-accept", label: "Aceptar traspaso", description: "Confirmación de ambos responsables" },
+  { id: "handover-cancel", label: "Cancelar traspaso", description: "Anular una solicitud pendiente" },
+  { id: "reverse", label: "Reversiones", description: "Correcciones contables" },
+  { id: "history", label: "Historial", description: "Gastos y reposiciones" },
+] as const

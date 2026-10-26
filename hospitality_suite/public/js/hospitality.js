@@ -144,10 +144,28 @@ window.hospitality_suite = window.hospitality_suite || {};
     date(value) {return value ? moment.tz(value,this.data.system_timezone).tz(this.prop.time_zone).format("DD/MM/YYYY HH:mm") : "—";}
     empty(message=__("No hay pendientes en esta vista.")){return `<div class="hs-empty"><span class="hs-empty-icon" aria-hidden="true">✓</span><h3>${esc(__(message))}</h3><p>${frappe.utils.escape_html(__("La información se actualiza al registrar movimientos."))}</p></div>`;}
     page_icon(page){return page?.icon&&frappe.utils.icon?`<span class="hs-menu-icon" aria-hidden="true">${frappe.utils.icon(page.icon,"sm")}</span>`:"";}
+    navigation_modules(){
+      const modules=this.data.navigation_modules||[{id:"suite",title:"Hospitality Suite",icon:"hotel",description:"",}];
+      return modules.map(module=>({...module,pages:this.data.pages.filter(page=>!page.module||page.module===module.id)}))
+        .filter(module=>module.pages.length);
+    }
+    render_navigation(){
+      const modules=this.navigation_modules();
+      const active=modules.find(module=>module.pages.some(page=>page.route===this.route))?.id||modules[0]?.id;
+      if(!modules.some(module=>module.id===this.navModule))this.navModule=active;
+      const moduleButtons=modules.map(module=>`<button type="button" class="hs-module-button ${module.id===this.navModule?"is-selected":""}" data-hs-module="${esc(module.id)}" aria-pressed="${module.id===this.navModule}" aria-controls="hs-menu-${esc(module.id)}" aria-label="${esc(__(module.title))}" title="${esc(__(module.title))}">${this.page_icon(module)}<span>${esc(__(module.short_title||module.title))}</span></button>`).join("");
+      const menus=modules.map(module=>`<section id="hs-menu-${esc(module.id)}" class="hs-module-menu" data-hs-menu="${esc(module.id)}" aria-label="${esc(__(module.title))}" ${module.id===this.navModule?"":"hidden"}><div class="hs-menu-head"><h2>${esc(__(module.title))}</h2><p>${esc(__(module.description||""))}</p></div><nav aria-label="${esc(__("Menú de {0}",[__(module.title)]))}">${module.pages.map(page=>`<a href="/app/${esc(page.route)}" class="${page.route===this.route?"is-active":""}" ${page.route===this.route?'aria-current="page"':""}>${this.page_icon(page)}<span>${esc(__(page.title))}</span></a>`).join("")}</nav></section>`).join("");
+      return `<aside class="hs-sidebar" aria-label="${esc(__("Navegación de alojamiento"))}"><div class="hs-module-rail"><span class="hs-brand-mark" aria-label="${esc(this.prop?.brand_name||"Hospitality")}">${frappe.utils.icon?frappe.utils.icon("hotel","md"):"H"}</span><nav class="hs-module-nav" aria-label="${esc(__("Módulos"))}">${moduleButtons}</nav></div><div class="hs-menu-panel"><div class="hs-brand"><strong>${esc(this.prop?.brand_name||"Hospitality")}</strong><small>${esc(__("MÓDULOS"))}</small></div>${menus}<div class="hs-sidebar-foot">${esc(this.prop?.time_zone||__("Configuración inicial"))}<br><span id="hs-connection" role="status"></span></div></div></aside>`;
+    }
     render() {
       const current=this.data.pages.find(p=>p.route===this.route);
       this.page.set_title(__(current?.title || "Hospitality Suite"));
-      this.root.html(`<div class="hs-layout"><aside class="hs-sidebar" aria-label="${frappe.utils.escape_html(__("Navegación de alojamiento"))}"><div class="hs-brand"><span class="hs-brand-mark" aria-hidden="true">${frappe.utils.icon?frappe.utils.icon("hotel","md"):"H"}</span><div><strong>${esc(this.prop?.brand_name||"Hospitality")}</strong><small>${frappe.utils.escape_html(__("OPERACIÓN DIARIA"))}</small></div></div><nav>${this.data.pages.map(p=>`<a href="/app/${esc(p.route)}" class="${p.route===this.route?"is-active":""}" ${p.route===this.route?'aria-current="page"':""}>${this.page_icon(p)}<span>${esc(__(p.title))}</span></a>`).join("")}</nav><div class="hs-sidebar-foot">${esc(this.prop?.time_zone || __("Configuración inicial"))}<br><span id="hs-connection" role="status"></span></div></aside><main class="hs-main"><header class="hs-header"><div><div class="hs-eyebrow">${esc(__(this.prop?.mode === "Por tiempo" ? __("OPERACIÓN POR TIEMPO") : __("GESTIÓN DE ALOJAMIENTO")))}</div><h1>${esc(__(current?.title || "Hospitality Suite"))}</h1><p>${frappe.utils.escape_html(__("Fecha operativa:"))} <strong>${esc(this.prop?.business_date || __("Pendiente de configurar"))}</strong></p></div><div class="hs-header-actions"><label for="hs-property">${frappe.utils.escape_html(__("Establecimiento"))}</label><select id="hs-property" class="form-control">${this.data.properties.map(p=>`<option value="${esc(p.name)}" ${p.name===this.property?"selected":""}>${esc(p.property_name)}</option>`).join("")}</select>${this.button("reload",__("Actualizar"))}</div></header><div class="hs-content" aria-live="polite"></div><footer class="hs-footer">${frappe.utils.escape_html(__("Hora de referencia del servidor:"))} ${esc(this.data.server_time)} · ${esc(this.prop?.currency || "")}</footer></main></div>`);
+      this.root.html(`<div class="hs-layout">${this.render_navigation()}<main class="hs-main"><header class="hs-header"><div><div class="hs-eyebrow">${esc(__(this.prop?.mode === "Por tiempo" ? __("OPERACIÓN POR TIEMPO") : __("GESTIÓN DE ALOJAMIENTO")))}</div><h1>${esc(__(current?.title || "Hospitality Suite"))}</h1><p>${frappe.utils.escape_html(__("Fecha operativa:"))} <strong>${esc(this.prop?.business_date || __("Pendiente de configurar"))}</strong></p></div><div class="hs-header-actions"><label for="hs-property">${frappe.utils.escape_html(__("Establecimiento"))}</label><select id="hs-property" class="form-control">${this.data.properties.map(p=>`<option value="${esc(p.name)}" ${p.name===this.property?"selected":""}>${esc(p.property_name)}</option>`).join("")}</select>${this.button("reload",__("Actualizar"))}</div></header><div class="hs-content" aria-live="polite"></div><footer class="hs-footer">${frappe.utils.escape_html(__("Hora de referencia del servidor:"))} ${esc(this.data.server_time)} · ${esc(this.prop?.currency || "")}</footer></main></div>`);
+      if(window.matchMedia?.("(max-width: 760px)").matches){
+        const reveal=(container,selected)=>{if(container&&selected)container.scrollLeft=selected.offsetLeft-container.offsetLeft-(container.clientWidth-selected.offsetWidth)/2;};
+        reveal(this.root.find(".hs-module-nav")[0],this.root.find(".hs-module-button.is-selected")[0]);
+        reveal(this.root.find(".hs-module-menu:not([hidden]) nav")[0],this.root.find(".hs-module-menu:not([hidden]) a[aria-current=page]")[0]);
+      }
       const content=this.root.find(".hs-content");
       if(!this.prop) content.html(`<div class="hs-empty"><h2>${frappe.utils.escape_html(__("Prepare su primer establecimiento"))}</h2><p>${frappe.utils.escape_html(__("Configure compañía, habitaciones y políticas antes de operar."))}</p>${this.data.can_create_property?this.button("new_property",__("Crear establecimiento"),"","primary"):__("Solicite acceso al administrador del sistema.")}</div>`);
       else {
@@ -186,6 +204,16 @@ window.hospitality_suite = window.hospitality_suite || {};
       this.root.off("click").on("click","[data-act]",async(event)=>{
         const button=$(event.currentTarget); const action=button.data("act"), id=String(button.data("id") || "");
         await this.run_action(action,id,event.currentTarget);
+      });
+      this.root.on("click","[data-hs-module]",event=>{
+        const selected=String(event.currentTarget.getAttribute("data-hs-module")||"");
+        if(!this.navigation_modules().some(module=>module.id===selected))return;
+        this.navModule=selected;
+        this.root.find("[data-hs-module]").each((_,node)=>{
+          const active=node.getAttribute("data-hs-module")===selected;
+          $(node).toggleClass("is-selected",active).attr("aria-pressed",String(active));
+        });
+        this.root.find("[data-hs-menu]").each((_,node)=>{node.hidden=node.getAttribute("data-hs-menu")!==selected;});
       });
       this.root.find("#hs-property").on("change",e=>{this.property=e.target.value;this.data=null;this.load();});
       this.root.find("#hs-search").on("input",e=>{if(this.update_room_filter)this.update_room_filter("query",e.target.value);else{this.query=e.target.value.toLowerCase();this.filterRooms();}});

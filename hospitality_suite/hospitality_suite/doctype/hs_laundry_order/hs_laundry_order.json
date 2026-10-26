@@ -73,7 +73,7 @@
   },
   {
    "fieldname": "items",
-   "label": "Items",
+   "label": "Artículos",
    "fieldtype": "Table",
    "options": "HS Laundry Order Item"
   },
@@ -86,7 +86,7 @@
   },
   {
    "fieldname": "billed_total",
-   "label": "Importe cargado al folio",
+   "label": "Importe cargado a la cuenta",
    "fieldtype": "Currency",
    "default": 0,
    "options": "currency"
@@ -105,6 +105,11 @@
   {
    "fieldname": "collected_at",
    "label": "Recogido el",
+   "fieldtype": "Datetime"
+  },
+  {
+   "fieldname": "counted_at",
+   "label": "Contado el",
    "fieldtype": "Datetime"
   },
   {
@@ -146,6 +151,7 @@
   "ready_by",
   "collected_by",
   "collected_at",
+  "counted_at",
   "delivered_by",
   "delivered_at",
   "shortage_note",

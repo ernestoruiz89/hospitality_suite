@@ -92,7 +92,7 @@
    "fieldname": "status",
    "label": "Estado",
    "fieldtype": "Select",
-   "options": "Pending\nInvoiced\nReversed\nScheduled",
+   "options": "Pending\nPosted\nInvoiced\nReversed\nScheduled",
    "reqd": 1,
    "default": "Pending"
   },
@@ -100,6 +100,12 @@
    "fieldname": "sales_invoice",
    "label": "Factura de venta",
    "fieldtype": "Data"
+  },
+  {
+   "fieldname": "pms_receivable",
+   "label": "Cuenta por cobrar PMS",
+   "fieldtype": "Link",
+   "options": "HS PMS Receivable"
   },
   {
    "fieldname": "period_key",
@@ -166,6 +172,7 @@
   "kind",
   "status",
   "sales_invoice",
+  "pms_receivable",
   "period_key",
   "service_date",
   "posted_at",

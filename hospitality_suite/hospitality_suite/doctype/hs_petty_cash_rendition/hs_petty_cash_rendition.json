@@ -121,6 +121,18 @@
    "fieldtype": "Data"
   },
   {
+   "fieldname": "pms_variance_journal",
+   "label": "Asiento de diferencia PMS",
+   "fieldtype": "Link",
+   "options": "HS Journal"
+  },
+  {
+   "fieldname": "pms_variance_reversal_journal",
+   "label": "Asiento de reversión de diferencia PMS",
+   "fieldtype": "Link",
+   "options": "HS Journal"
+  },
+  {
    "fieldname": "variance_account",
    "label": "Cuenta de diferencia",
    "fieldtype": "Data"
@@ -145,6 +157,8 @@
   "approved_business_date",
   "review_note",
   "variance_journal",
+  "pms_variance_journal",
+  "pms_variance_reversal_journal",
   "variance_account"
  ],
  "permissions": [

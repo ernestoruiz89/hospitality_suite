@@ -45,6 +45,12 @@
    "reqd": 1
   },
   {
+   "fieldname": "warehouse",
+   "label": "Almacén",
+   "fieldtype": "Link",
+   "options": "HS Warehouse"
+  },
+  {
    "fieldname": "quantity",
    "label": "Cantidad",
    "fieldtype": "Float",
@@ -95,6 +101,14 @@
    "fieldtype": "Data"
   },
   {
+   "fieldname": "opening_stock_issue",
+   "label": "Salida histórica de inventario",
+   "fieldtype": "Code",
+   "options": "JSON",
+   "hidden": 1,
+   "print_hide": 1
+  },
+  {
    "fieldname": "credit_note",
    "label": "Nota de crédito",
    "fieldtype": "Data"
@@ -117,6 +131,7 @@
   "folio",
   "customer",
   "item",
+  "warehouse",
   "quantity",
   "included",
   "currency",
@@ -125,6 +140,7 @@
   "charge",
   "stock_entry",
   "return_stock_entry",
+  "opening_stock_issue",
   "credit_note",
   "sales_invoice",
   "notes"

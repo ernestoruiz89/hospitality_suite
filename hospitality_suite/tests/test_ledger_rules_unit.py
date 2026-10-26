@@ -2,7 +2,9 @@
 
 import unittest
 
-from hospitality_suite.ledger_rules import LedgerValidationError, currency_line, inverse_lines, normalize_lines
+from hospitality_suite.ledger_rules import (LedgerValidationError, currency_line,
+                                             inverse_lines, normalize_lines,
+                                             rate_for_base)
 
 
 class TestLedgerRules(unittest.TestCase):
@@ -45,6 +47,16 @@ class TestLedgerRules(unittest.TestCase):
             currency_line({**line, "exchange_rate": "36.60"}, "USD", "NIO")
         with self.assertRaises(LedgerValidationError):
             currency_line({**line, "account_currency": "EUR"}, "USD", "NIO")
+
+    def test_historical_rate_reproduces_booked_base_to_the_cent(self):
+        rate = rate_for_base("3.00", "100.00")
+        line = currency_line({"account": "payable", "debit": "100.00",
+            "credit": "0", "debit_in_account_currency": "3.00",
+            "credit_in_account_currency": "0", "exchange_rate": rate},
+            "USD", "NIO")
+        self.assertEqual(line["debit"], "100.00")
+        with self.assertRaises(LedgerValidationError):
+            rate_for_base("100000000000.00", "0.01")
 
 
 if __name__ == "__main__":

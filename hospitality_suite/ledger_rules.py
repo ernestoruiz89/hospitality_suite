@@ -26,6 +26,20 @@ def amount(value, precision=2):
     return number.quantize(quantum)
 
 
+def rate_for_base(original, base, precision=2):
+    """A nine-decimal rate that reproduces an already booked base balance."""
+    original = amount(original, precision)
+    base = amount(base, precision)
+    if not original or not base:
+        raise LedgerValidationError("El saldo original y el saldo base deben ser positivos")
+    rate = (base / original).quantize(Decimal("0.000000001"), rounding=ROUND_HALF_UP)
+    if (rate <= 0 or rate >= Decimal("1000000000") or
+            (original * rate).quantize(Decimal(1).scaleb(-precision),
+                                       rounding=ROUND_HALF_UP) != base):
+        raise LedgerValidationError("El tipo de cambio histórico no reproduce el saldo base")
+    return format(rate, "f")
+
+
 def normalize_lines(lines, precision=2):
     if not isinstance(lines, (list, tuple)) or len(lines) < 2:
         raise LedgerValidationError("Un asiento requiere al menos dos líneas")

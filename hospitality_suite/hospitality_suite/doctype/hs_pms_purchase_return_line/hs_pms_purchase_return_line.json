@@ -1,0 +1,126 @@
+{
+ "doctype": "DocType",
+ "name": "HS PMS Purchase Return Line",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "hash",
+ "naming_rule": "Random",
+ "fields": [
+  {
+   "fieldname": "source_movement",
+   "label": "Entrada original",
+   "fieldtype": "Link",
+   "options": "HS Stock Movement",
+   "reqd": 1
+  },
+  {
+   "fieldname": "product",
+   "label": "Producto",
+   "fieldtype": "Link",
+   "options": "HS Product",
+   "reqd": 1
+  },
+  {
+   "fieldname": "warehouse",
+   "label": "Almacén",
+   "fieldtype": "Link",
+   "options": "HS Warehouse",
+   "reqd": 1
+  },
+  {
+   "fieldname": "quantity",
+   "label": "Cantidad",
+   "fieldtype": "Float",
+   "default": 0,
+   "reqd": 1,
+   "precision": 6
+  },
+  {
+   "fieldname": "invoice_currency",
+   "label": "Moneda de factura",
+   "fieldtype": "Link",
+   "options": "Currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "base_currency",
+   "label": "Moneda base",
+   "fieldtype": "Link",
+   "options": "Currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "credit_amount",
+   "label": "Importe del crédito",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "invoice_currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "tax_amount",
+   "label": "Importe del impuesto",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "invoice_currency"
+  },
+  {
+   "fieldname": "base_credit",
+   "label": "Crédito en moneda base",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "base_currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "base_tax",
+   "label": "Impuesto en moneda base",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "base_currency"
+  },
+  {
+   "fieldname": "stock_value",
+   "label": "Valor de inventario",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "base_currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "inventory_account",
+   "label": "Cuenta de inventario",
+   "fieldtype": "Link",
+   "options": "HS Account",
+   "reqd": 1
+  },
+  {
+   "fieldname": "return_movement",
+   "label": "Movimiento de devolución",
+   "fieldtype": "Link",
+   "options": "HS Stock Movement"
+  }
+ ],
+ "field_order": [
+  "source_movement",
+  "product",
+  "warehouse",
+  "quantity",
+  "invoice_currency",
+  "base_currency",
+  "credit_amount",
+  "tax_amount",
+  "base_credit",
+  "base_tax",
+  "stock_value",
+  "inventory_account",
+  "return_movement"
+ ],
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0,
+ "istable": 1
+}

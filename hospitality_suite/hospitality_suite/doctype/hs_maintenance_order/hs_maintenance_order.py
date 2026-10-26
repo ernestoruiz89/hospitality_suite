@@ -1,5 +1,5 @@
-from hospitality_suite.controllers import ScopedDocument
+from hospitality_suite.controllers import MaintenanceOrderDocument
 
 
-class HSMaintenanceOrder(ScopedDocument):
+class HSMaintenanceOrder(MaintenanceOrderDocument):
     pass

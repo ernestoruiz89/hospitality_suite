@@ -24,8 +24,7 @@
   {
    "fieldname": "stock_entry",
    "label": "Movimiento de inventario",
-   "fieldtype": "Data",
-   "reqd": 1
+   "fieldtype": "Data"
   },
   {
    "fieldname": "cost",
@@ -40,6 +39,13 @@
    "options": "Issued\nReturned",
    "reqd": 1,
    "default": "Issued"
+  },
+  {
+   "fieldname": "opening_stock_issue",
+   "label": "Salida histórica de inventario",
+   "fieldtype": "Long Text",
+   "read_only": 1,
+   "hidden": 1
   }
  ],
  "field_order": [
@@ -47,7 +53,8 @@
   "quantity",
   "stock_entry",
   "cost",
-  "status"
+  "status",
+  "opening_stock_issue"
  ],
  "permissions": [],
  "sort_field": "modified",

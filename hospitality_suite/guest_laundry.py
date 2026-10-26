@@ -45,9 +45,23 @@ def save_rate(prop, data):
     service = data.get("service_type")
     if not garment or len(garment) > 80 or service not in SERVICES:
         frappe.throw(frappe._("Indique una prenda y un tipo de servicio válidos"))
-    item = locked_doc("Item", data.get("item"))
-    if item.disabled or not item.is_sales_item or item.is_stock_item or item.is_fixed_asset:
-        frappe.throw(frappe._("Use un artículo de venta sin inventario para lavandería"))
+    from hospitality_suite.standalone_accounting import provider, require_pms
+    item = product = None
+    if provider() == "pms":
+        require_pms(prop)
+        product = locked_doc("HS Product", data.get("pms_product"))
+        if (product.property != prop.name or product.organization != prop.organization or
+                not product.active or product.product_type != "Service" or
+                not product.income_account or not product.tax_profile):
+            frappe.throw(frappe._("Use un producto de servicio PMS con ingreso e impuesto configurados"))
+        from hospitality_suite.standalone_accounting import account
+        income = account(prop, product.income_account)
+        if income.root_type != "Income" or income.account_currency != prop.currency:
+            frappe.throw(frappe._("La cuenta de ingresos de lavandería debe usar la moneda base"))
+    else:
+        item = locked_doc("Item", data.get("item"))
+        if item.disabled or not item.is_sales_item or item.is_stock_item or item.is_fixed_asset:
+            frappe.throw(frappe._("Use un artículo de venta sin inventario para lavandería"))
     rate = money(_positive(data.get("rate"), frappe._("La tarifa")), currency=prop.currency)
     express = data.get("express_rate")
     express = money(_positive(express, frappe._("La tarifa exprés")), currency=prop.currency) if express not in (None, "") else None
@@ -63,7 +77,9 @@ def save_rate(prop, data):
     else:
         doc = frappe.new_doc("HS Laundry Rate")
         doc.company, doc.property = prop.company, prop.name
-    doc.garment, doc.service_type, doc.item = garment, service, item.name
+    doc.garment, doc.service_type = garment, service
+    doc.item = item.name if item else None
+    doc.pms_product = product.name if product else None
     doc.currency, doc.rate, doc.express_rate = prop.currency, rate, express
     doc.active = 1 if data.get("active", 1) in (True, 1, "1") else 0
     doc.save() if existing else doc.insert()
@@ -110,11 +126,13 @@ def collect(prop, data):
         unit = decimal(rate.express_rate) if doc.express and decimal(rate.express_rate) > 0 else decimal(rate.rate)
         amount = money(unit * qty, currency=doc.currency)
         lines.append(dict(laundry_rate=rate.name, garment=rate.garment, service_type=rate.service_type,
-                          item=rate.item, quantity=qty, returned_quantity=0, rate=unit, amount=amount))
+                          item=rate.item, pms_product=rate.pms_product,
+                          quantity=qty, returned_quantity=0, rate=unit, amount=amount))
     doc.set("items", lines)
     doc.total = money(sum(decimal(row["amount"]) for row in lines), currency=doc.currency)
     doc.complimentary = 1 if data.get("complimentary") else 0
     doc.status, doc.collected_by, doc.collected_at = "Collected", frappe.session.user, now_datetime()
+    doc.counted_at = None
     doc.ready_by = add_to_date(now_datetime(), hours=8 if doc.express else 32)
     if data.get("notes"):
         doc.notes = str(data["notes"]).strip()[:500]
@@ -150,6 +168,7 @@ def return_pieces(prop, data):
         if isinstance(qty, bool) or not isinstance(qty, int) or not 0 <= qty <= row.quantity:
             frappe.throw(frappe._("La cantidad devuelta está fuera del rango recogido"))
         row.returned_quantity = qty
+    doc.counted_at = now_datetime()
     doc.save()
     audit(prop, "Laundry return count", doc)
     return dict(order=doc.name, pending=sum(row.quantity-row.returned_quantity for row in doc.items))
@@ -162,6 +181,9 @@ def deliver(prop, data):
     assert_version(doc, data.get("modified"))
     if doc.property != prop.name or doc.status != "Ready" or not doc.items:
         frappe.throw(frappe._("La orden debe estar lista antes de entregarla"))
+    from hospitality_suite.standalone_accounting import provider
+    if provider() == "pms" and not doc.counted_at:
+        frappe.throw(frappe._("Registre el conteo de prendas devueltas antes de entregar"))
     pending = sum(row.quantity - row.returned_quantity for row in doc.items)
     if pending:
         require(prop.name, "approve")
@@ -171,16 +193,39 @@ def deliver(prop, data):
     folio = _folio(prop, stay, doc.folio)
     total = money(0, currency=doc.currency)
     if not doc.complimentary:
-        ready(prop)
-        from hospitality_suite.operations import charge
+        pms = provider() == "pms"
+        if pms:
+            from hospitality_suite.standalone_accounting import require_pms
+            from hospitality_suite.standalone_tax import tax_for_amount
+            require_pms(prop)
+        else:
+            ready(prop)
+            from hospitality_suite.operations import charge
         for row in doc.items:
             if row.returned_quantity:
                 amount = money(decimal(row.rate) * row.returned_quantity, currency=doc.currency)
-                posted = charge(prop, stay, folio, row.item, amount, "Service",
-                                f"Lavandería {doc.name}: {row.garment} · {row.service_type}",
-                                snapshot=dict(laundry_order=doc.name, laundry_rate=row.laundry_rate,
-                                              quoted_quantity=row.quantity, returned_quantity=row.returned_quantity,
-                                              rate=str(row.rate)), quantity=row.returned_quantity)
+                description = f"Lavandería {doc.name}: {row.garment} · {row.service_type}"
+                if pms:
+                    product = locked_doc("HS Product", row.pms_product)
+                    if (product.property != prop.name or product.organization != prop.organization or
+                            not product.active or product.product_type != "Service" or
+                            not product.income_account or not product.tax_profile):
+                        frappe.throw(frappe._("El servicio PMS de la prenda ya no está disponible"))
+                    from hospitality_suite.standalone_accounting import account
+                    income = account(prop, product.income_account)
+                    if income.root_type != "Income" or income.account_currency != prop.currency:
+                        frappe.throw(frappe._("La cuenta de ingreso de la prenda ya no es válida"))
+                    tax_for_amount(prop, product.tax_profile, amount)
+                    posted = insert("HS Charge", prop, stay=stay.name, folio=folio.name,
+                        item=product.name, description=description, quantity=row.returned_quantity,
+                        rate=str(row.rate), amount=str(amount), currency=prop.currency,
+                        business_date=prop.business_date, kind="Service", status="Pending")
+                else:
+                    posted = charge(prop, stay, folio, row.item, amount, "Service",
+                                    description,
+                                    snapshot=dict(laundry_order=doc.name, laundry_rate=row.laundry_rate,
+                                                  quoted_quantity=row.quantity, returned_quantity=row.returned_quantity,
+                                                  rate=str(row.rate)), quantity=row.returned_quantity)
                 row.charge = posted.name
                 total += amount
     doc.status, doc.delivered_by, doc.delivered_at = "Delivered", frappe.session.user, now_datetime()
@@ -211,11 +256,11 @@ def cancel(prop, data):
 def board(prop):
     require(prop.name, "laundry")
     rates = frappe.get_all("HS Laundry Rate", filters={"property": prop.name},
-                           fields=["name", "garment", "service_type", "item", "rate", "express_rate",
+                           fields=["name", "garment", "service_type", "item", "pms_product", "rate", "express_rate",
                                    "currency", "active", "modified"], order_by="garment,service_type", limit=1000)
     fields = [
         "name", "stay", "room", "folio", "currency", "status", "express", "complimentary", "notes",
-        "total", "billed_total", "ready_by", "collected_at", "delivered_at", "shortage_note", "cancel_reason",
+        "total", "billed_total", "ready_by", "collected_at", "counted_at", "delivered_at", "shortage_note", "cancel_reason",
         "modified"]
     orders = frappe.get_all("HS Laundry Order", filters={"property": prop.name, "status": ["in", OPEN]},
                             fields=fields, order_by="modified desc", limit=2000)
@@ -224,10 +269,18 @@ def board(prop):
                             fields=fields, order_by="modified desc", limit=25)
     for order in orders:
         order["items"] = frappe.get_all("HS Laundry Order Item", filters={"parent": order.name}, fields=[
-            "name", "garment", "service_type", "item", "quantity", "returned_quantity", "rate", "amount", "charge"],
+            "name", "garment", "service_type", "item", "pms_product", "quantity", "returned_quantity", "rate", "amount", "charge"],
             order_by="idx asc", limit=100)
     stays = frappe.get_all("HS Stay", filters={"property": prop.name, "status": "Active"},
-                           fields=["name", "room"], limit=1000)
+                           fields=["name", "room", "booking"], limit=1000)
+    folios = frappe.get_all("HS Folio", filters={"property": prop.name, "status": "Open"},
+                           fields=["name", "stay", "booking", "label", "currency"], limit=1000)
+    from hospitality_suite.standalone_accounting import provider
+    products = (frappe.get_all("HS Product", filters={"property": prop.name,
+        "organization": prop.organization, "product_type": "Service", "active": 1},
+        fields=["name", "product_name", "income_account", "tax_profile"],
+        order_by="product_name asc", limit=500) if provider() == "pms" else [])
+    products = [row for row in products if row.income_account and row.tax_profile]
     cutoff = add_to_date(now_datetime(), days=-30)
     totals = frappe.db.sql("""SELECT COUNT(*) AS orders, COALESCE(SUM(billed_total),0) AS charges
         FROM `tabHS Laundry Order` WHERE property=%s AND status='Delivered' AND delivered_at >= %s""",
@@ -239,6 +292,6 @@ def board(prop):
         JOIN `tabHS Laundry Order Item` line ON line.parent=laundry.name
         WHERE laundry.property=%s AND laundry.status='Delivered' AND laundry.delivered_at >= %s
         GROUP BY line.service_type ORDER BY line.service_type""", (prop.name, cutoff), as_dict=True)
-    return dict(rates=rates, orders=orders, stays=stays,
+    return dict(rates=rates, orders=orders, stays=stays, folios=folios, products=products,
                 last_30_days=dict(orders=totals.orders, charges=totals.charges,
                                   by_service=services, currency=prop.currency))

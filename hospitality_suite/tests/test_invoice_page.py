@@ -129,6 +129,73 @@ class TestInvoicePage(IntegrationTestCase):
         with self.assertRaises(frappe.PermissionError):api.preview(motel.name,dict(folio=entered['folio']),action='invoice')
         self.assertEqual(frappe.db.count('Sales Invoice'),0)
 
+    def test_react_invoice_folio_search_is_paged_and_property_scoped(self):
+        entered = self.enter()
+        folio = entered['folio']
+        searched = api.erp_invoice_folios(self.prop.name, search=folio,
+            offset=0, page_length=1)
+        self.assertEqual([row['name'] for row in searched['rows']], [folio])
+        self.assertFalse(searched['has_more'])
+        self.assertEqual(searched['rows'][0]['customer'], self.guest.customer)
+        self.assertFalse(api.erp_invoice_folios(self.prop.name,
+            search='folio-not-found-' + uuid.uuid4().hex)['rows'])
+        with self.assertRaises(frappe.ValidationError):
+            api.erp_invoice_folios(self.prop.name, page_length=51)
+        other = frappe.get_doc('HS Property',
+            {'property_name':'Luna Demo · Por tiempo'})
+        self.assertFalse(api.erp_invoice_folios(other.name, search=folio)['rows'])
+        frappe.set_user('receptionist@hospitality.example.invalid')
+        with self.assertRaises(frappe.PermissionError):
+            api.erp_invoice_folios(self.prop.name, search=folio)
+        frappe.set_user('cashier@hospitality.example.invalid')
+        self.assertEqual(api.erp_invoice_folios(self.prop.name,
+            search=folio)['rows'][0]['name'], folio)
+
+    def test_react_erp_adjustment_review_requires_manager_and_current_charge(self):
+        entered = self.enter()
+        source = frappe.db.get_value('HS Charge', {'stay': entered['stay'],
+            'kind': 'Lodging'}, 'name')
+        frappe.set_user('manager@hospitality.example.invalid')
+        folios = api.erp_adjustment_folios(self.prop.name,
+            search=entered['folio'])
+        self.assertEqual([row['name'] for row in folios['rows']],
+            [entered['folio']])
+        listed = api.erp_adjustment_charges(self.prop.name,
+            entered['folio'])
+        self.assertIn(source, [row['name'] for row in listed['rows']])
+        before = {dt: frappe.db.count(dt) for dt in
+            ('HS Charge', 'HS Request', 'HS Audit Event', 'Sales Invoice')}
+        values = dict(charge=source, adjustment_type='Discount', amount=100,
+            reason='Descuento autorizado desde React')
+        quote = api.erp_adjustment_quote(self.prop.name, values)
+        self.assertEqual((quote['folio'], quote['charge'],
+            quote['signed_amount'], quote['new_amount']),
+            (entered['folio'], source, '-100.00', '1400.00'))
+        self.assertEqual({dt: frappe.db.count(dt) for dt in before}, before)
+        key = uuid.uuid4().hex
+        result = self.command('adjustment',
+            dict(values, acceptance=quote['acceptance']), key)
+        self.assertEqual(result, self.command('adjustment',
+            dict(values, acceptance=quote['acceptance']), key))
+        self.assertEqual(float(frappe.db.get_value('HS Charge',
+            result['charge'], 'amount')), -100)
+        updated = api.erp_adjustment_quote(self.prop.name, values)
+        self.assertNotEqual(updated['acceptance'], quote['acceptance'])
+        with self.assertRaisesRegex(frappe.ValidationError,
+                'cambiaron'):
+            self.command('adjustment', dict(values,
+                acceptance=quote['acceptance']))
+        self.assertEqual(frappe.db.count('HS Charge'), before['HS Charge'] + 1)
+        other = frappe.get_doc('HS Property',
+            {'property_name': 'Luna Demo · Por tiempo'})
+        with self.assertRaises(frappe.PermissionError):
+            api.erp_adjustment_charges(other.name, entered['folio'])
+        frappe.set_user('cashier@hospitality.example.invalid')
+        with self.assertRaises(frappe.PermissionError):
+            api.erp_adjustment_folios(self.prop.name)
+        with self.assertRaises(frappe.PermissionError):
+            api.erp_adjustment_quote(self.prop.name, values)
+
     def tax_template(self,included):
         parent=frappe.db.get_value('Account',{'company':self.prop.company,'root_type':'Liability','is_group':1})
         account=frappe.get_doc(dict(doctype='Account',company=self.prop.company,account_name='Impuesto revisión sintética '+uuid.uuid4().hex[:6],

@@ -103,7 +103,7 @@
    "fieldname": "kind",
    "label": "Tipo",
    "fieldtype": "Select",
-   "options": "Payment\nAdvance\nGuarantee\nRefund\nGuarantee Refund\nGuarantee Applied\nWithdrawal\nExpense\nSupplier Payment\nSettlement\nOther Income",
+   "options": "Payment\nAdvance\nGuarantee\nRefund\nGuarantee Refund\nGuarantee Applied\nWithdrawal\nExpense\nSupplier Payment\nSupplier Refund\nSettlement\nOther Income",
    "reqd": 1,
    "default": "Payment"
   },
@@ -127,31 +127,105 @@
   },
   {
    "fieldname": "pms_party",
-   "label": "Pms party",
+   "label": "Tercero PMS",
    "fieldtype": "Link",
    "options": "HS Party"
   },
   {
    "fieldname": "pms_counter_account",
-   "label": "Pms counter account",
+   "label": "Contracuenta PMS",
    "fieldtype": "Link",
    "options": "HS Account"
   },
   {
    "fieldname": "pms_concept",
-   "label": "Pms concept",
+   "label": "Concepto PMS",
    "fieldtype": "Link",
    "options": "HS Treasury Concept"
   },
   {
    "fieldname": "pms_receivable",
-   "label": "Pms receivable",
+   "label": "Cuenta por cobrar PMS",
    "fieldtype": "Link",
    "options": "HS PMS Receivable"
   },
   {
+   "fieldname": "pms_purchase",
+   "label": "Compra PMS",
+   "fieldtype": "Link",
+   "options": "HS PMS Purchase"
+  },
+  {
+   "fieldname": "pms_opening_payable",
+   "label": "Cuenta por pagar inicial PMS",
+   "fieldtype": "Link",
+   "options": "HS PMS Opening Payable"
+  },
+  {
+   "fieldname": "pms_settlement_currency",
+   "label": "Moneda de deuda liquidada",
+   "fieldtype": "Link",
+   "options": "Currency"
+  },
+  {
+   "fieldname": "pms_settled_amount",
+   "label": "Deuda liquidada en moneda de cuenta",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "pms_settlement_currency"
+  },
+  {
+   "fieldname": "pms_released_base_amount",
+   "label": "Pasivo liberado en moneda base",
+   "fieldtype": "Currency",
+   "default": 0
+  },
+  {
+   "fieldname": "pms_exchange_variance_account",
+   "label": "Cuenta de diferencia cambiaria aplicada",
+   "fieldtype": "Link",
+   "options": "HS Account"
+  },
+  {
+   "fieldname": "pms_opening_credit",
+   "label": "Crédito inicial PMS",
+   "fieldtype": "Link",
+   "options": "HS PMS Opening Credit"
+  },
+  {
+   "fieldname": "pms_historical_day_pass",
+   "label": "Day Pass histórico reembolsado",
+   "fieldtype": "Link",
+   "options": "HS Day Pass",
+   "unique": 1
+  },
+  {
+   "fieldname": "pms_opening_guarantee",
+   "label": "Garantía inicial PMS",
+   "fieldtype": "Link",
+   "options": "HS PMS Opening Guarantee"
+  },
+  {
+   "fieldname": "pms_opening_supplier_credit",
+   "label": "Crédito inicial del proveedor",
+   "fieldtype": "Link",
+   "options": "HS PMS Opening Supplier Credit"
+  },
+  {
+   "fieldname": "pms_purchase_return",
+   "label": "Devolución de compra PMS",
+   "fieldtype": "Link",
+   "options": "HS PMS Purchase Return"
+  },
+  {
+   "fieldname": "pms_agent_commission",
+   "label": "Comisión de agencia PMS",
+   "fieldtype": "Link",
+   "options": "HS PMS Agency Commission"
+  },
+  {
    "fieldname": "pms_journal",
-   "label": "Pms journal",
+   "label": "Asiento PMS",
    "fieldtype": "Link",
    "options": "HS Journal"
   },
@@ -277,6 +351,18 @@
   "pms_counter_account",
   "pms_concept",
   "pms_receivable",
+  "pms_purchase",
+  "pms_opening_payable",
+  "pms_settlement_currency",
+  "pms_settled_amount",
+  "pms_released_base_amount",
+  "pms_exchange_variance_account",
+  "pms_opening_credit",
+  "pms_historical_day_pass",
+  "pms_opening_guarantee",
+  "pms_opening_supplier_credit",
+  "pms_purchase_return",
+  "pms_agent_commission",
   "pms_journal",
   "reference",
   "source_payment",

@@ -23,20 +23,20 @@
   },
   {
    "fieldname": "organization",
-   "label": "Organization",
+   "label": "Organización",
    "fieldtype": "Link",
    "options": "HS Organization",
    "reqd": 1
   },
   {
    "fieldname": "party_name",
-   "label": "Party name",
+   "label": "Nombre del tercero",
    "fieldtype": "Data",
    "reqd": 1
   },
   {
    "fieldname": "party_type",
-   "label": "Party type",
+   "label": "Tipo de tercero",
    "fieldtype": "Select",
    "options": "Customer\nSupplier\nBoth",
    "reqd": 1,
@@ -44,7 +44,7 @@
   },
   {
    "fieldname": "tax_id",
-   "label": "Tax id",
+   "label": "Identificación fiscal",
    "fieldtype": "Data"
   },
   {
@@ -63,6 +63,33 @@
    "label": "Habilitado",
    "fieldtype": "Check",
    "default": 1
+  },
+  {
+   "fieldname": "credit_authorized",
+   "label": "Crédito autorizado",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "credit_limit",
+   "label": "Límite de crédito",
+   "fieldtype": "Currency",
+   "default": 0
+  },
+  {
+   "fieldname": "credit_days",
+   "label": "Plazo de pago (días)",
+   "fieldtype": "Int",
+   "default": 30
+  },
+  {
+   "fieldname": "credit_valid_until",
+   "label": "Crédito válido hasta",
+   "fieldtype": "Date"
+  },
+  {
+   "fieldname": "credit_reason",
+   "label": "Motivo de autorización de crédito",
+   "fieldtype": "Small Text"
   }
  ],
  "field_order": [
@@ -74,7 +101,12 @@
   "tax_id",
   "email",
   "phone",
-  "active"
+  "active",
+  "credit_authorized",
+  "credit_limit",
+  "credit_days",
+  "credit_valid_until",
+  "credit_reason"
  ],
  "permissions": [
   {

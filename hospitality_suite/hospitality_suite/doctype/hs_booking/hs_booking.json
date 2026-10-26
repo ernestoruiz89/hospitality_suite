@@ -88,6 +88,13 @@
    "read_only": 1
   },
   {
+   "fieldname": "pms_agent_commission",
+   "label": "Comisión de agencia PMS",
+   "fieldtype": "Link",
+   "options": "HS PMS Agency Commission",
+   "read_only": 1
+  },
+  {
    "fieldname": "instructions",
    "label": "Instrucciones",
    "fieldtype": "Small Text"
@@ -139,6 +146,12 @@
    "fieldtype": "Data"
   },
   {
+   "fieldname": "fee_receivable",
+   "label": "Comisión por cobrar",
+   "fieldtype": "Link",
+   "options": "HS PMS Receivable"
+  },
+  {
    "fieldname": "fee_amount",
    "label": "Comisión o penalización",
    "fieldtype": "Currency",
@@ -172,6 +185,7 @@
   "agent_commission_pct",
   "agent_commission_estimate",
   "agent_commission_invoice",
+  "pms_agent_commission",
   "instructions",
   "rooms",
   "reason",
@@ -180,6 +194,7 @@
   "draft_data",
   "quote_snapshot",
   "fee_invoice",
+  "fee_receivable",
   "fee_amount",
   "portal_token_hash",
   "portal_expires_at"

@@ -50,30 +50,60 @@ def open_context(prop,data):
     return shift,method
 
 
-def expense(prop,data):
+def expense_quote(prop, data):
     ready(prop)
     from hospitality_suite.cashier import expected
+
     shift,method=open_context(prop,data)
     category=document("HS Expense Category",data["category"],"finance")
     amount=money(data.get("amount"),currency=method.currency)
-    if not category.active or not method.is_cash or amount<=0 or not data.get("reason"):
+    reason=(data.get("reason") or "").strip()
+    if not category.active or not method.is_cash or amount<=0 or not reason or len(reason)>500:
         frappe.throw(frappe._("Seleccione categoría activa, medio en efectivo, importe positivo y motivo del egreso"))
     fx=exchange(method.currency,category.currency)
     base=money(amount*fx,currency=category.currency)
-    if (category.max_amount and base>decimal(category.max_amount)) or amount>decimal(expected(shift).get(method.currency,0)):
+    available=decimal(expected(shift).get(method.currency,0))
+    if (category.max_amount and base>decimal(category.max_amount)) or amount>available:
         frappe.throw(frappe._("El egreso supera el límite de la categoría o el efectivo esperado del turno"))
     account=locked_doc("Account",category.account)
-    if account.company!=prop.company or account.is_group or account.root_type!="Expense" or account.account_currency!=category.currency:
+    cash_account=locked_doc("Account",method.account)
+    if (account.company!=prop.company or account.is_group or account.disabled or
+            account.root_type!="Expense" or account.account_currency!=category.currency):
         frappe.throw(frappe._("Revise la cuenta de gasto configurada"))
+    if (cash_account.company!=prop.company or cash_account.is_group or cash_account.disabled or
+            cash_account.root_type!="Asset" or cash_account.account_currency!=method.currency or
+            cash_account.account_type!="Cash"):
+        frappe.throw(frappe._("Revise la cuenta de efectivo del medio de pago"))
+    q=dict(shift=shift.name,method=method.name,category=category.name,
+           category_label=category.label,amount=str(amount),currency=method.currency,
+           exchange_rate=str(fx),base_amount=str(base),base_currency=category.currency,
+           debit=account.name,debit_label=account.account_name,
+           credit=cash_account.name,credit_label=cash_account.account_name,
+           available_before=str(money(available,currency=method.currency)),
+           available_after=str(money(available-amount,currency=method.currency)),
+           category_limit=str(money(category.max_amount or 0,currency=category.currency)),
+           reason=reason)
+    q["acceptance"]=hashlib.sha256(canonical(q).encode()).hexdigest()
+    return q
+
+
+def expense(prop,data,review_required=False):
+    q=expense_quote(prop,data)
+    if review_required and data.get("acceptance")!=q["acceptance"]:
+        frappe.throw(frappe._("El egreso cambió; revise nuevamente el asiento y el efectivo disponible"))
     journal=frappe.new_doc("Journal Entry")
-    journal.update(dict(company=prop.company,posting_date=frappe.utils.nowdate(),voucher_type="Cash Entry",multi_currency=1,hs_shift=shift.name,user_remark=data["reason"]))
-    journal.append("accounts",dict(account=category.account,debit_in_account_currency=float(base),exchange_rate=1,cost_center=prop.cost_center))
-    journal.append("accounts",dict(account=method.account,credit_in_account_currency=float(amount),exchange_rate=float(fx),cost_center=prop.cost_center))
+    journal.update(dict(company=prop.company,posting_date=frappe.utils.nowdate(),voucher_type="Cash Entry",multi_currency=1,hs_shift=q["shift"],user_remark=q["reason"]))
+    journal.append("accounts",dict(account=q["debit"],debit_in_account_currency=float(q["base_amount"]),exchange_rate=1,cost_center=prop.cost_center))
+    journal.append("accounts",dict(account=q["credit"],credit_in_account_currency=float(q["amount"]),exchange_rate=float(q["exchange_rate"]),cost_center=prop.cost_center))
     post_standard(journal,prop)
-    payment=insert("HS Payment",prop,shift=shift.name,method=method.name,expense_category=category.name,currency=method.currency,
-                   amount=amount,exchange_rate=fx,base_amount=base,kind="Expense",status="Posted",journal_entry=journal.name,reason=data["reason"])
-    audit(prop,"Cash expense",payment,data["reason"])
-    return dict(payment=payment.name,journal_entry=journal.name,amount=str(amount),currency=method.currency)
+    payment=insert("HS Payment",prop,shift=q["shift"],method=q["method"],expense_category=q["category"],currency=q["currency"],
+                   amount=q["amount"],exchange_rate=q["exchange_rate"],base_amount=q["base_amount"],kind="Expense",status="Posted",journal_entry=journal.name,reason=q["reason"])
+    audit(prop,"Cash expense",payment,q["reason"])
+    return dict(payment=payment.name,journal_entry=journal.name,amount=q["amount"],currency=q["currency"])
+
+
+def reviewed_expense(prop,data):
+    return expense(prop,data,review_required=True)
 
 
 def settlement_quote(prop,data):

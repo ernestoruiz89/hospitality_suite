@@ -23,14 +23,14 @@
   },
   {
    "fieldname": "organization",
-   "label": "Organization",
+   "label": "Organización",
    "fieldtype": "Link",
    "options": "HS Organization",
    "reqd": 1
   },
   {
    "fieldname": "party",
-   "label": "Party",
+   "label": "Tercero",
    "fieldtype": "Link",
    "options": "HS Party",
    "reqd": 1
@@ -54,6 +54,11 @@
    "reqd": 1
   },
   {
+   "fieldname": "due_date",
+   "label": "Vencimiento",
+   "fieldtype": "Date"
+  },
+  {
    "fieldname": "currency",
    "label": "Moneda",
    "fieldtype": "Link",
@@ -69,6 +74,64 @@
    "reqd": 1
   },
   {
+   "fieldname": "base_currency",
+   "label": "Moneda base",
+   "fieldtype": "Link",
+   "options": "Currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "base_amount",
+   "label": "Importe en moneda base",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "base_currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "net_amount",
+   "label": "Importe neto",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency"
+  },
+  {
+   "fieldname": "tax_amount",
+   "label": "Importe del impuesto",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency"
+  },
+  {
+   "fieldname": "tax_profile",
+   "label": "Perfil fiscal",
+   "fieldtype": "Link",
+   "options": "HS PMS Tax Profile"
+  },
+  {
+   "fieldname": "tax_rate",
+   "label": "Tasa de impuesto",
+   "fieldtype": "Float",
+   "default": 0,
+   "precision": 6
+  },
+  {
+   "fieldname": "tax_treatment",
+   "label": "Tratamiento fiscal",
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "price_includes_tax",
+   "label": "Precio incluye impuesto",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "tax_account",
+   "label": "Cuenta de impuesto",
+   "fieldtype": "Link",
+   "options": "HS Account"
+  },
+  {
    "fieldname": "receivable_account",
    "label": "Cuenta por cobrar",
    "fieldtype": "Link",
@@ -79,19 +142,67 @@
    "fieldname": "income_account",
    "label": "Cuenta de ingresos",
    "fieldtype": "Link",
+   "options": "HS Account"
+  },
+  {
+   "fieldname": "opening_source_site",
+   "label": "Sitio de origen inicial",
+   "fieldtype": "Data",
+   "read_only": 1
+  },
+  {
+   "fieldname": "opening_source_name",
+   "label": "Documento de origen inicial",
+   "fieldtype": "Data",
+   "read_only": 1
+  },
+  {
+   "fieldname": "opening_source_sha256",
+   "label": "SHA-256 del origen inicial",
+   "fieldtype": "Data",
+   "read_only": 1
+  },
+  {
+   "fieldname": "opening_temporary_account",
+   "label": "Cuenta transitoria de apertura",
+   "fieldtype": "Link",
    "options": "HS Account",
-   "reqd": 1
+   "read_only": 1
+  },
+  {
+   "fieldname": "folio",
+   "label": "Cuenta de estancia",
+   "fieldtype": "Link",
+   "options": "HS Folio"
+  },
+  {
+   "fieldname": "source_charge",
+   "label": "Cargo de origen",
+   "fieldtype": "Link",
+   "options": "HS Charge"
+  },
+  {
+   "fieldname": "booking",
+   "label": "Reserva",
+   "fieldtype": "Link",
+   "options": "HS Booking"
+  },
+  {
+   "fieldname": "experience_order",
+   "label": "Orden de experiencia",
+   "fieldtype": "Link",
+   "options": "HS Experience Order"
   },
   {
    "fieldname": "journal",
-   "label": "Journal",
+   "label": "Asiento contable",
    "fieldtype": "Link",
    "options": "HS Journal",
    "reqd": 1
   },
   {
    "fieldname": "reversal_journal",
-   "label": "Reversal journal",
+   "label": "Asiento de reversión",
    "fieldtype": "Link",
    "options": "HS Journal"
   },
@@ -112,10 +223,28 @@
   "reference",
   "description",
   "business_date",
+  "due_date",
   "currency",
   "amount",
+  "base_currency",
+  "base_amount",
+  "net_amount",
+  "tax_amount",
+  "tax_profile",
+  "tax_rate",
+  "tax_treatment",
+  "price_includes_tax",
+  "tax_account",
   "receivable_account",
   "income_account",
+  "opening_source_site",
+  "opening_source_name",
+  "opening_source_sha256",
+  "opening_temporary_account",
+  "folio",
+  "source_charge",
+  "booking",
+  "experience_order",
   "journal",
   "reversal_journal",
   "status"

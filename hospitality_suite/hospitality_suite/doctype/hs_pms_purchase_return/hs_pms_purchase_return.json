@@ -1,0 +1,269 @@
+{
+ "doctype": "DocType",
+ "name": "HS PMS Purchase Return",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "hash",
+ "naming_rule": "Random",
+ "fields": [
+  {
+   "fieldname": "company",
+   "label": "Compañía",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "property",
+   "label": "Establecimiento",
+   "fieldtype": "Link",
+   "options": "HS Property",
+   "reqd": 1
+  },
+  {
+   "fieldname": "organization",
+   "label": "Organización",
+   "fieldtype": "Link",
+   "options": "HS Organization",
+   "reqd": 1
+  },
+  {
+   "fieldname": "purchase",
+   "label": "Compra",
+   "fieldtype": "Link",
+   "options": "HS PMS Purchase",
+   "reqd": 1
+  },
+  {
+   "fieldname": "supplier",
+   "label": "Proveedor",
+   "fieldtype": "Link",
+   "options": "HS Party",
+   "reqd": 1
+  },
+  {
+   "fieldname": "kind",
+   "label": "Tipo",
+   "fieldtype": "Select",
+   "options": "Return\nFull Cancellation",
+   "reqd": 1,
+   "default": "Return"
+  },
+  {
+   "fieldname": "reference",
+   "label": "Referencia",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "reason",
+   "label": "Motivo",
+   "fieldtype": "Small Text",
+   "reqd": 1
+  },
+  {
+   "fieldname": "business_date",
+   "label": "Fecha operativa",
+   "fieldtype": "Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "invoice_currency",
+   "label": "Moneda de factura",
+   "fieldtype": "Link",
+   "options": "Currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "base_currency",
+   "label": "Moneda base",
+   "fieldtype": "Link",
+   "options": "Currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "credit_amount",
+   "label": "Importe del crédito",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "invoice_currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "base_credit",
+   "label": "Crédito en moneda base",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "base_currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "base_tax",
+   "label": "Impuesto en moneda base",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "base_currency"
+  },
+  {
+   "fieldname": "stock_value",
+   "label": "Valor de inventario",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "base_currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "variance",
+   "label": "Diferencia de arqueo",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "base_currency"
+  },
+  {
+   "fieldname": "payable_applied",
+   "label": "Importe aplicado por pagar",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "base_currency"
+  },
+  {
+   "fieldname": "supplier_credit",
+   "label": "Crédito de proveedor",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "base_currency"
+  },
+  {
+   "fieldname": "payable_account",
+   "label": "Cuenta por pagar",
+   "fieldtype": "Link",
+   "options": "HS Account",
+   "reqd": 1
+  },
+  {
+   "fieldname": "tax_account",
+   "label": "Cuenta de impuesto",
+   "fieldtype": "Link",
+   "options": "HS Account"
+  },
+  {
+   "fieldname": "variance_account",
+   "label": "Cuenta de diferencia",
+   "fieldtype": "Link",
+   "options": "HS Account"
+  },
+  {
+   "fieldname": "adjustment_journal",
+   "label": "Asiento de ajuste",
+   "fieldtype": "Link",
+   "options": "HS Journal"
+  },
+  {
+   "fieldname": "lines",
+   "label": "Líneas",
+   "fieldtype": "Table",
+   "options": "HS PMS Purchase Return Line"
+  },
+  {
+   "fieldname": "status",
+   "label": "Estado",
+   "fieldtype": "Select",
+   "options": "Posted",
+   "reqd": 1,
+   "default": "Posted"
+  }
+ ],
+ "field_order": [
+  "company",
+  "property",
+  "organization",
+  "purchase",
+  "supplier",
+  "kind",
+  "reference",
+  "reason",
+  "business_date",
+  "invoice_currency",
+  "base_currency",
+  "credit_amount",
+  "base_credit",
+  "base_tax",
+  "stock_value",
+  "variance",
+  "payable_applied",
+  "supplier_credit",
+  "payable_account",
+  "tax_account",
+  "variance_account",
+  "adjustment_journal",
+  "lines",
+  "status"
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Administrator",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Supervisor",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Cashier",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Accountant",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Auditor",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0
+}

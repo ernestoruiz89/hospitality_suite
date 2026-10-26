@@ -46,6 +46,18 @@ def post_standard(doc, prop):
 
 def folio_balance(name):
     folio = document("HS Folio", name)
+    from hospitality_suite.standalone_accounting import provider
+    if provider() == "pms":
+        from hospitality_suite.standalone_receivables import outstanding as pms_outstanding, pending_total
+        prop = frappe.get_doc("HS Property", folio.property)
+        pending = pending_total(prop, name)
+        billed = sum((pms_outstanding(prop, row.name) for row in
+                      current_all("HS PMS Receivable", filters={"folio": name, "status": "Posted"},
+                                  fields=["name"])), Decimal(0))
+        from hospitality_suite.periodic import scheduled_amount
+        scheduled = scheduled_amount(name)
+        return dict(pending=str(money(pending)), scheduled=str(money(scheduled)),
+                    outstanding=str(money(billed + pending + scheduled)), currency=folio.currency)
     pending = sum(decimal(r.amount) for r in current_all("HS Charge", filters={"folio": name, "status": "Pending"}, fields=["amount"]))
     invoices = current_all("Sales Invoice", filters={"hs_folio": name, "docstatus": 1}, pluck="name")
     outstanding = sum(decimal(locked_doc("Sales Invoice", inv).outstanding_amount) for inv in set(invoices) if inv)
@@ -87,8 +99,11 @@ def invoice_folio(prop, data, *, preview=False):
     inv = frappe.new_doc("Sales Invoice")
     inv.flags.ignore_permissions=True
     from hospitality_suite.credit import invoice_due_date
-    inv.update(dict(company=prop.company, customer=folio.customer, posting_date=nowdate(), due_date=invoice_due_date(prop, folio.customer),
+    inv.update(dict(company=prop.company, customer=folio.customer, posting_date=prop.business_date,
+                    set_posting_time=1, due_date=invoice_due_date(prop, folio.customer, prop.business_date),
                     currency=folio.currency, debit_to=prop.receivable_account, cost_center=prop.cost_center,
+                    selling_price_list=prop.price_list, price_list_currency=prop.currency,
+                    plc_conversion_rate=1,
                     hs_stay=stay.name if stay else None,hs_booking=booking_name, hs_folio=folio.name, update_stock=0, taxes_and_charges=prop.tax_template))
     inv.party_account_currency=frappe.db.get_value('Account',prop.receivable_account,'account_currency') or frappe.db.get_value('Company',prop.company,'default_currency')
     mapping = []
@@ -131,6 +146,8 @@ def invoice_folio(prop, data, *, preview=False):
                 inv.append("advances", dict(reference_type="Journal Entry", reference_name=journal.name, reference_row=row.name,
                                            advance_amount=float(amount), allocated_amount=float(amount), ref_exchange_rate=journal.accounts[0].exchange_rate))
                 remaining -= amount
+            continue
+        if not payment.payment_entry:
             continue
         pe = locked_doc("Payment Entry", payment.payment_entry)
         if pe.docstatus != 1 or pe.company != prop.company or pe.party != folio.customer or pe.paid_from != prop.receivable_account:
@@ -202,6 +219,85 @@ def reconcile_folio_advances(prop, folio):
     return rows
 
 
+def apply_customer_advance(prop, data):
+    """Assign a customer credit to one posted invoice through ERPNext reconciliation.
+
+    An advance received before PMS cutover may have no booking or stay. Its
+    opening Payment Entry is the source of truth for the remaining credit.
+    """
+    from hospitality_suite.standalone_accounting import provider
+
+    if provider() != "erpnext":
+        frappe.throw(frappe._("La asignación ERPNext requiere contabilidad ERPNext"))
+    require(prop.name, "finance")
+    source = locked_doc("HS Payment", data["advance"])
+    if (source.property != prop.name or source.company != prop.company or
+            source.kind != "Advance" or source.status != "Posted" or
+            not source.payment_entry):
+        frappe.throw(frappe._("Seleccione un anticipo vigente de este establecimiento"))
+    payment = locked_doc("Payment Entry", source.payment_entry)
+    invoice = locked_doc("Sales Invoice", data["invoice"])
+    if (payment.docstatus != 1 or payment.payment_type != "Receive" or
+            payment.company != prop.company or payment.hs_property != prop.name or
+            payment.party_type != "Customer" or payment.party != source.customer or
+            payment.paid_from != prop.receivable_account or
+            payment.paid_from_account_currency != prop.currency or
+            payment.book_advance_payments_in_separate_party_account):
+        frappe.throw(frappe._("El anticipo no conserva un crédito de cliente compatible"))
+    if (invoice.docstatus != 1 or invoice.is_return or
+            invoice.company != prop.company or invoice.hs_property != prop.name or
+            invoice.customer != source.customer or
+            invoice.debit_to != payment.paid_from):
+        frappe.throw(frappe._("La factura no pertenece al cliente y establecimiento del anticipo"))
+    amount = money(data["amount"], currency=prop.currency)
+    before_credit = money(payment.unallocated_amount, currency=prop.currency)
+    before_due = money(invoice.outstanding_amount, currency=prop.currency)
+    if amount <= 0 or amount > before_credit or amount > before_due:
+        frappe.throw(frappe._("La asignación supera el anticipo o el saldo de la factura"))
+
+    rec = frappe.new_doc("Payment Reconciliation")
+    rec.update(dict(company=prop.company, party_type="Customer", party=source.customer,
+                    receivable_payable_account=payment.paid_from,
+                    payment_name=payment.name,
+                    invoice_name=invoice.name, payment_limit=10, invoice_limit=10))
+    rec.get_unreconciled_entries()
+    payments = [row.as_dict() for row in rec.payments
+                if row.reference_type == "Payment Entry" and
+                row.reference_name == payment.name and decimal(row.amount) > 0]
+    invoices = [row.as_dict() for row in rec.invoices
+                if row.invoice_type == "Sales Invoice" and
+                row.invoice_number == invoice.name and
+                decimal(row.outstanding_amount) > 0]
+    if len(payments) != 1 or len(invoices) != 1:
+        frappe.throw(frappe._("El crédito o la factura cambió; actualice los saldos"))
+    if amount > decimal(payments[0]["amount"]) or amount > decimal(invoices[0]["outstanding_amount"]):
+        frappe.throw(frappe._("El saldo conciliable cambió; actualice los saldos"))
+    rec.set("payments", payments)
+    rec.set("invoices", invoices)
+    rec.allocate_entries(dict(payments=[payments[0].copy()],
+                              invoices=[invoices[0].copy()]))
+    if (len(rec.allocation) != 1 or
+            decimal(rec.allocation[0].allocated_amount) < amount):
+        frappe.throw(frappe._("ERPNext no pudo asignar exactamente el importe solicitado"))
+    rec.allocation[0].allocated_amount = float(amount)
+    rec.validate_allocation()
+    rec.reconcile_allocations()
+    payment.reload()
+    invoice.reload()
+    after_credit = money(payment.unallocated_amount, currency=prop.currency)
+    after_due = money(invoice.outstanding_amount, currency=prop.currency)
+    if before_credit - after_credit != amount or before_due - after_due != amount:
+        frappe.throw(frappe._("La conciliación no redujo ambos saldos como se esperaba"))
+    audit(prop, "Apply customer advance", source,
+          details={"payment_entry": payment.name, "invoice": invoice.name,
+                   "amount": str(amount), "currency": prop.currency,
+                   "remaining_advance": str(after_credit),
+                   "invoice_outstanding": str(after_due)})
+    return dict(advance=source.name, payment_entry=payment.name,
+                invoice=invoice.name, amount=str(amount), currency=prop.currency,
+                remaining_advance=str(after_credit), invoice_outstanding=str(after_due))
+
+
 def credit_draft(prop, data):
     ready(prop)
     require(prop.name, "approve")
@@ -234,7 +330,14 @@ def credit_draft(prop, data):
         frappe.throw(frappe._('La factura ya no tiene cantidades pendientes de devolución'))
     # Native POS invoices own their stock ledger; operational deliveries use
     # Stock Entry and keep update_stock=0 on both invoice and credit note.
-    credit.update(dict(hs_stay=inv.hs_stay,hs_booking=inv.hs_booking, hs_folio=inv.hs_folio, update_stock=inv.update_stock, remarks=data["reason"]))
+    credit.update(dict(hs_stay=inv.hs_stay,hs_booking=inv.hs_booking,
+        hs_folio=inv.hs_folio, update_stock=inv.update_stock,
+        selling_price_list=inv.selling_price_list or prop.price_list,
+        price_list_currency=inv.price_list_currency or inv.currency,
+        plc_conversion_rate=inv.plc_conversion_rate or 1,
+        remarks=data["reason"]))
+    if _cutover_opening_receivable(prop, inv.name):
+        credit.update_outstanding_for_self = 0
     for row in credit.items:
         row.hs_charge = None
         row.hs_charge_sources=None
@@ -267,6 +370,51 @@ def credit_note_quote(prop,data):
     return credit_review(prop,inv,credit,data)
 
 
+def _reconcile_credit_to_unpaid(prop, original, credit):
+    """Apply a direct or migrated receivable credit to its unpaid part first."""
+    due = money(frappe.db.get_value("Sales Invoice", original.name,
+                                    "outstanding_amount"), currency=original.currency)
+    available = money(-decimal(frappe.db.get_value("Sales Invoice", credit.name,
+                                                  "outstanding_amount")),
+                      currency=original.currency)
+    if due <= 0 or available <= 0:
+        return
+    allocation = min(due, available)
+    rec = frappe.new_doc("Payment Reconciliation")
+    rec.update(dict(company=prop.company, party_type="Customer",
+                    party=original.customer,
+                    receivable_payable_account=original.debit_to,
+                    payment_name=credit.name, invoice_name=original.name,
+                    payment_limit=10, invoice_limit=10))
+    rec.get_unreconciled_entries()
+    payments = [row.as_dict() for row in rec.payments
+                if row.reference_type == "Sales Invoice" and
+                row.reference_name == credit.name and
+                decimal(row.amount) >= allocation]
+    invoices = [row.as_dict() for row in rec.invoices
+                if row.invoice_type == "Sales Invoice" and
+                row.invoice_number == original.name and
+                decimal(row.outstanding_amount) >= allocation]
+    if len(payments) != 1 or len(invoices) != 1:
+        frappe.throw(frappe._("La nota histórica no pudo aplicarse a su factura de origen"))
+    rec.set("payments", payments)
+    rec.set("invoices", invoices)
+    rec.allocate_entries(dict(payments=[payments[0].copy()],
+                              invoices=[invoices[0].copy()]))
+    if len(rec.allocation) != 1 or decimal(rec.allocation[0].allocated_amount) < allocation:
+        frappe.throw(frappe._("ERPNext no pudo conciliar la nota histórica"))
+    rec.allocation[0].allocated_amount = float(allocation)
+    rec.validate_allocation()
+    rec.reconcile_allocations()
+    if (money(frappe.db.get_value("Sales Invoice", original.name,
+                                  "outstanding_amount"), currency=original.currency) !=
+            due - allocation or
+            money(-decimal(frappe.db.get_value("Sales Invoice", credit.name,
+                                                "outstanding_amount")),
+                  currency=original.currency) != available - allocation):
+        frappe.throw(frappe._("La conciliación de la nota histórica no redujo ambos saldos"))
+
+
 def credit_note(prop,data):
     inv,credit=credit_draft(prop,data)
     review=credit_review(prop,inv,credit,data)
@@ -297,9 +445,9 @@ def apply_guarantee(prop, data):
     matches=source.stay==folio.stay if folio.stay else source.booking==folio.booking
     if source.kind != "Guarantee" or source.status != "Posted" or not matches or source.customer != folio.customer or not data.get("reason"):
         frappe.throw(frappe._("Garantía, pagador o motivo incompatible"))
-    used = sum(decimal(p.amount) for p in current_all("HS Payment", filters={"source_payment": source.name, "status":"Posted","kind":["in",["Guarantee Refund","Guarantee Applied"]]}, fields=["amount"]))
+    available = guarantee_balance(prop, source)
     amount = money(data["amount"],currency=source.currency)
-    if amount <= 0 or amount + used > decimal(source.amount):
+    if amount <= 0 or amount > available.nominal:
         frappe.throw(frappe._("El importe supera la garantía disponible"))
     shifts=current_all("HS Shift",filters={"property":prop.name,"cashier":frappe.session.user,"status":"Open"},fields=["name"])
     shift=document("HS Shift",data.get("shift") or (shifts[0].name if shifts else ""),"approve")
@@ -310,7 +458,7 @@ def apply_guarantee(prop, data):
     company_currency = frappe.db.get_value("Company", prop.company, "default_currency")
     fx = exchange(prop.currency, company_currency)
     liability=original_guarantee(source)
-    liability_amount=money(decimal(liability.credit_in_account_currency)*amount/decimal(source.amount))
+    liability_amount=guarantee_book_amount(prop, source, amount, available)
     party_amount = liability_amount
     journal = frappe.new_doc("Journal Entry")
     journal.update(dict(company=prop.company, posting_date=nowdate(), voucher_type="Journal Entry", multi_currency=1,
@@ -366,6 +514,7 @@ def invoice_cancellation(prop,booking,fee,reason):
     invoice.flags.ignore_permissions=True
     invoice.update(dict(company=prop.company,customer=booking.customer,currency=booking.currency,posting_date=nowdate(),due_date=nowdate(),
                         debit_to=prop.receivable_account,cost_center=prop.cost_center,hs_booking=booking.name,update_stock=0,remarks=reason,
+                        selling_price_list=prop.price_list,price_list_currency=prop.currency,plc_conversion_rate=1,
                         taxes_and_charges=prop.tax_template))
     invoice.append("items",dict(item_code=prop.penalty_item,qty=1,rate=float(decimal(fee["amount"])),cost_center=prop.cost_center,warehouse=prop.warehouse,
                                 description="Cancelación / no presentación: "+booking.name))
@@ -376,6 +525,8 @@ def invoice_cancellation(prop,booking,fee,reason):
     invoice.calculate_taxes_and_totals()
     remaining=decimal(invoice.grand_total)
     for row in current_all("HS Payment",filters={"booking":booking.name,"customer":booking.customer,"kind":"Advance","status":"Posted"},fields=["payment_entry"]):
+        if not row.payment_entry:
+            continue
         pe=locked_doc("Payment Entry",row.payment_entry)
         allocation=min(remaining,decimal(pe.unallocated_amount))
         if pe.docstatus==1 and allocation>0:
@@ -405,6 +556,124 @@ def original_guarantee(source):
     return rows[0]
 
 
+def guarantee_balance(prop, source):
+    """Remaining nominal and original book value, including pre-cutover uses."""
+    if (source.property != prop.name or source.kind != "Guarantee" or
+            source.status != "Posted"):
+        frappe.throw(frappe._("La garantía no conserva su origen contable"))
+    if not source.journal_entry:
+        # Fully settled PMS guarantees have no balance to transfer. Preserve
+        # their history without fabricating a new ERPNext voucher for them.
+        if source.pms_journal:
+            from hospitality_suite.standalone_receivables import deposit_available
+            native = current_all("HS Payment", filters={
+                "property": prop.name, "source_payment": source.name,
+                "kind": ["in", ["Guarantee Applied", "Guarantee Refund"]],
+                "status": "Posted", "journal_entry": ["is", "set"]},
+                fields=["name"])
+            if not native and deposit_available(prop, source.name, "Guarantee") == 0:
+                return frappe._dict(nominal=decimal(0), book=decimal(0),
+                    original_book=decimal(source.base_amount),
+                    historical_used=decimal(source.base_amount),
+                    native_used=decimal(0), liability=None)
+        frappe.throw(frappe._("La garantía no conserva su origen contable"))
+    liability = original_guarantee(source)
+    original_book = decimal(liability.credit_in_account_currency)
+    historical_used = decimal(0)
+    if source.pms_journal:
+        for row in current_all("HS PMS Allocation", filters={
+                "property": prop.name, "payment": source.name,
+                "kind": ["in", ["Guarantee Applied", "Guarantee Reversed"]]},
+                fields=["kind", "amount"]):
+            historical_used += decimal(row.amount) * (
+                -1 if row.kind == "Guarantee Reversed" else 1)
+    native_used = decimal(0)
+    native_nominal = decimal(0)
+    for row in current_all("HS Payment", filters={
+            "property": prop.name, "source_payment": source.name,
+            "kind": ["in", ["Guarantee Applied", "Guarantee Refund"]],
+            "status": "Posted"},
+            fields=["name", "kind", "amount", "base_amount", "journal_entry",
+                    "pms_journal"]):
+        if row.pms_journal and not row.journal_entry and source.pms_journal:
+            if row.kind != "Guarantee Refund":
+                frappe.throw(frappe._("La aplicación histórica de garantía es inválida"))
+            historical_used += decimal(row.base_amount)
+            continue
+        if not row.journal_entry:
+            frappe.throw(frappe._("La aplicación de garantía no tiene asiento contable"))
+        journal = locked_doc("Journal Entry", row.journal_entry)
+        if (journal.docstatus != 1 or journal.company != prop.company or
+                journal.hs_property != prop.name):
+            frappe.throw(frappe._("La aplicación de garantía tiene un asiento inválido"))
+        lines = [line for line in journal.accounts if
+                 line.account == liability.account and
+                 decimal(line.debit_in_account_currency) > 0]
+        if len(lines) != 1:
+            frappe.throw(frappe._("La aplicación de garantía no conserva el pasivo original"))
+        native_used += decimal(lines[0].debit_in_account_currency)
+        native_nominal += decimal(row.amount)
+    if historical_used < 0 or historical_used > original_book:
+        frappe.throw(frappe._("Las aplicaciones históricas de la garantía no concilian"))
+    book = money(original_book - historical_used - native_used,
+                 currency=prop.currency)
+    if source.pms_journal:
+        rate = decimal(source.exchange_rate)
+        if rate <= 0:
+            frappe.throw(frappe._("La garantía histórica no conserva su tasa"))
+        nominal = money(decimal(source.amount) - historical_used / rate -
+                        native_nominal, currency=source.currency)
+    else:
+        nominal = money(decimal(source.amount) - native_nominal,
+                        currency=source.currency)
+    if book < 0 or nominal < 0 or bool(book) != bool(nominal):
+        frappe.throw(frappe._("El saldo contable de la garantía no concilia"))
+    return frappe._dict(nominal=nominal, book=book, original_book=original_book,
+                        historical_used=historical_used,
+                        native_used=native_used, liability=liability)
+
+
+def guarantee_book_amount(prop, source, amount, balance=None):
+    balance = balance or guarantee_balance(prop, source)
+    if amount <= 0 or amount > balance.nominal:
+        frappe.throw(frappe._("El importe supera la garantía disponible"))
+    value = (balance.book if amount == balance.nominal else
+             money(balance.original_book * amount / decimal(source.amount),
+                   currency=prop.currency))
+    if value <= 0 or value > balance.book:
+        frappe.throw(frappe._("El importe supera el pasivo de garantía disponible"))
+    return value
+
+
+def unsettled_guarantees(prop, stay):
+    """Guarantees due at this departure, including the booking's last stay."""
+    last_departure = not frappe.db.exists("HS Stay", {
+        "property": prop.name, "booking": stay.booking, "status": "Active",
+        "name": ["!=", stay.name],
+    }) if stay.booking else True
+    folio_names = [row.name for row in folios_for_stay(stay)
+                   if row.stay == stay.name or (last_departure and not row.stay)]
+    payments = {}
+    for row in current_all("HS Payment", filters={
+            "property": prop.name, "kind": "Guarantee", "status": "Posted",
+            "stay": stay.name}, fields=["name"]):
+        payments[row.name] = row.name
+    if folio_names:
+        for row in current_all("HS Payment", filters={
+                "property": prop.name, "kind": "Guarantee", "status": "Posted",
+                "folio": ["in", folio_names]}, fields=["name"]):
+            payments[row.name] = row.name
+    if last_departure and stay.booking:
+        for row in current_all("HS Payment", filters={
+                "property": prop.name, "kind": "Guarantee", "status": "Posted",
+                "booking": stay.booking}, fields=["name"]):
+            payments[row.name] = row.name
+    return [{"payment": name,
+             "available": guarantee_balance(prop,
+                locked_doc("HS Payment", name)).book}
+            for name in payments]
+
+
 def balance_exchange(journal,prop):
     debit=sum(decimal(r.debit_in_account_currency)*decimal(r.exchange_rate or 1) for r in journal.accounts)
     credit=sum(decimal(r.credit_in_account_currency)*decimal(r.exchange_rate or 1) for r in journal.accounts)
@@ -422,6 +691,19 @@ def balance_exchange(journal,prop):
     journal.append("accounts",dict(account=account,cost_center=prop.cost_center,exchange_rate=1,
                                     debit_in_account_currency=float(-difference) if difference<0 else 0,
                                     credit_in_account_currency=float(difference) if difference>0 else 0))
+
+
+def _direct_receivable_invoice(prop, name):
+    """Select one posted bill with no stay or folio for a direct collection."""
+    invoice = locked_doc("Sales Invoice", name)
+    if (invoice.docstatus != 1 or invoice.is_return or invoice.is_pos or
+            invoice.company != prop.company or invoice.hs_property != prop.name or
+            invoice.hs_folio or invoice.hs_stay or invoice.hs_booking or
+            invoice.currency != prop.currency or
+            invoice.debit_to != prop.receivable_account or
+            decimal(invoice.outstanding_amount) <= 0):
+        frappe.throw(frappe._("Seleccione una factura directa pendiente de este establecimiento"))
+    return invoice
 
 
 def payment(prop, data):
@@ -457,9 +739,14 @@ def payment(prop, data):
             frappe.throw(frappe._("Origen de devolución inválido"))
         if source.currency != method.currency:
             frappe.throw(frappe._("Devuelva en la moneda del movimiento original"))
-        refunded = sum(decimal(p.amount) for p in current_all("HS Payment", filters={"source_payment": source.name, "status": "Posted","kind":["in",["Refund","Guarantee Refund","Guarantee Applied"]]}, fields=["amount"]))
-        if refunded + amount > decimal(source.amount):
-            frappe.throw(frappe._("La devolución supera el importe disponible"))
+        if kind == "Guarantee Refund":
+            guarantee_available = guarantee_balance(prop, source)
+            if amount > guarantee_available.nominal:
+                frappe.throw(frappe._("La devolución supera el importe disponible"))
+        else:
+            refunded = sum(decimal(p.amount) for p in current_all("HS Payment", filters={"source_payment": source.name, "status": "Posted","kind":["in",["Refund","Guarantee Refund","Guarantee Applied"]]}, fields=["amount"]))
+            if refunded + amount > decimal(source.amount):
+                frappe.throw(frappe._("La devolución supera el importe disponible"))
         data = {**data, "stay": source.stay, "booking": source.booking, "customer": source.customer, "folio": source.folio}
     stay = document("HS Stay", data["stay"], "finance") if data.get("stay") else None
     booking = document("HS Booking", data["booking"], "finance") if data.get("booking") else None
@@ -468,13 +755,18 @@ def payment(prop, data):
     if stay and booking and stay.booking!=booking.name:
         frappe.throw(frappe._("La estancia y la reserva no tienen el mismo origen"))
     folio = document("HS Folio", data["folio"], "finance") if data.get("folio") else None
-    if not stay and not booking and not (source and kind=='Refund'):
+    if data.get("invoice") and (kind != "Payment" or folio or stay or booking):
+        frappe.throw(frappe._("El cobro directo requiere solo una factura sin estancia"))
+    direct_invoice = (_direct_receivable_invoice(prop, data["invoice"])
+                      if data.get("invoice") else None)
+    if not stay and not booking and not direct_invoice and not (source and kind=='Refund'):
         frappe.throw(frappe._("El pago debe tener una estancia o reserva de origen"))
     if folio:
         matches=(stay and folio.stay==stay.name) if folio.stay else folio.booking==(booking.name if booking else stay.booking if stay else None)
         if not matches:
             frappe.throw(frappe._("La cuenta no corresponde a la estancia o grupo"))
-    customer = folio.customer if folio else (source.customer if source else (stay.customer if stay else booking.customer))
+    customer = (direct_invoice.customer if direct_invoice else folio.customer if folio
+                else source.customer if source else stay.customer if stay else booking.customer)
     company_currency = frappe.db.get_value("Company", prop.company, "default_currency")
     fx = exchange(method.currency, company_currency)
     property_fx = exchange(prop.currency, company_currency)
@@ -482,6 +774,8 @@ def payment(prop, data):
     if source and kind=='Refund':
         from hospitality_suite.refunds import plan
         refund_plan=plan(prop,source,amount,method,data.get('credit_note'))
+    if direct_invoice and not data.get("fx_acceptance"):
+        frappe.throw(frappe._("Revise el importe y tipo de cambio antes de cobrar la factura"))
     if data.get("fx_acceptance") and data["fx_acceptance"]!=payment_quote(prop,data)["acceptance"]:
         frappe.throw(frappe._("Los importes o fondos disponibles cambiaron; revise el movimiento otra vez"))
     party_amount = refund_plan.party_amount if refund_plan else money(amount * fx / property_fx)
@@ -497,7 +791,8 @@ def payment(prop, data):
         if is_refund:
             original=original_guarantee(source)
             liability_account=original.account
-            liability_value=money(decimal(original.credit_in_account_currency)*amount/decimal(source.amount))
+            liability_value=guarantee_book_amount(prop, source, amount,
+                guarantee_available)
             liability_rate=decimal(original.exchange_rate)
         for account, value, is_debit, currency, rate in [
             (method.account, amount, not is_refund, method.currency, fx),
@@ -540,11 +835,21 @@ def payment(prop, data):
     else:
         invoice = None
         if kind == "Payment":
-            if not folio:
+            if direct_invoice:
+                invoices = [direct_invoice]
+            elif not folio:
                 frappe.throw(frappe._("Seleccione la cuenta de estancia a cobrar"))
-            invoice_folio(prop, {"folio": folio.name})
-            names = set(current_all("HS Charge", filters={"folio": folio.name, "status": "Invoiced"}, pluck="sales_invoice"))
-            invoices = [locked_doc("Sales Invoice", n) for n in names if n]
+            else:
+                invoice_folio(prop, {"folio": folio.name})
+                # A folio may also contain opening Sales Invoices imported at
+                # PMS cutover, which have no HS Charge to point to them.
+                names = current_all("Sales Invoice", filters={
+                    "hs_property": prop.name, "hs_folio": folio.name,
+                    "company": prop.company, "customer": customer, "docstatus": 1},
+                    pluck="name")
+                invoices = sorted((inv for inv in (locked_doc("Sales Invoice", n)
+                    for n in names) if decimal(inv.outstanding_amount) > 0),
+                    key=lambda inv: (str(inv.posting_date), inv.name))
             if party_amount > sum(decimal(inv.outstanding_amount) for inv in invoices):
                 frappe.throw(frappe._("El cobro supera el saldo; registre un anticipo separado si corresponde"))
         elif refund_plan:
@@ -578,7 +883,8 @@ def payment(prop, data):
                     folio=folio.name if folio else None, customer=customer, shift=shift.name, method=method.name, amount=amount,
                     currency=method.currency, exchange_rate=fx, base_amount=money(amount * fx), kind=kind, status="Posted",
                     payment_entry=pe.name if pe else None, journal_entry=journal.name if journal else None,
-                    sales_invoice=refund_plan.credit.name if refund_plan and refund_plan.credit else None,
+                    sales_invoice=(refund_plan.credit.name if refund_plan and refund_plan.credit
+                                   else direct_invoice.name if direct_invoice else None),
                     source_payment=source.name if source else None, reference=data.get("reference"), reason=data.get("reason"),tendered=tendered,change_amount=change)
     audit(prop, kind, record, data.get("reason"),dict(payment_policy=policy,refund=refund_plan.proof if refund_plan else None) if policy or refund_plan else None)
     return dict(payment=record.name, payment_entry=record.payment_entry, journal_entry=record.journal_entry, amount=str(amount), currency=method.currency,
@@ -603,17 +909,100 @@ def payment_quote(prop,data):
                 base_currency=company_currency,property_amount=str(money(amount*fx/property_fx,currency=prop.currency)),property_currency=prop.currency,
                 tendered=str(tendered),change=str(money(tendered-amount,currency=method.currency)),method=method.name)
     values["payment_policy"]=policy
+    if data.get("invoice"):
+        if data.get("kind", "Payment") != "Payment" or any(
+                data.get(field) for field in ("folio", "stay", "booking")):
+            frappe.throw(frappe._("El cobro directo requiere solo una factura sin estancia"))
+        invoice = _direct_receivable_invoice(prop, data["invoice"])
+        due = money(invoice.outstanding_amount, currency=prop.currency)
+        if money(amount * fx / property_fx, currency=prop.currency) > due:
+            frappe.throw(frappe._("El cobro supera el saldo de la factura directa"))
+        values["invoice"] = dict(name=invoice.name, customer=invoice.customer,
+            modified=str(invoice.modified), outstanding=str(due),
+            account=invoice.debit_to)
+    elif data.get("kind", "Payment") == "Payment" and data.get("folio"):
+        folio = document("HS Folio", data["folio"], "finance")
+        stay = document("HS Stay", data["stay"], "finance") if data.get("stay") else None
+        booking = document("HS Booking", data["booking"], "finance") if data.get("booking") else None
+        if stay and booking and stay.booking != booking.name:
+            frappe.throw(frappe._("La estancia y la reserva no tienen el mismo origen"))
+        matches = (stay and folio.stay == stay.name) if folio.stay else (
+            folio.booking == (booking.name if booking else stay.booking if stay else None))
+        if not matches or folio.company != prop.company or folio.property != prop.name:
+            frappe.throw(frappe._("La cuenta no corresponde a la estancia o grupo"))
+        balance = folio_balance(folio.name)
+        due = money(balance["outstanding"], currency=prop.currency)
+        if money(amount * fx / property_fx, currency=prop.currency) > due:
+            frappe.throw(frappe._("El cobro supera el saldo actual de la cuenta de estancia"))
+        values["folio"] = dict(name=folio.name, customer=folio.customer,
+            modified=str(folio.modified), outstanding=str(due),
+            pending=balance["pending"], scheduled=balance["scheduled"])
+    elif data.get("kind") in ("Advance", "Guarantee"):
+        stay = document("HS Stay", data["stay"], "finance") if data.get("stay") else None
+        booking = document("HS Booking", data["booking"], "finance") if data.get("booking") else None
+        if (not stay and not booking or
+                stay and stay.status != "Active" or
+                booking and booking.status not in ("Hold", "Confirmed", "Checked In") or
+                stay and booking and stay.booking != booking.name):
+            frappe.throw(frappe._("Seleccione una estancia activa o reserva vigente"))
+        if data.get("folio"):
+            folio = document("HS Folio", data["folio"], "finance")
+            matches = (stay and folio.stay == stay.name) if folio.stay else (
+                folio.booking == (booking.name if booking else stay.booking if stay else None))
+            if not matches:
+                frappe.throw(frappe._("La cuenta no corresponde a la estancia o grupo"))
+        values["origin"] = dict(
+            stay=stay.name if stay else None,
+            stay_modified=str(stay.modified) if stay else None,
+            booking=booking.name if booking else None,
+            booking_modified=str(booking.modified) if booking else None,
+            customer=stay.customer if stay else booking.customer,
+            folio=data.get("folio") or None)
     if data.get('kind')=='Refund':
         from hospitality_suite.refunds import plan
         source=document('HS Payment',data.get('source_payment'),'finance')
         refund=plan(prop,source,amount,method,data.get('credit_note'))
         values['refund']={**refund.proof,'exchange_difference':str(money(amount*fx-refund.party_amount*refund.party_rate,currency=company_currency))}
+    elif data.get('kind')=='Guarantee Refund':
+        source=document('HS Payment',data.get('source_payment'),'finance')
+        if source.currency != method.currency:
+            frappe.throw(frappe._('Devuelva en la moneda del movimiento original'))
+        available=guarantee_balance(prop,source)
+        liability_amount=guarantee_book_amount(prop,source,amount,available)
+        values['guarantee']={
+            'source':source.name, 'opening_journal':source.journal_entry,
+            'available_nominal':str(available.nominal),
+            'available_book':str(available.book),
+            'liability_amount':str(liability_amount),
+            'liability_account':available.liability.account}
     values["acceptance"]=hashlib.sha256(canonical(values).encode()).hexdigest()
     return values
 
 
+def _cutover_opening_receivable(prop, invoice_name):
+    """Identify a receivable opening invoice from the immutable cutover record."""
+    source = frappe.db.get_value("Sales Invoice", invoice_name,
+        ["company", "hs_property", "is_opening", "docstatus"], as_dict=True)
+    if (not source or source.company != prop.company or
+            source.hs_property != prop.name or source.is_opening != "Yes" or
+            source.docstatus != 1):
+        return False
+    for run in frappe.get_all("HS Cutover Run", fields=["result_json"],
+                              limit_page_length=0):
+        result = frappe.parse_json(run.result_json or "{}")
+        if any(row.get("property") == prop.name and
+               invoice_name in row.get("receivables", [])
+               for row in result.get("properties", [])):
+            return True
+    return False
+
+
 def sync_document(doc, method=None):
     """Includes external Desk postings/cancellations, without trusting a client link."""
+    # Opening vouchers transfer old PMS balances. They do not create new
+    # operational charges, payments, or audit events for the old stay.
+    if getattr(frappe.local, "hs_cutover_opening", False):
+        return
     if not doc.get("hs_stay") and not doc.get("hs_property"):
         return
     stay = locked_doc("HS Stay", doc.hs_stay) if doc.get("hs_stay") else None
@@ -627,6 +1016,39 @@ def sync_document(doc, method=None):
     from hospitality_suite.service import lock_property
     lock_property(prop.name)
     with operation():
+        opening_return = bool(doc.doctype == "Sales Invoice" and
+            doc.docstatus == 1 and doc.is_return and doc.return_against and
+            _cutover_opening_receivable(prop, doc.return_against))
+        direct_return = bool(doc.doctype == "Sales Invoice" and
+            doc.docstatus == 1 and doc.is_return and doc.return_against and
+            not opening_return and not doc.get("hs_stay") and
+            not doc.get("hs_folio") and not doc.get("hs_booking"))
+        return_source = (locked_doc("Sales Invoice", doc.return_against)
+                         if opening_return or direct_return else None)
+        direct_return = bool(direct_return and return_source and
+            return_source.docstatus == 1 and not return_source.is_return and
+            not return_source.is_pos and return_source.company == prop.company and
+            return_source.hs_property == prop.name and
+            not return_source.hs_stay and not return_source.hs_folio and
+            not return_source.hs_booking and
+            return_source.currency == prop.currency and
+            return_source.debit_to == prop.receivable_account)
+        if opening_return or direct_return:
+            opening_items = set(frappe.get_all("Sales Invoice Item", filters={
+                "parent": return_source.name}, pluck="name",
+                limit_page_length=0))
+            if (doc.company != return_source.company or
+                    doc.customer != return_source.customer or
+                    doc.debit_to != return_source.debit_to or
+                    doc.currency != return_source.currency or
+                    (doc.get("hs_folio") or "") !=
+                    (return_source.get("hs_folio") or "") or
+                    (direct_return and
+                     doc.update_stock != return_source.update_stock) or
+                    any(row.get("hs_charge") or
+                        row.sales_invoice_item not in opening_items
+                        for row in doc.items)):
+                frappe.throw(frappe._("La nota de crédito no coincide con la factura de origen"))
         if doc.doctype == "Sales Invoice" and doc.docstatus == 1 and doc.is_return and doc.return_against:
             source_stays=current_all("HS Charge",filters={"sales_invoice":doc.return_against,
                 "kind":"Lodging"},pluck="stay")
@@ -657,6 +1079,8 @@ def sync_document(doc, method=None):
             if not doc.get("hs_folio"):
                 doc.db_set("hs_folio", folio_name, update_modified=False)
             for row in doc.items:
+                if opening_return:
+                    continue
                 charge = locked_doc("HS Charge", row.hs_charge) if row.get("hs_charge") else None
                 if not charge:
                     original=None
@@ -683,6 +1107,8 @@ def sync_document(doc, method=None):
                             linked.posted_at=now_datetime()
                         linked.status, linked.sales_invoice, linked.invoice_item = "Invoiced", doc.name, row.name
                         linked.save(ignore_permissions=True)
+        if (opening_return or direct_return) and method == "on_submit":
+            _reconcile_credit_to_unpaid(prop, return_source, doc)
         if doc.doctype == "Sales Invoice" and doc.docstatus == 2:
             for name in current_all("HS Charge", filters={"sales_invoice": doc.name}, pluck="name"):
                 charge = locked_doc("HS Charge", name)

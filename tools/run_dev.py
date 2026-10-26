@@ -3,6 +3,7 @@ import json
 import argparse
 import os
 from pathlib import Path
+import re
 import shutil
 import socket
 import subprocess
@@ -19,6 +20,24 @@ def port_open(port):
     with socket.socket() as sock:
         sock.settimeout(.3)
         return sock.connect_ex(("127.0.0.1",port))==0
+
+
+def managed_web_pid():
+    listening=subprocess.run(["ss","-ltnp","sport = :8086"],
+                             capture_output=True,text=True,check=True)
+    pids={int(value) for value in re.findall(r"pid=(\d+)",listening.stdout)}
+    if len(pids)!=1:
+        raise SystemExit("No se pudo identificar un único proceso web en 8086")
+    pid=pids.pop()
+    process_path=Path(f"/proc/{pid}")
+    if (process_path.stat().st_uid!=os.getuid() or
+            (process_path/"cwd").resolve() not in (BENCH,BENCH/"sites")):
+        raise SystemExit("El puerto 8086 pertenece a otro proceso; no se interrumpe")
+    cmdline=(process_path/"cmdline").read_bytes().decode(errors="replace")
+    if ("hospitality.localhost" not in cmdline or "serve" not in cmdline or
+            "8086" not in cmdline):
+        raise SystemExit("El puerto 8086 no corresponde al servidor aislado")
+    return pid
 
 
 def main():
@@ -49,21 +68,30 @@ def main():
     }
     for name,(command,port) in commands.items():
         pidfile=state/(name+".pid")
-        if ((name=="web" and args.restart_web) or (name=="worker" and args.restart_worker)) and pidfile.exists():
+        if name=="web" and args.restart_web and port_open(8086):
+            pid=managed_web_pid()
+            os.kill(pid,signal.SIGTERM)
+            for _ in range(50):
+                if not port_open(8086):
+                    break
+                time.sleep(.1)
+            if port_open(8086):
+                raise SystemExit("El proceso web no se detuvo todavía; revise su registro")
+        if name=="worker" and args.restart_worker and pidfile.exists():
             pid=int(pidfile.read_text())
             process_path=Path(f"/proc/{pid}")
             if process_path.exists():
                 cmdline=(process_path/"cmdline").read_bytes().decode(errors="replace")
                 cwd=(process_path/"cwd").resolve()
-                expected=("serve" in cmdline and "8086" in cmdline) if name=="web" else ("worker" in cmdline and str(BENCH) in cmdline)
+                expected="worker" in cmdline and str(BENCH) in cmdline
                 if not expected or cwd not in (BENCH,BENCH/"sites"):
                     raise SystemExit("El PID no coincide con el proceso aislado; no se interrumpe")
                 os.kill(pid,signal.SIGTERM)
                 for _ in range(50):
-                    if (name=="web" and not port_open(8086)) or (name=="worker" and not process_path.exists()):
+                    if not process_path.exists():
                         break
                     time.sleep(.1)
-                if (name=="web" and port_open(8086)) or (name=="worker" and process_path.exists()):
+                if process_path.exists():
                     raise SystemExit("El proceso no se detuvo todavía; revise su registro")
         if port and port_open(port):
             print(name+": puerto activo")

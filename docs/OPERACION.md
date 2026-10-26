@@ -12,6 +12,15 @@ Se corrigió y verificó el fallo `ENOTFOUND` con ambos orígenes, cinco conexio
 
 Es un servidor de desarrollo local. Para un despliegue definitivo use la administración de procesos, proxy, HTTPS y configuración de Bench correspondiente al sistema de destino; no copie este arranque como servicio público de producción.
 
+Para comprobar el contrato de lectura que consume React en un clon PMS sintético con establecimientos, ejecute desde `sites` del bench Frappe sin ERPNext:
+
+```sh
+cd /home/frappe/benches/hospitality-bench/sites
+/home/frappe/benches/hospitality-bench/env/bin/python /mnt/c/Users/Ernesto/Documents/ChatGPT/Hotel/tools/verify_pms_react_contract.py --site hs-pms-smoke-room.local
+```
+
+La comprobación recorre los snapshots de Caja, archivo fiscal, recepción, inventario, compras, lavandería, financiación, Caja Chica, experiencias, Day Pass y configuración para cada establecimiento. También consulta Mi cuenta; termina con rollback. Comprueba campos requeridos y errores de consulta, no sustituye el recorrido visual autenticado ni los ensayos de contabilización.
+
 ## Motor PDF del bench de pruebas
 
 Los PDF requieren wkhtmltopdf con Qt parcheado. El paquete del sistema WSL era 0.12.6 sin esas funciones: una exportación extensa podía partir filas y omitir encabezados. Se extrajo el [paquete oficial 0.12.6.1-3 de Jammy amd64](https://github.com/wkhtmltopdf/packaging/releases/tag/0.12.6.1-3), comprobado en este Ubuntu 24.04, únicamente en `.runtime/wkhtmltox` del bench. No sustituye `/usr/bin/wkhtmltopdf` ni cambia otro bench. El instalador verifica SHA-256 fijado, dependencias y la salida with patched qt, y limpia solo la caché de detección de estos sitios sintéticos.
@@ -83,6 +92,8 @@ Valide cantidades de establecimientos/habitaciones/reservas, snapshots de tarifa
 
 Ensayo ejecutado: respaldo nativo con archivos de hospitality.localhost y restauración en hospitality-restore.localhost, base hospitality_restore. Se conservaron exactamente 52 tablas y 295 filas operativas/nativas, incluidos GL Entry, Payment Ledger Entry y Stock Ledger Entry; SHA-256 idéntico antes y después de migrate. La configuración del destino mantuvo su base y credenciales y recibió la clave de cifrado del respaldo. El scheduler del destino está pausado. `tools/restore_wsl.py` solo admite este tercer sitio aislado; reemplaza sus datos y no es un restaurador para producción. La referencia completa permanece privada en el bench; los hashes y resultados están en docs/evidence.
 
+Ensayo adicional del futuro corte PMS → ERPNext: el respaldo con archivos de `hs-erp-smoke.local` se restauró en el sitio nuevo `hs-cutover-restore.local`, base `hs_cutover_restore`. Coincidieron antes y después de `migrate` los conteos comparados de entidades, propiedades, compañías, cuentas, asientos, actas y archivos; el único conteo no nulo fue `File: 2`, y los paquetes de archivos públicos y privados no contenían archivos de usuario. El destino quedó en ERPNext, modo mantenimiento y scheduler pausado. [verify_cutover_backup_restore.py](../tools/verify_cutover_backup_restore.py) se limita a esos nombres de ensayo y se niega a reemplazar un destino existente. Esta restauración comprueba el paquete y el esquema; todavía se necesita repetirla con datos hoteleros persistentes y comprobar sus saldos y archivos.
+
 ## Actualización y reversión de despliegue
 
 El responsable del despliegue debe identificar bench, sitio y base antes de ejecutar estos ejemplos. Sustituya `hotel.localhost` por ese destino confirmado. Registre también qué procesos lo sirven y si el scheduler estaba habilitado; una sede de recuperación puede requerir que siga pausado.
@@ -122,7 +133,8 @@ El ensayo de este procedimiento en 0.8.9 queda acreditado en [ACTUALIZACION_Y_RE
 
 ## Seguridad y monitoreo
 
-- Conceda roles HS más HS Access por compañía/establecimiento. Los roles ERPNext adicionales deben asignarse explícitamente; compruebe su alcance antes de usarlos.
+- Cada persona abre **Mi usuario** desde la navegación o la cabecera para configurar nombre, idioma y zona horaria en una pantalla independiente (`/hospitality/app/profile`). Esta pantalla pertenece a la cuenta y funciona incluso sin un establecimiento asignado; no permite cambiar roles ni accesos. Administración del sistema crea una identidad global desde **Usuarios → Nuevo usuario** (`/hospitality/app/users/new`), también sin requerir un establecimiento asignado. **Usuarios → Conceder acceso** asigna después roles HS y un hotel; el directorio y el retiro siguen siendo específicos del establecimiento.
+- Conceda roles HS más HS Access por compañía/establecimiento. Configuración React permite a administración del sistema conceder y retirar accesos con motivo. Los roles de Frappe son globales: un usuario con acceso a varios hoteles conserva los mismos roles HS en todos; use usuarios distintos si necesita funciones diferentes por hotel. Los roles ERPNext adicionales deben asignarse explícitamente; compruebe su alcance antes de usarlos.
 - Los archivos personales deben ser privados y vinculados a documentos autorizados. Configure y revise la política descrita arriba; el valor retention_days por sí solo no elimina datos.
 - Revise diferencias de caja, conciliación, documentos anulados, autorizaciones, bloqueos y jobs fallidos. No use ajustes automáticos para ocultar una diferencia.
 - Las notificaciones de la app invalidan solo el establecimiento y se envían por usuario autorizado. Los documentos estándar evitan difusión global de sus nombres; el transporte entre sesiones y la exclusión de otra propiedad están probados.

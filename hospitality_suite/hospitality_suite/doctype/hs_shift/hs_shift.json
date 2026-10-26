@@ -62,7 +62,7 @@
   },
   {
    "fieldname": "opening_by_currency",
-   "label": "Opening by currency",
+   "label": "Apertura por moneda",
    "fieldtype": "Code",
    "options": "JSON"
   },

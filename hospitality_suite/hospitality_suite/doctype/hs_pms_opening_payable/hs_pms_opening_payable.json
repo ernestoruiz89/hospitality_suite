@@ -1,0 +1,207 @@
+{
+ "doctype": "DocType",
+ "name": "HS PMS Opening Payable",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "hash",
+ "naming_rule": "Random",
+ "fields": [
+  {
+   "fieldname": "company",
+   "label": "Compañía",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "property",
+   "label": "Establecimiento",
+   "fieldtype": "Link",
+   "options": "HS Property",
+   "reqd": 1
+  },
+  {
+   "fieldname": "organization",
+   "label": "Organización",
+   "fieldtype": "Link",
+   "options": "HS Organization",
+   "reqd": 1
+  },
+  {
+   "fieldname": "supplier",
+   "label": "Proveedor",
+   "fieldtype": "Link",
+   "options": "HS Party",
+   "reqd": 1
+  },
+  {
+   "fieldname": "opening_source_site",
+   "label": "Sitio de origen inicial",
+   "fieldtype": "Data",
+   "reqd": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "opening_source_name",
+   "label": "Documento de origen inicial",
+   "fieldtype": "Data",
+   "reqd": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "opening_source_sha256",
+   "label": "SHA-256 del origen inicial",
+   "fieldtype": "Data",
+   "reqd": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "opening_temporary_account",
+   "label": "Cuenta transitoria de apertura",
+   "fieldtype": "Link",
+   "options": "HS Account",
+   "reqd": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "payable_account",
+   "label": "Cuenta por pagar",
+   "fieldtype": "Link",
+   "options": "HS Account",
+   "reqd": 1
+  },
+  {
+   "fieldname": "business_date",
+   "label": "Fecha operativa",
+   "fieldtype": "Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "due_date",
+   "label": "Vencimiento",
+   "fieldtype": "Date"
+  },
+  {
+   "fieldname": "currency",
+   "label": "Moneda",
+   "fieldtype": "Link",
+   "options": "Currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amount",
+   "label": "Importe",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "base_amount",
+   "label": "Importe en moneda base",
+   "fieldtype": "Currency",
+   "default": 0,
+   "reqd": 1
+  },
+  {
+   "fieldname": "journal",
+   "label": "Asiento contable",
+   "fieldtype": "Link",
+   "options": "HS Journal",
+   "reqd": 1
+  },
+  {
+   "fieldname": "status",
+   "label": "Estado",
+   "fieldtype": "Select",
+   "options": "Posted",
+   "reqd": 1,
+   "default": "Posted"
+  }
+ ],
+ "field_order": [
+  "company",
+  "property",
+  "organization",
+  "supplier",
+  "opening_source_site",
+  "opening_source_name",
+  "opening_source_sha256",
+  "opening_temporary_account",
+  "payable_account",
+  "business_date",
+  "due_date",
+  "currency",
+  "amount",
+  "base_amount",
+  "journal",
+  "status"
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Administrator",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Supervisor",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Cashier",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Accountant",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Auditor",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0
+}

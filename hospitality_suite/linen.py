@@ -1,7 +1,7 @@
 import frappe
 
 from hospitality_suite.accounting import ready, post_standard
-from hospitality_suite.security import property_document,require,private_evidence
+from hospitality_suite.security import property_document,require,private_evidence,warehouse_allowed
 from hospitality_suite.service import insert, audit,assert_version
 from hospitality_suite.pricing import decimal
 
@@ -36,9 +36,8 @@ def move_linen(prop,data):
     ready(prop)
     if not prop.get("laundry_warehouse") or prop.laundry_warehouse==prop.warehouse:
         frappe.throw(frappe._("Configure un almacén de lavandería diferente al almacén operativo"))
-    laundry = frappe.get_doc("Warehouse",prop.laundry_warehouse)
-    if laundry.company!=prop.company or laundry.is_group:
-        frappe.throw(frappe._("El almacén de lavandería no corresponde a la compañía"))
+    if not warehouse_allowed(prop,prop.laundry_warehouse):
+        frappe.throw(frappe._("El almacén de lavandería no pertenece a este establecimiento"))
     item = frappe.get_doc("Item",data["item"])
     quantity = decimal(data["quantity"])
     direction = data["direction"]
@@ -54,7 +53,10 @@ def move_linen(prop,data):
                                s_warehouse=prop.warehouse if direction=="Send" else prop.laundry_warehouse,
                                t_warehouse=None if direction=="Loss" else (prop.warehouse if direction=="Receive" else prop.laundry_warehouse)))
     post_standard(entry,prop)
-    record = insert("HS Incident",prop,room=room.name,kind="Linen",description=data.get("reason") or direction,
-                    item=item.name,quantity=float(quantity),status="Resolved",stock_entry=entry.name)
+    description = data.get("reason") or direction
+    record = insert("HS Incident",prop,room=room.name,kind="Linen",description=description,
+                    linen_direction=direction, item=item.name,quantity=float(quantity),
+                    status="Resolved",stock_entry=entry.name, resolution=description,
+                    resolved_by=frappe.session.user,resolved_at=frappe.utils.now_datetime())
     audit(prop,"Linen "+direction,record,data.get("reason"))
     return dict(incident=record.name,stock_entry=entry.name)

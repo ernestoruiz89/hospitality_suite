@@ -23,14 +23,14 @@
   },
   {
    "fieldname": "organization",
-   "label": "Organization",
+   "label": "Organización",
    "fieldtype": "Link",
    "options": "HS Organization",
    "reqd": 1
   },
   {
    "fieldname": "receivable",
-   "label": "Receivable",
+   "label": "Cuenta por cobrar",
    "fieldtype": "Link",
    "options": "HS PMS Receivable",
    "reqd": 1
@@ -39,16 +39,33 @@
    "fieldname": "payment",
    "label": "Pago",
    "fieldtype": "Link",
-   "options": "HS Payment",
-   "reqd": 1
+   "options": "HS Payment"
+  },
+  {
+   "fieldname": "opening_credit",
+   "label": "Crédito de apertura",
+   "fieldtype": "Link",
+   "options": "HS PMS Opening Credit"
+  },
+  {
+   "fieldname": "opening_guarantee",
+   "label": "Garantía inicial",
+   "fieldtype": "Link",
+   "options": "HS PMS Opening Guarantee"
   },
   {
    "fieldname": "kind",
    "label": "Tipo",
    "fieldtype": "Select",
-   "options": "Direct\nAdvance Applied",
+   "options": "Direct\nAdvance Applied\nGuarantee Applied\nDirect Reversed\nAdvance Reversed\nGuarantee Reversed\nOpening Credit Applied\nOpening Credit Reversed\nOpening Guarantee Applied\nOpening Guarantee Reversed",
    "reqd": 1,
    "default": "Direct"
+  },
+  {
+   "fieldname": "reverses",
+   "label": "Revierte a",
+   "fieldtype": "Link",
+   "options": "HS PMS Allocation"
   },
   {
    "fieldname": "business_date",
@@ -72,8 +89,37 @@
    "reqd": 1
   },
   {
+   "fieldname": "settlement_currency",
+   "label": "Moneda de liquidación",
+   "fieldtype": "Link",
+   "options": "Currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "settled_amount",
+   "label": "Importe liquidado",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "settlement_currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "opening_credit_base_amount",
+   "label": "Crédito inicial en moneda base",
+   "fieldtype": "Currency",
+   "default": 0,
+   "read_only": 1
+  },
+  {
+   "fieldname": "opening_credit_exchange_account",
+   "label": "Cuenta cambiaria del crédito inicial",
+   "fieldtype": "Link",
+   "options": "HS Account",
+   "read_only": 1
+  },
+  {
    "fieldname": "journal",
-   "label": "Journal",
+   "label": "Asiento contable",
    "fieldtype": "Link",
    "options": "HS Journal"
   }
@@ -84,10 +130,17 @@
   "organization",
   "receivable",
   "payment",
+  "opening_credit",
+  "opening_guarantee",
   "kind",
+  "reverses",
   "business_date",
   "currency",
   "amount",
+  "settlement_currency",
+  "settled_amount",
+  "opening_credit_base_amount",
+  "opening_credit_exchange_account",
   "journal"
  ],
  "permissions": [

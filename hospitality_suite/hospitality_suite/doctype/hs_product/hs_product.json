@@ -23,26 +23,26 @@
   },
   {
    "fieldname": "organization",
-   "label": "Organization",
+   "label": "Organización",
    "fieldtype": "Link",
    "options": "HS Organization",
    "reqd": 1
   },
   {
    "fieldname": "product_code",
-   "label": "Product code",
+   "label": "Código de producto",
    "fieldtype": "Data",
    "reqd": 1
   },
   {
    "fieldname": "product_name",
-   "label": "Product name",
+   "label": "Nombre de producto",
    "fieldtype": "Data",
    "reqd": 1
   },
   {
    "fieldname": "product_type",
-   "label": "Product type",
+   "label": "Tipo de producto",
    "fieldtype": "Select",
    "options": "Service\nStock\nAsset",
    "reqd": 1,
@@ -62,13 +62,19 @@
   },
   {
    "fieldname": "inventory_account",
-   "label": "Inventory account",
+   "label": "Cuenta de inventario",
    "fieldtype": "Link",
    "options": "HS Account"
   },
   {
+   "fieldname": "tax_profile",
+   "label": "Perfil fiscal",
+   "fieldtype": "Link",
+   "options": "HS PMS Tax Profile"
+  },
+  {
    "fieldname": "sales_rate",
-   "label": "Sales rate",
+   "label": "Precio de venta",
    "fieldtype": "Currency",
    "default": 0
   },
@@ -89,6 +95,7 @@
   "income_account",
   "expense_account",
   "inventory_account",
+  "tax_profile",
   "sales_rate",
   "active"
  ],

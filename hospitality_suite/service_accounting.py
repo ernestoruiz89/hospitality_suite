@@ -29,6 +29,9 @@ def validate_configuration(prop):
 
 def configuration(property_name):
     prop=require(property_name,'setup')
+    from hospitality_suite.standalone_accounting import provider
+    if provider() != 'erpnext':
+        frappe.throw(frappe._('La contabilidad de servicios ERPNext requiere el modo ERPNext'))
     return dict(modified=str(prop.modified),company=prop.company,
         defaults={field:prop.get(field) for field in FIELDS},
         services=[dict(item=row.item,item_name=frappe.db.get_value('Item',row.item,'item_name'),**{field:row.get(field) for field in FIELDS}) for row in prop.get('service_accounts') or []])

@@ -1,6 +1,7 @@
 """Agency commission snapshots and experience fulfillment use native ledgers."""
 from datetime import timedelta
 import uuid
+from unittest.mock import patch
 
 import frappe
 from frappe.tests import IntegrationTestCase
@@ -169,6 +170,12 @@ class TestTravelExperiences(IntegrationTestCase):
         invoice.cancel()
         self.assertFalse(frappe.db.get_value("HS Booking", booking_name, "agent_commission_invoice"))
         self.assertEqual(api.preview(self.prop.name, dict(booking=booking_name), "agent_commission")["amount"], q["amount"])
+        # A commission posted in PMS before ERPNext activation cannot be accrued again.
+        legacy_booking = frappe.get_doc("HS Booking", booking_name)
+        legacy_booking.pms_agent_commission = "legacy-pms-commission"
+        with patch("hospitality_suite.travel_experiences.document", return_value=legacy_booking):
+            with self.assertRaises(frappe.ValidationError):
+                api.preview(self.prop.name, dict(booking=booking_name), "agent_commission")
 
     def test_draft_keeps_agent_and_experience_until_confirmation(self):
         values=self.booking_values()

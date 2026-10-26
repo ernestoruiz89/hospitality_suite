@@ -156,7 +156,7 @@ class TestFinance(IntegrationTestCase):
         invoice=frappe.get_doc(dict(doctype="Sales Invoice",company=self.prop.company,customer=self.guest.customer,currency=self.prop.currency,
                                    debit_to=self.prop.receivable_account,cost_center=self.prop.cost_center,hs_property=self.prop.name,
                                    hs_stay=self.stay["stay"],hs_folio=self.stay["folio"],update_stock=0,
-                                   items=[dict(item_code=source.item,qty=source.quantity,rate=source.rate,cost_center=self.prop.cost_center,hs_charge=source.name)]))
+                                   items=[dict(item_code=source.item,qty=source.quantity,rate=source.rate,cost_center=self.prop.cost_center,warehouse=self.prop.warehouse,hs_charge=source.name)]))
         invoice.insert().submit()  # Deliberately bypasses PMS posting helper.
         source.reload()
         self.assertEqual(source.sales_invoice,invoice.name)
@@ -194,7 +194,7 @@ class TestFinance(IntegrationTestCase):
                                   debit_to=self.prop.receivable_account,cost_center=self.prop.cost_center,hs_property=self.prop.name,
                                   hs_stay=self.stay["stay"],hs_folio=self.stay["folio"],update_stock=0,
                                   items=[dict(item_code=source.item,qty=source.quantity,rate=rate,price_list_rate=source.rate,
-                                              cost_center=self.prop.cost_center,hs_charge=source.name,hs_charge_sources=frappe.as_json(sources))]))
+                                              cost_center=self.prop.cost_center,warehouse=self.prop.warehouse,hs_charge=source.name,hs_charge_sources=frappe.as_json(sources))]))
 
     def test_external_invoice_requires_all_adjustments_and_syncs_every_source(self):
         source=frappe.get_doc("HS Charge",{"stay":self.stay["stay"],"status":"Pending"})

@@ -38,8 +38,13 @@
   {
    "fieldname": "item",
    "label": "Artículo",
-   "fieldtype": "Data",
-   "reqd": 1
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "pms_product",
+   "label": "Producto PMS de la experiencia",
+   "fieldtype": "Link",
+   "options": "HS Product"
   },
   {
    "fieldname": "currency",
@@ -58,7 +63,7 @@
   },
   {
    "fieldname": "express_rate",
-   "label": "Express rate",
+   "label": "Tarifa exprés",
    "fieldtype": "Currency",
    "default": 0,
    "options": "currency"
@@ -76,6 +81,7 @@
   "garment",
   "service_type",
   "item",
+  "pms_product",
   "currency",
   "rate",
   "express_rate",

@@ -1,0 +1,224 @@
+{
+ "doctype": "DocType",
+ "name": "HS Historical Fiscal Document",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "hash",
+ "naming_rule": "Random",
+ "fields": [
+  {
+   "fieldname": "company",
+   "label": "Compañía",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "property",
+   "label": "Establecimiento",
+   "fieldtype": "Link",
+   "options": "HS Property",
+   "reqd": 1
+  },
+  {
+   "fieldname": "organization",
+   "label": "Organización",
+   "fieldtype": "Link",
+   "options": "HS Organization",
+   "reqd": 1
+  },
+  {
+   "fieldname": "source_key",
+   "label": "Clave de origen",
+   "fieldtype": "Data",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "source_site",
+   "label": "Sitio de origen",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "source_company",
+   "label": "Compañía de origen",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "source_doctype",
+   "label": "Tipo de documento de origen",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "source_name",
+   "label": "Documento de origen",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "document_type",
+   "label": "Tipo de documento",
+   "fieldtype": "Select",
+   "options": "Invoice\nCredit Note",
+   "reqd": 1,
+   "default": "Invoice"
+  },
+  {
+   "fieldname": "document_number",
+   "label": "Número de documento",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "posting_date",
+   "label": "Fecha de contabilización",
+   "fieldtype": "Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "buyer_name",
+   "label": "Nombre del comprador",
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "currency",
+   "label": "Moneda",
+   "fieldtype": "Link",
+   "options": "Currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "total_amount",
+   "label": "Importe total",
+   "fieldtype": "Currency",
+   "default": 0,
+   "options": "currency"
+  },
+  {
+   "fieldname": "source_invoice",
+   "label": "Factura de origen",
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "status",
+   "label": "Estado",
+   "fieldtype": "Select",
+   "options": "Posted\nCancelled",
+   "reqd": 1,
+   "default": "Posted"
+  },
+  {
+   "fieldname": "snapshot_sha256",
+   "label": "SHA-256 del snapshot",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "pdf_sha256",
+   "label": "SHA-256 del PDF",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "pdf_file",
+   "label": "Archivo PDF",
+   "fieldtype": "Attach",
+   "read_only": 1
+  },
+  {
+   "fieldname": "package_sha256",
+   "label": "SHA-256 del paquete",
+   "fieldtype": "Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "archived_at",
+   "label": "Archivado el",
+   "fieldtype": "Datetime",
+   "reqd": 1
+  }
+ ],
+ "field_order": [
+  "company",
+  "property",
+  "organization",
+  "source_key",
+  "source_site",
+  "source_company",
+  "source_doctype",
+  "source_name",
+  "document_type",
+  "document_number",
+  "posting_date",
+  "buyer_name",
+  "currency",
+  "total_amount",
+  "source_invoice",
+  "status",
+  "snapshot_sha256",
+  "pdf_sha256",
+  "pdf_file",
+  "package_sha256",
+  "archived_at"
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "HS Administrator",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1
+  },
+  {
+   "role": "HS Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1
+  },
+  {
+   "role": "HS Supervisor",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1
+  },
+  {
+   "role": "HS Cashier",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1
+  },
+  {
+   "role": "HS Accountant",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1
+  },
+  {
+   "role": "HS Auditor",
+   "read": 1,
+   "report": 1,
+   "export": 0,
+   "print": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0
+}

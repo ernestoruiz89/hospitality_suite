@@ -59,6 +59,14 @@
    "default": 0
   },
   {
+   "fieldname": "linen_direction",
+   "label": "Dirección de ropa de cama",
+   "fieldtype": "Select",
+   "options": "Send\nReceive\nLoss",
+   "reqd": 1,
+   "default": "Send"
+  },
+  {
    "fieldname": "status",
    "label": "Estado",
    "fieldtype": "Select",
@@ -97,6 +105,7 @@
   "evidence",
   "item",
   "quantity",
+  "linen_direction",
   "status",
   "stock_entry",
   "resolution",

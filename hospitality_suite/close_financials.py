@@ -9,7 +9,7 @@ from hospitality_suite.pricing import decimal,money,currency_precision
 from hospitality_suite.service import current_all
 
 
-METRICS=("production","invoices_net","invoices_tax","invoices_total","credit_notes_total","rounding_adjustment",
+METRICS=("production","cutover_opening_receivables","invoices_net","invoices_tax","invoices_total","credit_notes_total","rounding_adjustment",
          "payable_billed","payments","advances","guarantees","refunds","guarantee_refunds","guarantees_applied","pos_collections","pos_refunds",
          "net_customer_receipts","pending_charges","scheduled_charges","receivables","customer_credits","unallocated_advances","guarantees_held",
          "petty_initial","petty_replenishment","petty_expenses","petty_overage","petty_shortage",
@@ -18,6 +18,7 @@ METRICS=("production","invoices_net","invoices_tax","invoices_total","credit_not
 
 GROUPS=(
     ("Producción operativa",(("production","Importe de cargos y ventas registrados"),)),
+    ("Apertura contable del corte",(("cutover_opening_receivables","Cartera PMS trasladada, separada de ventas"),)),
     ("Facturación por fecha contable",(("invoices_net","Neto sin impuestos"),("invoices_tax","Impuestos"),("invoices_total","Total con impuestos"),
         ("credit_notes_total","Notas de crédito, ya restadas del total"),("rounding_adjustment","Ajuste de redondeo"),("payable_billed","Total exigible con redondeo"))),
     ("Movimientos de clientes por fecha operativa",(("payments","Cobros de facturas"),("advances","Anticipos recibidos"),("guarantees","Garantías recibidas"),
@@ -42,8 +43,10 @@ def display_groups():
 def snapshot(prop,operational):
     day=getdate(prop.business_date)
     totals=defaultdict(lambda:{key:decimal(0) for key in METRICS})
-    sources=dict(invoices=[],movements=[],native_pos=[],pending_charges=[],scheduled_charges=[],receivables=[],unallocated_advances=[],guarantees=[],
+    sources=dict(invoices=[],cutover_opening_invoices=[],movements=[],native_pos=[],pending_charges=[],scheduled_charges=[],receivables=[],unallocated_advances=[],guarantees=[],
                  petty_expenses=[],petty_variances=[],treasury_movements=[],unattributed_movements=[])
+    from hospitality_suite.reconciliation import cutover_history, historical_pms_payment
+    cutover_recorded, opening_vouchers = cutover_history(prop)
     for currency,amount in operational.get("production_by_currency",{}).items():
         totals[currency]["production"]=decimal(amount)
     invoices=current_all("Sales Invoice",filters={"hs_property":prop.name,"company":prop.company,"docstatus":1},
@@ -51,14 +54,18 @@ def snapshot(prop,operational):
     for row in invoices:
         current=totals[row.currency]
         if getdate(row.posting_date)==day:
-            current["invoices_net"]+=decimal(row.net_total)
-            current["invoices_tax"]+=decimal(row.total_taxes_and_charges)
-            current["invoices_total"]+=decimal(row.grand_total)
-            current["rounding_adjustment"]+=decimal(row.rounding_adjustment)
-            current["payable_billed"]+=decimal(row.grand_total if row.disable_rounded_total or row.rounded_total is None else row.rounded_total)
-            if row.is_return:
-                current["credit_notes_total"]-=decimal(row.grand_total)
-            sources["invoices"].append(dict(row))
+            if ("Sales Invoice", row.name) in opening_vouchers:
+                current["cutover_opening_receivables"]+=decimal(row.grand_total)
+                sources["cutover_opening_invoices"].append(dict(row))
+            else:
+                current["invoices_net"]+=decimal(row.net_total)
+                current["invoices_tax"]+=decimal(row.total_taxes_and_charges)
+                current["invoices_total"]+=decimal(row.grand_total)
+                current["rounding_adjustment"]+=decimal(row.rounding_adjustment)
+                current["payable_billed"]+=decimal(row.grand_total if row.disable_rounded_total or row.rounded_total is None else row.rounded_total)
+                if row.is_return:
+                    current["credit_notes_total"]-=decimal(row.grand_total)
+                sources["invoices"].append(dict(row))
         outstanding=decimal(row.outstanding_amount)
         if outstanding:
             # Native outstanding_amount is in receivable-account currency,
@@ -94,11 +101,10 @@ def snapshot(prop,operational):
         sources['scheduled_charges'].append(dict(row))
     kinds={"Payment":"payments","Advance":"advances","Guarantee":"guarantees","Refund":"refunds","Guarantee Refund":"guarantee_refunds","Guarantee Applied":"guarantees_applied"}
     movements=current_all("HS Payment",filters={"property":prop.name,"status":"Posted"},
-                           fields=["name","kind","currency","amount","business_date","business_date_source","payment_entry","journal_entry","source_payment"])
-    used=defaultdict(lambda:decimal(0))
+                           fields=["name","property","kind","currency","amount","business_date","business_date_source","payment_entry","journal_entry","pms_journal","source_payment"])
     for row in movements:
-        if row.source_payment and row.kind in ("Guarantee Refund","Guarantee Applied"):
-            used[row.source_payment]+=decimal(row.amount)
+        if historical_pms_payment(prop, row, opening_vouchers, cutover_recorded):
+            continue
         if not row.business_date:
             sources["unattributed_movements"].append(dict(row))
         elif getdate(row.business_date)==day and row.kind in kinds:
@@ -106,7 +112,8 @@ def snapshot(prop,operational):
             sources["movements"].append(dict(row))
     for row in movements:
         if row.kind=="Guarantee":
-            held=max(decimal(0),decimal(row.amount)-used[row.name])
+            from hospitality_suite.accounting import guarantee_balance
+            held=guarantee_balance(prop,frappe.get_doc("HS Payment",row.name)).nominal
             if held:
                 totals[row.currency]["guarantees_held"]+=held
                 sources["guarantees"].append(dict(source=row.name,currency=row.currency,available=str(held),journal_entry=row.journal_entry))

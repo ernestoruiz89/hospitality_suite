@@ -7,7 +7,16 @@ export default defineConfig(({ command }) => ({
   base: command === "build" ? "/assets/hospitality_suite/frontend/" : "/",
   plugins: [react(), tailwindcss()],
   resolve: { alias: { "@": path.resolve(__dirname, "./src") } },
-  build: { outDir: "../hospitality_suite/public/frontend", emptyOutDir: true },
+  build: {
+    outDir: "../hospitality_suite/public/frontend",
+    emptyOutDir: true,
+    rollupOptions: { input: {
+      index: path.resolve(__dirname, "index.html"),
+      portal: path.resolve(__dirname, "portal.html"),
+      confirmation: path.resolve(__dirname, "confirmation.html"),
+      guest: path.resolve(__dirname, "guest.html"),
+    } },
+  },
   server: {
     port: 5173,
     proxy: {

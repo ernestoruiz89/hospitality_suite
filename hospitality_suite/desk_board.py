@@ -19,6 +19,34 @@ def authorize(property_name):
     return prop
 
 
+def home_summary(property_name):
+    """Count today's operational queues without loading guests or folio balances."""
+    prop = authorize(property_name)
+    day = now_local(prop).date()
+    end = to_site(datetime.combine(day + timedelta(days=1), time()), prop)
+    now = now_datetime()
+    arrivals = frappe.db.sql("""
+        SELECT COUNT(*) AS total
+        FROM `tabHS Allocation` allocation
+        JOIN `tabHS Booking` booking ON booking.name = allocation.booking
+            AND booking.property = allocation.property AND booking.company = allocation.company
+        WHERE allocation.property = %(property)s AND allocation.company = %(company)s
+            AND allocation.kind = 'Reservation' AND allocation.status = 'Active'
+            AND allocation.starts_at < %(end)s
+            AND (booking.status IN ('Confirmed', 'Checked In')
+                OR (booking.status = 'Hold' AND booking.hold_until > %(now)s))
+    """, dict(property=prop.name, company=prop.company, end=end, now=now), as_dict=True)[0].total
+    scope = dict(property=prop.name, company=prop.company)
+    counts = dict(
+        arrivals=int(arrivals),
+        departures=frappe.db.count('HS Stay', {**scope, 'status': 'Active', 'ends_at': ['<', end]}),
+        hosted=frappe.db.count('HS Stay', {**scope, 'status': 'Active'}),
+        accounts=frappe.db.count('HS Folio', {**scope, 'status': 'Open'}),
+    )
+    return dict(property=prop.name, date=str(day), time_zone=prop.time_zone,
+                counts=counts, server_time=str(now))
+
+
 def pending_arrivals(prop):
     now=now_datetime()
     bookings={r.name:r for r in permitted_all('HS Booking',filters={'property':prop.name,'status':['in',['Confirmed','Hold','Checked In']]},

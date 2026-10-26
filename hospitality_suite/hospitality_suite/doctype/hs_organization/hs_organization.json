@@ -10,25 +10,25 @@
  "fields": [
   {
    "fieldname": "legal_name",
-   "label": "Legal name",
+   "label": "Razón social",
    "fieldtype": "Data",
    "reqd": 1
   },
   {
    "fieldname": "tax_id",
-   "label": "Tax id",
+   "label": "Identificación fiscal",
    "fieldtype": "Data"
   },
   {
    "fieldname": "base_currency",
-   "label": "Base currency",
+   "label": "Moneda base",
    "fieldtype": "Link",
    "options": "Currency",
    "reqd": 1
   },
   {
    "fieldname": "tax_regime",
-   "label": "Tax regime",
+   "label": "Régimen fiscal",
    "fieldtype": "Select",
    "options": "General\nCuota Fija",
    "reqd": 1,

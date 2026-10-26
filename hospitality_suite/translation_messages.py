@@ -221,7 +221,7 @@ def metadata_messages():
         frappe._("Compensación en moneda base"),
         frappe._("Compensación histórica"),
         frappe._("Completada"),
-        frappe._("Complete la configuración contable y confirme la política tributaria antes de operar:"),
+        frappe._("Complete la configuración contable antes de operar:"),
         frappe._("Complete la identificación requerida del acompañante"),
         frappe._("Complete la lista de revisión antes de marcar limpia"),
         frappe._("Complete las cuentas de comisión, retención y liquidación que correspondan"),

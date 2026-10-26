@@ -15,6 +15,18 @@ def hs_print_text(value):
     return escape(unescape(str(value if value is not None else "")))
 
 
+def hs_booking_customer(doc):
+    """Resolve both historical PMS parties and ERPNext customers on a booking."""
+    require(doc.property)
+    if not doc.customer:
+        return hs_print_text(frappe._("Por definir"))
+    label = frappe.db.get_value("HS Party", {"name": doc.customer,
+        "property": doc.property}, "party_name")
+    if not label and frappe.db.table_exists("Customer"):
+        label = frappe.db.get_value("Customer", doc.customer, "customer_name")
+    return hs_print_text(label or frappe._("Cliente registrado"))
+
+
 def hs_close_groups():
     from hospitality_suite.close_financials import display_groups
     return display_groups()

@@ -44,7 +44,11 @@ class TestAuditHistory(IntegrationTestCase):
     def fingerprints(self):
         from hospitality_suite.schema import SCHEMA
         names=set(SCHEMA)|{'Version','Sales Invoice','Payment Entry','Journal Entry','GL Entry','Payment Ledger Entry'}
-        return {dt:hashlib.sha256(canonical(frappe.db.sql('SELECT * FROM `tab'+dt+'` ORDER BY name',as_dict=True)).encode()).hexdigest() for dt in names}
+        result={}
+        for dt in names:
+            rows=frappe.db.get_singles_dict(dt) if frappe.get_meta(dt).issingle else frappe.db.sql('SELECT * FROM `tab'+dt+'` ORDER BY name',as_dict=True)
+            result[dt]=hashlib.sha256(canonical(rows).encode()).hexdigest()
+        return result
 
     def test_native_rate_update_requires_reason_and_keeps_values_without_copying_identity(self):
         rate=frappe.get_doc('HS Rate',{'property':self.prop.name,'mode':'Hotel'})
@@ -144,9 +148,10 @@ class TestAuditHistory(IntegrationTestCase):
         event,value=self.event('Reopen day',result['close']);self.assertEqual(value['before']['status'],'Closed');self.assertEqual(value['after']['status'],'Reopened')
         self.assertEqual(str(frappe.db.get_value('HS Property',self.prop.name,'business_date')),day)
         updated=self.call('daily_close',dict(confirm=False,reason='Nota de la nueva ejecución'))
-        self.call('daily_close',dict(confirm=True,reason='Nota de la nueva ejecución',review_acceptance=updated['review_acceptance']))
-        self.assertEqual(frappe.parse_json(frappe.db.get_value('HS Daily Close',result['close'],'summary'))['presentation']['reason'],'Nota de la nueva ejecución')
-        self.assertNotEqual(frappe.db.get_value('HS Daily Close',result['close'],'summary'),summary)
+        renewed=self.call('daily_close',dict(confirm=True,reason='Nota de la nueva ejecución',review_acceptance=updated['review_acceptance']))
+        self.assertNotEqual(renewed['close'],result['close'])
+        self.assertEqual(frappe.db.get_value('HS Daily Close',result['close'],'summary'),summary)
+        self.assertEqual(frappe.parse_json(frappe.db.get_value('HS Daily Close',renewed['close'],'summary'))['presentation']['reason'],'Nota de la nueva ejecución')
         old=api.audit_detail(self.prop.name,closed_event)
         self.assertEqual(canonical(old['close_snapshot']),canonical(frappe.parse_json(summary)))
         historic=frappe._dict(doctype='HS Daily Close',name=result['close'],property=self.prop.name,status='Closed',business_date=day,
@@ -175,6 +180,7 @@ class TestAuditHistory(IntegrationTestCase):
             event=insert('HS Audit Event',self.prop,action='Legacy record',source_doctype='HS Property',source_name=self.prop.name,
                 actor='Administrator',occurred_at=now_datetime(),business_date=self.prop.business_date,reason='Registro histórico',details='{"identity_number":"NEVER-ECHO-THIS","provider_secret":"NEVER-ECHO-THIS"}')
         before=self.fingerprints();detail=api.audit_detail(self.prop.name,event.name)
+        self.assertEqual((detail['source_doctype'],detail['source_name']),('HS Property',self.prop.name))
         self.assertFalse(detail['historical_values_available']);self.assertNotIn('NEVER-ECHO-THIS',json.dumps(detail));self.assertEqual(self.fingerprints(),before)
         other=frappe.get_doc('HS Property',{'property_name':'Luna Demo · Por tiempo'})
         with self.assertRaises(frappe.PermissionError):api.audit_detail(other.name,event.name)

@@ -120,7 +120,7 @@ class TestPaymentPolicies(IntegrationTestCase):
         invoice=frappe.get_doc(dict(doctype="Sales Invoice",company=self.prop.company,customer=self.guest.customer,currency=self.prop.currency,
                     debit_to=self.prop.receivable_account,cost_center=self.prop.cost_center,hs_property=self.prop.name,
                     hs_stay=self.stay["stay"],hs_folio=self.stay["folio"],update_stock=0,
-                    items=[dict(item_code=charge.item,qty=charge.quantity,rate=charge.rate,price_list_rate=charge.rate,cost_center=self.prop.cost_center,hs_charge=charge.name)])).insert()
+                    items=[dict(item_code=charge.item,qty=charge.quantity,rate=charge.rate,price_list_rate=charge.rate,cost_center=self.prop.cost_center,warehouse=self.prop.warehouse,hs_charge=charge.name)])).insert()
         with self.assertRaisesRegex(frappe.ValidationError,"Habilite y valide"):
             invoice.submit()
         self.assertEqual(frappe.db.count("GL Entry"),before)

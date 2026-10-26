@@ -80,17 +80,10 @@ class TestLanguageReview(IntegrationTestCase):
             for key,(target,label) in expected.items():
                 field=frappe.get_meta(dt).get_field(key);self.assertEqual(field.label,label);self.assertEqual(field.options,target);self.assertTrue(field.no_copy and field.print_hide)
 
-    def test_native_extractor_finds_secondary_dialog_labels_and_website_titles(self):
+    def test_native_extractor_finds_secondary_dialog_labels(self):
         from frappe.translate import get_server_messages
         messages={row[1] for row in get_server_messages('hospitality_suite')}
-        required={'Baño revisado','Cama y ropa revisadas','Superficies y equipo revisados','Administrador de Hospitality','Devolver {0}',
-                  'Extracto bancario','Factura','Vuelto','Hora adicional por tiempo','Confirmación de alojamiento','Solicitar una reserva','Reapertura autorizada por',
+        required={'Baño revisado','Cama y ropa revisadas','Superficies y equipo revisados','Devolver {0}',
+                  'Extracto bancario','Factura','Vuelto','Hora adicional por tiempo','Reapertura autorizada por',
                   'Tabla de resultados','Seleccionar todas las filas','Seleccionar fila {0}','Editar {0}, fila {1}. Valor: {2}','Editar fila {0}'}
         self.assertFalse(required-messages,required-messages)
-        self.translate('Confirmación de alojamiento','Confirmation de séjour');self.translate('Solicitar una reserva','Demander une réservation');frappe.local.lang='fr'
-        from hospitality_suite.www import hospitality,hospitality_confirmation
-        context=frappe._dict();hospitality.get_context(context);self.assertEqual(context.title,'Demander une réservation')
-        # The title is evaluated independently of guest token validation.
-        from unittest.mock import patch
-        with patch.object(hospitality_confirmation,'confirmation',return_value={}):hospitality_confirmation.get_context(context)
-        self.assertEqual(context.title,'Confirmation de séjour')

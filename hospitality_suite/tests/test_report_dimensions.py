@@ -239,7 +239,7 @@ class TestReportDimensions(IntegrationTestCase):
         foreign=frappe.get_doc(dict(doctype="Sales Invoice",company=self.prop.company,hs_property=self.prop.name,
                                     customer=self.guest.customer,currency="USD",conversion_rate=37,debit_to=self.prop.receivable_account,
                                     cost_center=self.prop.cost_center,update_stock=0))
-        foreign.append("items",dict(item_code=self.prop.lodging_item,qty=1,rate=5,cost_center=self.prop.cost_center))
+        foreign.append("items",dict(item_code=self.prop.lodging_item,qty=1,rate=5,cost_center=self.prop.cost_center,warehouse=self.prop.warehouse))
         foreign.set_missing_values()
         foreign.insert()
         foreign.submit()

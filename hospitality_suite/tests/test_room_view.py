@@ -1,6 +1,7 @@
 """Operational room board, scoped detail, interval agenda and use measures."""
 
 from datetime import datetime, time, timedelta
+from decimal import Decimal
 import uuid
 
 import frappe
@@ -42,7 +43,22 @@ class TestRoomView(IntegrationTestCase):
         self.assertEqual(row["stay"], entered["stay"])
         detail = api.room_snapshot(self.prop.name, self.rooms[0].name)
         self.assertEqual(detail["current"]["name"], entered["stay"])
+        self.assertEqual(detail["current"]["service_stay"], entered["stay"])
         self.assertIn("account_balances", detail["current"])
+        self.assertTrue(detail["current"]["accounts"])
+        self.assertTrue(all(row["name"] and "pending" in row and "outstanding" in row
+                            for row in detail["current"]["accounts"]))
+        self.assertTrue(all(row["folio"] in {account["name"] for account in detail["current"]["accounts"]}
+                            and row["currency"] == self.prop.currency
+                            for row in detail["current"]["recent_charges"]))
+        services = api.erp_service_snapshot(self.prop.name, entered["stay"])
+        self.assertEqual([row["name"] for row in services["stays"]], [entered["stay"]])
+        self.assertIn(entered["folio"],
+                      [row["name"] for row in services["stays"][0]["folios"]])
+        other_property = frappe.db.get_value("HS Property",
+                                             {"name": ["!=", self.prop.name]}, "name")
+        with self.assertRaises(frappe.PermissionError):
+            api.erp_service_snapshot(other_property, entered["stay"])
         self.assertEqual(detail["room"]["category"], self.rooms[0].category)
         frappe.set_user("housekeeping@hospitality.example.invalid")
         clean_row = next(r for r in api.room_board_snapshot(self.prop.name)["rooms"]
@@ -52,6 +68,9 @@ class TestRoomView(IntegrationTestCase):
         self.assertIsNone(clean_row["stay"])
         clean_detail = api.room_snapshot(self.prop.name, self.rooms[0].name)
         self.assertNotIn("account_balances", clean_detail["current"])
+        self.assertNotIn("accounts", clean_detail["current"])
+        self.assertNotIn("recent_charges", clean_detail["current"])
+        self.assertIsNone(clean_detail["current"]["service_stay"])
         other = frappe.db.get_value("HS Room", {"property":["!=",self.prop.name]}, "name")
         with self.assertRaises(frappe.PermissionError):
             api.room_snapshot(self.prop.name, other)
@@ -80,13 +99,62 @@ class TestRoomView(IntegrationTestCase):
                 detail = api.room_snapshot(self.prop.name, self.rooms[0].name)
                 self.assertEqual(bool(detail["room"]["guest_label"]), people)
                 self.assertEqual("account_balances" in detail["current"], account)
+                self.assertEqual("accounts" in detail["current"], account)
+                self.assertEqual("recent_charges" in detail["current"], account)
                 self.assertEqual(bool(detail["current"]["name"]), stay_link)
+                self.assertEqual(bool(detail["current"]["service_stay"]),
+                                 user not in ("auditor@hospitality.example.invalid",
+                                              "housekeeping@hospitality.example.invalid",
+                                              "maintenance@hospitality.example.invalid"))
         frappe.set_user("Administrator")
         frappe.db.set_value("HS Property", self.prop.name, "discreet_mode", 1)
         frappe.set_user("receptionist@hospitality.example.invalid")
         hidden = api.room_snapshot(self.prop.name, self.rooms[0].name)
         self.assertEqual(hidden["room"]["guest_label"], "Huésped registrado")
         self.assertEqual(hidden["current"]["guest_label"], "Huésped registrado")
+
+    def test_delivered_consumption_updates_room_account(self):
+        start = now_datetime().replace(microsecond=0)
+        data = dict(starts_at=str(start), ends_at=str(start + timedelta(days=1)),
+                    guest=self.guest.name, customer=self.guest.customer,
+                    rooms=[dict(room=self.rooms[0].name,
+                                category=self.rooms[0].category, people=1)])
+        data["acceptance"] = api.preview(self.prop.name, data)["acceptance"]
+        entered = self.command("walk_in", data)
+        before = api.room_snapshot(self.prop.name, self.rooms[0].name)
+        account = next(row for row in before["current"]["accounts"]
+                       if row["name"] == entered["folio"])
+        requested = self.command("request_service", dict(
+            stay=entered["stay"], folio=entered["folio"],
+            item="HS-DEMO-WATER", quantity=1, included=False))
+        service = frappe.get_doc("HS Service Request", requested["service"])
+        delivery = dict(service=service.name, modified=str(service.modified),
+                        status="Delivered")
+        delivery_key = uuid.uuid4().hex
+        delivered = api.execute(self.prop.name, "update_service", delivery_key, delivery)
+        self.assertEqual(delivered["status"], "Delivered")
+        self.assertEqual(api.execute(self.prop.name, "update_service", delivery_key,
+                                     delivery), delivered)
+        charge = frappe.db.get_value("HS Service Request", service.name, "charge")
+        self.assertTrue(charge)
+        delivery_snapshot = api.erp_service_snapshot(self.prop.name, entered["stay"])
+        delivered_row = next(row for row in delivery_snapshot["requests"]
+                             if row["name"] == service.name)
+        self.assertEqual(delivered_row["status"], "Delivered")
+        self.assertEqual(delivered_row["charge"], charge)
+        self.assertEqual(frappe.db.count("HS Charge", {"stay": entered["stay"],
+                         "item": "HS-DEMO-WATER", "kind": "Service"}), 1)
+        after = api.room_snapshot(self.prop.name, self.rooms[0].name)
+        updated = next(row for row in after["current"]["accounts"]
+                       if row["name"] == entered["folio"])
+        self.assertEqual(Decimal(updated["pending"]) - Decimal(account["pending"]),
+                         Decimal(str(service.amount)))
+        visible_charge = next(row for row in after["current"]["recent_charges"]
+                              if row["name"] == charge)
+        self.assertEqual(visible_charge["folio"], entered["folio"])
+        self.assertEqual(visible_charge["status"], "Pending")
+        self.assertEqual(Decimal(str(visible_charge["amount"])),
+                         Decimal(str(service.amount)))
 
     def test_schedule_keeps_short_motel_block_across_midnight(self):
         self.prop = frappe.get_doc("HS Property", {"property_name":"Luna Demo · Por tiempo"})

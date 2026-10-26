@@ -1,0 +1,46 @@
+/* Module rail and contextual menu for the native Hospitality Desk Pages. */
+.hs-layout{grid-template-columns:262px minmax(0,1fr)}
+.hs-sidebar{display:flex;flex-direction:row;min-width:0;padding:0;background:#f8faf8;color:#1d4035}
+.hs-module-rail{width:84px;flex:none;display:flex;flex-direction:column;align-items:center;gap:22px;padding:18px 7px;background:#153d35;color:#fff}
+.hs-module-rail .hs-brand-mark{width:42px;height:42px;flex:none;margin:0;border-color:#88b19c}
+.hs-module-nav{display:flex;flex-direction:column;gap:5px;width:100%}
+.hs-module-button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;width:100%;min-height:62px;padding:7px 3px;border:0;border-radius:9px;background:transparent;color:#c7ded1;text-align:center;font-size:10px;font-weight:600;line-height:1.15;cursor:pointer}
+.hs-module-button .hs-menu-icon{width:24px;height:24px}
+.hs-module-button .hs-menu-icon svg{width:21px;height:21px}
+.hs-module-button:hover,.hs-module-button:focus-visible{background:#265748;color:#fff}
+.hs-module-button.is-selected{background:#e4eee5;color:#143d34}
+.hs-module-button span:last-child{overflow-wrap:normal}
+.hs-menu-panel{display:flex;flex:1;min-width:0;flex-direction:column;padding:22px 10px 16px;border-right:1px solid #dce7dd}
+.hs-menu-panel .hs-brand{display:block;margin:0 7px 23px}
+.hs-menu-panel .hs-brand strong{font-size:15px;color:#173d34;overflow-wrap:anywhere}
+.hs-menu-panel .hs-brand small{display:block;margin-top:3px;font-size:9px;color:#718b79}
+.hs-menu-head{margin:0 7px 13px}
+.hs-menu-head h2{margin:0 0 3px;color:#193c32;font-size:15px;font-weight:700}
+.hs-menu-head p{margin:0;color:#668073;font-size:10px;line-height:1.4}
+.hs-module-menu[hidden]{display:none}
+.hs-menu-panel .hs-module-menu nav{display:flex;flex-direction:column;gap:4px}
+.hs-menu-panel .hs-module-menu nav a{display:flex;align-items:center;gap:9px;min-height:42px;padding:8px 9px;border-radius:7px;color:#345b4c;font-size:12px;line-height:1.25;white-space:normal}
+.hs-menu-panel .hs-module-menu nav a:hover,.hs-menu-panel .hs-module-menu nav a:focus-visible{background:#e9f0ea;color:#174634}
+.hs-menu-panel .hs-module-menu nav a.is-active{background:#dcebe0;color:#123f31;font-weight:700}
+.hs-menu-panel .hs-module-menu nav a span:last-child{min-width:0;overflow-wrap:anywhere}
+.hs-menu-panel .hs-sidebar-foot{margin-top:auto;padding:24px 7px 0;color:#617e6d;font-size:10px}
+@media(max-width:1100px){.hs-layout{grid-template-columns:258px minmax(0,1fr)}.hs-module-rail{width:82px}.hs-menu-panel{padding-right:8px;padding-left:8px}}
+@media(max-width:760px){
+  .hs-layout{display:block}
+  .hs-sidebar{display:block;padding:0}
+  .hs-module-rail{width:100%;display:flex;flex-direction:row;gap:8px;padding:8px 12px}
+  .hs-module-rail .hs-brand-mark{width:34px;height:34px}
+  .hs-module-nav{display:flex;flex:1;min-width:0;flex-direction:row;gap:4px;overflow-x:auto;scrollbar-width:thin}
+  .hs-module-button{width:72px;min-width:72px;min-height:52px;flex:none;padding:4px 5px;font-size:9px}
+  .hs-module-button .hs-menu-icon{height:20px}
+  .hs-module-button .hs-menu-icon svg{width:18px;height:18px}
+  .hs-menu-panel{display:block;padding:9px 12px 12px;border-right:0;border-bottom:1px solid #dce7dd}
+  .hs-menu-panel .hs-brand{display:none}
+  .hs-menu-head{margin:0 0 6px}
+  .hs-menu-head h2{font-size:12px}
+  .hs-menu-head p{display:none}
+  .hs-menu-panel .hs-module-menu nav{display:flex;flex-direction:row;gap:5px;overflow-x:auto;scrollbar-width:thin}
+  .hs-menu-panel .hs-module-menu nav a{min-height:40px;flex:none;padding:7px 10px;font-size:11px;white-space:nowrap}
+  .hs-menu-panel .hs-module-menu nav a span:last-child{overflow-wrap:normal}
+  .hs-menu-panel .hs-sidebar-foot{display:none}
+}

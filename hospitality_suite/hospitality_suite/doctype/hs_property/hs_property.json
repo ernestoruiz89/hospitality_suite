@@ -163,6 +163,30 @@
    "fieldtype": "Data"
   },
   {
+   "fieldname": "pms_linen_operating_warehouse",
+   "label": "Almacén de ropa operativa PMS",
+   "fieldtype": "Link",
+   "options": "HS Warehouse"
+  },
+  {
+   "fieldname": "pms_linen_laundry_warehouse",
+   "label": "Almacén de lavandería PMS",
+   "fieldtype": "Link",
+   "options": "HS Warehouse"
+  },
+  {
+   "fieldname": "pms_linen_clearing_account",
+   "label": "Cuenta temporal de ropa PMS",
+   "fieldtype": "Link",
+   "options": "HS Account"
+  },
+  {
+   "fieldname": "pms_exchange_variance_account",
+   "label": "Diferencia cambiaria PMS",
+   "fieldtype": "Link",
+   "options": "HS Account"
+  },
+  {
    "fieldname": "income_account",
    "label": "Cuenta de ingresos del establecimiento",
    "fieldtype": "Data",
@@ -255,6 +279,18 @@
    "fieldname": "agent_commission_item",
    "label": "Artículo de comisión de agencias",
    "fieldtype": "Data"
+  },
+  {
+   "fieldname": "pms_commission_expense_account",
+   "label": "Gasto de comisiones PMS",
+   "fieldtype": "Link",
+   "options": "HS Account"
+  },
+  {
+   "fieldname": "pms_commission_payable_account",
+   "label": "Cuenta por pagar comisiones PMS",
+   "fieldtype": "Link",
+   "options": "HS Account"
   },
   {
    "fieldname": "tax_policy_confirmed",
@@ -372,14 +408,12 @@
   {
    "fieldname": "invoice_print_format",
    "label": "Formato de factura",
-   "fieldtype": "Link",
-   "options": "Print Format"
+   "fieldtype": "Data"
   },
   {
    "fieldname": "receipt_print_format",
    "label": "Formato de recibo",
-   "fieldtype": "Link",
-   "options": "Print Format"
+   "fieldtype": "Data"
   }
  ],
  "field_order": [
@@ -408,6 +442,10 @@
   "cost_center",
   "warehouse",
   "laundry_warehouse",
+  "pms_linen_operating_warehouse",
+  "pms_linen_laundry_warehouse",
+  "pms_linen_clearing_account",
+  "pms_exchange_variance_account",
   "income_account",
   "expense_account",
   "service_accounts",
@@ -424,6 +462,8 @@
   "tax_template",
   "price_list",
   "agent_commission_item",
+  "pms_commission_expense_account",
+  "pms_commission_payable_account",
   "tax_policy_confirmed",
   "brand_name",
   "retention_days",

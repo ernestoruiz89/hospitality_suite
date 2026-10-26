@@ -12,7 +12,7 @@ from frappe.rate_limiter import rate_limit
 
 from hospitality_suite import operations, availability
 from hospitality_suite.service import operation, canonical, insert, audit, current_all
-from hospitality_suite.security import document
+from hospitality_suite.security import document, require
 from hospitality_suite.inputs import object_payload
 from hospitality_suite.time import to_site, local
 
@@ -72,6 +72,42 @@ def catalog():
             prop["experiences"].append(exp)
         result.append(prop)
     return result
+
+
+def staff_queue(property_name, offset=0, page_length=25, search=""):
+    """A bounded reception queue, scoped before looking up guest contact data."""
+    prop = require(property_name, "reserve")
+    try:
+        offset, page_length = int(offset), int(page_length)
+    except (TypeError, ValueError):
+        frappe.throw(frappe._("Revise la paginación de solicitudes web"))
+    if offset < 0 or offset > 1000000 or not 1 <= page_length <= 50:
+        frappe.throw(frappe._("Revise la paginación de solicitudes web"))
+    if not isinstance(search, str) or len(search) > 100:
+        frappe.throw(frappe._("Revise la búsqueda de solicitudes web"))
+    where = "property=%s AND company=%s AND status IN ('Hold','Requested')"
+    values = [prop.name, prop.company]
+    if search.strip():
+        where += " AND (name LIKE %s OR full_name LIKE %s OR email LIKE %s)"
+        values.extend(["%" + search.strip() + "%"] * 3)
+    total = frappe.db.sql(
+        "SELECT COUNT(*) FROM `tabHS Portal Request` WHERE " + where,
+        values, as_list=True)[0][0]
+    rows = frappe.db.sql(
+        "SELECT name,full_name,email,phone,category,mode,rooms,people,"
+        "starts_at,ends_at,status,hold_until,request_until,amount,currency "
+        "FROM `tabHS Portal Request` WHERE " + where +
+        " ORDER BY creation ASC,name ASC LIMIT %s OFFSET %s",
+        [*values, page_length, offset], as_dict=True)
+    from hospitality_suite.time import local
+
+    for row in rows:
+        deadline = row.request_until if row.status == "Requested" else row.hold_until
+        row["expired"] = not deadline or deadline <= now_datetime()
+        for field in ("starts_at", "ends_at", "hold_until", "request_until"):
+            row[field] = local(row[field], prop).strftime("%Y-%m-%d %H:%M") if row[field] else None
+    return {"property": prop.name, "offset": offset, "page_length": page_length,
+        "total": int(total), "has_more": offset + len(rows) < total, "rows": rows}
 
 
 def request_values(data):
@@ -181,6 +217,8 @@ def confirmation(token):
         frappe.throw(frappe._("Confirmación inválida"),frappe.PermissionError)
     doc=frappe.get_doc(data["doctype"],data["name"])
     prop=enabled(doc.property)
+    if doc.company != prop.company:
+        frappe.throw(frappe._("Confirmación inválida"),frappe.PermissionError)
     status="Expired" if doc.status=="Requested" and doc.request_until<=now_datetime() else doc.status
     quoted=frappe.parse_json(doc.quote_snapshot or "{}")
     return dict(property_name=prop.property_name,status=status,starts_at=local(doc.starts_at,prop),ends_at=local(doc.ends_at,prop),
@@ -188,7 +226,131 @@ def confirmation(token):
                 request_until=local(doc.request_until,prop) if doc.get("request_until") else None,
                 currency=doc.currency,amount=doc.amount,time_zone=prop.time_zone,
                 experiences_total=quoted.get("experiences_total") or "0.00",
-                estimated_total=quoted.get("estimated_total") or doc.amount)
+                estimated_total=quoted.get("estimated_total") or doc.amount,
+                can_link_guest=data["doctype"]=="HS Booking" and bool(doc.guest)
+                and bool(frappe.db.get_value("HS Guest", {"name": doc.guest,
+                    "property": prop.name, "company": prop.company}, "email"))
+                and status in ("Confirmed", "Checked In", "Completed"))
+
+
+def _portal_identity():
+    user = frappe.session.user
+    if not user or user == "Guest":
+        frappe.throw(frappe._("Inicie sesión para consultar sus reservas"), frappe.PermissionError)
+    email = (frappe.db.get_value("User", user, "email") or "").strip().casefold()
+    if not email:
+        frappe.throw(frappe._("Su cuenta necesita un correo electrónico"), frappe.PermissionError)
+    return user, email
+
+
+@rate_limit(limit=5, seconds=3600)
+def request_guest_account(token):
+    """Offer a Website User only to the email on a signed confirmed booking."""
+    data = verify(token)
+    if data.get("doctype") != "HS Booking" or not data.get("name"):
+        frappe.throw(frappe._("Use el enlace de una reserva confirmada"), frappe.PermissionError)
+    booking = frappe.get_doc("HS Booking", data["name"])
+    prop = enabled(booking.property)
+    if booking.company != prop.company or booking.status not in ("Confirmed", "Checked In", "Completed") or not booking.guest:
+        frappe.throw(frappe._("La reserva no admite acceso al portal"), frappe.PermissionError)
+    guest = frappe.db.sql(
+        "SELECT name,full_name,email FROM `tabHS Guest` WHERE name=%s AND property=%s AND company=%s",
+        (booking.guest, prop.name, prop.company), as_dict=True)
+    if not guest or not guest[0].email:
+        frappe.throw(frappe._("Recepción debe registrar un correo para este huésped"))
+    from frappe.utils import escape_html, random_string, validate_email_address
+
+    email = guest[0].email.strip().lower()
+    validate_email_address(email, throw=True)
+    existing = frappe.db.sql("SELECT name FROM `tabUser` WHERE email=%s FOR UPDATE", (email,), as_dict=True)
+    if not existing:
+        account = frappe.get_doc({"doctype": "User", "email": email,
+            "first_name": escape_html((guest[0].full_name or "Huésped").strip()[:140]),
+            "enabled": 1, "user_type": "Website User", "send_welcome_email": 1,
+            "new_password": random_string(20)})
+        account.flags.ignore_permissions = True
+        account.flags.ignore_password_policy = True
+        account.insert()
+        if not account.flags.email_sent:
+            frappe.throw(frappe._("No se pudo enviar el acceso; recepción debe revisar el correo saliente"))
+    # Identical response for an existing account, including a disabled one.
+    return {"requested": True}
+
+
+@rate_limit(limit=10, seconds=60)
+def claim_booking(token):
+    """A signed booking link plus matching login email explicitly links one guest."""
+    user, email = _portal_identity()
+    data = verify(token)
+    if data.get("doctype") != "HS Booking" or not data.get("name"):
+        frappe.throw(frappe._("Use el enlace de una reserva confirmada"), frappe.PermissionError)
+    booking = frappe.get_doc("HS Booking", data["name"])
+    prop = enabled(booking.property)
+    if booking.company != prop.company or booking.status not in ("Confirmed", "Checked In", "Completed") or not booking.guest:
+        frappe.throw(frappe._("La reserva no admite acceso al portal"), frappe.PermissionError)
+    rows = frappe.db.sql(
+        "SELECT name,property,company,email,portal_user FROM `tabHS Guest` WHERE name=%s FOR UPDATE",
+        (booking.guest,), as_dict=True)
+    if not rows:
+        frappe.throw(frappe._("La reserva no tiene un huésped válido"), frappe.PermissionError)
+    guest = rows[0]
+    if guest.property != prop.name or guest.company != prop.company or (guest.email or "").strip().casefold() != email:
+        frappe.throw(frappe._("El correo de su cuenta no coincide con el de la reserva"), frappe.PermissionError)
+    if guest.portal_user != user:
+        frappe.db.set_value("HS Guest", guest.name, "portal_user", user)
+        from hospitality_suite.service import audit
+        with operation(prop):
+            audit(prop, "Claim guest portal", frappe._dict(doctype="HS Guest", name=guest.name),
+                  details={"user": user, "previous_user": guest.portal_user,
+                           "booking": booking.name})
+    return {"booking": booking.name, "linked": True}
+
+
+def guest_portal_records(offset=0, page_length=25):
+    """Read only stays, bookings and passes for explicitly claimed guest records."""
+    user, email = _portal_identity()
+    try:
+        offset, page_length = int(offset), int(page_length)
+    except (TypeError, ValueError):
+        frappe.throw(frappe._("Revise la paginación del portal"))
+    if offset < 0 or offset > 1000000 or not 1 <= page_length <= 50:
+        frappe.throw(frappe._("Revise la paginación del portal"))
+    rows = frappe.db.sql("""
+        SELECT records.kind,records.name,records.property_name,records.status,
+               records.starts_at,records.ends_at,records.currency,records.amount,records.time_zone
+        FROM (
+            SELECT 'Reserva' AS kind,b.name,p.property_name,b.status,b.starts_at,b.ends_at,
+                   b.currency,b.amount,p.time_zone
+              FROM `tabHS Booking` b
+              JOIN `tabHS Guest` g ON g.name=b.guest AND g.property=b.property AND g.company=b.company
+              JOIN `tabHS Property` p ON p.name=b.property AND p.company=b.company
+             WHERE g.portal_user=%s AND LOWER(TRIM(g.email))=%s AND p.portal_enabled=1
+               AND b.status IN ('Confirmed','Checked In','Completed','Cancelled','No Show')
+            UNION ALL
+            SELECT 'Estancia' AS kind,s.name,p.property_name,s.status,s.starts_at,s.ends_at,
+                   s.currency,s.amount,p.time_zone
+              FROM `tabHS Stay` s
+              JOIN `tabHS Guest` g ON g.name=s.guest AND g.property=s.property AND g.company=s.company
+              JOIN `tabHS Property` p ON p.name=s.property AND p.company=s.company
+             WHERE g.portal_user=%s AND LOWER(TRIM(g.email))=%s AND p.portal_enabled=1
+            UNION ALL
+            SELECT 'Day Pass' AS kind,d.name,p.property_name,d.status,d.starts_at,d.ends_at,
+                   p.currency,NULL AS amount,p.time_zone
+              FROM `tabHS Day Pass` d
+              JOIN `tabHS Guest` g ON g.name=d.guest AND g.property=d.property AND g.company=d.company
+              JOIN `tabHS Property` p ON p.name=d.property AND p.company=d.company
+             WHERE g.portal_user=%s AND LOWER(TRIM(g.email))=%s AND p.portal_enabled=1
+        ) records
+        ORDER BY records.starts_at DESC,records.kind,records.name
+        LIMIT %s OFFSET %s
+    """, [user, email] * 3 + [page_length + 1, offset], as_dict=True)
+    more = len(rows) > page_length
+    for row in rows[:page_length]:
+        zone = frappe._dict(time_zone=row.pop("time_zone"))
+        row.starts_at = local(row.starts_at, zone).strftime("%Y-%m-%d %H:%M")
+        row.ends_at = local(row.ends_at, zone).strftime("%Y-%m-%d %H:%M")
+    return {"user": user, "offset": offset, "page_length": page_length,
+            "has_more": more, "records": rows[:page_length]}
 
 
 def link(prop,data):

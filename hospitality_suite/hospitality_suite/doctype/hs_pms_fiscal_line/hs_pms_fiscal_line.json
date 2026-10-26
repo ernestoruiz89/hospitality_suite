@@ -1,0 +1,88 @@
+{
+ "doctype": "DocType",
+ "name": "HS PMS Fiscal Line",
+ "module": "Hospitality Suite",
+ "custom": 0,
+ "engine": "InnoDB",
+ "track_changes": 1,
+ "autoname": "hash",
+ "naming_rule": "Random",
+ "fields": [
+  {
+   "fieldname": "receivable",
+   "label": "Cuenta por cobrar",
+   "fieldtype": "Link",
+   "options": "HS PMS Receivable"
+  },
+  {
+   "fieldname": "product",
+   "label": "Producto",
+   "fieldtype": "Link",
+   "options": "HS Product"
+  },
+  {
+   "fieldname": "description",
+   "label": "Descripción",
+   "fieldtype": "Small Text"
+  },
+  {
+   "fieldname": "tax_treatment",
+   "label": "Tratamiento fiscal",
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "tax_rate",
+   "label": "Tasa de impuesto",
+   "fieldtype": "Float",
+   "default": 0,
+   "precision": 6
+  },
+  {
+   "fieldname": "income_account",
+   "label": "Cuenta de ingresos",
+   "fieldtype": "Link",
+   "options": "HS Account"
+  },
+  {
+   "fieldname": "tax_account",
+   "label": "Cuenta de impuesto",
+   "fieldtype": "Link",
+   "options": "HS Account"
+  },
+  {
+   "fieldname": "net_amount",
+   "label": "Importe neto",
+   "fieldtype": "Currency",
+   "default": 0
+  },
+  {
+   "fieldname": "tax_amount",
+   "label": "Importe del impuesto",
+   "fieldtype": "Currency",
+   "default": 0
+  },
+  {
+   "fieldname": "total_amount",
+   "label": "Importe total",
+   "fieldtype": "Currency",
+   "default": 0
+  }
+ ],
+ "field_order": [
+  "receivable",
+  "product",
+  "description",
+  "tax_treatment",
+  "tax_rate",
+  "income_account",
+  "tax_account",
+  "net_amount",
+  "tax_amount",
+  "total_amount"
+ ],
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "allow_rename": 0,
+ "istable": 1
+}
