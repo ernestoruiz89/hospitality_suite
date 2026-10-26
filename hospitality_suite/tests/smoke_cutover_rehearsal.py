@@ -2529,6 +2529,18 @@ def run(include_live_day_pass=False, prior_day_pass_credit=False,
                 experience_product.sales_rate = 8
                 experience_product.tax_profile = tax_profile.name
                 experience_product.save()
+                product.reload()
+                product.sales_rate = 15
+                product.income_account = income.name
+                product.expense_account = petty_expense_account.name
+                product.tax_profile = tax_profile.name
+                product.save()
+                frappe.get_doc({"doctype": "HS Exchange Rate",
+                    "company": source_company.name, "property": prop.name,
+                    "organization": org.name, "from_currency": "USD",
+                    "to_currency": "NIO", "rate": "36.5",
+                    "effective_at": str(today) + " 00:00:00",
+                    "source": "Ensayo de corte"}).insert(ignore_permissions=True)
             counter_shift = suite_api.execute(prop.name, "pms_open_shift",
                 "cutover-counter-shift-" + suffix,
                 {"opening_by_currency": {"NIO": "0"}})["shift"]
@@ -2551,6 +2563,15 @@ def run(include_live_day_pass=False, prior_day_pass_credit=False,
             second_sale = suite_api.execute(prop.name, "pms_direct_sale",
                 "cutover-counter-returned-sale-" + suffix,
                 {**counter_data, "acceptance": second_quote["acceptance"]})
+            stock_data = {**counter_data, "item": product.name,
+                "warehouse": source_warehouse.name,
+                "method": source_foreign_method.name, "shift": None,
+                "reference": "COUNTER-STOCK-" + suffix}
+            stock_quote = suite_api.preview(prop.name, stock_data,
+                "pms_direct_sale")
+            stock_sale = suite_api.execute(prop.name, "pms_direct_sale",
+                "cutover-counter-stock-sale-" + suffix,
+                {**stock_data, "acceptance": stock_quote["acceptance"]})
             counter_credit_series = suite_api.execute(prop.name,
                 "pms_fiscal_series", "cutover-counter-credit-series-" + suffix,
                 {"series_code": "COUNTER-CR-" + suffix + "-",
@@ -2602,9 +2623,23 @@ def run(include_live_day_pass=False, prior_day_pass_credit=False,
             counter_map["source_sha256"] = counter_source["source_sha256"]
             counter_review = pms_cutover_plan.review(counter_map)
             counter_links = counter_review["link_manifest"]
+            continuations = counter_review["plan"]["properties"][0][
+                "continuing_direct_sales"]
+            continuation_by_sale = {row["source"]: row for row in continuations}
+            if (set(continuation_by_sale) != {
+                    counter_sale["service"], stock_sale["service"]} or
+                    Decimal(continuation_by_sale[counter_sale["service"]][
+                        "total_amount"]) != 8 or
+                    continuation_by_sale[counter_sale["service"]]["stock"] is not None or
+                    Decimal(continuation_by_sale[stock_sale["service"]][
+                        "total_amount"]) != 15 or
+                    Decimal(continuation_by_sale[stock_sale["service"]]["stock"][
+                        "value"]) != 10):
+                frappe.throw("The delivered PMS counter sale has no frozen return proof")
             expected_counter_links = {
                 ("customer", party.name, customer.name),
-                ("item", experience_product.name, experience_item.name)}
+                ("item", experience_product.name, experience_item.name),
+                ("item", product.name, item.name)}
             found_counter_links = {(row["field"], row["source"], row["target"])
                 for row in counter_links["rewrites"]
                 if row["doctype"] == "HS Service Request"}
@@ -2628,6 +2663,8 @@ def run(include_live_day_pass=False, prior_day_pass_credit=False,
                     migration_reference="HS-COUNTER-SALE-" + suffix)
                 historical_sale = frappe.get_doc("HS Service Request",
                     counter_sale["service"])
+                continuation = frappe.parse_json(
+                    historical_sale.erp_cutover_snapshot)
                 archive = suite_api.pms_fiscal_archive(prop.name,
                     search=counter_sale["document_number"])
                 returned_sale = frappe.get_doc("HS Service Request",
@@ -2635,6 +2672,11 @@ def run(include_live_day_pass=False, prior_day_pass_credit=False,
                 credit_archive = suite_api.pms_fiscal_archive(prop.name,
                     search=counter_return["document_number"])
                 if (historical_sale.customer != customer.name or
+                        continuation.get("source") != historical_sale.name or
+                        continuation.get("source_invoice") !=
+                            counter_sale["invoice"] or
+                        sha256(historical_sale.erp_cutover_snapshot.encode()).hexdigest()
+                            != historical_sale.erp_cutover_sha256 or
                         historical_sale.item != experience_item.name or
                         historical_sale.pms_party != party.name or
                         historical_sale.pms_product != experience_product.name or
@@ -2649,6 +2691,7 @@ def run(include_live_day_pass=False, prior_day_pass_credit=False,
                         returned_sale.pms_product != experience_product.name or
                         returned_sale.pms_fiscal_invoice != second_sale["invoice"] or
                         returned_sale.pms_fiscal_credit != counter_return["credit_note"] or
+                        returned_sale.erp_cutover_snapshot or
                         returned_sale.sales_invoice or returned_sale.credit_note or
                         not any(row.name == counter_return["credit_note"] for row in
                             credit_archive["documents"])):
@@ -2660,6 +2703,143 @@ def run(include_live_day_pass=False, prior_day_pass_credit=False,
                         "HS PMS Fiscal Document", counter_sale["invoice"],
                         print_format="HS Documento fiscal PMS"):
                     frappe.throw("The PMS counter invoice no longer prints")
+                available_returns = suite_api.pms_direct_sale_history(
+                    prop.name, returnable=1)
+                if {row["name"] for row in available_returns["rows"]} != {
+                        counter_sale["service"], stock_sale["service"]}:
+                    frappe.throw("The migrated counter sales are not available to return")
+                historical_sale.reload()
+                refund_shift = suite_api.execute(prop.name, "open_shift",
+                    "historical-counter-refund-shift-" + suffix,
+                    {"currency": prop.currency, "opening_amount": "100"})
+                historical_request = {"service": historical_sale.name,
+                    "modified": str(historical_sale.modified),
+                    "method": cash_method.name,
+                    "shift": refund_shift["shift"],
+                    "reference": "HIST-COUNTER-RETURN-" + suffix,
+                    "reason": "Devolución de venta anterior al corte"}
+                historical_quote = suite_api.erp_historical_direct_sale_return_quote(
+                    prop.name, canonical(historical_request))
+                historical_key = "historical-counter-return-" + suffix
+                historical_return = suite_api.execute(prop.name,
+                    "erp_historical_direct_sale_return", historical_key,
+                    {**historical_request,
+                     "acceptance": historical_quote["acceptance"]})
+                if (suite_api.execute(prop.name,
+                        "erp_historical_direct_sale_return", historical_key,
+                        {**historical_request,
+                         "acceptance": historical_quote["acceptance"]}) !=
+                            historical_return):
+                    frappe.throw("The historical counter return retried twice")
+                historical_sale.reload()
+                native_credit = frappe.get_doc("Sales Invoice",
+                    historical_return["credit_note"])
+                native_refund = frappe.get_doc("HS Payment",
+                    historical_return["refund"])
+                native_payment = frappe.get_doc("Payment Entry",
+                    native_refund.payment_entry)
+                if (historical_sale.status != "Returned" or
+                        historical_sale.credit_note != native_credit.name or
+                        historical_sale.erp_return_refund != native_refund.name or
+                        historical_sale.pms_fiscal_invoice != counter_sale["invoice"] or
+                        historical_sale.pms_fiscal_credit or
+                        native_credit.docstatus != 1 or
+                        Decimal(str(native_credit.grand_total)) != -8 or
+                        native_refund.source_payment != counter_sale["payment"] or
+                        native_payment.docstatus != 1 or
+                        native_payment.references[0].reference_name !=
+                            native_credit.name):
+                    frappe.throw("The historical counter return did not reconcile")
+                stock_service = frappe.get_doc("HS Service Request",
+                    stock_sale["service"])
+                stock_proof = frappe.parse_json(stock_service.erp_cutover_snapshot)
+                stock_before = Decimal(str(frappe.db.get_value("Bin", {
+                    "warehouse": target_warehouse, "item_code": item.name},
+                    "actual_qty") or 0))
+                if (stock_service.status != "Delivered" or
+                        stock_service.stock_entry !=
+                            stock_proof["stock"]["source_movement"] or
+                        stock_service.sales_invoice or
+                        Decimal(stock_proof["stock"]["value"]) != 10):
+                    frappe.throw("The stock sale was not frozen at cutover")
+                stock_request = {"service": stock_service.name,
+                    "modified": str(stock_service.modified),
+                    "method": source_foreign_method.name,
+                    "shift": "",
+                    "reference": "HIST-STOCK-RETURN-" + suffix,
+                    "reason": "Devolución de artículo anterior al corte"}
+                if not frappe.db.exists("Stock Entry Type", "Material Receipt"):
+                    frappe.get_doc({"doctype": "Stock Entry Type",
+                        "name": "Material Receipt",
+                        "purpose": "Material Receipt"}).insert(
+                            ignore_permissions=True)
+                stock_return_quote = suite_api.erp_historical_direct_sale_return_quote(
+                    prop.name, canonical(stock_request))
+                if (stock_return_quote["refund_currency"] != "USD" or
+                        Decimal(stock_return_quote["refund_amount"]) !=
+                        Decimal(str(frappe.db.get_value("HS Payment",
+                            stock_sale["payment"], "amount")))):
+                    frappe.throw("The bank return changed the original currency")
+                stock_return = suite_api.execute(prop.name,
+                    "erp_historical_direct_sale_return",
+                    "historical-stock-return-" + suffix,
+                    {**stock_request,
+                     "acceptance": stock_return_quote["acceptance"]})
+                if (suite_api.execute(prop.name,
+                        "erp_historical_direct_sale_return",
+                        "historical-stock-return-" + suffix,
+                        {**stock_request,
+                         "acceptance": stock_return_quote["acceptance"]}) !=
+                            stock_return):
+                    frappe.throw("The historical stock return duplicated")
+                stock_service.reload()
+                restored = frappe.get_doc("Stock Entry",
+                    stock_return["stock_entry"])
+                stock_after = Decimal(str(frappe.db.get_value("Bin", {
+                    "warehouse": target_warehouse, "item_code": item.name},
+                    "actual_qty") or 0))
+                if (stock_service.status != "Returned" or
+                        stock_service.return_stock_entry != restored.name or
+                        stock_service.erp_return_refund != stock_return["refund"] or
+                        stock_service.pms_fiscal_invoice != stock_sale["invoice"] or
+                        restored.docstatus != 1 or
+                        restored.stock_entry_type != "Material Receipt" or
+                        restored.items[0].item_code != item.name or
+                        Decimal(str(restored.items[0].qty)) != 1 or
+                        stock_after != stock_before + 1):
+                    frappe.throw("The historical stock return did not restore inventory")
+                stock_gl = frappe.get_all("GL Entry", filters={
+                    "voucher_type": "Stock Entry", "voucher_no": restored.name,
+                    "is_cancelled": 0}, fields=["account", "debit", "credit"],
+                    limit_page_length=20)
+                stock_net = {account: sum((Decimal(str(row.debit)) -
+                    Decimal(str(row.credit)) for row in stock_gl
+                    if row.account == account), Decimal(0)) for account in (
+                        stock_proof["stock"]["inventory_account"],
+                        stock_proof["stock"]["expense_account"])}
+                if (stock_net[stock_proof["stock"]["inventory_account"]] != 10 or
+                        stock_net[stock_proof["stock"]["expense_account"]] != -10):
+                    frappe.throw("The historical stock cost was not reversed")
+                if suite_api.pms_direct_sale_history(
+                        prop.name, returnable=1)["rows"]:
+                    frappe.throw("Returned historical sales remain eligible again")
+                complete_history = suite_api.pms_direct_sale_history(prop.name)
+                by_service = {row["name"]: row for row in
+                    complete_history["rows"]}
+                if (by_service[historical_sale.name]["native_credit_note"] !=
+                        historical_return["credit_note"] or
+                        by_service[stock_service.name]["native_credit_note"] !=
+                        stock_return["credit_note"]):
+                    frappe.throw("Native credits are absent from historical sales")
+                from hospitality_suite.security import guard_cancel
+                for linked_doc in (native_credit, native_payment, restored):
+                    try:
+                        guard_cancel(linked_doc)
+                    except frappe.ValidationError as exc:
+                        if "históric" not in str(exc).lower():
+                            raise
+                    else:
+                        frappe.throw("A historical return document could be cancelled")
             finally:
                 frappe.local.hs_cutover_rehearsal = previous_counter_flag
         finally:

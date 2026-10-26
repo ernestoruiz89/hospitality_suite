@@ -10,7 +10,8 @@ from hashlib import sha256
 
 import frappe
 
-from hospitality_suite import pms_cutover, pms_cutover_mapping, pms_cutover_links
+from hospitality_suite import (pms_cutover, pms_cutover_mapping,
+    pms_cutover_links, pms_cutover_direct_sales)
 from hospitality_suite.service import canonical
 from hospitality_suite.pricing import money
 
@@ -440,6 +441,7 @@ def build(report, mapping):
         if temporary_net:
             blockers.append({"property": name, "code": "temporary_account_not_zero",
                              "difference": pms_cutover._money(temporary_net)})
+        direct_sales = pms_cutover_direct_sales.collect(source, cfg, blockers)
         properties.append({"property": name, "organization": source["organization"],
             "company": company, "cost_center": center,
             "posting_date": source["business_date"],
@@ -449,6 +451,7 @@ def build(report, mapping):
             "opening_advances": advances,
             "opening_stock": stock, "purchase_orders": purchase_orders,
             "continuing_day_passes": day_passes,
+            "continuing_direct_sales": direct_sales,
             "opening_journal": journal,
             "profit_loss_transfer_journal": profit_loss,
             "control_total": pms_cutover._money(control_total),
@@ -457,7 +460,7 @@ def build(report, mapping):
             "journal_credit": pms_cutover._money(credit),
             "profit_loss_debit": pms_cutover._money(profit_loss_debit),
             "profit_loss_credit": pms_cutover._money(profit_loss_credit)})
-    plan = {"schema_version": 3,
+    plan = {"schema_version": 4,
             "source_sha256": report["source_sha256"],
             "mapping_sha256": sha256(canonical(mapping).encode()).hexdigest(),
             "properties": properties}

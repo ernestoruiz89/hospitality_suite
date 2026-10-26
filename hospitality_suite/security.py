@@ -455,6 +455,23 @@ def guard_cancel(doc,method=None):
         if provider() == "pms" and not getattr(frappe.local, "hs_cutover_opening", False):
             frappe.throw(frappe._("Este establecimiento sigue usando el libro PMS; no cancele documentos ERPNext de alojamiento"))
         require(prop_name,"approve")
+        if (doc.doctype == "Sales Invoice" and frappe.db.exists(
+                "HS Service Request", {"credit_note": doc.name,
+                    "status": "Returned", "erp_return_refund": ["is", "set"]})):
+            frappe.throw(frappe._(
+                "La nota histórica de la venta PMS está vinculada a su devolución"))
+        if (doc.doctype == "Stock Entry" and frappe.db.exists(
+                "HS Service Request", {"return_stock_entry": doc.name,
+                    "status": "Returned", "erp_return_refund": ["is", "set"]})):
+            frappe.throw(frappe._(
+                "El reingreso histórico de la venta PMS está vinculado a su devolución"))
+        if (doc.doctype == "Payment Entry" and frappe.db.sql(
+                "SELECT s.name FROM `tabHS Service Request` s "
+                "JOIN `tabHS Payment` payment ON payment.name=s.erp_return_refund "
+                "WHERE s.status='Returned' AND payment.payment_entry=%s LIMIT 1",
+                (doc.name,))):
+            frappe.throw(frappe._(
+                "El reembolso histórico de la venta PMS está vinculado a su devolución"))
         if doc.doctype=="Sales Invoice":
             if frappe.db.exists("HS Day Pass", {
                     "erp_opening_invoice": doc.name}):

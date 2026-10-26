@@ -25,8 +25,12 @@ type HistoricalSale = { name: string; creation: string; customer_name: string;
   item_name: string; quantity: number; amount: number; currency: string;
   status: string; sales_invoice: string; credit_note: string | null;
   document_number: string; credit_number: string | null;
+  modified: string; native_credit_note: string | null; erp_return_refund: string | null;
   payment: { amount: number; currency: string } | null }
 type HistoricalPage = { rows: HistoricalSale[]; has_more: boolean }
+type HistoricalReturnQuote = { original_invoice: string; total: string; currency: string;
+  refund_amount: string; refund_currency: string; exchange_rate: string;
+  stock_value: string | null; acceptance: string }
 type Quote = { customer: string; item: string; quantity: string; rate: string;
   total: string; currency: string; method: string; payment_amount: string;
   payment_currency: string; exchange_rate: string; acceptance: string;
@@ -73,6 +77,13 @@ export function ErpDirectSales({ property, canApprove }: { property: Property; c
   const [returnShift, setReturnShift] = useState("")
   const [returnReason, setReturnReason] = useState("")
   const [returnKey, setReturnKey] = useState("")
+  const [historicalReturn, setHistoricalReturn] = useState("")
+  const [historicalMethod, setHistoricalMethod] = useState("")
+  const [historicalShift, setHistoricalShift] = useState("")
+  const [historicalReference, setHistoricalReference] = useState("")
+  const [historicalReason, setHistoricalReason] = useState("")
+  const [historicalQuote, setHistoricalQuote] = useState<HistoricalReturnQuote | null>(null)
+  const [historicalKey, setHistoricalKey] = useState("")
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState("")
   const [notice, setNotice] = useState("")
@@ -123,12 +134,12 @@ export function ErpDirectSales({ property, canApprove }: { property: Property; c
   }, [property.name, section, historySearch, historyOffset, historyRevision])
 
   useEffect(() => {
-    if (section !== "history") return
+    if (section !== "history" && section !== "returns") return
     const controller = new AbortController()
     setHistorical(null)
     call<HistoricalPage>("pms_direct_sale_history", { property_name: property.name,
       search: historySearch, offset: String(historicalOffset),
-      page_length: String(PAGE_LENGTH), returnable: "0",
+      page_length: String(PAGE_LENGTH), returnable: section === "returns" ? "1" : "0",
     }, controller.signal).then((result) => {
       if (!controller.signal.aborted) setHistorical(result)
     }).catch((issue: unknown) => { if (!controller.signal.aborted) setError(errorText(issue)) })
@@ -137,6 +148,8 @@ export function ErpDirectSales({ property, canApprove }: { property: Property; c
 
   const selectedMethod = options?.methods.find((row) => row.name === method)
   const selectedReturn = history?.rows.find((row) => row.name === returnSale)
+  const selectedHistorical = historical?.rows.find((row) => row.name === historicalReturn)
+  const selectedHistoricalMethod = options?.methods.find((row) => row.name === historicalMethod)
   const invalidate = () => { setQuote(null); setIssued(null); setError("") }
   const saleData = () => ({ customer, item, quantity, method, shift,
     reference: reference.trim(), tendered: tendered || undefined, notes: notes.trim() })
@@ -145,7 +158,7 @@ export function ErpDirectSales({ property, canApprove }: { property: Property; c
   }
   function searchHistory(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setHistoryOffset(0); setHistoricalOffset(0); setHistorySearch(historyInput.trim())
-    setReturnSale(""); setReturnKey("")
+    setReturnSale(""); setReturnKey(""); setHistoricalReturn(""); setHistoricalQuote(null)
   }
   async function review(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -185,6 +198,36 @@ export function ErpDirectSales({ property, canApprove }: { property: Property; c
           reason: returnReason.trim() }, key)
       setReturnSale(""); setReturnShift(""); setReturnReason(""); setReturnKey("")
       setNotice(`Venta devuelta. Nota de crédito ${result.credit_note}.`)
+      setHistoryRevision((value) => value + 1)
+    } catch (issue) { setError(errorText(issue)) }
+    finally { setBusy(false) }
+  }
+  const historicalData = () => ({ service: selectedHistorical?.name || "",
+    modified: selectedHistorical?.modified || "", method: historicalMethod,
+    shift: selectedHistoricalMethod?.is_cash ? historicalShift : "",
+    reference: historicalReference.trim(), reason: historicalReason.trim() })
+  async function reviewHistoricalReturn(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    if (!selectedHistorical || !historicalMethod || busy ||
+        (selectedHistoricalMethod?.is_cash && !historicalShift)) return
+    setBusy(true); setError(""); setHistoricalQuote(null); setHistoricalKey("")
+    try {
+      const result = await call<HistoricalReturnQuote>(
+        "erp_historical_direct_sale_return_quote", {
+          property_name: property.name, data: JSON.stringify(historicalData()) })
+      setHistoricalQuote(result); setHistoricalKey(crypto.randomUUID())
+    } catch (issue) { setError(errorText(issue)) }
+    finally { setBusy(false) }
+  }
+  async function issueHistoricalReturn() {
+    if (!selectedHistorical || !historicalQuote || !historicalKey || busy) return
+    setBusy(true); setError(""); setNotice("")
+    try {
+      const result = await execute<{ credit_note: string }>(property.name,
+        "erp_historical_direct_sale_return", { ...historicalData(),
+          acceptance: historicalQuote.acceptance }, historicalKey)
+      setHistoricalReturn(""); setHistoricalQuote(null); setHistoricalKey("")
+      setNotice(`Venta PMS devuelta en ERPNext. Nota de crédito ${result.credit_note}.`)
       setHistoryRevision((value) => value + 1)
     } catch (issue) { setError(errorText(issue)) }
     finally { setBusy(false) }
@@ -247,18 +290,30 @@ export function ErpDirectSales({ property, canApprove }: { property: Property; c
         <label className="block space-y-1"><span>Motivo</span><Input required maxLength={500} value={returnReason} onChange={(event) => { setReturnReason(event.target.value); setReturnKey("") }} /></label>
         <div className="flex gap-2"><Button disabled={busy || !returnShift}>Confirmar devolución</Button><Button type="button" variant="outline" onClick={() => setReturnSale("")}>Cancelar</Button></div></form>}
     </CardContent></Card>}
-    {section === "history" && <Card><CardHeader><CardTitle>Ventas PMS anteriores al corte</CardTitle>
-      <CardDescription>Consulta e impresión de documentos originales. Para devolver una venta PMS anterior al corte, solicite revisión de Gerencia y Contabilidad.</CardDescription></CardHeader>
+    {(section === "history" || section === "returns") && <Card><CardHeader><CardTitle>{section === "returns" ? "Devolver venta PMS anterior al corte" : "Ventas PMS anteriores al corte"}</CardTitle>
+      <CardDescription>{section === "returns" ? "Gerencia puede devolver ventas conciliadas durante el corte. Se emitirá una nota en ERPNext y se conservará el documento PMS original." : "Consulta e impresión de documentos originales y notas posteriores al corte."}</CardDescription></CardHeader>
       <CardContent className="space-y-3">{!historical ? <Skeleton className="h-28" /> : <>
         <div className="space-y-2">{historical.rows.map((row) => <div key={row.name} className="rounded-md border p-3 text-sm">
           <div className="flex flex-wrap justify-between gap-2"><div><strong>{row.document_number}</strong><p>{row.customer_name} · {row.item_name} × {row.quantity}</p>
             <p className="text-xs text-muted-foreground">{row.name} · {statusLabels[row.status] || row.status} · PMS histórico · {new Date(row.creation).toLocaleString("es-NI")}</p></div>
             <p>{row.currency} {row.amount}{row.payment && <span className="block text-xs text-muted-foreground">Cobro {row.payment.currency} {row.payment.amount}</span>}</p></div>
           <div className="mt-2 flex flex-wrap gap-2"><Button asChild size="sm" variant="outline"><a href={pmsPrint(row.sales_invoice)} target="_blank" rel="noopener noreferrer">Factura PMS</a></Button>
-            {row.credit_note && <Button asChild size="sm" variant="outline"><a href={pmsPrint(row.credit_note)} target="_blank" rel="noopener noreferrer">Nota PMS {row.credit_number}</a></Button>}</div>
+            {row.credit_note && <Button asChild size="sm" variant="outline"><a href={pmsPrint(row.credit_note)} target="_blank" rel="noopener noreferrer">Nota PMS {row.credit_number}</a></Button>}
+            {row.native_credit_note && <Button asChild size="sm" variant="outline"><a href={invoicePrint(row.native_credit_note)} target="_blank" rel="noopener noreferrer">Nota ERPNext</a></Button>}
+            {section === "returns" && canApprove && <Button size="sm" variant="outline" onClick={() => { setHistoricalReturn(row.name); setHistoricalMethod(""); setHistoricalShift(""); setHistoricalReference(""); setHistoricalReason(""); setHistoricalQuote(null); setHistoricalKey("") }}>Devolver</Button>}</div>
         </div>)}{!historical.rows.length && <p className="text-sm text-muted-foreground">No hay ventas PMS anteriores al corte con ese criterio.</p>}</div>
-        <div className="flex gap-2"><Button variant="outline" disabled={!historicalOffset} onClick={() => setHistoricalOffset(Math.max(0, historicalOffset - PAGE_LENGTH))}>Anteriores</Button>
-          <Button variant="outline" disabled={!historical.has_more} onClick={() => setHistoricalOffset(historicalOffset + PAGE_LENGTH)}>Siguientes</Button></div>
-      </>}</CardContent></Card>}
+        <div className="flex gap-2"><Button variant="outline" disabled={!historicalOffset} onClick={() => { setHistoricalOffset(Math.max(0, historicalOffset - PAGE_LENGTH)); setHistoricalReturn(""); setHistoricalQuote(null) }}>Anteriores</Button>
+          <Button variant="outline" disabled={!historical.has_more} onClick={() => { setHistoricalOffset(historicalOffset + PAGE_LENGTH); setHistoricalReturn(""); setHistoricalQuote(null) }}>Siguientes</Button></div>
+      </>}
+      {section === "returns" && selectedHistorical && <form onSubmit={(event) => void reviewHistoricalReturn(event)} className="space-y-3 rounded-lg bg-secondary p-4 text-sm">
+        <p>Factura PMS <strong>{selectedHistorical.document_number}</strong> · {selectedHistorical.currency} {selectedHistorical.amount}. Se devolverá el cobro original completo.</p>
+        <label className="block space-y-1"><span>Medio de reembolso</span><select required className={selectClass} value={historicalMethod} onChange={(event) => { setHistoricalMethod(event.target.value); setHistoricalShift(""); setHistoricalQuote(null) }}><option value="">Seleccione medio</option>{options?.methods.filter((row) => row.currency === selectedHistorical.payment?.currency).map((row) => <option key={row.name} value={row.name}>{row.mode_of_payment} · {row.currency}</option>)}</select></label>
+        {selectedHistoricalMethod?.is_cash && <label className="block space-y-1"><span>Turno propio abierto</span><select required className={selectClass} value={historicalShift} onChange={(event) => { setHistoricalShift(event.target.value); setHistoricalQuote(null) }}><option value="">Seleccione turno</option>{options?.shifts.filter((row) => row.currency === selectedHistoricalMethod.currency).map((row) => <option key={row.name} value={row.name}>{row.name} · {row.cashier}</option>)}</select></label>}
+        <label className="block space-y-1"><span>Referencia{selectedHistoricalMethod?.reference_required ? " obligatoria" : ""}</span><Input required={!!selectedHistoricalMethod?.reference_required} maxLength={140} value={historicalReference} onChange={(event) => { setHistoricalReference(event.target.value); setHistoricalQuote(null) }} /></label>
+        <label className="block space-y-1"><span>Motivo</span><Input required maxLength={500} value={historicalReason} onChange={(event) => { setHistoricalReason(event.target.value); setHistoricalQuote(null) }} /></label>
+        <div className="flex gap-2"><Button type="submit" variant="outline" disabled={busy || !historicalMethod || !!selectedHistoricalMethod?.is_cash && !historicalShift}>Revisar devolución</Button><Button type="button" variant="outline" onClick={() => { setHistoricalReturn(""); setHistoricalQuote(null) }}>Cancelar</Button></div>
+        {historicalQuote && <div className="space-y-2 rounded-md border border-primary/30 bg-white p-3"><p>Nota ERPNext: {historicalQuote.currency} {historicalQuote.total}. Reembolso: <strong>{historicalQuote.refund_currency} {historicalQuote.refund_amount}</strong>{historicalQuote.stock_value && ` · Inventario a reingresar: ${historicalQuote.currency} ${historicalQuote.stock_value}`}</p>
+          <Button type="button" disabled={busy} onClick={() => void issueHistoricalReturn()}>Confirmar devolución</Button></div>}
+      </form>}</CardContent></Card>}
   </div>
 }

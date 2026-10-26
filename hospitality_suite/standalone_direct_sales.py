@@ -106,16 +106,15 @@ def history(property_name, search="", offset=0, page_length=25, returnable=0):
     start, length, pattern = _page(search, offset, page_length)
     if str(returnable) not in ("0", "1"):
         frappe.throw(_("Revise el filtro de devoluciones"))
-    if active_provider == "erpnext" and str(returnable) == "1":
-        frappe.throw(_("La devolución de ventas PMS anteriores al corte requiere un flujo histórico"))
     rows = frappe.db.sql(
-        "SELECT s.name, s.creation, s.pms_party AS customer, "
+        "SELECT s.name, s.creation, s.modified, s.pms_party AS customer, "
         "p.party_name AS customer_name, s.pms_product AS item, "
         "product.product_name AS item_name, product.product_type, "
         "s.quantity, s.amount, s.currency, s.status, "
         "s.pms_fiscal_invoice AS sales_invoice, "
         "s.pms_fiscal_credit AS credit_note, "
-        "s.pms_receivable, s.stock_entry, "
+        "s.pms_receivable, s.stock_entry, s.credit_note AS native_credit_note, "
+        "s.erp_return_refund, s.return_stock_entry, "
         "invoice.document_number, credit.document_number AS credit_number "
         "FROM `tabHS Service Request` s "
         "JOIN `tabHS PMS Receivable` r ON r.name=s.pms_receivable "
@@ -128,11 +127,17 @@ def history(property_name, search="", offset=0, page_length=25, returnable=0):
         "AND p.property=s.property AND product.property=s.property "
         "AND invoice.property=s.property AND invoice.document_type='Invoice' "
         "AND (s.stay IS NULL OR s.stay='') "
-        "AND (%s=0 OR s.status='Delivered') "
+        "AND (%s=0 OR (s.status='Delivered' AND "
+        "(%s='pms' OR (COALESCE(s.erp_cutover_snapshot,'')<>'' "
+        "AND COALESCE(s.erp_cutover_sha256,'')<>'' "
+        "AND COALESCE(s.pms_fiscal_credit,'')='' "
+        "AND COALESCE(s.credit_note,'')='' "
+        "AND COALESCE(s.erp_return_refund,'')='')))) "
         "AND (s.name LIKE %s OR invoice.document_number LIKE %s OR "
         "p.party_name LIKE %s OR product.product_name LIKE %s) "
         "ORDER BY s.creation DESC, s.name DESC LIMIT %s OFFSET %s",
-        (prop.name, prop.company, int(str(returnable)), pattern, pattern,
+        (prop.name, prop.company, int(str(returnable)), active_provider,
+         pattern, pattern,
          pattern, pattern, length + 1, start), as_dict=True)
     visible = rows[:length]
     names = [row.name for row in visible]

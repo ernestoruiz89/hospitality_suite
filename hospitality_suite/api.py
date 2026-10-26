@@ -48,6 +48,7 @@ from hospitality_suite import standalone_reports
 from hospitality_suite import standalone_day_pass
 from hospitality_suite import standalone_direct_sales
 from hospitality_suite import erp_historical_day_pass
+from hospitality_suite import erp_historical_direct_sales
 from hospitality_suite import standalone_maintenance_parts
 from hospitality_suite import standalone_linen
 from hospitality_suite import erp_cash
@@ -101,6 +102,7 @@ COMMANDS = {
     "pms_issue_invoice": ("finance", standalone_fiscal.issue_invoice),
     "pms_direct_sale": ("finance", standalone_direct_sales.sell),
     "pms_direct_sale_return": ("approve", standalone_direct_sales.return_sale),
+    "erp_historical_direct_sale_return": ("approve", erp_historical_direct_sales.return_sale),
     "pms_issue_credit_note": ("approve", standalone_fiscal.issue_credit),
     "pms_warehouse": ("setup", standalone_inventory.create_warehouse),
     "pms_opening_stock": ("inventory", standalone_inventory.opening_stock),
@@ -996,6 +998,12 @@ def pms_invoice_quote(property_name, data):
 def pms_direct_sale_return_quote(property_name, data):
     prop = require(property_name, "approve")
     return standalone_direct_sales.return_quote(prop, payload(data))
+
+
+@frappe.whitelist()
+def erp_historical_direct_sale_return_quote(property_name, data):
+    prop = require(property_name, "approve")
+    return erp_historical_direct_sales.quote(prop, payload(data))
 
 
 @frappe.whitelist()

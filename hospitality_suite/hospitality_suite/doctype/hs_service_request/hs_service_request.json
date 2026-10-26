@@ -153,6 +153,28 @@
    "read_only": 1
   },
   {
+   "fieldname": "erp_cutover_snapshot",
+   "label": "Prueba de venta PMS en el corte",
+   "fieldtype": "Code",
+   "options": "JSON",
+   "read_only": 1,
+   "hidden": 1
+  },
+  {
+   "fieldname": "erp_cutover_sha256",
+   "label": "Huella de venta PMS en el corte",
+   "fieldtype": "Data",
+   "read_only": 1,
+   "hidden": 1
+  },
+  {
+   "fieldname": "erp_return_refund",
+   "label": "Reembolso de venta PMS histórica",
+   "fieldtype": "Link",
+   "options": "HS Payment",
+   "read_only": 1
+  },
+  {
    "fieldname": "notes",
    "label": "Observaciones",
    "fieldtype": "Small Text"
@@ -182,6 +204,9 @@
   "pms_product",
   "pms_fiscal_invoice",
   "pms_fiscal_credit",
+  "erp_cutover_snapshot",
+  "erp_cutover_sha256",
+  "erp_return_refund",
   "notes"
  ],
  "permissions": [

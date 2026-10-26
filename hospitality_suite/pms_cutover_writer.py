@@ -166,6 +166,45 @@ def _bind_day_passes(prop, refs):
                 "relationship": "outstanding_balance"})
 
 
+def _bind_direct_sales(prop, refs):
+    """Preserve each paid PMS sale's original terms for a later native return."""
+    for row in prop.get("continuing_direct_sales", []):
+        service = frappe.db.get_value("HS Service Request", row["source"],
+            ["name", "property", "company", "customer", "item", "status",
+             "pms_party", "pms_product", "pms_receivable",
+             "pms_fiscal_invoice", "pms_fiscal_credit", "sales_invoice",
+             "credit_note", "stock_entry", "warehouse", "return_stock_entry",
+             "erp_cutover_snapshot", "erp_cutover_sha256",
+             "erp_return_refund"], as_dict=True)
+        stock = row.get("stock") or {}
+        if (not service or service.property != prop["property"] or
+                service.company != prop["company"] or
+                service.customer != row["customer"] or
+                service.item != row["item_code"] or
+                service.status != "Delivered" or
+                service.pms_party != row["source_party"] or
+                service.pms_product != row["source_product"] or
+                service.pms_receivable != row["source_receivable"] or
+                service.pms_fiscal_invoice != row["source_invoice"] or
+                service.pms_fiscal_credit or service.sales_invoice or
+                service.credit_note or service.return_stock_entry or
+                service.erp_cutover_snapshot or service.erp_cutover_sha256 or
+                service.erp_return_refund or
+                (service.stock_entry or None) !=
+                    (stock.get("source_movement") or None) or
+                (service.warehouse or None) !=
+                    (stock.get("source_warehouse") or None)):
+            frappe.throw("PMS direct sale changed before its ERP continuation: " +
+                         row["source"])
+        proof = canonical(row)
+        digest = sha256(proof.encode()).hexdigest()
+        frappe.db.set_value("HS Service Request", service.name, {
+            "erp_cutover_snapshot": proof,
+            "erp_cutover_sha256": digest}, update_modified=False)
+        refs["direct_sales"].append({"source": service.name,
+            "snapshot_sha256": digest})
+
+
 def _journal(company, posting_date, accounts, remark, property_name=None,
              opening=True):
     data = {
@@ -607,7 +646,7 @@ def post_property(prop):
 def _post_property(prop):
     refs = {"property": prop["property"], "company": prop["company"],
             "receivables": [], "payables": [], "supplier_credits": [],
-            "day_passes": [],
+            "day_passes": [], "direct_sales": [],
             "guarantees": [], "advances": [],
             "stock_reconciliation": None, "residual_journal": None,
             "profit_loss_transfer_journal": None,
@@ -621,6 +660,7 @@ def _post_property(prop):
             "source_name": row["source"], "target_doctype": doc.doctype,
             "target_name": doc.name})
     _bind_day_passes(prop, refs)
+    _bind_direct_sales(prop, refs)
     for row in prop["opening_payables"]:
         doc = _opening_invoice(row, sales=False)
         refs["payables"].append(doc.name)

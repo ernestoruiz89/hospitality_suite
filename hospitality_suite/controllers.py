@@ -1198,11 +1198,29 @@ class ServiceRequestDocument(ScopedDocument):
             fiscal = frappe.db.get_value("HS PMS Fiscal Document", self.pms_fiscal_invoice,
                 ["property", "document_type", "party", "total_amount", "status"],
                 as_dict=True) if self.pms_fiscal_invoice else None
+            proof = None
+            if self.erp_cutover_snapshot:
+                if (provider() != "erpnext" or not self.erp_cutover_sha256 or
+                        sha256(self.erp_cutover_snapshot.encode()).hexdigest() !=
+                            self.erp_cutover_sha256):
+                    frappe.throw(_("La prueba histórica de la venta no concilia"))
+                proof = frappe.parse_json(self.erp_cutover_snapshot)
+                if (not isinstance(proof, dict) or
+                        proof.get("source") != self.name or
+                        proof.get("property") != self.property or
+                        proof.get("company") != self.company or
+                        proof.get("customer") != self.customer or
+                        proof.get("item_code") != self.item or
+                        proof.get("source_receivable") != self.pms_receivable or
+                        proof.get("source_invoice") != self.pms_fiscal_invoice or
+                        Decimal(proof.get("total_amount") or "0") !=
+                            Decimal(str(self.amount))):
+                    frappe.throw(_("La venta no coincide con su prueba de corte"))
             if (provider() not in ("pms", "erpnext") or not property_scope or
                     not source or not fiscal or
                     self.stay or self.folio or self.charge or self.included or
                     self.opening_stock_issue or self.status not in ("Delivered", "Returned") or
-                    self.sales_invoice or self.credit_note or
+                    self.sales_invoice or (self.credit_note and not proof) or
                     not self.pms_party or not self.pms_product or
                     source.property != self.property or
                     source.organization != property_scope.organization or
@@ -1223,32 +1241,74 @@ class ServiceRequestDocument(ScopedDocument):
             if not payment or not payment.pms_journal:
                 frappe.throw(_("La venta directa PMS requiere su cobro publicado"))
             if self.status == "Delivered" and (
-                    self.pms_fiscal_credit or self.return_stock_entry):
+                    self.pms_fiscal_credit or self.return_stock_entry or
+                    self.credit_note or self.erp_return_refund):
                 frappe.throw(_("La venta vigente no puede tener devolución"))
             if self.status == "Returned":
-                credit = frappe.db.get_value("HS PMS Fiscal Document", self.pms_fiscal_credit,
-                    ["property", "document_type", "source_invoice", "total_amount",
-                     "status"], as_dict=True) if self.pms_fiscal_credit else None
-                refunded = frappe.db.exists("HS Payment", {
-                    "property": self.property, "source_payment": payment.name,
-                    "pms_receivable": self.pms_receivable,
-                    "kind": "Refund", "status": "Posted"})
-                if (not credit or credit.property != self.property or
-                        credit.document_type != "Credit Note" or
-                        credit.source_invoice != self.pms_fiscal_invoice or
-                        credit.status != "Posted" or
-                        Decimal(str(credit.total_amount)) != Decimal(str(self.amount)) or
-                        not refunded or bool(self.stock_entry) != bool(self.return_stock_entry)):
-                    frappe.throw(_("La devolución no conserva nota, reembolso e inventario"))
+                if self.pms_fiscal_credit:
+                    credit = frappe.db.get_value("HS PMS Fiscal Document", self.pms_fiscal_credit,
+                        ["property", "document_type", "source_invoice", "total_amount",
+                         "status"], as_dict=True)
+                    refunded = frappe.db.exists("HS Payment", {
+                        "property": self.property, "source_payment": payment.name,
+                        "pms_receivable": self.pms_receivable,
+                        "kind": "Refund", "status": "Posted"})
+                    if (not credit or credit.property != self.property or
+                            credit.document_type != "Credit Note" or
+                            credit.source_invoice != self.pms_fiscal_invoice or
+                            credit.status != "Posted" or
+                            Decimal(str(credit.total_amount)) != Decimal(str(self.amount)) or
+                            not refunded or self.credit_note or self.erp_return_refund or
+                            bool(self.stock_entry) != bool(self.return_stock_entry)):
+                        frappe.throw(_("La devolución no conserva nota, reembolso e inventario"))
+                else:
+                    native = frappe.db.get_value("Sales Invoice", self.credit_note,
+                        ["name", "company", "hs_property", "customer", "docstatus",
+                         "is_return", "grand_total"], as_dict=True) if self.credit_note else None
+                    refund = frappe.db.get_value("HS Payment", self.erp_return_refund,
+                        ["property", "company", "kind", "status", "source_payment",
+                         "payment_entry", "sales_invoice"], as_dict=True) if self.erp_return_refund else None
+                    stock = frappe.db.get_value("Stock Entry", self.return_stock_entry,
+                        ["company", "hs_property", "docstatus", "stock_entry_type"],
+                        as_dict=True) if self.return_stock_entry else None
+                    if (not proof or not native or not refund or
+                            native.company != self.company or
+                            native.hs_property != self.property or
+                            native.customer != self.customer or native.docstatus != 1 or
+                            not native.is_return or
+                            Decimal(str(native.grand_total)) !=
+                                -Decimal(str(self.amount)) or
+                            refund.property != self.property or
+                            refund.company != self.company or
+                            refund.kind != "Refund" or refund.status != "Posted" or
+                            refund.source_payment != payment.name or
+                            not refund.payment_entry or
+                            refund.sales_invoice != native.name or
+                            bool(stock) != bool(proof.get("stock")) or
+                            (stock and (stock.company != self.company or
+                                stock.hs_property != self.property or
+                                stock.docstatus != 1 or
+                                stock.stock_entry_type != "Material Receipt"))):
+                        frappe.throw(_("La devolución ERPNext no conserva nota, reembolso e inventario"))
         previous = self.get_doc_before_save()
         if previous and previous.pms_receivable:
             immutable = ("pms_receivable", "pms_party", "pms_product",
-                "pms_fiscal_invoice", "sales_invoice", "credit_note", "stock_entry",
+                "pms_fiscal_invoice", "sales_invoice", "stock_entry",
                 "customer", "item", "warehouse", "quantity", "amount",
                 "currency", "stay", "folio", "charge", "included",
-                "opening_stock_issue")
+                "opening_stock_issue", "erp_cutover_snapshot",
+                "erp_cutover_sha256")
+            native_transition = (previous.status == "Delivered" and
+                self.status == "Returned" and
+                getattr(frappe.local, "hs_erp_historical_direct_return", False))
             if (any(str(previous.get(field) or "") != str(self.get(field) or "")
                     for field in immutable) or
+                    (previous.credit_note != self.credit_note or
+                     previous.erp_return_refund != self.erp_return_refund or
+                     previous.return_stock_entry != self.return_stock_entry)
+                        and not native_transition and
+                        (previous.credit_note or self.credit_note or
+                         previous.erp_return_refund or self.erp_return_refund) or
                     previous.status == "Returned" and (
                         self.status != "Returned" or
                         previous.pms_fiscal_credit != self.pms_fiscal_credit or
