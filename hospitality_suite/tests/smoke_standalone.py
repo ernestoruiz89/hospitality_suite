@@ -3490,6 +3490,31 @@ def run():
         assert len(multi_doc.lines) == 2
         assert {row.inventory_account for row in multi_doc.lines} == {stock_asset, second_stock_account}
         assert {row.stock_movement for row in multi_doc.lines} == set(multi_purchase["stock_movements"])
+        purchase_page = api.pms_purchase_document_page(second_prop.name,
+            kind="Purchase", search=multi_data["supplier_reference"])
+        assert len(purchase_page["rows"]) == 1
+        assert purchase_page["rows"][0]["name"] == multi_doc.name
+        assert purchase_page["rows"][0]["can_cancel"]
+        assert {row["stock_movement"] for row in purchase_page["rows"][0]["lines"]} == set(multi_purchase["stock_movements"])
+        first_purchase_page = api.pms_purchase_document_page(second_prop.name,
+            kind="Purchase", page_length=1)
+        next_purchase_page = api.pms_purchase_document_page(second_prop.name,
+            kind="Purchase", offset=1, page_length=1)
+        assert first_purchase_page["has_more"]
+        assert len(first_purchase_page["rows"]) == len(next_purchase_page["rows"]) == 1
+        assert first_purchase_page["rows"][0]["name"] != next_purchase_page["rows"][0]["name"]
+        assert not api.pms_purchase_document_page(prop.name, kind="Purchase",
+            search=multi_data["supplier_reference"])["rows"]
+        frappe.set_user("Guest")
+        try:
+            try:
+                api.pms_purchase_document_page(second_prop.name, kind="Purchase")
+            except frappe.PermissionError:
+                frappe.clear_messages()
+            else:
+                raise AssertionError("Un visitante consultó compras privadas")
+        finally:
+            frappe.set_user("Administrator")
         assert standalone_inventory.current_balance(second_prop, second_purchase_product,
             stock_service["warehouse"]) == (Decimal("3"), Decimal("65.70"))
         assert any(row["name"] == multi_doc.name and len(row["lines"]) == 2 and
@@ -3573,6 +3598,12 @@ def run():
         assert any(row["name"] == paid_return["return"] and
                    row["refund_available"] == "18.25" for row in
                    api.pms_purchase_snapshot(second_prop.name)["returns"])
+        return_page = api.pms_purchase_document_page(second_prop.name,
+            kind="Return", search=paid_return_data["reference"],
+            available_only=1)
+        assert len(return_page["rows"]) == 1
+        assert return_page["rows"][0]["name"] == paid_return["return"]
+        assert return_page["rows"][0]["refund_available"] == "18.25"
         try:
             api.pms_purchase_return_quote(second_prop.name, {**paid_return_data,
                 "reference": "RETURN-OVER-" + suffix,
@@ -3590,6 +3621,9 @@ def run():
         refunded = api.execute(second_prop.name, "pms_supplier_refund",
             "purchase-supplier-refund-" + suffix, refund_command)
         assert refunded["available"] == "0.00"
+        assert not api.pms_purchase_document_page(second_prop.name,
+            kind="Return", search=paid_return_data["reference"],
+            available_only=1)["rows"]
         assert api.execute(second_prop.name, "pms_supplier_refund",
             "purchase-supplier-refund-" + suffix, refund_command) == refunded
         assert Decimal(standalone_accounting.balance(second_prop, payable)) == payable_before

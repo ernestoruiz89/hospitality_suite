@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
 import { call, type Property } from "./api"
 import { OpeningSupplierCreditsPms } from "./OpeningSupplierCreditsPms"
+import { PurchaseDocumentBrowser, type PurchaseCandidate, type PurchaseDocument,
+  type SupplierReturn } from "./PurchaseDocumentBrowser"
 import { SupplierDocumentBrowser, type SupplierDocument, type SupplierTarget } from "./SupplierDocumentBrowser"
 import { purchaseSections, usePurchaseSection, type PurchaseSection } from "./PurchaseSections"
 import { useIdempotentCommand, type SendCommand } from "./useIdempotentCommand"
@@ -279,14 +281,14 @@ function PurchaseReturns({ property, data, refresh, send, section, canApprove }:
   const [error, setError] = useState("")
   const [notice, setNotice] = useState("")
   useEffect(() => { setError(""); setNotice("") }, [section])
-  const [purchase, setPurchase] = useState("")
+  const [selectedPurchase, setSelectedPurchase] = useState<PurchaseCandidate | null>(null)
   const [cancelEntire, setCancelEntire] = useState(false)
   const [quantities, setQuantities] = useState<Record<string, string>>({})
   const [reference, setReference] = useState("")
   const [reason, setReason] = useState("")
   const [varianceAccount, setVarianceAccount] = useState("")
   const [reviewed, setReviewed] = useState<ReturnQuote | null>(null)
-  const [refundReturn, setRefundReturn] = useState("")
+  const [selectedRefund, setSelectedRefund] = useState<SupplierReturn | null>(null)
   const [refundMethod, setRefundMethod] = useState("")
   const [refundShift, setRefundShift] = useState("")
   const [refundAmount, setRefundAmount] = useState("")
@@ -297,30 +299,24 @@ function PurchaseReturns({ property, data, refresh, send, section, canApprove }:
     try { await refresh(); setNotice(success) }
     catch { setNotice(`${success} Actualice la vista para consultar el movimiento.`) }
   }
-  const selectedPurchase = data.purchases.find((row) => row.name === purchase)
-  const canCancelSelected = !!selectedPurchase && selectedPurchase.status === "Posted" &&
-    !data.payments.some((row) => row.pms_purchase === selectedPurchase.name &&
-      row.kind === "Supplier Payment") &&
-    !data.returns.some((row) => row.purchase === selectedPurchase.name)
-  const selectedRefund = data.returns.find((row) => row.name === refundReturn)
+  const canCancelSelected = !!selectedPurchase?.can_cancel
   const selectedMethod = data.methods.find((row) => row.name === refundMethod)
-  const returnData = { purchase, reference: reference.trim(), reason: reason.trim(),
+  const returnData = { purchase: selectedPurchase?.name, reference: reference.trim(), reason: reason.trim(),
     variance_account: varianceAccount || null,
     lines: (selectedPurchase?.lines || []).filter((line) => line.stock_movement &&
       (cancelEntire || Number(quantities[line.stock_movement] || 0) > 0)).map((line) => ({
         source_movement: line.stock_movement,
         quantity: cancelEntire ? String(line.quantity) : quantities[line.stock_movement!] })) }
-  const refundData = { return: refundReturn, method: refundMethod,
+  const refundData = { return: selectedRefund?.name, method: refundMethod,
     shift: selectedMethod?.is_cash ? refundShift : null,
     amount: refundAmount, reference: refundReference.trim(),
     reason: refundReason.trim() }
   const invalidateReturn = () => setReviewed(null)
   const invalidateRefund = () => setRefundReviewed(null)
   const productLabel = (name: string) => data.products.find((row) => row.name === name)?.product_name || name
-  const purchaseLabel = (name: string) => data.purchases.find((row) => row.name === name)?.supplier_reference || name
 
   async function returnStock(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault(); if (busy) return
+    event.preventDefault(); if (busy || !selectedPurchase) return
     setBusy(true); setError(""); setNotice("")
     try {
       if (!reviewed?.acceptance) {
@@ -330,7 +326,7 @@ function PurchaseReturns({ property, data, refresh, send, section, canApprove }:
       } else {
         await send(cancelEntire ? "pms_cancel_purchase" : "pms_return_purchase",
           { ...returnData, acceptance: reviewed.acceptance })
-        setPurchase(""); setQuantities({}); setReference(""); setReason("")
+        setSelectedPurchase(null); setQuantities({}); setReference(""); setReason("")
         setCancelEntire(false); setVarianceAccount(""); setReviewed(null)
         await refreshAfter(cancelEntire ? "Compra cancelada con devolución íntegra publicada." :
           "Devolución registrada y crédito del proveedor actualizado.")
@@ -340,7 +336,7 @@ function PurchaseReturns({ property, data, refresh, send, section, canApprove }:
   }
 
   async function receiveRefund(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault(); if (busy) return
+    event.preventDefault(); if (busy || !selectedRefund) return
     setBusy(true); setError(""); setNotice("")
     try {
       if (!refundReviewed) {
@@ -348,7 +344,7 @@ function PurchaseReturns({ property, data, refresh, send, section, canApprove }:
           property_name: property.name, data: JSON.stringify(refundData) }))
       } else {
         await send("pms_supplier_refund", { ...refundData, acceptance: refundReviewed.acceptance })
-        setRefundReturn(""); setRefundMethod(""); setRefundShift("")
+        setSelectedRefund(null); setRefundMethod(""); setRefundShift("")
         setRefundAmount(""); setRefundReference(""); setRefundReason("")
         setRefundReviewed(null)
         await refreshAfter("Reintegro del proveedor recibido y contabilizado.")
@@ -361,17 +357,28 @@ function PurchaseReturns({ property, data, refresh, send, section, canApprove }:
     {error && <p role="alert" className="rounded-lg border border-destructive/30 bg-red-50 p-3 text-sm text-destructive">{error}</p>}
     {notice && <p role="status" className="rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-900">{notice}</p>}
     {section === "return-new" && canApprove && <Card><CardHeader><CardTitle>Devolución o cancelación</CardTitle><CardDescription>Una devolución reduce la deuda abierta o crea un crédito si ya se pagó. La cancelación devuelve toda una factura sin pagos ni devoluciones previas. La diferencia de costo se registra en una cuenta de variación.</CardDescription></CardHeader><CardContent><form onSubmit={returnStock} className="space-y-3">
-        <select required value={purchase} onChange={(event) => { setPurchase(event.target.value); setQuantities({}); setCancelEntire(false); setVarianceAccount(""); invalidateReturn() }} className="h-9 w-full rounded-md border border-border bg-white px-2 text-sm"><option value="">Seleccione factura de compra</option>{data.purchases.filter((row) => row.status === "Posted").map((row) => <option key={row.name} value={row.name}>{row.supplier_reference} · {row.invoice_currency} {row.invoice_amount}</option>)}</select>
+        <PurchaseDocumentBrowser property={property} kind="Purchase" selected={selectedPurchase}
+          actionLabel="Devolver" refreshToken={data}
+          onSelect={(row: PurchaseDocument | null) => {
+            setSelectedPurchase(row?.kind === "Purchase" ? row : null)
+            setQuantities({}); setCancelEntire(false); setVarianceAccount(""); invalidateReturn()
+          }} />
+        <p className="text-sm">Compra seleccionada: {selectedPurchase?.supplier_reference || "Seleccione una compra arriba."}</p>
         {canCancelSelected && <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={cancelEntire} onChange={(event) => { setCancelEntire(event.target.checked); setVarianceAccount(""); invalidateReturn() }} />Cancelar la factura completa y devolver todas las líneas</label>}
         {selectedPurchase?.lines.map((line) => <label key={line.stock_movement || line.product} className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-border p-2 text-sm"><span>{productLabel(line.product)} · recibido {line.quantity}</span><Input aria-label={`Cantidad a devolver de ${productLabel(line.product)}`} type="number" min="0" max={line.quantity} step="0.000001" value={cancelEntire ? String(line.quantity) : line.stock_movement ? quantities[line.stock_movement] || "" : ""} disabled={!line.stock_movement || cancelEntire} onChange={(event) => { if (!line.stock_movement) return; setQuantities((current) => ({ ...current, [line.stock_movement!]: event.target.value })); setVarianceAccount(""); invalidateReturn() }} className="w-32" placeholder="Cantidad" /></label>)}
         <Input required maxLength={140} placeholder="Referencia de devolución" value={reference} onChange={(event) => { setReference(event.target.value); invalidateReturn() }} />
         <Input required maxLength={500} placeholder="Motivo" value={reason} onChange={(event) => { setReason(event.target.value); invalidateReturn() }} />
         {reviewed && <div className="space-y-1 rounded-lg bg-secondary p-3 text-sm"><p>Crédito del proveedor: {reviewed.invoice_currency} {reviewed.credit_amount} · Base {property.currency} {reviewed.base_credit}</p><p>Sale inventario {property.currency} {reviewed.stock_value} · Revierte impuesto {property.currency} {reviewed.base_tax}</p><p>Reduce deuda {property.currency} {reviewed.payable_applied} · Reintegro pendiente {property.currency} {reviewed.supplier_credit}</p>{Number(reviewed.variance) !== 0 && <p>Variación {property.currency} {reviewed.variance} ({reviewed.variance_nature === "Income" ? "ingreso" : "gasto"})</p>}</div>}
         {reviewed?.variance_nature && <select required value={varianceAccount} onChange={(event) => { setVarianceAccount(event.target.value); setReviewed((quote) => quote ? { ...quote, acceptance: null } : null) }} className="h-9 w-full rounded-md border border-border bg-white px-2 text-sm"><option value="">Cuenta de variación {reviewed.variance_nature === "Income" ? "de ingreso" : "de gasto"}</option>{data.accounts.filter((row) => row.root_type === reviewed.variance_nature).map((row) => <option key={row.name} value={row.name}>{row.account_code} · {row.account_name}</option>)}</select>}
-        <Button disabled={busy || !purchase || !returnData.lines.length}>{reviewed?.acceptance ? cancelEntire ? "Confirmar cancelación" : "Confirmar devolución" : cancelEntire ? "Revisar cancelación" : "Revisar devolución"}</Button>
+        <Button disabled={busy || !selectedPurchase || !returnData.lines.length}>{reviewed?.acceptance ? cancelEntire ? "Confirmar cancelación" : "Confirmar devolución" : cancelEntire ? "Revisar cancelación" : "Revisar devolución"}</Button>
       </form></CardContent></Card>}
     {section === "supplier-refund" && <Card><CardHeader><CardTitle>Reintegro del proveedor</CardTitle><CardDescription>Reciba total o parcialmente el crédito generado por una devolución ya pagada. Efectivo requiere turno abierto; banco usa su cuenta contable.</CardDescription></CardHeader><CardContent><form onSubmit={receiveRefund} className="space-y-3">
-        <select required value={refundReturn} onChange={(event) => { setRefundReturn(event.target.value); invalidateRefund() }} className="h-9 w-full rounded-md border border-border bg-white px-2 text-sm"><option value="">Seleccione crédito pendiente</option>{data.returns.filter((row) => Number(row.refund_available) > 0).map((row) => <option key={row.name} value={row.name}>{row.reference} · {purchaseLabel(row.purchase)} · {property.currency} {row.refund_available}</option>)}</select>
+        <PurchaseDocumentBrowser property={property} kind="Return" availableOnly
+          selected={selectedRefund} actionLabel="Reintegrar" refreshToken={data}
+          onSelect={(row: PurchaseDocument | null) => {
+            setSelectedRefund(row?.kind === "Return" ? row : null); invalidateRefund()
+          }} />
+        <p className="text-sm">Devolución seleccionada: {selectedRefund?.reference || "Seleccione un crédito pendiente arriba."}</p>
         <select required value={refundMethod} onChange={(event) => { setRefundMethod(event.target.value); setRefundShift(""); invalidateRefund() }} className="h-9 w-full rounded-md border border-border bg-white px-2 text-sm"><option value="">Medio de recepción</option>{data.methods.map((row) => <option key={row.name} value={row.name}>{row.mode_of_payment} · {row.currency}</option>)}</select>
         {selectedMethod?.is_cash && <select required value={refundShift} onChange={(event) => { setRefundShift(event.target.value); invalidateRefund() }} className="h-9 w-full rounded-md border border-border bg-white px-2 text-sm"><option value="">Turno abierto propio</option>{data.shifts.map((row) => <option key={row.name} value={row.name}>{row.name}</option>)}</select>}
         <Input required aria-label={`Importe del reintegro en ${selectedMethod?.currency || property.currency}`} type="number" min="0.01" step="0.01" value={refundAmount} onChange={(event) => { setRefundAmount(event.target.value); invalidateRefund() }} placeholder={`Importe (${selectedMethod?.currency || property.currency})`} />
@@ -380,7 +387,9 @@ function PurchaseReturns({ property, data, refresh, send, section, canApprove }:
         {refundReviewed && <div className="rounded-lg bg-secondary p-3 text-sm"><p>Débito Caja/banco {refundReviewed.currency} {refundReviewed.amount} · Crédito proveedores {property.currency} {refundReviewed.base_amount}</p><p>Crédito disponible después: {property.currency} {refundReviewed.available_after}</p></div>}
         <Button disabled={busy || !selectedRefund || !refundMethod}>{refundReviewed ? "Confirmar reintegro" : "Revisar reintegro"}</Button>
       </form></CardContent></Card>}
-    {section === "returns" && <Card><CardHeader><CardTitle>Devoluciones registradas</CardTitle></CardHeader><CardContent className="space-y-2">{data.returns.map((row) => <div key={row.name} className="flex flex-wrap justify-between gap-2 border-b border-border py-2 text-sm"><span><strong>{row.reference}</strong> · {purchaseLabel(row.purchase)} · {row.kind === "Full Cancellation" ? "Cancelación completa" : "Devolución"} · {row.business_date}</span><span>{row.invoice_currency} {row.credit_amount} · Crédito pendiente {property.currency} {row.refund_available}</span></div>)}{!data.returns.length && <p className="text-sm text-muted-foreground">Sin devoluciones al proveedor.</p>}</CardContent></Card>}
+    {section === "returns" && <Card><CardHeader><CardTitle>Devoluciones registradas</CardTitle></CardHeader><CardContent>
+      <PurchaseDocumentBrowser property={property} kind="Return" refreshToken={data} />
+    </CardContent></Card>}
   </div>
 }
 

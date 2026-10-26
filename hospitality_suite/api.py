@@ -40,6 +40,7 @@ from hospitality_suite import standalone_opening_credits
 from hospitality_suite import standalone_opening_guarantees
 from hospitality_suite import standalone_opening_supplier_credits
 from hospitality_suite import standalone_supplier_paging
+from hospitality_suite import standalone_purchase_paging
 from hospitality_suite import standalone_purchase_orders
 from hospitality_suite import standalone_purchase_returns
 from hospitality_suite import standalone_financing
@@ -366,6 +367,13 @@ def pms_supplier_document_page(property_name, kind="Target", search="",
                                supplier="", currency="", offset=0, page_length=25):
     return standalone_supplier_paging.page(property_name, kind, search, supplier,
         currency, offset, page_length)
+
+
+@frappe.whitelist()
+def pms_purchase_document_page(property_name, kind="Purchase", search="",
+                               offset=0, page_length=25, available_only=0):
+    return standalone_purchase_paging.page(property_name, kind, search, offset,
+        page_length, available_only)
 
 
 @frappe.whitelist()
