@@ -28,19 +28,51 @@ def _stays(prop, folio):
             (folio.stay == row.name if folio.stay else folio.booking == row.booking)]
 
 
-def options(property_name, folio_name):
+def options(property_name, folio_name, compact=0):
+    prop = require(property_name, "finance")
+    require_pms(prop)
+    if str(compact) not in ("0", "1"):
+        frappe.throw(_("Revise la consulta de servicios de la cuenta"))
+    folio = document("HS Folio", folio_name, "finance")
+    if folio.property != prop.name or folio.company != prop.company:
+        frappe.throw(_("La cuenta de estancia pertenece a otro establecimiento"), frappe.PermissionError)
+    result = {"stays": [{"name": row.name} for row in _stays(prop, folio)]}
+    if str(compact) == "1":
+        return result
+    products = frappe.get_all("HS Product", filters={"property": prop.name,
+        "organization": prop.organization, "product_type": "Service", "active": 1},
+        fields=["name", "product_code", "product_name", "sales_rate", "tax_profile",
+                "income_account"], order_by="product_name asc", limit_page_length=500)
+    return {**result, "products": [row for row in products if row.income_account and
+            row.tax_profile and Decimal(str(row.sales_rate or 0)) > 0]}
+
+
+def product_page(property_name, folio_name, search="", offset=0, page_length=25):
     prop = require(property_name, "finance")
     require_pms(prop)
     folio = document("HS Folio", folio_name, "finance")
     if folio.property != prop.name or folio.company != prop.company:
         frappe.throw(_("La cuenta de estancia pertenece a otro establecimiento"), frappe.PermissionError)
-    products = frappe.get_all("HS Product", filters={"property": prop.name,
-        "organization": prop.organization, "product_type": "Service", "active": 1},
-        fields=["name", "product_code", "product_name", "sales_rate", "tax_profile",
-                "income_account"], order_by="product_name asc", limit_page_length=500)
-    return {"stays": [{"name": row.name} for row in _stays(prop, folio)],
-            "products": [row for row in products if row.income_account and row.tax_profile and
-                         Decimal(str(row.sales_rate or 0)) > 0]}
+    try:
+        offset, page_length = int(offset), int(page_length)
+    except (TypeError, ValueError, OverflowError):
+        frappe.throw(_("Revise la paginación de servicios de la cuenta"))
+    if (offset < 0 or offset > 1000000 or not 1 <= page_length <= 100 or
+            not isinstance(search, str) or len(search) > 100):
+        frappe.throw(_("Revise la búsqueda de servicios de la cuenta"))
+    term = search.strip()
+    rows = frappe.db.sql(
+        "SELECT name,product_code,product_name,sales_rate "
+        "FROM `tabHS Product` WHERE property=%s AND organization=%s "
+        "AND product_type='Service' AND active=1 AND sales_rate>0 "
+        "AND COALESCE(income_account,'')<>'' AND COALESCE(tax_profile,'')<>'' "
+        "AND (%s='' OR LOCATE(%s,name)>0 OR LOCATE(%s,product_code)>0 "
+        "OR LOCATE(%s,product_name)>0) "
+        "ORDER BY product_name ASC,name ASC LIMIT %s OFFSET %s",
+        (prop.name, prop.organization, term, term, term, term,
+         page_length + 1, offset), as_dict=True)
+    return {"rows": rows[:page_length], "offset": offset,
+            "has_more": len(rows) > page_length}
 
 
 def _quantity(value):

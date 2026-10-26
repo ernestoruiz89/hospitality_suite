@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
 import { call, execute, type Property } from "./api"
+import { FolioServiceBrowser, type FolioServiceProduct } from "./FolioServiceBrowser"
 import { availableFolioSections } from "./FolioSections"
 
 type Folio = {
@@ -25,9 +26,7 @@ type Quote = { folio: string; currency: string; total: string; acceptance: strin
   lines: { source_charge: string; description: string; amount: string;
     net_amount: string; tax_amount: string; tax_treatment: string;
     income_account: string; charge_names: string[] }[] }
-type ServiceOptions = { stays: { name: string }[]; products: {
-  name: string; product_code: string; product_name: string; sales_rate: number;
-  tax_profile: string; income_account: string }[] }
+type ServiceOptions = { stays: { name: string }[] }
 type ServiceQuote = { folio: string; stay: string; product: string; product_name: string;
   quantity: string; rate: string; currency: string; price: string;
   net_amount: string; tax_amount: string; total_amount: string;
@@ -55,6 +54,7 @@ export function Folios({ property, canApprove }: { property: Property; canApprov
   const [serviceOptions, setServiceOptions] = useState<ServiceOptions | null>(null)
   const [serviceStay, setServiceStay] = useState("")
   const [serviceProduct, setServiceProduct] = useState("")
+  const [selectedService, setSelectedService] = useState<FolioServiceProduct | null>(null)
   const [serviceQuantity, setServiceQuantity] = useState("1")
   const [serviceQuote, setServiceQuote] = useState<(ServiceQuote & { requestKey: string }) | null>(null)
   const [adjustmentOptions, setAdjustmentOptions] = useState<AdjustmentOption[] | null>(null)
@@ -98,7 +98,7 @@ export function Folios({ property, canApprove }: { property: Property; canApprov
   useEffect(() => {
     setFolioPage(null); setSearch(""); setAppliedSearch(""); setOffset(0)
     setReceivableAccount(""); setQuote(null)
-    setServiceOptions(null); setServiceStay(""); setServiceProduct(""); setServiceQuantity("1"); setServiceQuote(null)
+    setServiceOptions(null); setServiceStay(""); setServiceProduct(""); setSelectedService(null); setServiceQuantity("1"); setServiceQuote(null)
     setAdjustmentOptions(null); setSourceCharge(""); setAdjustmentAmount(""); setAdjustmentReason(""); setAdjustmentQuote(null)
     setError(""); setNotice("")
   }, [property.name])
@@ -121,8 +121,9 @@ export function Folios({ property, canApprove }: { property: Property; canApprov
   useEffect(() => {
     if (section.id !== "services" || !selected) { setServiceOptions(null); return }
     let cancelled = false
-    setServiceOptions(null); setServiceStay(""); setServiceProduct(""); setServiceQuote(null)
-    call<ServiceOptions>("pms_folio_service_options", { property_name: property.name, folio })
+    setServiceOptions(null); setServiceStay(""); setServiceProduct(""); setSelectedService(null); setServiceQuote(null)
+    call<ServiceOptions>("pms_folio_service_options", { property_name: property.name,
+      folio, compact: "1" })
       .then((result) => {
         if (cancelled) return
         setServiceOptions(result)
@@ -302,12 +303,14 @@ export function Folios({ property, canApprove }: { property: Property; canApprov
         <CardContent className="space-y-3">{selected?.status === "Open" ? serviceOptions ? <>
           <form onSubmit={previewService} className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <label className="space-y-1 text-sm"><span>Estancia activa</span><select required value={serviceStay} onChange={(event) => { setServiceStay(event.target.value); setServiceQuote(null) }} className="h-9 w-full rounded-md border border-border bg-white px-2"><option value="">Seleccione una estancia</option>{serviceOptions.stays.map((row) => <option key={row.name} value={row.name}>{row.name}</option>)}</select></label>
-            <label className="space-y-1 text-sm"><span>Servicio</span><select required value={serviceProduct} onChange={(event) => { setServiceProduct(event.target.value); setServiceQuote(null) }} className="h-9 w-full rounded-md border border-border bg-white px-2"><option value="">Seleccione un servicio</option>{serviceOptions.products.map((row) => <option key={row.name} value={row.name}>{row.product_code} · {row.product_name} · {property.currency} {row.sales_rate}</option>)}</select></label>
+            <FolioServiceBrowser key={folio} property={property} folio={folio}
+              selected={selectedService} onSelect={(row) => {
+                setSelectedService(row); setServiceProduct(row?.name || ""); setServiceQuote(null)
+              }} />
             <label className="space-y-1 text-sm"><span>Cantidad</span><input required type="number" min="0.001" max="10000" step="0.001" value={serviceQuantity} onChange={(event) => { setServiceQuantity(event.target.value); setServiceQuote(null) }} className="h-9 w-full rounded-md border border-border bg-white px-2" /></label>
-            <div className="flex items-end"><Button disabled={busy || !serviceOptions.stays.length || !serviceOptions.products.length}>Revisar servicio</Button></div>
+            <div className="flex items-end"><Button disabled={busy || !serviceStay || !serviceProduct}>Revisar servicio</Button></div>
           </form>
           {serviceQuote && <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border p-3 text-sm"><span><strong>{serviceQuote.product_name}</strong> · {serviceQuote.quantity} × {serviceQuote.currency} {serviceQuote.rate}<span className="block text-muted-foreground">Base {serviceQuote.net_amount} · Impuesto {serviceQuote.tax_amount} · {serviceQuote.tax_treatment}</span></span><span className="font-semibold">Total estimado {serviceQuote.currency} {serviceQuote.total_amount}</span><Button disabled={busy} onClick={addService}>Añadir cargo</Button></div>}
-          {!serviceOptions.products.length && <p className="text-sm text-muted-foreground">Configure un servicio activo con precio, cuenta de ingresos y perfil tributario en Servicios PMS.</p>}
           {!serviceOptions.stays.length && <p className="text-sm text-muted-foreground">Esta cuenta no tiene una estancia activa para el servicio.</p>}
         </> : <Skeleton className="h-24 w-full" /> : <p className="text-sm text-muted-foreground">Seleccione una cuenta abierta para añadir servicios.</p>}</CardContent></Card>}
       {section.id === "adjustments" && canApprove && <Card><CardHeader><CardTitle>Corregir cargo pendiente</CardTitle><CardDescription>Gerencia puede registrar un descuento o recargo con motivo. Si el descuento cubre todo el cargo, se anulan los movimientos pendientes. Un cargo contabilizado requiere cancelación contable o nota de crédito, según su factura y cobros.</CardDescription></CardHeader>

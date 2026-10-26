@@ -1128,8 +1128,15 @@ def pms_folio_quote(property_name, data):
 
 
 @frappe.whitelist()
-def pms_folio_service_options(property_name, folio):
-    return standalone_folio_services.options(property_name, folio)
+def pms_folio_service_options(property_name, folio, compact=0):
+    return standalone_folio_services.options(property_name, folio, compact)
+
+
+@frappe.whitelist()
+def pms_folio_service_products(property_name, folio, search="",
+                               offset=0, page_length=25):
+    return standalone_folio_services.product_page(property_name, folio,
+        search, offset, page_length)
 
 
 @frappe.whitelist()

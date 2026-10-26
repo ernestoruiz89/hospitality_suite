@@ -2971,6 +2971,41 @@ def run():
         service_options = api.pms_folio_service_options(second_prop.name, fixture["folio"])
         assert fixture["stay"] in [row["name"] for row in service_options["stays"]]
         assert taxed_product in [row["name"] for row in service_options["products"]]
+        assert api.pms_folio_service_options(second_prop.name, fixture["folio"],
+            compact=1) == {"stays": service_options["stays"]}
+        service_products = api.pms_folio_service_products(second_prop.name,
+            fixture["folio"], search=taxed_product)
+        assert len(service_products["rows"]) == 1
+        assert service_products["rows"][0]["name"] == taxed_product
+        if len(service_options["products"]) > 1:
+            first_service_page = api.pms_folio_service_products(second_prop.name,
+                fixture["folio"], page_length=1)
+            next_service_page = api.pms_folio_service_products(second_prop.name,
+                fixture["folio"], offset=1, page_length=1)
+            assert first_service_page["has_more"]
+            assert first_service_page["rows"][0]["name"] != next_service_page["rows"][0]["name"]
+        try:
+            api.pms_folio_service_products(prop.name, fixture["folio"])
+        except frappe.PermissionError:
+            frappe.clear_messages()
+        else:
+            raise AssertionError("Se consultaron servicios de una cuenta de otro hotel")
+        try:
+            api.pms_folio_service_products(second_prop.name, fixture["folio"], offset=-1)
+        except frappe.ValidationError:
+            frappe.clear_messages()
+        else:
+            raise AssertionError("La búsqueda de servicios aceptó una página negativa")
+        frappe.set_user("Guest")
+        try:
+            try:
+                api.pms_folio_service_products(second_prop.name, fixture["folio"])
+            except frappe.PermissionError:
+                frappe.clear_messages()
+            else:
+                raise AssertionError("Un visitante consultó servicios privados")
+        finally:
+            frappe.set_user("Administrator")
         service_data = dict(folio=fixture["folio"], stay=fixture["stay"],
                             product=taxed_product, quantity="1")
         stale_service = api.pms_folio_service_quote(second_prop.name, service_data)
