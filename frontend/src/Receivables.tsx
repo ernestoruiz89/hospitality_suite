@@ -8,6 +8,7 @@ import { call, type Property } from "./api"
 import { OpeningCreditsPms } from "./OpeningCreditsPms"
 import { OpeningGuaranteesPms } from "./OpeningGuaranteesPms"
 import { ReceivableBalances } from "./ReceivableBalances"
+import { ReceivablePicker, type OpenReceivable } from "./ReceivablePicker"
 import { availableReceivableSections } from "./ReceivableSections"
 import { useIdempotentCommand } from "./useIdempotentCommand"
 
@@ -66,7 +67,7 @@ export function Receivables({ property, canCreate, canCancel }: { property: Prop
   const [receivableAccount, setReceivableAccount] = useState("")
   const [incomeAccount, setIncomeAccount] = useState("")
   const [taxProfile, setTaxProfile] = useState("")
-  const [receivable, setReceivable] = useState("")
+  const [selectedReceivable, setSelectedReceivable] = useState<OpenReceivable | null>(null)
   const [advance, setAdvance] = useState("")
   const [depositKind, setDepositKind] = useState<"Advance" | "Guarantee">("Advance")
   const [applyAmount, setApplyAmount] = useState("")
@@ -89,7 +90,7 @@ export function Receivables({ property, canCreate, canCancel }: { property: Prop
     setSearchParams(next, { replace: true })
   }, [searchParams, sections, setSearchParams])
   useEffect(() => {
-    setData(null); setError(""); setNotice(""); setParty(""); setReceivable(""); setAdvance(""); setDepositKind("Advance"); setUnapplyKind("Advance"); setTaxProfile("")
+    setData(null); setError(""); setNotice(""); setParty(""); setSelectedReceivable(null); setAdvance(""); setDepositKind("Advance"); setUnapplyKind("Advance"); setTaxProfile("")
     refresh().catch((issue: unknown) => setError(issue instanceof Error ? issue.message : "No se pudieron consultar las cuentas."))
   }, [refresh])
   async function createCustomer() {
@@ -115,13 +116,14 @@ export function Receivables({ property, canCreate, canCancel }: { property: Prop
     finally { setBusy(false) }
   }
   async function applyAdvance(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault(); if (busy) return
+    event.preventDefault(); if (busy || !selectedReceivable) return
     setBusy(true); setError(""); setNotice("")
     try {
       await send(depositKind === "Guarantee" ? "pms_apply_guarantee" : "pms_apply_advance",
-        { receivable, [depositKind === "Guarantee" ? "guarantee" : "advance"]: advance,
+        { receivable: selectedReceivable.name,
+          [depositKind === "Guarantee" ? "guarantee" : "advance"]: advance,
           amount: applyAmount, reason })
-      setApplyAmount(""); setReason("")
+      setApplyAmount(""); setReason(""); setSelectedReceivable(null); setAdvance("")
       await refreshAfter("Depósito aplicado y contabilizado.")
     } catch (issue) { setError(issue instanceof Error ? issue.message : "No se pudo aplicar el depósito.") }
     finally { setBusy(false) }
@@ -137,7 +139,7 @@ export function Receivables({ property, canCreate, canCancel }: { property: Prop
     } catch (issue) { setError(issue instanceof Error ? issue.message : "No se pudo revertir la aplicación.") }
     finally { setBusy(false) }
   }
-  const selected = data?.receivables.find((item) => item.name === receivable)
+  const selected = selectedReceivable
   const deposits = depositKind === "Guarantee" ? data?.guarantees : data?.advances
   const matchingDeposits = deposits?.filter((item) => item.pms_party === selected?.party &&
     (depositKind !== "Guarantee" || (!!selected?.folio && item.folio === selected.folio) ||
@@ -166,7 +168,9 @@ export function Receivables({ property, canCreate, canCancel }: { property: Prop
         </form></CardContent></Card>}
       {section.id === "apply" && <Card><CardHeader><CardTitle>Aplicar depósito</CardTitle><CardDescription>El anticipo o la garantía reduce el saldo por cobrar sin mover efectivo del turno. La garantía solo se aplica a su cuenta de estancia y requiere Gerencia.</CardDescription></CardHeader><CardContent><form onSubmit={applyAdvance} className="grid max-w-2xl gap-3">
           <select value={depositKind} onChange={(event) => { setDepositKind(event.target.value as "Advance" | "Guarantee"); setAdvance("") }} className="h-9 rounded-md border border-border bg-white px-2 text-sm"><option value="Advance">Anticipo</option>{canCancel && <option value="Guarantee">Garantía</option>}</select>
-          <select required value={receivable} onChange={(event) => { setReceivable(event.target.value); setAdvance("") }} className="h-9 rounded-md border border-border bg-white px-2 text-sm"><option value="">Cuenta pendiente</option>{data.receivables.filter((item) => item.currency === property.currency && Number(item.outstanding) > 0).map((item) => <option key={item.name} value={item.name}>{item.reference} · {customerName(item.party)} · {item.currency} {item.outstanding}</option>)}</select>
+          <ReceivablePicker property={property} currency={property.currency}
+            selected={selectedReceivable} refreshToken={data}
+            onSelect={(item) => { setSelectedReceivable(item); setAdvance("") }} />
           <select required value={advance} onChange={(event) => setAdvance(event.target.value)} className="h-9 rounded-md border border-border bg-white px-2 text-sm"><option value="">{depositKind === "Guarantee" ? "Garantía de la cuenta" : "Anticipo del cliente"}</option>{matchingDeposits.map((item) => <option key={item.name} value={item.name}>{item.reference} · {item.currency} {item.amount} · Disponible {property.currency} {item.available}</option>)}</select>
           <Input required type="number" min="0.01" step="0.01" placeholder={`Aplicar ${property.currency}`} value={applyAmount} onChange={(event) => setApplyAmount(event.target.value)} />
           <Input required maxLength={500} placeholder="Motivo" value={reason} onChange={(event) => setReason(event.target.value)} />

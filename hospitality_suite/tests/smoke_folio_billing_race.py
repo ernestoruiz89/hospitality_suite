@@ -220,6 +220,19 @@ def run():
                 api.pms_receivables_page(property_name,
                     search="missing-" + suffix)["rows"]):
             raise AssertionError("Customer receivable search was not scoped")
+        for scope in ({"party": party, "currency": "NIO",
+                       "folio": fixture["folio"]},
+                      {"party": party, "stay": fixture["stay"]}):
+            filtered = api.pms_receivables_page(property_name, **scope)
+            if {row["name"] for row in filtered["rows"]} != {
+                    row.name for row in rows}:
+                raise AssertionError("Eligible receivables were missing from a filtered page")
+        for scope in ({"party": "missing-" + suffix}, {"currency": "USD"},
+                      {"folio": "missing-" + suffix},
+                      {"stay": "missing-" + suffix},
+                      {"booking": "missing-" + suffix}):
+            if api.pms_receivables_page(property_name, **scope)["rows"]:
+                raise AssertionError("Receivable filter included an ineligible account")
         sites_path = Path(frappe.local.sites_path).resolve()
         for index, same_key in enumerate((True, False)):
             receivable = (first_result if index == 0 else second_result)[

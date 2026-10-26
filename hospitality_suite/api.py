@@ -333,8 +333,10 @@ def pms_receivables(property_name):
 
 
 @frappe.whitelist()
-def pms_receivables_page(property_name, search="", offset=0, page_length=25):
-    return standalone_receivables.receivables_page(property_name, search, offset, page_length)
+def pms_receivables_page(property_name, search="", offset=0, page_length=25,
+                         party="", currency="", folio="", stay="", booking=""):
+    return standalone_receivables.receivables_page(property_name, search, offset,
+        page_length, party, currency, folio, stay, booking)
 
 
 @frappe.whitelist()

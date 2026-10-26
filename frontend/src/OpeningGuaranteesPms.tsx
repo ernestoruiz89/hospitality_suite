@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { call, type Property } from "./api"
+import { ReceivablePicker, type OpenReceivable } from "./ReceivablePicker"
 import { type SendCommand } from "./useIdempotentCommand"
 
 type Guarantee = { name: string; customer: string; opening_source_name: string;
@@ -39,7 +40,7 @@ export function OpeningGuaranteesPms({ property, data, refresh, send, canApprove
   const [error, setError] = useState("")
   const [notice, setNotice] = useState("")
   const [applyGuarantee, setApplyGuarantee] = useState("")
-  const [applyReceivable, setApplyReceivable] = useState("")
+  const [selectedReceivable, setSelectedReceivable] = useState<OpenReceivable | null>(null)
   const [applyAmount, setApplyAmount] = useState("")
   const [applyReason, setApplyReason] = useState("")
   const [applyQuote, setApplyQuote] = useState<ApplyQuote | null>(null)
@@ -54,13 +55,6 @@ export function OpeningGuaranteesPms({ property, data, refresh, send, canApprove
   }
   const selectedMethod = data.refund_methods.find((item) => item.name === method)
   const selectedGuarantee = data.opening_guarantees.find((item) => item.name === applyGuarantee)
-  const matchingReceivables = selectedGuarantee ? data.receivables.filter((item) =>
-    item.party === selectedGuarantee.customer && Number(item.outstanding) > 0 &&
-    !!item.folio && (selectedGuarantee.source_folio
-      ? item.folio === selectedGuarantee.source_folio
-      : selectedGuarantee.source_stay
-        ? item.folio_stay === selectedGuarantee.source_stay
-        : item.booking === selectedGuarantee.source_booking)) : []
   const selectedApplication = data.opening_guarantee_applications.find(
     (item) => item.name === reverseAllocation)
   const customerName = (id: string) => data.customers.find((item) => item.name === id)?.party_name || id
@@ -86,9 +80,9 @@ export function OpeningGuaranteesPms({ property, data, refresh, send, canApprove
   }
 
   async function apply(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault(); if (busy) return
+    event.preventDefault(); if (busy || !selectedReceivable) return
     setBusy(true); setError(""); setNotice("")
-    const request = { guarantee: applyGuarantee, receivable: applyReceivable,
+    const request = { guarantee: applyGuarantee, receivable: selectedReceivable.name,
       amount: applyAmount, reason: applyReason.trim() }
     try {
       if (!applyQuote) {
@@ -96,7 +90,7 @@ export function OpeningGuaranteesPms({ property, data, refresh, send, canApprove
           { property_name: property.name, data: JSON.stringify(request) }))
       } else {
         await send("pms_apply_opening_guarantee", { ...request, acceptance: applyQuote.acceptance })
-        setApplyAmount(""); setApplyReason("")
+        setApplyAmount(""); setApplyReason(""); setSelectedReceivable(null)
         invalidateApply()
         await refreshAfter("Garantía aplicada a la cuenta y contabilizada.")
       }
@@ -135,18 +129,24 @@ export function OpeningGuaranteesPms({ property, data, refresh, send, canApprove
   </CardContent></Card>
     {mode === "apply" && canApprove && <Card><CardHeader><CardTitle>Aplicar garantía de apertura</CardTitle>
       <CardDescription>Reduce un cargo pendiente de la misma cuenta de estancia y cliente, sin mover efectivo.</CardDescription></CardHeader><CardContent><form onSubmit={apply} className="grid gap-3 sm:grid-cols-2">
-      <select required value={applyGuarantee} onChange={(event) => { setApplyGuarantee(event.target.value); setApplyReceivable(""); invalidateApply() }} className="h-9 rounded-md border bg-white px-2 text-sm sm:col-span-2">
+      <select required value={applyGuarantee} onChange={(event) => { setApplyGuarantee(event.target.value); setSelectedReceivable(null); invalidateApply() }} className="h-9 rounded-md border bg-white px-2 text-sm sm:col-span-2">
         <option value="">Garantía disponible</option>{data.opening_guarantees.filter((item) => Number(item.available) > 0).map((item) =>
           <option key={item.name} value={item.name}>{item.opening_source_name} · {customerName(item.customer)} · Disponible {property.currency} {item.available}</option>)}
       </select>
-      <select required value={applyReceivable} onChange={(event) => { setApplyReceivable(event.target.value); invalidateApply() }} className="h-9 rounded-md border bg-white px-2 text-sm sm:col-span-2">
-        <option value="">Cargo pendiente de la cuenta</option>{matchingReceivables.map((item) =>
-          <option key={item.name} value={item.name}>{item.reference} · Pendiente {property.currency} {item.outstanding}</option>)}
-      </select>
+      <div className="sm:col-span-2"><ReceivablePicker property={property}
+        party={selectedGuarantee?.customer} currency={property.currency}
+        folio={selectedGuarantee?.source_folio || undefined}
+        stay={!selectedGuarantee?.source_folio ? selectedGuarantee?.source_stay || undefined : undefined}
+        booking={!selectedGuarantee?.source_folio && !selectedGuarantee?.source_stay
+          ? selectedGuarantee?.source_booking || undefined : undefined}
+        enabled={!!selectedGuarantee && !!(selectedGuarantee.source_folio ||
+          selectedGuarantee.source_stay || selectedGuarantee.source_booking)}
+        label="Cargo pendiente de la cuenta" selected={selectedReceivable}
+        refreshToken={data} onSelect={(item) => { setSelectedReceivable(item); invalidateApply() }} /></div>
       <Input required type="number" min="0.01" step="0.01" placeholder={`Aplicar ${property.currency}`} value={applyAmount} onChange={(event) => { setApplyAmount(event.target.value); invalidateApply() }} />
       <Input required maxLength={500} placeholder="Motivo" value={applyReason} onChange={(event) => { setApplyReason(event.target.value); invalidateApply() }} />
       {applyQuote && <p className="rounded-md bg-secondary p-3 text-sm sm:col-span-2">Débito {applyQuote.debit} · Crédito {applyQuote.credit} · {applyQuote.currency} {applyQuote.amount}. Garantía disponible después: {applyQuote.available_after}; cuenta pendiente: {applyQuote.outstanding_after}.</p>}
-      <Button disabled={busy || !applyReceivable}>{applyQuote ? "Confirmar aplicación" : "Revisar aplicación"}</Button>
+      <Button disabled={busy || !selectedReceivable}>{applyQuote ? "Confirmar aplicación" : "Revisar aplicación"}</Button>
     </form></CardContent></Card>}
     {mode === "refund" && canApprove && <Card><CardHeader><CardTitle>Devolver garantía de apertura</CardTitle>
       <CardDescription>Entrega en Caja o banco el saldo que no se haya aplicado.</CardDescription></CardHeader><CardContent><form onSubmit={submit} className="grid gap-3 sm:grid-cols-2">

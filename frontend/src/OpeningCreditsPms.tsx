@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { call, type Property } from "./api"
+import { ReceivablePicker, type OpenReceivable } from "./ReceivablePicker"
 import { type SendCommand } from "./useIdempotentCommand"
 
 type Credit = { name: string; credit_kind: string; customer: string;
@@ -33,7 +34,7 @@ export function OpeningCreditsPms({ property, data, refresh, send, canApprove, m
   mode: "apply" | "refund" | "reverse"
 }) {
   const [credit, setCredit] = useState("")
-  const [receivable, setReceivable] = useState("")
+  const [selectedReceivable, setSelectedReceivable] = useState<OpenReceivable | null>(null)
   const [amount, setAmount] = useState("")
   const [reason, setReason] = useState("")
   const [applyQuote, setApplyQuote] = useState<ApplyQuote | null>(null)
@@ -64,16 +65,17 @@ export function OpeningCreditsPms({ property, data, refresh, send, canApprove, m
   const sourceName = (id: string) => data.opening_credits.credits.find((item) => item.name === id)?.opening_source_name || id
 
   async function applyCredit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault(); if (busy) return
+    event.preventDefault(); if (busy || !selectedReceivable) return
     setBusy(true); setError(""); setNotice("")
-    const request = { credit, receivable, amount, reason: reason.trim() }
+    const request = { credit, receivable: selectedReceivable.name,
+      amount, reason: reason.trim() }
     try {
       if (!applyQuote) {
         setApplyQuote(await call<ApplyQuote>("pms_opening_credit_apply_quote",
           { property_name: property.name, data: JSON.stringify(request) }))
       } else {
         await send("pms_apply_opening_credit", { ...request, acceptance: applyQuote.acceptance })
-        setAmount(""); setReason(""); invalidateApply()
+        setAmount(""); setReason(""); setSelectedReceivable(null); invalidateApply()
         await refreshAfter("Crédito inicial aplicado a la cuenta por cobrar.")
       }
     } catch (issue) { setError(issue instanceof Error ? issue.message : "No se pudo aplicar el crédito.") }
@@ -126,12 +128,15 @@ export function OpeningCreditsPms({ property, data, refresh, send, canApprove, m
     <div className="space-y-2">{data.opening_credits.credits.map((item) => <div key={item.name} className="flex flex-wrap items-center justify-between gap-2 border-b py-2 text-sm"><span><strong>{item.opening_source_name}</strong> · {item.credit_kind === "Credit Note" ? "Nota de crédito" : "Anticipo"} · {customerName(item.customer)}{item.historical_document && <a className="ml-2 text-primary underline" target="_blank" rel="noopener noreferrer" href={`/api/method/hospitality_suite.api.historical_fiscal_pdf?document=${encodeURIComponent(item.historical_document)}`}>Imprimir copia fiscal</a>}</span><span>Disponible {item.currency} {item.available} / {item.amount}{item.currency !== property.currency && <small className="block text-muted-foreground">Valor base {property.currency} {item.base_available} / {item.base_amount}</small>}</span></div>)}</div>
     <div className="max-w-2xl">
       {mode === "apply" && <form onSubmit={applyCredit} className="space-y-3 rounded-lg border p-4"><h3 className="font-medium">Aplicar a una cuenta</h3>
-        <select required value={credit} onChange={(event) => { setCredit(event.target.value); setReceivable(""); invalidateApply() }} className="h-9 w-full rounded-md border bg-white px-2 text-sm"><option value="">Crédito disponible</option>{data.opening_credits.credits.filter((item) => Number(item.available) > 0).map((item) => <option key={item.name} value={item.name}>{item.opening_source_name} · {customerName(item.customer)} · {item.currency} {item.available}</option>)}</select>
-        <select required value={receivable} onChange={(event) => { setReceivable(event.target.value); invalidateApply() }} className="h-9 w-full rounded-md border bg-white px-2 text-sm"><option value="">Cuenta por cobrar</option>{data.receivables.filter((item) => item.party === selected?.customer && item.currency === selected?.currency && Number(item.outstanding) > 0).map((item) => <option key={item.name} value={item.name}>{item.reference} · Pendiente {item.currency} {item.outstanding}</option>)}</select>
+        <select required value={credit} onChange={(event) => { setCredit(event.target.value); setSelectedReceivable(null); invalidateApply() }} className="h-9 w-full rounded-md border bg-white px-2 text-sm"><option value="">Crédito disponible</option>{data.opening_credits.credits.filter((item) => Number(item.available) > 0).map((item) => <option key={item.name} value={item.name}>{item.opening_source_name} · {customerName(item.customer)} · {item.currency} {item.available}</option>)}</select>
+        <ReceivablePicker property={property} party={selected?.customer}
+          currency={selected?.currency} enabled={!!selected} label="Cuenta por cobrar"
+          selected={selectedReceivable} refreshToken={data}
+          onSelect={(item) => { setSelectedReceivable(item); invalidateApply() }} />
         <Input required type="number" min="0.01" step="0.01" placeholder={`Importe ${selected?.currency || property.currency}`} value={amount} onChange={(event) => { setAmount(event.target.value); invalidateApply() }} />
         <Input required maxLength={500} placeholder="Motivo" value={reason} onChange={(event) => { setReason(event.target.value); invalidateApply() }} />
         {applyQuote && <p className="rounded-md bg-secondary p-3 text-sm">{applyQuote.journal_required ? `Débito ${applyQuote.debit} · Crédito ${applyQuote.credit}. ` : "Aplicación dentro de la misma cuenta. "}Disponible después: {selected?.currency || property.currency} {applyQuote.available_after}. Cuenta pendiente: {selected?.currency || property.currency} {applyQuote.outstanding_after}.{applyQuote.settlement_currency && <span className="block">Valor base del crédito {property.currency} {applyQuote.source_base_amount} · Cartera liberada {property.currency} {applyQuote.target_base_amount} · Cambio {property.currency} {applyQuote.exchange_variance_base}</span>}</p>}
-        <Button disabled={busy || !credit || !receivable}>{applyQuote ? "Confirmar aplicación" : "Revisar aplicación"}</Button>
+        <Button disabled={busy || !credit || !selectedReceivable}>{applyQuote ? "Confirmar aplicación" : "Revisar aplicación"}</Button>
       </form>}
       {mode === "refund" && canApprove && <form onSubmit={submitRefund} className="space-y-3 rounded-lg border p-4"><h3 className="font-medium">Devolver crédito</h3>
         <select required value={refundCredit} onChange={(event) => { setRefundCredit(event.target.value); setRefundSettled(""); invalidateRefund() }} className="h-9 w-full rounded-md border bg-white px-2 text-sm"><option value="">Crédito disponible</option>{data.opening_credits.credits.filter((item) => Number(item.available) > 0).map((item) => <option key={item.name} value={item.name}>{item.opening_source_name} · {item.currency} {item.available}</option>)}</select>

@@ -496,10 +496,16 @@ def cancel(prop, data, *, allow_day_pass=False):
 
 
 def list_receivables(prop, open_only=False, folio=None, receivable=None, *,
-                     search="", offset=0, page_length=200):
+                     search="", offset=0, page_length=200, party="", currency="",
+                     stay="", booking=""):
     open_filter = " AND (r.amount-COALESCE(a.original_allocated,0)-COALESCE(c.credited,0))>0" if open_only else ""
     folio_filter = " AND r.folio=%s" if folio else ""
     receivable_filter = " AND r.name=%s" if receivable else ""
+    scope_filter = (" AND r.party=%s" if party else "") + (
+        " AND r.currency=%s" if currency else "") + (
+        " AND f.stay=%s" if stay else "") + (
+        " AND r.folio IS NOT NULL AND COALESCE(f.booking,s.booking)=%s"
+        if booking else "")
     search_filter = (" AND (LOCATE(%s,r.name)>0 OR LOCATE(%s,r.reference)>0 "
                      "OR LOCATE(%s,p.party_name)>0)"
                      if search else "")
@@ -533,17 +539,20 @@ def list_receivables(prop, open_only=False, folio=None, receivable=None, *,
         "WHERE d.property=%s AND d.document_type='Credit Note' AND d.status='Posted' "
         "GROUP BY l.receivable) c ON c.receivable=r.name "
         "WHERE r.property=%s AND r.status='Posted'" + open_filter + folio_filter +
-        receivable_filter + search_filter +
+        receivable_filter + scope_filter + search_filter +
         " ORDER BY r.creation DESC,r.name DESC LIMIT %s OFFSET %s",
         (prop.name, prop.name, prop.name, *((folio,) if folio else ()),
          *((receivable,) if receivable else ()),
+         *((party,) if party else ()), *((currency,) if currency else ()),
+         *((stay,) if stay else ()), *((booking,) if booking else ()),
          *((search,) * 3 if search else ()),
          page_length, offset), as_dict=True)
     return [{**row, "outstanding": _money(row.outstanding),
              "base_outstanding": _money(row.base_outstanding)} for row in rows]
 
 
-def receivables_page(property_name, search="", offset=0, page_length=25):
+def receivables_page(property_name, search="", offset=0, page_length=25,
+                     party="", currency="", folio="", stay="", booking=""):
     prop = require(property_name, "finance")
     require_pms(prop)
     try:
@@ -551,10 +560,14 @@ def receivables_page(property_name, search="", offset=0, page_length=25):
     except (TypeError, ValueError):
         frappe.throw(_("Revise la paginación de cuentas por cobrar"))
     if (not isinstance(search, str) or len(search) > 100 or
+            any(not isinstance(value, str) or len(value) > 140
+                for value in (party, currency, folio, stay, booking)) or
+            sum(bool(value) for value in (folio, stay, booking)) > 1 or
             offset < 0 or page_length < 1 or page_length > 100):
         frappe.throw(_("Revise la búsqueda de cuentas por cobrar"))
     rows = list_receivables(prop, open_only=True, search=search.strip(),
-        offset=offset, page_length=page_length + 1)
+        offset=offset, page_length=page_length + 1, party=party,
+        currency=currency, folio=folio or None, stay=stay, booking=booking)
     return {"rows": rows[:page_length], "search": search.strip(),
             "offset": offset, "has_more": len(rows) > page_length}
 
