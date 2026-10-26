@@ -164,6 +164,7 @@ COMMANDS = {
     "pms_day_pass_cancel": ("approve", standalone_day_pass.cancel),
     "pms_historical_day_pass_return": ("approve", standalone_day_pass.historical_return),
     "erp_historical_day_pass_return": ("approve", erp_historical_day_pass.return_pass),
+    "erp_historical_day_pass_return_reversal": ("approve", erp_historical_day_pass.reverse_return),
     "pms_opening_balance": ("setup", standalone_accounting.opening_balance),
     "pms_manual_journal": ("journal", standalone_accounting.manual_journal),
     "pms_reverse_journal": ("approve", standalone_accounting.reverse),
@@ -252,6 +253,7 @@ ERP_ONLY_ACTIONS = frozenset({
     "apply_customer_advance", "open_shift", "close_shift",
     "credit_note", "apply_guarantee", "withdrawal",
     "direct_sale", "return_direct_sale", "erp_historical_day_pass_return",
+    "erp_historical_day_pass_return_reversal",
     "erp_historical_direct_sale_return_reversal",
     "cash_expense", "cash_expense_reviewed",
     "settle_payment", "purchase_order", "receive_purchase",
@@ -1030,6 +1032,12 @@ def pms_historical_day_pass_return_quote(property_name, data):
 def erp_historical_day_pass_return_quote(property_name, data):
     prop = require(property_name, "approve")
     return erp_historical_day_pass.quote(prop, payload(data))
+
+
+@frappe.whitelist()
+def erp_historical_day_pass_return_reversal_quote(property_name, data):
+    prop = require(property_name, "approve")
+    return erp_historical_day_pass.reversal_quote(prop, payload(data))
 
 
 @frappe.whitelist()

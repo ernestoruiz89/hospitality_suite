@@ -477,12 +477,14 @@ def guard_cancel(doc,method=None):
             frappe.throw(frappe._(
                 "El reembolso histórico de la venta PMS está vinculado a su devolución"))
         if doc.doctype=="Sales Invoice":
+            day_reversal = getattr(frappe.local,
+                "hs_erp_historical_day_pass_reversal", None)
             if frappe.db.exists("HS Day Pass", {
                     "erp_opening_invoice": doc.name}):
                 frappe.throw(frappe._(
                     "La factura de apertura de este Day Pass conserva el saldo trasladado"))
-            if frappe.db.exists("HS Day Pass", {
-                    "erp_return_credit_note": doc.name}):
+            if (linked := frappe.db.exists("HS Day Pass", {
+                    "erp_return_credit_note": doc.name})) and linked != day_reversal:
                 frappe.throw(frappe._(
                     "La nota histórica del Day Pass está vinculada a su devolución; use una corrección integral"))
             bookings=frappe.get_all("HS Charge",filters={"sales_invoice":doc.name,"kind":"Lodging"},pluck="stay")
@@ -498,10 +500,12 @@ def guard_cancel(doc,method=None):
                     (doc.name,), as_list=True):
                 frappe.throw(frappe._(
                     "Revierta primero el reembolso vinculado a esta nota de crédito"))
-        if doc.doctype == "Payment Entry" and frappe.db.sql(
+        if (doc.doctype == "Payment Entry" and (linked := frappe.db.sql(
                 "SELECT pass.name FROM `tabHS Day Pass` pass "
                 "JOIN `tabHS Payment` payment ON payment.name=pass.erp_return_refund "
-                "WHERE payment.payment_entry=%s LIMIT 1", (doc.name,)):
+                "WHERE payment.payment_entry=%s LIMIT 1", (doc.name,))) and
+                linked[0][0] != getattr(frappe.local,
+                    "hs_erp_historical_day_pass_reversal", None)):
             frappe.throw(frappe._(
                 "El reembolso histórico del Day Pass está vinculado a su devolución"))
         if not doc.get("hs_correction_reason"):

@@ -5,7 +5,7 @@ from hashlib import sha256
 
 import frappe
 from frappe import _
-from frappe.utils import nowdate
+from frappe.utils import now_datetime, nowdate
 
 from hospitality_suite import accounting
 from hospitality_suite.pricing import money
@@ -308,6 +308,7 @@ def return_pass(prop, data):
     try:
         doc.erp_return_credit_note = credit.name
         doc.erp_return_refund = refund.name if refund else None
+        doc.erp_return_business_date = prop.business_date
         doc.status = "Cancelled"
         doc.save()
     finally:
@@ -321,3 +322,203 @@ def return_pass(prop, data):
     return {"day_pass": doc.name, "credit_note": credit.name,
             "refund": refund.name if refund else None,
             "opening_applied": str(outstanding)}
+
+
+def _reversal_source(prop, data):
+    from hospitality_suite.standalone_accounting import provider
+
+    if provider() != "erpnext":
+        frappe.throw(_("Esta corrección requiere contabilidad ERPNext"))
+    require(prop.name, "approve")
+    doc = locked_doc("HS Day Pass", data.get("day_pass"))
+    assert_version(doc, data.get("modified"))
+    if (doc.property != prop.name or doc.company != prop.company or
+            doc.status != "Cancelled" or not doc.pms_receivable or
+            not doc.quote_snapshot or doc.service or doc.sales_invoice or
+            doc.payment or not doc.erp_return_credit_note or
+            not doc.erp_opening_snapshot or not doc.erp_opening_sha256 or
+            sha256(doc.erp_opening_snapshot.encode()).hexdigest() !=
+                doc.erp_opening_sha256):
+        frappe.throw(_("Seleccione una devolución histórica vigente de Day Pass"))
+    proof = frappe.parse_json(doc.erp_opening_snapshot)
+    if (not isinstance(proof, dict) or proof.get("source") != doc.name or
+            proof.get("property") != prop.name or
+            proof.get("company") != prop.company or
+            proof.get("customer") != doc.customer or
+            proof.get("source_receivable") != doc.pms_receivable or
+            proof.get("opening_invoice") != doc.erp_opening_invoice):
+        frappe.throw(_("El Day Pass no concilia con su prueba de corte"))
+    business_date = doc.erp_return_business_date or frappe.db.get_value(
+        "HS Audit Event", {"property": prop.name,
+            "source_doctype": "HS Day Pass", "source_name": doc.name,
+            "action": "erp_historical_day_pass_returned"},
+        "business_date", order_by="creation desc")
+    if (str(business_date) != str(prop.business_date) or
+            frappe.db.exists("HS Daily Close", {"property": prop.name,
+                "business_date": prop.business_date, "status": "Closed"})):
+        frappe.throw(_("Solo puede corregir el Day Pass en la fecha operativa abierta"))
+    total = _remaining(proof)[2]
+    credit = locked_doc("Sales Invoice", doc.erp_return_credit_note)
+    refund = (locked_doc("HS Payment", doc.erp_return_refund)
+        if doc.erp_return_refund else None)
+    pe = locked_doc("Payment Entry", refund.payment_entry) if refund else None
+    method = locked_doc("HS Payment Method", refund.method) if refund else None
+    refund_base = _amount(refund.base_amount) if refund else Decimal(0)
+    application = total - refund_base
+    opening = (locked_doc("Sales Invoice", doc.erp_opening_invoice)
+        if doc.erp_opening_invoice else None)
+    if (credit.docstatus != 1 or not credit.is_return or credit.return_against or
+            credit.company != prop.company or credit.hs_property != prop.name or
+            credit.customer != doc.customer or credit.currency != prop.currency or
+            _amount(-credit.grand_total) != total or
+            _amount(abs(credit.outstanding_amount)) != 0 or
+            refund_base > total or (application and not opening) or
+            (opening and (opening.docstatus != 1 or opening.is_return or
+                opening.company != prop.company or
+                opening.hs_property != prop.name or
+                opening.customer != doc.customer or
+                opening.currency != prop.currency or
+                _amount(opening.outstanding_amount) != 0 or
+                _amount(opening.grand_total) !=
+                    _amount(proof["outstanding"]))) or
+            (refund and (refund.status != "Posted" or
+                refund.kind != "Refund" or refund.property != prop.name or
+                refund.company != prop.company or refund.customer != doc.customer or
+                refund.sales_invoice != credit.name or
+                str(refund.business_date) != str(prop.business_date) or
+                method.property != prop.name or method.company != prop.company or
+                method.currency != refund.currency or
+                bool(method.is_cash) != bool(refund.shift) or
+                not refund.payment_entry or pe.docstatus != 1 or
+                pe.company != prop.company or pe.hs_property != prop.name or
+                pe.payment_type != "Pay" or pe.party != doc.customer or
+                pe.paid_from != method.account or pe.hs_shift != refund.shift or
+                _amount(pe.paid_amount) != _amount(refund.amount) or
+                _amount(pe.received_amount) != refund_base or
+                money(Decimal(str(refund.amount)) *
+                    Decimal(str(refund.exchange_rate)),
+                    currency=prop.currency) != refund_base or
+                len(pe.references) != 1 or
+                pe.references[0].reference_doctype != "Sales Invoice" or
+                pe.references[0].reference_name != credit.name or
+                _amount(-pe.references[0].allocated_amount) != refund_base))):
+        frappe.throw(_("La devolución del Day Pass ya no concilia"))
+    shift = locked_doc("HS Shift", refund.shift) if refund and refund.shift else None
+    if shift and (shift.property != prop.name or shift.company != prop.company or
+            shift.status != "Open" or pe.hs_shift != shift.name):
+        frappe.throw(_("El turno del reembolso debe continuar abierto"))
+    history = (frappe.parse_json(doc.erp_return_corrections)
+        if doc.erp_return_corrections else [])
+    if (not isinstance(history, list) or
+            bool(doc.erp_return_corrections) !=
+                bool(doc.erp_return_corrections_sha256) or
+            (doc.erp_return_corrections and
+             sha256(doc.erp_return_corrections.encode()).hexdigest() !=
+                doc.erp_return_corrections_sha256)):
+        frappe.throw(_("El historial de correcciones del Day Pass no concilia"))
+    return doc, proof, credit, refund, pe, opening, shift, application, history
+
+
+def reversal_quote(prop, data):
+    if not isinstance(data, dict) or set(data) != {
+            "day_pass", "modified", "reason"}:
+        frappe.throw(_("Revise la corrección del Day Pass histórico"))
+    reason = data["reason"]
+    if (not isinstance(reason, str) or not reason.strip() or
+            len(reason.strip()) > 500):
+        frappe.throw(_("Indique un motivo de corrección válido"))
+    reason = reason.strip()
+    doc, proof, credit, refund, pe, opening, shift, application, history = (
+        _reversal_source(prop, data))
+    signature = {"day_pass": doc.name, "modified": str(doc.modified),
+        "snapshot_sha256": doc.erp_opening_sha256,
+        "history_sha256": doc.erp_return_corrections_sha256,
+        "credit": credit.name, "credit_modified": str(credit.modified),
+        "refund": refund.name if refund else None,
+        "refund_modified": str(refund.modified) if refund else None,
+        "payment_entry": pe.name if pe else None,
+        "payment_modified": str(pe.modified) if pe else None,
+        "opening": opening.name if opening else None,
+        "opening_modified": str(opening.modified) if opening else None,
+        "shift": shift.name if shift else None,
+        "shift_modified": str(shift.modified) if shift else None,
+        "application": str(application),
+        "business_date": str(prop.business_date), "reason": reason}
+    return {"day_pass": doc.name,
+        "original_invoice": proof["source_fiscal"].get(
+            "invoice", {}).get("document_number"),
+        "credit_note": credit.name,
+        "refund": refund.name if refund else None,
+        "payment_entry": pe.name if pe else None,
+        "opening_invoice": opening.name if opening else None,
+        "opening_applied": str(application),
+        "refund_currency": refund.currency if refund else None,
+        "refund_amount": str(refund.amount) if refund else "0",
+        "business_date": str(prop.business_date),
+        "correction_count": len(history), "reason": reason,
+        "acceptance": sha256(canonical(signature).encode()).hexdigest()}
+
+
+def reverse_return(prop, data):
+    if not isinstance(data, dict) or set(data) != {
+            "day_pass", "modified", "reason", "acceptance"}:
+        frappe.throw(_("Revise la corrección del Day Pass histórico"))
+    accepted = reversal_quote(prop, {key: value for key, value in data.items()
+        if key != "acceptance"})
+    if accepted["acceptance"] != data["acceptance"]:
+        frappe.throw(_("Cambió la devolución; revise la corrección"))
+    doc, proof, credit, refund, pe, opening, shift, application, history = (
+        _reversal_source(prop, data))
+    before = getattr(frappe.local, "hs_erp_historical_day_pass_reversal", None)
+    frappe.local.hs_erp_historical_day_pass_reversal = doc.name
+    try:
+        for native in (pe, credit):
+            if not native:
+                continue
+            native.reload()
+            if native.docstatus != 1:
+                frappe.throw(_("Cambió un comprobante de la devolución"))
+            native.hs_correction_reason = accepted["reason"]
+            native.flags.ignore_permissions = True
+            native.cancel()
+        if refund:
+            refund.reload()
+            if refund.status != "Cancelled":
+                frappe.throw(_("El reembolso del Day Pass no fue cancelado"))
+        if opening:
+            opening.reload()
+            if money(opening.outstanding_amount,
+                    currency=prop.currency) != application:
+                frappe.throw(_("La cartera de apertura no se restableció"))
+        history.append({"credit_note": credit.name,
+            "refund": refund.name if refund else None,
+            "payment_entry": pe.name if pe else None,
+            "opening_invoice": opening.name if opening else None,
+            "opening_applied": str(application),
+            "business_date": str(prop.business_date),
+            "actor": frappe.session.user, "at": str(now_datetime()),
+            "reason": accepted["reason"]})
+        doc.status = "Issued"
+        doc.erp_return_credit_note = None
+        doc.erp_return_refund = None
+        doc.erp_return_business_date = None
+        doc.erp_return_corrections = canonical(history)
+        doc.erp_return_corrections_sha256 = sha256(
+            doc.erp_return_corrections.encode()).hexdigest()
+        doc.save()
+    finally:
+        frappe.local.hs_erp_historical_day_pass_reversal = before
+    audit(prop, "erp_historical_day_pass_return_reversal", doc,
+        accepted["reason"], {"credit_note": credit.name,
+            "refund": refund.name if refund else None,
+            "payment_entry": pe.name if pe else None,
+            "opening_invoice": opening.name if opening else None,
+            "opening_applied": str(application),
+            "correction_count": len(history)})
+    return {"day_pass": doc.name, "status": doc.status,
+        "credit_note": credit.name,
+        "refund": refund.name if refund else None,
+        "payment_entry": pe.name if pe else None,
+        "opening_invoice": opening.name if opening else None,
+        "opening_applied": str(application),
+        "correction_count": len(history)}

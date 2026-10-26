@@ -108,14 +108,21 @@ class ScopedDocument(Document):
             if self.company != prop.company:
                 frappe.throw(_("La compañía no coincide con el establecimiento"))
             if (self.doctype == 'HS Payment' and not self.is_new() and
-                    frappe.db.exists('HS Day Pass', {
-                        'erp_return_refund': self.name})):
+                    (linked_pass := frappe.db.exists('HS Day Pass', {
+                        'erp_return_refund': self.name}))):
                 previous = self.get_doc_before_save()
+                reversing_refund = (getattr(frappe.local,
+                    'hs_erp_historical_day_pass_reversal', None) == linked_pass and
+                    previous and previous.status == 'Posted' and
+                    self.status == 'Cancelled' and
+                    frappe.db.get_value('Payment Entry', self.payment_entry,
+                        'docstatus') == 2)
                 if (not previous or any(previous.get(field) != self.get(field)
                         for field in ('property', 'company', 'customer', 'shift',
                             'method', 'currency', 'amount', 'exchange_rate',
-                            'base_amount', 'kind', 'status', 'payment_entry',
-                            'sales_invoice', 'reference', 'reason'))):
+                            'base_amount', 'kind', 'payment_entry',
+                            'sales_invoice', 'reference', 'reason')) or
+                        (previous.status != self.status and not reversing_refund)):
                     frappe.throw(_('El reembolso histórico vinculado es inmutable'))
             if not internal:
                 from hospitality_suite.security import require
@@ -262,7 +269,9 @@ class ScopedDocument(Document):
                 prop = frappe.get_doc('HS Property', self.property)
                 if (self.erp_opening_invoice or self.erp_opening_snapshot or
                         self.erp_opening_sha256 or self.erp_return_credit_note or
-                        self.erp_return_refund):
+                        self.erp_return_refund or self.erp_return_business_date or
+                        self.erp_return_corrections or
+                        self.erp_return_corrections_sha256):
                     frappe.throw(_('La continuación ERPNext no pertenece a un Day Pass PMS'))
                 if self.opening_historical_invoice:
                     from hospitality_suite.standalone_day_pass import opening_sale
@@ -367,6 +376,48 @@ class ScopedDocument(Document):
                         self.opening_refund or
                         any(old.get(field) != self.get(field) for field in origin)):
                     frappe.throw(_('El Day Pass trasladado conserva su origen y saldo inmutables'))
+                old_history = (frappe.parse_json(old.erp_return_corrections)
+                    if old.erp_return_corrections else [])
+                new_history = (frappe.parse_json(self.erp_return_corrections)
+                    if self.erp_return_corrections else [])
+                if (not isinstance(old_history, list) or
+                        not isinstance(new_history, list) or
+                        bool(self.erp_return_corrections) !=
+                            bool(self.erp_return_corrections_sha256) or
+                        (self.erp_return_corrections and
+                         sha256(self.erp_return_corrections.encode()).hexdigest() !=
+                            self.erp_return_corrections_sha256)):
+                    frappe.throw(_('El historial de correcciones del Day Pass no concilia'))
+                reversing = (getattr(frappe.local,
+                    'hs_erp_historical_day_pass_reversal', None) == self.name and
+                    old.status == 'Cancelled' and self.status == 'Issued')
+                if reversing:
+                    last = new_history[-1] if new_history else None
+                    refund_entry = (frappe.db.get_value('HS Payment',
+                        old.erp_return_refund, 'payment_entry')
+                        if old.erp_return_refund else None)
+                    if (new_history[:-1] != old_history or
+                            not isinstance(last, dict) or
+                            not old.erp_return_credit_note or
+                            last.get('credit_note') != old.erp_return_credit_note or
+                            last.get('refund') != old.erp_return_refund or
+                            last.get('payment_entry') != refund_entry or
+                            not last.get('reason') or
+                            last.get('actor') != frappe.session.user or
+                            self.erp_return_credit_note or self.erp_return_refund or
+                            self.erp_return_business_date or
+                            frappe.db.get_value('Sales Invoice',
+                                old.erp_return_credit_note, 'docstatus') != 2 or
+                            (refund_entry and frappe.db.get_value('Payment Entry',
+                                refund_entry, 'docstatus') != 2) or
+                            (old.erp_return_refund and frappe.db.get_value(
+                                'HS Payment', old.erp_return_refund,
+                                'status') != 'Cancelled')):
+                        frappe.throw(_('La corrección del Day Pass no conserva sus documentos cancelados'))
+                elif (new_history != old_history or
+                        (self.erp_return_corrections_sha256 or '') !=
+                            (old.erp_return_corrections_sha256 or '')):
+                    frappe.throw(_('El historial de correcciones del Day Pass es inmutable'))
                 if getattr(frappe.local,
                            'hs_erp_historical_day_pass_return', False):
                     from hospitality_suite.erp_historical_day_pass import _remaining
@@ -387,6 +438,10 @@ class ScopedDocument(Document):
                         'outstanding_amount') or 0))
                     if (old.status != 'Issued' or self.status != 'Cancelled' or
                             old.erp_return_credit_note or old.erp_return_refund or
+                            old.erp_return_business_date or
+                            str(self.erp_return_business_date) != str(
+                                frappe.db.get_value('HS Property', self.property,
+                                    'business_date')) or
                             not credit or credit.company != self.company or
                             credit.hs_property != self.property or
                             credit.customer != self.customer or
@@ -406,15 +461,21 @@ class ScopedDocument(Document):
                                 refund.sales_invoice != credit.name or
                                 not refund.payment_entry))):
                         frappe.throw(_('La cancelación histórica requiere nota y reembolso conciliados'))
-                elif (old.status != self.status or
+                elif (not reversing and (
+                        old.status != self.status or
                         old.erp_return_credit_note != self.erp_return_credit_note or
-                        old.erp_return_refund != self.erp_return_refund):
+                        old.erp_return_refund != self.erp_return_refund or
+                        old.erp_return_business_date !=
+                            self.erp_return_business_date)):
                     frappe.throw(_('El Day Pass trasladado solo admite devolución autorizada'))
             elif (not self.service or not self.sales_invoice or not self.payment or
                     self.pms_receivable or self.quote_snapshot or
                     self.erp_opening_invoice or self.erp_opening_snapshot or
                     self.erp_opening_sha256 or self.erp_return_credit_note or
-                    self.erp_return_refund or self.opening_historical_invoice or
+                    self.erp_return_refund or self.erp_return_business_date or
+                    self.erp_return_corrections or
+                    self.erp_return_corrections_sha256 or
+                    self.opening_historical_invoice or
                     self.opening_financial or self.opening_financial_sha256 or
                     self.opening_credit_note or self.opening_refund):
                 frappe.throw(_('El Day Pass ERPNext requiere venta, factura y cobro'))

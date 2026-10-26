@@ -36,7 +36,8 @@ def erp_snapshot(property_name):
                                "ends_at", "status", "service", "sales_invoice",
                                "payment", "pms_receivable", "erp_opening_invoice",
                                "erp_opening_snapshot", "erp_opening_sha256",
-                               "erp_return_credit_note", "erp_return_refund"],
+                               "erp_return_credit_note", "erp_return_refund",
+                               "erp_return_corrections"],
                        order_by="creation desc", limit_page_length=100)
     invoice_ids = sorted({name for row in rows for name in
         (row.sales_invoice, row.erp_opening_invoice) if name})
@@ -53,6 +54,8 @@ def erp_snapshot(property_name):
         fields=["name", "status"], limit_page_length=100)} if service_ids else {}
     now = now_datetime()
     for row in rows:
+        corrections = row.pop("erp_return_corrections")
+        row["correction_count"] = len(frappe.parse_json(corrections)) if corrections else 0
         historical = bool(row.pms_receivable)
         invoice = invoices.get(row.erp_opening_invoice if historical else
                                row.sales_invoice)

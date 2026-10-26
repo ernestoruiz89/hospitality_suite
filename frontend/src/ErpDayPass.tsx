@@ -12,6 +12,7 @@ type Pass = { name: string; modified: string; customer: string; guest: string | 
   service: string | null; sales_invoice: string | null; amount: string | null;
   erp_opening_invoice: string | null; historical_invoice_number: string | null;
   erp_return_credit_note: string | null; erp_return_refund: string | null;
+  correction_count: number;
   historical: boolean; transfer_problem: boolean;
   currency: string; outstanding: string | null;
   can_return: boolean }
@@ -36,6 +37,10 @@ type HistoricalReturnQuote = { day_pass: string; modified: string;
   refund_base: string; refund_amount: string; refund_currency: string | null;
   exchange_rate: string; method: string | null; shift: string | null;
   reference: string; reason: string; acceptance: string }
+type HistoricalCorrectionQuote = { credit_note: string; refund: string | null;
+  payment_entry: string | null; opening_invoice: string | null;
+  opening_applied: string; refund_currency: string | null;
+  refund_amount: string; business_date: string; acceptance: string }
 const statusLabel: Record<string, string> = {
   Upcoming: "Próximo", Active: "Vigente", Expired: "Vencido", Cancelled: "Cancelado",
 }
@@ -75,6 +80,10 @@ export function ErpDayPass({ property, canApprove }: { property: Property; canAp
   const [returnReason, setReturnReason] = useState("")
   const [returnKey, setReturnKey] = useState("")
   const [returnQuote, setReturnQuote] = useState<HistoricalReturnQuote | null>(null)
+  const [correctionPass, setCorrectionPass] = useState("")
+  const [correctionReason, setCorrectionReason] = useState("")
+  const [correctionQuote, setCorrectionQuote] = useState<HistoricalCorrectionQuote | null>(null)
+  const [correctionKey, setCorrectionKey] = useState("")
 
   const refresh = useCallback(async () => {
     setData(await call<Snapshot>("erp_day_pass_snapshot", { property_name: property.name }))
@@ -85,14 +94,17 @@ export function ErpDayPass({ property, canApprove }: { property: Property; canAp
     setMethod(""); setShift(""); setReference(""); setTendered(""); setNotes("")
     setReturnPass(""); setReturnMethod(""); setReturnShift(""); setReturnReference("")
     setReturnReason(""); setReturnKey(""); setReturnQuote(null)
+    setCorrectionPass(""); setCorrectionReason(""); setCorrectionQuote(null); setCorrectionKey("")
     refresh().catch((issue: unknown) => setError(issue instanceof Error ? issue.message : "No se pudieron consultar los Day Pass."))
   }, [refresh])
   useEffect(() => {
     setReturnPass(""); setReturnMethod(""); setReturnShift(""); setReturnReference("")
     setReturnReason(""); setReturnKey(""); setReturnQuote(null)
+    setCorrectionPass(""); setCorrectionReason(""); setCorrectionQuote(null); setCorrectionKey("")
   }, [section.id])
   const selectedMethod = data?.methods.find((row) => row.name === method)
   const selectedReturn = data?.day_passes.find((row) => row.name === returnPass)
+  const selectedCorrection = data?.day_passes.find((row) => row.name === correctionPass)
   const selectedReturnMethod = data?.methods.find((row) => row.name === returnMethod)
   const displayedPasses = data?.day_passes.filter((row) =>
     section.id === "passes-return" ? row.can_return : true) || []
@@ -178,6 +190,33 @@ export function ErpDayPass({ property, canApprove }: { property: Property; canAp
     finally { setBusy(false) }
   }
 
+  const correctionData = () => ({ day_pass: selectedCorrection?.name || "",
+    modified: selectedCorrection?.modified || "", reason: correctionReason.trim() })
+  async function reviewHistoricalCorrection(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    if (!canApprove || !selectedCorrection || !correctionReason.trim() || busy) return
+    setBusy(true); setError(""); setCorrectionQuote(null); setCorrectionKey("")
+    try {
+      const result = await call<HistoricalCorrectionQuote>(
+        "erp_historical_day_pass_return_reversal_quote", {
+          property_name: property.name, data: JSON.stringify(correctionData()) })
+      setCorrectionQuote(result); setCorrectionKey(crypto.randomUUID())
+    } catch (issue) { setError(issue instanceof Error ? issue.message : "No se pudo revisar la corrección.") }
+    finally { setBusy(false) }
+  }
+  async function confirmHistoricalCorrection() {
+    if (!selectedCorrection || !correctionQuote || !correctionKey || busy) return
+    setBusy(true); setError("")
+    try {
+      await execute(property.name, "erp_historical_day_pass_return_reversal",
+        { ...correctionData(), acceptance: correctionQuote.acceptance }, correctionKey)
+      await refresh()
+      setCorrectionPass(""); setCorrectionReason(""); setCorrectionQuote(null); setCorrectionKey("")
+      setNotice(`Devolución del Day Pass ${selectedCorrection.name} corregida. El acceso vuelve a estar vigente.`)
+    } catch (issue) { setError(issue instanceof Error ? issue.message : "No se pudo corregir la devolución.") }
+    finally { setBusy(false) }
+  }
+
   return <div className="space-y-6">
     <div><h1 className="text-3xl font-semibold">Day Pass sin habitación</h1>
       <p className="mt-1 text-sm text-muted-foreground">{section.label} · {section.description}. En ERPNext la emisión crea la factura y registra el cobro en el mismo paso.</p></div>
@@ -225,10 +264,19 @@ export function ErpDayPass({ property, canApprove }: { property: Property; canAp
             {row.erp_opening_invoice && Number(row.outstanding) > 0 &&
               <Button asChild type="button" variant="outline" size="sm"><Link to={`/customer-credits?section=invoices&invoice=${encodeURIComponent(row.erp_opening_invoice)}`}>Cobrar saldo trasladado</Link></Button>}
             {row.erp_return_credit_note && <a className="rounded-md border border-border px-3 py-1.5 hover:bg-secondary" href={invoicePrint(row.erp_return_credit_note)} target="_blank" rel="noopener noreferrer">Imprimir nota de crédito</a>}
+            {row.correction_count > 0 && <span className="self-center text-xs text-muted-foreground">Correcciones: {row.correction_count}</span>}
+            {section.id === "passes" && canApprove && row.historical && row.status === "Cancelled" && row.erp_return_credit_note && <Button type="button" variant="outline" size="sm" onClick={() => { setCorrectionPass(row.name); setCorrectionReason(""); setCorrectionQuote(null); setCorrectionKey("") }}>Corregir devolución</Button>}
             {section.id === "passes-return" && canApprove && row.can_return && <Button type="button" variant="outline" size="sm" onClick={() => { setReturnPass(row.name); setReturnMethod(""); setReturnShift(""); setReturnReference(""); setReturnReason(""); setReturnKey(""); setReturnQuote(null) }}>Devolver acceso</Button>}
           </div>
         </div>)}
         {!displayedPasses.length && <p className="text-sm text-muted-foreground">No hay Day Pass para esta opción.</p>}
+        {section.id === "passes" && selectedCorrection && <form onSubmit={(event) => void reviewHistoricalCorrection(event)} className="space-y-3 rounded-lg bg-secondary p-3 text-sm">
+          <p>Day Pass {selectedCorrection.name} · nota {selectedCorrection.erp_return_credit_note}. La corrección requiere fecha operativa abierta y cancelará todos los comprobantes vinculados.</p>
+          <label className="block space-y-1"><span>Motivo de corrección</span><Input required maxLength={500} value={correctionReason} onChange={(event) => { setCorrectionReason(event.target.value); setCorrectionQuote(null); setCorrectionKey("") }} /></label>
+          <div className="flex gap-2"><Button type="submit" variant="outline" disabled={busy || !correctionReason.trim()}>Revisar corrección</Button><Button type="button" variant="outline" onClick={() => { setCorrectionPass(""); setCorrectionQuote(null) }}>Volver</Button></div>
+          {correctionQuote && <div className="space-y-2 rounded-md border border-border bg-white p-3"><p>Fecha {correctionQuote.business_date}. Se cancelarán nota {correctionQuote.credit_note}{correctionQuote.payment_entry && ` y reembolso ${correctionQuote.refund_currency} ${correctionQuote.refund_amount} (${correctionQuote.payment_entry})`}. Se restaurará el saldo de apertura {property.currency} {correctionQuote.opening_applied}.</p>
+            <Button type="button" disabled={busy} onClick={() => void confirmHistoricalCorrection()}>Confirmar corrección integral</Button></div>}
+        </form>}
         {section.id === "passes-return" && selectedReturn && (selectedReturn.historical ?
           <div className="space-y-3 rounded-lg bg-secondary p-3 text-sm">
             <p>Devolver {selectedReturn.name}. La nota revierte la venta PMS aún no acreditada; se aplica al saldo trasladado y solo se reembolsa el resto.</p>

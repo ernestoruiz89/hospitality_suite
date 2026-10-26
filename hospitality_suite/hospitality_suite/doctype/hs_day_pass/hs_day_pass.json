@@ -122,6 +122,27 @@
    "read_only": 1
   },
   {
+   "fieldname": "erp_return_business_date",
+   "label": "Fecha operativa de devolución ERPNext",
+   "fieldtype": "Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "erp_return_corrections",
+   "label": "Correcciones de devoluciones ERPNext",
+   "fieldtype": "Code",
+   "options": "JSON",
+   "read_only": 1,
+   "hidden": 1
+  },
+  {
+   "fieldname": "erp_return_corrections_sha256",
+   "label": "Huella de correcciones de devoluciones",
+   "fieldtype": "Data",
+   "read_only": 1,
+   "hidden": 1
+  },
+  {
    "fieldname": "opening_historical_invoice",
    "label": "Factura histórica de apertura",
    "fieldtype": "Link",
@@ -180,6 +201,9 @@
   "erp_opening_sha256",
   "erp_return_credit_note",
   "erp_return_refund",
+  "erp_return_business_date",
+  "erp_return_corrections",
+  "erp_return_corrections_sha256",
   "opening_historical_invoice",
   "opening_financial",
   "opening_financial_sha256",

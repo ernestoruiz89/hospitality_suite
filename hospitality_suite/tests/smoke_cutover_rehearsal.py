@@ -18,14 +18,22 @@ from hospitality_suite.service import canonical, operation
 
 
 def run(include_live_day_pass=False, prior_day_pass_credit=False,
-        post_cutover_day_pass_collection=False, persist_source=False):
+        post_cutover_day_pass_collection=False, persist_source=False,
+        unpaid_day_pass=False, foreign_day_pass_refund=False):
     if not frappe.local.site.startswith("hs-erp-smoke"):
         frappe.throw("Use únicamente el sitio ERPNext de ensayo")
     if persist_source and (frappe.local.site !=
             "hs-erp-smoke-persistent.local" or not include_live_day_pass or
-            post_cutover_day_pass_collection or frappe.db.count("HS Property") or
+            post_cutover_day_pass_collection or unpaid_day_pass or
+            foreign_day_pass_refund or
+            frappe.db.count("HS Property") or
             frappe.db.count("HS Cutover Run")):
         frappe.throw("La fuente persistente exige un sitio de ensayo nuevo y aislado")
+    if unpaid_day_pass and (not include_live_day_pass or prior_day_pass_credit or
+            post_cutover_day_pass_collection or foreign_day_pass_refund):
+        frappe.throw("El ensayo sin cobro requiere un Day Pass nuevo sin variantes")
+    if foreign_day_pass_refund and not include_live_day_pass:
+        frappe.throw("El reembolso extranjero requiere un Day Pass de ensayo")
     frappe.set_user("Administrator")
     previous_maintenance = frappe.local.conf.get("maintenance_mode")
     previous_rehearsal = getattr(frappe.local, "hs_cutover_rehearsal", False)
@@ -1450,19 +1458,21 @@ def run(include_live_day_pass=False, prior_day_pass_credit=False,
             issued = suite_api.execute(prop.name, "day_pass_no_room",
                 "cutover-live-day-pass-" + suffix,
                 {**request, "acceptance": offered["acceptance"]})
-            shift = suite_api.execute(prop.name, "pms_open_shift",
-                "cutover-live-pass-shift-" + suffix,
-                {"opening_by_currency": {"NIO": "0"}})
-            collected = suite_api.execute(prop.name, "pms_cash_movement",
-                "cutover-live-pass-payment-" + suffix,
-                {"kind": "Payment", "amount": "6", "method": cash_method.name,
-                 "shift": shift["shift"], "receivable": issued["receivable"],
-                 "reference": "DAY-PASS-CUTOVER-" + suffix,
-                 "reason": "Cobro parcial del pase"})
-            suite_api.execute(prop.name, "pms_close_shift",
-                "cutover-live-pass-close-" + suffix,
-                {"shift": shift["shift"],
-                 "counted_by_currency": {"NIO": "6.00"}})
+            collected = None
+            if not unpaid_day_pass:
+                shift = suite_api.execute(prop.name, "pms_open_shift",
+                    "cutover-live-pass-shift-" + suffix,
+                    {"opening_by_currency": {"NIO": "0"}})
+                collected = suite_api.execute(prop.name, "pms_cash_movement",
+                    "cutover-live-pass-payment-" + suffix,
+                    {"kind": "Payment", "amount": "6", "method": cash_method.name,
+                     "shift": shift["shift"], "receivable": issued["receivable"],
+                     "reference": "DAY-PASS-CUTOVER-" + suffix,
+                     "reason": "Cobro parcial del pase"})
+                suite_api.execute(prop.name, "pms_close_shift",
+                    "cutover-live-pass-close-" + suffix,
+                    {"shift": shift["shift"],
+                     "counted_by_currency": {"NIO": "6.00"}})
             fiscal_request = {"series": fiscal_series,
                 "receivables": [issued["receivable"]]}
             fiscal_quote = suite_api.pms_invoice_quote(prop.name, fiscal_request)
@@ -1572,7 +1582,8 @@ def run(include_live_day_pass=False, prior_day_pass_credit=False,
             migrated = frappe.get_doc("HS Day Pass", issued["day_pass"])
             opening = frappe.get_doc("Sales Invoice",
                 migrated.erp_opening_invoice)
-            expected_opening = 6 if prior_day_pass_credit else 10
+            expected_opening = (16 if unpaid_day_pass else
+                6 if prior_day_pass_credit else 10)
             if (not moved["cutover_performed"] or
                     migrated.status != "Issued" or
                     opening.outstanding_amount != expected_opening or
@@ -1593,6 +1604,20 @@ def run(include_live_day_pass=False, prior_day_pass_credit=False,
             target_shift = suite_api.execute(prop.name, "open_shift",
                 "cutover-live-pass-target-shift-" + suffix,
                 {"currency": "NIO", "opening_amount": "100"})
+            if foreign_day_pass_refund:
+                exchange_name = frappe.db.get_value("Currency Exchange", {
+                    "date": str(today), "from_currency": "USD",
+                    "to_currency": "NIO", "for_buying": 0,
+                    "for_selling": 1}, "name")
+                if exchange_name:
+                    frappe.db.set_value("Currency Exchange", exchange_name,
+                        "exchange_rate", "36.5")
+                else:
+                    frappe.get_doc({"doctype": "Currency Exchange",
+                        "date": str(today), "from_currency": "USD",
+                        "to_currency": "NIO", "exchange_rate": "36.5",
+                        "for_buying": 0, "for_selling": 1}).insert(
+                            ignore_permissions=True)
             later_payment = None
             if post_cutover_day_pass_collection:
                 later_request = {"kind": "Payment", "invoice": opening.name,
@@ -1609,7 +1634,11 @@ def run(include_live_day_pass=False, prior_day_pass_credit=False,
                     frappe.throw("Post-cutover collection did not reduce the opening")
             return_request = {"day_pass": migrated.name,
                 "modified": str(migrated.modified),
-                "method": cash_method.name, "shift": target_shift["shift"],
+                "method": ("" if unpaid_day_pass else
+                    source_foreign_method.name if foreign_day_pass_refund else
+                    cash_method.name),
+                "shift": "" if unpaid_day_pass or foreign_day_pass_refund else
+                    target_shift["shift"],
                 "amount": "", "reference": "LIVE-PASS-RETURN-" + suffix,
                 "reason": "Devolución tras corte"}
             reviewed_return = suite_api.erp_historical_day_pass_return_quote(
@@ -1632,15 +1661,18 @@ def run(include_live_day_pass=False, prior_day_pass_credit=False,
                         expected_opening -
                             (3 if post_cutover_day_pass_collection else 0) or
                     Decimal(str(reviewed_return["refund_base"])) !=
-                        (9 if post_cutover_day_pass_collection else 6) or
+                        (0 if unpaid_day_pass else
+                         9 if post_cutover_day_pass_collection else 6) or
                     frappe.db.get_value("HS Day Pass", migrated.name,
                         "status") != "Cancelled"):
                 frappe.throw("Live Day Pass return did not reconcile")
             opening.reload()
             return_credit = frappe.get_doc("Sales Invoice",
                 returned["credit_note"])
-            refund = frappe.get_doc("HS Payment", returned["refund"])
-            refund_entry = frappe.get_doc("Payment Entry", refund.payment_entry)
+            refund = (frappe.get_doc("HS Payment", returned["refund"])
+                if returned["refund"] else None)
+            refund_entry = (frappe.get_doc("Payment Entry", refund.payment_entry)
+                if refund else None)
             from hospitality_suite import cashier
             shift_expected = cashier.expected(
                 frappe.get_doc("HS Shift", target_shift["shift"]))
@@ -1649,21 +1681,132 @@ def run(include_live_day_pass=False, prior_day_pass_credit=False,
                     Decimal(str(return_credit.grand_total)) !=
                         (-12 if prior_credit else -16) or
                     Decimal(str(return_credit.outstanding_amount)) != 0 or
-                    refund_entry.docstatus != 1 or
-                    refund_entry.references[0].reference_name !=
-                        return_credit.name or
-                    shift_expected["NIO"] != "94.00" or
-                    frappe.db.get_value("HS Payment", returned["refund"],
-                        "base_amount") !=
-                        (9 if post_cutover_day_pass_collection else 6) or
-                    frappe.db.get_value("HS Payment", collected["payment"],
-                        "company") != target_company.name):
+                    bool(refund) == unpaid_day_pass or
+                    (refund_entry and (refund_entry.docstatus != 1 or
+                        refund_entry.references[0].reference_name !=
+                            return_credit.name)) or
+                    shift_expected["NIO"] !=
+                        ("100.00" if unpaid_day_pass or foreign_day_pass_refund
+                         else "94.00") or
+                    (foreign_day_pass_refund and (not refund or
+                        refund.currency != "USD")) or
+                    (refund and Decimal(str(refund.base_amount)) !=
+                        (9 if post_cutover_day_pass_collection else 6)) or
+                    (collected and frappe.db.get_value("HS Payment",
+                        collected["payment"], "company") !=
+                            target_company.name)):
                 frappe.throw("Live Day Pass opening or refund diverged")
+            migrated.reload()
+            correction_request = {"day_pass": migrated.name,
+                "modified": str(migrated.modified),
+                "reason": "Corrección integral de devolución Day Pass"}
+            if not prior_day_pass_credit and not post_cutover_day_pass_collection:
+                from hospitality_suite.security import guard_cancel
+                for linked in (return_credit, refund_entry):
+                    if not linked:
+                        continue
+                    try:
+                        guard_cancel(linked)
+                    except frappe.ValidationError as exc:
+                        if "Day Pass" not in str(exc):
+                            raise
+                    else:
+                        frappe.throw("A Day Pass return document could be cancelled alone")
+                if refund and refund.shift:
+                    frappe.db.savepoint("hs_day_pass_correction_closed_shift")
+                    try:
+                        frappe.db.set_value("HS Shift", target_shift["shift"],
+                            "status", "Review", update_modified=False)
+                        try:
+                            suite_api.erp_historical_day_pass_return_reversal_quote(
+                                prop.name, canonical(correction_request))
+                        except frappe.ValidationError as exc:
+                            if "turno" not in str(exc).lower():
+                                raise
+                        else:
+                            frappe.throw("A closed shift allowed Day Pass correction")
+                    finally:
+                        frappe.db.rollback(save_point="hs_day_pass_correction_closed_shift")
+                frappe.db.savepoint("hs_day_pass_correction_closed_date")
+                try:
+                    business_date = frappe.db.get_value("HS Property",
+                        prop.name, "business_date")
+                    frappe.db.set_value("HS Property", prop.name,
+                        "business_date", str(frappe.utils.getdate(
+                            business_date) + timedelta(days=1)),
+                        update_modified=False)
+                    try:
+                        suite_api.erp_historical_day_pass_return_reversal_quote(
+                            prop.name, canonical(correction_request))
+                    except frappe.ValidationError as exc:
+                        if "fecha operativa" not in str(exc).lower():
+                            raise
+                    else:
+                        frappe.throw("A later date allowed Day Pass correction")
+                finally:
+                    frappe.db.rollback(save_point="hs_day_pass_correction_closed_date")
+            correction_quote = (
+                suite_api.erp_historical_day_pass_return_reversal_quote(
+                    prop.name, canonical(correction_request)))
+            correction_key = "cutover-live-pass-correction-" + suffix
+            corrected = suite_api.execute(prop.name,
+                "erp_historical_day_pass_return_reversal", correction_key,
+                {**correction_request,
+                 "acceptance": correction_quote["acceptance"]})
+            if (suite_api.execute(prop.name,
+                    "erp_historical_day_pass_return_reversal", correction_key,
+                    {**correction_request,
+                     "acceptance": correction_quote["acceptance"]}) != corrected):
+                frappe.throw("Live Day Pass correction retried twice")
+            migrated.reload()
+            opening.reload()
+            if refund:
+                refund.reload()
+            restored_due = expected_opening - (
+                3 if post_cutover_day_pass_collection else 0)
+            corrected_cash = cashier.expected(
+                frappe.get_doc("HS Shift", target_shift["shift"]))
+            correction_history = frappe.parse_json(
+                migrated.erp_return_corrections)
+            if (migrated.status != "Issued" or
+                    migrated.erp_return_credit_note or
+                    migrated.erp_return_refund or
+                    Decimal(str(opening.outstanding_amount)) != restored_due or
+                    (refund and refund.status != "Cancelled") or
+                    frappe.db.get_value("Sales Invoice", return_credit.name,
+                        "docstatus") != 2 or
+                    (refund_entry and frappe.db.get_value(
+                        "Payment Entry", refund_entry.name,
+                        "docstatus") != 2) or
+                    corrected_cash["NIO"] != (
+                        "103.00" if post_cutover_day_pass_collection else
+                        "100.00") or
+                    len(correction_history) != 1 or
+                    correction_history[0]["credit_note"] != return_credit.name or
+                    sha256(migrated.erp_return_corrections.encode()).hexdigest()
+                        != migrated.erp_return_corrections_sha256):
+                frappe.throw("Live Day Pass correction did not reconcile")
+            return_request["modified"] = str(migrated.modified)
+            repeat_quote = suite_api.erp_historical_day_pass_return_quote(
+                prop.name, canonical(return_request))
+            repeated = suite_api.execute(prop.name,
+                "erp_historical_day_pass_return",
+                "cutover-live-pass-return-repeat-" + suffix,
+                {**return_request, "amount": repeat_quote["refund_amount"],
+                 "acceptance": repeat_quote["acceptance"]})
+            migrated.reload()
+            if (repeated["credit_note"] == return_credit.name or
+                    migrated.status != "Cancelled" or
+                    len(frappe.parse_json(
+                        migrated.erp_return_corrections)) != 1):
+                frappe.throw("Corrected Day Pass could not be returned again")
             return {"live_day_pass_rehearsed": True,
-                "source_payment": collected["payment"],
+                "source_payment": collected["payment"] if collected else None,
                 "opening_invoice": opening.name,
-                "credit_note": returned["credit_note"],
-                "refund": returned["refund"],
+                "credit_note": repeated["credit_note"],
+                "refund": repeated["refund"],
+                "corrected_credit_note": returned["credit_note"],
+                "correction_retried": True,
                 "prior_credit": prior_credit["document"] if prior_credit else None,
                 "post_cutover_payment": (later_payment["payment_entry"]
                     if later_payment else None),
@@ -6522,6 +6665,14 @@ def run(include_live_day_pass=False, prior_day_pass_credit=False,
 
 def run_live_day_pass():
     return run(include_live_day_pass=True)
+
+
+def run_live_day_pass_unpaid():
+    return run(include_live_day_pass=True, unpaid_day_pass=True)
+
+
+def run_live_day_pass_foreign_refund():
+    return run(include_live_day_pass=True, foreign_day_pass_refund=True)
 
 
 def run_live_day_pass_with_prior_credit():

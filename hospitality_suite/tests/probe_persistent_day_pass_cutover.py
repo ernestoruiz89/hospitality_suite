@@ -130,3 +130,73 @@ def return_access():
         "credit_note": credit.name, "refund": refund.name,
         "shift_expected": expected[prop.currency],
         "same_result_on_retry": True}
+
+
+def reverse_return():
+    if frappe.local.site != SITE:
+        frappe.throw("Use only the isolated persistent cutover site")
+    frappe.set_user("Administrator")
+    before = inspect()
+    if before["status"] != "Cancelled":
+        frappe.throw("The synthetic historical return is not active")
+    day_pass = frappe.get_doc("HS Day Pass", before["day_pass"])
+    refund = frappe.get_doc("HS Payment", day_pass.erp_return_refund)
+    request = {"day_pass": day_pass.name,
+        "modified": str(day_pass.modified),
+        "reason": "Corrección persistente de devolución Day Pass sintética"}
+    quote = api.erp_historical_day_pass_return_reversal_quote(
+        day_pass.property, canonical(request))
+    submitted = {**request, "acceptance": quote["acceptance"]}
+    first = api.execute(day_pass.property,
+        "erp_historical_day_pass_return_reversal",
+        "persistent-day-pass-return-correction", submitted)
+    second = api.execute(day_pass.property,
+        "erp_historical_day_pass_return_reversal",
+        "persistent-day-pass-return-correction", submitted)
+    day_pass.reload()
+    refund.reload()
+    opening = frappe.get_doc("Sales Invoice", day_pass.erp_opening_invoice)
+    shift = frappe.get_doc("HS Shift", refund.shift)
+    expected = cashier.expected(shift)
+    history = frappe.parse_json(day_pass.erp_return_corrections)
+    if (first != second or day_pass.status != "Issued" or
+            day_pass.erp_return_credit_note or day_pass.erp_return_refund or
+            day_pass.erp_return_business_date or len(history) != 1 or
+            history[0]["credit_note"] != first["credit_note"] or
+            sha256(day_pass.erp_return_corrections.encode()).hexdigest() !=
+                day_pass.erp_return_corrections_sha256 or
+            refund.status != "Cancelled" or
+            frappe.db.get_value("Sales Invoice", first["credit_note"],
+                "docstatus") != 2 or
+            frappe.db.get_value("Payment Entry", first["payment_entry"],
+                "docstatus") != 2 or
+            Decimal(str(opening.outstanding_amount)) != 6 or
+            expected[frappe.db.get_value("HS Property", day_pass.property,
+                "currency")] != "100.00"):
+        frappe.throw("The persistent Day Pass correction did not reconcile")
+    frappe.db.commit()
+    return {"persistent_day_pass_correction_verified": True,
+        "day_pass": day_pass.name,
+        "cancelled_credit": first["credit_note"],
+        "opening_outstanding": str(opening.outstanding_amount),
+        "cash_expected": expected, "retry_identical": True}
+
+
+def inspect_reversal():
+    if frappe.local.site != SITE:
+        frappe.throw("Use only the isolated persistent cutover site")
+    frappe.set_user("Administrator")
+    current = inspect()
+    if current["status"] != "Issued" or current["opening_outstanding"] != "6.0":
+        frappe.throw("The corrected Day Pass did not persist")
+    day_pass = frappe.get_doc("HS Day Pass", current["day_pass"])
+    history = frappe.parse_json(day_pass.erp_return_corrections)
+    snapshot = api.erp_day_pass_snapshot(day_pass.property)
+    if (len(history) != 1 or not any(row["name"] == day_pass.name and
+            row["can_return"] and row["correction_count"] == 1
+            for row in snapshot["day_passes"])):
+        frappe.throw("The corrected Day Pass is not returnable in React")
+    return {"persistent_day_pass_reversal_read_back": True,
+        "source_fiscal_invoice": current["source_fiscal_invoice"],
+        "cancelled_credit": history[0]["credit_note"],
+        "returnable_again": True}
