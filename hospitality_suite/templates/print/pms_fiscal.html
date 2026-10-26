@@ -5,7 +5,7 @@
   <table>
     <tr><th>Fecha</th><td>{{ doc.business_date | e }}</td><th>Moneda</th><td>{{ doc.currency | e }}</td></tr>
     <tr><th>Cliente</th><td>{{ doc.buyer_name | e }}</td><th>Identificación</th><td>{{ (doc.buyer_tax_id or "—") | e }}</td></tr>
-    {% if doc.folio %}<tr><th>Folio</th><td colspan="3">{{ doc.folio | e }}</td></tr>{% endif %}
+    {% if doc.folio %}<tr><th>Cuenta de estancia</th><td colspan="3">{{ doc.folio | e }}</td></tr>{% endif %}
     {% if doc.source_invoice %}<tr><th>Factura original</th><td colspan="3">{{ (frappe.db.get_value("HS PMS Fiscal Document", doc.source_invoice, "document_number") or doc.source_invoice) | e }}</td></tr>{% endif %}
     {% if doc.historical_source_invoice %}<tr><th>Factura histórica original</th><td colspan="3">{{ (frappe.db.get_value("HS Historical Fiscal Document", doc.historical_source_invoice, "document_number") or doc.historical_source_invoice) | e }}</td></tr>{% endif %}
     {% if doc.authorization_reference %}<tr><th>Referencia</th><td colspan="3">{{ doc.authorization_reference | e }}</td></tr>{% endif %}
