@@ -57,7 +57,7 @@ def build(prop):
     require_pms(prop)
     day = prop.business_date
     receivables = _records("HS PMS Receivable", prop,
-        ["name", "party", "folio", "experience_order", "reference", "currency", "net_amount", "tax_amount",
+        ["name", "party", "folio", "experience_order", "source_service", "reference", "currency", "net_amount", "tax_amount",
          "amount", "base_amount", "income_account", "tax_account", "receivable_account", "journal",
          "opening_source_name"],
         business_date=day, status="Posted")
@@ -102,7 +102,7 @@ def build(prop):
         ["name", "kind", "currency", "amount", "base_amount", "exchange_rate",
          "pms_settlement_currency", "pms_settled_amount",
          "pms_released_base_amount", "pms_exchange_variance_account",
-         "method", "shift", "pms_counter_account", "pms_concept", "pms_receivable",
+         "method", "shift", "service", "pms_counter_account", "pms_concept", "pms_receivable",
          "pms_purchase", "pms_purchase_return", "pms_agent_commission",
          "pms_opening_payable", "pms_opening_credit",
          "pms_historical_day_pass",

@@ -40,7 +40,7 @@ import { erpReportSections, pmsReportSections } from "./ReportSections"
 import {
   Journal, Chart, Cash, ErpCash, Receivables, Folios, Products, Billing, FiscalArchive,
   Reception, Availability, RateCalendar, RoomCalendar, Reservations, Stays, BookingDraft,
-  Departure, Credit, ErpCredit, ErpInvoicing, ErpAdjustments, ErpDirectSales, Services, ErpServices, Inventory, ErpInventory, Purchases, ErpPurchases,
+  Departure, Credit, ErpCredit, ErpInvoicing, ErpAdjustments, ErpDirectSales, PmsDirectSales, Services, ErpServices, Inventory, ErpInventory, Purchases, ErpPurchases,
   Financing, ErpFinancing, DailyClose, ErpDailyClose, Reports, ErpReports, Portfolio, Health,
   PrivacyRetention, RoomOperations, DayPass, ErpDayPass, Laundry, TravelExperiences,
   ErpTravelExperiences, CustomerCredits, PropertyCurrencies, Tickets, Setup, UserManagement,
@@ -156,7 +156,7 @@ function Shell({ children, properties, property, setProperty, provider, showJour
       icon: HandCoins, group: section.id.includes("guarantee") ? "Garantías ERPNext" :
         (section.id.includes("advance") || section.id === "refund-applied") ? "Anticipos ERPNext" :
           (section.id === "credit-note" || section.id === "direct-refund") ? "Correcciones ERPNext" : "Cobros ERPNext" })) : []
-  const directSaleNav = showErpCredits ? availableDirectSaleSections(showRetention)
+  const directSaleNav = showCash || showErpCredits ? availableDirectSaleSections(showRetention)
     .map((section) => ({ to: `/direct-sales?section=${section.id}`, label: section.label,
       icon: ReceiptText, group: "Ventas directas" })) : []
   const purchaseNav = showPurchases ? (showCash ? purchaseSections
@@ -831,7 +831,9 @@ function PropertyApp() {
       {showCash && <Route path="/billing" element={<Billing key={selected.name} property={selected} canSetup={base.actions.includes("setup")} canChart={showChart} canApprove={base.actions.includes("approve")} />} />}
       {showErpCredits && <Route path="/erp-invoicing" element={<ErpInvoicing key={`${selected.name}:${location.search}`} property={selected} />} />}
       {base.accounting_provider === "erpnext" && showRetention && <Route path="/erp-adjustments" element={<ErpAdjustments key={`${selected.name}:${location.search}`} property={selected} />} />}
-      {showErpCredits && <Route path="/direct-sales" element={<ErpDirectSales key={selected.name} property={selected} canApprove={showRetention} />} />}
+      {(showCash || showErpCredits) && <Route path="/direct-sales" element={showCash
+        ? <PmsDirectSales key={selected.name} property={selected} canApprove={showRetention} />
+        : <ErpDirectSales key={selected.name} property={selected} canApprove={showRetention} />} />}
       {(showCash || showErpCredits) && <Route path="/fiscal-archive" element={<FiscalArchive key={selected.name} property={selected} provider={base.accounting_provider} />} />}
       {showJournal && <Route path="/journal" element={<Journal property={selected} />} />}
       {showChart && <Route path="/chart" element={<Chart key={selected.name} property={selected} />} />}

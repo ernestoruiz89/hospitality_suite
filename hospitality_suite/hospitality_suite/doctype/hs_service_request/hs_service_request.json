@@ -119,6 +119,12 @@
    "fieldtype": "Data"
   },
   {
+   "fieldname": "pms_receivable",
+   "label": "Cuenta por cobrar PMS",
+   "fieldtype": "Link",
+   "options": "HS PMS Receivable"
+  },
+  {
    "fieldname": "notes",
    "label": "Observaciones",
    "fieldtype": "Small Text"
@@ -143,6 +149,7 @@
   "opening_stock_issue",
   "credit_note",
   "sales_invoice",
+  "pms_receivable",
   "notes"
  ],
  "permissions": [

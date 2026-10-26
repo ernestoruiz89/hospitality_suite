@@ -182,6 +182,12 @@
    "options": "HS Charge"
   },
   {
+   "fieldname": "source_service",
+   "label": "Venta directa de origen",
+   "fieldtype": "Link",
+   "options": "HS Service Request"
+  },
+  {
    "fieldname": "booking",
    "label": "Reserva",
    "fieldtype": "Link",
@@ -243,6 +249,7 @@
   "opening_temporary_account",
   "folio",
   "source_charge",
+  "source_service",
   "booking",
   "experience_order",
   "journal",

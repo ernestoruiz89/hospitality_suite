@@ -23,6 +23,7 @@ export const ErpCredit = lazy(() => import("./ErpCredit").then(({ ErpCredit }) =
 export const ErpInvoicing = lazy(() => import("./ErpInvoicing").then(({ ErpInvoicing }) => ({ default: ErpInvoicing })))
 export const ErpAdjustments = lazy(() => import("./ErpAdjustments").then(({ ErpAdjustments }) => ({ default: ErpAdjustments })))
 export const ErpDirectSales = lazy(() => import("./ErpDirectSales").then(({ ErpDirectSales }) => ({ default: ErpDirectSales })))
+export const PmsDirectSales = lazy(() => import("./PmsDirectSales").then(({ PmsDirectSales }) => ({ default: PmsDirectSales })))
 export const Services = lazy(() => import("./Services").then(({ Services }) => ({ default: Services })))
 export const ErpServices = lazy(() => import("./ErpServices").then(({ ErpServices }) => ({ default: ErpServices })))
 export const Inventory = lazy(() => import("./Inventory").then(({ Inventory }) => ({ default: Inventory })))

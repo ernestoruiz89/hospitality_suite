@@ -1188,7 +1188,67 @@ class MaintenanceOrderDocument(ScopedDocument):
 class ServiceRequestDocument(ScopedDocument):
     def validate(self):
         super().validate()
+        if self.pms_receivable:
+            from hospitality_suite.standalone_accounting import provider
+            source = frappe.db.get_value("HS PMS Receivable", self.pms_receivable,
+                ["property", "organization", "party", "source_service", "amount",
+                 "status"], as_dict=True)
+            fiscal = frappe.db.get_value("HS PMS Fiscal Document", self.sales_invoice,
+                ["property", "document_type", "party", "total_amount", "status"],
+                as_dict=True) if self.sales_invoice else None
+            if (provider() != "pms" or not source or not fiscal or
+                    self.stay or self.folio or self.charge or self.included or
+                    self.opening_stock_issue or self.status not in ("Delivered", "Returned") or
+                    source.property != self.property or
+                    source.organization != self.company or
+                    source.party != self.customer or source.source_service != self.name or
+                    source.status != "Posted" or
+                    Decimal(str(source.amount)) != Decimal(str(self.amount)) or
+                    fiscal.property != self.property or fiscal.document_type != "Invoice" or
+                    fiscal.party != self.customer or fiscal.status != "Posted" or
+                    Decimal(str(fiscal.total_amount)) != Decimal(str(self.amount)) or
+                    not frappe.db.exists("HS PMS Fiscal Line", {
+                        "parent": self.sales_invoice,
+                        "receivable": self.pms_receivable})):
+                frappe.throw(_("La venta directa PMS no conserva su cargo y factura"))
+            payment = frappe.db.get_value("HS Payment", {
+                "property": self.property, "service": self.name,
+                "pms_receivable": self.pms_receivable, "kind": "Payment",
+                "status": "Posted"}, ["name", "pms_journal"], as_dict=True)
+            if not payment or not payment.pms_journal:
+                frappe.throw(_("La venta directa PMS requiere su cobro publicado"))
+            if self.status == "Delivered" and (self.credit_note or self.return_stock_entry):
+                frappe.throw(_("La venta vigente no puede tener devolución"))
+            if self.status == "Returned":
+                credit = frappe.db.get_value("HS PMS Fiscal Document", self.credit_note,
+                    ["property", "document_type", "source_invoice", "total_amount",
+                     "status"], as_dict=True) if self.credit_note else None
+                refunded = frappe.db.exists("HS Payment", {
+                    "property": self.property, "source_payment": payment.name,
+                    "pms_receivable": self.pms_receivable,
+                    "kind": "Refund", "status": "Posted"})
+                if (not credit or credit.property != self.property or
+                        credit.document_type != "Credit Note" or
+                        credit.source_invoice != self.sales_invoice or
+                        credit.status != "Posted" or
+                        Decimal(str(credit.total_amount)) != Decimal(str(self.amount)) or
+                        not refunded or bool(self.stock_entry) != bool(self.return_stock_entry)):
+                    frappe.throw(_("La devolución no conserva nota, reembolso e inventario"))
         previous = self.get_doc_before_save()
+        if previous and previous.pms_receivable:
+            immutable = ("pms_receivable", "sales_invoice", "stock_entry",
+                "customer", "item", "warehouse", "quantity", "amount",
+                "currency", "stay", "folio", "charge", "included",
+                "opening_stock_issue")
+            if (any(str(previous.get(field) or "") != str(self.get(field) or "")
+                    for field in immutable) or
+                    previous.status == "Returned" and (
+                        self.status != "Returned" or
+                        previous.credit_note != self.credit_note or
+                        previous.return_stock_entry != self.return_stock_entry) or
+                    previous.status == "Delivered" and
+                        self.status not in ("Delivered", "Returned")):
+                frappe.throw(_("Los términos contabilizados de la venta directa son inmutables"))
         if previous and (previous.opening_stock_issue or "") != (
                 self.opening_stock_issue or ""):
             frappe.throw(_("La salida histórica del servicio es inmutable"))
@@ -1790,7 +1850,7 @@ class PMSReceivableDocument(ScopedDocument):
                 str(self.business_date) != str(prop.business_date) or
                 not self.due_date or self.status != "Posted" or
                 self.reversal_journal or self.income_account or self.tax_account or
-                self.tax_profile or self.source_charge or
+                self.tax_profile or self.source_charge or self.source_service or
                 self.booking or self.experience_order or
                 self.tax_treatment != "Unclassified" or
                 Decimal(str(self.amount or 0)) <= 0 or
@@ -1885,7 +1945,7 @@ class PMSReceivableDocument(ScopedDocument):
                          "base_amount", "net_amount", "tax_amount",
                          "tax_profile", "tax_rate", "tax_treatment", "price_includes_tax",
                          "tax_account", "receivable_account",
-                         "income_account", "folio", "source_charge", "booking",
+                         "income_account", "folio", "source_charge", "source_service", "booking",
                          "experience_order", "journal", "opening_source_site",
                          "opening_source_name", "opening_source_sha256",
                          "opening_temporary_account")) or
@@ -1911,6 +1971,27 @@ class PMSReceivableDocument(ScopedDocument):
             frappe.throw(_("Seleccione un cliente activo del establecimiento"))
         if bool(self.folio) != bool(self.source_charge):
             frappe.throw(_("El cargo de estancia requiere una cuenta de estancia y un cargo de origen"))
+        if self.source_service:
+            service = frappe.db.get_value("HS Service Request", self.source_service,
+                ["property", "company", "customer", "item", "stay", "folio",
+                 "charge", "status", "amount", "currency"], as_dict=True)
+            product = frappe.db.get_value("HS Product", service.item,
+                ["property", "organization", "income_account", "tax_profile"],
+                as_dict=True) if service else None
+            if (self.folio or self.source_charge or self.booking or
+                    self.experience_order or not service or not product or
+                    service.property != prop.name or service.company != prop.company or
+                    service.customer != self.party or service.stay or service.folio or
+                    service.charge or service.status != "Requested" or
+                    service.currency != prop.currency or
+                    Decimal(str(service.amount or 0)) != Decimal(str(self.amount or 0)) or
+                    product.property != prop.name or
+                    product.organization != prop.organization or
+                    self.income_account != product.income_account or
+                    self.tax_profile != product.tax_profile or
+                    frappe.db.exists("HS PMS Receivable", {
+                        "source_service": self.source_service, "status": "Posted"})):
+                frappe.throw(_("La venta directa no conserva un servicio nuevo válido"))
         if self.experience_order:
             order = frappe.db.get_value('HS Experience Order', self.experience_order,
                 ['property', 'company', 'customer', 'booking', 'status',

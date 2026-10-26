@@ -46,6 +46,7 @@ from hospitality_suite import standalone_petty_cash
 from hospitality_suite import standalone_closing
 from hospitality_suite import standalone_reports
 from hospitality_suite import standalone_day_pass
+from hospitality_suite import standalone_direct_sales
 from hospitality_suite import erp_historical_day_pass
 from hospitality_suite import standalone_maintenance_parts
 from hospitality_suite import standalone_linen
@@ -98,6 +99,8 @@ COMMANDS = {
     "pms_tax_profile": ("chart", standalone_tax.setup),
     "pms_fiscal_series": ("setup", standalone_fiscal.create_series),
     "pms_issue_invoice": ("finance", standalone_fiscal.issue_invoice),
+    "pms_direct_sale": ("finance", standalone_direct_sales.sell),
+    "pms_direct_sale_return": ("approve", standalone_direct_sales.return_sale),
     "pms_issue_credit_note": ("approve", standalone_fiscal.issue_credit),
     "pms_warehouse": ("setup", standalone_inventory.create_warehouse),
     "pms_opening_stock": ("inventory", standalone_inventory.opening_stock),
@@ -434,6 +437,28 @@ def erp_direct_sale_customers(property_name, search="", offset=0, page_length=25
 def erp_direct_sale_history(property_name, search="", offset=0, page_length=25,
                             returnable=0):
     return direct_sales.history(property_name, search, offset, page_length, returnable)
+
+
+@frappe.whitelist()
+def pms_direct_sale_options(property_name):
+    return standalone_direct_sales.options(property_name)
+
+
+@frappe.whitelist()
+def pms_direct_sale_customers(property_name, search="", offset=0, page_length=25):
+    return standalone_direct_sales.customer_page(property_name, search, offset, page_length)
+
+
+@frappe.whitelist()
+def pms_direct_sale_products(property_name, search="", offset=0, page_length=25):
+    return standalone_direct_sales.product_page(property_name, search, offset, page_length)
+
+
+@frappe.whitelist()
+def pms_direct_sale_history(property_name, search="", offset=0, page_length=25,
+                            returnable=0):
+    return standalone_direct_sales.history(property_name, search, offset,
+                                           page_length, returnable)
 
 
 @frappe.whitelist()
@@ -965,6 +990,12 @@ def pms_tax_profiles(property_name):
 def pms_invoice_quote(property_name, data):
     prop = require(property_name, "finance")
     return standalone_fiscal.invoice_quote(prop, payload(data))
+
+
+@frappe.whitelist()
+def pms_direct_sale_return_quote(property_name, data):
+    prop = require(property_name, "approve")
+    return standalone_direct_sales.return_quote(prop, payload(data))
 
 
 @frappe.whitelist()
@@ -1716,7 +1747,7 @@ def execute(property_name, action, request_key, data=None):
 def preview(property_name, data, action="reserve"):
     if standalone_accounting.provider() == "pms" and action in ERP_ONLY_ACTIONS:
         frappe.throw(frappe._("Use el flujo PMS de este sitio para la operación financiera"))
-    permission="inventory" if action=="purchase_order" else "service" if action=="request_service" else "approve" if action in ("adjust_stock","retire_sensitive","credit_note","pms_legacy_direct_experience_review") else "commission" if action=="agent_commission" else "finance" if action in ("invoice","payment","direct_sale","day_pass_no_room","cash_expense_reviewed","settle_payment","supplier_payment","finance_post","pms_direct_experience_order","pms_direct_experience_delivery") else "reserve" if action in ("reserve","booking_status","modify_reservation","convert_portal","confirm_booking_draft","experience_order") else "stay"
+    permission="inventory" if action=="purchase_order" else "service" if action=="request_service" else "approve" if action in ("adjust_stock","retire_sensitive","credit_note","pms_legacy_direct_experience_review") else "commission" if action=="agent_commission" else "finance" if action in ("invoice","payment","direct_sale","pms_direct_sale","day_pass_no_room","cash_expense_reviewed","settle_payment","supplier_payment","finance_post","pms_direct_experience_order","pms_direct_experience_delivery") else "reserve" if action in ("reserve","booking_status","modify_reservation","convert_portal","confirm_booking_draft","experience_order") else "stay"
     prop = require(property_name, permission)
     with selected_property(prop):
         return _preview(prop,payload(data),action)
@@ -1766,6 +1797,8 @@ def _preview(prop,data,action):
     if action=="direct_sale":
         require(prop.name,"finance")
         return direct_sales.quote(prop,data)
+    if action=="pms_direct_sale":
+        return standalone_direct_sales.quote(prop,data)
     if action=="day_pass_no_room":
         return (standalone_day_pass.quote(prop, data) if standalone_accounting.provider() == "pms"
                 else day_pass.quote_without_room(prop,data))

@@ -182,7 +182,7 @@ def create(prop, data):
 
 def _create(prop, *, party, reference, description, value, receivable, income,
             folio=None, source_charge=None, booking=None, experience_order=None,
-            tax_profile=None):
+            tax_profile=None, source_service=None):
     from hospitality_suite.standalone_tax import tax_for_amount
     from hospitality_suite.standalone_credit import due_date
 
@@ -204,7 +204,8 @@ def _create(prop, *, party, reference, description, value, receivable, income,
                  tax_treatment=tax["treatment"], price_includes_tax=int(tax["included_in_price"]),
                  tax_account=tax["liability_account"],
                  receivable_account=receivable.name, income_account=income.name,
-                 folio=folio, source_charge=source_charge, booking=booking,
+                 folio=folio, source_charge=source_charge, source_service=source_service,
+                 booking=booking,
                  experience_order=experience_order,
                  journal=journal.name, status="Posted")
     audit(prop, "pms_receivable_created", doc, details={"journal": journal.name,
