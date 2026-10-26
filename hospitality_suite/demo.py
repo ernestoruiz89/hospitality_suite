@@ -115,13 +115,6 @@ def seed():
         guarantee = frappe.get_doc(dict(doctype="Account", company=company.name, account_name="Garantías de huéspedes demo",
                                         parent_account=parent, root_type="Liability", account_type="", account_currency="NIO")).insert().name
     cash = company.default_cash_account or frappe.db.get_value("Account", {"company": company.name, "account_type": "Cash", "is_group": 0})
-    warehouse = frappe.db.get_value("Warehouse", {"company": company.name, "warehouse_name": "Stores", "is_group": 0})
-    if not warehouse:
-        # ERPNext translates its initial warehouse names when Company is created.
-        # This explicit demo owns a stable fixture; normal installation creates none.
-        parent=frappe.db.get_value("Warehouse",{"company":company.name,"is_group":1,"parent_warehouse":["is","not set"]})
-        warehouse=frappe.get_doc(dict(doctype="Warehouse",warehouse_name="Stores",company=company.name,
-                                      parent_warehouse=parent,is_group=0)).insert().name
     if not frappe.db.exists("Mode of Payment", "Efectivo demo"):
         frappe.get_doc(dict(doctype="Mode of Payment", mode_of_payment="Efectivo demo", type="Cash",
                             accounts=[dict(company=company.name, default_account=cash)])).insert()
@@ -132,16 +125,27 @@ def seed():
         for mode, property_name, prefix in [("Hotel", "Hotel Jardín Demo", "H"), ("Por tiempo", "Luna Demo · Por tiempo", "M")]:
             prop_name = frappe.db.get_value("HS Property", {"property_name": property_name})
             if not prop_name:
+                warehouse_label = f"HS Demo {prefix} Inventory"
+                warehouse = frappe.db.get_value("Warehouse", {"company": company.name,
+                    "warehouse_name": warehouse_label, "is_group": 0})
+                if not warehouse:
+                    parent = frappe.db.get_value("Warehouse", {"company": company.name,
+                        "is_group": 1, "parent_warehouse": ["is", "not set"]})
+                    warehouse = frappe.get_doc(dict(doctype="Warehouse",
+                        warehouse_name=warehouse_label, company=company.name,
+                        parent_warehouse=parent, is_group=0)).insert().name
+                elif (frappe.db.get_value("Warehouse", warehouse, "hs_property") or
+                        frappe.db.exists("HS Property", {"warehouse": warehouse})):
+                    frappe.throw(frappe._("El almacén demostrativo ya está asignado a otro establecimiento"))
                 prop = frappe.get_doc(dict(doctype="HS Property", property_name=property_name, company=company.name, mode=mode,
                                            time_zone="America/Managua", business_date=nowdate(), currency="NIO", cleaning_minutes=30,
                                            inspection_required=1, discreet_mode=mode=="Por tiempo", hold_minutes=15,
                                            cost_center=company.cost_center, warehouse=warehouse, receivable_account=company.default_receivable_account,
                                            guarantee_account=guarantee, lodging_item="HS-DEMO-LODGING",extra_hour_item="HS-DEMO-EXTRA-HOUR", tax_policy_confirmed=1, financial_enabled=1)).insert()
+                frappe.db.set_value("Warehouse", warehouse, "hs_property", prop.name)
             else:
                 prop = frappe.get_doc("HS Property", prop_name)
-                if prop.warehouse!=warehouse:
-                    prop.warehouse = warehouse
-                    prop.save()
+                warehouse = prop.warehouse
             cat_name = frappe.db.get_value("HS Category", {"property": prop.name, "category_name": "Estándar"})
             if not cat_name:
                 cat_name = frappe.get_doc(dict(doctype="HS Category", property=prop.name, company=company.name,
@@ -184,11 +188,14 @@ def seed():
                 if not frappe.db.exists("HS Access", {"user": email, "property": prop.name}):
                     frappe.get_doc(dict(doctype="HS Access", user=email, company=prop.company, property=prop.name)).insert()
             result.append(dict(property=prop.name, property_name=prop.property_name))
-        if not frappe.db.exists("Stock Entry Detail", {"item_code": "HS-DEMO-WATER", "t_warehouse": warehouse}):
-            entry = frappe.get_doc(dict(doctype="Stock Entry", stock_entry_type="Material Receipt", company=company.name,
-                                        set_posting_time=1, posting_date=nowdate(), posting_time="00:00:00",
-                                        items=[dict(item_code="HS-DEMO-WATER", qty=100, t_warehouse=warehouse, basic_rate=10)]))
-            entry.insert().submit()
+            if (warehouse and frappe.db.get_value("Warehouse", warehouse, "hs_property") == prop.name
+                    and not frappe.db.exists("Stock Entry Detail", {"item_code": "HS-DEMO-WATER", "t_warehouse": warehouse})):
+                entry = frappe.get_doc(dict(doctype="Stock Entry", stock_entry_type="Material Receipt",
+                                            company=company.name, hs_property=prop.name,
+                                            set_posting_time=1, posting_date=nowdate(), posting_time="00:00:00",
+                                            items=[dict(item_code="HS-DEMO-WATER", qty=100,
+                                                        t_warehouse=warehouse, basic_rate=10)]))
+                entry.insert().submit()
     frappe.db.set_single_value("System Settings", "setup_complete", 1)
     for app in frappe.get_all("Installed Application", filters={"app_name": ["in", ["frappe", "erpnext"]]}, pluck="name"):
         frappe.db.set_value("Installed Application", app, "is_setup_complete", 1)
