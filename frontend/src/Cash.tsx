@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
 import { call, type ChartData, type Property } from "./api"
 import { pmsCashMovementKind, pmsCashSections, pmsCashSetupKind, usePmsCashSection } from "./CashSections"
+import { CashRefundSourcePicker, type RefundablePayment } from "./CashRefundSourcePicker"
 import { useIdempotentCommand } from "./useIdempotentCommand"
 
 type CashData = {
@@ -24,11 +25,7 @@ type CashData = {
     exchange_rate: number; reference: string; business_date: string; shift: string | null;
     method: string; pms_receivable: string | null; pms_party: string | null;
     folio: string | null; booking: string | null }[]
-  refundable: { name: string; kind: string; currency: string; reference: string; method: string;
-    folio: string | null; booking: string | null;
-    remaining_amount: string; remaining_base: string; pms_receivable: string | null;
-    settlement_currency: string | null; remaining_settled_amount: string | null;
-    remaining_released_base: string | null }[]
+  refundable: RefundablePayment[]
   deposit_accounts: { name: string; account_code: string; account_name: string }[]
   receivables: { name: string; party: string; folio: string | null; reference: string; currency: string;
     outstanding: string }[]
@@ -83,7 +80,7 @@ export function Cash({ property, canSetup, canRefund }: { property: Property; ca
   const [setupLabel, setSetupLabel] = useState("")
   const [setupAccount, setSetupAccount] = useState("")
   const [setupLimit, setSetupLimit] = useState("")
-  const [refundSource, setRefundSource] = useState("")
+  const [selectedRefund, setSelectedRefund] = useState<RefundablePayment | null>(null)
   const [refundAmount, setRefundAmount] = useState("")
   const [refundShift, setRefundShift] = useState("")
   const [refundReference, setRefundReference] = useState("")
@@ -104,7 +101,7 @@ export function Cash({ property, canSetup, canRefund }: { property: Property; ca
     setSnapshot(null); setChart(null); setError(""); setNotice("")
     setOpening({}); setCounted({}); setMethod(""); setShift(""); setQuote(null)
     setCounter(""); setReceivable(""); setSettledAmount(""); setParty(""); setFolio(""); setBooking(""); setGuaranteeTarget("booking"); setCustomerName(""); setCategory(""); setConcept("")
-    setRefundSource(""); setRefundQuote(null)
+    setSelectedRefund(null); setRefundQuote(null)
     refresh().catch((reason: unknown) => setError(reason instanceof Error ? reason.message : "No se pudo consultar Caja."))
     if (canSetup) call<ChartData>("pms_chart", { property_name: property.name }).then(setChart)
       .catch((reason: unknown) => setError(reason instanceof Error ? reason.message : "No se pudo consultar el catálogo."))
@@ -115,7 +112,7 @@ export function Cash({ property, canSetup, canRefund }: { property: Property; ca
     setParty(""); setFolio(""); setBooking(""); setGuaranteeTarget("booking"); setCustomerName("")
     setCategory(""); setConcept(""); setAmount(""); setReference(""); setReason("")
     setQuote(null); setSetupLabel(""); setSetupAccount(""); setSetupLimit("")
-    setRefundSource(""); setRefundAmount(""); setRefundShift(""); setRefundReference("")
+    setSelectedRefund(null); setRefundAmount(""); setRefundShift(""); setRefundReference("")
     setRefundReason(""); setRefundQuote(null)
   }, [section])
   useEffect(() => {
@@ -235,13 +232,12 @@ export function Cash({ property, canSetup, canRefund }: { property: Property; ca
     } catch (reason) { setError(reason instanceof Error ? reason.message : "No se pudo crear el cliente.") }
     finally { setBusy(false) }
   }
-  const selectedRefund = snapshot?.refundable.find((item) => item.name === refundSource)
   const refundMethod = snapshot?.methods.find((item) => item.name === selectedRefund?.method)
   function refundChanged() { setRefundQuote(null); setError(""); setNotice("") }
   async function submitRefund(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); if (busy || !canRefund) return
     setBusy(true); setError(""); setNotice("")
-    const data = { source_payment: refundSource, amount: refundAmount,
+    const data = { source_payment: selectedRefund?.name || "", amount: refundAmount,
       ...(refundMethod?.is_cash ? { shift: refundShift } : {}),
       reference: refundReference, reason: refundReason }
     try {
@@ -257,7 +253,7 @@ export function Cash({ property, canSetup, canRefund }: { property: Property; ca
               expected_released_base_amount: refundQuote.released_base_amount,
               expected_exchange_variance_base: refundQuote.exchange_variance_base,
             } : {}) })
-        setRefundQuote(null); setRefundSource("")
+        setRefundQuote(null); setSelectedRefund(null)
         setRefundAmount(""); setRefundReference(""); setRefundReason("")
         await refreshAfter(`Devolución ${result.payment} contabilizada.`)
       }
@@ -311,7 +307,8 @@ export function Cash({ property, canSetup, canRefund }: { property: Property; ca
       </div>
       {pmsCashSetupKind(section) && canSetup && <Card><CardHeader><CardTitle>{sectionInfo.label}</CardTitle><CardDescription>{sectionInfo.description}.</CardDescription></CardHeader><CardContent><form onSubmit={createSetup} className="grid gap-3 sm:grid-cols-3"><Input required placeholder="Nombre" value={setupLabel} onChange={(event) => setSetupLabel(event.target.value)} /><select required value={setupAccount} onChange={(event) => setSetupAccount(event.target.value)} className="h-9 rounded-md border border-border bg-white px-2 text-sm"><option value="">Cuenta contable</option>{chart?.accounts.filter((account) => !account.is_group && account.active && (setupKind === "method" ? (account.is_cash || account.is_bank) : account.root_type === (setupKind === "category" ? "Expense" : "Income") && account.account_currency === property.currency)).map((account) => <option key={account.name} value={account.name}>{account.account_code} · {account.account_name}</option>)}</select>{setupKind === "category" && <Input type="number" min="0" step="0.01" placeholder="Límite por operación" value={setupLimit} onChange={(event) => setSetupLimit(event.target.value)} />}<Button type="submit" disabled={busy || !chart}>Crear {setupKind === "method" ? "medio" : setupKind === "category" ? "categoría" : "concepto"}</Button></form></CardContent></Card>}
       {section === "refunds" && canRefund && <Card><CardHeader><CardTitle>Devolver cobro, anticipo o garantía</CardTitle><CardDescription>La devolución conserva el movimiento original y publica el asiento contrario en su misma moneda.</CardDescription></CardHeader><CardContent><form onSubmit={submitRefund} className="grid gap-3 sm:grid-cols-2">
-        <select required value={refundSource} onChange={(event) => { refundChanged(); setRefundSource(event.target.value); setRefundAmount("") }} className="h-9 rounded-md border border-border bg-white px-2 text-sm sm:col-span-2"><option value="">Movimiento original</option>{snapshot.refundable.map((item) => <option key={item.name} value={item.name}>{item.reference} · {item.kind === "Advance" ? "Anticipo" : item.kind === "Guarantee" ? "Garantía" : "Cobro"}{item.folio && ` · ${item.folio}`}{item.booking && ` · ${item.booking}`} · {item.currency} {item.remaining_amount} · Saldo base {property.currency} {item.remaining_base}{item.settlement_currency && ` · Principal ${item.settlement_currency} ${item.remaining_settled_amount}`}</option>)}</select>
+        <CashRefundSourcePicker property={property} selected={selectedRefund} refreshToken={snapshot}
+          onSelect={(payment) => { refundChanged(); setSelectedRefund(payment); setRefundAmount("") }} />
         {refundMethod?.is_cash && <select required value={refundShift} onChange={(event) => { refundChanged(); setRefundShift(event.target.value) }} className="h-9 rounded-md border border-border bg-white px-2 text-sm"><option value="">Turno abierto</option>{snapshot.shifts.map((item) => <option key={item.name} value={item.name}>{item.name} · {item.expected[refundMethod.currency] || "0.00"} {refundMethod.currency}</option>)}</select>}
         <Input required type="number" min="0.01" step="0.01" max={selectedRefund?.remaining_amount} placeholder={`Importe ${selectedRefund?.currency || ""}`} value={refundAmount} onChange={(event) => { refundChanged(); setRefundAmount(event.target.value) }} />
         <Input required maxLength={140} placeholder="Referencia de devolución" value={refundReference} onChange={(event) => { refundChanged(); setRefundReference(event.target.value) }} />

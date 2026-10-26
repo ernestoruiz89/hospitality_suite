@@ -1026,6 +1026,18 @@ def run():
         assert Decimal(standalone_accounting.balance(second_prop, deposit)) == liability_before - Decimal("21.50")
         assert any(row["name"] == guarantee["payment"] and row["remaining_amount"] == "0.59"
                    for row in api.pms_cash_snapshot(second_prop.name)["refundable"])
+        refundable_page = api.pms_refundable_payments_page(second_prop.name,
+            search="GUAR-" + suffix, page_length=1)
+        assert any(row["name"] == guarantee["payment"] and row["remaining_amount"] == "0.59"
+                   for row in refundable_page["rows"])
+        assert not api.pms_refundable_payments_page(prop.name,
+            search="GUAR-" + suffix)["rows"]
+        try:
+            api.pms_refundable_payments_page(second_prop.name, page_length=101)
+        except frappe.ValidationError:
+            pass
+        else:
+            raise AssertionError("Se admitió una consulta de devoluciones sin límite")
         try:
             api.execute(second_prop.name, "pms_refund", "over-guarantee-refund-" + suffix,
                 dict(source_payment=guarantee["payment"], amount="1",

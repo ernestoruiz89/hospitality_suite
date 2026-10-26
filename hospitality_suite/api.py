@@ -325,6 +325,11 @@ def pms_cash_snapshot(property_name, folio=None, receivable=None):
 
 
 @frappe.whitelist()
+def pms_refundable_payments_page(property_name, search="", offset=0, page_length=25):
+    return standalone_cash.refundable_page(property_name, search, offset, page_length)
+
+
+@frappe.whitelist()
 def pms_customers(property_name):
     return standalone_cash.customers(property_name)
 

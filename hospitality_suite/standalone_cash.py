@@ -685,6 +685,70 @@ def refund(prop, data):
             "exchange_variance_base": q["exchange_variance_base"]}
 
 
+def _refundable_rows(prop, movements):
+    from hospitality_suite.standalone_receivables import deposit_available, remaining_allocation
+    refundable = []
+    for row in movements:
+        if row.kind not in ("Payment", "Advance", "Guarantee"):
+            continue
+        refunds = current_all("HS Payment", filters={"property": prop.name,
+            "source_payment": row.name,
+            "kind": "Guarantee Refund" if row.kind == "Guarantee" else "Refund",
+            "status": "Posted"},
+            fields=["amount", "base_amount", "pms_settled_amount",
+                    "pms_released_base_amount"])
+        foreign = Decimal(str(row.amount)) - sum((Decimal(str(item.amount)) for item in refunds), Decimal(0))
+        if row.kind in ("Advance", "Guarantee"):
+            base = deposit_available(prop, row.name, row.kind)
+            foreign = min(foreign, (base / Decimal(str(row.exchange_rate))).quantize(
+                Decimal("0.01"), rounding=ROUND_HALF_UP))
+        else:
+            original = frappe.db.get_value("HS PMS Allocation", {"property": prop.name,
+                "payment": row.name, "kind": "Direct"}, "name")
+            base = remaining_allocation(prop, original) if original else Decimal(0)
+            if row.pms_settlement_currency:
+                released = base
+                settled = Decimal(str(row.pms_settled_amount)) - sum(
+                    (Decimal(str(item.pms_settled_amount or 0)) for item in refunds), Decimal(0))
+                base = Decimal(str(row.base_amount)) - sum(
+                    (Decimal(str(item.base_amount)) for item in refunds), Decimal(0))
+        if foreign > 0 and base > 0:
+            refundable.append({"name": row.name, "kind": row.kind, "currency": row.currency,
+                "reference": row.reference, "method": row.method, "folio": row.folio,
+                "booking": row.booking,
+                "remaining_amount": _money(foreign), "remaining_base": _money(base),
+                "pms_receivable": row.pms_receivable,
+                "settlement_currency": row.pms_settlement_currency,
+                "remaining_settled_amount": _money(settled) if row.pms_settlement_currency else None,
+                "remaining_released_base": _money(released) if row.pms_settlement_currency else None})
+    return refundable
+
+
+def refundable_page(property_name, search="", offset=0, page_length=25):
+    prop = require(property_name, "finance")
+    require_pms(prop)
+    try:
+        offset, page_length = int(offset), int(page_length)
+    except (TypeError, ValueError, OverflowError):
+        frappe.throw(_("Revise la paginación de devoluciones"))
+    if (offset < 0 or offset > 1000000 or not 1 <= page_length <= 100 or
+            not isinstance(search, str) or len(search) > 100):
+        frappe.throw(_("Revise la búsqueda de devoluciones"))
+    term = search.strip()
+    rows = frappe.db.sql(
+        "SELECT name,kind,currency,amount,base_amount,exchange_rate,reference,"
+        "business_date,shift,method,pms_receivable,pms_party,folio,booking,"
+        "source_payment,pms_settlement_currency,pms_settled_amount,"
+        "pms_released_base_amount FROM `tabHS Payment` "
+        "WHERE property=%s AND pms_journal IS NOT NULL AND status='Posted' "
+        "AND kind IN ('Payment','Advance','Guarantee') "
+        "AND (%s='' OR LOCATE(%s,name)>0 OR LOCATE(%s,reference)>0) "
+        "ORDER BY creation DESC,name DESC LIMIT %s OFFSET %s",
+        (prop.name, term, term, term, page_length + 1, offset), as_dict=True)
+    return {"rows": _refundable_rows(prop, rows[:page_length]),
+            "offset": offset, "has_more": len(rows) > page_length}
+
+
 def snapshot(property_name, folio=None, receivable=None):
     prop = require(property_name, "finance")
     require_pms(prop)
@@ -724,41 +788,7 @@ def snapshot(property_name, folio=None, receivable=None):
                              "pms_settlement_currency", "pms_settled_amount",
                              "pms_released_base_amount"],
                      order_by="creation desc", limit_page_length=50)
-    from hospitality_suite.standalone_receivables import deposit_available, remaining_allocation
-    refundable = []
-    for row in movements:
-        if row.kind not in ("Payment", "Advance", "Guarantee"):
-            continue
-        refunds = current_all("HS Payment", filters={"property": prop.name,
-            "source_payment": row.name,
-            "kind": "Guarantee Refund" if row.kind == "Guarantee" else "Refund",
-            "status": "Posted"},
-            fields=["amount", "base_amount", "pms_settled_amount",
-                    "pms_released_base_amount"])
-        foreign = Decimal(str(row.amount)) - sum((Decimal(str(item.amount)) for item in refunds), Decimal(0))
-        if row.kind in ("Advance", "Guarantee"):
-            base = deposit_available(prop, row.name, row.kind)
-            foreign = min(foreign, (base / Decimal(str(row.exchange_rate))).quantize(
-                Decimal("0.01"), rounding=ROUND_HALF_UP))
-        else:
-            original = frappe.db.get_value("HS PMS Allocation", {"property": prop.name,
-                "payment": row.name, "kind": "Direct"}, "name")
-            base = remaining_allocation(prop, original) if original else Decimal(0)
-            if row.pms_settlement_currency:
-                released = base
-                settled = Decimal(str(row.pms_settled_amount)) - sum(
-                    (Decimal(str(item.pms_settled_amount or 0)) for item in refunds), Decimal(0))
-                base = Decimal(str(row.base_amount)) - sum(
-                    (Decimal(str(item.base_amount)) for item in refunds), Decimal(0))
-        if foreign > 0 and base > 0:
-            refundable.append({"name": row.name, "kind": row.kind, "currency": row.currency,
-                "reference": row.reference, "method": row.method, "folio": row.folio,
-                "booking": row.booking,
-                "remaining_amount": _money(foreign), "remaining_base": _money(base),
-                "pms_receivable": row.pms_receivable,
-                "settlement_currency": row.pms_settlement_currency,
-                "remaining_settled_amount": _money(settled) if row.pms_settlement_currency else None,
-                "remaining_released_base": _money(released) if row.pms_settlement_currency else None})
+    refundable = _refundable_rows(prop, movements)
     return {"base_currency": prop.currency, "accepted_currencies": sorted({prop.currency} |
         {row.currency for row in prop.accepted_currencies}), "methods": methods, "categories": categories,
         "concepts": concepts, "customers": customers(prop.name),
