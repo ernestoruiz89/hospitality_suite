@@ -65,6 +65,17 @@ def page(property_name, kind="Purchase", search="", offset=0,
                     "status": "Posted"}))
             for key in ("product", "warehouse", "quantity", "stock_movement"):
                 row.pop(key, None)
+        product_ids = {line["product"] for row in page_rows for line in row["lines"]
+                       if line.get("product")}
+        labels = {product.name: product.product_name for product in frappe.get_all(
+            "HS Product", filters={"property": prop.name,
+                                   "organization": prop.organization,
+                                   "name": ["in", list(product_ids)]},
+            fields=["name", "product_name"], limit_page_length=len(product_ids))
+            } if product_ids else {}
+        for row in page_rows:
+            for line in row["lines"]:
+                line["product_name"] = labels.get(line.get("product")) or line.get("product")
     else:
         only_open = str(available_only) == "1"
         rows = frappe.db.sql(

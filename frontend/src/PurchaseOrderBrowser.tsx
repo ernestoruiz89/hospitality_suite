@@ -10,7 +10,7 @@ export type PurchaseOrder = { name: string; supplier: string; party_name?: strin
   tax_account: string | null; amount: number; recoverable_tax: number;
   expected_date: string | null; requested_by: string; approved_by: string | null;
   status: string; progress: string; modified: string; close_reason: string | null;
-  lines: { name: string; product: string; warehouse: string; quantity: string;
+  lines: { name: string; product: string; product_name: string; warehouse: string; quantity: string;
     received_quantity: string; remaining_quantity: string; amount: string;
     recoverable_tax: string }[] }
 type Page = { rows: PurchaseOrder[]; offset: number; has_more: boolean }

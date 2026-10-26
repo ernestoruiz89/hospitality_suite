@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
 import { call, type Property } from "./api"
 import { OpeningSupplierCreditsPms } from "./OpeningSupplierCreditsPms"
+import { PurchaseCatalogBrowser } from "./PurchaseCatalogBrowser"
 import { PurchaseDocumentBrowser, type PurchaseCandidate, type PurchaseDocument,
   type SupplierReturn } from "./PurchaseDocumentBrowser"
 import { PurchaseOrderBrowser, type PurchaseOrder as Order } from "./PurchaseOrderBrowser"
@@ -16,13 +17,11 @@ import { useIdempotentCommand, type SendCommand } from "./useIdempotentCommand"
 
 type Account = { name: string; account_code: string; account_name: string;
   root_type: string; account_type: string }
-type PurchaseLine = { product: string; warehouse: string; quantity: string;
+type PurchaseLine = { product: string; product_name?: string; warehouse: string; quantity: string;
   invoice_amount: string; recoverable_tax: string }
 const emptyLine = (): PurchaseLine => ({ product: "", warehouse: "", quantity: "",
   invoice_amount: "", recoverable_tax: "0" })
 type Snapshot = { currency: string; currencies: string[];
-  suppliers: { name: string; party_name: string; tax_id?: string }[];
-  products: { name: string; product_code: string; product_name: string }[];
   warehouses: { name: string; warehouse_name: string }[];
   accounts: Account[];
   methods: { name: string; mode_of_payment: string; currency: string; is_cash: boolean }[];
@@ -63,6 +62,7 @@ export function Purchases({ property, canPurchase, canApprove }: {
   const [supplierName, setSupplierName] = useState("")
   const [supplierTaxId, setSupplierTaxId] = useState("")
   const [supplier, setSupplier] = useState("")
+  const [supplierLabel, setSupplierLabel] = useState("")
   const [billReference, setBillReference] = useState("")
   const [lineRows, setLineRows] = useState<PurchaseLine[]>([emptyLine()])
   const [currency, setCurrency] = useState(property.currency)
@@ -86,7 +86,7 @@ export function Purchases({ property, canPurchase, canApprove }: {
   }
   useEffect(() => {
     setData(null); setError(""); setNotice(""); setSupplierName(""); setSupplierTaxId("");
-    setSupplier(""); setBillReference(""); setLineRows([emptyLine()]);
+    setSupplier(""); setSupplierLabel(""); setBillReference(""); setLineRows([emptyLine()]);
     setCurrency(property.currency); setPayableAccount(""); setTaxAccount("");
     setPurchaseNotes(""); setPurchaseQuote(null)
     setSelectedPaymentTarget(null); setMethod(""); setShift(""); setPaymentAmount(""); setSettledAmount("");
@@ -97,7 +97,9 @@ export function Purchases({ property, canPurchase, canApprove }: {
   const changePayment = () => setPaymentQuote(null)
   const totalTax = lineRows.reduce((total, row) => total + Number(row.recoverable_tax || 0), 0)
   const purchaseData = { supplier, supplier_reference: billReference.trim(),
-    lines: lineRows.map((row) => ({ ...row, recoverable_tax: row.recoverable_tax || "0" })),
+    lines: lineRows.map((row) => ({ product: row.product, warehouse: row.warehouse,
+      quantity: row.quantity, invoice_amount: row.invoice_amount,
+      recoverable_tax: row.recoverable_tax || "0" })),
     invoice_currency: currency, payable_account: payableAccount,
     tax_account: totalTax > 0 ? taxAccount : null, notes: purchaseNotes.trim() }
   const updateLine = (index: number, field: keyof PurchaseLine, value: string) => {
@@ -178,18 +180,35 @@ export function Purchases({ property, canPurchase, canApprove }: {
           refresh={refresh} send={send} section={section} canApprove={canApprove} />}
       {section === "supplier-new" && canPurchase && <Card className="max-w-2xl"><CardHeader><CardTitle>Registrar proveedor</CardTitle><CardDescription>Proveedor propio del establecimiento.</CardDescription></CardHeader><CardContent><form onSubmit={createSupplier} className="space-y-3"><Input required maxLength={140} placeholder="Nombre" value={supplierName} onChange={(event) => setSupplierName(event.target.value)} /><Input maxLength={140} placeholder="Identificación fiscal (opcional)" value={supplierTaxId} onChange={(event) => setSupplierTaxId(event.target.value)} /><Button disabled={busy}>Crear proveedor</Button></form></CardContent></Card>}
       {section === "suppliers" && canPurchase &&
-        <Card><CardHeader><CardTitle>Proveedores registrados</CardTitle></CardHeader><CardContent className="space-y-2">{data.suppliers.map((row) => <div key={row.name} className="border-b border-border py-2 text-sm"><strong>{row.party_name}</strong>{row.tax_id && <span className="ml-2 text-muted-foreground">{row.tax_id}</span>}</div>)}{!data.suppliers.length && <p className="text-sm text-muted-foreground">Sin proveedores registrados.</p>}</CardContent></Card>
+        <Card><CardHeader><CardTitle>Proveedores registrados</CardTitle></CardHeader><CardContent>
+          <PurchaseCatalogBrowser property={property} kind="Supplier" refreshToken={data} />
+        </CardContent></Card>
       }
       {section === "receive" && canPurchase && <Card><CardHeader><CardTitle>Recepción de compra</CardTitle><CardDescription>Una factura y una cuenta por pagar con hasta 50 líneas. El impuesto recuperable se separa del costo del inventario.</CardDescription></CardHeader><CardContent><form onSubmit={receive} className="grid gap-3 sm:grid-cols-2">
-          <select required value={supplier} onChange={(event) => { changePurchase(); setSupplier(event.target.value) }} className="h-9 rounded-md border border-border bg-white px-2 text-sm"><option value="">Proveedor</option>{data.suppliers.map((row) => <option key={row.name} value={row.name}>{row.party_name}</option>)}</select>
+          <PurchaseCatalogBrowser property={property} kind="Supplier"
+            selected={supplier ? { name: supplier, party_name: supplierLabel } : null}
+            onSelect={(row) => { changePurchase(); setSupplier(row?.name || "");
+              setSupplierLabel(row?.party_name || "") }} />
           <Input required maxLength={140} placeholder="Referencia de factura" value={billReference} onChange={(event) => { changePurchase(); setBillReference(event.target.value) }} />
           <select required value={currency} onChange={(event) => { changePurchase(); setCurrency(event.target.value) }} className="h-9 rounded-md border border-border bg-white px-2 text-sm">{data.currencies.map((row) => <option key={row} value={row}>{row}</option>)}</select>
-          <div className="space-y-3 sm:col-span-2">{lineRows.map((row, index) => <div key={index} className="grid gap-2 rounded-lg border border-border p-3 sm:grid-cols-2"><div className="flex items-center justify-between sm:col-span-2"><strong className="text-sm">Línea {index + 1}</strong>{lineRows.length > 1 && <Button type="button" variant="outline" size="sm" onClick={() => { changePurchase(); setLineRows((rows) => rows.filter((_, position) => position !== index)) }}>Quitar</Button>}</div><select required aria-label={`Producto línea ${index + 1}`} value={row.product} onChange={(event) => updateLine(index, "product", event.target.value)} className="h-9 rounded-md border border-border bg-white px-2 text-sm"><option value="">Producto</option>{data.products.map((item) => <option key={item.name} value={item.name}>{item.product_code} · {item.product_name}</option>)}</select><select required aria-label={`Almacén línea ${index + 1}`} value={row.warehouse} onChange={(event) => updateLine(index, "warehouse", event.target.value)} className="h-9 rounded-md border border-border bg-white px-2 text-sm"><option value="">Almacén</option>{data.warehouses.map((store) => <option key={store.name} value={store.name}>{store.warehouse_name}</option>)}</select><Input required aria-label={`Cantidad línea ${index + 1}`} type="number" min="0.000001" step="0.000001" value={row.quantity} onChange={(event) => updateLine(index, "quantity", event.target.value)} placeholder="Cantidad" /><Input required aria-label={`Total línea ${index + 1} en ${currency}`} type="number" min="0.01" step="0.01" value={row.invoice_amount} onChange={(event) => updateLine(index, "invoice_amount", event.target.value)} placeholder={`Total (${currency})`} /><Input aria-label={`Impuesto recuperable línea ${index + 1} en ${currency}`} type="number" min="0" step="0.01" value={row.recoverable_tax} onChange={(event) => updateLine(index, "recoverable_tax", event.target.value)} placeholder={`Impuesto recuperable (${currency})`} /></div>)}<Button type="button" variant="outline" disabled={busy || lineRows.length >= 50} onClick={() => { changePurchase(); setLineRows((rows) => [...rows, emptyLine()]) }}>Añadir línea</Button></div>
+          <div className="space-y-3 sm:col-span-2">{lineRows.map((row, index) => <div key={index} className="grid gap-2 rounded-lg border border-border p-3 sm:grid-cols-2">
+            <div className="flex items-center justify-between sm:col-span-2"><strong className="text-sm">Línea {index + 1}</strong>{lineRows.length > 1 && <Button type="button" variant="outline" size="sm" onClick={() => { changePurchase(); setLineRows((rows) => rows.filter((_, position) => position !== index)) }}>Quitar</Button>}</div>
+            <PurchaseCatalogBrowser property={property} kind="Product"
+              selected={row.product ? { name: row.product, product_name: row.product_name } : null}
+              onSelect={(item) => { changePurchase(); setLineRows((rows) => rows.map((line, position) =>
+                position === index ? { ...line, product: item?.name || "",
+                  product_name: item?.product_name || "" } : line)) }} />
+            <select required aria-label={`Almacén línea ${index + 1}`} value={row.warehouse} onChange={(event) => updateLine(index, "warehouse", event.target.value)} className="h-9 rounded-md border border-border bg-white px-2 text-sm"><option value="">Almacén</option>{data.warehouses.map((store) => <option key={store.name} value={store.name}>{store.warehouse_name}</option>)}</select>
+            <Input required aria-label={`Cantidad línea ${index + 1}`} type="number" min="0.000001" step="0.000001" value={row.quantity} onChange={(event) => updateLine(index, "quantity", event.target.value)} placeholder="Cantidad" />
+            <Input required aria-label={`Total línea ${index + 1} en ${currency}`} type="number" min="0.01" step="0.01" value={row.invoice_amount} onChange={(event) => updateLine(index, "invoice_amount", event.target.value)} placeholder={`Total (${currency})`} />
+            <Input aria-label={`Impuesto recuperable línea ${index + 1} en ${currency}`} type="number" min="0" step="0.01" value={row.recoverable_tax} onChange={(event) => updateLine(index, "recoverable_tax", event.target.value)} placeholder={`Impuesto recuperable (${currency})`} />
+          </div>)}<Button type="button" variant="outline" disabled={busy || lineRows.length >= 50} onClick={() => { changePurchase(); setLineRows((rows) => [...rows, emptyLine()]) }}>Añadir línea</Button></div>
           <select required value={payableAccount} onChange={(event) => { changePurchase(); setPayableAccount(event.target.value) }} className="h-9 rounded-md border border-border bg-white px-2 text-sm"><option value="">Cuenta por pagar</option>{data.accounts.filter((row) => row.root_type === "Liability" && row.account_type === "Payable").map((row) => <option key={row.name} value={row.name}>{row.account_code} · {row.account_name}</option>)}</select>
           {totalTax > 0 && <select required value={taxAccount} onChange={(event) => { changePurchase(); setTaxAccount(event.target.value) }} className="h-9 rounded-md border border-border bg-white px-2 text-sm"><option value="">Cuenta de impuesto recuperable</option>{data.accounts.filter((row) => row.root_type === "Asset" && row.account_type === "Tax").map((row) => <option key={row.name} value={row.name}>{row.account_code} · {row.account_name}</option>)}</select>}
           <Input maxLength={500} placeholder="Observaciones" value={purchaseNotes} onChange={(event) => { changePurchase(); setPurchaseNotes(event.target.value) }} className="sm:col-span-2" />
           {purchaseQuote && <div className="space-y-1 rounded-lg bg-secondary p-3 text-sm sm:col-span-2"><strong>{purchaseQuote.supplier_name} · {purchaseQuote.lines.length} línea(s)</strong>{purchaseQuote.lines.map((line, index) => <p key={index}>{line.product_name} · {line.quantity} · {purchaseQuote.invoice_currency} {line.invoice_amount} · costo base {property.currency} {line.base_cost}</p>)}<p>Factura {purchaseQuote.invoice_currency} {purchaseQuote.invoice_amount} · Cambio {purchaseQuote.exchange_rate}</p><p>Débito inventario {property.currency} {purchaseQuote.base_cost}{Number(purchaseQuote.base_tax) > 0 && ` · Débito impuesto ${property.currency} ${purchaseQuote.base_tax}`} · Crédito proveedores {property.currency} {purchaseQuote.base_amount}</p></div>}
-          <Button disabled={busy || !data.products.length || !data.warehouses.length} className="sm:col-span-2">{purchaseQuote ? "Confirmar recepción" : "Revisar compra"}</Button>
+          <Button disabled={busy || !supplier || lineRows.some((row) => !row.product) || !data.warehouses.length}
+            className="sm:col-span-2">{purchaseQuote ? "Confirmar recepción" : "Revisar compra"}</Button>
         </form></CardContent></Card>
       }
       {section === "payables" && <Card><CardHeader><CardTitle>Cuentas por pagar</CardTitle></CardHeader><CardContent>
@@ -261,7 +280,6 @@ function PurchaseReturns({ property, data, refresh, send, section, canApprove }:
     reason: refundReason.trim() }
   const invalidateReturn = () => setReviewed(null)
   const invalidateRefund = () => setRefundReviewed(null)
-  const productLabel = (name: string) => data.products.find((row) => row.name === name)?.product_name || name
 
   async function returnStock(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); if (busy || !selectedPurchase) return
@@ -313,7 +331,7 @@ function PurchaseReturns({ property, data, refresh, send, section, canApprove }:
           }} />
         <p className="text-sm">Compra seleccionada: {selectedPurchase?.supplier_reference || "Seleccione una compra arriba."}</p>
         {canCancelSelected && <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={cancelEntire} onChange={(event) => { setCancelEntire(event.target.checked); setVarianceAccount(""); invalidateReturn() }} />Cancelar la factura completa y devolver todas las líneas</label>}
-        {selectedPurchase?.lines.map((line) => <label key={line.stock_movement || line.product} className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-border p-2 text-sm"><span>{productLabel(line.product)} · recibido {line.quantity}</span><Input aria-label={`Cantidad a devolver de ${productLabel(line.product)}`} type="number" min="0" max={line.quantity} step="0.000001" value={cancelEntire ? String(line.quantity) : line.stock_movement ? quantities[line.stock_movement] || "" : ""} disabled={!line.stock_movement || cancelEntire} onChange={(event) => { if (!line.stock_movement) return; setQuantities((current) => ({ ...current, [line.stock_movement!]: event.target.value })); setVarianceAccount(""); invalidateReturn() }} className="w-32" placeholder="Cantidad" /></label>)}
+        {selectedPurchase?.lines.map((line) => <label key={line.stock_movement || line.product} className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-border p-2 text-sm"><span>{line.product_name} · recibido {line.quantity}</span><Input aria-label={`Cantidad a devolver de ${line.product_name}`} type="number" min="0" max={line.quantity} step="0.000001" value={cancelEntire ? String(line.quantity) : line.stock_movement ? quantities[line.stock_movement] || "" : ""} disabled={!line.stock_movement || cancelEntire} onChange={(event) => { if (!line.stock_movement) return; setQuantities((current) => ({ ...current, [line.stock_movement!]: event.target.value })); setVarianceAccount(""); invalidateReturn() }} className="w-32" placeholder="Cantidad" /></label>)}
         <Input required maxLength={140} placeholder="Referencia de devolución" value={reference} onChange={(event) => { setReference(event.target.value); invalidateReturn() }} />
         <Input required maxLength={500} placeholder="Motivo" value={reason} onChange={(event) => { setReason(event.target.value); invalidateReturn() }} />
         {reviewed && <div className="space-y-1 rounded-lg bg-secondary p-3 text-sm"><p>Crédito del proveedor: {reviewed.invoice_currency} {reviewed.credit_amount} · Base {property.currency} {reviewed.base_credit}</p><p>Sale inventario {property.currency} {reviewed.stock_value} · Revierte impuesto {property.currency} {reviewed.base_tax}</p><p>Reduce deuda {property.currency} {reviewed.payable_applied} · Reintegro pendiente {property.currency} {reviewed.supplier_credit}</p>{Number(reviewed.variance) !== 0 && <p>Variación {property.currency} {reviewed.variance} ({reviewed.variance_nature === "Income" ? "ingreso" : "gasto"})</p>}</div>}
@@ -350,6 +368,7 @@ function PurchaseOrders({ property, data, refresh, send, section, canPurchase, c
   const [notice, setNotice] = useState("")
   useEffect(() => { setError(""); setNotice("") }, [section])
   const [supplier, setSupplier] = useState("")
+  const [supplierName, setSupplierName] = useState("")
   const [reference, setReference] = useState("")
   const [currency, setCurrency] = useState(property.currency)
   const [payableAccount, setPayableAccount] = useState("")
@@ -386,8 +405,6 @@ function PurchaseOrders({ property, data, refresh, send, section, canPurchase, c
   } : null
   const invalidateOrder = () => setReviewed(null)
   const invalidateReceipt = () => setReceiptQuote(null)
-  const productLabel = (id: string) => data.products.find((row) => row.name === id)?.product_name || id
-  const supplierLabel = (id: string) => data.suppliers.find((row) => row.name === id)?.party_name || id
   const statusLabel = (value: string) => ({ Pending: "Pendiente de aprobación",
     Approved: "Aprobada", "Partially Received": "Recibida parcialmente",
     Completed: "Recibida completamente", Closed: "Cerrada",
@@ -454,16 +471,29 @@ function PurchaseOrders({ property, data, refresh, send, section, canPurchase, c
     {canPurchase && (section === "order-new" || section === "order-receive") && <div className="space-y-5">
       {section === "order-new" &&
       <Card><CardHeader><CardTitle>Solicitar orden</CardTitle></CardHeader><CardContent><form onSubmit={requestOrder} className="grid gap-3 sm:grid-cols-2">
-        <select required value={supplier} onChange={(event) => { invalidateOrder(); setSupplier(event.target.value) }} className="h-9 rounded-md border border-border bg-white px-2 text-sm"><option value="">Proveedor</option>{data.suppliers.map((row) => <option key={row.name} value={row.name}>{row.party_name}</option>)}</select>
+        <PurchaseCatalogBrowser property={property} kind="Supplier"
+          selected={supplier ? { name: supplier, party_name: supplierName } : null}
+          onSelect={(row) => { invalidateOrder(); setSupplier(row?.name || "");
+            setSupplierName(row?.party_name || "") }} />
         <Input required maxLength={140} placeholder="Referencia de orden" value={reference} onChange={(event) => { invalidateOrder(); setReference(event.target.value) }} />
         <select required value={currency} onChange={(event) => { invalidateOrder(); setCurrency(event.target.value) }} className="h-9 rounded-md border border-border bg-white px-2 text-sm">{data.currencies.map((row) => <option key={row} value={row}>{row}</option>)}</select>
         <Input type="date" value={expectedDate} onChange={(event) => { invalidateOrder(); setExpectedDate(event.target.value) }} aria-label="Fecha esperada" />
         <select required value={payableAccount} onChange={(event) => { invalidateOrder(); setPayableAccount(event.target.value) }} className="h-9 rounded-md border border-border bg-white px-2 text-sm"><option value="">Cuenta por pagar</option>{data.accounts.filter((row) => row.root_type === "Liability" && row.account_type === "Payable").map((row) => <option key={row.name} value={row.name}>{row.account_code} · {row.account_name}</option>)}</select>
         {hasTax && <select required value={taxAccount} onChange={(event) => { invalidateOrder(); setTaxAccount(event.target.value) }} className="h-9 rounded-md border border-border bg-white px-2 text-sm"><option value="">Impuesto recuperable</option>{data.accounts.filter((row) => row.root_type === "Asset" && row.account_type === "Tax").map((row) => <option key={row.name} value={row.name}>{row.account_code} · {row.account_name}</option>)}</select>}
-        <div className="space-y-2 sm:col-span-2">{rows.map((row, index) => <div key={index} className="grid gap-2 rounded-lg border p-3 sm:grid-cols-2"><div className="flex justify-between sm:col-span-2"><strong>Línea {index + 1}</strong>{rows.length > 1 && <Button type="button" size="sm" variant="outline" onClick={() => { invalidateOrder(); setRows((current) => current.filter((_, i) => i !== index)) }}>Quitar</Button>}</div><select required aria-label={`Producto de orden ${index + 1}`} value={row.product} onChange={(event) => { invalidateOrder(); setRows((current) => current.map((item, i) => i === index ? { ...item, product: event.target.value } : item)) }} className="h-9 rounded-md border border-border bg-white px-2 text-sm"><option value="">Producto</option>{data.products.map((item) => <option key={item.name} value={item.name}>{item.product_name}</option>)}</select><select required aria-label={`Almacén de orden ${index + 1}`} value={row.warehouse} onChange={(event) => { invalidateOrder(); setRows((current) => current.map((item, i) => i === index ? { ...item, warehouse: event.target.value } : item)) }} className="h-9 rounded-md border border-border bg-white px-2 text-sm"><option value="">Almacén</option>{data.warehouses.map((item) => <option key={item.name} value={item.name}>{item.warehouse_name}</option>)}</select>{(["quantity", "invoice_amount", "recoverable_tax"] as const).map((field) => <Input key={field} required aria-label={`${field} de orden ${index + 1}`} type="number" min={field === "recoverable_tax" ? "0" : "0.01"} step={field === "quantity" ? "0.000001" : "0.01"} placeholder={field === "quantity" ? "Cantidad" : field === "invoice_amount" ? `Total (${currency})` : `Impuesto (${currency})`} value={row[field]} onChange={(event) => { invalidateOrder(); setRows((current) => current.map((item, i) => i === index ? { ...item, [field]: event.target.value } : item)) }} />)}</div>)}<Button type="button" variant="outline" disabled={busy || rows.length >= 50} onClick={() => { invalidateOrder(); setRows((current) => [...current, emptyLine()]) }}>Añadir línea</Button></div>
+        <div className="space-y-2 sm:col-span-2">{rows.map((row, index) => <div key={index} className="grid gap-2 rounded-lg border p-3 sm:grid-cols-2">
+          <div className="flex justify-between sm:col-span-2"><strong>Línea {index + 1}</strong>{rows.length > 1 && <Button type="button" size="sm" variant="outline" onClick={() => { invalidateOrder(); setRows((current) => current.filter((_, i) => i !== index)) }}>Quitar</Button>}</div>
+          <PurchaseCatalogBrowser property={property} kind="Product"
+            selected={row.product ? { name: row.product, product_name: row.product_name } : null}
+            onSelect={(item) => { invalidateOrder(); setRows((current) => current.map((line, i) =>
+              i === index ? { ...line, product: item?.name || "",
+                product_name: item?.product_name || "" } : line)) }} />
+          <select required aria-label={`Almacén de orden ${index + 1}`} value={row.warehouse} onChange={(event) => { invalidateOrder(); setRows((current) => current.map((item, i) => i === index ? { ...item, warehouse: event.target.value } : item)) }} className="h-9 rounded-md border border-border bg-white px-2 text-sm"><option value="">Almacén</option>{data.warehouses.map((item) => <option key={item.name} value={item.name}>{item.warehouse_name}</option>)}</select>
+          {(["quantity", "invoice_amount", "recoverable_tax"] as const).map((field) => <Input key={field} required aria-label={`${field} de orden ${index + 1}`} type="number" min={field === "recoverable_tax" ? "0" : "0.01"} step={field === "quantity" ? "0.000001" : "0.01"} placeholder={field === "quantity" ? "Cantidad" : field === "invoice_amount" ? `Total (${currency})` : `Impuesto (${currency})`} value={row[field]} onChange={(event) => { invalidateOrder(); setRows((current) => current.map((item, i) => i === index ? { ...item, [field]: event.target.value } : item)) }} />)}
+        </div>)}<Button type="button" variant="outline" disabled={busy || rows.length >= 50} onClick={() => { invalidateOrder(); setRows((current) => [...current, emptyLine()]) }}>Añadir línea</Button></div>
         <Input maxLength={500} placeholder="Observaciones" value={notes} onChange={(event) => { invalidateOrder(); setNotes(event.target.value) }} className="sm:col-span-2" />
         {reviewed && <p className="rounded-lg bg-secondary p-3 text-sm sm:col-span-2">Orden {reviewed.currency} {reviewed.amount} · impuesto recuperable {reviewed.recoverable_tax}</p>}
-        <Button disabled={busy || !data.suppliers.length || !data.products.length} className="sm:col-span-2">{reviewed ? "Solicitar orden" : "Revisar orden"}</Button>
+        <Button disabled={busy || !supplier || rows.some((row) => !row.product)}
+          className="sm:col-span-2">{reviewed ? "Solicitar orden" : "Revisar orden"}</Button>
       </form></CardContent></Card>}
       {section === "order-receive" &&
       <Card><CardHeader><CardTitle>Recibir contra orden</CardTitle></CardHeader><CardContent><form onSubmit={receiveOrder} className="space-y-3">
@@ -472,14 +502,14 @@ function PurchaseOrders({ property, data, refresh, send, section, canPurchase, c
           onSelect={(order) => { invalidateReceipt(); setSelectedOrder(order); setQuantities({}) }} />
         <p className="text-sm">Orden seleccionada: {chosen?.reference || "Seleccione una orden aprobada arriba."}</p>
         <Input required maxLength={140} placeholder="Referencia de factura del proveedor" value={billReference} onChange={(event) => { invalidateReceipt(); setBillReference(event.target.value) }} />
-        {chosen?.lines.map((line) => <label key={line.name} className="grid gap-1 text-sm"><span>{productLabel(line.product)} · pendiente {line.remaining_quantity} de {line.quantity} · {chosen.currency} {line.amount} ordenados</span><Input type="number" min="0" max={line.remaining_quantity} step="0.000001" value={quantities[line.name] || ""} onChange={(event) => { invalidateReceipt(); setQuantities((current) => ({ ...current, [line.name]: event.target.value })) }} placeholder="Cantidad a recibir" disabled={Number(line.remaining_quantity) <= 0} /></label>)}
+        {chosen?.lines.map((line) => <label key={line.name} className="grid gap-1 text-sm"><span>{line.product_name} · pendiente {line.remaining_quantity} de {line.quantity} · {chosen.currency} {line.amount} ordenados</span><Input type="number" min="0" max={line.remaining_quantity} step="0.000001" value={quantities[line.name] || ""} onChange={(event) => { invalidateReceipt(); setQuantities((current) => ({ ...current, [line.name]: event.target.value })) }} placeholder="Cantidad a recibir" disabled={Number(line.remaining_quantity) <= 0} /></label>)}
         {receiptQuote && <div className="rounded-lg bg-secondary p-3 text-sm"><strong>Factura {receiptQuote.invoice_currency} {receiptQuote.invoice_amount}</strong><p>Inventario {property.currency} {receiptQuote.base_cost} · impuesto {property.currency} {receiptQuote.base_tax} · proveedores {property.currency} {receiptQuote.base_amount}</p></div>}
         <Button disabled={busy || !chosen || !receiptPayload?.lines.length}>{receiptQuote ? "Confirmar recepción" : "Revisar recepción"}</Button>
       </form></CardContent></Card>}
     </div>}
     {section === "orders" && <Card><CardHeader><CardTitle>Seguimiento de órdenes</CardTitle></CardHeader><CardContent>
       <PurchaseOrderBrowser property={property} refreshToken={data} renderOrder={(order) =>
-        <div className="rounded-lg border p-3 text-sm"><div className="flex flex-wrap items-start justify-between gap-2"><div><strong>{order.reference}</strong> · {order.party_name || supplierLabel(order.supplier)} · {statusLabel(order.progress)}<p className="text-xs text-muted-foreground">{order.currency} {order.amount} · solicitó {order.requested_by}{order.approved_by && ` · aprobó ${order.approved_by}`}</p></div><div className="flex gap-2">{canApprove && order.status === "Pending" && <Button size="sm" disabled={busy} onClick={() => void approveOrder(order)}>Aprobar</Button>}</div></div><div className="mt-2 space-y-1">{order.lines.map((line) => <p key={line.name}>{productLabel(line.product)} · recibido {line.received_quantity} / {line.quantity} · pendiente {line.remaining_quantity}</p>)}</div>{order.status === "Pending" || order.status === "Approved" ? <div className="mt-3 flex flex-wrap gap-2"><Input maxLength={500} placeholder="Motivo de cierre" value={closeReason} onChange={(event) => setCloseReason(event.target.value)} className="min-w-48 flex-1" /><Button type="button" size="sm" variant="outline" disabled={busy || !closeReason.trim() || (order.status === "Approved" && !canApprove)} onClick={() => void closeOrder(order)}>Cerrar orden</Button></div> : order.close_reason && <p className="mt-2 text-xs text-muted-foreground">Cierre: {order.close_reason}</p>}</div>
+        <div className="rounded-lg border p-3 text-sm"><div className="flex flex-wrap items-start justify-between gap-2"><div><strong>{order.reference}</strong> · {order.party_name || order.supplier} · {statusLabel(order.progress)}<p className="text-xs text-muted-foreground">{order.currency} {order.amount} · solicitó {order.requested_by}{order.approved_by && ` · aprobó ${order.approved_by}`}</p></div><div className="flex gap-2">{canApprove && order.status === "Pending" && <Button size="sm" disabled={busy} onClick={() => void approveOrder(order)}>Aprobar</Button>}</div></div><div className="mt-2 space-y-1">{order.lines.map((line) => <p key={line.name}>{line.product_name} · recibido {line.received_quantity} / {line.quantity} · pendiente {line.remaining_quantity}</p>)}</div>{order.status === "Pending" || order.status === "Approved" ? <div className="mt-3 flex flex-wrap gap-2"><Input maxLength={500} placeholder="Motivo de cierre" value={closeReason} onChange={(event) => setCloseReason(event.target.value)} className="min-w-48 flex-1" /><Button type="button" size="sm" variant="outline" disabled={busy || !closeReason.trim() || (order.status === "Approved" && !canApprove)} onClick={() => void closeOrder(order)}>Cerrar orden</Button></div> : order.close_reason && <p className="mt-2 text-xs text-muted-foreground">Cierre: {order.close_reason}</p>}</div>
       } />
     </CardContent></Card>}
   </div>

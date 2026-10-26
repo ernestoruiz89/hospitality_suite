@@ -3496,6 +3496,8 @@ def run():
         assert purchase_page["rows"][0]["name"] == multi_doc.name
         assert purchase_page["rows"][0]["can_cancel"]
         assert {row["stock_movement"] for row in purchase_page["rows"][0]["lines"]} == set(multi_purchase["stock_movements"])
+        assert {row["product_name"] for row in purchase_page["rows"][0]["lines"]} == {
+            "Producto de segunda línea", "Agua minibar"}
         first_purchase_page = api.pms_purchase_document_page(second_prop.name,
             kind="Purchase", page_length=1)
         next_purchase_page = api.pms_purchase_document_page(second_prop.name,
@@ -3517,13 +3519,44 @@ def run():
             frappe.set_user("Administrator")
         assert standalone_inventory.current_balance(second_prop, second_purchase_product,
             stock_service["warehouse"]) == (Decimal("3"), Decimal("65.70"))
+        supplier_catalog = api.pms_purchase_catalog_page(second_prop.name,
+            kind="Supplier", search="SUP-" + suffix)
+        assert any(row["name"] == supplier for row in supplier_catalog["rows"])
+        assert not api.pms_purchase_catalog_page(prop.name,
+            kind="Supplier", search="SUP-" + suffix)["rows"]
+        product_catalog = api.pms_purchase_catalog_page(second_prop.name,
+            kind="Product", search="Producto de segunda línea")
+        assert any(row["name"] == second_purchase_product
+                   for row in product_catalog["rows"])
+        first_catalog_page = api.pms_purchase_catalog_page(second_prop.name,
+            kind="Product", page_length=1)
+        next_catalog_page = api.pms_purchase_catalog_page(second_prop.name,
+            kind="Product", offset=1, page_length=1)
+        assert first_catalog_page["has_more"]
+        assert first_catalog_page["rows"][0]["name"] != next_catalog_page["rows"][0]["name"]
+        try:
+            api.pms_purchase_catalog_page(second_prop.name, kind="Product", offset=-1)
+        except frappe.ValidationError:
+            frappe.clear_messages()
+        else:
+            raise AssertionError("El catálogo de compras aceptó una página negativa")
+        frappe.set_user("Guest")
+        try:
+            try:
+                api.pms_purchase_catalog_page(second_prop.name, kind="Supplier")
+            except frappe.PermissionError:
+                frappe.clear_messages()
+            else:
+                raise AssertionError("Un visitante consultó proveedores privados")
+        finally:
+            frappe.set_user("Administrator")
         full_purchase_snapshot = api.pms_purchase_snapshot(second_prop.name)
         assert any(row["name"] == multi_doc.name and len(row["lines"]) == 2 and
                    row["outstanding"] == "109.50" for row in
                    full_purchase_snapshot["purchases"])
         compact_purchase_snapshot = api.pms_purchase_snapshot(second_prop.name, compact=1)
         assert set(compact_purchase_snapshot) == {
-            "currency", "currencies", "suppliers", "products", "warehouses",
+            "currency", "currencies", "warehouses",
             "accounts", "methods", "shifts"}
         assert all(compact_purchase_snapshot[key] == full_purchase_snapshot[key]
                    for key in compact_purchase_snapshot)
@@ -3864,6 +3897,7 @@ def run():
         assert len(open_orders["rows"]) == 1
         assert open_orders["rows"][0]["name"] == order_name
         assert Decimal(open_orders["rows"][0]["lines"][0]["remaining_quantity"]) == 3
+        assert open_orders["rows"][0]["lines"][0]["product_name"] == "Agua minibar"
         assert not api.pms_purchase_order_page(prop.name,
             search=order_data["reference"])["rows"]
         frappe.set_user("Guest")

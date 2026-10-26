@@ -246,6 +246,15 @@ def _decorate(prop, orders):
         order["received_quantity"] = str(received_qty)
         order["progress"] = ("Completed" if received_qty == total_qty else
             "Partially Received" if received_qty else order.status) if order.status == "Approved" else order.status
+    product_ids = {line["product"] for order in orders for line in order["lines"]}
+    labels = {row.name: row.product_name for row in frappe.get_all("HS Product",
+        filters={"property": prop.name, "organization": prop.organization,
+                 "name": ["in", list(product_ids)]},
+        fields=["name", "product_name"], limit_page_length=len(product_ids))
+        } if product_ids else {}
+    for order in orders:
+        for line in order["lines"]:
+            line["product_name"] = labels.get(line["product"]) or line["product"]
     return orders
 
 

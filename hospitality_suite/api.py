@@ -688,6 +688,13 @@ def pms_purchase_snapshot(property_name, compact=0):
 
 
 @frappe.whitelist()
+def pms_purchase_catalog_page(property_name, kind="Supplier", search="",
+                              offset=0, page_length=25):
+    return standalone_purchases.catalog_page(property_name, kind, search,
+        offset, page_length)
+
+
+@frappe.whitelist()
 def pms_purchase_order_page(property_name, search="", offset=0,
                             page_length=25, receivable_only=0):
     return standalone_purchase_orders.page(property_name, search, offset,

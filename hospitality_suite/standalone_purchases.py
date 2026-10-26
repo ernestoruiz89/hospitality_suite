@@ -388,15 +388,6 @@ def snapshot(property_name, compact=0):
     require_pms(prop)
     if str(compact) not in ("0", "1"):
         frappe.throw(_("Revise el formato de la consulta de compras"))
-    suppliers = frappe.get_all("HS Party", filters={"property": prop.name,
-        "organization": prop.organization, "active": 1,
-        "party_type": ["in", ["Supplier", "Both"]]},
-        fields=["name", "party_name", "tax_id"], order_by="party_name asc",
-        limit_page_length=500)
-    products = frappe.get_all("HS Product", filters={"property": prop.name,
-        "organization": prop.organization, "active": 1, "product_type": "Stock"},
-        fields=["name", "product_code", "product_name"],
-        order_by="product_name asc", limit_page_length=500)
     warehouses = frappe.get_all("HS Warehouse", filters={"property": prop.name,
         "organization": prop.organization, "active": 1},
         fields=["name", "warehouse_name"], order_by="warehouse_name asc")
@@ -412,11 +403,19 @@ def snapshot(property_name, compact=0):
         "cashier": frappe.session.user, "status": "Open"},
         fields=["name", "opened_at"], order_by="opened_at desc")
     catalogs = {"currency": prop.currency, "currencies": sorted(enabled_currencies(prop)),
-        "suppliers": suppliers, "products": products,
         "warehouses": warehouses, "accounts": accounts, "methods": methods,
         "shifts": shifts}
     if str(compact) == "1":
         return catalogs
+    suppliers = frappe.get_all("HS Party", filters={"property": prop.name,
+        "organization": prop.organization, "active": 1,
+        "party_type": ["in", ["Supplier", "Both"]]},
+        fields=["name", "party_name", "tax_id"], order_by="party_name asc",
+        limit_page_length=500)
+    products = frappe.get_all("HS Product", filters={"property": prop.name,
+        "organization": prop.organization, "active": 1, "product_type": "Stock"},
+        fields=["name", "product_code", "product_name"],
+        order_by="product_name asc", limit_page_length=500)
     purchases = frappe.get_all("HS PMS Purchase", filters={"property": prop.name},
         fields=["name", "supplier", "supplier_reference", "purchase_order", "product", "warehouse",
                 "quantity", "invoice_currency", "invoice_amount", "recoverable_tax",
@@ -472,7 +471,44 @@ def snapshot(property_name, compact=0):
     from hospitality_suite.standalone_opening_supplier_credits import snapshot as supplier_credit_snapshot
     from hospitality_suite.standalone_purchase_returns import snapshot as return_snapshot
     from hospitality_suite.standalone_purchase_orders import snapshot as order_snapshot
-    return {**catalogs, "purchases": purchases, "opening_payables": opening_snapshot(prop),
+    return {**catalogs, "suppliers": suppliers, "products": products,
+        "purchases": purchases, "opening_payables": opening_snapshot(prop),
         "opening_supplier_credits": supplier_credit_snapshot(prop),
         "payments": payments[:200],
         "returns": return_snapshot(prop), "orders": order_snapshot(prop)}
+
+
+def catalog_page(property_name, kind="Supplier", search="", offset=0, page_length=25):
+    prop = require(property_name, "finance")
+    require_pms(prop)
+    try:
+        offset, page_length = int(offset), int(page_length)
+    except (TypeError, ValueError, OverflowError):
+        frappe.throw(_("Revise la paginación del catálogo de compras"))
+    if (kind not in ("Supplier", "Product") or offset < 0 or offset > 1000000 or
+            page_length < 1 or page_length > 100 or
+            not isinstance(search, str) or len(search) > 100):
+        frappe.throw(_("Revise la búsqueda del catálogo de compras"))
+    term = search.strip()
+    if kind == "Supplier":
+        rows = frappe.db.sql(
+            "SELECT name,party_name,tax_id FROM `tabHS Party` "
+            "WHERE property=%s AND organization=%s AND active=1 "
+            "AND party_type IN ('Supplier','Both') "
+            "AND (%s='' OR LOCATE(%s,name)>0 OR LOCATE(%s,party_name)>0 "
+            "OR LOCATE(%s,COALESCE(tax_id,''))>0) "
+            "ORDER BY party_name ASC,name ASC LIMIT %s OFFSET %s",
+            (prop.name, prop.organization, term, term, term, term,
+             page_length + 1, offset), as_dict=True)
+    else:
+        rows = frappe.db.sql(
+            "SELECT name,product_code,product_name FROM `tabHS Product` "
+            "WHERE property=%s AND organization=%s AND active=1 "
+            "AND product_type='Stock' "
+            "AND (%s='' OR LOCATE(%s,name)>0 OR LOCATE(%s,product_code)>0 "
+            "OR LOCATE(%s,product_name)>0) "
+            "ORDER BY product_name ASC,name ASC LIMIT %s OFFSET %s",
+            (prop.name, prop.organization, term, term, term, term,
+             page_length + 1, offset), as_dict=True)
+    return {"rows": rows[:page_length], "offset": offset,
+            "has_more": len(rows) > page_length}

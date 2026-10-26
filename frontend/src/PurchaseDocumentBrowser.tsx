@@ -10,7 +10,7 @@ type Base = { name: string; supplier: string; party_name: string | null;
 export type PurchaseCandidate = Base & { kind: "Purchase";
   supplier_reference: string; invoice_currency: string; invoice_amount: number;
   base_amount: number; can_cancel: boolean;
-  lines: { product: string; warehouse: string; quantity: number;
+  lines: { product: string; product_name: string; warehouse: string; quantity: number;
     stock_movement: string | null }[] }
 export type SupplierReturn = Base & { kind: "Return";
   purchase: string; supplier_reference: string; return_kind: string;
