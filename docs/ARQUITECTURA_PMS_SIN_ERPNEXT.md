@@ -173,6 +173,7 @@ En ERPNext, el reporte de Auditoría React abre el detalle histórico de cada ev
 
 En la vista de habitación, **Revisar consumo** consulta el precio y el desglose tributario PMS al servidor antes de entregar el producto. La confirmación usa esa cotización y rechaza cambios de cantidad, precio o perfil tributario; el flujo ERPNext conserva su cotización propia. El ensayo transaccional comprueba C$90.00 de base, C$13.50 de impuesto, C$103.50 de total y el rechazo de una aceptación reutilizada para otra cantidad.
 **Servicios → Nueva solicitud** usa la misma revisión para productos pagados o incluidos. Muestra base, impuesto y total antes de registrar; un cambio del formulario descarta la cotización. Los reintentos de registro y de cambio de estado conservan su clave hasta recibir confirmación, y una falla posterior al guardar durante el refresco se informa sin invitar a duplicar el comando.
+La revisión visual del 26/10/2026 en un clon PMS sin ERPNext confirmó el flujo React con una estancia activa, cuenta principal y un agua de inventario: mostró 98 unidades disponibles y, antes de registrar, base NIO 100.00, impuesto NIO 0.00 y total NIO 100.00. No se confirmó la solicitud; el usuario y el servidor temporales del clon se retiraron después de la comprobación.
 
 7. **Pendiente:** ambas migraciones reales, pruebas de concurrencia e idempotencia de todos los comandos y paridad de todas las pantallas React.
 
