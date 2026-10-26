@@ -46,8 +46,15 @@ def main():
 
         status = preflight()
         assert not status["blockers"], status["blockers"]
+        requirements = [{"property": row["property"], **{
+            key: len(value) if isinstance(value, list) else {
+                party: len(rows) for party, rows in value.items()}
+            for key, value in row["mapping_requirements"].items()
+            if key != "source_settings"}}
+            for row in status["properties"]]
         print(json.dumps({"site": SITE, "properties": result,
             "ready_for_mapping": status["ready_for_mapping"],
+            "mapping_requirements": requirements,
             "source_sha256": status["source_sha256"]}, ensure_ascii=False))
     finally:
         frappe.db.rollback()
