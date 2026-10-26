@@ -3846,6 +3846,23 @@ def run():
         finally:
             frappe.set_user("Administrator")
         assert approved_order["status"] == "Approved"
+        open_orders = api.pms_purchase_order_page(second_prop.name,
+            search=order_data["reference"], receivable_only=1)
+        assert len(open_orders["rows"]) == 1
+        assert open_orders["rows"][0]["name"] == order_name
+        assert Decimal(open_orders["rows"][0]["lines"][0]["remaining_quantity"]) == 3
+        assert not api.pms_purchase_order_page(prop.name,
+            search=order_data["reference"])["rows"]
+        frappe.set_user("Guest")
+        try:
+            try:
+                api.pms_purchase_order_page(second_prop.name)
+            except frappe.PermissionError:
+                frappe.clear_messages()
+            else:
+                raise AssertionError("Un visitante consultó órdenes privadas")
+        finally:
+            frappe.set_user("Administrator")
         assert not frappe.db.exists("HS Journal", {"property": second_prop.name,
             "source_doctype": "HS PMS Purchase Order", "source_name": order_name})
         order_line = next(row for row in api.pms_purchase_snapshot(second_prop.name)["orders"]
@@ -3918,6 +3935,10 @@ def run():
             if row["name"] == order_name)
         assert Decimal(reopened["lines"][0]["received_quantity"]) == 1
         assert Decimal(reopened["lines"][0]["remaining_quantity"]) == 2
+        reopened_page = api.pms_purchase_order_page(second_prop.name,
+            search=order_data["reference"], receivable_only=1)
+        assert len(reopened_page["rows"]) == 1
+        assert Decimal(reopened_page["rows"][0]["lines"][0]["remaining_quantity"]) == 2
         final_order_receipt, final_order_review = ordered_receipt(
             "PO-BILL-3-" + suffix, "2", "order-receipt-3-" + suffix)
         assert final_order_review["invoice_amount"] == "2.00"
@@ -3925,11 +3946,17 @@ def run():
         completed = next(row for row in api.pms_purchase_snapshot(second_prop.name)["orders"]
             if row["name"] == order_name)
         assert completed["progress"] == "Completed"
+        assert not api.pms_purchase_order_page(second_prop.name,
+            search=order_data["reference"], receivable_only=1)["rows"]
         closed_order = api.execute(second_prop.name, "pms_order_close",
             "order-close-" + suffix,
             dict(order=order_name, modified=str(completed["modified"]),
                  reason="Recepción de la orden completada"))
         assert closed_order["status"] == "Closed"
+        closed_page = api.pms_purchase_order_page(second_prop.name,
+            search=order_data["reference"])
+        assert len(closed_page["rows"]) == 1
+        assert closed_page["rows"][0]["status"] == "Closed"
         try:
             api.pms_purchase_quote(second_prop.name, dict(
                 purchase_order=order_name, supplier=supplier,

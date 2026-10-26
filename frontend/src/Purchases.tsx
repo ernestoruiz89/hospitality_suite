@@ -8,6 +8,7 @@ import { call, type Property } from "./api"
 import { OpeningSupplierCreditsPms } from "./OpeningSupplierCreditsPms"
 import { PurchaseDocumentBrowser, type PurchaseCandidate, type PurchaseDocument,
   type SupplierReturn } from "./PurchaseDocumentBrowser"
+import { PurchaseOrderBrowser, type PurchaseOrder as Order } from "./PurchaseOrderBrowser"
 import { SupplierDocumentBrowser, type SupplierDocument, type SupplierTarget } from "./SupplierDocumentBrowser"
 import { SupplierPaymentHistory } from "./SupplierPaymentHistory"
 import { purchaseSections, usePurchaseSection, type PurchaseSection } from "./PurchaseSections"
@@ -35,14 +36,6 @@ type ReturnRow = { name: string; purchase: string; supplier: string; reference: 
   kind: string;
   invoice_currency: string; credit_amount: number; base_credit: number;
   supplier_credit: number; refund_available: string; business_date: string }
-type OrderLine = { name: string; product: string; warehouse: string; quantity: string;
-  received_quantity: string; remaining_quantity: string;
-  amount: string; recoverable_tax: string }
-type Order = { name: string; supplier: string; reference: string; currency: string;
-  payable_account: string; tax_account: string | null; amount: number;
-  recoverable_tax: number; expected_date: string | null; requested_by: string;
-  approved_by: string | null; status: string; progress: string; modified: string;
-  close_reason: string | null; lines: OrderLine[] }
 type Snapshot = { currency: string; currencies: string[];
   suppliers: { name: string; party_name: string; tax_id?: string }[];
   products: { name: string; product_code: string; product_name: string }[];
@@ -400,7 +393,7 @@ function PurchaseOrders({ property, data, refresh, send, section, canPurchase, c
   const [rows, setRows] = useState<PurchaseLine[]>([emptyLine()])
   const [reviewed, setReviewed] = useState<{ acceptance: string; amount: string;
     recoverable_tax: string; currency: string } | null>(null)
-  const [selectedOrder, setSelectedOrder] = useState("")
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
   const [billReference, setBillReference] = useState("")
   const [quantities, setQuantities] = useState<Record<string, string>>({})
   const [receiptQuote, setReceiptQuote] = useState<PurchaseQuote | null>(null)
@@ -409,7 +402,7 @@ function PurchaseOrders({ property, data, refresh, send, section, canPurchase, c
     try { await refresh(); setNotice(success) }
     catch { setNotice(`${success} Actualice la vista para consultar la orden.`) }
   }
-  const chosen = data.orders.find((row) => row.name === selectedOrder)
+  const chosen = selectedOrder
   const hasTax = rows.some((row) => Number(row.recoverable_tax) > 0)
   const orderPayload = { supplier, reference: reference.trim(), currency,
     payable_account: payableAccount, tax_account: hasTax ? taxAccount : null,
@@ -481,7 +474,7 @@ function PurchaseOrders({ property, data, refresh, send, section, canPurchase, c
         }))
       } else {
         await send("pms_receive_purchase", { ...receiptPayload, acceptance: receiptQuote.acceptance })
-        invalidateReceipt(); setSelectedOrder(""); setBillReference(""); setQuantities({});
+        invalidateReceipt(); setSelectedOrder(null); setBillReference(""); setQuantities({});
         await refreshAfter("Recepción registrada con factura y cuenta por pagar propias.")
       }
     } catch (issue) { setError(issue instanceof Error ? issue.message : "No se pudo recibir la orden.") }
@@ -508,13 +501,20 @@ function PurchaseOrders({ property, data, refresh, send, section, canPurchase, c
       </form></CardContent></Card>}
       {section === "order-receive" &&
       <Card><CardHeader><CardTitle>Recibir contra orden</CardTitle></CardHeader><CardContent><form onSubmit={receiveOrder} className="space-y-3">
-        <select required value={selectedOrder} onChange={(event) => { invalidateReceipt(); setSelectedOrder(event.target.value); setQuantities({}) }} className="h-9 w-full rounded-md border border-border bg-white px-2 text-sm"><option value="">Orden aprobada con saldo</option>{data.orders.filter((order) => order.status === "Approved" && order.lines.some((line) => Number(line.remaining_quantity) > 0)).map((order) => <option key={order.name} value={order.name}>{order.reference} · {supplierLabel(order.supplier)} · {order.currency}</option>)}</select>
+        <PurchaseOrderBrowser property={property} receivableOnly selected={selectedOrder}
+          actionLabel="Recibir" refreshToken={data}
+          onSelect={(order) => { invalidateReceipt(); setSelectedOrder(order); setQuantities({}) }} />
+        <p className="text-sm">Orden seleccionada: {chosen?.reference || "Seleccione una orden aprobada arriba."}</p>
         <Input required maxLength={140} placeholder="Referencia de factura del proveedor" value={billReference} onChange={(event) => { invalidateReceipt(); setBillReference(event.target.value) }} />
         {chosen?.lines.map((line) => <label key={line.name} className="grid gap-1 text-sm"><span>{productLabel(line.product)} · pendiente {line.remaining_quantity} de {line.quantity} · {chosen.currency} {line.amount} ordenados</span><Input type="number" min="0" max={line.remaining_quantity} step="0.000001" value={quantities[line.name] || ""} onChange={(event) => { invalidateReceipt(); setQuantities((current) => ({ ...current, [line.name]: event.target.value })) }} placeholder="Cantidad a recibir" disabled={Number(line.remaining_quantity) <= 0} /></label>)}
         {receiptQuote && <div className="rounded-lg bg-secondary p-3 text-sm"><strong>Factura {receiptQuote.invoice_currency} {receiptQuote.invoice_amount}</strong><p>Inventario {property.currency} {receiptQuote.base_cost} · impuesto {property.currency} {receiptQuote.base_tax} · proveedores {property.currency} {receiptQuote.base_amount}</p></div>}
         <Button disabled={busy || !chosen || !receiptPayload?.lines.length}>{receiptQuote ? "Confirmar recepción" : "Revisar recepción"}</Button>
       </form></CardContent></Card>}
     </div>}
-    {section === "orders" && <Card><CardHeader><CardTitle>Seguimiento de órdenes</CardTitle></CardHeader><CardContent className="space-y-3">{data.orders.map((order) => <div key={order.name} className="rounded-lg border p-3 text-sm"><div className="flex flex-wrap items-start justify-between gap-2"><div><strong>{order.reference}</strong> · {supplierLabel(order.supplier)} · {statusLabel(order.progress)}<p className="text-xs text-muted-foreground">{order.currency} {order.amount} · solicitó {order.requested_by}{order.approved_by && ` · aprobó ${order.approved_by}`}</p></div><div className="flex gap-2">{canApprove && order.status === "Pending" && <Button size="sm" disabled={busy} onClick={() => void approveOrder(order)}>Aprobar</Button>}</div></div><div className="mt-2 space-y-1">{order.lines.map((line) => <p key={line.name}>{productLabel(line.product)} · recibido {line.received_quantity} / {line.quantity} · pendiente {line.remaining_quantity}</p>)}</div>{order.status === "Pending" || order.status === "Approved" ? <div className="mt-3 flex flex-wrap gap-2"><Input maxLength={500} placeholder="Motivo de cierre" value={closeReason} onChange={(event) => setCloseReason(event.target.value)} className="min-w-48 flex-1" /><Button type="button" size="sm" variant="outline" disabled={busy || !closeReason.trim() || (order.status === "Approved" && !canApprove)} onClick={() => void closeOrder(order)}>Cerrar orden</Button></div> : order.close_reason && <p className="mt-2 text-xs text-muted-foreground">Cierre: {order.close_reason}</p>}</div>)}{!data.orders.length && <p className="text-sm text-muted-foreground">Sin órdenes de compra.</p>}</CardContent></Card>}
+    {section === "orders" && <Card><CardHeader><CardTitle>Seguimiento de órdenes</CardTitle></CardHeader><CardContent>
+      <PurchaseOrderBrowser property={property} refreshToken={data} renderOrder={(order) =>
+        <div className="rounded-lg border p-3 text-sm"><div className="flex flex-wrap items-start justify-between gap-2"><div><strong>{order.reference}</strong> · {order.party_name || supplierLabel(order.supplier)} · {statusLabel(order.progress)}<p className="text-xs text-muted-foreground">{order.currency} {order.amount} · solicitó {order.requested_by}{order.approved_by && ` · aprobó ${order.approved_by}`}</p></div><div className="flex gap-2">{canApprove && order.status === "Pending" && <Button size="sm" disabled={busy} onClick={() => void approveOrder(order)}>Aprobar</Button>}</div></div><div className="mt-2 space-y-1">{order.lines.map((line) => <p key={line.name}>{productLabel(line.product)} · recibido {line.received_quantity} / {line.quantity} · pendiente {line.remaining_quantity}</p>)}</div>{order.status === "Pending" || order.status === "Approved" ? <div className="mt-3 flex flex-wrap gap-2"><Input maxLength={500} placeholder="Motivo de cierre" value={closeReason} onChange={(event) => setCloseReason(event.target.value)} className="min-w-48 flex-1" /><Button type="button" size="sm" variant="outline" disabled={busy || !closeReason.trim() || (order.status === "Approved" && !canApprove)} onClick={() => void closeOrder(order)}>Cerrar orden</Button></div> : order.close_reason && <p className="mt-2 text-xs text-muted-foreground">Cierre: {order.close_reason}</p>}</div>
+      } />
+    </CardContent></Card>}
   </div>
 }

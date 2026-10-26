@@ -688,6 +688,13 @@ def pms_purchase_snapshot(property_name):
 
 
 @frappe.whitelist()
+def pms_purchase_order_page(property_name, search="", offset=0,
+                            page_length=25, receivable_only=0):
+    return standalone_purchase_orders.page(property_name, search, offset,
+        page_length, receivable_only)
+
+
+@frappe.whitelist()
 def pms_laundry_snapshot(property_name):
     prop = require(property_name, "laundry")
     standalone_accounting.require_pms(prop)

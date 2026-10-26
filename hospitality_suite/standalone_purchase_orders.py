@@ -221,6 +221,10 @@ def snapshot(prop):
             "tax_account", "amount", "recoverable_tax", "expected_date", "notes",
             "requested_by", "approved_by", "status", "modified", "business_date",
             "close_reason"], order_by="creation desc", limit_page_length=200)
+    return _decorate(prop, orders)
+
+
+def _decorate(prop, orders):
     for order in orders:
         order["modified"] = str(order.modified)
         doc = frappe.get_doc("HS PMS Purchase Order", order.name)
@@ -243,3 +247,54 @@ def snapshot(prop):
         order["progress"] = ("Completed" if received_qty == total_qty else
             "Partially Received" if received_qty else order.status) if order.status == "Approved" else order.status
     return orders
+
+
+def page(property_name, search="", offset=0, page_length=25, receivable_only=0):
+    prop = require(property_name, "finance")
+    require_pms(prop)
+    try:
+        offset, page_length = int(offset), int(page_length)
+    except (TypeError, ValueError, OverflowError):
+        frappe.throw(_("Revise la paginación de órdenes"))
+    if (offset < 0 or page_length < 1 or page_length > 100 or
+            not isinstance(search, str) or len(search) > 100 or
+            str(receivable_only) not in ("0", "1")):
+        frappe.throw(_("Revise los filtros de órdenes"))
+    term = search.strip()
+    only_open = str(receivable_only) == "1"
+    open_clause = (
+        "AND o.status='Approved' AND EXISTS ("
+        "SELECT 1 FROM `tabHS PMS Purchase Order Line` ol "
+        "LEFT JOIN (SELECT pl.order_line,SUM(pl.quantity) AS qty "
+        "FROM `tabHS PMS Purchase Line` pl "
+        "JOIN `tabHS PMS Purchase` b ON b.name=pl.parent "
+        "WHERE b.property=%s AND b.organization=%s AND b.status='Posted' "
+        "GROUP BY pl.order_line) received ON received.order_line=ol.name "
+        "LEFT JOIN (SELECT pl.order_line,SUM(rl.quantity) AS qty "
+        "FROM `tabHS PMS Purchase Return Line` rl "
+        "JOIN `tabHS PMS Purchase Return` r ON r.name=rl.parent "
+        "JOIN `tabHS PMS Purchase Line` pl ON pl.stock_movement=rl.source_movement "
+        "JOIN `tabHS PMS Purchase` b ON b.name=pl.parent "
+        "WHERE r.property=%s AND r.organization=%s AND r.status='Posted' "
+        "AND b.property=%s AND b.organization=%s AND b.status='Posted' "
+        "GROUP BY pl.order_line) returned ON returned.order_line=ol.name "
+        "WHERE ol.parent=o.name AND ol.quantity>"
+        "COALESCE(received.qty,0)-COALESCE(returned.qty,0)) "
+    ) if only_open else ""
+    rows = frappe.db.sql(
+        "SELECT o.name,o.supplier,p.party_name,o.reference,o.currency,o.payable_account,"
+        "o.tax_account,o.amount,o.recoverable_tax,o.expected_date,o.notes,"
+        "o.requested_by,o.approved_by,o.status,o.modified,o.business_date,"
+        "o.close_reason "
+        "FROM `tabHS PMS Purchase Order` o "
+        "LEFT JOIN `tabHS Party` p ON p.name=o.supplier AND p.property=o.property "
+        "WHERE o.property=%s AND o.organization=%s " + open_clause +
+        "AND (%s='' OR LOCATE(%s,o.name)>0 OR LOCATE(%s,o.reference)>0 "
+        "OR LOCATE(%s,p.party_name)>0) "
+        "ORDER BY o.creation DESC,o.name DESC LIMIT %s OFFSET %s",
+        (prop.name, prop.organization,
+         *((prop.name, prop.organization, prop.name, prop.organization,
+            prop.name, prop.organization) if only_open else ()),
+         term, term, term, term, page_length + 1, offset), as_dict=True)
+    return {"rows": _decorate(prop, rows[:page_length]), "search": term,
+            "offset": offset, "has_more": len(rows) > page_length}
