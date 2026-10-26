@@ -172,6 +172,7 @@ El ensayo `hospitality_suite.tests.smoke_http_retry.run` usa dos solicitudes WSG
 En ERPNext, el reporte de Auditoría React abre el detalle histórico de cada evento. La preparación del cierre muestra los registros excepcionales congelados, paginados y desglosados por clase; el snapshot histórico conserva esa misma lista. Cada detalle vuelve a comprobar el permiso de reporte y el establecimiento antes de mostrar valores anteriores y posteriores. La compilación y diez pruebas de integración de auditoría pasaron en el sitio de aceptación.
 
 En la vista de habitación, **Revisar consumo** consulta el precio y el desglose tributario PMS al servidor antes de entregar el producto. La confirmación usa esa cotización y rechaza cambios de cantidad, precio o perfil tributario; el flujo ERPNext conserva su cotización propia. El ensayo transaccional comprueba C$90.00 de base, C$13.50 de impuesto, C$103.50 de total y el rechazo de una aceptación reutilizada para otra cantidad.
+**Servicios → Nueva solicitud** usa la misma revisión para productos pagados o incluidos. Muestra base, impuesto y total antes de registrar; un cambio del formulario descarta la cotización. Los reintentos de registro y de cambio de estado conservan su clave hasta recibir confirmación, y una falla posterior al guardar durante el refresco se informa sin invitar a duplicar el comando.
 
 7. **Pendiente:** ambas migraciones reales, pruebas de concurrencia e idempotencia de todos los comandos y paridad de todas las pantallas React.
 
